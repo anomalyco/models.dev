@@ -1,3 +1,8 @@
+# Cache key (chat): automatic vLLM prefix cache with `prompt_tokens_details.cached_tokens` reporting and reduced energy cost on cached tokens
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params
+# Cache policy: stable prefix + same model; hits grow across follow-up turns sharing system prompt and history
+# Docs: https://portal.neuralwatt.com/docs/api/chat-completions
 name = "Neuralwatt"
 env = ["NEURALWATT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
