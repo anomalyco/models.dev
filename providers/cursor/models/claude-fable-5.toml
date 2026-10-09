@@ -1,0 +1,14 @@
+# Sources (accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Context/capabilities: https://cursor.com/docs
+# - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+base_model = "anthropic/claude-fable-5"
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+

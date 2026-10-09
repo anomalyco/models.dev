@@ -1,0 +1,16 @@
+# Sources (accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Context/capabilities: https://cursor.com/docs
+# - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+base_model = "openai/gpt-5.1"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.125
+
+[limit]
+context = 272_000
+output = 32_000
