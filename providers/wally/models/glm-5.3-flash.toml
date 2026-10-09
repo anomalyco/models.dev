@@ -1,8 +1,12 @@
-# Effort: reasoning_effort = none|low|high|max
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: reasoning_effort = low|high|max
 # Pricing: https://www.runwally.com/pricing
 base_model = "zhipuai/glm-5.3-flash"
 attachment = false
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
 
 [interleaved]
 field = "reasoning_content"
@@ -17,4 +21,3 @@ context = 1_048_576
 
 [modalities]
 input = ["text"]
-output = ["text"]
