@@ -1,11 +1,11 @@
 # CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
 # cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
-# Source: https://crowllm.com/api/pricing (accessed 2026-10-08).
-# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-08): "gpt-5.4-thinking:free".
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-09).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-09): "gpt-5.4-thinking:free".
 # Thinking is on by default for this id; it is switched off with the none level, not a toggle.
 # Effort: reasoning_effort = none|low|medium|high|xhigh (top-level, forwarded verbatim); `none` is the level that turns thinking off on this id
 # reasoning_options mirror providers/openai for the same model on this surface.
-# Live gateway row: model_ratio=0, completion_ratio=6, cache_ratio=None, enable_groups=['pro', 'free'].
+# Live gateway row: model_ratio=0, completion_ratio=6, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "openai/gpt-5.4"
 name = "GPT-5.4 Thinking (free)"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] } ]

@@ -1,7 +1,7 @@
 # CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
 # cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
-# Source: https://crowllm.com/api/pricing (accessed 2026-10-08).
-# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-08): "qwen-3.8-27b:free".
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-09).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-09): "qwen-3.8-27b:free".
 # Effort: reasoning_effort = low|medium|xhigh (top-level, forwarded verbatim)
 # reasoning_options mirror providers/cortecs for the same model on this surface.
 # Set adjusted from providers/nebius: `none` dropped: on this gateway thinking is turned off with enable_thinking, and no Qwen source agrees on a none level.
