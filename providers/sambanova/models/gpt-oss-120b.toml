@@ -1,13 +1,11 @@
 # SambaNova serves gpt-oss-120b with a 131k context window and 131k max output tokens.
 # Pricing from GET https://api.sambanova.ai/v1/models (probed 2026-10-09): USD per million tokens.
 # https://docs.sambanova.ai/cloud/docs/get-started/supported-models
-# SambaNova exposes reasoning_effort (low/medium/high) for gpt-oss-120b via the Responses API.
-# https://docs.sambanova.ai/docs/en/features/responses
+# SambaNova exposes reasoning_effort via the Responses API (/v1/responses), not the
+# chat-completions endpoint (/v1/chat/completions) used by @ai-sdk/openai-compatible.
 base_model = "openai/gpt-oss-120b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+reasoning_options = []
 
 [cost]
 input = 0.22
