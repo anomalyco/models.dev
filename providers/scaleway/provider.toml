@@ -1,3 +1,8 @@
+# Prompt caching (chat): Automatic token caching with no client control; Serverless persists the prefix cache automatically (50-90% hits on recurring prefixes, discounted cached-input billing); Dedicated input cache included in price.
+# Use headers: none.
+# Use body: none. The chat schema exposes no `prompt_cache_key` or cache control field.
+# To get a hit: Keep recurring prefixes (system prompt, conversation start) stable and append-only; monitor cached-token consumption in Cockpit.
+# Docs: https://www.scaleway.com/en/docs/generative-apis/faq/
 name = "Scaleway"
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.scaleway.ai/v1"
