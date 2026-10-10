@@ -1,3 +1,6 @@
+# Prompt caching (chat): automatic prefix caching; authenticated GET `/models` metadata drives per-model controls.
+# To get a hit: keep stable prefix on same model plus conversation with keepalive-friendly cadence inside the 5-minute TTL; confirm via cached-input with cache-write billing rates.
+# Docs: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 name = "GitHub Copilot"
 # Reasoning HTTP format (accessed 2026-06-25): POST /chat/completions.
 # Supported controls and values come from authenticated GET /models metadata
