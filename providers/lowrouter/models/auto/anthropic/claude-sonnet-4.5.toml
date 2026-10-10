@@ -1,0 +1,24 @@
+# Source: https://api.lowrouter.ai/v1/models (read 2026-10-10): this ID has 1 route on anthropic.
+# Cost is the route a plain request resolved to on 2026-10-10 under the default routing profile:
+# Anthropic's API, global endpoint.
+# LowRouter bills in EUR; a USD-billed route carries LowRouter's FX buffer, so the figure sits slightly
+# above Anthropic's own list price.
+# EUR 2.7269 in / 13.6344 out / 0.2727 cache read / 3.4086 cache write per MTok,
+# converted at 1.1186 USD/EUR (ECB reference rate, 2026-10-08). Another route can serve a request
+# (the key's routing policy, or a failover); usage.cost on the response carries the amount debited.
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh, mapped to an extended-thinking budget of
+# 1024 / 2048 / 8192 / 16384 / 32768 tokens (https://lowrouter.ai/docs/guides/request-parameters);
+# max is rejected (400). Verified live 2026-10-10: every value accepted with max_tokens unset, nothing
+# disclosed as unapplied, completion tokens rise from ~5 to 170-280 with thinking on. Anthropic routes
+# do not return the trace on chat completions; thinking tokens are billed as output tokens.
+base_model = "anthropic/claude-sonnet-4-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 3.0503
+output = 15.2515
+cache_read = 0.305
+cache_write = 3.8129

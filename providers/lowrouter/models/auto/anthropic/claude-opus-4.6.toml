@@ -1,0 +1,24 @@
+# Source: https://api.lowrouter.ai/v1/models (read 2026-10-10): this ID has 12 routes on anthropic, aws-bedrock.
+# Cost is the route a plain request resolved to on 2026-10-10 under the default routing profile:
+# Amazon Bedrock, fr-par endpoint.
+# LowRouter bills in EUR; a USD-billed route carries LowRouter's FX buffer and a Bedrock regional endpoint carries AWS's
+# regional premium, so the figure sits above Anthropic's own list price.
+# EUR 4.9993 in / 24.9964 out / 0.4999 cache read / 6.2491 cache write per MTok,
+# converted at 1.1186 USD/EUR (ECB reference rate, 2026-10-08). Another route can serve a request
+# (the key's routing policy, or a failover); usage.cost on the response carries the amount debited.
+# Effort: reasoning_effort = low|medium|high, mapped to Anthropic's adaptive thinking effort of the same
+# name (https://lowrouter.ai/docs/guides/request-parameters). xhigh is also accepted and served as a
+# 32,768-token thinking budget; max is rejected (400). Verified live 2026-10-10: nothing disclosed as
+# unapplied. Anthropic routes do not return the trace on chat completions; thinking tokens are billed
+# as output tokens.
+base_model = "anthropic/claude-opus-4-6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 5.5922
+output = 27.961
+cache_read = 0.5592
+cache_write = 6.9902
