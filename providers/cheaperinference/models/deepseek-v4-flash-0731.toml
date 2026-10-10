@@ -1,0 +1,30 @@
+# Image input works on this host although the base model is text-only: a 32x32 solid-colour PNG as a
+# data: URI was named correctly on 10 of 10 probes across four colours, so attachment and the input
+# modalities are overridden here rather than inherited (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "deepseek/deepseek-v4-flash-0731"
+attachment = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.047377
+output = 0.095377
+cache_read = 0.0087273158
+cache_write = 0.0473768572
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

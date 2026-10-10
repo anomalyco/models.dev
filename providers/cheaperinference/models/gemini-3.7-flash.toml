@@ -1,0 +1,21 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Effort: reasoning_effort = low|medium|high, the lab set (providers/google). Thinking cannot be turned
+# off: the host rejects reasoning_effort = "none" (probed 2026-09-17). The host also accepts "minimal",
+# but on 2 prompts it gave the same answers and completion tokens as "low" and no lower reasoning-token
+# count (probed 2026-10-02), so it is not listed.
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "google/gemini-3.7-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.584698
+output = 2.923491
+cache_read = 0.05846982
+cache_write = 0.5846982

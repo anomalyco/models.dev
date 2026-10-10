@@ -1,0 +1,17 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Path: GET https://api.cheaperinference.com/v1/models lists this model as "google/gemini-3.5-flash-lite",
+# the only slash-scoped ID in the catalog. The sync maps each catalog ID to <id>.toml, hence the nested path.
+# Effort: reasoning_effort = minimal|low|medium|high, the lab set (providers/google/models/gemini-3.5-flash-lite.toml).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "google/gemini-3.5-flash-lite"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.214023
+output = 1.783526
+cache_read = 0.0214023075
+cache_write = 0.214023075

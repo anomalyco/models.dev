@@ -1,0 +1,24 @@
+# No usable image input on this host: the request is accepted but the image never reaches the model -
+# NOIMAGE for green and purple on 4 of 4 probes, with only the blue guess landing (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.462
+output = 1.386
+cache_read = 0.0154
+cache_write = 0.462
+
+[limit]
+context = 1_048_576

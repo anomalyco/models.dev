@@ -1,0 +1,33 @@
+# No usable image input on this host: the request is accepted but the image never reaches the model -
+# it answered NOIMAGE on 4 of 4 colour probes (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|medium|high|xhigh|max (same set as providers/anthropic and openrouter)
+# Re-probed 2026-10-02 on 3 prompts. reasoning.enabled = false returns no reasoning_content (3 of 3), while
+# no field returns it on 2 of 3. Completion tokens, low vs max: 96 vs 696, 163 vs 584, 17 vs 185.
+# Full ladder on one prompt: low 163, medium 242, high 395, xhigh 478, max 584. The host rejects
+# reasoning.max_tokens (adaptive thinking), so there is no budget control.
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "anthropic/claude-sonnet-5"
+attachment = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.4
+output = 7
+cache_read = 0.14
+cache_write = 1.75
+
+[limit]
+output = 64_000
+
+[modalities]
+input = ["text"]

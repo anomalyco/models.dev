@@ -1,0 +1,25 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = high|max
+# Measured on this host with one prompt, reasoning_content length: no field 75-76, effort "low" and
+# "medium" 0-77, "high" 218-261, "max" 636-650, and reasoning.enabled = false 0 on 2 of 2. The usage
+# block on this route reports no reasoning token count (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "anthropic/claude-opus-4-6"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 3.880875
+output = 19.404376
+cache_read = 0.38808751
+cache_write = 4.851093875
