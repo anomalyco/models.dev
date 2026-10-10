@@ -1,0 +1,11 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No off switch on Tempr: Sarvam switches thinking off with a JSON null effort, which Tempr
+# doesn't send, so reasoning.effort = "none" maps to the lowest level below.
+# Effort: reasoning.effort = low|medium|high (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = low|medium|high
+# /v1/responses: reasoning.effort = low|medium|high
+base_model = "sarvam/sarvam-105b"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high"] },
+]
