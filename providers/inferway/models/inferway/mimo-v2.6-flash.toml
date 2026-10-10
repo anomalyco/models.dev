@@ -1,0 +1,39 @@
+# Model ID inferway/mimo-v2.6-flash, served on Inferway's own MiMo-V2.6-Flash
+# deployment (not a pass-through to Xiaomi's API).
+# Toggle: chat_template_kwargs.enable_thinking = true|false. Thinking is off by
+# default. reasoning.enabled = true|false is accepted as an alias, and so is
+# reasoning_effort: "none" means off, and any other accepted level means on.
+# The host has no graded effort, and contradictory signals return HTTP 400.
+# thinking.type returns HTTP 400.
+# Wire evidence (2026-09-24, POST https://api.inferway.ai/v1/chat/completions,
+# streamed, usage.completion_tokens_details.reasoning_tokens):
+#   enable_thinking=true: 12 and 30
+#   reasoning_effort="none": 0 and 0
+#   omitted: 0 and 0
+# Reasoning streams in reasoning_content, and a replayed reasoning_content in
+# history is accepted.
+# Also confirmed on the wire: tool calls, streaming and non-streaming;
+# response_format json_schema; max_tokens 131072. Image input (data: URL)
+# succeeds; this host does not serve audio or video input.
+# Limits and pricing: https://api.inferway.ai/v1/models and
+# https://inferway.ai/pricing (accessed 2026-09-25): context 393,216 tokens;
+# USD per 1M tokens $0.14 input / $0.28 output / $0.0028 cache hit
+# (pricing_version mimo-v2.6-flash-usd-2026-09-23). These are list prices; a
+# time-limited launch promotion is not recorded here.
+base_model = "xiaomi/mimo-v2.6-flash"
+structured_output = true
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[limit]
+context = 393_216
+
+[modalities]
+input = ["text", "image"]
+
+[interleaved]
+field = "reasoning_content"
