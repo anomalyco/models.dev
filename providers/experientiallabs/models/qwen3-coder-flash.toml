@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3-coder-flash"
+structured_output = true
+
+[cost]
+input = 0.195
+output = 0.975
+cache_read = 0.039
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_001 }
+input = 0.325
+output = 1.625
+cache_read = 0.065
+
+[limit]
+input = 934_464

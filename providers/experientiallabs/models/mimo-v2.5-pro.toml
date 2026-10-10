@@ -1,0 +1,14 @@
+# Reasoning controls copied from the providers/xiaomi/models/mimo-v2.5-pro.toml lab baseline.
+# Toggle and budget controls from the source are not emitted: the Experiential Labs chat surface exposes no native on/off or budget request field - enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on mimo-v2.5: x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)"]) (see platform.experientiallabs.ai/llms.txt).
+# Reasoning controls: none emitted - the lab/peer baseline documents no effort levels, and its toggle/budget controls have no native request fields on this surface: enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on mimo-v2.5: x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)"]). reasoning_effort is the only reasoning wire and passes through unchanged where the route supports it (platform.experientiallabs.ai/llms.txt).
+base_model = "xiaomi/mimo-v2.5-pro"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.0036
+
+[limit]
+input = 917_504

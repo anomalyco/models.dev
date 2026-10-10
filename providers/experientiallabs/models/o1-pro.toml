@@ -1,0 +1,21 @@
+# Reasoning controls copied from the providers/openai/models/o1-pro.toml lab baseline.
+# Effort: reasoning_effort = low|medium|high
+base_model = "openai/o1-pro"
+name = "o1 Pro"
+attachment = false
+tool_call = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 150
+output = 600
+cache_read = 150
+
+[limit]
+input = 100_000
+
+[modalities]
+input = ["text"]

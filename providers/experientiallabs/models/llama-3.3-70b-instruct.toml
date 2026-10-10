@@ -1,0 +1,13 @@
+base_model = "meta/llama-3.3-70b-instruct"
+name = "Llama 3.3 70B Instruct"
+structured_output = true
+
+[cost]
+input = 0.1
+output = 0.32
+cache_read = 0.11
+
+[limit]
+context = 131_072
+input = 131_072
+output = 131_072

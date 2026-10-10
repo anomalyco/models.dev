@@ -1,0 +1,14 @@
+base_model = "openai/gpt-4-turbo"
+attachment = false
+structured_output = true
+
+[cost]
+input = 10
+output = 30
+cache_read = 10
+
+[limit]
+input = 123_904
+
+[modalities]
+input = ["text"]

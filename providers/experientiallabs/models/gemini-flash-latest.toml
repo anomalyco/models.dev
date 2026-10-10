@@ -1,0 +1,15 @@
+# Reasoning controls copied from the providers/google/models/gemini-flash-latest.toml lab baseline.
+# Effort: reasoning_effort = low|medium|high
+base_model = "google/gemini-flash-latest"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.375
+output = 1.875
+cache_read = 0.0375
+
+[limit]
+input = 1_048_576

@@ -1,0 +1,15 @@
+# Reasoning controls copied from the providers/alibaba/models/qwen3.7-max.toml lab baseline.
+# Toggle and budget controls from the source are not emitted: the Experiential Labs chat surface exposes no native on/off or budget request field - thinking_budget is rejected and enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on qwen3.5-122b-a10b and qwen3.5-27b: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)"]) (see platform.experientiallabs.ai/llms.txt).
+# Reasoning controls: none emitted - the lab/peer baseline documents no effort levels, and its toggle/budget controls have no native request fields on this surface: thinking_budget is rejected and enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on qwen3.5-122b-a10b and qwen3.5-27b: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)"]). reasoning_effort is the only reasoning wire and passes through unchanged where the route supports it (platform.experientiallabs.ai/llms.txt).
+base_model = "alibaba/qwen3.7-max"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 2.5
+output = 7.5
+cache_read = 0.5
+
+[limit]
+input = 868_928
+output = 131_072

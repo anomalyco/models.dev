@@ -1,0 +1,15 @@
+# Reasoning controls copied from the providers/openrouter/models/openai/gpt-oss-20b.toml relay peer baseline.
+# Effort: reasoning_effort = low|medium|high
+base_model = "openai/gpt-oss-20b"
+name = "GPT Oss 20b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.61
+output = 2.94
+
+[limit]
+input = 131_072

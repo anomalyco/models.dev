@@ -1,0 +1,20 @@
+# Reasoning controls copied from the providers/openrouter/models/qwen/qwen3.8-max-0902.toml relay peer baseline.
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh
+base_model = "alibaba/qwen3.8-max-0902"
+name = "Qwen3.8 Max (0902)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+input = 868_928
+
+[modalities]
+input = ["text", "image", "video"]

@@ -1,0 +1,17 @@
+# Reasoning controls copied from the providers/google/models/gemini-omni-flash-preview.toml lab baseline: it authors `reasoning_options = []` — no caller control is documented.
+base_model = "google/gemini-omni-flash-preview"
+attachment = false
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 131_072
+input = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

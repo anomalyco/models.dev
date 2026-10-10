@@ -1,0 +1,18 @@
+# Reasoning controls copied from the providers/openrouter/models/tencent/hy4-preview.toml relay peer baseline.
+# Effort: reasoning_effort = none|low|high
+base_model = "tencent/hy4-preview"
+name = "Tencent Hy4 Preview"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.834
+output = 2.501
+cache_read = 0.042
+
+[limit]
+context = 1_000_000
+input = 936_000

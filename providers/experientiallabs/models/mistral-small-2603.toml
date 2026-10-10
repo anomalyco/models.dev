@@ -1,0 +1,17 @@
+# Reasoning controls copied from the providers/mistral/models/mistral-small-2603.toml lab baseline.
+# Effort: reasoning_effort = none|high
+base_model = "mistral/mistral-small-2603"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015
+
+[limit]
+context = 262_144
+input = 262_144
