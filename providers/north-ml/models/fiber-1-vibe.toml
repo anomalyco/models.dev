@@ -1,0 +1,29 @@
+# North ML: Fiber 1 Vibe — first-party host (provider IS the lab, full inline allowed).
+# Source: GET https://api.north-ml.space/v1/models, entry id = "fiber-1-vibe", owned_by = "north-ml".
+# Context: fiber.max_context = 8192. Output: not published separately; set to max_context
+# (North ML confirms output may use the full context).
+# Cost: fiber.list_price_mtok_usd = 0.05 (USD/MTok, input and output); fiber.billing_note marks
+# this as preview pricing ("theoretical pricing; API may be free during preview").
+# Parameters: fiber.parameters = 191221040 (~191M, proprietary).
+# Reasoning: fixed fiber.thinking_token_budget = 64; no request-level reasoning field in the API docs.
+name = "Fiber 1 Vibe"
+description = "North ML's proprietary ~191M-parameter small model in its faster Vibe mode, with a lighter reasoning budget."
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = false
+reasoning = true
+tool_call = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.05
+output = 0.05
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
