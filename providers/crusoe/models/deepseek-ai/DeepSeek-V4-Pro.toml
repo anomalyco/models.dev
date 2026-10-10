@@ -1,0 +1,21 @@
+# Probed live endpoint 2026-09-29 (POST /v1/chat/completions, temperature 0):
+# reasoning is off by default (no reasoning text on a plain request) and
+# reasoning_effort "none" keeps it off; low/high/max enable it. On a harder
+# prompt low was shorter than high/max (414 vs 1295/1058 completion tokens);
+# medium and xhigh are accepted but not distinct rungs, so the native
+# DeepSeek low/high/max set plus "none" is advertised (effort-only, no
+# toggle). chat_template_kwargs.thinking = true also enables it. Reasoning
+# text arrives interleaved with tool_calls, in "reasoning_content".
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+interleaved = { field = "reasoning_content" }
+
+# Pricing: https://www.crusoe.ai/cloud/pricing and live GET /v1/models
+# (accessed 2026-09-29)
+[cost]
+input = 1.74
+output = 3.48
+cache_read = 0.15
+
+[limit]
+context = 1_048_576

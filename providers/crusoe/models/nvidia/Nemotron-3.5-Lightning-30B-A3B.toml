@@ -1,0 +1,17 @@
+# Probed live endpoint 2026-09-29 (POST /v1/chat/completions, temperature 0,
+# 3 repeats per level): reasoning is on by default; reasoning_effort "none"
+# (or chat_template_kwargs.enable_thinking = false) disables it (4
+# completion tokens). low/medium/high/max/xhigh are accepted but stay
+# within run-to-run variance (~840-1410 tokens), so this is encoded as a
+# toggle. Reasoning text arrives interleaved with tool_calls, in the
+# message field named "reasoning" (not "reasoning_content").
+base_model = "nvidia/nemotron-3.5-lightning"
+reasoning_options = [{ type = "toggle" }]
+interleaved = true
+
+# Pricing: https://www.crusoe.ai/cloud/pricing and live GET /v1/models
+# (accessed 2026-09-29)
+[cost]
+input = 0.05
+output = 0.20
+cache_read = 0.03

@@ -15,3 +15,7 @@ input = 0.30
 output = 1.83
 cache_read = 0.30
 input_audio = 0.50
+
+# Context: live GET /v1/models reports 262,144 (accessed 2026-09-29).
+[limit]
+context = 262_144
