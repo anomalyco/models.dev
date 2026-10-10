@@ -285,6 +285,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
 - New xAI API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. Alias IDs of models already cataloged under their canonical ID are skipped silently and never reported as missing.
 
+## Inception Notes
+
+- Inception is implemented in `packages/core/src/sync/providers/inception.ts`.
+- Run it with `bun models:sync inception`.
+- Source endpoint: `https://api.inceptionlabs.ai/v1/models`; no authentication is required (the catalog is public).
+- Only the chat-completions catalog is represented; `mercury-decide` is a decisions-endpoint preview and is skipped.
+- Existing entries are updated with API-authoritative per-1M-token prices (converted from per-token strings), served context/output limits, and optional cache rates. Capabilities, reasoning controls, dates, descriptions, and request metadata stay hand-authored.
+- New chat models are not created automatically (`skipCreates`); each opens a deduped missing-model issue. Local models absent from the listing are retained (`deleteMissing: false`) because the edit model is not part of this catalog.
+
 ## Tinfoil Notes
 
 - Tinfoil is implemented in `packages/core/src/sync/providers/tinfoil.ts`.
