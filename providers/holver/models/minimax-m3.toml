@@ -1,0 +1,12 @@
+# Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
+# Bearer $HOLVER_API_KEY). Catalog: https://holver.id/models.
+# Holver bills via credit packages, not per-model USD rates, so cost is
+# intentionally omitted.
+# Reasoning on this host: only the OpenAI-style top-level `reasoning_effort`
+# field is forwarded upstream (`thinking`/`enable_thinking`/`thinking_budget`
+# are not on Holver's forward whitelist), so the lab's own toggle control is
+# not reachable through this API. Holver selects the routed MiniMax endpoint,
+# which exposes no caller-facing effort tiers here — hence no reasoning_options.
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3"
+reasoning_options = []
