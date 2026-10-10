@@ -1,0 +1,26 @@
+# Agent Plan model name from https://www.volcengine.com/docs/82379/2366394
+# (accessed 2026-09-21). Subscription tier: no per-token price.
+# Effort on this endpoint was not probed; mirrors the coding-plan peer:
+# reasoning_effort = none|low|high.
+# Output cap measured via max_tokens rejection: 262144 (matches docs 256K).
+# Context bisected with oversized prompts (2026-09-21): requests fail with
+# "Total tokens of image and text exceed max message tokens" above ~229K
+# prompt tokens, so the documented 256K does NOT hold on this endpoint and
+# the conservative measured floor is used.
+base_model = "bytedance-seed/seed-2.1-turbo"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 228_000
+output = 262_144
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
