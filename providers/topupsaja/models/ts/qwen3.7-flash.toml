@@ -1,0 +1,20 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+# Budget: reasoning.max_tokens = <integer>
+
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+
+base_model = "alibaba/qwen3.7-flash"
+
+structured_output = false
+
+[cost]
+input = 0.21
+output = 0.91
+cache_read = 0.042
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"

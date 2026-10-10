@@ -1,0 +1,20 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
+base_model = "zhipuai/glm-5.3-flash"
+
+name = "GLM Flash Latest"
+
+[cost]
+input = 0.525
+output = 1.75
+cache_read = 0.105
+
+[limit]
+context = 1310720
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[modalities]
+input = ["text", "image", "video"]
