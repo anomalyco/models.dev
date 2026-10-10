@@ -1,3 +1,8 @@
+# Context 1_048_576 per live DeepSeek API GET /models (context_window 1048576 for deepseek-flash/deepseek-v4-pro);
+# corroborated by NVIDIA NGC maximum context length 1,048,576; DeepSeek docs describe as 1M.
+# https://catalog.ngc.nvidia.com/orgs/nim/teams/deepseek-ai/models/deepseek-v4-pro
+# https://api-docs.deepseek.com/quick_start/pricing/
+# https://api-docs.deepseek.com/news/news260424
 # Added benchmarks are from the original V4 preview instruct-model comparison, not the later 0731/0813 releases.
 name = "DeepSeek V4 Pro"
 description = "Open MoE flagship with million-token context for coding and long agent runs"
@@ -13,7 +18,7 @@ knowledge = "2025-05"
 open_weights = true
 
 [limit]
-context = 1_000_000
+context = 1_048_576
 output = 384_000
 
 [modalities]
