@@ -1,0 +1,11 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Toggle: chat_template_kwargs.thinking = true|false (catalog chat template)
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.75
+output = 3.5
+cache_read = 0.16

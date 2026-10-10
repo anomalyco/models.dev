@@ -1,0 +1,19 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Upstream encoder controls; the public catalog does not expose the deployed tokenizer
+# revision, so distinct low-effort behavior has not been verified on this host.
+# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: chat_template_kwargs.reasoning_effort = low|high|max
+# Model controls: https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/tree/main/encoding
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.044
+
+[limit]
+context = 1_048_576
+output = 1_048_576

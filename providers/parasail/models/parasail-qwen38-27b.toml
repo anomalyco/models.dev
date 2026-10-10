@@ -1,0 +1,22 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: chat_template_kwargs.reasoning_effort = low|medium|xhigh
+# Toggle verified on this exact SKU (2026-09-23):
+# POST https://api.parasail.io/v1/chat/completions
+# User message: "Compute 17 * 23. Reply with only the integer."
+# Same temperature=0, seed=42, max_tokens=96, stream=false; only enable_thinking changed.
+# false: no message.reasoning, answer "391"; true: 133 reasoning characters, then answer "391".
+# Off/on usage.prompt_tokens=27/67; returned prompt_token_ids also differed.
+# This is observed Parasail on/off behavior, not a toggle inferred from lab/relay peers.
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.24
+output = 2.2
+cache_read = 0.05
+
+[limit]
+output = 262_144
