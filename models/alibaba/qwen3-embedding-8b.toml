@@ -1,0 +1,26 @@
+# https://huggingface.co/Qwen/Qwen3-Embedding-8B
+# https://qwenlm.github.io/blog/qwen3-embedding/
+name = "Qwen3 Embedding 8B"
+description = "Multilingual text embedding model for retrieval, code search, classification, and clustering"
+type = "embedding"
+family = "qwen"
+release_date = "2025-06-05"
+last_updated = "2025-06-05"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 32_768
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-Embedding-8B"

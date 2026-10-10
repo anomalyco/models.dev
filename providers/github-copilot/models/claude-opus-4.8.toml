@@ -15,3 +15,7 @@ output = 64_000
 [experimental.modes.fast]
 cost = { input = 10, output = 50, cache_read = 1, cache_write = 12.5 }
 provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.githubcopilot.com/v1"

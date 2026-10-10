@@ -2,10 +2,23 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
+
+const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
+  "alibaba/qwen3.6-27b": 65_536,
+  "amazon/nova-2-lite": 65_535,
+  "bytedance/seed-1.8": 32_768,
+  "deepseek/deepseek-v3.1-terminus": 32_768,
+  "inception/mercury-2": 50_000,
+  "minimax/minimax-m2": 196_608,
+  "quiverai/arrow-2": 65_536,
+  "quiverai/arrow-2-telos": 65_536,
+  "zai/glm-5-turbo": 131_072,
+};
 
 const KnownModelType = z.enum([
   "language",
@@ -39,6 +52,7 @@ const Pricing = z.object({
 export const VercelModel = z.object({
   id: z.string(),
   name: z.string(),
+  description: z.string().optional(),
   created: z.number(),
   released: z.number().optional(),
   context_window: z.number().optional().default(0),
@@ -49,6 +63,9 @@ export const VercelModel = z.object({
   // text/text handling in buildVercelModel instead of failing the whole sync.
   type: KnownModelType.or(z.string()),
   tags: z.array(z.string()).optional().default([]),
+  // Keep the catalog parse forward-compatible with new control shapes or
+  // effort values; unresolved options retain the authored menu below.
+  reasoning_options: z.array(z.unknown()).optional(),
   pricing: Pricing.optional(),
 }).passthrough();
 
@@ -78,13 +95,17 @@ export const vercel = {
     const routeBase = freeRouteBase(model.id);
     const baseModel = existing?.base_model ?? resolveVercelBaseModel(model.id);
     const inherited = routeBase === undefined ? undefined : context.existing(routeBase);
+    const translated = buildVercelModel(
+      model,
+      existing,
+      inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
+    );
     return {
       id: model.id,
-      model: buildVercelModel(
-        model,
-        existing,
-        inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
-      ),
+      model: translated,
+      header: translated.reasoning_options?.some((option) => option.type === "toggle")
+        ? "# Toggle: reasoning.enabled = true|false\n# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning\n"
+        : undefined,
     };
   },
   sameModel(current, desired) {
@@ -104,9 +125,9 @@ export function buildVercelModel(
   const context = model.context_window > 0
     ? model.context_window
     : existing?.limit?.context ?? 0;
-  const output = model.max_tokens > 0
+  const output = OUTPUT_LIMIT_OVERRIDES[model.id] ?? (model.max_tokens > 0
     ? model.max_tokens
-    : existing?.limit?.output ?? 0;
+    : existing?.limit?.output ?? 0);
   const input = model.id.startsWith("openai/") && context > output
     ? context - output
     : undefined;
@@ -118,14 +139,18 @@ export function buildVercelModel(
   const family = existing?.family === "o" && inferredFamily !== "o"
     ? inferredFamily
     : (existing?.family ?? inferredFamily);
+  const reasoning = existing?.reasoning ?? tags.has("reasoning");
 
   const synced: SyncedFullModel = {
+    type: model.type === "evaluation" ? "decision" : existing?.type,
     name: existing?.name ?? model.name,
-    description: existing?.description ?? describeModel({
+    description: model.type === "evaluation"
+      ? existing?.description ?? model.description ?? "Decision model for typed evaluation of shared state"
+      : existing?.description ?? describeModel({
       id: model.id,
       name: existing?.name ?? model.name,
       family,
-      reasoning: existing?.reasoning ?? tags.has("reasoning"),
+      reasoning,
       tool_call: model.type === "language"
         ? existing?.tool_call ?? tags.has("tool-use")
         : tags.has("tool-use"),
@@ -156,10 +181,8 @@ export function buildVercelModel(
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
-    reasoning: existing?.reasoning ?? tags.has("reasoning"),
-    reasoning_options: existing?.reasoning_options?.length
-      ? existing.reasoning_options
-      : base?.reasoning_options,
+    reasoning,
+    reasoning_options: reasoning ? vercelReasoningOptions(model, existing, base) : undefined,
     temperature: existing?.temperature,
     tool_call: model.type === "language"
       ? existing?.tool_call ?? tags.has("tool-use")
@@ -198,7 +221,13 @@ export function buildVercelModel(
   if (baseModel === undefined) return synced;
 
   return factorBaseModel(baseModel, {
+    type: synced.type,
     name: synced.name,
+    // The lab describes the decision task; a generic gateway chat description
+    // must not override it when the provider file has no curated description.
+    description: model.type === "evaluation" && existing?.description === undefined
+      ? undefined
+      : synced.description,
     attachment: synced.attachment,
     reasoning: synced.reasoning,
     reasoning_options: synced.reasoning_options,
@@ -213,6 +242,26 @@ export function buildVercelModel(
     limit: synced.limit,
     modalities: synced.modalities,
   }, synced.limit, existing?.base_model_omit);
+}
+
+function vercelReasoningOptions(
+  model: VercelModel,
+  existing: ExistingModel | undefined,
+  base: ExistingModel | undefined,
+): SyncedFullModel["reasoning_options"] {
+  const authored = existing?.reasoning_options?.length
+    ? existing.reasoning_options
+    : base?.reasoning_options ?? existing?.reasoning_options;
+  if (model.reasoning_options === undefined) return authored;
+  if (model.reasoning_options.length === 0) return [];
+
+  const parsed = model.reasoning_options.map((option) => ReasoningOption.safeParse(option));
+  if (parsed.some((result) => !result.success)) return authored;
+  const options = parsed.flatMap((result) => result.success ? [result.data] : []);
+  // An effort of "none" already disables reasoning; don't duplicate the off
+  // control with the catalog's separate toggle.
+  const effortHasNone = options.some((option) => option.type === "effort" && option.values.includes("none"));
+  return effortHasNone ? options.filter((option) => option.type !== "toggle") : options;
 }
 
 function resolveVercelBaseModel(modelID: string) {
@@ -335,6 +384,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
   const fields: Array<[unknown, unknown, boolean?]> = [
     [current.base_model, desiredModel.base_model],
     [current.base_model_omit, desiredModel.base_model_omit],
+    [current.type, desiredModel.type],
     [current.name, desiredModel.name],
     [current.description, desiredModel.description],
     [current.family, desiredModel.family],

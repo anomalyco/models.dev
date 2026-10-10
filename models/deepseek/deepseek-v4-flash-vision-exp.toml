@@ -1,3 +1,4 @@
+# Text-agent results use DeepSeek Harness minimal mode, max effort, temperature=1.0, top_p=0.95.
 # Open weights (MIT): https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp
 name = "DeepSeek V4 Flash Vision Exp"
 description = "Experimental multimodal DeepSeek V4 Flash model for image understanding, coding, and agentic work"
@@ -23,3 +24,86 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 83.9
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+version = "2.1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 57.7
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "CyberGym"
+score = 75.3
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 59.3
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 75.9
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "DSBench-Hard"
+score = 63.6
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+dataset = "internal"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 25.7
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+dataset = "public"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "ApexBench"
+score = 36.5
+metric = "pass@1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 27.3
+metric = "score"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "Chartography"
+score = 64.3
+metric = "score"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+
+[[benchmarks]]
+name = "ZeroBench"
+score = 35
+metric = "pass@5"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"

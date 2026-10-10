@@ -1,0 +1,22 @@
+# https://huggingface.co/Gryphe/MythoMax-L2-13b
+name = "MythoMax L2 13B"
+description = "Llama 2 merge combining MythoLogic and Huginn for creative writing and roleplay"
+release_date = "2023-08-10"
+last_updated = "2023-08-10"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[limit]
+context = 4_096
+output = 3_200
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Gryphe/MythoMax-L2-13b"

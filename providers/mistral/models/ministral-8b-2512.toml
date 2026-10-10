@@ -1,0 +1,9 @@
+# https://docs.mistral.ai/models/ministral-3-8b-25-12 (Ministral 3 8B API ID ministral-8b-2512, 256k context)
+# https://docs.mistral.ai/inference/pricing (Ministral 3 8B: $0.15 input, $0.015 cached input, $0.15 output per MTok)
+# https://mistral.ai/news/mistral-3 (Ministral 3 family released 2025-12-02, Apache 2.0)
+base_model = "mistral/ministral-3-8b-instruct-2512"
+
+[cost]
+input = 0.15
+cache_read = 0.015
+output = 0.15

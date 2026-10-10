@@ -45,7 +45,7 @@ describe("catalog generation", () => {
     });
   });
 
-  test("base_model can factor metadata without changing provider JSON", async () => {
+  test("base_model publishes canonical identity with the provider model", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
       await write(root, "providers/factored/provider.toml", providerToml("Factored"));
@@ -96,9 +96,10 @@ cache_read = 0.125
         },
       ]);
 
-      expect(catalog.providers.factored?.models.model).toEqual(
-        catalog.providers.direct?.models.model,
-      );
+      expect(catalog.providers.factored?.models.model).toEqual({
+        ...catalog.providers.direct?.models.model,
+        canonical_model_id: "lab/model",
+      });
       expect(catalog.providers.factored?.models.model).not.toHaveProperty(
         "base_model",
       );

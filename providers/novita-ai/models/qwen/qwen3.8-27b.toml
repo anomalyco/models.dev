@@ -1,0 +1,18 @@
+# https://novita.ai/models/model-detail/qwen-qwen3.8-27b
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (reasoning tokens); cannot be combined with effort.
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.42
+output = 3
+cache_read = 0.085
+
+[limit]
+context = 1_000_000
+output = 131_072

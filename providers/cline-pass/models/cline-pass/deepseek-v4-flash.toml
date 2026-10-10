@@ -1,5 +1,9 @@
+# https://docs.cline.bot/getting-started/clinepass
+# https://api-docs.deepseek.com/guides/thinking_mode/ (OpenAI: thinking.type + reasoning_effort low|high|max)
+# Effort: reasoning_effort = none|low|high|max (none disables thinking; DeepSeek Flash graded set)
+# Legacy Flash slug; lab serves V4.1-Flash. Same reasoning surface as deepseek-v4.1-flash.
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [cost]
 input = 0.14

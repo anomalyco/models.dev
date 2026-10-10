@@ -1,0 +1,21 @@
+type = "decision"
+name = "Laya (Free)"
+description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 8_192
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]

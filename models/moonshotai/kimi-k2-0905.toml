@@ -1,0 +1,24 @@
+# https://huggingface.co/moonshotai/Kimi-K2-Instruct-0905
+name = "Kimi K2 Instruct 0905"
+description = "September 2025 Kimi K2 instruction update with a 256K context and improved agentic coding"
+family = "kimi-k2"
+release_date = "2025-09-05"
+last_updated = "2025-09-05"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+license = "Modified MIT"
+
+[limit]
+context = 262_144
+output = 98_304
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/moonshotai/Kimi-K2-Instruct-0905"

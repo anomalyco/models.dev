@@ -1,7 +1,6 @@
 base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
 name = "Mistral Small 3.1 24B Instruct"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-attachment = false
 structured_output = false
 
 [cost]
@@ -10,6 +9,3 @@ output = 0.555
 
 [limit]
 output = 128_000
-
-[modalities]
-input = ["text"]

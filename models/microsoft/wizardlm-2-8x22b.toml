@@ -1,0 +1,24 @@
+# https://wizardlm.github.io/WizardLM2/
+# https://huggingface.co/alpindale/WizardLM-2-8x22B (archived original weights)
+name = "WizardLM 2 8x22B"
+description = "Microsoft WizardLM instruction-tuned Mixtral MoE for multilingual dialogue and complex tasks"
+release_date = "2024-04-15"
+last_updated = "2024-04-15"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 65_536
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face archive"
+url = "https://huggingface.co/alpindale/WizardLM-2-8x22B"

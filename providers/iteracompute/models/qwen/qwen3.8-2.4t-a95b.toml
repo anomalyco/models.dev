@@ -1,19 +1,20 @@
-# Sources (accessed 2026-09-15):
-# https://api.iteracompute.com/v1/models (model ID, availability, capabilities, limits, and pricing)
-# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
-# Prices are in USD per million tokens.
+# Sources (accessed 2026-10-10):
+# https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
+# https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
+# https://iteracompute.com/models/qwen3-8-2-4t-a95b/ (retail USD/MTok prices, context, and vision)
+# Effort wire path: reasoning_effort = none|low|medium|xhigh; reasoning.effort is also accepted.
+# reasoning_effort = none disables thinking; do not add a separate toggle.
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 attachment = true
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 
 [cost]
 input = 1.95
-output = 5.95
-cache_read = 0.20
+output = 5.7
+cache_read = 0.245
 
 [limit]
-context = 970_000
-output = 131_072
+context = 1_048_576
 
 [modalities]
 input = ["text", "image"]

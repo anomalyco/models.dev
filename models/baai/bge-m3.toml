@@ -1,0 +1,26 @@
+# https://huggingface.co/BAAI/bge-m3
+# https://github.com/FlagOpen/FlagEmbedding/tree/master/research/BGE_M3
+name = "BGE M3"
+description = "Multilingual embedding model combining dense, sparse, and multi-vector retrieval"
+type = "embedding"
+family = "bge"
+release_date = "2024-01-30"
+last_updated = "2024-01-30"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 8_192
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/BAAI/bge-m3"

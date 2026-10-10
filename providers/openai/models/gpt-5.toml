@@ -6,3 +6,11 @@ reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "h
 input = 1.25
 output = 10.00
 cache_read = 0.125
+
+[experimental.modes.fast]
+cost = { input = 2.50, output = 20.00, cache_read = 0.25 }
+provider = { body = { service_tier = "priority" } }
+
+[experimental.modes.flex]
+cost = { input = 0.625, output = 5.00, cache_read = 0.0625 }
+provider = { body = { service_tier = "flex" } }

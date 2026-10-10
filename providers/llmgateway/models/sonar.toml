@@ -1,8 +1,9 @@
 base_model = "perplexity/sonar"
 
 [cost]
-input = 1
-output = 1
+input = 0.25
+output = 2.5
+cache_write = 0.25
 
 [limit]
 context = 130_000

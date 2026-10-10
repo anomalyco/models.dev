@@ -1,0 +1,9 @@
+# Source: https://ai.azure.com/catalog/models/grok-4.7
+# Pricing not yet published on Azure's public pricing page.
+# Azure catalog lists context/output limits identical to the base model (500k/500k), so no override is needed.
+base_model = "xai/grok-4.7"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]

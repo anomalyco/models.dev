@@ -1,0 +1,16 @@
+# Sources:
+# https://ofox.ai/models/anthropic/claude-opus-5.5
+# https://platform.claude.com/docs/en/models/opus-5-5/overview
+# https://www.anthropic.com/claude-opus-5-5
+base_model = "anthropic/claude-opus-5-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+cache_write = 5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.ofox.ai/anthropic/v1"

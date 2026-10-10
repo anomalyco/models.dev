@@ -1,0 +1,27 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+name = "Apodex 1.1 Mini (free)"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 235_929
+
+[modalities]
+input = ["text"]
+output = ["text"]

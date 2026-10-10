@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ModelFamily } from "./family";
 import { MODEL_TYPES } from "./filter";
 
-type JsonValue =
+export type JsonValue =
   | string
   | number
   | boolean
@@ -11,7 +11,7 @@ type JsonValue =
   | { [key: string]: JsonValue }
   | JsonValue[];
 
-const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
+export const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
   z.union([
     z.string(),
     z.number(),
@@ -111,7 +111,7 @@ const OutputCost = Cost.extend({
   tiers: z.array(CostTier).optional(),
 }).strict();
 
-const DateString = z
+export const DateString = z
   .string()
   .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
     message: "Must be in YYYY-MM or YYYY-MM-DD format",
@@ -364,6 +364,8 @@ function refineModel<
 export const ModelShape = z
   .object({
     ...ModelBase.shape,
+    /** Canonical lab/model ID for this provider offering, when linked to model metadata. */
+    canonical_model_id: z.string().optional(),
     cost: OutputCost.optional(),
   })
   .strict();

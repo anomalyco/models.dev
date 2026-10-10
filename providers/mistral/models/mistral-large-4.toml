@@ -1,0 +1,20 @@
+# Source: https://docs.mistral.ai/models/mistral-large-4-0 (accessed 2026-10-06)
+# Public preview. Cost is the current 50%-off launch price (API billing model
+# "mistral-large-4-0-launch-discount"); list price is $1.36 input / $4.18
+# output / $0.14 cached input per MTok.
+# Limits verified live 2026-10-06: /v1/models reports max_context_length
+# 524288 and prompts above it are rejected, although the docs advertise 1M;
+# max_tokens above 262144 is rejected.
+# Effort verified live 2026-10-06: reasoning_effort = none|high; minimal, low,
+# medium, xhigh and max are rejected. Omitting it behaves like none.
+base_model = "mistral/mistral-large-4"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.68
+output = 2.09
+cache_read = 0.07

@@ -1,0 +1,17 @@
+# Cost from https://ollama.com/pricing (accessed 2026-10-06): mistral-large-4
+# $1.36 input / $0.14 cached input / $4.18 output per MTok. Context 1M and
+# text/image input from https://ollama.com/library/mistral-large-4:cloud
+# (matches inherited limit/modalities, so no limit override).
+# Effort: OpenAI POST /v1/chat/completions accepts `reasoning_effort` or
+# `reasoning.effort` with model-defined levels; copy lab native set none|high.
+# Sources: https://docs.ollama.com/openai,
+# https://docs.mistral.ai/models/mistral-large-4-0,
+# providers/mistral/models/mistral-large-4.toml (reasoning_effort none|high).
+base_model = "mistral/mistral-large-4"
+
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 1.36
+output = 4.18
+cache_read = 0.14

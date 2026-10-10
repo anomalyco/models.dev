@@ -4,12 +4,11 @@
 # Same controls as OpenRouter/Together and the model card.
 # https://huggingface.co/meta-models/Muse-Glimmer-30B
 # https://openrouter.ai/meta/muse-glimmer-30b
-
 base_model = "meta/muse-glimmer-30b"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.35

@@ -1,3 +1,5 @@
+# Evaluation settings and benchmark-specific methodology are linked from the launch post.
+# Methodology: https://deepmind.google/models/evals-methodology/gemini-3-8-flash
 # Sources:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
 # - https://ai.google.dev/gemini-api/docs/latest-model
@@ -20,3 +22,116 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 73.7
+metric = "pass@1"
+version = "1.1"
+harness = "mini-swe-agent"
+variant = "high thinking"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1545
+metric = "Elo"
+version = "2"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "Finance Agent"
+score = 61.4
+metric = "pass@1"
+version = "2"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "Harvey Legal Agent Benchmark"
+score = 10
+metric = "all-pass rate"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 89.4
+metric = "pass@1"
+version = "2.1"
+harness = "Terminus 2"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 19.1
+metric = "pass@1"
+version = "4.0"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "GDP.PDF"
+score = 35
+metric = "all-pass rate"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 86.2
+metric = "pass@1"
+variant = "without tools"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "LVBench"
+score = 87.8
+metric = "pass@1"
+variant = "agentic"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "LVBench"
+score = 87.1
+metric = "pass@1"
+variant = "static; 1024 frames; without tools"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "HLE-Verified"
+score = 54.9
+metric = "accuracy"
+dataset = "1811 verified and revised items"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 59
+metric = "partial score"
+version = "2.0"
+dataset = "before 2026-08-08 patch"
+harness = "Gemini CUA"
+variant = "batched tool calls; best of 3 runs; 500 steps"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "BioMysteryBench"
+score = 88.8
+metric = "pass@1"
+dataset = "human-solvable"
+variant = "with tools"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "BioMysteryBench"
+score = 56.5
+metric = "pass@1"
+dataset = "human-difficult"
+variant = "with tools"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+
+[[benchmarks]]
+name = "LAB-Bench"
+score = 86.2
+metric = "macro-average"
+version = "2"
+dataset = "11 subtasks"
+variant = "with tools"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"

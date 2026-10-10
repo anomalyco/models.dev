@@ -1,6 +1,5 @@
 base_model = "openai/gpt-oss-20b"
 name = "GPT OSS 20B (Consensus Protocol)"
-attachment = true
 structured_output = false
 
 [[reasoning_options]]
@@ -13,4 +12,4 @@ output = 0.19
 cache_read = 0.01
 
 [limit]
-context = 65_536
+context = 128_000

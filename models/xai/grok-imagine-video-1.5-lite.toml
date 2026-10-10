@@ -1,0 +1,25 @@
+# Sources:
+# - https://docs.x.ai/developers/models/grok-imagine-video-1.5-lite (modalities text, image -> video; $0.020/sec output)
+# - https://docs.x.ai/developers/models (Imagine pricing: grok-imagine-video-1.5-lite $0.020/sec)
+# - https://cryptobriefing.com/grok-imagine-lite-venice-ai-video/ (first observed 2026-10-01; 15s clips up to 1080p with native audio)
+# Pricing: $0.020/sec output (not token-based; no [cost] authored)
+# Release: no official xAI release date published; using first-observed date 2026-10-01
+
+name = "Grok Imagine Video 1.5 Lite"
+description = "Cost-efficient video model for text-to-video and image-to-video generation"
+family = "grok"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_024
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

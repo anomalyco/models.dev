@@ -3,13 +3,16 @@
 # disables thinking; low|medium map to high, xhigh maps to max (GLM-5.2 native
 # mapping). Model reasons by default (default effort: max).
 base_model = "zhipuai/glm-5.2"
-status = "beta"
+status = "deprecated"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "high", "max"]
 
 [cost]
-input = 1.40
-output = 4.40
+input = 1.4
+output = 4.4
 cache_read = 0.14
+
+[limit]
+context = 1_048_576

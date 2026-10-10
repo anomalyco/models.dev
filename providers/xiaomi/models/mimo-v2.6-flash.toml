@@ -9,8 +9,7 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-knowledge = "2026-09-22"
-open_weights = false
+open_weights = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -25,7 +24,7 @@ context = 1_048_576
 output = 131_072
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text", "image", "audio", "video"]
 output = ["text"]
 
 [interleaved]

@@ -1,0 +1,12 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No reasoning control for this model: it reasons at its own depth, and the
+# x-tempr-reasoning-effort response header reports "default".
+base_model = "minimax/MiniMax-M2.7-highspeed"
+
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.06
+cache_write = 0.375

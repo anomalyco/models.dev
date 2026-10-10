@@ -4,9 +4,16 @@
 # Verified live: GET https://api.stepfun.ai/v1/models lists step-5-preview
 # with reasoning_effort_support_list ["low", "medium", "high"] and
 # max_input_tokens 1024000; POST /v1/chat/completions succeeds.
+# The model card specifies maximum output of 64k tokens:
+# https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
 # Pricing (USD/MTok): input 1.00, output 2.70, cache_read 0.05 (95% cache
 # discount), matching existing mirrors and vendor reporting.
 base_model = "stepfun/step-5-preview"
+
+[limit]
+context = 1_024_000
+input = 1_024_000
+output = 65_536
 
 [[reasoning_options]]
 type = "effort"

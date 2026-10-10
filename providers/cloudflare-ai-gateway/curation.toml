@@ -5,7 +5,8 @@
 #   - base_model: any proxied id whose canonical file name differs from its catalog id.
 #   - structured_output: a quality judgement. Cloudflare advertises response_format for
 #     nearly every model, but several do not honour it, so this stays hand-set.
-#   - reasoning_options: the catalog has no reasoning schema, so reasoning shapes are curated.
+#   - reasoning_options: the per-model schema can enumerate effort, but toggles and
+#     incomplete or route-specific reasoning shapes are curated here.
 #   - interleaved: whether a wire returns reasoning content as a separate field. Never
 #     inheritable from base_model (this deployment's wire format can differ from the lab's).
 #   - limit.output: the catalog's max_output_tokens is not a reliable ceiling (verified wrong
@@ -84,7 +85,6 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhig
 
 [models."anthropic/claude-sonnet-4.5"]
 structured_output = true
-limit = { context = 1000000 }
 reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 
 [models."anthropic/claude-sonnet-4.6"]
@@ -96,6 +96,15 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"
 structured_output = true
 note = ["Toggle: thinking.type = adaptive|disabled.", "Effort: output_config.effort = low|medium|high|xhigh|max."]
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+# Claude Sonnet 5.5: adaptive thinking on by default; disabled is rejected, so no toggle.
+# between_tools is the lowest setting (low|medium|high only), not a full off. Effort only.
+[models."anthropic/claude-sonnet-5.5"]
+note = [
+  "Effort: output_config.effort = low|medium|high|xhigh|max (Anthropic Messages API; adaptive thinking on by default, disabled rejected).",
+  "Sources: https://platform.claude.com/docs/en/build-with-claude/effort ; https://platform.claude.com/docs/en/models/sonnet-5-5/overview ; https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [models."openai/gpt-5"]
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
@@ -157,13 +166,16 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 # expose (native-format providers). Values mirror models.dev's merge-gateway provider, which
 # proxies the same upstreams. Google uses thinkingConfig.thinkingBudget / thinking_level.
 #
-# DeepSeek: toggle-only would only be correct if AI Gateway drops the effort field on this
-# route (merge-gateway's own toggle-only shape is backed by a live-tested selected-route
-# comment specific to *their* relay, not evidence about Cloudflare's). Absent host-specific
-# proof that Cloudflare strips it, match the lab + Workers AI baseline: toggle + high/max.
+# Cloudflare serves this DeepSeek V4 Pro route via Fireworks. Fireworks' V4 renderer
+# accepts reasoning_effort=none to disable thinking and low|high|max for graded effort;
+# off is an effort value, not a separate thinking.type toggle.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
 [models."deepseek/deepseek-v4-pro"]
-note = ["Toggle: thinking.type = enabled|disabled.", "Effort: reasoning_effort = high|max."]
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+note = [
+  "Off: reasoning_effort = none; effort: low|high|max (Fireworks route).",
+  "Source: https://docs.fireworks.ai/api-reference/post-chatcompletions",
+]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 # Alibaba is a first-party lab; the catalog's OpenAI-compat schema exposes a generic
 # `reasoning_effort` enum, but Alibaba's real API (see providers/alibaba/models/qwen3.7-plus.toml)
@@ -208,10 +220,10 @@ reasoning_options = []
 
 [models."moonshotai/kimi-k3"]
 note = [
-  "API: thinking.type = enabled|disabled|adaptive; in adaptive mode the",
-  "reasoning depth is set by output_config.effort = low|high|max.",
+  "Kimi K3 always thinks; thinking.type is not supported. Effort: reasoning_effort = low|high|max.",
+  "Sources: https://platform.kimi.ai/docs/api/models-overview ; https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3/",
 ]
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [models."thinkingmachines/inkling"]
 note = [

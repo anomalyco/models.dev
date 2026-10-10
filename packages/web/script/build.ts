@@ -3,6 +3,7 @@
 import { RenderedPages, Providers, Models, renderDocument } from "../src/render";
 import {
   filterCatalogByModelType,
+  generateV2,
   MODEL_TYPES,
   type ModelTypeFilter,
 } from "@models.dev/core";
@@ -92,5 +93,11 @@ for (const [suffix, filter] of variants) {
   await Bun.write(`./dist/_models${suffix}.json`, JSON.stringify(filtered.models));
   await Bun.write(`./dist/_catalog${suffix}.json`, JSON.stringify(filtered));
 }
+
+const providersV2 = await generateV2(providersDir);
+await Bun.write(
+  "./dist/_experimental_v2.0_api.json",
+  JSON.stringify(providersV2),
+);
 
 await fs.rm("./dist/index.html", { force: true });
