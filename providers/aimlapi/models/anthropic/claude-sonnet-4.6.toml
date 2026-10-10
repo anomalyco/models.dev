@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-sonnet-4-6"
+name = "Claude 4.6 Sonnet"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[cost]
+input = 4.1262
+output = 20.631
+cache_read = 0.41262
+
+[limit]
+context = 200_000

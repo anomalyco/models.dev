@@ -1,0 +1,17 @@
+base_model = "thinkingmachines/inkling-small"
+
+[interleaved]
+field = "reasoning_details"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.797732
+output = 1.980576
+cache_read = 0.159546
+
+[limit]
+context = 524_288
+output = 262_144

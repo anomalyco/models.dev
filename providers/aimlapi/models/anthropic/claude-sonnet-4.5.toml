@@ -1,0 +1,10 @@
+# No caller control: reasoning_effort is validated (invalid value -> 400) but low/high
+# do not order reasoning tokens; toggle/budget fields are dropped by the gateway.
+base_model = "anthropic/claude-sonnet-4-5"
+name = "Claude 4.5 Sonnet"
+reasoning_options = []
+
+[cost]
+input = 4.1262
+output = 20.631
+cache_read = 0.41262
