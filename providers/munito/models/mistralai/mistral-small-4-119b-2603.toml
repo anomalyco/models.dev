@@ -1,9 +1,6 @@
+# Off is reasoning_effort=none; on is reasoning_effort=high. No toggle.
 base_model = "mistral/mistral-small-2603"
-name = "Mistral Small 4"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [interleaved]
 field = "reasoning_content"

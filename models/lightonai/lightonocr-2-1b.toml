@@ -1,0 +1,33 @@
+# Sources (accessed 2026-10-10):
+#   https://huggingface.co/lightonai/LightOnOCR-2-1B
+#   https://arxiv.org/abs/2601.14251
+# The model card describes a 1B-parameter end-to-end vision-language OCR model
+# that converts document images to text, under the Apache-2.0 license.
+name = "LightOnOCR-2-1B"
+description = "Compact open-weights OCR model that turns document pages into clean Markdown"
+type = "chat"
+release_date = "2026-01-19"
+last_updated = "2026-01-19"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/lightonai/LightOnOCR-2-1B"
+
+[[links]]
+label = "Paper"
+url = "https://arxiv.org/abs/2601.14251"
+type = "paper"

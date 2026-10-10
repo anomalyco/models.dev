@@ -1,31 +1,12 @@
-# https://huggingface.co/Aleph-Alpha/Kolibri-1
-name = "Kolibri 1"
-description = "Small-active MoE (78B total / 3.46B active) European model for low-latency chat and agents"
-family = "qwen"
-release_date = "2026-10-03"
-last_updated = "2026-10-03"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+# Off is reasoning_effort=none; graded levels low|medium|high. No toggle.
+# Munito validates reasoning_effort against the levels this model declares.
+base_model = "aleph-alpha/kolibri-1"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
-[limit]
-context = 262_144
-output = 32_768
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.13
 cache_read = 0.078
 output = 1.0
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[interleaved]
-field = "reasoning_content"
