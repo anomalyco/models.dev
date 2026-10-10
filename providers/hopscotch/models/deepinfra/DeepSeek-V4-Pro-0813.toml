@@ -1,0 +1,15 @@
+# Reasoning: none forwarded. This host rebuilds each deepinfra request from a
+# fixed parameter map and sends nothing else: frequency_penalty,
+# max_completion_tokens, max_tokens, messages, model, n, presence_penalty, stop,
+# stream, stream_options, temperature, tool_choice, tools, top_p. It has no
+# reasoning_effort and no thinking field.
+# https://platform.hopscotchlabs.ai/models
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = []
+
+[cost]
+input = 1.3
+output = 2.6
+
+[limit]
+context = 1_048_576

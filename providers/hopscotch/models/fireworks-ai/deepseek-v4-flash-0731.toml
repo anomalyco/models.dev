@@ -1,0 +1,15 @@
+# Reasoning: none forwarded. This host rebuilds each fireworks-ai request from a
+# fixed parameter map and sends nothing else: context_length_exceeded_behavior,
+# frequency_penalty, logprobs, max_completion_tokens, max_tokens, messages,
+# model, n, presence_penalty, prompt_truncate_len, response_format, stop,
+# stream, stream_options, temperature, tools, top_k, top_logprobs, top_p, user.
+# It has no reasoning_effort and no thinking field.
+# https://platform.hopscotchlabs.ai/models
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = []
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007
+cache_write = 0.22

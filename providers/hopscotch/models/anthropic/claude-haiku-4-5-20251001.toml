@@ -1,0 +1,14 @@
+# Budget: thinking.budget_tokens (integer reasoning tokens)
+# https://platform.hopscotchlabs.ai/models
+base_model = "anthropic/claude-haiku-4-5-20251001"
+structured_output = true
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
