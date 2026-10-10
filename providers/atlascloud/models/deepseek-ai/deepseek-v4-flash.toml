@@ -1,5 +1,11 @@
+# No caller control: measured 2026-10-10 on api.atlascloud.ai, thinking.type=disabled, enable_thinking=false and
+# reasoning_effort (low/high/max) did not stop reasoning_content (30/30 runs across three prompts still reasoned).
+# Prices: GET https://api.atlascloud.ai/v1/models (pricing.prompt / completion / input_cache_read, per token x 1e6), read 2026-10-10.
 base_model = "deepseek/deepseek-v4-flash"
 reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.14

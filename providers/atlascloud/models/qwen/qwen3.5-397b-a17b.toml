@@ -1,5 +1,13 @@
+# Toggle: enable_thinking true|false (also honored: thinking.type = enabled|disabled)
+# Measured 2026-10-10 on api.atlascloud.ai: disabled returned no reasoning_content in 5/5 runs, default in 5/5.
+# thinking_budget capped reasoning in only about half of the requests (2 of 4 each at 256 and 2048), so no budget_tokens option is claimed.
+# reasoning_effort other than none is rejected with HTTP 400.
+# Prices: GET https://api.atlascloud.ai/v1/models (pricing.prompt / completion / input_cache_read, per token x 1e6), read 2026-10-10.
 base_model = "alibaba/qwen3.5-397b-a17b"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.55

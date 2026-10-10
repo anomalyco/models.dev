@@ -1,7 +1,17 @@
+# No caller control: measured 2026-10-10 on api.atlascloud.ai, thinking.type=disabled, enable_thinking=false and
+# reasoning_effort=none all still returned reasoning_content (5/5 runs each); the model always reasons here.
+# Limits: context from the same catalog entry (context_length), where it is smaller than the lab entry.
+# Prices: GET https://api.atlascloud.ai/v1/models (pricing.prompt / completion / input_cache_read, per token x 1e6), read 2026-10-10.
 base_model = "minimax/MiniMax-M2.5"
 reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.295
 output = 1.2
 cache_read = 0.06
+
+[limit]
+context = 196_608
