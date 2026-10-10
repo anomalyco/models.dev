@@ -1,0 +1,20 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/claude-sonnet-5 ($1.60 input / $8.00 output / $0.10 cache read / $1.40 cache write per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("claude-sonnet-5")
+# Toggle: thinking.type = adaptive|disabled (Anthropic Messages, passed through)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-sonnet-5"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 1.6
+output = 8.0
+cache_read = 0.1
+cache_write = 1.4
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.apimodels.app/v1"
