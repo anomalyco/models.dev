@@ -1,0 +1,9 @@
+base_model = "openai/gpt-6-luna"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.openai-proxy.org/v1"

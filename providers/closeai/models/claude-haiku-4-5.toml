@@ -1,0 +1,10 @@
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1024
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.openai-proxy.org/anthropic/v1"
