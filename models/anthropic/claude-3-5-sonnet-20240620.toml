@@ -1,0 +1,20 @@
+# https://www.anthropic.com/news/claude-3-5-sonnet
+name = "Claude 3.5 Sonnet (June 2024)"
+description = "June 2024 Claude Sonnet model for coding, analysis, and visual understanding"
+family = "claude-sonnet"
+release_date = "2024-06-20"
+last_updated = "2024-06-20"
+knowledge = "2024-04"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 200_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,18 @@
+# Public catalog: https://platform.acedata.cloud/models/gemini-3.5-flash
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/94b49b55-2ea8-4d46-a93c-eb308e1a52d5
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort on the OpenAI-compatible endpoint
+base_model = "google/gemini-3.5-flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 0.55189925
+output = 3.311395675
+cache_read = 0.055189925
+
+[provider]
+api = "https://api.acedata.cloud/gemini"

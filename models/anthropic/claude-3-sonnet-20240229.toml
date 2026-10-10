@@ -1,0 +1,20 @@
+# https://www.anthropic.com/news/claude-3-family
+name = "Claude 3 Sonnet"
+description = "Claude 3 model balancing instruction following, visual understanding, and speed"
+family = "claude-sonnet"
+release_date = "2024-03-04"
+last_updated = "2024-03-04"
+knowledge = "2023-08"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 200_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

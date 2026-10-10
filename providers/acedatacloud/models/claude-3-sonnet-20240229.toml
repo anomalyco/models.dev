@@ -1,0 +1,15 @@
+# Public catalog: https://platform.acedata.cloud/models/claude-3-sonnet-20240229
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/6b2b437b-b6d5-466c-8750-b16650072593
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# cache_write is the default 5-minute cache TTL.
+base_model = "anthropic/claude-3-sonnet-20240229"
+
+[cost]
+input = 1.1037985
+output = 5.51899285
+cache_read = 0.11037985
+cache_write = 1.3797483
+
+[provider]
+api = "https://api.acedata.cloud/v1"

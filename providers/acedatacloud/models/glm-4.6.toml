@@ -1,0 +1,17 @@
+# Public catalog: https://platform.acedata.cloud/models/glm-4.6
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/f0392e69-ad58-40b9-b28b-e1feee258603
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-4.6"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.643825
+output = 0.965825
+
+[provider]
+api = "https://api.acedata.cloud/glm"

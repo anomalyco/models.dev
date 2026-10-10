@@ -1,0 +1,23 @@
+# Public catalog: https://platform.acedata.cloud/models/claude-fable-5
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/6b2b437b-b6d5-466c-8750-b16650072593
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort on the Chat Completions endpoint; native Messages thinking/budget fields are not part of this endpoint contract
+# Host API evidence: definition.paths[/v1/chat/completions].post.requestBody
+# .content[application/json].schema.properties.reasoning_effort exposes an effort enum.
+# That schema has no thinking or budget_tokens control; do not copy native Messages controls.
+# cache_write is the default 5-minute cache TTL.
+base_model = "anthropic/claude-fable-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 3.679328625
+output = 18.396643125
+cache_read = 0.367932775
+cache_write = 4.599160825
+
+[provider]
+api = "https://api.acedata.cloud/v1"
