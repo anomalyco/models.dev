@@ -1,0 +1,8 @@
+# Source: https://tokenharbor.ai/models (retrieved 2026-10-08); USD per 1M tokens.
+base_model = "openai/gpt-6.1-sol"
+name = "GPT-6.1 Sol (Fast)"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4
+output = 20
