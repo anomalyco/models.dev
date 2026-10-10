@@ -1,0 +1,17 @@
+# TokenLab serves many labs' models through one OpenAI-compatible
+# Chat Completions API: POST https://api.tokenlab.sh/v1/chat/completions
+# Model list, limits and prices: https://tokenlab.sh/api/public/model-data/models
+# Prices are for the default delivery option (Auto), which is used when a
+# request has no X-TokenLab-Delivery-Policy header:
+# https://tokenlab.sh/docs/en/guides/billing
+# Reasoning controls in the Chat Completions body (tested 2026-10-05):
+# - reasoning_effort: GPT, Gemini, Grok, DeepSeek, Claude 5.x, Kimi K3 and
+#   GLM-5.3 models
+#   (https://tokenlab.sh/docs/en/api-reference/chat/create-completion).
+# - thinking.type = enabled|disabled: DeepSeek, Qwen, Kimi K3, Kimi K2.6
+#   and GLM-5.1. Qwen also takes thinking.budget_tokens.
+name = "TokenLab"
+npm = "@ai-sdk/openai-compatible"
+env = ["TOKENLAB_API_KEY"]
+api = "https://api.tokenlab.sh/v1"
+doc = "https://tokenlab.sh/docs"
