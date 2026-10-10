@@ -1,0 +1,27 @@
+# Public catalog token_bands[0].max_tokens=262144, context_window=1048576; see ../README.md.
+# Direct API catalog and USD pricing (2026-09-22):
+# https://inference.api.reka.ai/v1/site/models?capability=chat
+# Toggle: enable_thinking = true|false; reasoning budget: thinking_budget.
+# These parameters pass through to the Alibaba chat-completions API.
+base_model = "alibaba/qwen3.6-flash"
+attachment = false
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.25
+output = 1.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 262144 }
+input = 1.0
+output = 4.0
+
+[limit]
+context = 1048576
+output = 32768
+
+[modalities]
+input = ["text"]
