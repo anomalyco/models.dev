@@ -12,6 +12,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync aiand` syncs only ai&.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
+- `bun models:sync togetherai --dry-run` checks Together's authenticated serverless catalog without changing files. Set `TOGETHER_API_KEY` for manual runs; this provider is not yet in the scheduled CI matrix.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
 - `bun models:sync direct` syncs every provider in the `direct` group.
@@ -34,6 +35,8 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR body. Do not commit that report from local runs.
 
 ## Runner Responsibilities
+
+Together AI's v2 `supported-models?product=PRODUCT_SERVERLESS` response supplies exact `serverlessEndpoint` IDs and USD-per-million-token `pricing.input`, `pricing.output`, and optional `pricing.cachedInput`. The `togetherai` sync updates those three prices only for already-curated endpoint IDs; it reports uncurated and unlisted IDs for review. It does **not** automatically add or delete routes: Together says catalog entries can outlive serving, and the v2 status is a catalog recommendation, not a verified retirement. The API's `contextLength` describes underlying weights, not a guaranteed served context; it provides no completion cap or model release date. Keep capabilities, modalities, limits, dates, reasoning controls, and lifecycle curated until independently verified. Source: https://docs.together.ai/reference/dmi/supported-models-list and https://docs.together.ai/docs/deprecations.
 
 `packages/core/src/sync/index.ts` handles the shared behavior:
 
