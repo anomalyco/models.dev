@@ -235,7 +235,7 @@ Rules:
 - You may override any top-level model field when the provider actually differs.
 - If you override a nested table like `[cost]`, `[limit]`, or `[modalities]`, include the full values needed for that table (arrays/primitives replace; plain objects deep-merge).
 - `base_model_omit` is optional and removes inherited model metadata fields after local overrides are merged. Use dot-path strings, for example `base_model_omit = ["limit.input"]`.
-- Provider-specific fields (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`, `experimental`) belong on the provider model when needed.
+- Provider-specific fields (`cost`, `reasoning_options`, `interleaved`, `rate_limits`, `status`, `provider`, `experimental`) belong on the provider model when needed.
 - `id` still comes from the filename; do not add it to the TOML.
 
 **Reasoning options (short):** classify first-party lab vs multi-model relay (not by npm). Copy the underlying model’s controls from the lab entry and same-surface peers — often `low`/`medium`/`high` on GPT-style relays, but DeepSeek V4 is `toggle`+`high`/`max`, etc. Do not use `[]` from uncertainty on relays. Full policy: `AGENTS.md`.
@@ -305,6 +305,11 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 - `limit.context`: Number — Maximum context window (tokens)
 - `limit.input`: Number — Maximum input tokens
 - `limit.output`: Number — Maximum output tokens
+- `rate_limits` _(optional)_: Array of tables — Published rate limits on this provider, one `[[rate_limits]]` entry per usage tier, lowest tier first. Omit when the provider does not publish limits. Each entry sets at least one limit:
+  - `tier` _(optional)_: String — Usage tier label (e.g. `"Free"`, `"Tier 1"`)
+  - `rpm` / `rpd` _(optional)_: Integer — Requests per minute / per day
+  - `tpm` _(optional)_: Integer — Tokens per minute (input and output combined)
+  - `input_tpm` / `output_tpm` _(optional)_: Integer — Input / output tokens per minute
 - `modalities.input`: Array of strings — Supported input modalities (e.g., ["text", "image", "audio", "video", "pdf"])
 - `modalities.output`: Array of strings — Supported output modalities (e.g., ["text"])
 - `status` _(optional)_: String — Supported status:

@@ -1,3 +1,4 @@
+# Rate limits: https://platform.claude.com/docs/en/api/rate-limits (checked 2026-10-03)
 base_model = "anthropic/claude-opus-5-5"
 structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
@@ -11,3 +12,21 @@ cache_write = 5
 [experimental.modes.fast]
 cost = { input = 8, output = 40, cache_read = 0.4, cache_write = 10 }
 provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }
+
+[[rate_limits]]
+tier = "Start"
+rpm = 1_000
+input_tpm = 2_000_000
+output_tpm = 400_000
+
+[[rate_limits]]
+tier = "Build"
+rpm = 5_000
+input_tpm = 5_000_000
+output_tpm = 1_000_000
+
+[[rate_limits]]
+tier = "Scale"
+rpm = 10_000
+input_tpm = 10_000_000
+output_tpm = 2_000_000

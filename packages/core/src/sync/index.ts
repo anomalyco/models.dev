@@ -366,9 +366,10 @@ export async function syncProvider<SourceModel>(
     const withDescription = provider.preserveDescriptions === false
       ? withReasoningOptions
       : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
+    const withRateLimits = preserveRateLimits(withDescription, existing.get(relativePath)?.authored);
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...withDescription,
+      ...withRateLimits,
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
@@ -572,6 +573,12 @@ export function preserveDescription(model: SyncedModel, existing: ExistingModel 
   if (model.description !== undefined) return model;
   if (existing?.description === undefined) return model;
   return { ...model, description: existing.description } as SyncedModel;
+}
+
+export function preserveRateLimits(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
+  if (model.rate_limits !== undefined) return model;
+  if (existing?.rate_limits === undefined) return model;
+  return { ...model, rate_limits: existing.rate_limits } as SyncedModel;
 }
 
 export function preserveReasoningOptions(
@@ -1097,6 +1104,16 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     if (model.limit.context !== undefined) lines.push(`context = ${formatInteger(model.limit.context)}`);
     if (model.limit.input !== undefined) lines.push(`input = ${formatInteger(model.limit.input)}`);
     if (model.limit.output !== undefined) lines.push(`output = ${formatInteger(model.limit.output)}`);
+  }
+
+  for (const rateLimit of model.rate_limits ?? []) {
+    lines.push("", "[[rate_limits]]");
+    if (rateLimit.tier !== undefined) lines.push(`tier = ${quote(rateLimit.tier)}`);
+    if (rateLimit.rpm !== undefined) lines.push(`rpm = ${formatInteger(rateLimit.rpm)}`);
+    if (rateLimit.rpd !== undefined) lines.push(`rpd = ${formatInteger(rateLimit.rpd)}`);
+    if (rateLimit.tpm !== undefined) lines.push(`tpm = ${formatInteger(rateLimit.tpm)}`);
+    if (rateLimit.input_tpm !== undefined) lines.push(`input_tpm = ${formatInteger(rateLimit.input_tpm)}`);
+    if (rateLimit.output_tpm !== undefined) lines.push(`output_tpm = ${formatInteger(rateLimit.output_tpm)}`);
   }
 
   if (model.modalities !== undefined) {

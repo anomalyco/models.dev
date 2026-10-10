@@ -46,6 +46,25 @@ describe("model schema", () => {
     );
   });
 
+  test("accepts tiered rate limits", () => {
+    const model = baseModel({
+      rate_limits: [
+        { tier: "Free", rpm: 30, rpd: 1_000, tpm: 6_000 },
+        { tier: "Paid", rpm: 1_000, input_tpm: 2_000_000, output_tpm: 400_000 },
+      ],
+    });
+
+    expect(AuthoredModel.safeParse(model).success).toBe(true);
+  });
+
+  test("rejects empty, fractional, or unknown rate limit fields", () => {
+    for (const rateLimit of [{ tier: "Free" }, { rpm: 1.5 }, { rpm: 0 }, { rps: 10 }]) {
+      const model = baseModel({ rate_limits: [rateLimit] });
+
+      expect(AuthoredModel.safeParse(model).success).toBe(false);
+    }
+  });
+
   test("requires reasoning_options when reasoning is true", () => {
     const model = baseModel({ reasoning: true });
 

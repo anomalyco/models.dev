@@ -3,7 +3,7 @@ import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
+import { formatToml, preserveRateLimits, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
 import {
   anthropic,
   buildAnthropicModel,
@@ -5422,4 +5422,28 @@ test("rejects synced model paths that differ only in case", async () => {
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test("formats rate limits as tables that round-trip", () => {
+  const rateLimits = [
+    { tier: "Start", rpm: 1_000, input_tpm: 2_000_000, output_tpm: 400_000 },
+    { tier: "Build", rpm: 5_000, rpd: 100_000, tpm: 6_000_000 },
+  ];
+  const content = formatToml({
+    id: "example/model",
+    base_model: "example/model",
+    rate_limits: rateLimits,
+  });
+
+  expect(content).toContain("[[rate_limits]]\ntier = \"Start\"\nrpm = 1_000");
+  expect(Bun.TOML.parse(content)).toMatchObject({ rate_limits: rateLimits });
+});
+
+test("preserves hand-authored rate limits across sync", () => {
+  const rateLimits = [{ tier: "Start", rpm: 1_000 }];
+
+  expect(preserveRateLimits({ base_model: "example/model" }, { rate_limits: rateLimits }))
+    .toEqual({ base_model: "example/model", rate_limits: rateLimits });
+  expect(preserveRateLimits({ base_model: "example/model", rate_limits: [{ rpm: 5 }] }, { rate_limits: rateLimits }))
+    .toEqual({ base_model: "example/model", rate_limits: [{ rpm: 5 }] });
 });
