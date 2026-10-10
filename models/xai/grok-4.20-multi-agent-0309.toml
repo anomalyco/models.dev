@@ -1,3 +1,7 @@
+# https://docs.x.ai/developers/models/grok-4.20-multi-agent-0309
+# https://docs.x.ai/developers/model-capabilities/text/multi-agent
+# https://docs.x.ai/developers/release-notes (Mar 10, 2026)
+# Multi-agent does not support client-side function calling (see Limitations).
 name = "Grok 4.20 Multi-Agent"
 description = "Grok model that coordinates agents in parallel for deep research"
 family = "grok"
@@ -9,21 +13,6 @@ temperature = true
 tool_call = false
 structured_output = true
 open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 2.5
-output = 5
-cache_read = 0.4
 
 [limit]
 context = 1_000_000

@@ -1,0 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28.
+# disabled returns 0 reasoning tokens; enable_thinking=false and reasoning_effort=none are ignored.
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: MiniMax-M3.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.21
+output = 0.84
+cache_read = 0.042
+
+[[cost.tiers]]
+tier = { type = "context", size = 512_000 }
+input = 0.42
+output = 1.68
+cache_read = 0.084
