@@ -1,0 +1,13 @@
+# thinking.type / enable_thinking are rejected (M3) or ignored (M2.5) here,
+# so only reasoning_effort is listed.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 524_300
+output = 524_288
