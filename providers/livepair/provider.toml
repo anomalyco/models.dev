@@ -1,4 +1,4 @@
-# POST /v1/chat/completions (OpenAI-compatible).
+# POST /v1/agent/chat/completions (OpenAI-compatible).
 # No reasoning controls exposed. Authenticate with x-api-key: lp_... or
 # Authorization: Bearer lp_... -- or pay per call with x402 (USDC on Base)
 # via POST /v1/agent/chat, no account needed.
@@ -6,5 +6,5 @@
 name = "LivePair"
 env = ["LIVEPAIR_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-api = "https://livepairai.com/v1"
+api = "https://livepairai.com/v1/agent"
 doc = "https://livepairai.com/docs"
