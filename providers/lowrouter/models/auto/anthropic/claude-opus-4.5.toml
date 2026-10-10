@@ -1,7 +1,9 @@
 # Source: https://api.lowrouter.ai/v1/models?currency=usd (read 2026-10-10): this ID has 11 routes on anthropic, aws-bedrock.
 # Cost is the route a plain request resolved to on 2026-10-10 under the default routing profile:
-# Amazon Bedrock, fr-par endpoint; that route bills in USD, so this is its USD quote as the API returns it, with no currency conversion. A Bedrock regional endpoint carries AWS's premium over the global profile, which is why the figure sits
-# above Anthropic's own list price.
+# Amazon Bedrock, fr-par endpoint;
+# that route bills in USD, so this is its USD quote as the API returns it, with no currency conversion.
+# A Bedrock regional endpoint carries AWS's premium over the global profile, which is why the figure
+# sits above Anthropic's own list price.
 # USD 5.5 in / 27.5 out / 0.55 cache read / 6.875 cache write per MTok.
 # Another route can serve a request (the key's routing policy, or a failover); usage.cost on the
 # response carries the amount debited.
