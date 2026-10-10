@@ -1,0 +1,12 @@
+# SahabatMobile retail pricing (USD/MTok); source: https://sahabatmobile.com/docs
+# Toggle: enable_thinking true|false; Effort: reasoning_effort = low|medium|xhigh; Budget: thinking_budget (0..262144, reasoning tokens, not combinable with reasoning_effort)
+base_model = "alibaba/qwen3.8-max"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
+[cost]
+input = 2.00
+output = 6.00
