@@ -1,0 +1,32 @@
+# DeepSeek-V4.1-Flash, served as `deepseek-flash` on one official line at 80% of
+# DeepSeek's list. The chat body is forwarded unchanged, so the controls are DeepSeek's
+# own, as in providers/deepseek/models/deepseek-flash.toml:
+# Toggle: $.thinking.type = "enabled"|"disabled" on /v1/chat/completions.
+# Effort: $.reasoning_effort = "low"|"high"|"max". The trace returns in reasoning_content.
+# Toggle and trace field checked live on 2026-09-28.
+# Off-peak price below; models.dev has no time-of-day tier. DeepSeek's peak hours,
+# 01:00-04:00 and 06:00-10:00 UTC, Monday to Friday outside Chinese public holidays,
+# bill twice the off-peak lanes: input 0.24, output 0.96, cache read 0.0048.
+# Context 1,048,576 and output 393,216 tokens as TopxAI lists them.
+# https://ai.topxea.com/pricing/deepseek-flash (accessed 2026-09-28)
+# https://ai.topxea.com/api/pricing (accessed 2026-09-28)
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.12
+output = 0.48
+cache_read = 0.0024
+
+[limit]
+context = 1_048_576
+output = 393_216

@@ -1,0 +1,19 @@
+# Sonnet 5.5 replaced Sonnet 5 on TopxAI on 2026-10-02; claude-sonnet-5 is retired (403).
+# Thinking follows Anthropic's Sonnet 5.5 contract: adaptive by default, effort via
+# $.output_config.effort on /v1/messages (relayed byte for byte) or $.reasoning_effort on
+# /v1/chat/completions; disabled thinking is normalised to between_tools at low effort.
+# https://ai.topxea.com/blog/claude-sonnet-5-5 and https://ai.topxea.com/docs/api-reference (accessed 2026-10-05)
+# Shared-pool price, 50% of Anthropic's list; cache lanes from the same table.
+# https://ai.topxea.com/pricing/claude-sonnet-5-5 (accessed 2026-10-05)
+base_model = "anthropic/claude-sonnet-5-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
