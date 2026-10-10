@@ -1,0 +1,7 @@
+name = "Maritaca AI"
+npm = "@ai-sdk/openai-compatible"
+# Base URL is `/api`, not `/v1`; the OpenAI SDK appends `/chat/completions`.
+# https://docs.maritaca.ai/pt/api/openai-compatibilidade (accessed 2026-09-28)
+api = "https://chat.maritaca.ai/api"
+env = ["MARITACA_API_KEY"]
+doc = "https://docs.maritaca.ai/pt/visao-geral"
