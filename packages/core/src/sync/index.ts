@@ -26,6 +26,7 @@ import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
+import { ioNet } from "./providers/io-net.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
@@ -162,6 +163,7 @@ export const providers: {
   hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
+  "io-net": SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
@@ -203,6 +205,7 @@ export const providers: {
   hyper,
   huggingface,
   inceptron,
+  "io-net": ioNet,
   kilo,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
