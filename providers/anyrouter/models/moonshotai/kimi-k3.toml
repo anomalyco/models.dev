@@ -1,0 +1,19 @@
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1048576, max_completion_tokens not declared,
+# capabilities=[chat, reasoning, streaming, function-calling, vision, coding,
+# agentic], price 3/15. Context and modalities match the lab entry, so only cost
+# and reasoning_options are authored.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header), so the lab's and the peer's shared ladder — low, high, max — is
+# published without the toggle they also carry.
+# Unverified on this host: with a plain key every effort value returns 404 "No
+# upstream available for model moonshotai/kimi-k3" — the served routes are
+# BYOK-only — so no rung could be measured here.
+# Effort: reasoning_effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 3
+output = 15

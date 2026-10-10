@@ -1,0 +1,32 @@
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1048576, max_completion_tokens=16384,
+# capabilities=[chat, coding, reasoning, agentic, vision, function-calling,
+# structured-output, streaming], price 0.3/1.2. Context and modalities match the
+# lab entry; the host caps output at 16384, well under the lab's 512000, so
+# output is the one override.
+# Reasoning: no caller control is published, and this is the measured reason
+# rather than a missing check. providers/minimax and the OpenRouter peer both
+# publish this model as toggle-only, and the chat surface has no toggle to
+# forward (the host documents the toggle as a Responses-endpoint control,
+# `reasoning.enabled`, and this route's upstream refuses the `reasoning` object
+# with 400 "property 'reasoning' is unsupported").
+# Probed /api/v1/chat/completions 2026-09-27, five runs of `none` at
+# max_tokens=1200 on the two runs the route served: 0 and 787 reasoning tokens.
+# The same value on the same route returned both, so the off sentinel is not a
+# reproducible control here and is not published. The graded rungs do take
+# effect — `high` returned 654 and 813, and an earlier run of the day gave
+# low=611, medium=551, high=846, none=0 — but low and medium did not separate
+# from each other, and neither the lab nor a same-surface peer publishes a
+# ladder for this model, so a ladder is not promised either. The route is also
+# out of upstream credit for most of the day (402 → 502), which is why `low`
+# could not be re-measured. The ask for published per-listing values is in the
+# PR. See the provider header.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+output = 16_384

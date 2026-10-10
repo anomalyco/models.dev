@@ -1,0 +1,50 @@
+# Multi-model gateway (OpenAI Chat Completions + Anthropic Messages), so every
+# lab model below is served here as a relay. Reasoning contract, from the host's
+# own docs plus live probes on 2026-09-27:
+#   * Chat takes one reasoning control: the flat `reasoning_effort`
+#     (none, minimal, low, medium, high, xhigh, max). `none` is the disable
+#     sentinel.
+#   * There is no toggle and no reasoning budget on this surface. The host says
+#     so itself: "AnyRouter does not infer universal toggle, token-budget, or
+#     interleaved-thinking support from a model name or description. Toggle and
+#     budget controls remain endpoint-specific (`reasoning.enabled` /
+#     `reasoning.max_tokens` on Responses, `thinking` on Messages)."
+#     The `reasoning` object is also refused by the upstreams these routes
+#     serve: 400 "Validation: Unsupported parameter(s): `reasoning`" on
+#     deepseek/deepseek-v4.1-flash, 400 "property 'reasoning' is unsupported"
+#     on openai/gpt-oss-20b.
+#   * The gateway forwards `reasoning_effort` verbatim, so the rungs a model
+#     accepts are whatever the serving route's own upstream allows, and that set
+#     is per model id, not per backend: `nvidia-byok` serves both
+#     deepseek-v4.1-flash (rejects minimal and medium) and
+#     meta/muse-glimmer-30b (accepts both).
+# Each entry therefore publishes the lab/peer ladder minus the controls this
+# surface cannot express, restricted to the rungs its route accepts, plus `none`
+# only where a probe shows it taking reasoning_tokens to 0. Accepting a value is
+# not a control: a graded rung neither the lab nor a same-surface peer publishes
+# is left off unless the route separates it from its neighbours run over run, and
+# one route here answers the off sentinel with 400 "Reasoning is mandatory for
+# this endpoint and cannot be disabled." Entries with nothing verifiable publish
+# `[]`, which is the same shape providers/xai and the OpenRouter peer use for
+# models with no caller control. Every file records its own probe, accepted set
+# and honored numbers.
+# Prices are the flat per-token rates this catalog publishes; no listing here
+# declares a long-context tier, so no entry carries `[[cost.tiers]]`. The
+# `anyrouter/*` presets resolve a concrete route per request and bill that
+# route's rate, so they carry no per-token price.
+# Eight ids are BYOK-only. With a plain key they answer 404 ("...is a Bring Your
+# Own Key (BYOK) only model" / "No upstream available") for every effort value,
+# so those entries carry the lab/peer ladder and say they are unverified.
+# `GET /api/v1/models` lists only what the caller can reach; add `?all=1` for
+# the full catalog, otherwise the BYOK-only routes look removed.
+# Sources: https://docs.anyrouter.dev/api-reference/models,
+# https://docs.anyrouter.dev/api-reference/chat-completions,
+# https://docs.anyrouter.dev/api-reference/presets,
+# https://anyrouter.dev/api/v1/models?all=1 (read 2026-09-24, re-verified
+# 2026-09-27), and live probes of https://anyrouter.dev/api/v1/chat/completions
+# on 2026-09-27.
+name = "AnyRouter"
+env = ["ANYROUTER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://anyrouter.dev/api/v1"
+doc = "https://docs.anyrouter.dev"
