@@ -296,6 +296,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 
+## Moark Notes
+
+- Moark (模力方舟, formerly Gitee AI) is implemented in `packages/core/src/sync/providers/moark.ts`.
+- Source endpoint: `https://moark.ai/api/pay/services?type=serverless&status=1&size=1000`; no authentication is required (the catalog is public).
+- The overseas USD listing is authoritative for `[cost]`; the mainland catalog (`ai.gitee.com`) quotes RMB and must never be published as USD.
+- Only token-priced chat services are translated; image, video, speech, embedding, OCR, moderation, and decision services are ignored.
+- Existing entries are updated in place and only `[cost]` input/output rates are written. Limits, reasoning controls, interleaving, dates, and headers stay hand-authored.
+- New chat models are not created automatically (`skipCreates`); each opens a deduped missing-model issue. Local models absent from the listing are retained (`deleteMissing: false`) because the overseas catalog is a subset of the platform's full catalog.
+
 ## OpenAI Notes
 
 - OpenAI is implemented in `packages/core/src/sync/providers/openai.ts`.
