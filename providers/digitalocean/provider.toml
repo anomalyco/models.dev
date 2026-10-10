@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix match on the same model; `X-Model-Affinity` pins router sessions — body `cache_control` on Anthropic routes, `prompt_cache_retention` on OpenAI models (1024+ tokens)
+# Use headers: `X-Model-Affinity` — stable per-session value pinning multi-turn turns to one model for reuse; `none` opts out where supported
+# Use body: `cache_control` ephemeral breakpoints for Anthropic models; `prompt_cache_retention` (`in_memory`|`24h`) for OpenAI models
+# Cache policy: keep an exact token-prefix match with static content first; reuse reports `prompt_tokens_details.cached_tokens` and `cache_read_input_tokens` at the discounted rate
+# Docs: https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
 name = "DigitalOcean"
 env = ["DIGITALOCEAN_ACCESS_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
