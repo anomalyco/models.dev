@@ -1,11 +1,10 @@
-# Source: https://api.lowrouter.ai/v1/models (read 2026-10-10): this ID has 9 routes on anthropic, aws-bedrock, deepinfra.
+# Source: https://api.lowrouter.ai/v1/models?currency=usd (read 2026-10-10): this ID has 9 routes on anthropic, aws-bedrock, deepinfra.
 # Cost is the route a plain request resolved to on 2026-10-10 under the default routing profile:
-# Amazon Bedrock, fr-par endpoint.
-# LowRouter bills in EUR; a USD-billed route carries LowRouter's FX buffer and a Bedrock regional endpoint carries AWS's
-# regional premium, so the figure sits above Anthropic's own list price.
-# EUR 1.9997 in / 9.9986 out / 0.2 cache read / 2.4996 cache write per MTok,
-# converted at 1.1186 USD/EUR (ECB reference rate, 2026-10-08). Another route can serve a request
-# (the key's routing policy, or a failover); usage.cost on the response carries the amount debited.
+# Amazon Bedrock, fr-par endpoint; that route bills in USD, so this is its USD quote as the API returns it, with no currency conversion. A Bedrock regional endpoint carries AWS's premium over the global profile, which is why the figure sits
+# above Anthropic's own list price.
+# USD 2.2 in / 11 out / 0.22 cache read / 2.75 cache write per MTok.
+# Another route can serve a request (the key's routing policy, or a failover); usage.cost on the
+# response carries the amount debited.
 # Effort: reasoning_effort = low|medium|high|xhigh, mapped to Anthropic's adaptive thinking effort of the
 # same name (https://lowrouter.ai/docs/guides/request-parameters). max is rejected (400). Verified live
 # 2026-10-10: every value accepted and forwarded, nothing disclosed as unapplied. Anthropic routes do not
@@ -17,7 +16,7 @@ type = "effort"
 values = ["low", "medium", "high", "xhigh"]
 
 [cost]
-input = 2.2369
-output = 11.1844
-cache_read = 0.2237
-cache_write = 2.7961
+input = 2.2
+output = 11
+cache_read = 0.22
+cache_write = 2.75
