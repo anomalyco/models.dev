@@ -1,19 +1,20 @@
 # Sources (accessed 2026-10-10):
 # https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
 # https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
-# https://iteracompute.com/models/minimax-m3/ (retail USD/MTok prices, context, and vision)
+# https://iteracompute.com/models/kimi-k2-7-code/ (retail USD/MTok prices, context, and vision)
 # The host explicitly advertises mandatory = true, effort_support = not_supported, and no toggle.
-base_model = "minimax/MiniMax-M3"
-structured_output = false
+base_model = "moonshotai/kimi-k2.7-code"
+attachment = false
+temperature = true
 reasoning_options = []
 
 [cost]
-input = 0.299
-output = 1.19
-cache_read = 0.045
+input = 0.69
+output = 3.29
+cache_read = 0.15
 
 [limit]
-output = 524_288
+output = 235_929
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]

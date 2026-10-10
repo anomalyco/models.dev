@@ -1,19 +1,19 @@
-# Sources (accessed 2026-09-15):
-# https://api.iteracompute.com/v1/models (model ID, availability, capabilities, limits, and pricing)
-# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
-# Reasoning is mandatory and the public catalog exposes no caller-selectable reasoning control.
-# Prices are in USD per million tokens.
+# Sources (accessed 2026-10-10):
+# https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
+# https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
+# https://iteracompute.com/models/kimi-k3/ (retail USD/MTok prices, context, and vision)
+# Effort wire path: reasoning_effort = low|high|max; reasoning.effort is also accepted.
+# The host advertises mandatory = true and supports_enable_disable = false.
 base_model = "moonshotai/kimi-k3"
-structured_output = false
-reasoning_options = []
+temperature = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
-input = 3.00
-output = 14.90
-cache_read = 0.29
+input = 2.39
+output = 11.99
+cache_read = 0.24
 
 [limit]
-context = 1_048_576
 output = 999_999
 
 [modalities]

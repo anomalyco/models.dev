@@ -1,12 +1,11 @@
 # Sources (accessed 2026-10-10):
 # https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
 # https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
-# https://iteracompute.com/models/deepseek-v4-flash-0731/ (retail USD/MTok prices, context, and vision)
+# https://iteracompute.com/models/deepseek-v4-1-flash/ (retail USD/MTok prices, context, and vision)
 # Effort wire path: reasoning_effort = low|high|max; reasoning.effort is also accepted.
 # The host advertises mandatory = true and supports_enable_disable = false.
-# https://iteracompute.com/models/deepseek-v4-flash-0731/ documents this compatibility alias for V4.1 Flash.
+# Text-only on this host: detailed catalog input_modalities contains only text.
 base_model = "deepseek/deepseek-v4.1-flash"
-name = "DeepSeek V4 Flash 0731 (legacy alias)"
 attachment = false
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
