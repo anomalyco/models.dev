@@ -1,0 +1,16 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/moonshotai/models/kimi-k3.toml.
+# Toggle: Chat Completions `/v1/chat/completions` `thinking.type` = enabled|disabled (copied from the first-party model control; Go2LLM was not live-tested).
+
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.302
+output = 1.51
+cache_read = 0.03015
+cache_write = 0.378
+
+[modalities]
+input = ["text"]
+output = ["text"]

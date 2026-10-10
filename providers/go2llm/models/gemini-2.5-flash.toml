@@ -1,0 +1,16 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/google/models/gemini-2.5-flash.toml.
+# Toggle: Gemini `generationConfig.thinkingConfig.thinkingBudget` = 0|positive token budget (copied from the first-party model control; Go2LLM was not live-tested).
+
+base_model = "google/gemini-2.5-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 24576 }]
+
+[cost]
+input = 0.036
+output = 0.3
+cache_read = 0.0036
+cache_write = 0.045
+
+[modalities]
+input = ["text"]
+output = ["text"]
