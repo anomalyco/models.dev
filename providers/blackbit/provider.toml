@@ -1,0 +1,9 @@
+# OpenAI Chat Completions at POST /v1/chat/completions.
+# Auth: Authorization: Bearer $BLACKBIT_API_KEY (sk-blackbit-...).
+# https://docs.blackbit.sh/docs/void/guides/openai-sdk (accessed 2026-09-22)
+# https://void.blackbit.sh/v1/models (accessed 2026-09-22)
+name = "BlackBit VOID"
+npm = "@ai-sdk/openai-compatible"
+env = ["BLACKBIT_API_KEY"]
+api = "https://void.blackbit.sh/v1"
+doc = "https://docs.blackbit.sh/docs/void/models"

@@ -1,0 +1,19 @@
+# Pricing from GET https://void.blackbit.sh/v1/models (accessed 2026-09-22).
+# https://docs.blackbit.sh/docs/void/models/language
+# cache_read = input * model_info.cache_read_multiplier (0.02).
+# Toggle: thinking.type = enabled|disabled on /chat/completions.
+# Effort: reasoning_effort = low|high|max
+# https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-09-22)
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.13
+output = 0.26
+cache_read = 0.0026
