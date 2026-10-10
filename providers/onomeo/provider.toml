@@ -1,0 +1,17 @@
+# onomeo is in public beta: not every feature is guaranteed to work, and user
+# feedback is welcome at https://onomeo.com/feedback.
+# Every model listed here is one of onomeo's free models: it is not charged,
+# so its [cost] is 0. Free models are limited by calls instead: 12 requests/min
+# per key and 30 per 5 hours per account (a long request counts as several),
+# or 90 per 5 hours for 35 days after a payment, plus a site-wide pool shared
+# by all accounts. Claude, GPT and other big models (none are listed here) are
+# charged by usage from a US-dollar balance, at per-model prices listed at
+# https://onomeo.com/models#pricing. Topping up is optional and starts at $5;
+# the balance does not expire and nothing renews automatically.
+# https://onomeo.com/models (accessed 2026-10-10)
+# https://onomeo.com/integrations/opencode (accessed 2026-09-21)
+name = "onomeo"
+env = ["ONOMEO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://onomeo.com/v1"
+doc = "https://onomeo.com/docs"
