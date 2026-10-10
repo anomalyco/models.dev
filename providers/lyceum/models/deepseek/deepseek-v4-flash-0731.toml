@@ -1,0 +1,22 @@
+# Sources (accessed 2026-09-15):
+# https://docs.lyceum.technology/docs/inference/serverless
+# https://lyceum.technology/products/inference/models
+# Toggle: chat_template_kwargs.thinking = false disables reasoning; omission enables it.
+# Effort: reasoning_effort = high|max.
+base_model = "deepseek/deepseek-v4-flash-0731"
+interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.25
+output = 0.30
+cache_read = 0.06
+
+[limit]
+output = 65_536
