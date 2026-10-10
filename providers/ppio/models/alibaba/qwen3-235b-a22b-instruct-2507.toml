@@ -1,0 +1,13 @@
+# CNY→USD rate: 6.718405, 2026-09-20, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://ppio.com/pricing
+# limit.output is PPIO's completion cap, not the context window: the API
+# rejects max_tokens above it with "must be between 0 and 260000".
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+structured_output = true
+
+[cost]
+input = 0.21583
+output = 0.8633
+
+[limit]
+output = 260_000

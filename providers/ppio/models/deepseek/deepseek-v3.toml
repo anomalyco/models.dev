@@ -1,0 +1,12 @@
+# CNY→USD rate: 6.718405, 2026-09-20, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://ppio.com/pricing
+base_model = "deepseek/deepseek-v3"
+structured_output = true
+
+[cost]
+input = 0.29769
+output = 1.19076
+
+[limit]
+context = 64_000
+output = 8_000
