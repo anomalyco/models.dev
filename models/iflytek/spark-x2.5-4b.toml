@@ -1,0 +1,24 @@
+name = "Spark X2.5 4B"
+description = "Compact 4B edge Dense model with native 1M context; hybrid attention (1 full + 3 sliding window layers); 200+ languages; agentic, tool-use, code, and math reasoning"
+family = "spark"
+release_date = "2026-09-01"
+last_updated = "2026-09-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+knowledge = "2026-08"
+open_weights = true
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XHToken/Spark-X2.5-4B"

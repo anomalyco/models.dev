@@ -1,0 +1,27 @@
+# Sources (accessed 2026-09-14):
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+# https://maas.xfyun.cn/modelSquare
+# Spark-X2.5-1.7B: 1M context, open-weight 1.7B ultra-light edge model.
+# Toggle: enable_thinking = true|false per host docs; effort = high|max
+# matching the documented Spark reasoning intensity control (same surface
+# as the flagship Spark-X2.5 / Spark-X2-Flash on this host).
+# Tool calling NOT supported on this host (only DeepSeek V3.2 and GLM-4.7).
+# Pricing: listed as 限时免费 (limited-time free) on MaaS model square;
+# cost is 0 while the free promotion runs.
+
+base_model = "iflytek/spark-x2.5-1.7b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
