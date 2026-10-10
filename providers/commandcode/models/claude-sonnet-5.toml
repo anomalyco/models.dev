@@ -1,0 +1,23 @@
+# Pricing: https://commandcode.ai/models (accessed 2026-09-12)
+# Model ID on this gateway has no lab prefix: "claude-sonnet-5" (verified:
+# /chat/completions rejects Claude models and points to /messages).
+# Claude models are served on this gateway's Anthropic Messages endpoint
+# (/provider/v1/messages), so this model overrides the provider wire.
+# Effort levels mirror the Anthropic API surface.
+base_model = "anthropic/claude-sonnet-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.20
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.commandcode.ai/provider/v1"
