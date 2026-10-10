@@ -1,0 +1,20 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# SambaNova Gemma 4 31B thinking mode on POST /v1/chat/completions, disabled by default.
+# https://docs.sambanova.ai/docs/en/features/text-generation (Gemma 4 31B thinking mode curl: model gemma-4-31B-it with chat_template_kwargs.enable_thinking true, reasoning field in response)
+# https://community.sambanova.ai/t/gemma-4-reasoning/1675 (SambaNova staff curl gemma-4-31b-it with chat_template_kwargs.enable_thinking true, reasoning field returned)
+# Context 128k and text/image/video input per https://docs.sambanova.ai/docs/en/models/sambacloud-models (gemma-4-31B-it 128k preview); output inherits lab 32768 (SambaNova max-output unpublished).
+# Pricing USD/MTok per https://cloud.sambanova.ai/plans/pricing: gemma-4-31B-it input 0.38 / output 1.15.
+base_model = "google/gemma-4-31b-it"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.38
+output = 1.15
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
