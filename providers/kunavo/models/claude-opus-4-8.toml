@@ -1,0 +1,34 @@
+# Kunavo is an OpenAI-compatible gateway; the ids here are Kunavo's own and are
+# matched exactly (no date-suffixed aliases).
+#
+# Prices are Kunavo's list rates in USD per 1M tokens, re-verified 2026-09-25:
+# input, output and the long-context tiers against the live catalog at
+# https://kunavo.com/llms.txt, cache prices against the per-model cache table
+# at https://kunavo.com/pricing. Each token class follows the vendor's own
+# price structure at the model's discount. cache_read is 0.10x input, 0.025x
+# on Claude Fable 5.1 and 0.05x on Claude Opus 5.5, which Anthropic lists at
+# those ratios. cache_write is 1.25x input on the Claude models and on GPT-5.6
+# / GPT-6, and equals input on GPT-5.5, which has no per-token write price. Where the vendor has a
+# long-context tier (Kunavo's GPT models, over 272K prompt tokens),
+# [[cost.tiers]] bills the whole request at 2x input, cache reads and writes
+# included, and 1.5x output. Claude has no tier.
+#
+# reasoning_options = [] states that the registered surface has no caller
+# reasoning control, and that is documented by the host, not inferred. On the
+# surface this provider registers (OpenAI /v1/chat/completions), Kunavo builds
+# the upstream Anthropic request from a fixed field list — model, max_tokens,
+# messages (system role included), stream, temperature/top_p/top_k, stop,
+# tools, tool_choice, response_format — so reasoning_effort, thinking and any
+# other reasoning field are dropped for Claude ids on this endpoint. Host doc:
+# https://kunavo.com/docs/chat#reasoning (the "Claude" row: "Not forwarded").
+# Anthropic `thinking` does work on Kunavo's native Messages route (origin
+# https://api.kunavo.com, client appends /v1/messages), which is not the
+# surface this entry registers.
+base_model = "anthropic/claude-opus-4-8"
+reasoning_options = []
+
+[cost]
+input = 3.5
+output = 17.5
+cache_read = 0.35
+cache_write = 4.375
