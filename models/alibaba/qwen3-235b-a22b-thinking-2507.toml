@@ -1,0 +1,23 @@
+# https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507
+name = "Qwen3 235B A22B Thinking 2507"
+description = "Qwen3-235B-A22B-Thinking-2507 is a high-performance, open-weight Mixture-of-Experts (MoE) language model optimized for complex reasoning tasks. It activates 22B of its 235B parameters per forward pass and natively supports up to 262,144 tokens of context. This \"thinking-only\" variant enhances structured logical reasoning, mathematics, science, and long-form generation, showing strong benchmark performance across AIME, SuperGPQA, LiveCodeBench, and MMLU-Redux. It enforces a special reasoning mode (</think>) and is designed for high-token outputs (up to 81,920 tokens) in challenging domains.\n\nThe model is instruction-tuned and excels at step-by-step reasoning, tool use, agentic workflows, and multilingual tasks. This release represents the most capable open-source variant in the Qwen3-235B series, surpassing many closed models in structured reasoning use cases."
+release_date = "2025-07-21"
+last_updated = "2025-07-21"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 262_144
+output = 81_920
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507"
