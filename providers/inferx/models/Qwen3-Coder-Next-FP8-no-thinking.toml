@@ -1,21 +1,7 @@
-name = "Qwen3-Coder-Next-FP8-no-thinking"
-description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2026-02-03"
-last_updated = "2026-02-03"
-attachment = false
+base_model = "alibaba/qwen3-coder-next"
+name = "Qwen3 Coder Next (FP8) [No Thinking]"
 reasoning = false
-temperature = true
-knowledge = "2025-04"
-tool_call = true
-structured_output = true
-open_weights = true
-[limit]
-context = 260_000
-output = 65_536
-[modalities]
-input = ["text"]
-output = ["text"]
+
 [cost]
-input = 0
-output = 0
+input = 0.018
+output = 0.128
