@@ -1,0 +1,15 @@
+# Source: https://docs.anonrouter.ai/models and authenticated GET /v1/models (accessed 2026-09-10).
+# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+base_model = "moonshotai/kimi-k2.5"
+reasoning_options = []
+
+[cost]
+input = 0.56
+output = 3.5
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

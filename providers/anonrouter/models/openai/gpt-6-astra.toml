@@ -1,0 +1,11 @@
+# Source: https://docs.anonrouter.ai/models and authenticated GET /v1/models (accessed 2026-09-10).
+# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+
+[modalities]
+input = ["text", "image"]
