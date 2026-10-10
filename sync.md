@@ -321,6 +321,14 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - The endpoint is used only to monitor catalog availability. Existing TOMLs are preserved byte-for-byte, including models absent from the response, because model access can be scoped to the API project.
 - Fine-tuned and customer-owned models are excluded. Unknown first-party models are ignored because the endpoint does not provide enough lifecycle or visibility metadata to distinguish public catalog additions.
 
+## IO.NET Notes
+
+- IO.NET (IO Intelligence) is implemented in `packages/core/src/sync/providers/io-net.ts`.
+- Run it with `bun models:sync io-net`.
+- Source endpoint: `https://api.intelligence.io.solutions/api/v1/models`; no authentication is required (the catalog is public).
+- Existing entries are updated with API-authoritative per-1M-token input, output, and cache-read prices (converted from per-token USD numbers) and served context/output limits. Capabilities, reasoning controls, dates, descriptions, and request metadata stay hand-authored.
+- New priced chat models are not created automatically (`skipCreates`); each opens a deduped missing-model issue. Local models absent from the listing are retained (`deleteMissing: false`) because retired and tier-gated models drop out of the public catalog.
+
 ## Meta Notes
 
 - Run with `bun models:sync meta` or as part of the `direct` group. Registration also enables the hourly provider-specific workflow; no new secret is required.
