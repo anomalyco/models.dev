@@ -1,3 +1,7 @@
+# Prompt caching (chat): Routing gateway with automatic prefix reuse plus explicit per-conversation grouping for OpenAI-family models.
+# Use body: `prompt_cache_key` stable per conversation sharing a prefix; `prompt_cache_retention: "24h"` extends lifetime on gpt-4.1 plus gpt-5 family models.
+# To get a hit: Place reusable system content first with append-only growth, reuse one stable key per shared prefix, confirm via usage.prompt_tokens_details.cached_tokens.
+# Docs: https://docs.auriko.ai/guides/prompt-caching
 name = "Auriko"
 env = ["AURIKO_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
