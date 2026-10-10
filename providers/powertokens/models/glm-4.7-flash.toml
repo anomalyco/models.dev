@@ -1,0 +1,16 @@
+# Pricing: https://powertokens.ai/pricing (USD per 1M tokens, accessed 2026-10-01)
+# glm-4.7-flash is listed at 0 input / 0 output / 0 cache on PowerTokens (same data via
+# POST https://powertokens.ai/api/model/pricing). PowerTokens' model ID has no :free suffix.
+# Request fields: https://docs.powertokens.ai/en/zmodelChat/zhipu/glm-4.7-flash.md (accessed 2026-10-01)
+# Endpoint matrix: https://docs.powertokens.ai/en/ecosystem-tools/text-model-protocols.md
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-4.7-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
