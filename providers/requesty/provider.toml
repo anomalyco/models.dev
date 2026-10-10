@@ -1,3 +1,8 @@
+# Prompt caching (chat): router `requesty.auto_cache` plus pass-through `cache_control` breakpoints; provider caches server-side
+# Use headers: none.
+# Use body: `requesty.auto_cache` — boolean (`true` attempts caching, `false` skips costly writes); `cache_control` — `{"type": "ephemeral"}` breakpoints on Messages API content blocks
+# To get a hit: send the full history with `auto_cache: true` (chat) or place `cache_control` on stable blocks (messages); verify via cache analytics and cached-token counters in usage
+# Docs: https://docs.requesty.ai/features/auto-caching
 name = "Requesty"
 env = ["REQUESTY_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
