@@ -286,6 +286,14 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 
+## IO.NET Notes
+
+- IO.NET (IO Intelligence) is implemented in `packages/core/src/sync/providers/io-net.ts`.
+- Run it with `bun models:sync io-net`.
+- Source endpoint: `https://api.intelligence.io.solutions/api/v1/models`; no authentication is required (the catalog is public).
+- Existing entries are updated with API-authoritative per-1M-token input, output, and cache-read prices (converted from per-token USD numbers) and served context/output limits. Capabilities, reasoning controls, dates, descriptions, and request metadata stay hand-authored.
+- New priced chat models are not created automatically (`skipCreates`); each opens a deduped missing-model issue. Local models absent from the listing are retained (`deleteMissing: false`) because retired and tier-gated models drop out of the public catalog.
+
 ## OpenAI Notes
 
 - OpenAI is implemented in `packages/core/src/sync/providers/openai.ts`.
