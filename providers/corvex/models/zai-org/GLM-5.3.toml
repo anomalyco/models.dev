@@ -1,0 +1,26 @@
+# Host rates and limits: https://api.tokenfactory.corvex.cloud/v1/models (2026-10-06).
+# Host documentation states: maximum output 393,216 tokens, subject to remaining context space.
+# https://docs.corvex.cloud/models/zai-org/GLM-5.3 explicitly documents the output
+# ceiling: input tokens + requested output must fit within the context window.
+# Effort: reasoning_effort = low|high|max; no off control. The model's template
+# renders these distinct levels; other accepted strings fall back to max.
+# https://huggingface.co/zai-org/GLM-5.3/blob/main/chat_template.jinja
+# Cached input has the full input rate; no cache-write charge is advertised.
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 1.40
+
+[limit]
+context = 393_216
+output = 393_216
