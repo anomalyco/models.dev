@@ -1,0 +1,12 @@
+# Budget: thinking.type = enabled, thinking.budget_tokens (chat only); max_tokens must exceed the budget.
+base_model = "anthropic/claude-haiku-4-5"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 0.19
+output = 0.95
+cache_read = 0.023
+cache_write = 0.185

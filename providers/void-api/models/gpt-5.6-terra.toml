@@ -1,0 +1,12 @@
+# Effort: reasoning_effort (/v1/chat/completions).
+base_model = "openai/gpt-5.6-terra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.079
+output = 0.47
+cache_read = 0.0079
+cache_write = 0.081

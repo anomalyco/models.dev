@@ -1,0 +1,12 @@
+# Effort: reasoning_effort (/v1/chat/completions).
+base_model = "openai/gpt-6-astra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.54
+output = 2.7
+cache_read = 0.048
+cache_write = 0.54
