@@ -1,0 +1,14 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-09).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-09): "deepseek-v4-flash".
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
+# reasoning_options mirror providers/deepseek for the same model on this surface.
+# Live gateway row: model_ratio=0.07, completion_ratio=3.928571428571, cache_ratio=None, enable_groups=['pro'].
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] } ]
+
+[cost]
+input = 0.14
+output = 0.55

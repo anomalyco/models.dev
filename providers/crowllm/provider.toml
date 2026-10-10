@@ -1,0 +1,26 @@
+# CrowLLM is a single-endpoint gateway: every model below is served on
+# POST /v1/chat/completions with one key.
+# The headline deal is the pass: $4.99 credits $25 of API usage, $9.99 credits $50,
+# $19.99 credits $110 - five times the same money (5.5x on the top pass), spent
+# through the same key as a plain top-up. The cost below is the rate WITHOUT a
+# pass, so a pass holder's effective rate is a fifth of what is listed here
+# (DeepSeek V4 Flash works out to $0.028/$0.11 per MTok on a pass).
+# That no-pass rate is already at or under each lab's own published price.
+# cost is converted from the gateway's live billing ratios at
+# USD/MTok = 2 x model_ratio, output = input x completion_ratio, cache_read = 2 x cache_ratio.
+# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. Seven served ids
+# carry that suffix but bill real credit (`qwen-3.8-max:free` 1, `gemini-3.8-flash:free` 0.375,
+# `minimax-m2.7:free` 0.12, `mimo-v2-6-flash:free` 0.09, `glm-5.3-flash:free` 0.075,
+# `glm-5.3-flash-thinking:free` 0.075, `deepseek-v4-flash:free` 0.025) and are left out of this
+# catalog, since `:free` means zero-rated here.
+# Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
+# Passes: https://crowllm.com/pricing | Docs: https://crowllm.com/docs
+# Each model's # Toggle/# Effort/# Budget comment names the field as the gateway handles it:
+# the request body is parsed in relaykit/dto/openai_request.go and forwarded per upstream by
+# relaykit/relayconvert (OpenAI -> Gemini/Claude/DeepSeek) and relay/channel/<lab>/adaptor.go.
+# Source: https://github.com/QuantumNous/new-api (CrowLLM runs this gateway).
+name = "CrowLLM"
+npm = "@ai-sdk/openai-compatible"
+env = ["CROWLLM_API_KEY"]
+api = "https://crowllm.com/v1"
+doc = "https://crowllm.com/docs"

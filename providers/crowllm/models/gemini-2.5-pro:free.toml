@@ -1,0 +1,14 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-09).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-09): "gemini-2.5-pro:free".
+# Budget: extra_body.google.thinking_config.thinking_budget = 128..32768 (snake_case only; the gateway rejects thinkingBudget)
+# reasoning_options mirror providers/google for the same model on this surface.
+# Live gateway row: model_ratio=0, completion_ratio=8, cache_ratio=None, enable_groups=['free', 'pro'].
+base_model = "google/gemini-2.5-pro"
+name = "Gemini 2.5 Pro (free)"
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32768 } ]
+
+[cost]
+input = 0
+output = 0
