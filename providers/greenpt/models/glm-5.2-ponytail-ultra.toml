@@ -1,5 +1,6 @@
-# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-08-01).
+# Cost: GreenPT EUR list prices converted at 1.1367 USD/EUR (ECB, 2026-09-24).
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
 # reasoning_effort: thinking is enabled by default and "none" disables it.
 # Values verified against the production API. See https://docs.greenpt.ai/chat-completion
 # cache_read: discounted rate for cached prompt tokens. Cache writes are not
@@ -10,6 +11,6 @@ description = "glm-5.2 carrying a built-in ruleset that compresses generated cod
 reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 
 [cost]
-input = 1.254
-cache_read = 0.3135
-output = 5.016
+input = 1.420875
+cache_read = 0.34101
+output = 4.88781
