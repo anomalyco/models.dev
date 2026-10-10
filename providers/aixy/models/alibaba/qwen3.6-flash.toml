@@ -1,0 +1,15 @@
+# Source: https://www.alibabacloud.com/help/en/model-studio/models
+# Serving metadata: providers/alibaba/models/qwen3.6-flash.toml (2026-09-24).
+# Toggle: enable_thinking = true|false; reasoning budget: thinking_budget.
+base_model = "alibaba/qwen3.6-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1875
+output = 1.125
+cache_write = 0.234375

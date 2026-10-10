@@ -1,0 +1,14 @@
+# Source: https://openrouter.ai/api/v1/models
+# Serving metadata: providers/openrouter/models/minimax/minimax-m3.toml (2026-09-24).
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+base_model = "minimax/MiniMax-M3"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06

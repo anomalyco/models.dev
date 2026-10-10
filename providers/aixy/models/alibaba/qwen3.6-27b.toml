@@ -1,0 +1,14 @@
+# Source: https://www.alibabacloud.com/help/en/model-studio/models
+# Serving metadata: providers/alibaba/models/qwen3.6-27b.toml (2026-09-24).
+# Toggle: enable_thinking = true|false; reasoning budget: thinking_budget.
+base_model = "alibaba/qwen3.6-27b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.6
+output = 3.6

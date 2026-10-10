@@ -1,0 +1,18 @@
+# Source: https://ai.google.dev/gemini-api/docs/pricing
+# Serving metadata: providers/google/models/gemini-3.6-flash.toml (2026-09-24).
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing#gemini-3.6-flash
+# Introductory Standard pricing applies through 2026-12-31. The published
+# 2027 rates are $1.50 input, $7.50 output, and $0.15 cache read.
+# Promotional token rates through 2026-12-31; see Google pricing for 2027 rates.
+base_model = "google/gemini-3.6-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+input_audio = 0.75

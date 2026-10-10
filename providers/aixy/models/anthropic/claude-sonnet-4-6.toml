@@ -1,0 +1,27 @@
+# Source: https://platform.claude.com/docs/en/models/overview
+# Serving metadata: providers/anthropic/models/claude-sonnet-4-6.toml (2026-09-24).
+# Native Anthropic Messages through Aixy; project key also supports x-api-key.
+# https://docs.aixy-gateway.com/integrations/claude-code
+base_model = "anthropic/claude-sonnet-4-6"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1024
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[limit]
+output = 128_000
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.aixy-gateway.com/v1"

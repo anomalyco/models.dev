@@ -1,0 +1,28 @@
+# Source: https://api-docs.deepseek.com/quick_start/pricing/
+# Serving metadata: providers/deepseek/models/deepseek-v4-pro.toml (2026-09-24).
+# Toggle: thinking.type = enabled|disabled; reasoning_effort = low|high|max.
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# Prices checked 2026-09-24: off-peak USD/MTok; peak rates are 2x.
+# Reasoning tokens are included in output tokens and billed at the output rate.
+# Current official prices supersede the older provider-peer cost block.
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.66
+output = 1.98
+reasoning = 1.98
+cache_read = 0.022
+
+[limit]
+output = 393_216
