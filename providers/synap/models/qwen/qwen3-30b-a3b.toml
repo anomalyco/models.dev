@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3-30b-a3b"
+# Served as plain text completions; no reasoning-effort control is exposed on
+# this endpoint, so reasoning is declared false rather than inheriting true
+# without the matching reasoning_options.
+reasoning = false
+
+[cost]
+input = 0.0585
+output = 0.2438
+
+[limit]
+context = 8_192
+output = 8_192

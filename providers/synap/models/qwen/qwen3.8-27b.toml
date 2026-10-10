@@ -1,0 +1,20 @@
+base_model = "alibaba/qwen3.8-27b"
+# Served as plain text completions on this endpoint:
+# - no reasoning-effort control is exposed, so reasoning is declared false
+#   rather than inheriting true without the matching reasoning_options;
+# - the 4-bit text deployment does not accept file attachments or the base
+#   model's image/video inputs.
+reasoning = false
+attachment = false
+
+[cost]
+input = 0.6564
+output = 1.2431
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
