@@ -1,3 +1,8 @@
+# Cache key (chat): Use body `prompt_cache_key` routing hint — documented chat-payload field that pins prefix-hash routing to improve hit rate.
+# Cache headers: none
+# Cache policy: exact-prefix match required; apply one stable `prompt_cache_key` per workload on the same model; cache is org-scoped.
+# Cache verify: confirm hits via usage.prompt_tokens_details.cached_tokens.
+# Docs: https://www.jalapeno-cloud.ai/docs/inference/features/prompt-caching
 name = "Jalapeno Cloud"
 env = ["JALAPENO_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
