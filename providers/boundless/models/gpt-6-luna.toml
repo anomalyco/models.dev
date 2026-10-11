@@ -1,15 +1,14 @@
 # Rate card: https://inference.boundless.network/models — USD per 1M tokens
 # Reasoning: reasoning_effort = none|low|medium|high (Responses: reasoning.effort)
 # Docs: https://inference.boundless.network/docs/api-compatibility
-# Modalities match the lab entry on this route — see the `supports` field for this ID in the catalog.
 
-base_model = "deepseek/deepseek-v4.1-flash"
+base_model = "openai/gpt-6-luna"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
-input = 0.2
-output = 1
+input = 0.1
+output = 0.5
 cache_read = 0.01
 
-[limit]
-context = 1_048_576
+[modalities]
+input = ["text", "image"]
