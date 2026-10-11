@@ -7,10 +7,13 @@
 # (DeepSeek V4 Flash works out to $0.028/$0.11 per MTok on a pass).
 # That no-pass rate is already at or under each lab's own published price.
 # cost is converted from the gateway's live billing ratios at
-# USD/MTok = 2 x model_ratio, output = input x completion_ratio, cache_read = 2 x cache_ratio.
-# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. Seven served ids
-# carry that suffix but bill real credit (`qwen-3.8-max:free` 1, `gemini-3.8-flash:free` 0.375,
-# `minimax-m2.7:free` 0.12, `mimo-v2-6-flash:free` 0.09, `glm-5.3-flash:free` 0.075,
+# USD/MTok = 2 x model_ratio, output = input x completion_ratio, cache_read = input x cache_ratio
+# (service/text_quota.go: cached prompt tokens bill at cache_ratio of a fresh input token, so the
+# cache rate is always below the fresh rate on the same entry).
+# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. Eleven served ids
+# carry that suffix but bill real credit (`qwen-3.8-max:free` 1, `gemini-3.8-flash:free` 0.375, `nemotron-3-ultra-550b-a55b:free` 0.25,
+# `kimi-k2.6:free` 0.225, `glm-5.3-flash:free` 0.15, `minimax-m2.7:free` 0.12,
+# `gemma4:31b:free` 0.1, `mimo-v2-6-flash:free` 0.09, `gpt-oss:120b:free` 0.075,
 # `glm-5.3-flash-thinking:free` 0.075, `deepseek-v4-flash:free` 0.025) and are left out of this
 # catalog, since `:free` means zero-rated here.
 # Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
