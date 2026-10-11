@@ -1,0 +1,20 @@
+# No caller-side reasoning control on this route: effort is accepted and is a no-op.
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-11.
+# reasoning_effort and reasoning.effort are both accepted (HTTP 200) and no reply
+# carries reasoning_content. Three samples per level at temperature 0 gave
+# completion_tokens of 330/383/402 with no parameter, 356/309/358 at low,
+# 340/304/310 at medium and 386/376/409 at high: the no-parameter spread is wider
+# than any gap between levels, so the values change nothing.
+# Text and image only, although the lab entry also lists video, audio and pdf: on
+# 2026-09-11 a two-colour test image was read correctly while the same prompt without
+# it guessed wrong, and a type: "file" part fails schema deserialisation on every route.
+base_model = "google/gemini-3.8-flash"
+reasoning_options = []
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+
+[modalities]
+input = ["text", "image"]
