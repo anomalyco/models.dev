@@ -8,6 +8,7 @@ import {
   nearai,
   type NearAIModel,
 } from "../src/sync/providers/nearai.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 
 function context(entries: Record<string, ExistingModel>) {
   return { existing: (id: string) => entries[id], authored: (id: string) => entries[id] };
@@ -188,72 +189,47 @@ test("keeps an unpriced local entry rather than aborting the run or deleting it"
   expect(translated?.model as unknown).toEqual(entry);
 });
 
-test("names the models held off the catalog on purpose", () => {
-  const notice = nearai.skippedNotice(["openai/privacy-filter"]);
-
-  expect(notice[0]).toContain("held off the catalog on purpose");
-  expect(notice[1]).toContain("`openai/privacy-filter`");
-});
-
-test("creates a curated model as an override-only base_model overlay", () => {
+test("creates a non-reasoning model as a cost-only base_model overlay", () => {
   const translated = nearai.translateModel(
     nearAIModel({
-      id: "z-ai/glm-5.3-flash",
-      pricing: { input: 0.15, output: 0.5, input_cache_read: "0.000000035" },
+      id: "openai/gpt-4.1",
+      owned_by: "openai",
+      pricing: { input: 2, output: 8, input_cache_read: "0.0000005" },
     }),
     context({}),
   );
 
-  expect(translated?.model).toEqual({
-    base_model: "zhipuai/glm-5.3-flash",
-    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }],
-    interleaved: { field: "reasoning_content" },
-    modalities: { input: ["text", "image"] },
-    cost: { input: 0.15, output: 0.5, cache_read: 0.035 },
+  expect(translated?.model as unknown).toEqual({
+    base_model: "openai/gpt-4.1",
+    cost: { input: 2, output: 8, cache_read: 0.5 },
   });
 });
 
-test("narrows a create to the inputs the route reports, not the lab's", () => {
-  const translated = nearai.translateModel(
-    nearAIModel({ id: "z-ai/glm-5.3-flash", input_modalities: ["text", "image"] }),
-    context({}),
-  );
-
-  expect(translated?.model).not.toHaveProperty("limit");
-  expect((translated?.model as { modalities: { input: string[] } }).modalities.input)
-    .not.toContain("pdf");
+test("opens a research issue instead of creating a reasoning model", () => {
+  expect(() => nearai.translateModel(nearAIModel({ id: "z-ai/glm-5.3-flash" }), context({})))
+    .toThrow(MissingReasoningOptionsError);
 });
 
-test("writes the probed evidence as the created file's leading comment", () => {
-  const translated = nearai.translateModel(
-    nearAIModel({ id: "z-ai/glm-5.3-flash" }),
-    context({}),
-  );
-
-  const header = translated !== undefined && "header" in translated ? translated.header : undefined;
-  expect(header).toContain("# Toggle: chat_template_kwargs.enable_thinking");
-  expect(header).toContain("reasoning_tokens: no parameter 394/389/389");
-});
-
-test("holds back a live reasoning model nobody has probed", () => {
-  expect(() => nearai.translateModel(nearAIModel({ id: "deepseek/deepseek-v9" }), context({})))
-    .toThrow(/deepseek\/deepseek-v9: live on NEAR AI Cloud but not published/);
-});
-
-test("holds back an uncurated model the catalog does not call a reasoner", () => {
-  const model = nearAIModel({ id: "deepseek/deepseek-v9", supported_features: ["tools"] });
+test("judges reasoning from the lab entry, not the catalog's supported_features", () => {
+  const model = nearAIModel({ id: "x-ai/grok-4.7", supported_features: ["tools"] });
 
   expect(() => nearai.translateModel(model, context({})))
-    .toThrow(/live on NEAR AI Cloud but not published/);
+    .toThrow(/x-ai\/grok-4\.7: reasoning model \(base xai\/grok-4\.7\)/);
 });
 
-test("creates nothing for a model curated as deliberately unpublished", () => {
-  const translated = nearai.translateModel(
-    nearAIModel({ id: "openai/privacy-filter" }),
-    context({}),
-  );
+test("reports a model with no lab entry as missing rather than creating it", () => {
+  const model = nearAIModel({ id: "typesafe/jev-1.13" });
 
-  expect(translated).toBeUndefined();
+  expect(nearai.translateModel(model, context({}))).toBeUndefined();
+  expect(nearai.missingModelID(model)).toBe("typesafe/jev-1.13");
+});
+
+test("skips an ignored model silently", () => {
+  const model = nearAIModel({ id: "openai/privacy-filter" });
+
+  expect(nearai.translateModel(model, context({}))).toBeUndefined();
+  expect(nearai.missingModelID(model)).toBeUndefined();
+  expect(nearai.sourceID(model)).toBeUndefined();
 });
 
 test("maps the lab namespaces NEAR AI spells differently", () => {

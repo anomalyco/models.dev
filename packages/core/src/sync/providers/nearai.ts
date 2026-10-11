@@ -1,9 +1,13 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+
 import { z } from "zod";
 
 import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { nearaiCuration } from "./nearai-curation.js";
-import { factorBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata } from "./openrouter.js";
+
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
 const API_ENDPOINT = "https://cloud-api.near.ai/v1/models";
 
@@ -12,6 +16,10 @@ const TOKENS_PER_PRICING_UNIT = 1_000_000;
 const HOSTED_BY_NEAR_AI = "nearai";
 
 const MIN_LIVE_MODELS = 20;
+
+// Token classification priced per input token only; the token-cost schema
+// cannot describe it, so it is skipped rather than reported as missing.
+const IGNORED_MODELS = new Set(["openai/privacy-filter"]);
 
 const LAB_NAMESPACE: Record<string, string> = {
   qwen: "alibaba",
@@ -52,16 +60,19 @@ export const nearai = {
   id: "nearai",
   name: "NEAR AI Cloud",
   modelsDir: "providers/nearai/models",
-  trackMissingModels: false,
   sourceID(model) {
-    return model.id;
+    return IGNORED_MODELS.has(model.id) ? undefined : model.id;
+  },
+  // A create is only skipped when no lab entry exists to base it on, so every
+  // non-ignored skip opens a deduped missing-model issue.
+  missingModelID(model) {
+    return IGNORED_MODELS.has(model.id) ? undefined : model.id;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} NEAR AI models were not synced, because they are held off the`
-        + ` catalog on purpose.`,
-      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+      `${ids.length} NEAR AI models have no lab entry under models/ to base them on: `
+        + ids.map((id) => `\`${id}\``).join(", "),
     ];
   },
   async fetchModels() {
@@ -107,28 +118,26 @@ export function labModelID(id: string): string {
   return `${LAB_NAMESPACE[namespace] ?? namespace}${lowered.slice(separator)}`;
 }
 
-function createNearAIModel(model: NearAIModel) {
-  const curated = nearaiCuration[model.id];
-  if (curated === undefined) {
+// New models are created as base_model overlays carrying only cost. The
+// catalog says nothing about how a route controls reasoning, so a model whose
+// lab entry reasons is not created: it opens an issue for someone to research
+// and hand-author its reasoning_options, after which sync keeps it priced.
+export function createNearAIModel(model: NearAIModel) {
+  if (IGNORED_MODELS.has(model.id)) return undefined;
+  const baseModel = labModelID(model.id);
+  if (!existsSync(path.join(MODELS_DIR, `${baseModel}.toml`))) return undefined;
+  if (modelMetadata(baseModel).reasoning === true) {
     throw new MissingReasoningOptionsError(
       model.id,
-      "live on NEAR AI Cloud but not published: record how this route controls reasoning,"
-        + " or mark it skip, in packages/core/src/sync/providers/nearai-curation.ts",
+      `reasoning model (base ${baseModel}) that NEAR AI's /v1/models exposes no reasoning`
+        + " controls for; probe the route and author its reasoning_options by hand",
     );
   }
-  if (curated.skip === true) return undefined;
   const cacheRead = perMillion(model.pricing.input_cache_read);
   return {
     id: model.id,
-    header: curated.source.map((line) => `# ${line}`).join("\n"),
     model: {
-      base_model: curated.base_model ?? labModelID(model.id),
-      ...(curated.attachment === undefined ? {} : { attachment: curated.attachment }),
-      ...(curated.reasoning_options === undefined
-        ? {}
-        : { reasoning_options: curated.reasoning_options }),
-      ...(curated.interleaved === undefined ? {} : { interleaved: curated.interleaved }),
-      ...(curated.modalities === undefined ? {} : { modalities: curated.modalities }),
+      base_model: baseModel,
       cost: {
         input: price(model.pricing.input),
         output: price(model.pricing.output),
