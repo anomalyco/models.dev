@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.8-flash"
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+
+[limit]
+context = 977_000
+output = 128_000
+
+[modalities]
+input = ["text"]

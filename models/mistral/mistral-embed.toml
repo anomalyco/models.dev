@@ -1,0 +1,18 @@
+name = "Mistral Embed"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+family = "mistral-embed"
+release_date = "2023-12-11"
+last_updated = "2023-12-11"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 8_000
+output = 3_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

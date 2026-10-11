@@ -30,7 +30,9 @@ import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
+import { mistral } from "./providers/mistral.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
+import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
@@ -165,7 +167,9 @@ export const providers: {
   "llmgateway-providers": SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
   meta: SyncProvider<any>;
+  mistral: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
+  "novita-ai": SyncProvider<any>;
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
@@ -204,7 +208,9 @@ export const providers: {
   "llmgateway-providers": llmgatewayProviders,
   "merge-gateway": mergeGateway,
   meta,
+  mistral,
   "nano-gpt": nanoGpt,
+  "novita-ai": novitaAi,
   ofox,
   "ollama-cloud": ollamaCloud,
   openai,
@@ -231,13 +237,14 @@ export const groups = {
     "llmgateway-providers",
     "merge-gateway",
     "nano-gpt",
+    "novita-ai",
     "ofox",
     "requesty",
     "openrouter",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -1011,6 +1018,7 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if ("base_model_omit" in model && model.base_model_omit !== undefined) {
     lines.push(`base_model_omit = [${model.base_model_omit.map(quote).join(", ")}]`);
   }
+  if (model.type !== undefined) lines.push(`type = ${quote(model.type)}`);
   if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
   if (model.description !== undefined) lines.push(`description = ${quote(model.description)}`);
   if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);

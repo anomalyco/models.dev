@@ -1,0 +1,17 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# Effort: top-level reasoning_effort; levels shared by the pool members.
+base_model = "alibaba/qwen3.8-27b"
+attachment = false
+structured_output = false
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.5811
+output = 3
+
+[modalities]
+input = ["text"]
+
+[interleaved]
+field = "reasoning_content"

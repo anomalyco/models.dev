@@ -1,0 +1,17 @@
+# NIM wire syntax (verified against integrate.api.nvidia.com/v1, 2026-10-01):
+#   Effort: top-level "reasoning_effort" = "none" | "low" | "high" | "max"
+#   "none" disables thinking; thinking is on when the field is omitted.
+#   The request schema also names "minimal", "medium" and "xhigh", but the backend
+#   answered 400 for "minimal" and "medium" and 500 for "xhigh".
+# Pricing: free endpoint on NVIDIA's API trial tier; no list rate is published.
+# https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash
+base_model = "deepseek/deepseek-v4.1-flash"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.0
+output = 0.0

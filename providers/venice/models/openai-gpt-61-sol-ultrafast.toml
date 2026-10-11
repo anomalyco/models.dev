@@ -1,0 +1,35 @@
+name = "GPT-6.1 Sol Ultrafast"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+family = "gpt"
+release_date = "2026-10-08"
+last_updated = "2026-10-10"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 15
+output = 75
+cache_read = 0.75
+cache_write = 18.75
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 30
+output = 112.5
+cache_read = 1.5
+cache_write = 37.5
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

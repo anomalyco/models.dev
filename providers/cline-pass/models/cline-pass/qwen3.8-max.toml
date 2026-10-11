@@ -1,11 +1,11 @@
 # https://docs.cline.bot/getting-started/clinepass (accessed 2026-08-24)
 # Model ID cline-pass/qwen3.8-max; reference pricing $2 / $6 / $0.25 per 1M tokens (input/output/cache read), cache write $2.5.
+# Lab Alibaba Qwen3.8 Max: enable_thinking + reasoning_effort low|medium|xhigh
+# (providers/alibaba/models/qwen3.8-max.toml; https://docs.qwencloud.com/developer-guides/text-generation/thinking)
+# Effort includes none for off (hybrid model); no high (lab maps high→xhigh; native graded set is low|medium|xhigh)
 base_model = "alibaba/qwen3.8-max"
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 
 [cost]
 input = 2

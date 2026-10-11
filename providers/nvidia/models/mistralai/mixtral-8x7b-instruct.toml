@@ -1,4 +1,9 @@
+# NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z for `mistralai/mixtral-8x7b-instruct-v0.1`,
+# the ID NVIDIA serves this model under (probed 2026-10-01 against integrate.api.nvidia.com).
+# This catalog ID has no `-v0.1` suffix and returns HTTP 404 on the chat endpoint.
+# https://build.nvidia.com/mistralai/mixtral-8x7b-instruct lists the free endpoint as deprecated.
 name = "Mistral: Mixtral 8x7B Instruct"
+status = "deprecated"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 release_date = "2023-12-10"
 last_updated = "2026-03-15"

@@ -1,0 +1,22 @@
+# https://www.qwencloud.com/models/qwen-mt-plus
+# https://www.alibabacloud.com/help/en/model-studio/qwen-mt-plus
+# https://qwenlm.github.io/blog/qwen-mt/
+# https://novita.ai/models/model-detail/qwen-qwen-mt-plus
+name = "Qwen MT Plus"
+description = "Flagship Qwen translation model with terminology control and support for 92 languages"
+family = "qwen"
+release_date = "2025-07-24"
+last_updated = "2025-07-24"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = false
+
+[limit]
+context = 16_384
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

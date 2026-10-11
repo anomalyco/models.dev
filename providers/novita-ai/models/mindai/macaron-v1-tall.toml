@@ -1,0 +1,14 @@
+# https://novita.ai/models/model-detail/mindai-macaron-v1-tall
+# Effort: reasoning_effort = none|high; this field, not thinking.type, suppresses reasoning with none.
+# Other accepted effort values were not demonstrated to be distinct depth controls, so only the verified off/on effort values are represented.
+# thinking.type=disabled does not suppress reasoning on this route; thinking_budget is not honored.
+base_model = "mindlab/macaron-v1-tall"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.2475
+output = 1.43
+cache_read = 0.044

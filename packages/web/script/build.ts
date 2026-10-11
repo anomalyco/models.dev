@@ -1,6 +1,12 @@
 #!/usr/bin/env bun
 
 import { RenderedPages, Providers, Models, renderDocument } from "../src/render";
+import {
+  filterCatalogByModelType,
+  generateV2,
+  MODEL_TYPES,
+  type ModelTypeFilter,
+} from "@models.dev/core";
 import fs from "fs/promises";
 import path from "path";
 
@@ -74,15 +80,24 @@ for (const [route, rendered] of RenderedPages) {
   await Bun.write(filePath, renderDocument(template, rendered));
 }
 
-await Bun.write("./dist/api.json", JSON.stringify(Providers));
-await Bun.write(
-  "./dist/catalog.json",
-  JSON.stringify({ models: Models, providers: Providers }),
-);
-await Bun.write("./dist/models.json", JSON.stringify(Models));
+const catalog = { models: Models, providers: Providers };
+const variants: Array<[suffix: string, filter: ModelTypeFilter]> = [
+  ["", "default"],
+  ["-all", "all"],
+  ...MODEL_TYPES.map((type) => [`-${type}`, [type]] as const),
+];
 
-await fs.rename("./dist/api.json", "./dist/_api.json");
-await fs.rename("./dist/catalog.json", "./dist/_catalog.json");
-await fs.rename("./dist/models.json", "./dist/_models.json");
+for (const [suffix, filter] of variants) {
+  const filtered = filterCatalogByModelType(catalog, filter);
+  await Bun.write(`./dist/_api${suffix}.json`, JSON.stringify(filtered.providers));
+  await Bun.write(`./dist/_models${suffix}.json`, JSON.stringify(filtered.models));
+  await Bun.write(`./dist/_catalog${suffix}.json`, JSON.stringify(filtered));
+}
+
+const providersV2 = await generateV2(providersDir);
+await Bun.write(
+  "./dist/_experimental_v2.0_api.json",
+  JSON.stringify(providersV2),
+);
 
 await fs.rm("./dist/index.html", { force: true });

@@ -1,13 +1,5 @@
-name = "Kimi K2 Instruct"
-description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-release_date = "2024-01-01"
-last_updated = "2025-07-01"
-attachment = false
-reasoning = false
-tool_call = true
+base_model = "moonshotai/kimi-k2-instruct"
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.4
@@ -18,7 +10,3 @@ cache_read = 0.2
 context = 256_000
 input = 256_000
 output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

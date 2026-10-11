@@ -126,7 +126,7 @@ test("maps structured provider pricing instead of display labels", () => {
   });
 });
 
-test("derives nested Cloudflare reasoning controls", () => {
+test("derives nested Cloudflare effort values without inventing a toggle", () => {
   expect(deriveReasoningOptions({
     properties: {
       thinking: { type: "boolean" },
@@ -138,10 +138,74 @@ test("derives nested Cloudflare reasoning controls", () => {
         },
       },
     },
-  })).toEqual([
-    { type: "toggle" },
-    { type: "effort", values: ["low", "medium", "high"] },
+  })).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
+});
+
+test("does not turn Opus 5.5's adaptive-only thinking schema into an off switch", () => {
+  const schema = {
+    properties: {
+      thinking: {
+        type: "object",
+        properties: { type: { type: "string", const: "adaptive" } },
+      },
+      output_config: {
+        properties: { effort: { enum: ["low", "medium", "high", "xhigh", "max"] } },
+      },
+    },
+  };
+  expect(deriveReasoningOptions(schema)).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
   ]);
+  expect(buildCloudflareAiGatewayModel({
+    model_id: "anthropic/claude-opus-5.5",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 4, output_tokens: 20 }),
+  }, schema).reasoning_options).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+});
+
+test("requires curation rather than inferring a toggle from a thinking field", () => {
+  expect(deriveReasoningOptions({
+    properties: { thinking: { type: "object" } },
+  })).toEqual([]);
+  expect(deriveReasoningOptions({
+    properties: { thinking: { properties: { type: { enum: ["adaptive", "disabled"] } } } },
+  })).toEqual([]);
+  expect(deriveReasoningOptions({
+    properties: { enable_thinking: { type: "boolean" } },
+  })).toEqual([]);
+  expect(() => buildCloudflareAiGatewayModel({
+    model_id: "anthropic/claude-opus-5.5",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 4, output_tokens: 20 }),
+  }, { properties: { thinking: { type: "object" } } })).toThrow("no reasoning_options");
+  expect(buildCloudflareAiGatewayModel({
+    model_id: "alibaba/qwen3.7-plus",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+  }, { properties: { enable_thinking: { type: "boolean" } } }, {
+    reasoning_options: [{ type: "toggle" }],
+  }).reasoning_options).toEqual([{ type: "toggle" }]);
+});
+
+test("uses Cloudflare's curated route controls for Kimi K3 and Fireworks DeepSeek V4 Pro", () => {
+  const translate = (model_id: string) => cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id,
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+  }, { authored: () => undefined, existing: () => undefined }).model.reasoning_options;
+
+  expect(translate("moonshotai/kimi-k3")).toEqual([
+    { type: "effort", values: ["low", "high", "max"] },
+  ]);
+  expect(translate("deepseek/deepseek-v4-pro")).toEqual([
+    { type: "effort", values: ["none", "low", "high", "max"] },
+  ]);
+  expect(translate("anthropic/claude-sonnet-5")).toContainEqual({ type: "toggle" });
+  expect(translate("alibaba/qwen3.8-max")).toContainEqual({ type: "toggle" });
 });
 
 test("ignores advertised reasoning controls for non-reasoning base models", () => {
@@ -249,6 +313,65 @@ test("rejects a catalog with no eligible proxied models", async () => {
     restoreEnv("CLOUDFLARE_API_TOKEN", originalToken);
     restoreEnv("CLOUDFLARE_ACCOUNT_ID", originalAccount);
   }
+});
+
+test("syncs Jev through shared TypeSafe metadata without inventing tool support", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalToken = process.env.CLOUDFLARE_API_TOKEN;
+  const originalAccount = process.env.CLOUDFLARE_ACCOUNT_ID;
+  process.env.CLOUDFLARE_API_TOKEN = "test";
+  process.env.CLOUDFLARE_ACCOUNT_ID = "test";
+  globalThis.fetch = async (input) => {
+    if (String(input).endsWith("/schema")) return new Response(null, { status: 404 });
+    return new Response(JSON.stringify(catalogPage([
+      {
+        model_id: "typesafe/jev",
+        task: "Text Generation",
+        context_length: 32_000,
+        provider_details: providerDetails({ input_tokens: 0.042, output_tokens: 0 }),
+      },
+      {
+        model_id: "openai/gpt-4.1",
+        task: "Text Generation",
+        context_length: 1_047_576,
+        provider_details: providerDetails({ input_tokens: 2, output_tokens: 8 }),
+      },
+    ])));
+  };
+
+  try {
+    const models = await cloudflareAiGateway.fetchModels();
+    expect(models.map((model) => model.catalog.model_id)).toEqual(["typesafe/jev", "openai/gpt-4.1"]);
+    expect(cloudflareAiGateway.translateModel(models[0]!, {
+      existing: () => undefined,
+      authored: () => undefined,
+    }).model).toEqual({
+      base_model: "typesafe/jev-latest",
+      cost: { input: 0.042, output: 0 },
+      limit: { context: 32_000 },
+    });
+  } finally {
+    globalThis.fetch = originalFetch;
+    restoreEnv("CLOUDFLARE_API_TOKEN", originalToken);
+    restoreEnv("CLOUDFLARE_ACCOUNT_ID", originalAccount);
+  }
+});
+
+test("syncs Pareto through shared Unbiased metadata", () => {
+  expect(buildCloudflareAiGatewayModel({
+    model_id: "unbiased/pareto",
+    task: "Text Generation",
+    context_length: 262_144,
+    provider_details: providerDetails({
+      input_tokens: 2.5,
+      output_tokens: 7.5,
+      input_cached_tokens: 0.25,
+    }),
+  }, undefined)).toEqual({
+    base_model: "unbiased/pareto",
+    cost: { input: 2.5, output: 7.5, cache_read: 0.25 },
+    limit: { context: 262_144 },
+  });
 });
 
 test("validates Cloudflare page metadata", async () => {

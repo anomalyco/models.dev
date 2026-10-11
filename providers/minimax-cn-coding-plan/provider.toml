@@ -1,5 +1,10 @@
-name = "MiniMax Token Plan (minimaxi.com)"
+# China API host migrated from api.minimaxi.com → api.minimax.cn
+# Sources:
+# - https://platform.minimaxi.com/docs/guides/quickstart-preparation
+# - https://platform.minimaxi.com/docs/token-plan/other-tools
+# Anthropic-compatible base: https://api.minimax.cn/anthropic
+name = "MiniMax Token Plan (minimax.cn)"
 env = ["MINIMAX_API_KEY"]
 npm = "@ai-sdk/anthropic"
 doc = "https://platform.minimaxi.com/docs/token-plan/intro"
-api = "https://api.minimaxi.com/anthropic/v1"
+api = "https://api.minimax.cn/anthropic/v1"

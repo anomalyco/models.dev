@@ -235,7 +235,6 @@ export function buildCloudflareAiGatewayModel(
 export function deriveReasoningOptions(
   schemaInput: unknown,
 ): NonNullable<SyncedBaseModel["reasoning_options"]> {
-  let hasToggle = false;
   let effortValues: Array<"none" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max" | "default">
     | undefined;
 
@@ -265,7 +264,6 @@ export function deriveReasoningOptions(
 
       for (const [property, rawSchema] of Object.entries(value)) {
         const propertySchema = rawSchema as Record<string, unknown>;
-        if (property === "enable_thinking" || property === "thinking") hasToggle = true;
         if (property === "effort" || property === "reasoning_effort") {
           const candidates = [propertySchema, ...arrayValue(propertySchema.anyOf), ...arrayValue(propertySchema.oneOf)];
           for (const candidate of candidates) {
@@ -279,10 +277,9 @@ export function deriveReasoningOptions(
   };
   visit(schemaInput);
 
-  const options: NonNullable<SyncedBaseModel["reasoning_options"]> = [];
-  if (hasToggle) options.push({ type: "toggle" });
-  if (effortValues !== undefined) options.push({ type: "effort", values: effortValues });
-  return options;
+  // A thinking field describes an accepted input shape, not proof that this route
+  // supports disabling thinking. Toggle support is curated per model instead.
+  return effortValues === undefined ? [] : [{ type: "effort", values: effortValues }];
 }
 
 function arrayValue(value: unknown): Array<Record<string, unknown>> {

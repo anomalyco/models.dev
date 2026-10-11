@@ -1,0 +1,31 @@
+# Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Profile ID verified via ListInferenceProfiles (ACTIVE, SYSTEM_DEFINED, created 2026-09-29) per issue #8471; AWS model card still lists Global as Not supported as of 2026-09-30 (docs lag).
+# Global base rate pricing (Standard): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html
+# Effort levels match OpenAI-native 6.1 Sol (low|medium|high|xhigh|max, no none): https://developers.openai.com/api/docs/models/gpt-6.1-sol
+# Ultrafast via service_tier=ultrafast at 6x Standard (Global CRIS): https://developers.openai.com/api/docs/guides/ultrafast-mode
+# Ultrafast availability: https://aws.amazon.com/about-aws/whats-new/2026/10/openai-gpt-sol-ultrafast-amazon/
+# Ultrafast is 6x Standard per Bedrock Astra card and OpenAI ultrafast table: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html and https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast
+# Converse input is text+image per AWS card and OpenAI model docs; overrides lab pdf.
+base_model = "openai/gpt-6.1-sol"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+name = "GPT-6.1 Sol (Global)"
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.10
+cache_write = 2.50
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 4.00
+output = 15.00
+cache_read = 0.20
+cache_write = 5.00
+
+[modalities]
+input = ["text", "image"]
+
+[experimental.modes.ultrafast]
+cost = { input = 12.00, output = 60.00, cache_read = 0.60, cache_write = 15.00 }
+provider = { body = { service_tier = "ultrafast" } }

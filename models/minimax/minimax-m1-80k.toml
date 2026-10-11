@@ -1,0 +1,25 @@
+# https://huggingface.co/MiniMaxAI/MiniMax-M1-80k
+# https://www.minimax.io/news/minimaxm1
+name = "MiniMax M1 80K"
+description = "Open hybrid-attention MoE reasoning model with a million-token context and an 80K thinking budget"
+family = "minimax"
+release_date = "2025-06-17"
+last_updated = "2025-06-17"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 1_000_000
+output = 80_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/MiniMaxAI/MiniMax-M1-80k"

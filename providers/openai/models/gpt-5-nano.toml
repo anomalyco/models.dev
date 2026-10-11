@@ -25,3 +25,7 @@ output = 128_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[experimental.modes.flex]
+cost = { input = 0.025, output = 0.20, cache_read = 0.0025 }
+provider = { body = { service_tier = "flex" } }

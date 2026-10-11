@@ -1,0 +1,29 @@
+# Subconscious serves DeepSeek V4.1 Flash Marathon as subconscious/deepseek-v4.1-flash-marathon.
+# Pricing (USD per 1M tokens): cached $0.0028, input $0.14, output $0.28.
+# Context: 5M tokens via TIMRUN auto compaction (Marathon), vs. 1M on the base model.
+# Multimodal: accepts text and image input (inherited from base model).
+# Toggle: Anthropic Messages thinking.type = "enabled" turns thinking on; omit
+# thinking to disable.
+# Effort: output_config.effort = low|high|max, matching the lab's Anthropic
+# Messages surface and peers.
+# Sources (accessed 2026-09-30):
+#   https://api.subconscious.dev/v1/models
+#   https://www.subconscious.dev/pricing
+#   https://docs.subconscious.dev/features/thinking
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash Marathon"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[limit]
+context = 5_000_000

@@ -1,3 +1,4 @@
+# Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
 name = "Mistral Large 3"
 description = "Mistral's largest general model for enterprise agents, coding, and multilingual reasoning"
 family = "mistral-large"
@@ -12,6 +13,7 @@ open_weights = true
 
 [cost]
 input = 0.5
+cache_read = 0.05
 output = 1.5
 
 [limit]

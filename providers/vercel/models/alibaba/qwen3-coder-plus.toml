@@ -5,5 +5,23 @@ input = 1
 output = 5
 cache_read = 0.2
 
+[[cost.tiers]]
+tier = { type = "context", size = 32_001 }
+input = 1.8
+output = 9
+cache_read = 0.36
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_001 }
+input = 3
+output = 15
+cache_read = 0.6
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_001 }
+input = 6
+output = 60
+cache_read = 1.2
+
 [limit]
 context = 1_000_000

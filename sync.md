@@ -20,6 +20,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync xai` syncs only xAI.
 - `bun models:sync kilo` syncs only Kilo.
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
+- `bun models:sync mistral` syncs only Mistral.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
@@ -232,7 +233,7 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - Source endpoint: `https://generativelanguage.googleapis.com/v1beta/models`.
 - Required auth: `GOOGLE_API_KEY`, `GEMINI_API_KEY`, or `GOOGLE_GENERATIVE_AI_API_KEY`.
 - Model IDs are derived from the `models/{model}` resource names.
-- The API is authoritative for display names, token limits, temperature metadata, and the `thinking` flag when present.
+- The API is authoritative for display names, temperature metadata, and the `thinking` flag when present. Token limits normally come from the API, except Gemini 2.5 Computer Use, Gemini 3 Pro Image, and two Gemini 3.1 Flash Image variants whose model-specific cards document different limits.
 - Local Google models missing from the API response are removed.
 - New Google API models are not created automatically (`skipCreates`) and do not open missing-model issues because the endpoint is not lifecycle-authoritative.
 - Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.
@@ -246,6 +247,33 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
 - Unmatched rows open missing-model issues, and local entries missing from the source are kept.
 - When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
+
+## Novita AI Notes
+
+- Source: `https://api.novita.ai/openai/v1/models`.
+- CI key: `NOVITA_AI_API_KEY`; locally `NOVITA_AI_MODELS_DEV_KEY` takes precedence when set.
+- Sync existing chat models' input/output/cache prices, context/output limits, and context pricing tiers only. Preserve curated capabilities, reasoning controls, dates, descriptions, optional pricing, and leading wire/source comments.
+- Decimal `price_per_m_decimal` fields are USD/MTok; legacy integer fields are scaled by 10,000.
+- New eligible models use the existing missing-model issue-fixer pipeline, which opens separate PRs without enabling auto-merge. The update-only sync PRs use the normal auto-merge policy; no provider-specific exception is needed.
+- Never delete entries absent from the account-scoped inventory. In particular, the list omits working embedding/reranking routes. These remain hand-authored.
+- Skip deferred Sao10K routes, known unadvertised/development aliases, non-chat rows, zero-limit placeholders, and unpriced rows.
+
+## Mistral Notes
+
+Mistral is implemented in `packages/core/src/sync/providers/mistral.ts`.
+
+- Run it with `bun models:sync mistral` or `bun mistral:sync`.
+- Source endpoint: `https://api.mistral.ai/v1/models`; required auth: `MISTRAL_API_KEY`.
+- Every alias is listed as its own row, so existing alias TOMLs such as `mistral-small-latest` are updated from the model the alias currently resolves to.
+- The API is authoritative for the served context window (`max_context_length`), tool calling, reasoning support, image and audio input, and deprecation. The served context can be smaller than the documented one; Mistral Large 4 serves 524,288 tokens although its model card advertises 1M.
+- `deprecation` is incomplete: the API still serves some models Mistral's docs list as deprecated with `deprecation: null`. Those IDs are pinned in `DEPRECATED_IDS` in `mistral.ts` so the sync keeps them deprecated instead of clearing an authored `status`. Models absent from `/v1/models` are never touched, so mark them deprecated in their TOML.
+- Pricing, output limits, reasoning controls, dates, and other metadata stay hand-authored because the endpoint does not expose them.
+- Reasoning controls are checked, not written. For each reasoning model the sync sends one chat request with `reasoning_effort: "minimal"` and `max_tokens: 1`; Mistral's rejection lists the accepted values. If they differ from the authored `effort` values, the model's file is left unchanged and a missing-model issue is opened with the diagnostic. This catches aliases that move to a model with different controls. Accepted values can include aliases (Mistral silently accepts `minimal` on `zai-glm-5-2`), so a probe that succeeds or returns an unrecognized message is treated as unknown and skips the check rather than writing guessed values.
+- A model that newly reports reasoning without authored `reasoning_options` also fails closed with a missing-model issue.
+- Ordinary auto-merge rules apply: context, tool-calling, and modality updates can auto-merge, while any change to reasoning metadata still requires manual review because Mistral is not a reviewed reasoning provider.
+- Embedding, OCR, moderation, transcription, and TTS rows are ignored; existing TOMLs for them are kept unchanged.
+- New chat models are not created automatically (`skipCreates`). Each opens one deduped missing-model issue under its canonical ID (the row whose `id` equals its `name`), not once per alias.
+- Local models absent from the response are retained (`deleteMissing: false`) because the listing is scoped to the key's workspace and drops retired models.
 
 ## xAI Notes
 
@@ -321,6 +349,8 @@ Fireworks AI is implemented in `packages/core/src/sync/providers/fireworks-ai.ts
 ## Vercel Status
 
 Vercel is intentionally not wired into `bun models:sync` right now. Keep using the existing `vercel:generate` script until Vercel sync behavior is redesigned and reviewed separately.
+
+`vercel:generate` reads `reasoning_options` from the public Vercel AI Gateway `/v1/models` catalog when present. It removes a redundant toggle if effort includes `none`, retains authored controls when catalog controls are absent or unrecognized, and treats an explicit empty list as no caller controls. This does not change the Vercel scheduling policy above.
 
 Do not add Vercel model changes to OpenRouter sync PRs.
 

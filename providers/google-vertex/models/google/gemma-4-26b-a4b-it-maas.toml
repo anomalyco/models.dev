@@ -1,0 +1,24 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/google/gemma-4-26b-a4b-it (Experimental)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# No usable reasoning control: chat_template_kwargs.enable_thinking (off by default) only takes effect without
+# a system message. Live test 2026-10-08: enable_thinking=true streamed reasoning_content for user-only requests,
+# but none once a system message was present, with or without tools.
+base_model = "google/gemma-4-26b-a4b-it"
+reasoning_options = []
+status = "alpha"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.015
+
+[limit]
+output = 128_000
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"

@@ -1,0 +1,18 @@
+# Thinking: adaptive (default) or between_tools (lowest setting; still returns thinking between tools).
+# disabled is rejected; between_tools works only at low, medium, or high effort.
+# https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide#turn-off-up-front-thinking
+# Pricing: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
+# Cache read $0.10/MTok (5% of base input): https://platform.claude.com/docs/en/about-claude/pricing
+# Pricing: https://www.anthropic.com/pricing
+base_model = "anthropic/claude-sonnet-5-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.1
+cache_write = 2.5

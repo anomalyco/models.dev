@@ -1,0 +1,13 @@
+# https://novita.ai/models/model-detail/mindai-macaron-v1-venti
+# Effort: reasoning_effort = none|high|max; none suppresses reasoning. Graded baseline follows GLM-5.2/Macaron's native high|max modes; accepted aliases are not distinct levels.
+# https://recipes.vllm.ai/mindlab-research/Macaron-V1-Coding-Venti
+base_model = "mindlab/macaron-v1-venti"
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.825
+output = 2.475
+cache_read = 0.165

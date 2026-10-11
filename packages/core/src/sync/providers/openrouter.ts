@@ -21,6 +21,10 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
 } as const;
 
+const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
+  "minimax/minimax-01": 40_000,
+};
+
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
@@ -246,7 +250,10 @@ export function buildOpenRouterModel(
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
+    output: OUTPUT_LIMIT_OVERRIDES[model.id]
+      ?? model.top_provider.max_completion_tokens
+      ?? existing?.limit?.output
+      ?? context,
   };
   const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 

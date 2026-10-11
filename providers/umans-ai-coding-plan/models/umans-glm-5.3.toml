@@ -1,0 +1,27 @@
+# Effort only: reasoning_effort = low|high|max. Thinking is ALWAYS ON (Z.ai's
+# published GLM 5.3 parameters accept thinking.type=enabled only; disabling is
+# not supported). The live card mirrors that shape: levels low/high/max,
+# default max, `can_disable=false`: https://api.code.umans.ai/v1/models/info
+# Coding-plan keys call the same pay-per-token catalog id (released
+# 2026-08-29, llm-gateway 00336; a production model, not a seat-gated lab);
+# plan usage is flat-fee, so cost is 0 here.
+# limit.context mirrors the gateway card exactly (1048576). limit.output is
+# cap-1 on purpose: the gateway 400s max_tokens >= max_completion_tokens
+# (131072), so 131071 is the largest value that serves (its advertised
+# `recommended_max_tokens`). Text only, like the base (supports_vision=false).
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 1_048_576
+output = 131_071

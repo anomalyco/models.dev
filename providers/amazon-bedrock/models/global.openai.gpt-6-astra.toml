@@ -1,5 +1,6 @@
 # Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
 # Bedrock model IDs, routes, limits and Global CRIS pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
+# Ultrafast via service_tier=ultrafast at 6x Standard (US Geo + Global CRIS, Mantle us-east-1): https://developers.openai.com/api/docs/guides/ultrafast-mode
 # Cache rates: AWS-published Responses pricing; the card's API coverage can lag live behavior.
 # Converse effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh|max.
 # Live check 2026-09-09 (us-east-1): outputConfig.textFormat enforces JSON schema despite a conflicting user instruction.
@@ -24,3 +25,7 @@ cache_write = 25.00
 
 [modalities]
 input = ["text", "image"]
+
+[experimental.modes.ultrafast]
+cost = { input = 60.00, output = 300.00, cache_read = 6.00, cache_write = 75.00 }
+provider = { body = { service_tier = "ultrafast" } }
