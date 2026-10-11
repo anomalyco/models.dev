@@ -1,0 +1,22 @@
+# NEAR AI serves deepseek/deepseek-v4.1-flash through OpenRouter ZDR.
+# Pricing/context: https://near.ai/models/deepseek/deepseek-v4.1-flash (accessed 2026-10-11) lists input $0.30, output $1.20, cache-read $0.006 per 1M tokens, 1048K context.
+# Toggle: thinking.type = enabled|disabled (extra_body)
+# Effort: reasoning_effort = low|high|max
+# Lab controls: https://api-docs.deepseek.com/guides/thinking_mode/ (thinking.type toggle, reasoning_effort low|high|max, reasoning_content).
+# Same set as OpenRouter relay providers/openrouter/models/deepseek/deepseek-v4.1-flash.toml; NEAR passes third-party provider-native controls through per https://docs.near.ai/cloud/reasoning-models.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
