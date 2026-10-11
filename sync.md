@@ -236,6 +236,17 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - `providers/cloudflare-ai-gateway/curation.toml` supplies base-model mappings, live-tested reasoning controls, structured-output support, limit overrides, and intentional skips that the catalog cannot express authoritatively.
 - New catalog entries without canonical lab metadata or required reasoning controls fail closed instead of generating incomplete TOMLs.
 
+## The Grid AI Notes
+
+- The Grid AI is implemented in `packages/core/src/sync/providers/the-grid-ai.ts`.
+- Run it with `bun models:sync the-grid-ai` or as part of the `aggregators` group.
+- Source endpoint: `https://api.thegrid.ai/v1/models`; no authentication is required (the catalog is public).
+- The Grid prices tokens on an open market, so `cost` is intentionally omitted from the catalog and this sync never writes it (see `providers/the-grid-ai/provider.toml`).
+- Existing instruments are updated with API-authoritative limits (`context_length` → `limit.context`, `max_input_tokens` → `limit.input`, `max_completion_tokens` → `limit.output`), attachment support, and modalities.
+- Descriptions, reasoning tiers (`reasoning_options`), dates, and status stay hand-authored; the per-instrument effort enums come from the same catalog, but their wire semantics are maintained by hand.
+- New instruments are not created automatically (`skipCreates`); each opens a deduped missing-model issue so descriptions and reasoning tiers get authored first.
+- Local instruments absent from the listing are retained (`deleteMissing: false`): a truncated response must not delete files, and retired instruments also drop out of the catalog.
+
 ## Google Notes
 
 Google is implemented in `packages/core/src/sync/providers/google.ts`.
