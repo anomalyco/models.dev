@@ -1,8 +1,11 @@
 # Sources (accessed 2026-10-10):
 #   https://huggingface.co/lightonai/LightOnOCR-2-1B
 #   https://arxiv.org/abs/2601.14251
+#   https://huggingface.co/lightonai/LightOnOCR-2-1B/blob/main/config.json
 # The model card describes a 1B-parameter end-to-end vision-language OCR model
 # that converts document images to text, under the Apache-2.0 license.
+# config.json sets text_config.max_position_embeddings to 16,384. The card states
+# no output limit, so this file sets none; each host sets its own.
 name = "LightOnOCR-2-1B"
 description = "Compact open-weights OCR model that turns document pages into clean Markdown"
 type = "chat"
@@ -16,8 +19,7 @@ open_weights = true
 license = "Apache-2.0"
 
 [limit]
-context = 131_072
-output = 16_384
+context = 16_384
 
 [modalities]
 input = ["text", "image"]

@@ -1,5 +1,6 @@
 # Toggle: chat_template_kwargs.thinking = true|false
 # Effort: reasoning_effort = low|high|max
+# Limits: GET https://api.munito.ai/admin/v1/models (context_length, max_output_tokens), 2026-10-11.
 base_model = "deepseek/deepseek-v4-flash"
 reasoning_options = [
   { type = "toggle" },
@@ -13,3 +14,7 @@ field = "reasoning_content"
 input = 0.13
 cache_read = 0.028
 output = 0.28
+
+[limit]
+context = 1_048_576
+output = 943_718
