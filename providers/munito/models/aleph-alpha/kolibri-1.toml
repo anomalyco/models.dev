@@ -1,5 +1,6 @@
 # Off is reasoning_effort=none; graded levels low|medium|high. No toggle.
 # Munito validates reasoning_effort against the levels this model declares.
+# Munito serves the full 1,048,576-token context; its output limit is 90% of it.
 base_model = "aleph-alpha/kolibri-1"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
@@ -10,3 +11,6 @@ field = "reasoning_content"
 input = 0.13
 cache_read = 0.078
 output = 1.0
+
+[limit]
+output = 943_718

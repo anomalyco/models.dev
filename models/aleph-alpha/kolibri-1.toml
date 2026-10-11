@@ -1,9 +1,10 @@
 # Sources (accessed 2026-10-10):
 #   https://huggingface.co/Aleph-Alpha/Kolibri-1
 #   https://aleph-alpha.com/downloads/tech-report.pdf
-# The model card states 78B total / 3.46B active parameters, a native context of
-# 262,144 tokens (validated to 1,048,576), German and English, reasoning mode,
-# tool calling, a June 2026 knowledge cutoff, and the Apache-2.0 license.
+# The model card states 78B total / 3.46B active parameters, a context length of
+# 1,048,576 tokens (262,144 native, with a max_position_embeddings override beyond it),
+# German and English, reasoning mode, tool calling, a June 2026 knowledge cutoff, and
+# the Apache-2.0 license. It states no output limit, so output equals the context.
 name = "Kolibri 1"
 description = "Aleph Alpha's German and English MoE reasoning model (78B total / 3.46B active) for chat, RAG and agents"
 release_date = "2026-10-03"
@@ -17,8 +18,8 @@ open_weights = true
 license = "Apache-2.0"
 
 [limit]
-context = 262_144
-output = 32_768
+context = 1_048_576
+output = 1_048_576
 
 [modalities]
 input = ["text"]
