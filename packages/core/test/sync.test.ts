@@ -5150,6 +5150,56 @@ test("skips an unavailable OpenRouter stub with no authored file", () => {
   expect(translated).toBeUndefined();
 });
 
+test("syncs OpenRouter decision models with no supported parameters as decision type", () => {
+  const decision = openRouterModel({
+    id: "cloudflare/clef-omni",
+    name: "Cloudflare: Clef Omni",
+    hugging_face_id: "Cloudflare/clef-omni",
+    knowledge_cutoff: null,
+    context_length: 65_536,
+    architecture: { input_modalities: ["text", "image"], output_modalities: ["decisions"] },
+    pricing: { prompt: "0.00000015", completion: "0" },
+    top_provider: { context_length: 65_536, max_completion_tokens: 58_982 },
+    supported_parameters: [],
+  });
+  const translated = openrouter.translateModel(decision, {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model).toMatchObject({
+    type: "decision",
+    name: "Clef Omni",
+    description: "Decision model for typed evaluation of shared state",
+    modalities: { input: ["text", "image"], output: ["text"] },
+    cost: { input: 0.15, output: 0 },
+  });
+  expect(openrouter.translateModel(openRouterModel(), {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.model.type).toBeUndefined();
+});
+
+test("factors OpenRouter decision models onto decision lab metadata without a chat description", () => {
+  const translated = openrouter.translateModel(openRouterModel({
+    id: "liquid/d1",
+    name: "LiquidAI: d1",
+    knowledge_cutoff: null,
+    context_length: 65_536,
+    architecture: { input_modalities: ["text"], output_modalities: ["decisions"] },
+    pricing: { prompt: "0.00000004", completion: "0" },
+    top_provider: { context_length: 65_536, max_completion_tokens: 58_982 },
+    supported_parameters: [],
+  }), {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model).toMatchObject({ base_model: "liquid/d1", cost: { input: 0.04, output: 0 } });
+  expect(translated?.model).not.toHaveProperty("type"); // inherited from lab metadata
+  expect(translated?.model).not.toHaveProperty("description");
+});
+
 test("parses nullable EmpirioLabs release dates", () => {
   expect(empiriolabs.parseModels({
     data: [{ id: "unknown-text-model", category: "text", model_released_at: null }],

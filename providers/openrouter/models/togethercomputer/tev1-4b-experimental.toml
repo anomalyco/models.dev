@@ -1,0 +1,23 @@
+type = "decision"
+name = "Tev1 4B Experimental"
+description = "Decision model for typed evaluation of shared state"
+release_date = "2026-09-30"
+last_updated = "2026-09-30"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.042
+output = 0
+
+[limit]
+context = 32_768
+output = 8
+
+[modalities]
+input = ["text"]
+output = ["text"]

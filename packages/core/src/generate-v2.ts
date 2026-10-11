@@ -403,6 +403,8 @@ function resolveOpencodePackage(
       return "@opencode/ai/providers/cloudflare-workers-ai";
     if (provider.id === "vercel")
       return "@opencode/ai/providers/vercel-ai-gateway";
+    if (provider.id === "openrouter")
+      return "@opencode/ai/providers/openrouter";
     return "@opencode/ai/providers/typesafe-ai";
   }
 

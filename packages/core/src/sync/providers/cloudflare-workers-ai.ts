@@ -23,6 +23,7 @@ const ENABLE_THINKING_MODELS = new Set([
 const DECISION_MODELS = new Set([
   "@cf/cloudflare/clef",
   "@cf/cloudflare/clef-flash",
+  "@cf/cloudflare/clef-omni",
 ]);
 // Search and the model pages report 1,310,720 for these, but the serving backend rejects any request over 1,048,576
 // tokens. The sync re-derives context from search, so the served window is pinned here. It only ever lowers a window.
