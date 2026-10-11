@@ -1,9 +1,5 @@
-# Rate card: https://inference.boundless.network/models — USD per 1M tokens
-# Reasoning: reasoning_effort = low|medium|high — this model always reasons, the host rejects 'none' with a 400
-# Docs: https://inference.boundless.network/docs/api-compatibility
-
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
 
 [cost]
 input = 0.12

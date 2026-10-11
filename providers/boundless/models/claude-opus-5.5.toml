@@ -1,7 +1,3 @@
-# Rate card: https://inference.boundless.network/models — USD per 1M tokens
-# Reasoning: reasoning_effort = low|medium|high — this model always reasons, the host rejects 'none' with a 400
-# Docs: https://inference.boundless.network/docs/api-compatibility
-
 base_model = "anthropic/claude-opus-5-5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
