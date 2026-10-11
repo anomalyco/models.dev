@@ -1,0 +1,18 @@
+# Kenari relay of meta/muse-spark-1.3 - authored 2026-10-02 from the provider's public API:
+#   https://kenari.id/v1/models          (capabilities, context, reasoning options)
+#   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
+# IDR prices were converted to USD per 1M tokens by dividing by that rate.
+base_model = "meta/muse-spark-1.3"
+name = "Muse Spark 1.3 Contributor"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1143
+output = 0.2286
+cache_read = 0.0023
+
+[modalities]
+input = ["image", "pdf", "text", "video"]

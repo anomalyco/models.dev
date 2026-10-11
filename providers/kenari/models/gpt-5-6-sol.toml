@@ -1,3 +1,7 @@
+# Kenari relay of openai/gpt-5.6-sol - authored 2026-10-02 from the provider's public API:
+#   https://kenari.id/v1/models          (capabilities, context, reasoning options)
+#   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
+# IDR prices were converted to USD per 1M tokens by dividing by that rate.
 base_model = "openai/gpt-5.6-sol"
 base_model_omit = ["limit.input"]
 
@@ -6,5 +10,10 @@ type = "effort"
 values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0
-output = 0
+input = 2.97
+output = 17.71
+cache_read = 1.19
+cache_write = 3.71
+
+[limit]
+context = 872_000
