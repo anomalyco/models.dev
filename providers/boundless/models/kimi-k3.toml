@@ -1,0 +1,10 @@
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
+
+[cost]
+input = 2.3
+output = 11.4
+cache_read = 0.23
+
+[modalities]
+input = ["text", "image"]

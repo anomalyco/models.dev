@@ -1,0 +1,12 @@
+# Toggle: reasoning_effort = none (off) | high (on)
+
+base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.04
+output = 0.35
+cache_read = 0.02
+
+[modalities]
+input = ["text", "image"]
