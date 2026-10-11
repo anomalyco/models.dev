@@ -1,0 +1,16 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Munito declares no reasoning_effort levels for this model.
+# Limits: GET https://api.munito.ai/admin/v1/models (context_length, max_output_tokens), 2026-10-11.
+base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.13
+cache_read = 0.078
+output = 1.0
+
+[limit]
+output = 235_929

@@ -1,0 +1,7 @@
+# Munito bills this model per page ($0.004/page), not per token, so no [cost].
+# Prompt and output share the 16,384-token window of the checkpoint: on Munito, a chat request
+# for 16,000 output tokens succeeds and one for 20,000 fails (2026-10-11).
+base_model = "lightonai/lightonocr-2-1b"
+
+[limit]
+output = 16_384
