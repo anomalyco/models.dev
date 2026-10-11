@@ -1,7 +1,9 @@
 # Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+# Controls: https://docs.anonrouter.ai/reasoning
+# Effort: reasoning_effort.
 base_model = "anthropic/claude-opus-4-6"
-attachment = false
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low","medium","high","max"] }]
 
 [cost]
 input = 5
@@ -12,4 +14,4 @@ context = 200000
 output = 32768
 
 [modalities]
-input = ["text"]
+input = ["text","image"]

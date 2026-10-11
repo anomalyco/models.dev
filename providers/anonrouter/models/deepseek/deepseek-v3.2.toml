@@ -1,5 +1,7 @@
 # Source: https://api.anonrouter.ai/v1/models (2026-10-11).
-# Reasoning uses reasoning_effort.
+# Capabilities use callable provider_routes; prices and limits use the default route.
+# Controls: https://docs.anonrouter.ai/reasoning
+# Effort: reasoning_effort; none disables reasoning.
 base_model = "deepseek/deepseek-v3.2"
 reasoning_options = [{ type = "effort", values = ["none","low","medium","high"] }]
 status = "deprecated"

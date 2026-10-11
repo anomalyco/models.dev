@@ -1,4 +1,7 @@
 # Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+# Controls: https://docs.anonrouter.ai/reasoning
+# All callable routes report effort_configurable=false and can_disable=false.
 base_model = "google/gemini-3.8-flash"
 reasoning_options = []
 
