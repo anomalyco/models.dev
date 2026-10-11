@@ -1,0 +1,16 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# SambaNova DeepSeek thinking toggle (text-generation docs + OpenAPI EnableThinking + community V3.1 example).
+# https://docs.sambanova.ai/docs/en/features/text-generation
+# https://docs.sambanova.ai/docs/api-reference/chat-completions/create-chat-based-completion
+# Limits/pricing: GET https://api.sambanova.ai/v1/models (DeepSeek-V3.1 context_length 131072, max_completion_tokens 7168; USD 3.00/4.50 per MTok).
+base_model = "deepseek/deepseek-v3.1"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 3.00
+output = 4.50
+
+[limit]
+output = 7_168
