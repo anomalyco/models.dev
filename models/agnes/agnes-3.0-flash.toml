@@ -1,3 +1,9 @@
+# Sources:/n# - providers/nano-gpt/models/agnes-3.0-flash.toml (the only entry that describes 3.0; Agnes
+#   ships no first-party entry for it, so name, description, dates and limits are that relay's)
+# - https://agnes-ai.com/doc (provider documentation)
+# Note: no reasoning control is declared here. Kenari reports none for this id, Agnes ships no
+# first-party entry to copy one from, and the relay above records `reasoning_options = []`.
+
 name = "Agnes 3.0 Flash"
 description = "Agnes 3.0 Flash is a low-cost model for coding, tool use, and multi-turn agent tasks. It supports text and image input, optional thinking, and a 512K-token context window."
 release_date = "2026-09-09"

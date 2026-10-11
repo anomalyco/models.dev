@@ -4,6 +4,7 @@
 # IDR prices were converted to USD per 1M tokens by dividing by that rate.
 # kenari publishes no reasoning options for this id; the baseline is the model's
 # own lab entry (providers/agnes/models/agnes-2.5-flash.toml), per AGENTS.md.
+# Lab control: API: {"chat_template_kwargs": {"enable_thinking": true}}
 # Toggle: reasoning.enabled = true|false   (kenari, https://kenari.id/docs/reasoning)
 base_model = "agnes/agnes-2.5-flash"
 name = "Agnes 2.5 Flash (Free)"
