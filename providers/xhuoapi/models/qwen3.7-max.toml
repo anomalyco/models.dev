@@ -1,0 +1,14 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-09)
+# Prices are for the Standard group, the default for new accounts.
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.7-max"
+[[reasoning_options]]
+type = "toggle"
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.4

@@ -1,0 +1,15 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-09)
+# Prices are for the Standard group, the default for new accounts.
+# Toggle/budget (Gemini native): generationConfig.thinkingConfig.thinkingBudget 0 disables; enabled manual budgets 512..24576
+base_model = "google/gemini-2.5-flash-lite"
+[[reasoning_options]]
+type = "toggle"
+[[reasoning_options]]
+type = "budget_tokens"
+min = 512
+max = 24576
+
+[cost]
+input = 0.08
+output = 0.32
+cache_read = 0.008
