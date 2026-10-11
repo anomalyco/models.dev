@@ -3,6 +3,7 @@
 #   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
 # IDR prices were converted to USD per 1M tokens by dividing by that rate.
 base_model = "openai/gpt-6-luna"
+base_model_omit = ["limit.input"]
 
 [[reasoning_options]]
 type = "effort"
