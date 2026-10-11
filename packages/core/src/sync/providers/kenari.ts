@@ -45,12 +45,15 @@ const PRICING_UNIT = "micro_idr_per_1m_tokens";
 // "delete most of the catalog".
 const MIN_LIVE_MODELS = 30;
 
-// The feed also reports lanes the catalog's schema has no enum for (`file`), so modality
-// values are filtered rather than passed straight into a strict schema.
+// The feed reports lanes the catalog's schema has no enum for. `file` is not `pdf`: 69 ids list
+// `file` while only 32 list `pdf`, so mapping one to the other would widen 37 entries. An
+// unknown lane is therefore dropped — a relay may narrow, not widen — and a lane that would be
+// emptied by that is left to the lab entry rather than overwritten with `[]`.
 const MODALITIES = ["text", "audio", "image", "video", "pdf"] as const;
 type Modality = (typeof MODALITIES)[number];
-const isModality = (value: string): value is Modality =>
-  (MODALITIES as readonly string[]).includes(value);
+const toModalities = (values: string[]): Modality[] =>
+  [...new Set(values.filter((value): value is Modality =>
+    (MODALITIES as readonly string[]).includes(value)))].sort();
 
 /** One unrecognised level fails `SyncedAuthoredModel` and aborts the whole run for every model. */
 function isReasoningEffort(value: string): boolean {
@@ -111,6 +114,8 @@ interface LabEntry {
   stem: string;
   context?: number;
   input?: number;
+  /** The lab's own `reasoning` flag, which decides whether a control must be declared. */
+  reasoning?: boolean;
 }
 
 interface LabControl {
@@ -150,13 +155,15 @@ function labEntries(): Map<string, Map<string, LabEntry>> {
     for (const file of readdirSync(path.join(MODELS_DIR, lab.name))) {
       if (!file.endsWith(".toml")) continue;
       const stem = file.slice(0, -5);
-      const limit = readToml(path.join(MODELS_DIR, lab.name, file))?.limit;
+      const entry = readToml(path.join(MODELS_DIR, lab.name, file));
+      const limit = entry?.limit;
       const record =
         typeof limit === "object" && limit !== null ? (limit as Record<string, unknown>) : {};
       entries.set(stem.toLowerCase(), {
         stem,
         context: typeof record.context === "number" ? record.context : undefined,
         input: typeof record.input === "number" ? record.input : undefined,
+        reasoning: typeof entry?.reasoning === "boolean" ? entry.reasoning : undefined,
       });
     }
     index.set(lab.name, entries);
@@ -264,6 +271,14 @@ export function resolveBaseModel(id: string, ownedBy: string | undefined): LabEn
   return undefined;
 }
 
+/** The lab's own `reasoning` flag for a `base_model` id, which a provider file does not carry. */
+function labReasoning(baseModel: string): boolean | undefined {
+  const separator = baseModel.indexOf("/");
+  if (separator < 0) return undefined;
+  const entries = labEntries().get(baseModel.slice(0, separator));
+  return entries?.get(baseModel.slice(separator + 1).toLowerCase())?.reasoning;
+}
+
 /**
  * Ids whose lab entry is not discoverable from the feed: `deepseek-v4-1-flash` is served by
  * DeepSeek-V4.1-Flash, whose first-party entry carries the legacy name `deepseek-flash`, and
@@ -298,7 +313,10 @@ export function resolveReasoningOptions(
 ): CatalogReasoningOption[] | undefined {
   const source = REASONING_SOURCE[id] ?? baseModel;
   const base = controlFor(source);
-  const reasons = reasoning ?? base?.reasoning ?? undefined;
+  // A provider file only carries `reasoning` when it is a full definition; a factored entry
+  // omits it, so the lab's own `models/` metadata is what settles whether this model reasons.
+  const reasons =
+    reasoning ?? base?.reasoning ?? labReasoning(source) ?? labReasoning(baseModel);
   if (reasons === false) return undefined;
 
   // kenari's own list, restricted to the vocabulary the schema knows.
@@ -357,10 +375,14 @@ function pricingIsMicroIdr(
  * synced model, not only the ones that carry reasoning controls.
  */
 function fileHeader(model: SyncedModel, rate: number): string {
+  // Deliberately deterministic: `authoritativeHeaders` compares this text on every run, so a
+  // sync timestamp here would rewrite all 74 files even when nothing changed, and `sync.md`
+  // expects a clean re-run. The rate is the only volatile part, and it only moves when kenari
+  // moves it, which is exactly when a rewrite is wanted.
   const lines = [
     "# Synced from kenari's public API by the kenari sync module.",
     `# Catalog: GET ${CATALOG_DOC}`,
-    `# Pricing: GET ${PRICING_DOC} (usd_idr_rate = ${rate} on ${new Date().toISOString().slice(0, 10)})`,
+    `# Pricing: GET ${PRICING_DOC} (usd_idr_rate = ${rate}, re-read on every sync)`,
     "# IDR prices were converted to USD per 1M tokens by dividing by that rate.",
   ];
   const options = "reasoning_options" in model ? model.reasoning_options : undefined;
@@ -368,7 +390,10 @@ function fileHeader(model: SyncedModel, rate: number): string {
 
   lines.push(`# Docs: ${DOCS_URL}`);
   if (options.some((option) => option.type === "toggle")) {
-    lines.push("# Toggle: reasoning.enabled = true|false");
+    lines.push(
+      "# Toggle: reasoning.enabled = true|false  (/v1/chat/completions;"
+        + " /v1/messages takes the Anthropic thinking block instead)",
+    );
   }
   const effort = options.find((option) => option.type === "effort");
   if (effort !== undefined && effort.type === "effort" && effort.values.length > 0) {
@@ -487,16 +512,21 @@ export const kenari = {
       ...(reasoningOptions === undefined ? {} : { reasoning_options: reasoningOptions }),
       ...(narrows ? { limit: { context: advertised } } : {}),
       ...(chat && model.modalities !== undefined
-        ? {
-            modalities: {
-              input: model.modalities.input.filter(isModality).sort(),
-              output: model.modalities.output.filter(isModality).sort(),
-            },
-          }
+        ? (() => {
+            const input = toModalities(model.modalities.input);
+            const output = toModalities(model.modalities.output);
+            // An empty lane would overwrite the lab entry's with nothing, so the lab's stands.
+            return input.length === 0 || output.length === 0
+              ? {}
+              : { modalities: { input, output } };
+          })()
         : {}),
     };
 
     const deltas = authored?.base_model === baseModel ? authored : undefined;
+    // `AuthoredCost` requires the flat rates, so preserved tiers are only re-attached alongside
+    // a cost this run computed.
+    const preservedTiers = cost === undefined ? undefined : deltas?.cost?.tiers;
     const built = factorBaseModel(
       baseModel,
       {
@@ -507,12 +537,15 @@ export const kenari = {
         last_updated: deltas?.last_updated,
         knowledge: deltas?.knowledge,
         open_weights: deltas?.open_weights,
-        // Hand-authored fields the feed is not authoritative for.
+        // Hand-authored fields the feed is not authoritative for. `reasoning` is only carried
+        // when no option set is written, because the schema rejects options on a
+        // `reasoning = false` entry.
+        tool_call: deltas?.tool_call,
+        attachment: deltas?.attachment,
+        ...(reasoningOptions === undefined ? { reasoning: deltas?.reasoning } : {}),
         status: deltas?.status,
         interleaved: deltas?.interleaved,
-        ...(deltas?.cost?.tiers === undefined
-          ? {}
-          : { cost: { ...host.cost, tiers: deltas.cost.tiers } }),
+        ...(preservedTiers === undefined ? {} : { cost: { ...host.cost, tiers: preservedTiers } }),
       },
       // The narrowed limit is what lets `factorBaseModel` record that `limit.input` must not be
       // inherited from the lab entry now that `limit.context` no longer matches it.
