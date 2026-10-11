@@ -1,12 +1,11 @@
-# Source: https://anonrouter.ai/models public catalog, primary route (accessed 2026-10-07).
-# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
-reasoning_options = []
+reasoning = false
 
 [cost]
 input = 0.075
 output = 0.3
 
 [limit]
-context = 128_000
-output = 16_384
+context = 128000
+output = 16384

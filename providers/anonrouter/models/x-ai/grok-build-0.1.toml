@@ -1,0 +1,13 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+base_model = "xai/grok-build-0.1"
+reasoning_options = []
+
+[cost]
+input = 1
+output = 2
+
+[limit]
+output = 65536
+
+[modalities]
+input = ["text","image"]

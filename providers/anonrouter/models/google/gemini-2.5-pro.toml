@@ -1,5 +1,4 @@
-# Source: https://anonrouter.ai/models public catalog, primary route (accessed 2026-10-07).
-# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
 base_model = "google/gemini-2.5-pro"
 reasoning_options = []
 
@@ -8,8 +7,8 @@ input = 1.25
 output = 10
 
 [limit]
-context = 200_000
-output = 16_384
+context = 200000
+output = 16384
 
 [modalities]
-input = ["text", "image"]
+input = ["text","image"]

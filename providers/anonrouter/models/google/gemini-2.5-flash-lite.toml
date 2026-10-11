@@ -1,0 +1,14 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+base_model = "google/gemini-2.5-flash-lite"
+attachment = false
+reasoning = false
+
+[cost]
+input = 0.1
+output = 0.4
+
+[limit]
+output = 8192
+
+[modalities]
+input = ["text"]

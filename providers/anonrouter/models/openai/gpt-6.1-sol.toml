@@ -1,0 +1,15 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+base_model = "openai/gpt-6.1-sol"
+base_model_omit = ["limit.input"]
+tool_call = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 10
+
+[limit]
+context = 272000
+
+[modalities]
+input = ["text","image"]

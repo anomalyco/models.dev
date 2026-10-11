@@ -1,0 +1,14 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+base_model = "anthropic/claude-opus-4-5"
+reasoning_options = []
+
+[cost]
+input = 6
+output = 30
+
+[limit]
+context = 198000
+output = 32768
+
+[modalities]
+input = ["text","image"]

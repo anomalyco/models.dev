@@ -1,0 +1,12 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Reasoning uses reasoning_effort.
+base_model = "minimax/MiniMax-M2.7"
+reasoning_options = [{ type = "effort", values = ["none","low","medium","high"] }]
+
+[cost]
+input = 0.375
+output = 1.5
+
+[limit]
+context = 198000
+output = 32768

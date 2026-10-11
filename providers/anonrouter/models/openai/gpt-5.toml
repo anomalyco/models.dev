@@ -1,0 +1,11 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+base_model = "openai/gpt-5"
+base_model_omit = ["limit.input"]
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 10
+
+[limit]
+output = 16384

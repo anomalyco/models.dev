@@ -1,11 +1,12 @@
-# Source: https://anonrouter.ai/models public catalog, primary route (accessed 2026-10-07).
-# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Reasoning uses reasoning_effort.
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none","low","medium","high"] }]
 
 [cost]
-input = 1.65
-output = 3.301
+input = 1.3
+output = 2.6
 
 [limit]
-output = 32_768
+context = 1048576
+output = 16384

@@ -1,0 +1,13 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+base_model = "anthropic/claude-sonnet-4-5"
+reasoning = false
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+output = 16384
+
+[modalities]
+input = ["text","image"]

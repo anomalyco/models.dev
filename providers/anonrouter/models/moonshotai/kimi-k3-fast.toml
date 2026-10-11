@@ -1,0 +1,14 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Reasoning uses reasoning_effort.
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["none","low","high","max"] }]
+
+[cost]
+input = 4.5
+output = 22.5
+
+[limit]
+context = 1000000
+
+[modalities]
+input = ["text","image"]

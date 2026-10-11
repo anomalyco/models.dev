@@ -1,14 +1,10 @@
-# Source: https://anonrouter.ai/models public catalog, primary route (accessed 2026-10-07).
-# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 
 [cost]
-input = 2.5
-output = 12.5
-
-[limit]
-output = 64_000
+input = 2
+output = 10
 
 [modalities]
-input = ["text", "image"]
+input = ["text","image"]
