@@ -1,0 +1,14 @@
+base_model = "meta/muse-wonder-1.0"
+name = "Muse Wonder 1.0 (Meta)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+
+[limit]
+output = 1_048_576
