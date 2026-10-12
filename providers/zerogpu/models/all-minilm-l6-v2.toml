@@ -1,0 +1,11 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# POST /v1/embeddings returns 384-dimensional vectors; billed on input tokens only.
+# Max input: 512 tokens per https://docs.zerogpu.ai/docs/embeddings
+base_model = "sentence-transformers/all-minilm-l6-v2"
+
+[cost]
+input = 0.004
+output = 0
+
+[limit]
+context = 512

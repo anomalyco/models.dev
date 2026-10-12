@@ -1,0 +1,19 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# Toggle: thinking.type = enabled|disabled (thinking is off by default).
+# Effort: reasoning_effort = high|max (applies when thinking is enabled).
+# Text-only on this host.
+# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12).
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 0.30
+output = 1.20
+cache_read = 0.003
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text"]

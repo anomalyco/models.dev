@@ -1,0 +1,11 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# No caller reasoning control: reasoning_effort and reasoning.effort (low vs high)
+# produce no measurable change in reasoning tokens.
+# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12).
+base_model = "openai/gpt-oss-120b"
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.03
