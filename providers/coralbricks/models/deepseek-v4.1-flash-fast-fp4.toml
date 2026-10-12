@@ -1,5 +1,5 @@
-# CoralBricks pricing per https://www.coralbricks.ai/pricing and https://www.coralbricks.ai/api/public/models (accessed 2026-09-21):
-# input $0.30, output $1.20, cache write $0.09 per 1M tokens; cached input is free.
+# Older ID for deepseek-v4.1-flash-fast: same model, same rates (see that file for the current pricing source).
+# input $0.01, output $1.20 per 1M tokens; a cache-written prompt token bills $0.09 in total; cached input is free.
 # Effort: reasoning_effort = none|low|high|max. Reasoning is opt-in: with no reasoning_effort, or none, the model
 # answers without reasoning. thinking.type is ignored by this endpoint.
 # Verified live against POST https://inference.coralbricks.ai/v1/chat/completions (2026-09-22): low, high and max
@@ -16,7 +16,7 @@ context = 1_048_576
 output = 131_072
 
 [cost]
-input = 0.3
+input = 0.01
 output = 1.2
 cache_read = 0
 cache_write = 0.09

@@ -1,23 +1,12 @@
-name = "MiniMax M1"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-release_date = "2025-06-17"
-last_updated = "2025-06-17"
-attachment = false
-reasoning = true
+# https://novita.ai/models/model-detail/minimaxai-minimax-m1-80k
+# Always-on reasoning is emitted as <think> in ordinary content on this route.
+base_model = "minimax/minimax-m1-80k"
+structured_output = true
 reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
 
 [cost]
 input = 0.55
 output = 2.2
 
 [limit]
-context = 1_000_000
 output = 40_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

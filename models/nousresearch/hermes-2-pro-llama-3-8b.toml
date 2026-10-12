@@ -1,0 +1,24 @@
+# https://huggingface.co/NousResearch/Hermes-2-Pro-Llama-3-8B
+name = "Hermes 2 Pro Llama 3 8B"
+description = "Llama 3 fine-tune optimized for function calling, structured JSON responses, and dialogue"
+release_date = "2024-04-30"
+last_updated = "2024-04-30"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+license = "Llama 3 Community License"
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/NousResearch/Hermes-2-Pro-Llama-3-8B"

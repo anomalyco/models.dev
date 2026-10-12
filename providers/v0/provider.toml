@@ -1,6 +1,0 @@
-name = "v0"
-env = ["V0_API_KEY"]
-npm = "@ai-sdk/vercel"
-# These configured IDs use the Model API at https://api.v0.dev/v1 (for example POST /chat/completions); its public contract documents no reasoning toggle, effort, or budget field. https://sdk.vercel.ai/providers/ai-sdk-providers/vercel (accessed 2026-06-25)
-# The separate Platform API uses v0-sdk and https://api.v0.app/v2/chats[/<id>/messages]; returned message parts may include thinking, but no caller reasoning control is documented. https://v0.dev/docs/api/v2 (accessed 2026-06-25)
-doc = "https://sdk.vercel.ai/providers/ai-sdk-providers/vercel"

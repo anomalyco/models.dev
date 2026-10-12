@@ -1,4 +1,4 @@
-name = "Qwen: Qwen3 235B A22B Thinking 2507 (retires Oct 9)"
+name = "Qwen: Qwen3 235B A22B Thinking 2507"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 family = "qwen"
 release_date = "2025-07-25"
@@ -15,12 +15,12 @@ type = "effort"
 values = ["high"]
 
 [cost]
-input = 0.23
-output = 2.3
+input = 0.45
+output = 3.5
 
 [limit]
-context = 131_072
-output = 117_964
+context = 128_000
+output = 16_384
 
 [modalities]
 input = ["text"]

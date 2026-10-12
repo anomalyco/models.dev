@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro (reka-ai)"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.2
+output = 3.3
+cache_read = 0.13
+
+[limit]
+context = 1_048_576
+output = 393_216

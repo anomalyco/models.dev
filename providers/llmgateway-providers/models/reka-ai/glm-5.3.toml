@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 (reka-ai)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.17
+output = 3.96
+cache_read = 0.234
+
+[limit]
+context = 1_048_576
+output = 262_144

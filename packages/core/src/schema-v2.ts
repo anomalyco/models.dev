@@ -190,10 +190,74 @@ export const ReasoningSupportV2 = z.discriminatedUnion("supported", [
 
 export type ReasoningSupportV2 = z.infer<typeof ReasoningSupportV2>;
 
+export type DurationUnitV2 = "ms" | "s" | "m" | "h" | "d";
+export type DurationStringV2 = `${number}${DurationUnitV2}`;
+
+export const DurationStringV2 = z
+  .string()
+  .regex(
+    /^\d+(ms|s|m|h|d)$/,
+    "Must be a duration like 5m, 30m, 1h, 24h",
+  ) as z.ZodType<DurationStringV2>;
+
+export const CacheTargetV2Values = [
+  "tools",
+  "system",
+  "messages",
+] as const;
+
+export const KnownCacheTargetV2 = z.enum(CacheTargetV2Values);
+export const CacheTargetV2 = openEnum(CacheTargetV2Values);
+export type CacheTargetV2 = z.infer<typeof CacheTargetV2>;
+
+export const ImplicitCacheV2 = z.union([
+  z.boolean(),
+  z
+    .object({
+      ttl: z.array(DurationStringV2).optional(),
+      min_tokens: z.number().int().min(0).optional(),
+    })
+    .strict(),
+]);
+
+export type ImplicitCacheV2 = z.infer<typeof ImplicitCacheV2>;
+
+export const ExplicitCacheV2 = z.union([
+  z.boolean(),
+  z
+    .object({
+      ttl: z.array(DurationStringV2).optional(),
+      max_breakpoints: z.number().int().min(1).optional(),
+      targets: z.array(CacheTargetV2).optional(),
+      min_tokens: z.number().int().min(0).optional(),
+    })
+    .strict(),
+]);
+
+export type ExplicitCacheV2 = z.infer<typeof ExplicitCacheV2>;
+
+export const CacheSupportV2 = z.discriminatedUnion("supported", [
+  z
+    .object({
+      supported: z.literal(false),
+    })
+    .strict(),
+  z
+    .object({
+      supported: z.literal(true),
+      implicit: ImplicitCacheV2.optional(),
+      explicit: ExplicitCacheV2.optional(),
+    })
+    .strict(),
+]);
+
+export type CacheSupportV2 = z.infer<typeof CacheSupportV2>;
+
 export const CapabilitiesV2 = z
   .object({
     tools: ToolsSupportV2,
     reasoning: ReasoningSupportV2,
+    cache: CacheSupportV2.optional(),
     structured_output: z.boolean().optional(),
     temperature: z.boolean().optional(),
     top_p: z.boolean().optional(),

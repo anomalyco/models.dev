@@ -1,4 +1,4 @@
-name = "Qwen: Qwen3 VL 30B A3B Thinking (retires Oct 9)"
+name = "Qwen: Qwen3 VL 30B A3B Thinking"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
 release_date = "2025-10-06"
@@ -15,12 +15,12 @@ type = "effort"
 values = ["high"]
 
 [cost]
-input = 0.2
-output = 2.4
+input = 0.29
+output = 1
 
 [limit]
-context = 131_072
-output = 32_768
+context = 262_144
+output = 235_929
 
 [modalities]
 input = ["text", "image"]

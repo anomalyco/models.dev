@@ -25,6 +25,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
+- `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -248,6 +249,16 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - Unmatched rows open missing-model issues, and local entries missing from the source are kept.
 - When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
 
+## Novita AI Notes
+
+- Source: `https://api.novita.ai/openai/v1/models`.
+- CI key: `NOVITA_AI_API_KEY`; locally `NOVITA_AI_MODELS_DEV_KEY` takes precedence when set.
+- Sync existing chat models' input/output/cache prices, context/output limits, and context pricing tiers only. Preserve curated capabilities, reasoning controls, dates, descriptions, optional pricing, and leading wire/source comments.
+- Decimal `price_per_m_decimal` fields are USD/MTok; legacy integer fields are scaled by 10,000.
+- New eligible models use the existing missing-model issue-fixer pipeline, which opens separate PRs without enabling auto-merge. The update-only sync PRs use the normal auto-merge policy; no provider-specific exception is needed.
+- Never delete entries absent from the account-scoped inventory. In particular, the list omits working embedding/reranking routes. These remain hand-authored.
+- Skip deferred Sao10K routes, known unadvertised/development aliases, non-chat rows, zero-limit placeholders, and unpriced rows.
+
 ## Mistral Notes
 
 Mistral is implemented in `packages/core/src/sync/providers/mistral.ts`.
@@ -285,6 +296,22 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Reasoning controls are preserved for reasoners and removed when the API reports `reasoning: false`. A reasoner without authored controls fails sync for manual review rather than inventing an empty control set.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
+
+## NEAR AI Cloud Notes
+
+- NEAR AI Cloud is implemented in `packages/core/src/sync/providers/nearai.ts`.
+- Source endpoint: `https://cloud-api.near.ai/v1/models`.
+- No authentication is required; the catalog is public, so the sync needs no repository secret.
+- Existing models are updated from API-authoritative input, output and cached-input pricing, and context windows. Nothing else is taken from the endpoint.
+- `pricing.input` and `pricing.output` are already dollars per million tokens, while `pricing.input_cache_read` is per token and is scaled. Every published price is rounded because the endpoint returns artifacts such as `1.4000000000000001`.
+- `context` is synced only for models NEAR AI hosts itself (`owned_by = "nearai"`), where `context_length` is the serving `max_model_len`. On relayed routes the figure comes from the upstream aggregator and is often rounded below the lab entry, so syncing it would publish a cap the host does not impose. Where it is synced it is taken as the lower of the two values, so a smaller verified cap survives.
+- `limit.output` is never synced. `max_output_length` is advisory rather than enforced: a request above it is accepted, and only exceeding the context window is rejected.
+- No capability is taken from the endpoint, because its capability fields are wrong in both directions. `supported_features` lists `reasoning` for relayed routes that accept every documented reasoning parameter and still return no reasoning content, and omits it for others that plainly reason. `input_modalities` advertises image input for routes that reject it, and also reports an `embedding` modality the schema has no value for.
+- `tool_call`, `structured_output` and lifecycle `status` are hand-authored.
+- New models are created as `base_model` overlays carrying only `cost`, keyed to the lab entry at `models/<lab>/<model>.toml` (NEAR AI namespaces such as `qwen`, `x-ai` and `z-ai` are mapped to `alibaba`, `xai` and `zhipuai`). Everything else, including limits, modalities, release date and knowledge cutoff, is inherited from the lab entry.
+- A new model whose lab entry has `reasoning = true` is not created. The endpoint says nothing about how a route turns reasoning on, off or up, so the run opens a deduped GitHub issue asking for the route's controls to be researched and its `reasoning_options` hand-authored. Once that file exists, the sync keeps it priced like any other. Reasoning is judged from the lab entry, never from `supported_features`.
+- A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
+- Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
 
 ## OpenAI Notes
 

@@ -1,0 +1,14 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/mistral
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# POST .../publishers/mistralai/models/mistral-small-2503:streamRawPredict with the Mistral chat body.
+# Regional endpoints only; the global endpoint does not serve Mistral.
+base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
+
+[cost]
+input = 0.10
+output = 0.30
+
+[provider]
+npm = "@ai-sdk/mistral"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/mistralai/models"

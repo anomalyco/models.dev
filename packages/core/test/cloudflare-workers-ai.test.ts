@@ -96,7 +96,7 @@ test("never raises a context window or pins other models", () => {
 });
 
 test("marks Clef routes as decisions even when Workers AI search labels them text generation", () => {
-  for (const id of ["@cf/cloudflare/clef", "@cf/cloudflare/clef-flash"]) {
+  for (const id of ["@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
     const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow(id, 65_536)] } });
     const translated = cloudflareWorkersAi.translateModel(source!, {
       existing: () => undefined,

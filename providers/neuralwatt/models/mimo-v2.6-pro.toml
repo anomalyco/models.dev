@@ -1,0 +1,35 @@
+# MiMo-V2.6-Pro on Neuralwatt (Xiaomi MOPD build, in public GET /v1/models).
+# Pricing, limits, and reasoning ladder from live GET /v1/models metadata
+# (checked 2026-10-08): $0.87/$1.74/$0.036, 1,048,560 context, 393,216 output.
+# Effort: reasoning_effort = none|high (default high, reasoning on by default;
+# aliases max/xhigh/medium/low -> high, minimal -> none) per metadata.reasoning
+# and the model page mapping. Off is effort=none, so no separate toggle.
+# Budget: thinking_token_budget (integer reasoning tokens) accepted on this host.
+# Neuralwatt serves text+image+audio input (capabilities vision + audio_input
+# true; video_url is rejected per chat-completions content-parts docs, so the
+# lab video modality is omitted).
+# https://docs.neuralwatt.com/api/models#list-models
+# https://portal.neuralwatt.com/models/mimo-v2.6-pro
+# https://docs.neuralwatt.com/api/chat-completions#reasoning-effort
+base_model = "xiaomi/mimo-v2.6-pro"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.87
+output = 1.74
+cache_read = 0.036
+
+[limit]
+context = 1_048_560
+output = 393_216
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]

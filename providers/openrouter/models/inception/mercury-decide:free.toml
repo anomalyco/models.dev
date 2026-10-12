@@ -1,0 +1,24 @@
+type = "decision"
+name = "Mercury Decide (free)"
+description = "Decision model for typed evaluation of shared state"
+family = "mercury"
+release_date = "2026-09-30"
+last_updated = "2026-09-30"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 65_536
+output = 58_982
+
+[modalities]
+input = ["text"]
+output = ["text"]

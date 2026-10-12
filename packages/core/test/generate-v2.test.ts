@@ -1,7 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import path from "node:path";
 
-import { generateV2, ProviderV2, toModelV2 } from "../src/index.js";
+import {
+  CacheSupportV2,
+  DurationStringV2,
+  generateV2,
+  ProviderV2,
+  toModelV2,
+} from "../src/index.js";
 import type { Model, Provider } from "../src/index.js";
 
 describe("v2 catalog generation", () => {
@@ -133,5 +139,57 @@ describe("v2 catalog generation", () => {
         },
       },
     });
+    expect(providersV2.openrouter?.models["typesafe/jev-1.13"]).toMatchObject({
+      type: "decision",
+      api: {
+        systemone: {
+          base_url: "https://openrouter.ai/api/v1",
+          sdk: { opencodeai: "@opencode/ai/providers/openrouter" },
+        },
+      },
+    });
+    expect(
+      providersV2["google-vertex"]?.models["gemini-2.5-pro"]?.api[
+        "generate-content"
+      ]?.base_url,
+    ).toBe(
+      "https://${GOOGLE_VERTEX_ENDPOINT}/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/google",
+    );
+    expect(
+      providersV2["google-vertex"]?.models["claude-haiku-5-5@default"]?.api
+        .messages?.base_url,
+    ).toBe(
+      "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/anthropic/models",
+    );
   }, 15_000);
+
+  test("validates cache capabilities and duration strings", () => {
+    expect(DurationStringV2.safeParse("5m").success).toBe(true);
+    expect(DurationStringV2.safeParse("30m").success).toBe(true);
+    expect(DurationStringV2.safeParse("1h").success).toBe(true);
+    expect(DurationStringV2.safeParse("24h").success).toBe(true);
+    expect(DurationStringV2.safeParse("500ms").success).toBe(true);
+    expect(DurationStringV2.safeParse("5min").success).toBe(false);
+
+    expect(
+      CacheSupportV2.safeParse({
+        supported: true,
+        implicit: { ttl: ["30m"], min_tokens: 1024 },
+        explicit: {
+          ttl: ["5m", "1h"],
+          max_breakpoints: 4,
+          targets: ["tools", "system", "messages"],
+          min_tokens: 4096,
+        },
+      }).success,
+    ).toBe(true);
+
+    expect(
+      CacheSupportV2.safeParse({
+        supported: true,
+        implicit: true,
+        explicit: false,
+      }).success,
+    ).toBe(true);
+  });
 });

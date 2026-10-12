@@ -12,9 +12,9 @@ open_weights = false
 reasoning_options = []
 
 [cost]
-input = 1.5
-output = 7.5
-cache_read = 0.3
+input = 0.22
+output = 1.8
+cache_read = 0.022
 
 [[cost.tiers]]
 tier = { type = "context", size = 32_001 }
@@ -30,7 +30,7 @@ cache_read = 0.9
 
 [limit]
 context = 262_144
-output = 65_536
+output = 32_768
 
 [modalities]
 input = ["text"]

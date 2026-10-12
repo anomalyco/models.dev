@@ -1,0 +1,25 @@
+# https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct
+# https://github.com/QwenLM/Qwen3-VL (News: 2025.10.4)
+name = "Qwen3 VL 30B A3B Instruct"
+description = "Open vision-language MoE model for image and video understanding, documents, and visual agents"
+family = "qwen"
+release_date = "2025-10-04"
+last_updated = "2025-10-04"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct"
