@@ -1,0 +1,13 @@
+# Source: https://www.tokener.ca/models/nemotron-3.5-lightning-30b (verified 2026-10-11)
+# Price list: https://www.tokener.ca/pricing (USD per 1M tokens, regular price)
+# The model page states: context 262,144; max output 262,144; input text; output text;
+# reasoning Off, On (default Off); tool calling; BF16 weights.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# https://www.tokener.ca/docs#reasoning-controls
+base_model = "nvidia/nemotron-3.5-lightning"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.07
+output = 0.17
+cache_read = 0.02
