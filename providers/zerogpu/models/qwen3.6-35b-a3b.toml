@@ -1,5 +1,7 @@
 # Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
 # Toggle: chat_template_kwargs.enable_thinking = true|false (thinking is off by default).
+# No thinking budget control: thinking_budget (top-level or in chat_template_kwargs),
+# reasoning.max_tokens and thinking_token_budget are not applied.
 # Image and video input are accepted; audio input is rejected.
 # Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12).
 base_model = "alibaba/qwen3.6-35b-a3b"
