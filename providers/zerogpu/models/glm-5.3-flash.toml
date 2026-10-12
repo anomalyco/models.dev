@@ -1,0 +1,18 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
+# Image and PDF input are accepted; video is not.
+# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12).
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.10
+output = 0.35
+cache_read = 0.015
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]
