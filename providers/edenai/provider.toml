@@ -1,6 +1,7 @@
-# Catalog: https://api.edenai.run/v3/models
-# Reasoning: reasoning_effort = none|minimal|low|medium|high|xhigh|max 
-# Pricing: list_pricing, USD per token; the sibling `pricing` field is discounted
+# Catalog: https://api.edenai.run/v3/models?view=models, one entry per model name
+# Routing: a bare model name lets Eden AI pick the provider per request
+# Reasoning: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# Pricing: the cheapest provider's `pricing` (after model discounts), USD per token
 name = "Eden AI"
 env = ["EDENAI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -31,10 +31,10 @@ import {
 } from "../src/sync/providers/digitalocean.js";
 import {
   buildEdenAIModel,
-  collectFirstPartyBaseModels,
   edenai,
   reasoningOptionsFor,
   resolveEdenAIBaseModel,
+  type EdenAIEndpoint,
   type EdenAIModel,
 } from "../src/sync/providers/edenai.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
@@ -2514,43 +2514,18 @@ test("factors new Hyper models against unique models/ metadata", () => {
   });
 });
 
-test("deduplicates Eden AI case-only IDs without losing context metadata", () => {
-  const lowercase = edenAIModel({
-    id: "flexai/deepseek-v4-flash-0731",
-    model_name: "deepseek-v4-flash-0731",
-    owned_by: "flexai",
-    context_length: null,
-  });
-  const uppercase = edenAIModel({
-    ...lowercase,
-    id: "flexai/DeepSeek-V4-Flash-0731",
-    model_name: "DeepSeek-V4-Flash-0731",
-    context_length: 786_432,
-  });
-
-  for (const data of [[lowercase, uppercase], [uppercase, lowercase]]) {
-    const models = edenai.parseModels({ object: "list", data });
-    expect(models).toEqual([{ ...lowercase, context_length: 786_432 }]);
-    expect(edenai.translateModel(models[0]!, { existing: () => undefined, authored: () => undefined })).toMatchObject({
-      id: lowercase.id,
-      model: { base_model: "deepseek/deepseek-v4-flash-0731", limit: { context: 786_432 } },
-    });
-  }
-
-  expect(edenai.parseModels({ object: "list", data: [uppercase] })).toEqual([uppercase]);
-});
-
-test("factors Eden AI models onto lab metadata and prices from list_pricing", () => {
+test("factors Eden AI models onto lab metadata and prices from the effective rate", () => {
   const model = edenAIModel({
-    id: "openai/gpt-5.6-terra",
-    model_name: "gpt-5.6-terra",
-    owned_by: "openai",
-    pricing: { input_cost_per_token: 0.0000013, output_cost_per_token: 0.0000078 },
-    list_pricing: {
-      input_cost_per_token: 0.000002,
-      output_cost_per_token: 0.000012,
-      cache_read_input_token_cost: 0.0000002,
-    },
+    endpoints: [
+      edenAIEndpoint({
+        pricing: {
+          input_cost_per_token: 0.000002,
+          output_cost_per_token: 0.000012,
+          cache_read_input_token_cost: 0.0000002,
+        },
+        list_pricing: { input_cost_per_token: 0.000004, output_cost_per_token: 0.000024 },
+      }),
+    ],
   });
 
   expect(buildEdenAIModel(model)).toMatchObject({
@@ -2561,11 +2536,128 @@ test("factors Eden AI models onto lab metadata and prices from list_pricing", ()
     ],
   });
   expect(buildEdenAIModel(model)).not.toHaveProperty("reasoning");
+  expect(buildEdenAIModel(model)).not.toHaveProperty("name");
+});
+
+test("resolves Eden AI model names through their lab", () => {
+  expect(resolveEdenAIBaseModel(edenAIModel({ id: "claude-sonnet-5.5", owned_by: "anthropic" }))).toBe(
+    "anthropic/claude-sonnet-5-5",
+  );
+  expect(resolveEdenAIBaseModel(edenAIModel({ id: "glm-5", owned_by: "zai" }))).toBe("zhipuai/glm-5");
+});
+
+test("names Eden AI models that resolve onto another model's lab entry", () => {
+  expect(buildEdenAIModel(edenAIModel({ id: "glm-5.3-fast", owned_by: "zai" }))).toMatchObject({
+    base_model: "zhipuai/glm-5.3",
+    name: "GLM-5.3 (glm-5.3-fast)",
+  });
+  expect(buildEdenAIModel(edenAIModel({ id: "claude-sonnet-5.5", owned_by: "anthropic" }))).not.toHaveProperty(
+    "name",
+  );
+});
+
+test("prices an Eden AI model at its cheapest routable provider", () => {
+  const gptOss = (id: string, input: number | null, output: number) =>
+    edenAIEndpoint({ id, pricing: { input_cost_per_token: input, output_cost_per_token: output } });
+
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "gpt-oss-120b",
+        endpoints: [
+          gptOss("groq/openai/gpt-oss-120b", 0.00000015, 0.0000006),
+          gptOss("deepinfra/openai/gpt-oss-120b", 0.00000005, 0.00000045),
+          gptOss("cerebras/gpt-oss-120b", 0.00000005, 0.0000005),
+          // A regional pin and an unpriced provider are never chosen for a bare name.
+          gptOss("deepinfra/openai/gpt-oss-120b@eu", 0.00000001, 0.0000001),
+          gptOss("acme/gpt-oss-120b", null, 0.0000001),
+        ],
+      }),
+    ),
+  ).toMatchObject({ base_model: "openai/gpt-oss-120b", cost: { input: 0.05, output: 0.45 } });
+
+  expect(
+    buildEdenAIModel(
+      edenAIModel({ id: "gpt-oss-120b", endpoints: [gptOss("acme/gpt-oss-120b", null, 0.0000001)] }),
+    ),
+  ).toBeUndefined();
+});
+
+test("breaks Eden AI price ties on cache reads, ignoring float noise", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "claude-sonnet-5.5",
+        owned_by: "anthropic",
+        endpoints: [
+          edenAIEndpoint({
+            id: "databricks/databricks-claude-sonnet-5-5",
+            pricing: {
+              input_cost_per_token: 0.0000019999999999,
+              output_cost_per_token: 0.000010000000003,
+              cache_read_input_token_cost: 1.9999999999e-7,
+            },
+          }),
+          edenAIEndpoint({
+            id: "deepinfra/anthropic/claude-sonnet-5-5",
+            pricing: { input_cost_per_token: 0.000002, output_cost_per_token: 0.00001 },
+          }),
+          edenAIEndpoint({
+            id: "anthropic/claude-sonnet-5-5",
+            pricing: {
+              input_cost_per_token: 0.000002,
+              output_cost_per_token: 0.00001,
+              cache_read_input_token_cost: 1e-7,
+            },
+          }),
+        ],
+      }),
+    ),
+  ).toMatchObject({ cost: { input: 2, output: 10, cache_read: 0.1 } });
+});
+
+test("gives an Eden AI model its largest provider window and any provider's capabilities", () => {
+  const built = buildEdenAIModel(
+    edenAIModel({
+      id: "gpt-oss-120b",
+      endpoints: [
+        edenAIEndpoint({
+          id: "groq/openai/gpt-oss-120b",
+          context_length: 131_072,
+          capabilities: {
+            input_modalities: ["text"],
+            output_modalities: ["text"],
+            supports_function_calling: false,
+            supports_response_schema: false,
+          },
+        }),
+        edenAIEndpoint({
+          id: "deepinfra/openai/gpt-oss-120b",
+          context_length: 262_144,
+          capabilities: {
+            input_modalities: ["text", "image"],
+            output_modalities: ["text"],
+            supports_function_calling: true,
+            supports_response_schema: false,
+          },
+        }),
+      ],
+    }),
+  );
+
+  expect(built).toMatchObject({
+    limit: { context: 262_144 },
+    modalities: { input: ["text", "image"] },
+    attachment: true,
+    structured_output: false,
+  });
+  // The lab entry already says true, so "any provider" leaves nothing to override.
+  expect(built).not.toHaveProperty("tool_call");
 });
 
 test("takes Eden AI reasoning options from the model's own lab entry", () => {
   expect(reasoningOptionsFor("deepseek/deepseek-v4-pro")).toEqual([
-    { type: "effort", values: ["none", "high", "max"] },
+    { type: "effort", values: ["none", "low", "high", "max"] },
   ]);
   expect(reasoningOptionsFor("openai/o1")).toEqual([
     { type: "effort", values: ["low", "medium", "high"] },
@@ -2573,16 +2665,10 @@ test("takes Eden AI reasoning options from the model's own lab entry", () => {
 });
 
 test("skips new Eden AI models whose reasoning control has no effort equivalent", () => {
-  // The sync does not yet map this route's budget control to Eden AI's API.
+  // The sync does not yet map this model's budget control to Eden AI's API.
   expect(reasoningOptionsFor("google/gemini-2.5-pro")).toBeUndefined();
   expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "google/gemini-2.5-pro",
-        model_name: "gemini-2.5-pro",
-        owned_by: "google",
-      }),
-    ),
+    buildEdenAIModel(edenAIModel({ id: "gemini-2.5-pro", owned_by: "google" })),
   ).toBeUndefined();
 });
 
@@ -2593,18 +2679,14 @@ test("Eden AI preserves authored controls when reasoning mapping is unresolved",
     [{ type: "effort", values: ["high"] }],
     [{ type: "toggle" }, { type: "budget_tokens" }],
   ];
-  for (const [id, base] of [
-    ["zai/glm-5", "zhipuai/glm-5"],
-    ["moonshot/kimi-k2.6", "moonshotai/kimi-k2.6"],
-    ["minimax/MiniMax-M3", "minimax/MiniMax-M3"],
-    ["deepinfra/nvidia/Nemotron-3-Nano-30B-A3B", "nvidia/nemotron-3-nano-30b-a3b"],
-    ["google/gemini-2.5-pro", "google/gemini-2.5-pro"],
+  for (const [id, owner, base] of [
+    ["glm-5", "zai", "zhipuai/glm-5"],
+    ["kimi-k2.6", "moonshot", "moonshotai/kimi-k2.6"],
+    ["minimax-m3", "minimax", "minimax/MiniMax-M3"],
+    ["nemotron-3-nano-30b-a3b", "nvidia", "nvidia/nemotron-3-nano-30b-a3b"],
+    ["gemini-2.5-pro", "google", "google/gemini-2.5-pro"],
   ] as const) {
-    const model = edenAIModel({
-      id,
-      owned_by: id.slice(0, id.indexOf("/")),
-      model_name: id.slice(id.indexOf("/") + 1),
-    });
+    const model = edenAIModel({ id, owned_by: owner });
     expect(buildEdenAIModel(model)).toBeUndefined();
     for (const reasoning_options of authored) {
       expect(buildEdenAIModel(model, { base_model: base, reasoning_options })).toMatchObject({
@@ -2620,9 +2702,9 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
   const modelsDir = path.join(root, "providers", "edenai", "models");
   const repo = path.join(import.meta.dirname, "..", "..", "..");
   const files = [
-    ["openai/gpt-4o-mini", "openai/gpt-4o-mini"],
-    ["zai/glm-5", "zhipuai/glm-5"],
-    ["retired/model", "openai/gpt-4o-mini"],
+    ["gpt-6-luna", "openai/gpt-6-luna"],
+    ["glm-5", "zhipuai/glm-5"],
+    ["retired-model", "openai/gpt-6-luna"],
   ] as const;
 
   try {
@@ -2633,41 +2715,38 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
       await mkdir(path.dirname(metadata), { recursive: true });
       await copyFile(path.join(repo, "models", `${base}.toml`), metadata);
       await copyFile(
-        path.join(repo, "providers", "edenai", "models", `${id === "retired/model" ? "openai/gpt-4o-mini" : id}.toml`),
+        path.join(repo, "providers", "edenai", "models", `${id === "retired-model" ? "gpt-6-luna" : id}.toml`),
         destination,
       );
     }
-    const glmPath = path.join(modelsDir, "zai/glm-5.toml");
+    const glmPath = path.join(modelsDir, "glm-5.toml");
     const authored = (await readFile(glmPath, "utf8")).replace(
       "reasoning_options = []",
       'reasoning_options = [{ type = "toggle" }]',
     );
     const header = "# Toggle: extra_body.thinking.type = enabled|disabled\n";
     await Bun.write(glmPath, header + authored);
-    const supported = edenAIModel({
-      id: "openai/gpt-4o-mini",
-      model_name: "gpt-4o-mini",
-      owned_by: "openai",
-      list_pricing: { input_cost_per_token: 0.000123, output_cost_per_token: 0.000456 },
+    const lunaEndpoint = edenAIEndpoint({
+      id: "openai/gpt-6-luna",
+      pricing: { input_cost_per_token: 0.000123, output_cost_per_token: 0.000456 },
     });
-    const unresolved = edenAIModel({ id: "zai/glm-5", model_name: "glm-5", owned_by: "zai" });
+    const supported = edenAIModel({
+      id: "gpt-6-luna",
+      endpoints: [lunaEndpoint, { ...lunaEndpoint, id: "openai/gpt-6-luna@us" }],
+    });
+    const unresolved = edenAIModel({ id: "glm-5", owned_by: "zai" });
     const provider = {
       ...edenai,
       modelsDir,
       async fetchModels() {
-        return { object: "list", data: [
-          supported,
-          { ...supported, id: "openai/gpt-4o-mini@us" },
-          unresolved,
-          { ...unresolved, id: "zai/glm-5@us" },
-        ] };
+        return { object: "list", data: [supported, unresolved] };
       },
     };
 
     const result = await syncProvider(provider);
-    expect(result).toMatchObject({ created: 1, deleted: 1 });
+    expect(result).toMatchObject({ created: 0, deleted: 1 });
     expect(result.files.filter((file) => file.status === "deleted").map((file) => file.path)).toEqual([
-      path.join(modelsDir, "retired/model.toml"),
+      path.join(modelsDir, "retired-model.toml"),
     ]);
     const content = await readFile(glmPath, "utf8");
     expect(content).toStartWith(header);
@@ -2675,171 +2754,40 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
       base_model: "zhipuai/glm-5",
       reasoning_options: [{ type: "toggle" }],
     });
-    expect(await Bun.file(path.join(modelsDir, "zai/glm-5@us.toml")).exists()).toBe(false);
-    expect(await Bun.file(path.join(modelsDir, "openai/gpt-4o-mini@us.toml")).exists()).toBe(true);
+    expect(Bun.TOML.parse(await readFile(path.join(modelsDir, "gpt-6-luna.toml"), "utf8"))).toMatchObject({
+      cost: { input: 123, output: 456 },
+    });
   } finally {
     await rm(root, { recursive: true, force: true });
   }
 });
 
 test("omits Eden AI reasoning options for non-reasoning models", () => {
-  const model = edenAIModel({
-    id: "openai/gpt-4o-mini",
-    model_name: "gpt-4o-mini",
-    owned_by: "openai",
-    context_length: 128_000,
-  });
-
-  const built = buildEdenAIModel(model);
+  const built = buildEdenAIModel(edenAIModel({ id: "gpt-4o-mini" }));
   expect(built).toMatchObject({ base_model: "openai/gpt-4o-mini" });
   expect(built).not.toHaveProperty("reasoning_options");
 });
 
 test("skips Eden AI models without lab metadata", () => {
   expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "deepinfra/acme/Not-A-Real-Model",
-        model_name: "acme/Not-A-Real-Model",
-        owned_by: "deepinfra",
-      }),
-    ),
+    buildEdenAIModel(edenAIModel({ id: "not-a-real-model", owned_by: "acme" })),
   ).toBeUndefined();
-});
-
-test("names Eden AI regional deployments after the canonical model", () => {
-  expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "amazon/anthropic.claude-opus-5@eu",
-        model_name: "anthropic.claude-opus-5",
-        owned_by: "amazon",
-      }),
-    ),
-  ).toMatchObject({
-    base_model: "anthropic/claude-opus-5",
-    name: "Claude Opus 5 (Amazon Bedrock, EU)",
-  });
-});
-
-test("names Eden AI latest aliases as Latest plus the current target", () => {
-  expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "anthropic/claude-fable-latest",
-        model_name: "claude-fable-5-1",
-        owned_by: "anthropic",
-        alias_of: "anthropic/claude-fable-5-1",
-      }),
-    ),
-  ).toMatchObject({
-    base_model: "anthropic/claude-fable-5-1",
-    name: "Claude Fable Latest (Claude Fable 5.1)",
-  });
-  expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "openai/gpt-latest",
-        model_name: "gpt-6-astra",
-        owned_by: "openai",
-        alias_of: "openai/gpt-6-astra",
-      }),
-    ),
-  ).toMatchObject({
-    base_model: "openai/gpt-6-astra",
-    name: "GPT Latest (GPT-6 Astra)",
-  });
-  expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "vertex/gemini-flash-latest@us",
-        model_name: "gemini-3.8-flash",
-        owned_by: "vertex",
-        alias_of: "vertex/gemini-3.8-flash",
-      }),
-    ),
-  ).toMatchObject({
-    base_model: "google/gemini-3.8-flash",
-    name: "Gemini Flash Latest (Gemini 3.8 Flash, Vertex AI, US)",
-  });
-});
-
-test("names Eden AI non-primary hosts distinctly from the lab route", () => {
-  expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "google/gemini-3.8-flash",
-        model_name: "gemini-3.8-flash",
-        owned_by: "google",
-      }),
-    ),
-  ).not.toHaveProperty("name");
-  expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "vertex/gemini-3.8-flash",
-        model_name: "gemini-3.8-flash",
-        owned_by: "vertex",
-      }),
-    ),
-  ).toMatchObject({
-    base_model: "google/gemini-3.8-flash",
-    name: "Gemini 3.8 Flash (Vertex AI)",
-  });
-  expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "vertex/gemini-3.8-flash@us",
-        model_name: "gemini-3.8-flash",
-        owned_by: "vertex",
-      }),
-    ),
-  ).toMatchObject({
-    base_model: "google/gemini-3.8-flash",
-    name: "Gemini 3.8 Flash (Vertex AI, US)",
-  });
-  expect(
-    buildEdenAIModel(
-      edenAIModel({
-        id: "deepinfra/openai/gpt-oss-120b",
-        model_name: "openai/gpt-oss-120b",
-        owned_by: "deepinfra",
-      }),
-    ),
-  ).toMatchObject({
-    base_model: "openai/gpt-oss-120b",
-    name: "GPT OSS 120B (Deep Infra)",
-  });
-});
-
-test("does not treat Eden AI case-only aliases as latest pointers", () => {
-  const built = buildEdenAIModel(
-    edenAIModel({
-      id: "flexai/deepseek-v4-flash-0731",
-      model_name: "DeepSeek-V4-Flash-0731",
-      owned_by: "flexai",
-      alias_of: "flexai/DeepSeek-V4-Flash-0731",
-    }),
-  );
-  expect(built).toMatchObject({
-    base_model: "deepseek/deepseek-v4-flash-0731",
-    name: "DeepSeek V4 Flash 0731 (FlexAI)",
-  });
 });
 
 test("builds Eden AI context tiers without reading time-based cache keys", () => {
   const model = edenAIModel({
-    id: "openai/gpt-5.6-terra",
-    model_name: "gpt-5.6-terra",
-    owned_by: "openai",
-    list_pricing: {
-      input_cost_per_token: 0.000002,
-      output_cost_per_token: 0.000012,
-      input_cost_per_token_above_272k_tokens: 0.000004,
-      output_cost_per_token_above_272k_tokens: 0.000018,
-      cache_creation_input_token_cost_above_1hr: 0.000009,
-      cache_creation_input_token_cost_above_1hr_above_272k_tokens: 0.00001,
-    },
+    endpoints: [
+      edenAIEndpoint({
+        pricing: {
+          input_cost_per_token: 0.000002,
+          output_cost_per_token: 0.000012,
+          input_cost_per_token_above_272k_tokens: 0.000004,
+          output_cost_per_token_above_272k_tokens: 0.000018,
+          cache_creation_input_token_cost_above_1hr: 0.000009,
+          cache_creation_input_token_cost_above_1hr_above_272k_tokens: 0.00001,
+        },
+      }),
+    ],
   });
 
   expect(buildEdenAIModel(model)).toMatchObject({
@@ -2852,63 +2800,6 @@ test("builds Eden AI context tiers without reading time-based cache keys", () =>
   expect(
     (buildEdenAIModel(model) as { cost: { tiers: Array<Record<string, unknown>> } }).cost.tiers[0],
   ).not.toHaveProperty("cache_write");
-});
-
-test("keeps only the first-party Eden AI route when the lab's own API is relayed", () => {
-  const bedrock = edenAIModel({
-    id: "amazon/anthropic.claude-opus-5",
-    model_name: "anthropic.claude-opus-5",
-    owned_by: "amazon",
-  });
-  const direct = edenAIModel({
-    id: "anthropic/claude-opus-5",
-    model_name: "claude-opus-5",
-    owned_by: "anthropic",
-  });
-
-  const firstParty = collectFirstPartyBaseModels([bedrock, direct]);
-  expect(firstParty).toEqual(new Set(["anthropic/claude-opus-5"]));
-  expect(buildEdenAIModel(bedrock, undefined, firstParty)).toBeUndefined();
-  expect(buildEdenAIModel(direct, undefined, firstParty)).toMatchObject({
-    base_model: "anthropic/claude-opus-5",
-  });
-});
-
-test("keeps every Eden AI route for models with no first-party relay", () => {
-  const models = ["deepinfra", "groq", "cerebras"].map((owner) =>
-    edenAIModel({
-      id: `${owner}/openai/gpt-oss-120b`,
-      model_name: "openai/gpt-oss-120b",
-      owned_by: owner,
-    }),
-  );
-
-  const firstParty = collectFirstPartyBaseModels(models);
-  expect(firstParty.size).toBe(0);
-  const names = {
-    deepinfra: "GPT OSS 120B (Deep Infra)",
-    groq: "GPT OSS 120B (Groq)",
-    cerebras: "GPT OSS 120B (Cerebras)",
-  };
-  for (const model of models) {
-    expect(buildEdenAIModel(model, undefined, firstParty)).toMatchObject({
-      base_model: "openai/gpt-oss-120b",
-      name: names[model.owned_by as keyof typeof names],
-    });
-  }
-});
-
-test("resolves Eden AI aliases to the model they point at", () => {
-  expect(
-    resolveEdenAIBaseModel(
-      edenAIModel({
-        id: "anthropic/claude-opus-latest",
-        model_name: "claude-opus-latest",
-        owned_by: "anthropic",
-        alias_of: "anthropic/claude-opus-5",
-      }),
-    ),
-  ).toBe("anthropic/claude-opus-5");
 });
 
 test("preserves model type when formatting synced TOML", () => {
@@ -5355,11 +5246,9 @@ function mergeGatewayModel(overrides: Partial<MergeGatewayModel> = {}): MergeGat
   };
 }
 
-function edenAIModel(overrides: Partial<EdenAIModel> = {}): EdenAIModel {
+function edenAIEndpoint(overrides: Partial<EdenAIEndpoint> = {}): EdenAIEndpoint {
   return {
     id: "openai/gpt-5.6-terra",
-    owned_by: "openai",
-    model_name: "gpt-5.6-terra",
     context_length: 1_050_000,
     capabilities: {
       input_modalities: ["text", "image"],
@@ -5367,10 +5256,20 @@ function edenAIModel(overrides: Partial<EdenAIModel> = {}): EdenAIModel {
       supports_function_calling: true,
       supports_response_schema: true,
     },
-    list_pricing: {
+    pricing: {
       input_cost_per_token: 0.000002,
       output_cost_per_token: 0.000012,
     },
+    ...overrides,
+  };
+}
+
+function edenAIModel(overrides: Partial<EdenAIModel> = {}): EdenAIModel {
+  const { id = "gpt-5.6-terra", owned_by = "openai" } = overrides;
+  return {
+    id,
+    owned_by,
+    endpoints: [edenAIEndpoint({ id: `${owned_by}/${id}` })],
     ...overrides,
   };
 }
