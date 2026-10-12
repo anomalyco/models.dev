@@ -1,0 +1,24 @@
+# Source: https://api.lowrouter.ai/v1/models?currency=usd (read 2026-10-12): this ID has 21 routes on aki,
+# aws-bedrock, deepinfra, groq, infercom, ionos, nebius, nscale, ovhcloud, regolo, scaleway.
+# Cost is the route a plain request resolved to on 2026-10-12 under the default routing profile:
+# Scaleway, fr-par endpoint;
+# that route bills in EUR; converted at 1.1298 USD/EUR (ECB monthly fixing, 2026-10-01).
+# USD 0.1695 in / 0.6779 out per MTok.
+# Another route can serve a request (the key's routing policy, or a failover); usage.cost on the
+# response carries the amount debited.
+# Effort: reasoning_effort = low|medium|high, forwarded unchanged to the OpenAI-compatible host
+# (https://lowrouter.ai/docs/guides/request-parameters); these are the levels gpt-oss documents and the
+# other hosts of this model list. Live check 2026-10-12 on this route: accepted low, medium, high;
+# disclosed as rejected_by_provider and served without the parameter: minimal, xhigh;
+# refused upstream with a 400 that LowRouter passed through: none;
+# max is refused by LowRouter itself with 400 'reasoning_effort "max" is not valid (expected one of: none,
+# minimal, low, medium, high, xhigh)'.
+base_model = "openai/gpt-oss-120b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.1695
+output = 0.6779
