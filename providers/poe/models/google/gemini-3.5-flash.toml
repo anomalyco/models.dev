@@ -1,7 +1,15 @@
+# Sources: Poe API /v1/models, accessed 2026-10-12 (verified live with
+# packages/core/script/poe-reasoning-audit.py) — costs already exact;
+# input modalities refreshed (video added, audio no longer listed by the bot);
+# thinking_level enum = minimal|low|high (no medium) verified live.
+# Effort follows the bot's extra_body thinking_level (the control that scales:
+# minimal rt=0, low/high raise rt; medium -> 400). Top-level reasoning_effort=medium
+# returns 200 but its reasoning_tokens overlap baseline/low and do not scale as a
+# distinct level, so it is not filed as an extra effort value (see provider.toml:
+# forwarding is best-effort; acceptance alone is not an effective control).
 base_model = "google/gemini-3.5-flash"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "high"] }]
 name = "Gemini-3.5-Flash"
-temperature = false
 
 [cost]
 input = 1.5152
@@ -9,4 +17,4 @@ output = 9.0909
 cache_read = 0.1515
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image", "video"]
