@@ -1,0 +1,27 @@
+# Rodium-native routing alias (no shared lab model). Costs vary by routed model.
+# https://www.rodiumai.io/docs/models
+name = "Auto"
+description = "RodiumAi auto routing alias across catalogue models."
+family = "auto"
+release_date = "2025-01-01"
+last_updated = "2026-10-12"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
