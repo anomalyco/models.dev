@@ -1,7 +1,7 @@
 # Pricing: https://api.uplinkswitch.com/v1/catalog (id hy3), USD per million tokens, read 2026-10-12
-# Effort: reasoning_effort = none|low|high
+# Effort: reasoning_effort = none|high (none turns reasoning off)
 base_model = "tencent/hy3"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [cost]
 input = 0.0417
