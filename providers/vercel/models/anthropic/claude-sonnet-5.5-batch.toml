@@ -1,0 +1,27 @@
+name = "Claude Sonnet 5.5 (Batch)"
+description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
+family = "claude-sonnet"
+release_date = "2026-09-28"
+last_updated = "2026-09-28"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.05
+cache_write = 1.25
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

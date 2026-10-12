@@ -1,0 +1,26 @@
+name = "GPT-5 pro (Batch)"
+description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
+family = "gpt"
+release_date = "2025-10-06"
+last_updated = "2025-10-06"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 7.5
+output = 60
+
+[limit]
+context = 400_000
+input = 128_000
+output = 272_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

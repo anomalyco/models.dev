@@ -1,0 +1,27 @@
+name = "GPT-5 nano (Batch)"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "gpt"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.025
+output = 0.2
+cache_read = 0.0025
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,0 +1,26 @@
+name = "Gemini 3.5 Flash (Batch)"
+description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
+family = "gemini"
+release_date = "2026-05-19"
+last_updated = "2026-05-19"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high"]
+
+[cost]
+input = 0.75
+output = 4.5
+cache_read = 0.075
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

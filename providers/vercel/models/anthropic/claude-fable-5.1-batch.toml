@@ -1,0 +1,30 @@
+name = "Claude Fable 5.1 (Batch)"
+description = "Claude model for creative writing, analysis, and controlled agent workflows"
+family = "claude-fable"
+release_date = "2026-08-31"
+last_updated = "2026-08-31"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.125
+cache_write = 6.25
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

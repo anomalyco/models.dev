@@ -1,0 +1,23 @@
+name = "GPT-4.1 (Batch)"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+family = "gpt"
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1
+output = 4
+cache_read = 0.25
+
+[limit]
+context = 1_047_576
+input = 1_014_808
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
