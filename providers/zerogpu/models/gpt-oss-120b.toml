@@ -1,13 +1,9 @@
 # Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
-# No caller reasoning control on this host. reasoning_effort (chat completions) and
-# reasoning.effort (/v1/responses) are accepted but not applied: on the same prompt
-# with max_tokens = 16000, low vs high gave 639/591 vs 568/610 completion tokens on
-# /v1/chat/completions and 615 vs 612 output tokens on /v1/responses.
-# The documented /v1/responses schema has no reasoning field:
-# https://docs.zerogpu.ai/api-reference/models/gpt-oss-120b
+# Effort: reasoning_effort = low|medium|high on /v1/chat/completions,
+# reasoning.effort on /v1/responses.
 # Verified against https://api.zerogpu.ai/v1 (2026-10-12).
 base_model = "openai/gpt-oss-120b"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.15
