@@ -1,13 +1,8 @@
-# Exited preview 2026-09-10; the preview-parity list price ($1.45/$4.5/$0.145)
-# was confirmed as the launch price per GET /v1/models (checked 2026-09-18).
-# Reasoning cannot be disabled (reasoning.mandatory = true), so there is no
-# none level and no toggle. The API supports low, high and max as distinct
-# efforts; minimal, medium and xhigh are accepted as aliases onto them.
+# Effort: reasoning_effort = "low" | "high" | "max"
 # Budget: thinking_token_budget (integer reasoning tokens)
 # https://portal.neuralwatt.com/docs/api/chat-completions
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
-structured_output = false
 
 interleaved = true
 

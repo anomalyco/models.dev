@@ -1,7 +1,13 @@
+# Effort: reasoning_effort = "none" | "max"
+# https://portal.neuralwatt.com/docs/api/chat-completions
 base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B"
-reasoning_options = [{ type = "effort", values = ["none", "max"] }]
+
 interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "max"]
 
 [cost]
 input = 0.144
