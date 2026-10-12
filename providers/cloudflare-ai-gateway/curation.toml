@@ -63,6 +63,21 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhig
 structured_output = true
 reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 
+# Claude Haiku 5.5: adaptive thinking on by default; disabled accepted at high
+# effort or below, rejected at xhigh/max, so toggle + effort (no none in effort).
+# Wire: thinking.type = adaptive|disabled; output_config.effort = low|medium|high|xhigh|max
+# on the Anthropic Messages path.
+# https://platform.claude.com/docs/en/build-with-claude/effort
+# https://platform.claude.com/docs/en/models/haiku-5-5/overview
+# https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide
+[models."anthropic/claude-haiku-5.5"]
+note = [
+  "Toggle: thinking.type = adaptive|disabled (disabled accepted at high effort or below; xhigh|max reject it).",
+  "Effort: output_config.effort = low|medium|high|xhigh|max (Anthropic Messages API; adaptive thinking on by default).",
+  "Sources: https://platform.claude.com/docs/en/build-with-claude/effort ; https://platform.claude.com/docs/en/models/haiku-5-5/overview ; https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide",
+]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
 [models."anthropic/claude-opus-4.5"]
 structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1024 }]
