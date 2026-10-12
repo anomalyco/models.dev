@@ -218,6 +218,16 @@ test("preserves authored budget_tokens controls", () => {
   ]);
 });
 
+test("does not preserve a toggle alongside the API effort ladder", () => {
+  const existing = authored({ reasoning_options: [{ type: "toggle" }] });
+
+  const built = buildNeuralwattModel(parsedModel(), existing, "alibaba/qwen3.8-27b");
+
+  expect(built.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "xhigh"] },
+  ]);
+});
+
 test("never un-deprecates a locally deprecated model", () => {
   const built = buildNeuralwattModel(
     parsedModel({ metadata: neuralwattMetadata({ deprecated: false }) }),
@@ -311,7 +321,7 @@ function context(entries: Record<string, ExistingModel>) {
   return { existing: (id: string) => entries[id], authored: (id: string) => entries[id] };
 }
 
-test("skips Neuralwatt-branded nw-* aliases as missing models rather than aliasing lab files", () => {
+test("skips Neuralwatt-branded nw-* aliases rather than aliasing lab files", () => {
   const model = parsedModel({
     id: "nw-large",
     metadata: neuralwattMetadata({ huggingface_id: "moonshotai/Kimi-K3" }),
@@ -319,7 +329,7 @@ test("skips Neuralwatt-branded nw-* aliases as missing models rather than aliasi
 
   expect(neuralwatt.translateModel(model, context({}))).toBeUndefined();
   expect(neuralwatt.sourceID(model)).toBe("nw-large");
-  expect(neuralwatt.missingModelID(model)).toBe("nw-large");
+  expect(neuralwatt.missingModelID(model)).toBeUndefined();
 });
 
 test("returns undefined for an unresolvable base so the runner preserves the file", () => {
@@ -333,6 +343,7 @@ test("returns undefined for an unresolvable base so the runner preserves the fil
     model,
     context({ "mystery-model-9b": authored({ base_model: "unknownlab/mystery-9b" }) }),
   )).toBeUndefined();
+  expect(neuralwatt.missingModelID(model)).toBe("mystery-model-9b");
 });
 
 test("normalizes a new model's id and factors it onto the resolved lab base", () => {
@@ -391,15 +402,11 @@ test("writes a leading wire-path header for every reasoning control on the file"
   expect(translated?.header).toContain("https://portal.neuralwatt.com/docs/");
 });
 
-test("renders skipped and missing notices with their ids", () => {
+test("renders the skipped notice with its ids", () => {
   expect(neuralwatt.skippedNotice(["nw-large", "nw-flash"])).toEqual([
     expect.stringContaining("nw-large, nw-flash"),
   ]);
-  expect(neuralwatt.missingNotice(["old-model.toml"])).toEqual([
-    expect.stringContaining("old-model.toml"),
-  ]);
   expect(neuralwatt.skippedNotice([])).toEqual([]);
-  expect(neuralwatt.missingNotice([])).toEqual([]);
 });
 
 function contextWithAuthored(

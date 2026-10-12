@@ -161,7 +161,11 @@ export function buildNeuralwattModel(
   if (reasoning === true) {
     const supported = model.metadata.reasoning.supported_efforts ?? [];
     const ladder = REASONING_EFFORT_LADDER.filter((level) => supported.includes(level));
-    const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
+    // Only budget controls survive a sync: this host's off switch is the
+    // effort ladder (none), so a preserved toggle could pair a `none` level
+    // with a second off control — the combination the catalog forbids — and
+    // the regenerated header could not document a toggle wire path anyway.
+    const preserved = existing?.reasoning_options?.filter((option) => option.type === "budget_tokens") ?? [];
     if (ladder.length === 0 && preserved.length === 0) {
       throw new MissingReasoningOptionsError(
         neuralwattID(model.id),
@@ -267,7 +271,8 @@ export const neuralwatt = {
     };
     // nw-* entries are Neuralwatt-branded aliases for lab models the host also
     // serves under their own ids; the catalog does not author branded routes,
-    // so these are reported as missing models instead of aliasing the lab file.
+    // so these are skipped without a missing-model issue: an intentional
+    // omission, not missing metadata (see missingModelID).
     if (id.startsWith("nw-")) return undefined;
     // Variant ids (flex/fast/speed) may lack their own huggingface_id; fall
     // back to the sibling entry's resolved base so the variant still factors
@@ -286,18 +291,17 @@ export const neuralwatt = {
     return neuralwattID(model.id);
   },
   missingModelID(model: NeuralwattModel) {
-    return neuralwattID(model.id);
+    const id = neuralwattID(model.id);
+    // Intentional omissions (branded nw-* aliases) return undefined: opening
+    // issues for routes the catalog will never author only feeds the issue
+    // fixer's redispatch loop. Every other skip is an unresolvable lab base,
+    // which does need manual metadata.
+    return id.startsWith("nw-") ? undefined : id;
   },
   skippedNotice(ids: string[]) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} remote model(s) skipped: Neuralwatt-branded nw-* aliases are not authored, and other ids need a resolvable models/<lab>/<model>.toml base: ${ids.join(", ")}`,
-    ];
-  },
-  missingNotice(paths: string[]) {
-    if (paths.length === 0) return [];
-    return [
-      `${paths.length} local model(s) deleted after being removed from the Neuralwatt API: ${paths.join(", ")}`,
+      `${ids.length} remote model(s) skipped: Neuralwatt-branded nw-* aliases are intentionally not authored; other ids need a resolvable models/<lab>/<model>.toml base and are reported via missing-model issues: ${ids.join(", ")}`,
     ];
   },
 } satisfies SyncProvider<NeuralwattModel>;
