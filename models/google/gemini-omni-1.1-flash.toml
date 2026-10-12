@@ -1,0 +1,21 @@
+# Sources:
+# - https://poe.com/gemini-omni-1.1-flash (Poe API model entry: modalities,
+#   131k context, no reasoning control; added 2026-08-27)
+name = "Gemini Omni 1.1 Flash"
+description = "Video generation and editing model for scene extension, frame interpolation, and reference-guided multimodal control"
+family = "gemini"
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 131_072
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

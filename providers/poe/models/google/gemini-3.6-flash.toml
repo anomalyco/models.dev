@@ -1,0 +1,16 @@
+# Sources:
+# - https://poe.com/gemini-3.6-flash
+# Effort: thinking_level = minimal|low|medium|high (Poe bot parameter)
+base_model = "google/gemini-3.6-flash"
+name = "Gemini-3.6-Flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+temperature = false
+
+[cost]
+input = 0.7576
+output = 3.7879
+cache_read = 0.0758
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
