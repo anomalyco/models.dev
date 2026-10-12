@@ -1,8 +1,12 @@
 # Sources:
 # https://research.meta.ai/blog/muse-wonder
 # https://research.meta.ai/static/muse-wonder-model-card (PDF; scores on the capabilities scorecard)
-# The model card states a 1M-token context; Meta documents its 1M Muse context as 1,048,576 tokens.
-# Meta has not yet published an output limit, knowledge cutoff, or API reference for this model.
+# Meta Model API probes with muse-wonder-1.0 on 2026-10-12:
+# - Prompt plus max_tokens is accepted up to 1,048,576 tokens (including Meta's injected scaffolding).
+#   There is no separate output cap, but max_tokens reserves output TPM capacity, so this uses
+#   the same 131,072 practical output limit as Muse Spark.
+# - Image, PDF, audio, and video inputs, strict json_schema output, temperature, and tool calls are accepted.
+# Meta has not published a knowledge cutoff.
 
 name = "Muse Wonder"
 description = "Muse Wonder is a frontier multimodal reasoning model from Meta for personal and professional agents, long-horizon coding, and computer use. It combines Active Memory, which carries relevant context across conversations, with Active Focus, which keeps it working through blockers toward a goal."
@@ -12,13 +16,16 @@ last_updated = "2026-10-12"
 attachment = true
 reasoning = true
 tool_call = true
+structured_output = true
+temperature = true
 open_weights = false
 
 [limit]
 context = 1_048_576
+output = 131_072
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image", "video", "pdf", "audio"]
 output = ["text"]
 
 [[links]]
