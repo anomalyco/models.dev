@@ -107,7 +107,20 @@ test("refuses a truncated catalog rather than deleting the models it omits", asy
     ));
 
   await expect(fetchNeuralwattModels(truncated as unknown as typeof fetch))
-    .rejects.toThrow(/below the 15 needed/);
+    .rejects.toThrow(/below the 20 needed/);
+});
+
+test("holds back a catalog that shrank below the safety floor", async () => {
+  const shrunken = () =>
+    Promise.resolve(new Response(
+      JSON.stringify({
+        data: Array.from({ length: 19 }, (_, index) => neuralwattModel({ id: `model-${index}` })),
+      }),
+      { headers: { "content-type": "application/json" } },
+    ));
+
+  await expect(fetchNeuralwattModels(shrunken as unknown as typeof fetch))
+    .rejects.toThrow(/below the 20 needed/);
 });
 
 test("normalizes API ids to the catalog's hyphen convention", () => {
@@ -531,6 +544,32 @@ test("pins structured_output false when the host disables JSON mode", () => {
   const built = buildNeuralwattModel(model, undefined, "alibaba/qwen3.8-27b");
 
   expect(built).toMatchObject({ structured_output: false });
+});
+
+test("gives a new reasoning model the interleaved side channel", () => {
+  const model = parsedModel();
+
+  const built = buildNeuralwattModel(model, undefined, undefined);
+
+  expect(built).toMatchObject({ interleaved: true });
+});
+
+test("keeps an authored interleaved value over the host default", () => {
+  const model = parsedModel();
+
+  const built = buildNeuralwattModel(model, authored({ interleaved: false }), undefined);
+
+  expect(built).toMatchObject({ interleaved: false });
+});
+
+test("leaves interleaved off for a model without reasoning", () => {
+  const model = parsedModel({
+    metadata: neuralwattMetadata({
+      capabilities: { tools: true, json_mode: true, vision: true, audio_input: false, reasoning: false },
+    }),
+  });
+
+  expect(buildNeuralwattModel(model, undefined, undefined).interleaved).toBeUndefined();
 });
 
 test("reports missing reasoning controls under the normalized file id", () => {

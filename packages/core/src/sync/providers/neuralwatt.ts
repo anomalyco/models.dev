@@ -11,7 +11,10 @@ const API_ENDPOINT = "https://api.neuralwatt.com/v1/models";
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
-const MIN_LIVE_MODELS = 15;
+// The live catalog carries ~27 entries; the floor sits just below the largest
+// observed retirement batch (8) so a truncated response fails the run before
+// deprecateMissing can act on it.
+const MIN_LIVE_MODELS = 20;
 
 const REASONING_EFFORT_LADDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 
@@ -142,7 +145,7 @@ export function buildNeuralwattModel(
     structured_output: capabilities.json_mode,
     knowledge: existing?.knowledge,
     status: model.metadata.deprecated === true ? "deprecated" : existing?.status,
-    interleaved: existing?.interleaved,
+    interleaved: existing?.interleaved ?? (reasoning === true ? true : undefined),
     cost,
     limit,
     modalities: {
