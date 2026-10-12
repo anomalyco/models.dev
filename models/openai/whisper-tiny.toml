@@ -1,0 +1,25 @@
+# https://huggingface.co/openai/whisper-tiny
+# https://openai.com/index/whisper/
+name = "Whisper Tiny"
+description = "Smallest multilingual Whisper checkpoint for fast, low-cost speech transcription"
+type = "transcription"
+family = "whisper"
+release_date = "2022-09-21"
+last_updated = "2022-09-21"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 448
+output = 448
+
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openai/whisper-tiny"
