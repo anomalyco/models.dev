@@ -1,0 +1,10 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id claude-haiku-4-5), USD per million tokens, read 2026-10-12
+# Budget: thinking.budget_tokens (min 1024)
+base_model = "anthropic/claude-haiku-4-5"
+name = "Claude Haiku 4.5"
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 0.6
+output = 3.00
+cache_read = 0.06

@@ -1,0 +1,11 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id qwen3.8-flash), USD per million tokens, read 2026-10-12
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.09
+output = 0.282
+cache_read = 0.0096

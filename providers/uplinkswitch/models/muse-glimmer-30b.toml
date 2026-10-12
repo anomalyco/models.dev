@@ -1,0 +1,9 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id muse-glimmer-30b), USD per million tokens, read 2026-10-12
+# Effort: reasoning_effort = low|medium|high|xhigh
+base_model = "meta/muse-glimmer-30b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 3.00
+output = 3.00
+cache_read = 3.00

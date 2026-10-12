@@ -1,0 +1,9 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id claude-sonnet-4-6), USD per million tokens, read 2026-10-12
+# Effort: output_config.effort = low|medium|high|max
+# Budget: thinking.budget_tokens (min 1024)
+base_model = "anthropic/claude-sonnet-4-6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 1.8
+output = 9.00

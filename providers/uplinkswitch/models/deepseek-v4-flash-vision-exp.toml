@@ -1,0 +1,10 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id deepseek-v4-flash-vision-exp), USD per million tokens, read 2026-10-12
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.132
+output = 0.396
+cache_read = 0.0042

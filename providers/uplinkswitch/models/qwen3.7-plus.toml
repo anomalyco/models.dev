@@ -1,0 +1,10 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id qwen3.7-plus), USD per million tokens, read 2026-10-12
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.192
+output = 0.768
+cache_read = 0.0384
