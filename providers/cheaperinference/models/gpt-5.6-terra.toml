@@ -1,0 +1,21 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "openai/gpt-5.6-terra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.16
+output = 6.96
+cache_read = 0.116
+cache_write = 1.45
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 2.32
+output = 10.44
+cache_read = 0.232
+cache_write = 2.9

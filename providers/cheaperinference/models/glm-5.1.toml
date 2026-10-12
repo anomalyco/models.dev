@@ -1,0 +1,20 @@
+# No image input on this host: an image_url part carrying a 32x32 PNG as a data: URI is rejected with
+# 502 on 4 of 4 requests while a text-only control answers 200 (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "zhipuai/glm-5.1"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.77
+output = 2.42
+cache_read = 0.143
+cache_write = 0.77
+
+[limit]
+output = 24_000

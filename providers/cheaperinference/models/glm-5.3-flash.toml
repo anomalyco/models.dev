@@ -1,0 +1,24 @@
+# No dependable image input on this host: 10 probes gave 3 colours right, "red" for green and one
+# NOIMAGE, so image input cannot be relied on here (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "zhipuai/glm-5.3-flash"
+attachment = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.105927
+output = 0.35309
+cache_read = 0.0211853856
+cache_write = 0.105926928
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text"]

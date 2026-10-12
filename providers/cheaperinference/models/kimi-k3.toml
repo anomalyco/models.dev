@@ -1,0 +1,28 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|high|max (lab set, providers/moonshotai/models/kimi-k3.toml)
+# The lab API always thinks, but this host turns thinking off with reasoning.enabled = false:
+# reasoning_tokens 0 and no reasoning_content on 4 of 4 prompts, against 110-248 reasoning tokens
+# with no field. thinking.type = "disabled" is ignored (144-394 reasoning tokens, 3 of 3) (probed 2026-10-02).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "moonshotai/kimi-k3"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2.1
+output = 10.5
+cache_read = 0.21
+cache_write = 2.1
+
+[limit]
+context = 1_000_000

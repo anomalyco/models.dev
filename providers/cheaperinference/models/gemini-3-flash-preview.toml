@@ -1,0 +1,20 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "google/gemini-3-flash-preview"
+
+[interleaved]
+field = "reasoning_details"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.35
+output = 2.1
+cache_read = 0.035
+cache_write = 0.35
+
+[limit]
+context = 256_000

@@ -1,0 +1,18 @@
+# No usable image input on this host: the request is accepted but the image never reaches the model -
+# "black" twice and NOIMAGE twice across 4 colour probes (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "openai/gpt-5.4-nano"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.14
+output = 0.875
+cache_read = 0.014
+cache_write = 0.14
+
+[modalities]
+input = ["text"]

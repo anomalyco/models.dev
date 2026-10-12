@@ -1,0 +1,18 @@
+# No usable image input on this host: the request is accepted but the colour is guessed - 1 of 6 probes
+# right, the rest wrong or empty (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "openai/gpt-5-nano"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.042065
+output = 0.336517
+cache_read = 0.0042064614
+cache_write = 0.042064614
+
+[modalities]
+input = ["text"]

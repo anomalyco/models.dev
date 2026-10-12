@@ -1,0 +1,20 @@
+# No usable image input on this host: the request is accepted but the image never reaches the model -
+# it answered NOIMAGE on 4 of 4 colour probes (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.77
+output = 2.42
+cache_read = 0.143
+cache_write = 0.77
+
+[limit]
+context = 1_048_576
