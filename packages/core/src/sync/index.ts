@@ -40,6 +40,7 @@ import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
+import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
@@ -178,6 +179,7 @@ export const providers: {
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
+  prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
@@ -220,6 +222,7 @@ export const providers: {
   openrouter,
   ovhcloud,
   pioneer,
+  prime,
   requesty,
   tinfoil,
   vercel,
@@ -244,6 +247,7 @@ export const groups = {
     "ofox",
     "requesty",
     "openrouter",
+    "prime",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
