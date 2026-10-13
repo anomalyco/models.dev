@@ -1,0 +1,13 @@
+# Zurelay: an OpenAI-compatible API for Anthropic, OpenAI, Google, xAI,
+# DeepSeek, Alibaba, Z.ai, MiniMax, Xiaomi, Moonshot and Tencent models, at
+# prices below each lab's list price. Prices and context windows per model:
+# https://zurelay.com/docs/models
+# Reasoning: POST /v1/chat/completions takes top-level reasoning_effort. Each
+# model takes the levels in its file; a level it doesn't take runs at the
+# closest one it does, and none turns thinking off where listed.
+# https://zurelay.com/docs/chat (accessed 2026-10-12)
+name = "Zurelay"
+npm = "@ai-sdk/openai-compatible"
+env = ["ZURELAY_API_KEY"]
+api = "https://api.zurelay.com/v1"
+doc = "https://zurelay.com/docs/models"

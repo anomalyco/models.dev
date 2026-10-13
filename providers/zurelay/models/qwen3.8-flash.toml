@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = none|low|medium|xhigh on POST /v1/chat/completions; none turns thinking off.
+base_model = "alibaba/qwen3.8-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[modalities]
+input = ["text", "image", "pdf", "video"]
+output = ["text"]
+
+[cost]
+input = 0.07
+output = 0.22
+cache_read = 0.007

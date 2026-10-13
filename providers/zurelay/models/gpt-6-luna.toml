@@ -1,0 +1,17 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max on POST /v1/chat/completions; none turns thinking off.
+base_model = "openai/gpt-6-luna"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.025
+output = 0.125
+cache_read = 0.0025
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.05
+output = 0.1875
+cache_read = 0.005

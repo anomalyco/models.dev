@@ -1,0 +1,16 @@
+# Always reasons; this host takes no reasoning control for it.
+base_model = "xiaomi/mimo-v2.6-flash"
+reasoning_options = []
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
+
+[cost]
+input = 0.06
+output = 0.12
+cache_read = 0.0012

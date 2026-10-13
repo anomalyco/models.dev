@@ -1,0 +1,11 @@
+# Effort: reasoning_effort = none|high|max on POST /v1/chat/completions; none turns thinking off.
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.38
+output = 1.21
+cache_read = 0.038

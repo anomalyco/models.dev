@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions.
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost]
+input = 0.06
+output = 0.2
+cache_read = 0.006
