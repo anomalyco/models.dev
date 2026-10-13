@@ -1,0 +1,28 @@
+name = "LiquidAI: LFM2.5-24B-A2B"
+description = "LFM2.5-24B-A2B is a mixture-of-experts reasoning model from Liquid AI with 24B total and 2.45B active parameters. It always reasons before answering and is built for agents that call tools. Liquid..."
+family = "liquid"
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 0.1
+output = 1
+cache_read = 0.05
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
