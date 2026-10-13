@@ -1,13 +1,12 @@
 # NetMind model ID: XiaomiMiMo/MiMo-V2.5.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
-# NetMind uses an OpenAI-compatible API; effort uses reasoning_effort.
-# Other reasoning controls follow the underlying lab and relay baseline.
+# Pricing maps input/output/cache fields and context tiers from that response.
+# NetMind documents no separate reasoning control for this model.
 # https://www.netmind.ai/product/inference
 base_model = "xiaomi/mimo-v2.5"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [cost]
 input = 0.14
 output = 0.28
 cache_read = 0.0028
-cache_write = 0

@@ -1,7 +1,7 @@
 # NetMind model ID: zai-org/GLM-5.3.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
-# NetMind uses an OpenAI-compatible API; effort uses reasoning_effort.
-# Other reasoning controls follow the underlying lab and relay baseline.
+# Pricing maps input/output/cache fields and context tiers from that response.
+# Reasoning effort wire field: reasoning_effort.
 # https://www.netmind.ai/product/inference
 base_model = "zhipuai/glm-5.3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
@@ -10,4 +10,3 @@ reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 input = 1.4
 output = 4.4
 cache_read = 0.26
-cache_write = 0

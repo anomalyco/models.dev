@@ -1,20 +1,18 @@
 # NetMind model ID: Qwen/Qwen3.7-Plus.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
-# NetMind uses an OpenAI-compatible API; effort uses reasoning_effort.
-# Other reasoning controls follow the underlying lab and relay baseline.
+# Pricing maps input/output/cache fields and context tiers from that response.
+# NetMind documents no separate reasoning control for this model.
 # https://www.netmind.ai/product/inference
 base_model = "alibaba/qwen3.7-plus"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+reasoning_options = []
 
 [cost]
 input = 0.274
 output = 1.096
 cache_read = 0.0548
-cache_write = 0
 
 [[cost.tiers]]
-tier = { type = "context", size = 262144 }
+tier = { type = "context", size = 256000 }
 input = 0.822
 output = 3.288
 cache_read = 0.164
-cache_write = 0.0
