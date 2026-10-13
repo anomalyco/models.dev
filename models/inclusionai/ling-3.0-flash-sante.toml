@@ -1,0 +1,19 @@
+# Lab metadata carried over from providers/vercel/models/inclusionai/ling-3.0-flash-sante.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "Ling 3.0 Flash Sante"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "ling"
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256000
+output = 32000
+
+[modalities]
+input = ["text"]
+output = ["text"]

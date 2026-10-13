@@ -432,6 +432,59 @@ const INTERLEAVED_FIELD: Readonly<Record<string, "reasoning_content" | "reasonin
   "z-ai/glm-4.7-flash": "reasoning_details",
 };
 
+/**
+ * Upstream rows this catalogue never publishes, so they are neither created
+ * nor routed to the missing-model issue flow:
+ *
+ * - Dated snapshots (`-YYYY-MM-DD` / `-YYYYMMDD` suffixes) whose undated
+ *   canonical model is the catalogue entry. (Dated ids the PR already
+ *   publishes, e.g. the `gpt-4o-2024-*` cards, are not listed here.)
+ * - Moving `-latest` aliases whose versioned card is published instead.
+ * - Duplicate spellings of a model already covered under its canonical
+ *   aimlapi id (`gemini-3-7-flash` for `gemini-3.7-flash`, `bytedance/…` for
+ *   `bytedance-seed/…`).
+ *
+ * Explicit ids, not patterns: a pattern would also match published cards.
+ * Add new upstream junk here as it appears; one entry suppresses it forever.
+ */
+const BLACKLISTED: ReadonlySet<string> = new Set([
+  "deepseek/deepseek-v4-flash-latest",
+  "anthropic/claude-fable-latest",
+  "openai/gpt-chat-latest",
+  "anthropic/claude-haiku-latest",
+  "anthropic/claude-sonnet-latest",
+  "google/gemini-pro-latest",
+  "moonshotai/kimi-latest",
+  "openai/gpt-latest",
+  "openai/gpt-mini-latest",
+  "openai/gpt-5.5-2026-04-23",
+  "anthropic/claude-opus-latest",
+  "minimax/m2-7-20260402",
+  "openai/gpt-5.4-2026-03-05",
+  "alibaba/qwen3.5-plus-20260218",
+  "minimax/m2-5-20260218",
+  "minimax/m2-5-highspeed-20260218",
+  "openai/gpt-5.2-2025-12-11",
+  "openai/gpt-5.1-2025-11-13",
+  "openai/gpt-5-2025-08-07",
+  "openai/gpt-5-mini-2025-08-07",
+  "openai/gpt-5-nano-2025-08-07",
+  "openai/o3-2025-04-16",
+  "openai/o4-mini-2025-04-16",
+  "openai/gpt-4.1-2025-04-14",
+  "openai/gpt-4.1-mini-2025-04-14",
+  "openai/gpt-4.1-nano-2025-04-14",
+  "openai/o3-mini-2025-01-31",
+  "openai/o1-2024-12-17",
+  "openai/gpt-4o-mini-2024-07-18",
+  "openai/gpt-4-turbo-2024-04-09",
+  "google/gemini-3-7-flash",
+  "google/gemini-3-6-flash",
+  "bytedance/seed-2-0-lite",
+  "bytedance/seed-2-0-mini",
+  "google/gemini-3-1-flash-lite-preview",
+]);
+
 const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
 
 const DOCS_CONCURRENCY = 8;
@@ -628,6 +681,45 @@ const STALE_HOST_NAME: ReadonlySet<string> = new Set([
 
 const BASE_MODEL_OVERRIDES: Readonly<Record<string, string>> = {
   "deepseek/deepseek-chat": "deepseek/deepseek-v4-flash",
+  // Upstream spellings (dashed versions, vendor-org aliases) of models whose
+  // lab entry lives under the canonical spelling. The host serves only the
+  // spelling on the left, so the card is published under it and factored onto
+  // the lab entry on the right.
+  "google/gemini-3-8-flash": "google/gemini-3.8-flash",
+  "zhipu/glm-5.3": "zhipuai/glm-5.3",
+  "bytedance-seed/seed-2-1-turbo": "bytedance-seed/seed-2.1-turbo",
+  "x-ai/grok-4-6": "xai/grok-4.6",
+  "x-ai/grok-4-5": "xai/grok-4.5",
+  "moonshot/kimi-k2-7-code-highspeed": "moonshotai/kimi-k2.7-code-highspeed",
+  "alibaba/glm-5.2": "zhipuai/glm-5.2",
+  "zhipu/glm-5.2": "zhipuai/glm-5.2",
+  "moonshot/kimi-k2-7-code": "moonshotai/kimi-k2.7-code",
+  "x-ai/grok-build-0-1": "xai/grok-build-0.1",
+  "x-ai/grok-4-3": "xai/grok-4.3",
+  "bytedance/seed-2-0-pro": "bytedance-seed/seed-2.0-pro",
+  "openai/gpt-5-5": "openai/gpt-5.5",
+  "moonshot/kimi-k2-6": "moonshotai/kimi-k2.6",
+  "x-ai/grok-4-20-0309-non-reasoning": "xai/grok-4.20-0309-non-reasoning",
+  "x-ai/grok-4-20-0309-reasoning": "xai/grok-4.20-0309-reasoning",
+  "zhipu/glm-5.1": "zhipuai/glm-5.1",
+  "openai/gpt-5-4": "openai/gpt-5.4",
+  "zhipu/glm-5": "zhipuai/glm-5",
+  "upstage/solar-pro-3": "upstage/solar-pro3",
+  "bytedance/seed-1-8": "bytedance-seed/seed-1-8",
+  "bytedance-seed/seed-1.6": "bytedance-seed/seed-1-6",
+  "bytedance-seed/seed-1.6-flash": "bytedance-seed/seed-1-6-flash",
+  "zhipu/glm-4.7": "zhipuai/glm-4.7",
+  "openai/gpt-5-2": "openai/gpt-5.2",
+  "x-ai/grok-4-1-fast-reasoning": "xai/grok-4.1-fast-reasoning",
+  "openai/gpt-5-1": "openai/gpt-5.1",
+  "zhipu/glm-4.6": "zhipuai/glm-4.6",
+  "zhipu/glm-4.5": "zhipuai/glm-4.5",
+  "zhipu/glm-4.5-air": "zhipuai/glm-4.5-air",
+  "minimax/m2-her": "minimax/MiniMax-M2-Her",
+  "anthropic/claude-sonnet-4": "anthropic/claude-sonnet-4-20250514",
+  "ibm-granite/granite-4.2-8b": "ibm/granite-4.2-8b",
+  "ibm-granite/granite-4.0-h-micro": "ibm/granite-4-h-micro",
+  "meta-llama/Llama-3.3-70B-Instruct-Turbo": "meta/llama-3.3-70b-instruct",
 };
 
 /**
@@ -1031,6 +1123,7 @@ function wireHeader(id: string, reasoningOptions: Array<{ type: "effort"; values
  * is exactly what that flow exists to research.
  */
 function candidateID(model: AimlapiModel): string | undefined {
+  if (BLACKLISTED.has(model.id)) return undefined;
   if (NOT_CALLABLE.has(model.id)) return undefined;
   if (ALIAS_DUPLICATE_IDS.has(model.id)) return undefined;
   return isChatTextModel(model) ? model.id : undefined;
@@ -1084,6 +1177,7 @@ export const aimlapi = {
     return models;
   },
   translateModel(model, context) {
+    if (BLACKLISTED.has(model.id)) return undefined;
     if (NOT_CALLABLE.has(model.id)) return undefined;
     if (ALIAS_DUPLICATE_IDS.has(model.id)) return undefined;
     if (!isChatTextModel(model)) return undefined;

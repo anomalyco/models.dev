@@ -1,0 +1,22 @@
+# Lab metadata carried over from providers/openrouter/models/mistralai/codestral-2508.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "Codestral 2508"
+description = "Mistral coding model for code completion, generation, and developer workflows"
+family = "codestral"
+release_date = "2025-08-01"
+last_updated = "2025-08-01"
+knowledge = "2025-03-31"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 256000
+output = 204800
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

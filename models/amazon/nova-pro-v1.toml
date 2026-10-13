@@ -1,0 +1,22 @@
+# Lab metadata carried over from providers/openrouter/models/amazon/nova-pro-v1.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "Nova Pro 1.0"
+description = "Flagship model for demanding analysis, coding, and production agent workflows"
+family = "nova-pro"
+release_date = "2024-12-05"
+last_updated = "2024-12-05"
+knowledge = "2024-10-31"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 300000
+output = 5120
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
