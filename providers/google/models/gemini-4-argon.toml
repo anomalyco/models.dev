@@ -1,0 +1,17 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing#gemini-4-argon
+# - https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
+# Introductory Standard pricing (50% off) applies through 2026-11-30. From
+# 2026-12-01 the published rates are $4.00 input, $20.00 output, and $0.20
+# cache read. Only implicit caching is supported (explicit caching is not).
+base_model = "google/gemini-4-argon"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.10
+input_audio = 2.00

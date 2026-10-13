@@ -1,0 +1,29 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
+# - https://ai.google.dev/gemini-api/docs/latest-model
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon
+# - https://deepmind.google/models/model-cards/gemini-4-argon/
+# Input, thinking, and output share one 1,048,576-token window. A single
+# request returns at most 65,536 output tokens; longer outputs (up to 1M) need
+# long decode via background execution or client-side continuation hops.
+# Temperature, top_p, and top_k are ignored by this model.
+name = "Gemini 4 Argon"
+description = "Google's flagship reasoning model for complex software engineering, deep math and science, and long-horizon autonomous agents"
+family = "gemini"
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-03"
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]
