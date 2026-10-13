@@ -1,0 +1,29 @@
+# Sources (accessed 2026-08-28):
+# https://platform.sensenova.cn/docs
+# GET /v1/models: context 1048576, max output 65536, fp8, text+image -> text,
+# supported features tools+json_mode+reasoning; pricing all zero (public beta
+# free on TokenPlan).
+# Reasoning: reasoning_effort documented enum none|low|high|max (default
+# high). A reasoning side channel is returned as message.reasoning, which is
+# not a schema-supported interleaved field, so no interleaved is authored.
+
+name = "DeepSeek V4.1 Flash"
+description = "DeepSeek V4.1 Flash is a high-performance conversational model by DeepSeek, supporting thinking/non-thinking modes, 1M context window, and tool calling."
+last_updated = "2026-10-13"
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
