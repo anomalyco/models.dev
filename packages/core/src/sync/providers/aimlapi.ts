@@ -14,6 +14,10 @@ import {
 // The public catalog needs no key, and `include` is what turns on the pricing
 // and modality blocks this sync depends on.
 const API_ENDPOINT = "https://api.aimlapi.com/v1/models?include=pricing,modalities";
+// The catalog and docs can retain sunset models. Match both canonical IDs and
+// aliases against the host's lifecycle feed before updating or reporting them.
+// https://docs.aimlapi.com/api-references/service-endpoints/model-deprecations
+const DEPRECATIONS_ENDPOINT = "https://api.aimlapi.com/v1/models/deprecations";
 
 // Per-model request schema. It is the only place the API states which reasoning
 // controls a model actually accepts, so reasoning_options is read from here
@@ -532,12 +536,23 @@ export const AimlapiModel = z
       .nullish(),
     /** Attached by fetchModels; not part of the upstream payload. */
     reasoningEffort: z.array(z.string()).nullish(),
+    deprecated: z.boolean().optional(),
   })
   .passthrough();
+
+const Deprecation = z.object({
+  id: z.string(),
+  aliases: z.array(z.string()),
+  status: z.enum(["deprecated", "superseded", "withdrawn"]),
+  shutdown_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
+});
+
+const DeprecationsResponse = z.object({ data: z.array(Deprecation) });
 
 export const AimlapiResponse = z
   .object({
     data: z.array(AimlapiModel).min(1),
+    deprecations: z.array(Deprecation).optional(),
   })
   .passthrough();
 
@@ -1122,17 +1137,16 @@ function wireHeader(id: string, reasoningOptions: Array<{ type: "effort"; values
  * The remote id to report for a chat candidate, or `undefined` for records
  * sync intentionally ignores: uncallable rows, dashed alias duplicates, and
  * anything that is not a text-output chat model. `sourceID` reports every
- * candidate skip in the sync report. `missingModelID` is narrower — it routes
- * a skip to the missing-model issue flow only when an issue can fix it:
+ * candidate skip in the sync report. `missingModelID` identifies unresolved
+ * metadata so the runner preserves existing cards instead of deleting them:
  *
- * - No lab entry to point `base_model` at: the issue flow authors it.
+ * - No lab entry to point `base_model` at.
  * - A card already on disk that sync can no longer state (its reasoning
- *   control stopped resolving): preserved, and the issue asks for research.
+ *   control stopped resolving).
  *
- * A new model whose lab exists but whose thinking control cannot be stated
- * on this host is deliberately not issued: no entry an issue could write
- * would make the control exist. It stays unlisted until the host offers one
- * that resolves, and appears here only as a report notice.
+ * Automatic issues are disabled for all these skips while the backlog is
+ * audited. Missing evidence about a thinking control is not proof that no
+ * working control exists; it requires research rather than an invented [].
  */
 function candidateID(model: AimlapiModel): string | undefined {
   if (BLACKLISTED.has(model.id)) return undefined;
@@ -1148,6 +1162,24 @@ function issueModelID(model: AimlapiModel): string | undefined {
   return existsSync(local) ? model.id : undefined;
 }
 
+function activeModels(raw: unknown) {
+  const parsed = AimlapiResponse.parse(raw);
+  const retired = new Map((parsed.deprecations ?? []).flatMap((entry) =>
+    [entry.id, ...entry.aliases].map((id) => [id, entry] as const),
+  ));
+  const today = new Date().toISOString().slice(0, 10);
+  const models = parsed.data.flatMap((model) => {
+    const entry = retired.get(model.id);
+    if (entry?.status === "withdrawn") return [];
+    if (entry?.status === "deprecated" && entry.shutdown_at !== null && entry.shutdown_at <= today) return [];
+    // Superseded IDs still resolve; only an actual sunset removes them.
+    return [{ ...model, deprecated: entry?.status === "deprecated" }];
+  });
+  indexMediaOutputs(models);
+  indexAliasDuplicates(models);
+  return models;
+}
+
 export const aimlapi = {
   id: "aimlapi",
   name: "AI/ML API",
@@ -1156,11 +1188,12 @@ export const aimlapi = {
   // limits, reasoning controls, and removal once the host stops serving a
   // model (`deleteMissing`). It never creates a model: the catalog cannot
   // fully populate a new entry (no lab metadata, capabilities, or dates), so
-  // every remote-only model goes through the missing-model issue flow
-  // (`skipCreates`), where the lab entry and provider card are authored and
-  // reviewed. Later syncs then keep that file updated.
+  // Remote-only models remain report-only until the existing upstream backlog
+  // has been audited. skipCreates also admits every skipped remote ID to the
+  // runner's issue pipeline, independently of missingModelID; opt out here to
+  // prevent another batch of issues and issue-fixer PRs.
   skipCreates: true,
-  trackMissingModels: true,
+  trackMissingModels: false,
   deleteMissing: true,
   authoritativeHeaders: true,
   sourceID(model) {
@@ -1172,28 +1205,31 @@ export const aimlapi = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} AI/ML API chat models were not written by sync. Models with no lab entry to point \`base_model\` at are routed to the missing-model issue flow for authoring; models whose thinking control cannot be stated on this host stay unlisted until the host offers one that resolves, and are listed here only. Existing files for skipped ids are preserved.`,
+      `${ids.length} AI/ML API chat models were not written by sync. Automatic missing-model issues are disabled pending a catalog audit; skipped IDs are report-only. Existing files for skipped ids are preserved.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
   async fetchModels() {
-    const response = await fetch(API_ENDPOINT);
+    const [response, deprecations] = await Promise.all([
+      fetch(API_ENDPOINT),
+      fetch(DEPRECATIONS_ENDPOINT),
+    ]);
     if (!response.ok) {
       throw new Error(`AI/ML API request failed: ${response.status} ${response.statusText}`);
     }
+    if (!deprecations.ok) {
+      throw new Error(`AI/ML API deprecations request failed: ${deprecations.status} ${deprecations.statusText}`);
+    }
     const raw = await response.json();
     const parsed = AimlapiResponse.parse(raw);
-    indexMediaOutputs(parsed.data);
-    indexAliasDuplicates(parsed.data);
-    await attachReasoningEffort(parsed.data);
-    return parsed;
+    const retired = DeprecationsResponse.parse(await deprecations.json());
+    const models = activeModels({ ...parsed, deprecations: retired.data });
+    await attachReasoningEffort(models);
+    return { ...parsed, data: models, deprecations: retired.data };
   },
   parseModels(raw) {
-    const models = AimlapiResponse.parse(raw).data;
-    // Replays parse a cached payload without going through fetchModels.
-    indexMediaOutputs(models);
-    indexAliasDuplicates(models);
-    return models;
+    // Replays apply the same lifecycle and cross-surface filters as live fetches.
+    return activeModels(raw);
   },
   translateModel(model, context) {
     if (BLACKLISTED.has(model.id)) return undefined;
@@ -1273,6 +1309,7 @@ export const aimlapi = {
           name:
             STALE_HOST_ROW.has(model.id) || STALE_HOST_NAME.has(model.id) ? undefined : (info.name ?? undefined),
           reasoning_options: reasoningOptions,
+          status: model.deprecated ? "deprecated" : undefined,
           interleaved: INTERLEAVED_FIELD[measuredAs(model.id)]
             ? { field: INTERLEAVED_FIELD[measuredAs(model.id)]! }
             : undefined,

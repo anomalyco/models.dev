@@ -1,5 +1,9 @@
 import { expect, test } from "bun:test";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
+import { syncProvider } from "../src/sync/index.js";
 import { aimlapi, labEffortValues, labLadder, resolveLadder } from "../src/sync/providers/aimlapi.js";
 import { providerDirForMetadataLab } from "../src/sync/providers/openrouter.js";
 
@@ -123,10 +127,60 @@ test("a wire alias resolves through the measurements of the id it answers as", (
 // Sync owns updates and removals for models already on disk, but never
 // creates: a new model goes through the missing-model issue flow, where its
 // lab entry and provider card are authored and reviewed.
-test("sync updates and removes existing models but routes creates to issues", () => {
+test("sync updates and removes existing models without opening backlog issues", () => {
   expect(aimlapi.skipCreates).toBe(true);
-  expect(aimlapi.trackMissingModels).toBe(true);
+  expect(aimlapi.trackMissingModels).toBe(false);
   expect(aimlapi.deleteMissing).toBe(true);
+});
+
+test("lifecycle feed removes withdrawn and expired IDs, including aliases, but retains serving models", () => {
+  const models = aimlapi.parseModels({
+    data: ["withdrawn-alias", "expired", "future-sunset", "superseded-alias", "active"].map((id) => ({
+      id,
+      type: "openai/chat-completions",
+    })),
+    deprecations: [
+      { id: "withdrawn", aliases: ["withdrawn-alias"], status: "withdrawn", shutdown_at: null },
+      { id: "expired", aliases: [], status: "deprecated", shutdown_at: "2000-01-01" },
+      { id: "future-sunset", aliases: [], status: "deprecated", shutdown_at: "2999-01-01" },
+      { id: "superseded", aliases: ["superseded-alias"], status: "superseded", shutdown_at: null },
+    ],
+  });
+  expect(models.map((model) => model.id)).toEqual(["future-sunset", "superseded-alias", "active"]);
+  expect(models[0]?.deprecated).toBe(true);
+  expect(models[1]?.deprecated).toBe(false);
+  expect(models[2]?.deprecated).toBe(false);
+});
+
+test("the actual sync runner never admits aimlapi skips to issues, even with openIssues enabled", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-aimlapi-issues-"));
+  try {
+    const result = await syncProvider({
+      ...aimlapi,
+      modelsDir: dir,
+      async fetchModels() {
+        return {
+          data: [
+            { id: "acme/unmapped", type: "openai/chat-completions" },
+            {
+              id: "openai/gpt-4",
+              type: "openai/chat-completions",
+              pricing: { units: [
+                { name: "token", content: "text", origin: "provided", price: 1, per: 1_000_000 },
+                { name: "token", content: "text", origin: "generated", price: 2, per: 1_000_000 },
+              ] },
+            },
+          ],
+        };
+      },
+    }, { dryRun: true, openIssues: true });
+    expect(result.created).toBe(0);
+    expect(result.notices.some((notice) => notice.includes("Would open GitHub issue"))).toBe(false);
+    expect(result.notices.some((notice) => notice.includes("acme/unmapped"))).toBe(true);
+    expect(result.notices.some((notice) => notice.includes("openai/gpt-4"))).toBe(true);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
 
 test("only chat candidates are reported for the missing-model issue flow", () => {
