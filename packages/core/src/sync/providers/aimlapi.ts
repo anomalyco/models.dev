@@ -87,9 +87,8 @@ const isEffortValue = (value: string): value is EffortValue => EFFORT_RANK.has(v
  * to this list — a row that starts working should come back.
  *
  * The guard sits on the publish path, so the entry is never created or updated.
- * It does not delete a file that is already on disk: this sync runs with
- * `deleteMissing: false`, so removing a published row still takes an explicit
- * delete, as it did here.
+ * With `deleteMissing` enabled, a published row for one of these ids is
+ * removed by sync like any other model the host no longer serves.
  */
 const NOT_CALLABLE: ReadonlySet<string> = new Set([
   "anthropic/claude-opus-4.7-fast",
@@ -1022,31 +1021,47 @@ function wireHeader(id: string, reasoningOptions: Array<{ type: "effort"; values
   return lines.length > 0 ? lines.join("\n") + "\n" : undefined;
 }
 
+/**
+ * The remote id to report for a chat candidate, or `undefined` for records
+ * sync intentionally ignores: uncallable rows, dashed alias duplicates, and
+ * anything that is not a text-output chat model. Shared by `sourceID` (report
+ * the skip) and `missingModelID` (route the skip to the missing-model issue
+ * flow): every remaining skip is "cannot fully populate" — no lab entry to
+ * point `base_model` at, no resolvable reasoning control, or no price — which
+ * is exactly what that flow exists to research.
+ */
+function candidateID(model: AimlapiModel): string | undefined {
+  if (NOT_CALLABLE.has(model.id)) return undefined;
+  if (ALIAS_DUPLICATE_IDS.has(model.id)) return undefined;
+  return isChatTextModel(model) ? model.id : undefined;
+}
+
 export const aimlapi = {
   id: "aimlapi",
   name: "AI/ML API",
   modelsDir: "providers/aimlapi/models",
-  // The catalog turns over quickly and lists far more than the chat surface, so
-  // a local model missing from one response is not proof that it is gone.
-  deleteMissing: false,
+  // Sync owns what the catalog can state for models already on disk: pricing,
+  // limits, reasoning controls, and removal once the host stops serving a
+  // model (`deleteMissing`). It never creates a model: the catalog cannot
+  // fully populate a new entry (no lab metadata, capabilities, or dates), so
+  // every remote-only model goes through the missing-model issue flow
+  // (`skipCreates`), where the lab entry and provider card are authored and
+  // reviewed. Later syncs then keep that file updated.
+  skipCreates: true,
+  trackMissingModels: true,
+  deleteMissing: true,
   authoritativeHeaders: true,
   sourceID(model) {
-    if (NOT_CALLABLE.has(model.id)) return undefined;
-    if (ALIAS_DUPLICATE_IDS.has(model.id)) return undefined;
-    return isChatTextModel(model) ? model.id : undefined;
+    return candidateID(model);
+  },
+  missingModelID(model) {
+    return candidateID(model);
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} AI/ML API chat models were skipped because this repository has no lab entry to point \`base_model\` at, or because the API does not document the reasoning control a reasoning model requires.`,
+      `${ids.length} AI/ML API chat models were not written by sync: new models are routed to the missing-model issue flow for authoring, and models sync cannot fully populate (no lab entry to point \`base_model\` at, no resolvable reasoning control, or no published price) are reported there instead of being guessed. Existing files for those ids are preserved.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
-    ];
-  },
-  missingNotice(paths) {
-    if (paths.length === 0) return [];
-    return [
-      `${paths.length} local AI/ML API models were absent from the catalog and were retained for manual lifecycle review.`,
-      `Retained local paths: ${paths.map((item) => `\`${item}\``).join(", ")}`,
     ];
   },
   async fetchModels() {

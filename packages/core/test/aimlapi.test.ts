@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { labEffortValues, labLadder, resolveLadder } from "../src/sync/providers/aimlapi.js";
+import { aimlapi, labEffortValues, labLadder, resolveLadder } from "../src/sync/providers/aimlapi.js";
 import { providerDirForMetadataLab } from "../src/sync/providers/openrouter.js";
 
 // The lookup that silently kept the host enum for every GLM id: `base_model`
@@ -118,4 +118,62 @@ test("a wire alias resolves through the measurements of the id it answers as", (
     resolveLadder("deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-flash", host),
   );
   expect(resolveLadder("deepseek/deepseek-chat", "deepseek/deepseek-v4-flash", host)).toEqual(["none", "low", "high"]);
+});
+
+// Sync owns updates and removals for models already on disk, but never
+// creates: a new model goes through the missing-model issue flow, where its
+// lab entry and provider card are authored and reviewed.
+test("sync updates and removes existing models but routes creates to issues", () => {
+  expect(aimlapi.skipCreates).toBe(true);
+  expect(aimlapi.trackMissingModels).toBe(true);
+  expect(aimlapi.deleteMissing).toBe(true);
+});
+
+test("only chat candidates are reported for the missing-model issue flow", () => {
+  const models = aimlapi.parseModels({
+    data: [
+      {
+        id: "acme/chat-1",
+        type: "openai/chat-completions",
+        info: { name: "Chat 1" },
+        modalities: { input: ["text"], output: ["text"] },
+      },
+      {
+        id: "acme/image-1",
+        type: "openai/image-generations",
+        info: { name: "Image 1" },
+        modalities: { input: ["text"], output: ["image"] },
+      },
+      {
+        id: "anthropic/claude-opus-4.8",
+        type: "openai/chat-completions",
+        info: { name: "Claude Opus 4.8" },
+        modalities: { input: ["text"], output: ["text"] },
+      },
+      {
+        id: "anthropic/claude-opus-4-8",
+        type: "openai/chat-completions",
+        info: { name: "Claude Opus 4.8" },
+        modalities: { input: ["text"], output: ["text"] },
+      },
+      {
+        id: "anthropic/claude-opus-4.7-fast",
+        type: "openai/chat-completions",
+        info: { name: "Claude Opus 4.7 Fast" },
+        modalities: { input: ["text"], output: ["text"] },
+      },
+    ],
+  });
+  const byID = new Map(models.map((model) => [model.id, model]));
+  // A chat candidate a skip cannot fully populate is reported and routed to
+  // an issue; intentional ignores (non-chat, alias duplicate, uncallable)
+  // are neither, so sync can still delete those files when they go stale.
+  expect(aimlapi.sourceID(byID.get("acme/chat-1")!)).toBe("acme/chat-1");
+  expect(aimlapi.missingModelID(byID.get("acme/chat-1")!)).toBe("acme/chat-1");
+  expect(aimlapi.sourceID(byID.get("acme/image-1")!)).toBeUndefined();
+  expect(aimlapi.missingModelID(byID.get("acme/image-1")!)).toBeUndefined();
+  expect(aimlapi.sourceID(byID.get("anthropic/claude-opus-4-8")!)).toBeUndefined();
+  expect(aimlapi.missingModelID(byID.get("anthropic/claude-opus-4-8")!)).toBeUndefined();
+  expect(aimlapi.sourceID(byID.get("anthropic/claude-opus-4.7-fast")!)).toBeUndefined();
+  expect(aimlapi.missingModelID(byID.get("anthropic/claude-opus-4.7-fast")!)).toBeUndefined();
 });
