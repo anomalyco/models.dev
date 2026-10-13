@@ -1,6 +1,10 @@
 base_model = "mistral/codestral-2508"
+name = "Codestral 2508"
 
 [cost]
 input = 0.41262
 output = 1.23786
 cache_read = 0.041262
+
+[limit]
+context = 256_000
