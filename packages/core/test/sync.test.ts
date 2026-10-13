@@ -4776,6 +4776,22 @@ test("Vercel sync accepts evaluation and unknown future model types", () => {
   expect(buildVercelModel(future!, undefined).type).toBeUndefined();
 });
 
+test("Vercel sync skips batch routes", () => {
+  const route = (id: string) => ({
+    id,
+    name: id,
+    created: 1_755_815_280,
+    context_window: 200_000,
+    max_tokens: 64_000,
+    type: "language",
+  });
+  const models = vercel.parseModels({
+    data: [route("anthropic/claude-sonnet-4.5"), route("anthropic/claude-sonnet-4.5-batch")],
+  });
+
+  expect(models.map((model) => model.id)).toEqual(["anthropic/claude-sonnet-4.5"]);
+});
+
 test("Vercel sync preserves Liquid d1 as a decision model via its lab metadata", () => {
   const [model] = vercel.parseModels({
     data: [{
