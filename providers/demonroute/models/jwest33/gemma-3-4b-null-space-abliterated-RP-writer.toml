@@ -1,0 +1,23 @@
+# Source: https://demonroute.com model catalog (channel "jwest33/gemma-3-4b-null-space-abliterated-RP-writer"); dates from https://huggingface.co/jwest33/gemma-3-4b-null-space-abliterated-RP-writer
+name = "gemma-3-4b-null-space-abliterated-RP-writer"
+description = "Abliterated Gemma 3 4B roleplay and creative-writing fine-tune"
+family = "gemma"
+release_date = "2026-01-09"
+last_updated = "2026-01-09"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.8
+output = 1.60
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+# Source: https://demonroute.com model catalog (channel "Ateron/Gemma-4-Writers-31B-V2"); dates from https://huggingface.co/Ateron/Gemma-4-Writers-31B-V2
+name = "Gemma-4-Writers-31B-V2"
+description = "Gemma 4 31B fine-tune for creative writing"
+family = "gemma"
+release_date = "2026-10-02"
+last_updated = "2026-10-02"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 1.92
+output = 5.76
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
