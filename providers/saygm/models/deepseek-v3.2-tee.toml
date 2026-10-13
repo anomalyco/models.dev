@@ -1,0 +1,9 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+# Confidential tier: served inside a TEE (Intel TDX), prompt decrypted only in the enclave.
+base_model = "deepseek/deepseek-v3.2"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.95
+output = 0.95
+cache_read = 0.095

@@ -1,0 +1,8 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 0.0866
+output = 0.2599
+cache_read = 0.0028

@@ -1,0 +1,8 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.045
+output = 0.27
+cache_read = 0.009
