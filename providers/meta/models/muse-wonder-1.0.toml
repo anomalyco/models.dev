@@ -3,8 +3,13 @@
 # GET https://api.meta.ai/v1/models lists muse-wonder-1.0 (verified 2026-10-12)
 # Effort values from the API's own validation error for reasoning_effort = "none":
 # "Supported values: [minimal, low, medium, high, xhigh, max]" (verified 2026-10-12)
-# Pricing: Meta has not published Muse Wonder rates yet (https://dev.meta.ai/docs/pricing-rate-limits).
+# https://dev.meta.ai/docs/pricing-rate-limits (Standard mode token pricing; Contributor mode not on Model API)
 
 base_model = "meta/muse-wonder-1.0"
 
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4.00
+output = 20.00
+cache_read = 0.20
