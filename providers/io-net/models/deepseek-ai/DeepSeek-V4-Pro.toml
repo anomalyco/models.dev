@@ -4,6 +4,7 @@
 # Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
 # reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
 # Live check 2026-10-13, reasoning_tokens per level (five samples each): low 506-764, high 575-797, max 712-1114; medium and xhigh are accepted but add nothing beyond the lab set.
+# limit.output = 600000 is the max_tokens value io.net publishes for this deployment in /api/v1/models (the V4-Pro-0813 listing publishes 393216, the lab entry 384000). The endpoint itself accepts any max_tokens up to the context window, so the published field is the only statement of the served output limit.
 base_model = "deepseek/deepseek-v4-pro-0423"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
