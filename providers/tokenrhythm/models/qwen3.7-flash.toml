@@ -1,0 +1,14 @@
+# Source: https://tokenrhythm.studio/api/models (public, accessed 2026-10-13).
+# Host lists contextWindow 1000000, maxOutputTokens 131072, input modalities ["text","image","video"].
+# Toggle: reasoning.enabled = true|false (reasoningMode = "optional"; the TokenRhythm
+# playground sends this field). reasoningSupportedEfforts = [] and
+# reasoningSupportsMaxTokens = false, so no effort or budget control.
+# Pricing: published in CNY per 1M tokens (input 1.2 / output 4.8 / cache read 0.24); converted to USD at
+# 1 USD = 7 CNY (2026-10-13).
+base_model = "alibaba/qwen3.7-flash"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.1714
+output = 0.6857
+cache_read = 0.0343
