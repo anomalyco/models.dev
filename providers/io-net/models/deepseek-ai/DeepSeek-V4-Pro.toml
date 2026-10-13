@@ -1,0 +1,17 @@
+# io.net IO Intelligence listing of deepseek-ai/DeepSeek-V4-Pro.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+base_model = "deepseek/deepseek-v4-pro-0423"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.402
+output = 4.536
+cache_read = 0.701
+
+[limit]
+context = 1_048_576
+output = 600_000

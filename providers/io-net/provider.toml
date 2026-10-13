@@ -1,11 +1,15 @@
+# IO Intelligence (io.net). The model list, prices, context/output limits, modalities and
+# capability flags under models/ come from the public catalogue endpoint
+# https://api.intelligence.io.solutions/api/v1/models (read 2026-10-13). Prices there are
+# USD per token and are multiplied by 1e6 here.
+# Reasoning: POST /chat/completions takes `reasoning.effort` = none | low | medium | high
+# (the legacy top-level `reasoning_effort` also works). Chain-of-thought is returned in
+# `choices[0].message.reasoning_content`, its size in
+# `usage.completion_tokens_details.reasoning_tokens`. Models that always reason reject
+# `none` with HTTP 400; each model's effort list was verified live on 2026-10-13.
+# https://io.net/docs/guides/intelligence/reasoning-for-chat-completions
 name = "IO.NET"
 env = ["IOINTELLIGENCE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Reasoning HTTP format (accessed 2026-06-25): POST /api/v1/chat/completions uses
-# `reasoning.effort` = none, low, medium, or high; none disables and omission uses
-# the model default. Legacy top-level `reasoning_effort` accepts low, medium, or
-# high. Always-reasoning models may reject or ignore none. No token budget field
-# is documented; response reasoning is `choices[0].message.reasoning_content`.
-# https://io.net/docs/guides/intelligence/reasoning-for-chat-completions
 doc = "https://io.net/docs/guides/intelligence/io-intelligence"
 api = "https://api.intelligence.io.solutions/api/v1"

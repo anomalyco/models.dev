@@ -1,0 +1,16 @@
+# io.net IO Intelligence listing of zai-org/GLM-4.7.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+base_model = "zhipuai/glm-4.7"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.50808
+output = 2.01184
+cache_read = 0.25404
+
+[limit]
+context = 202_752

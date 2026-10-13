@@ -1,0 +1,16 @@
+# io.net IO Intelligence listing of moonshotai/Kimi-K2.7-Code.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.98874
+output = 4.37
+cache_read = 0.49437
+
+[modalities]
+input = ["text", "image"]

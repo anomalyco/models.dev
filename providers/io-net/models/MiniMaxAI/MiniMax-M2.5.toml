@@ -1,0 +1,16 @@
+# io.net IO Intelligence listing of MiniMaxAI/MiniMax-M2.5.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.354
+output = 1.416
+cache_read = 0.177
+
+[limit]
+context = 196_600

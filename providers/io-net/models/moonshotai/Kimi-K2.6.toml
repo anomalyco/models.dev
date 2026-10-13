@@ -1,0 +1,21 @@
+# io.net IO Intelligence listing of moonshotai/Kimi-K2.6.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# max_tokens is not published for this model; the inherited output limit is capped to the context window.
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.59291
+output = 2.936
+cache_read = 0.296455
+
+[limit]
+context = 262_142
+output = 262_142
+
+[modalities]
+input = ["text", "image"]

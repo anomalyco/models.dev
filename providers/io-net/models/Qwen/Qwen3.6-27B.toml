@@ -1,0 +1,21 @@
+# io.net IO Intelligence listing of Qwen/Qwen3.6-27B.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# max_tokens is not published for this model; the inherited output limit is capped to the context window.
+base_model = "alibaba/qwen3.6-27b"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.311
+output = 3.08
+cache_read = 0.1555
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
