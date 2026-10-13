@@ -1,10 +1,11 @@
 # NetMind model ID: minimax/minimax-m3.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
 # Pricing maps input/output/cache fields and context tiers from that response.
-# NetMind documents no separate reasoning control for this model.
+# Toggle: reasoning.enabled = true|false
+# Relay baseline: https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 # https://www.netmind.ai/product/inference
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.3

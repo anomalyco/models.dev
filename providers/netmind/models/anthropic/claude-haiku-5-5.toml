@@ -1,10 +1,12 @@
 # NetMind model ID: anthropic/claude-haiku-5-5.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
 # Pricing maps input/output/cache fields and context tiers from that response.
-# Reasoning effort wire field: reasoning_effort.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = <level>
+# Relay baseline: https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 # https://www.netmind.ai/product/inference
 base_model = "anthropic/claude-haiku-5-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.1

@@ -1,7 +1,7 @@
 # NetMind model ID: openai/gpt-6.1-sol.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
 # Pricing maps input/output/cache fields and context tiers from that response.
-# Reasoning effort wire field: reasoning_effort.
+# Effort: reasoning_effort = <level>
 # https://www.netmind.ai/product/inference
 base_model = "openai/gpt-6.1-sol"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]

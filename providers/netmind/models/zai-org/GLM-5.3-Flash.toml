@@ -1,7 +1,7 @@
 # NetMind model ID: zai-org/GLM-5.3-Flash.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
 # Pricing maps input/output/cache fields and context tiers from that response.
-# Reasoning effort wire field: reasoning_effort.
+# Effort: reasoning_effort = <level>
 # https://www.netmind.ai/product/inference
 base_model = "zhipuai/glm-5.3-flash"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]

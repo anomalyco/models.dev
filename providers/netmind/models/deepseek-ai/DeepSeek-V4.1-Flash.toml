@@ -1,10 +1,12 @@
 # NetMind model ID: deepseek-ai/DeepSeek-V4.1-Flash.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
 # Pricing maps input/output/cache fields and context tiers from that response.
-# Reasoning effort wire field: reasoning_effort.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = <level>
+# Relay baseline: https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 # https://www.netmind.ai/product/inference
 base_model = "deepseek/deepseek-v4.1-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 0.3

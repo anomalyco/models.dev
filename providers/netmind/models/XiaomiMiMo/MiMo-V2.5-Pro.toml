@@ -1,10 +1,11 @@
 # NetMind model ID: XiaomiMiMo/MiMo-V2.5-Pro.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
 # Pricing maps input/output/cache fields and context tiers from that response.
-# NetMind documents no separate reasoning control for this model.
+# Toggle: reasoning.enabled = true|false
+# Relay baseline: https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 # https://www.netmind.ai/product/inference
 base_model = "xiaomi/mimo-v2.5-pro"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.435
