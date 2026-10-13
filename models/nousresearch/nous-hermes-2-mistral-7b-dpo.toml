@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/NousResearch/Nous-Hermes-2-Mistral-7B-DPO
+name = "Nous-Hermes-2-Mistral-7B-DPO"
+description = "Nous Research finetune — steerable, honest, built for long conversations."
+family = "mistral"
+release_date = "2024-02-18"
+last_updated = "2024-04-30"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/NousResearch/Nous-Hermes-2-Mistral-7B-DPO"

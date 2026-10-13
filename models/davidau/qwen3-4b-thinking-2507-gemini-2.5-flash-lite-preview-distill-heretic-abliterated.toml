@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/DavidAU/Qwen3-4B-Thinking-2507-Gemini-2.5-Flash-Lite-Preview-Distill-Heretic-Abliterated
+name = "Qwen3-4B-Thinking-2507-Gemini-2.5-Flash-Lite-Preview-Distill-Heretic-Abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "qwen"
+release_date = "2025-12-09"
+last_updated = "2025-12-13"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/DavidAU/Qwen3-4B-Thinking-2507-Gemini-2.5-Flash-Lite-Preview-Distill-Heretic-Abliterated"

@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/Doctor-Shotgun/MS3.2-24B-Magnum-Diamond
+name = "MS3.2-24B-Magnum-Diamond"
+description = "Anthropic-style prose at a fraction of the cost. A cult favorite for a reason."
+release_date = "2025-06-22"
+last_updated = "2025-07-07"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Doctor-Shotgun/MS3.2-24B-Magnum-Diamond"

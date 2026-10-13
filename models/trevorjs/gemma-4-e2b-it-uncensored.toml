@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/TrevorJS/gemma-4-E2B-it-uncensored
+name = "gemma-4-E2B-it-uncensored"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "gemma"
+release_date = "2026-04-03"
+last_updated = "2026-06-13"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/TrevorJS/gemma-4-E2B-it-uncensored"

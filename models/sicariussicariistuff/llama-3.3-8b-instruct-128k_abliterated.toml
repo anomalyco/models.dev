@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/SicariusSicariiStuff/Llama-3.3-8B-Instruct-128K_Abliterated
+name = "Llama-3.3-8B-Instruct-128K_Abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "llama"
+release_date = "2026-01-05"
+last_updated = "2026-01-26"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/SicariusSicariiStuff/Llama-3.3-8B-Instruct-128K_Abliterated"

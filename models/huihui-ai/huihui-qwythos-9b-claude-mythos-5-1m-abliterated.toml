@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/huihui-ai/Huihui-Qwythos-9B-Claude-Mythos-5-1M-abliterated
+name = "Huihui-Qwythos-9B-Claude-Mythos-5-1M-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+release_date = "2026-06-26"
+last_updated = "2026-06-26"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 1048576
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/huihui-ai/Huihui-Qwythos-9B-Claude-Mythos-5-1M-abliterated"

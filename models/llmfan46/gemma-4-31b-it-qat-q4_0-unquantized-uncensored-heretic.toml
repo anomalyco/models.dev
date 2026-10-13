@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/llmfan46/gemma-4-31B-it-qat-q4_0-unquantized-uncensored-heretic
+name = "gemma-4-31B-it-qat-q4_0-unquantized-uncensored-heretic"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "gemma"
+release_date = "2026-06-11"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/llmfan46/gemma-4-31B-it-qat-q4_0-unquantized-uncensored-heretic"

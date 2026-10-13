@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Orion-zhen/Qwen2.5-14B-Instruct-Uncensored
+name = "Qwen2.5-14B-Instruct-Uncensored"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "qwen"
+release_date = "2024-10-21"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Orion-zhen/Qwen2.5-14B-Instruct-Uncensored"

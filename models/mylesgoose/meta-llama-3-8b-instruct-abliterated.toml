@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/mylesgoose/Meta-Llama-3-8B-Instruct-abliterated
+name = "Meta-Llama-3-8B-Instruct-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "llama"
+release_date = "2024-08-07"
+last_updated = "2024-09-08"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/mylesgoose/Meta-Llama-3-8B-Instruct-abliterated"
