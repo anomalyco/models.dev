@@ -1,0 +1,30 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+name = "gpt-6.1-sol"
+description = "gpt-6.1-sol served by NetMind"
+attachment = true
+release_date = "2026-10-12"
+last_updated = "2026-10-12"
+open_weights = false
+reasoning_options = []
+reasoning = true
+tool_call = false
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 2.0
+output = 10.0
+cache_read = 0.1
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 4.0
+output = 15.0
+cache_read = 0.2
+cache_write = 5.0

@@ -1,0 +1,26 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+base_model = "openai/gpt-6-luna"
+name = "gpt-6-luna"
+reasoning_options = []
+reasoning = true
+tool_call = false
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 0.2
+output = 0.75
+cache_read = 0.02
+cache_write = 0.25

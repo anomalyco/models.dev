@@ -1,0 +1,19 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-Flash"
+reasoning_options = []
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1000000
+output = 131072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03

@@ -1,0 +1,19 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+base_model = "anthropic/claude-fable-5-1"
+name = "claude-fable-5-1"
+reasoning_options = []
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 10.0
+output = 50.0
+cache_read = 1.0

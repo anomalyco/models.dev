@@ -1,0 +1,26 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+base_model = "alibaba/qwen3.7-plus"
+name = "Qwen3.7-Plus"
+reasoning_options = []
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1000000
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.274
+output = 1.096
+cache_read = 0.0548
+
+[[cost.tiers]]
+tier = { type = "context", size = 262144 }
+input = 0.822
+output = 3.288
+cache_read = 0.164
+cache_write = 0.0

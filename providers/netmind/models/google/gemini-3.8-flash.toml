@@ -1,0 +1,19 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+base_model = "google/gemini-3.8-flash"
+name = "gemini-3.8-flash"
+reasoning_options = []
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1000000
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075

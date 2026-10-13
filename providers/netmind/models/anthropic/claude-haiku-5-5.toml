@@ -1,0 +1,30 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+name = "claude-haiku-5-5"
+description = "claude-haiku-5-5 served by NetMind"
+attachment = true
+release_date = "2026-10-12"
+last_updated = "2026-10-12"
+open_weights = false
+reasoning_options = []
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+
+[[cost.tiers]]
+tier = { type = "context", size = 100000 }
+input = 0.5
+output = 2.5
+cache_read = 0.05
+cache_write = 0.625

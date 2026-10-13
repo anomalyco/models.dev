@@ -1,0 +1,23 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+name = "claude-sonnet-5-5"
+description = "claude-sonnet-5-5 served by NetMind"
+attachment = true
+release_date = "2026-10-12"
+last_updated = "2026-10-12"
+open_weights = false
+reasoning_options = []
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 2.0
+output = 10.0
+cache_read = 0.1

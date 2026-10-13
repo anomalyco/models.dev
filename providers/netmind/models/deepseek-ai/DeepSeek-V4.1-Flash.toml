@@ -1,0 +1,19 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek-V4.1-Flash"
+reasoning_options = []
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1000000
+output = 384000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006

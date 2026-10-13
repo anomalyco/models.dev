@@ -1,0 +1,19 @@
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+base_model = "anthropic/claude-haiku-4-5"
+name = "claude-haiku-4-5"
+reasoning_options = []
+reasoning = true
+tool_call = true
+
+[limit]
+context = 200000
+output = 64000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 1.0
+output = 5.0
+cache_read = 0.1
