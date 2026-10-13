@@ -1,0 +1,23 @@
+# Sources (accessed 2026-09-20):
+# https://aihubmix.com/api/v1/models?type=llm (USD per million tokens)
+# https://www.alibabacloud.com/help/en/model-studio/qwen-omni
+# Toggle: enable_thinking = true|false on /v1/chat/completions.
+# Effort: reasoning_effort = low|medium|xhigh on /v1/chat/completions.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "alibaba/qwen3.8-omni-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.1126
+output = 0.380025
+cache_read = 0.014075
+cache_write = 0.175937

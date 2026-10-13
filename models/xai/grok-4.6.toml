@@ -1,3 +1,4 @@
+# Benchmarks use the "Grok 4.6 High" comparison column and Grok 4.6 (high) GDPval chart in the Grok 4.7 announcement.
 name = "Grok 4.6"
 description = "xAI's frontier model for long-running agents, coding, knowledge work, and visual projects"
 family = "grok"
@@ -18,3 +19,71 @@ output = 500_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[benchmarks]]
+name = "CursorBench"
+score = 40.4
+metric = "score"
+variant = "high effort"
+version = "4.0"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 65.2
+metric = "score"
+variant = "high effort"
+version = "1.1"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "EEBench"
+score = 53
+metric = "score"
+variant = "high effort"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "AA-Briefcase"
+score = 1546
+metric = "Elo"
+variant = "high effort"
+version = "1.1"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 20.3
+metric = "score"
+variant = "high effort"
+version = "4.0"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "Harvey Legal Agent Benchmark"
+score = 15.8
+metric = "score"
+variant = "high effort"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "HealthBench"
+score = 48.5
+metric = "score"
+variant = "high effort; professional"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "GDPval"
+score = 1605
+metric = "Elo"
+variant = "high effort"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"

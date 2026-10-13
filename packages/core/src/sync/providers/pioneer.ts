@@ -23,7 +23,7 @@ function baseModelReasoning(modelID: string): boolean {
   return value;
 }
 
-const API_ENDPOINT = "https://api.pioneer.ai/v1/models";
+const API_ENDPOINT = "https://api.fastino.ai/v1/models";
 
 const BaseModels: Record<string, string> = {
   "Qwen/Qwen2.5-Coder-0.5B": "alibaba/qwen2.5-coder-0.5b",

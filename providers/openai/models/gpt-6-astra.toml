@@ -1,5 +1,6 @@
 # Pricing: https://developers.openai.com/api/docs/models/gpt-6-astra
 # Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra
+# Ultrafast mode: https://developers.openai.com/api/docs/guides/ultrafast-mode
 base_model = "openai/gpt-6-astra"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
@@ -22,3 +23,7 @@ provider = { body = { service_tier = "priority" } }
 
 [experimental.modes.pro]
 provider = { body = { reasoning = { mode = "pro" } } }
+
+[experimental.modes.ultrafast]
+cost = { input = 60.00, output = 300.00, cache_read = 6.00, cache_write = 75.00 }
+provider = { body = { service_tier = "ultrafast" } }

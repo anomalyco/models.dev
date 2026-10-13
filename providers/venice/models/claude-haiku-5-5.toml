@@ -1,0 +1,21 @@
+base_model = "anthropic/claude-haiku-5-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.125
+output = 0.625
+cache_read = 0.0125
+cache_write = 0.15625
+
+[[cost.tiers]]
+tier = { type = "context", size = 100_000 }
+input = 0.625
+output = 3.125
+cache_read = 0.0625
+cache_write = 0.78125
+
+[modalities]
+input = ["text", "image"]

@@ -1,5 +1,10 @@
+# Toggle: reasoning.enabled = true|false
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 base_model = "alibaba/qwen3.8-max-preview"
 name = "Qwen 3.8 Max"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

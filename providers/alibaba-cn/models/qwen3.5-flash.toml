@@ -1,8 +1,14 @@
+# Sources (accessed 2026-09-22):
+# https://help.aliyun.com/en/model-studio/model-pricing (China (Beijing) USD list prices)
+# https://help.aliyun.com/en/model-studio/qwen3-5-flash (capabilities and limits)
+# https://help.aliyun.com/en/model-studio/deep-thinking
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens, max 81,920)
 name = "Qwen3.5 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
 release_date = "2026-02-23"
-last_updated = "2026-09-11"
+last_updated = "2026-09-22"
 attachment = true
 reasoning = true
 structured_output = true
@@ -18,16 +24,25 @@ type = "toggle"
 type = "budget_tokens"
 max = 81_920
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
-input = 0.172
-output = 1.033
-reasoning = 1.033
+input = 0.029
+output = 0.287
+reasoning = 0.287
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.115
+output = 1.147
+reasoning = 1.147
 
 [[cost.tiers]]
 tier = { type = "context", size = 256_000 }
-input = 0.689
-output = 4.133
-reasoning = 4.133
+input = 0.172
+output = 1.72
+reasoning = 1.72
 
 [limit]
 context = 1_000_000

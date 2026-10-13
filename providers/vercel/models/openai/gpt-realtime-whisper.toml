@@ -1,2 +1,8 @@
+# Vercel's transcription route has no token context and advertises output 0.
+# https://vercel.com/ai-gateway/models/gpt-realtime-whisper
 base_model = "openai/gpt-realtime-whisper"
 name = "gpt-realtime-whisper"
+
+[limit]
+context = 0
+output = 0

@@ -1,0 +1,12 @@
+# https://docs.mistral.ai/models/ministral-3-3b-25-12 — Ministral 3 3B, API ID ministral-3b-2512, 256k context, $0.1/MTok in/out
+# https://docs.mistral.ai/inference/pricing — Ministral 3 3B: $0.1 input, $0.01 cached input, $0.1 output
+# https://mistral.ai/news/mistral-3 — released 2025-12-02, Apache 2.0, vision-language instruct variant
+base_model = "mistral/ministral-3-3b-instruct-2512"
+
+[cost]
+input = 0.1
+output = 0.1
+cache_read = 0.01
+
+[limit]
+context = 131_072

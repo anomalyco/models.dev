@@ -25,3 +25,11 @@ output = 128_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[experimental.modes.fast]
+cost = { input = 3.50, output = 28.00, cache_read = 0.35 }
+provider = { body = { service_tier = "priority" } }
+
+[experimental.modes.flex]
+cost = { input = 0.875, output = 7.00, cache_read = 0.0875 }
+provider = { body = { service_tier = "flex" } }

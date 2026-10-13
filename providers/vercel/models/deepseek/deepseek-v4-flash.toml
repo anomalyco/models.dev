@@ -1,11 +1,8 @@
 base_model = "deepseek/deepseek-v4-flash"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.13

@@ -100,6 +100,7 @@ export const ModelFamilyValues = [
   "ministral",
   "codestral",
   "devstral",
+  "leanstral",
   "pixtral",
   "mixtral",
 

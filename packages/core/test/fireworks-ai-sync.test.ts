@@ -1,12 +1,17 @@
-import { expect, test } from "bun:test";
+import { expect, spyOn, test } from "bun:test";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
-import type { ExistingModel } from "../src/sync/index.js";
+import { syncProvider, type ExistingModel } from "../src/sync/index.js";
+import * as missingIssues from "../src/sync/missing-issues.js";
 import {
   buildFireworksModel,
   expandFireworksModels,
   fetchFireworksInventory,
   fetchFireworksModels,
   type FireworksInventoryModel,
+  FireworksInventoryResponse,
   FireworksResponse,
   fireworksAi,
   mergeFireworksModels,
@@ -27,6 +32,36 @@ test("fetches the Fireworks serverless catalog with bearer auth", async () => {
 
   expect(request?.url).toBe("https://api.fireworks.ai/v1/serverless/models");
   expect(request?.headers.get("authorization")).toBe("Bearer test-key");
+});
+
+test("ignores FireRouter auto without accepting incomplete model rows", async () => {
+  const router = {
+    id: "firerouter/auto",
+    object: "model",
+    kind: "router",
+    display_name: "FireRouter Auto",
+    pricing_mode: "auto",
+    usage_identifier: "auto",
+    created: 1790634780,
+  };
+  const fetcher = (async () => Response.json({
+    object: "list",
+    data: [fireworksModel(), router],
+  })) as unknown as typeof fetch;
+
+  expect((await fetchFireworksModels("test-key", fetcher)).data.map((model) => model.id))
+    .toEqual(["accounts/fireworks/models/example"]);
+
+  expect(() => mergeFireworksModels(
+    FireworksResponse.parse({ object: "list", data: [router] }).data,
+    [inventoryModel()],
+  )).toThrow("empty serverless source");
+
+  const malformed = (async () => Response.json({
+    object: "list",
+    data: [fireworksModel(), { ...router, kind: "model" }],
+  })) as unknown as typeof fetch;
+  expect(fetchFireworksModels("test-key", malformed)).rejects.toThrow();
 });
 
 test("parses the Fireworks serverless model list", () => {
@@ -86,6 +121,12 @@ test("fetches every Fireworks serverless inventory page", async () => {
   expect(new URL(requests[1]!.url).searchParams.get("pageToken")).toBe("next");
 });
 
+test("accepts unset Fireworks deprecation dates", () => {
+  expect(FireworksInventoryResponse.parse({
+    models: [{ ...inventoryModel(), deprecationDate: null }],
+  }).models[0]?.deprecationDate).toBeNull();
+});
+
 test("unions pricing IDs with generation models from serverless inventory", () => {
   const models = mergeFireworksModels(
     [fireworksModel()],
@@ -107,9 +148,96 @@ test("unions pricing IDs with generation models from serverless inventory", () =
   });
 });
 
+test("keeps priced serverless generation models even when they are not HF base models", () => {
+  const priced = fireworksModel({ id: "accounts/fireworks/models/flumina" });
+  const inventory = inventoryModel({ name: priced.id, kind: "FLUMINA_BASE_MODEL" });
+
+  expect(mergeFireworksModels([priced], [inventory]).map((model) => model.catalogId))
+    .toEqual([priced.id]);
+});
+
+test("does not report retired pricing rows or their aliases as missing models", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "fireworks-sync-"));
+  const modelsDir = path.join(dir, "providers/fireworks-ai/models");
+  await mkdir(modelsDir, { recursive: true });
+  const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
+  const provider = {
+    ...fireworksAi,
+    modelsDir,
+    async fetchModels() {
+      return {
+        serverless: {
+          object: "list" as const,
+          data: [
+            fireworksModel({
+              id: "accounts/fireworks/models/retired",
+              aliases: ["accounts/fireworks/routers/retired-latest"],
+            }),
+            fireworksModel({ id: "accounts/fireworks/models/new" }),
+          ],
+        },
+        inventory: [
+          inventoryModel({ name: "accounts/fireworks/models/retired", supportsServerless: false }),
+          inventoryModel({ name: "accounts/fireworks/models/new" }),
+        ],
+      };
+    },
+  };
+
+  try {
+    await syncProvider(provider, { openIssues: true });
+    expect(issues).toHaveBeenCalledTimes(1);
+    expect(issues.mock.calls[0]?.[1]).toEqual(["accounts/fireworks/models/new"]);
+  } finally {
+    issues.mockRestore();
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("excludes expired serverless deprecations including fast routes", () => {
+  const retiring = {
+    ...inventoryModel({ name: "accounts/fireworks/models/retiring" }),
+    deprecationDate: { year: 2026, month: 9, day: 25 },
+  };
+  const live = inventoryModel({ name: "accounts/fireworks/models/live" });
+  const pricing = [
+    fireworksModel({ id: retiring.name }),
+    fireworksModel({
+      id: retiring.name,
+      serverless_mode: "fast",
+      usage_identifier: "accounts/fireworks/routers/retiring-fast",
+    }),
+    fireworksModel({ id: live.name }),
+  ];
+
+  expect(mergeFireworksModels(pricing, [retiring, live], new Date("2026-09-28T00:00:00Z"))
+    .map((model) => model.catalogId)).toEqual([live.name]);
+  expect(mergeFireworksModels(pricing, [retiring, live], new Date("2026-09-25T12:00:00Z"))
+    .map((model) => model.catalogId)).toEqual([
+    retiring.name,
+    "accounts/fireworks/routers/retiring-fast",
+    live.name,
+  ]);
+});
+
+test("honors the documented GLM 5.2 retirement while Fireworks still flags it as serverless", () => {
+  const retired = inventoryModel({ name: "accounts/fireworks/models/glm-5p2" });
+  const live = inventoryModel({ name: "accounts/fireworks/models/glm-5p3" });
+  const pricing = [fireworksModel({ id: retired.name }), fireworksModel({ id: live.name })];
+
+  expect(mergeFireworksModels(pricing, [retired, live], new Date("2026-09-28T00:00:00Z"))
+    .map((model) => model.catalogId)).toEqual([live.name]);
+});
+
 test("refuses destructive sync when either Fireworks source is empty", () => {
   expect(() => mergeFireworksModels([], [inventoryModel()])).toThrow("empty serverless source");
   expect(() => mergeFireworksModels([fireworksModel()], [])).toThrow("empty serverless source");
+  expect(() => mergeFireworksModels([fireworksModel()], [
+    inventoryModel({ supportsServerless: false }),
+  ])).toThrow("empty active serverless inventory");
+  expect(() => mergeFireworksModels([fireworksModel({ output_modalities: ["embeddings"] })], [
+    inventoryModel({ kind: "EMBEDDING_MODEL" }),
+  ])).toThrow("empty active serverless inventory");
 });
 
 test("preserves inventory-only models while enabling deletion for models absent from both sources", () => {

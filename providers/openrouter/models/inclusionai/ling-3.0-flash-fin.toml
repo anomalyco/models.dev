@@ -9,20 +9,20 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = true
+structured_output = false
 open_weights = false
 
 [[reasoning_options]]
 type = "toggle"
 
 [cost]
-input = 0.06
-output = 0.18
-cache_read = 0.012
+input = 0.042
+output = 0.1232
+cache_read = 0.0084
 
 [limit]
 context = 262_144
-output = 235_929
+output = 32_768
 
 [modalities]
 input = ["text"]

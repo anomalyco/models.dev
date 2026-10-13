@@ -43,9 +43,120 @@ test.each(["claude-fable-5.1", "claude-fable-5.1@eu"])(
       structured_output: true,
       reasoning_options: [
         { type: "effort", values: ["none", "low", "medium", "high", "max"] },
-        { type: "budget_tokens" },
       ],
       cost: { input: 10, output: 50, cache_read: 0.25, cache_write: 12.5 },
     });
   },
 );
+
+test.each([
+  "claude-sonnet-5-5",
+  "claude-sonnet-5-5@eu",
+  "claude-sonnet-4-5",
+  "openai/gpt-5.4",
+  "google/gemini-2.5-pro",
+  "requesty-unknown-model",
+])("advertises only Requesty's effort control for %s", (id) => {
+  const model = buildRequestyModel(RequestyModel.parse({
+    id,
+    created: Date.parse("2026-09-01") / 1_000,
+    description: "Reasoning model",
+    context_window: 200_000,
+    max_output_tokens: 16_000,
+    supports_reasoning: true,
+  }));
+
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "max"] },
+  ]);
+});
+
+test("does not advertise controls for non-reasoning models", () => {
+  const model = buildRequestyModel(RequestyModel.parse({
+    id: "requesty-non-reasoning-model",
+    created: Date.parse("2026-09-01") / 1_000,
+    description: "Non-reasoning model",
+    context_window: 200_000,
+    max_output_tokens: 16_000,
+  }));
+
+  expect(model.reasoning_options).toBeUndefined();
+});
+
+test("uses the first Requesty pricing band as the base cost", () => {
+  const model = buildRequestyModel(RequestyModel.parse({
+    id: "requesty-priced-model",
+    created: Date.parse("2026-09-01") / 1_000,
+    description: "Requesty description",
+    context_window: 1_000_000,
+    max_output_tokens: 128_000,
+    input_price: 0.000001,
+    output_price: 0.000002,
+    cached_price: 0.000003,
+    caching_price: 0.000004,
+    pricing: [
+      {
+        prompt_tokens_threshold: 0,
+        input_price: 0.00001,
+        output_price: 0.00005,
+        cached_price: 0.00000025,
+        caching_price: 0.0000125,
+      },
+      {
+        prompt_tokens_threshold: 200_000,
+        input_price: 0.00002,
+        output_price: 0.000075,
+        cached_price: 0.0000005,
+        caching_price: 0.000025,
+      },
+    ],
+  }));
+
+  expect(model.cost).toEqual({
+    input: 10,
+    output: 50,
+    cache_read: 0.25,
+    cache_write: 12.5,
+    tiers: [{
+      tier: { type: "context", size: 200_000 },
+      input: 20,
+      output: 75,
+      cache_read: 0.5,
+      cache_write: 25,
+    }],
+  });
+});
+
+test("uses Requesty pricing bands when top-level prices are null", () => {
+  const model = buildRequestyModel(RequestyModel.parse({
+    id: "requesty-priced-model",
+    created: Date.parse("2026-09-01") / 1_000,
+    description: "Requesty description",
+    context_window: 1_000_000,
+    max_output_tokens: 128_000,
+    input_price: null,
+    output_price: null,
+    pricing: [
+      {
+        prompt_tokens_threshold: 0,
+        input_price: 0.00001,
+        output_price: 0.00005,
+      },
+      {
+        prompt_tokens_threshold: 200_000,
+        input_price: null,
+        output_price: null,
+      },
+    ],
+  }));
+
+  expect(model.cost).toEqual({
+    input: 10,
+    output: 50,
+    tiers: [{
+      tier: { type: "context", size: 200_000 },
+      input: 10,
+      output: 50,
+    }],
+  });
+});

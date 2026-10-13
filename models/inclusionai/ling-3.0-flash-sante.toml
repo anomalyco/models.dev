@@ -1,18 +1,20 @@
-# Lab metadata carried over from providers/vercel/models/inclusionai/ling-3.0-flash-sante.toml (curated catalogue data already in this repo),
-# with provider-specific fields (cost, reasoning_options, status) stripped.
+# https://vercel.com/changelog/ling-3-0-flash-sante-is-now-available-on-ai-gateway-for-free
+# https://novita.ai/models/model-detail/inclusionai-ling-3.0-flash-sante
+# The open Ling backbone does not establish that Sante's medical fine-tune has public weights.
 name = "Ling 3.0 Flash Sante"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
+description = "Health and medicine specialization of Ling 3.0 Flash for medical reasoning and evidence-based retrieval"
 family = "ling"
 release_date = "2026-09-04"
 last_updated = "2026-09-04"
 attachment = false
 reasoning = true
 tool_call = true
+temperature = true
 open_weights = false
 
 [limit]
-context = 256000
-output = 32000
+context = 262_144
+output = 32_768
 
 [modalities]
 input = ["text"]

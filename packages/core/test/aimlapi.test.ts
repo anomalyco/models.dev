@@ -32,7 +32,7 @@ test("reads the lab ladder through the provider directory, not the model record"
   // does. A lookup on the wrong one returns undefined and looks like "no lab
   // ladder", which is a different claim.
   expect(labEffortValues("zhipuai/glm-5.3-flash")).toEqual(["low", "high", "max"]);
-  expect(labEffortValues("deepseek/deepseek-v4-pro")).toEqual(["high", "max"]);
+  expect(labEffortValues("deepseek/deepseek-v4-pro")).toEqual(["low", "high", "max"]);
 });
 
 test("a dated snapshot borrows the ladder of the model it snapshots", () => {
@@ -48,9 +48,9 @@ test("a lab entry with toggle only and no effort ladder yields undefined", () =>
 const HOST = ["none", "low", "medium", "high"] as const;
 
 test("intersects the host enum with the lab ladder and drops the rest", () => {
-  // lab high/max, host none..high: `low` and `medium` go although the host
-  // accepts them — that is the doctrine, and this test pins its cost.
-  expect(resolveLadder("deepseek/deepseek-v4-pro", "deepseek/deepseek-v4-pro", HOST)).toEqual(["none", "high"]);
+  // lab low/high/max, host none..high: `medium` goes although the host
+  // accepts it — that is the doctrine, and this test pins its cost.
+  expect(resolveLadder("deepseek/deepseek-v4-pro", "deepseek/deepseek-v4-pro", HOST)).toEqual(["none", "low", "high"]);
 });
 
 test("`none` survives only where measured as a real off switch", () => {
@@ -84,8 +84,8 @@ test("a toggle-only lab base never yields the host's effort dump", () => {
 });
 
 test("an empty intersection is unresolved, not the host enum", () => {
-  // lab high/max, host offers neither -> skip, do not republish low/medium.
-  expect(resolveLadder("deepseek/deepseek-v4-pro", "deepseek/deepseek-v4-pro", ["low", "medium"])).toBeUndefined();
+  // lab low/high/max, host offers none of them -> skip, do not republish.
+  expect(resolveLadder("deepseek/deepseek-v4-pro", "deepseek/deepseek-v4-pro", ["medium"])).toBeUndefined();
 });
 
 test("a base with no lab entry falls back to the OpenRouter peer's ladder, intersected", () => {

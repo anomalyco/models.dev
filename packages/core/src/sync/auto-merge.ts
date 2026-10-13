@@ -17,6 +17,7 @@ const REVIEWED_REASONING_PROVIDERS = new Set([
   "nano-gpt",
   "openrouter",
   "venice",
+  "vercel",
 ]);
 
 export interface CatalogChange {

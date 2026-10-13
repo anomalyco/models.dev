@@ -193,8 +193,9 @@ export function buildCrossModel(
   // CrossModel serves threshold-tiered pricing. The lowest-threshold tier is the
   // headline [cost]; every higher tier maps to a [[cost.tiers]] context band
   // (threshold -> tier size), so tier pricing stays fresh on each sync instead of
-  // being frozen at hand-authored values. Fall back to the existing tiers only
-  // when the API reports none.
+  // being frozen at hand-authored values. When the API reports usable pricing,
+  // its tier list is authoritative; fall back to the existing cost only when the
+  // source pricing is absent or unusable.
   const tiers = [...(model.pricing?.tiers ?? [])].sort(
     (a, b) => (a.threshold ?? 0) - (b.threshold ?? 0),
   );
@@ -210,7 +211,7 @@ export function buildCrossModel(
     .filter((entry): entry is NonNullable<typeof entry> => entry !== undefined);
   const cost =
     base !== undefined
-      ? { ...base, tiers: contextTiers.length > 0 ? contextTiers : existing?.cost?.tiers }
+      ? { ...base, tiers: contextTiers.length > 0 ? contextTiers : undefined }
       : existing?.cost;
 
   // Every served model reports a context window; without one (and no existing

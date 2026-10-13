@@ -1,23 +1,49 @@
+# Sources (accessed 2026-09-22):
+# https://help.aliyun.com/en/model-studio/model-pricing (China (Beijing) USD list prices)
+# https://help.aliyun.com/en/model-studio/model-qwen3-max (alias, capabilities, and limits)
+# https://help.aliyun.com/en/model-studio/deep-thinking
+# qwen3-max currently aliases qwen3-max-2026-01-23.
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens, max 81,920)
 name = "Qwen3 Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
 family = "qwen"
-release_date = "2025-09-23"
-last_updated = "2026-09-11"
+release_date = "2026-01-23"
+last_updated = "2026-09-22"
 attachment = false
-reasoning = false
+reasoning = true
+structured_output = true
 temperature = true
 knowledge = "2025-04"
 tool_call = true
 open_weights = false
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 81_920
+
+[interleaved]
+field = "reasoning_content"
+
 [cost]
-input = 1.291
-output = 7.749
+input = 0.359
+output = 1.434
+reasoning = 1.434
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.574
+output = 2.294
+reasoning = 2.294
 
 [[cost.tiers]]
 tier = { type = "context", size = 128_000 }
-input = 2.153
-output = 12.915
+input = 1.004
+output = 4.014
+reasoning = 4.014
 
 [limit]
 context = 262_144

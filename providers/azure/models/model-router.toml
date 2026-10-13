@@ -1,3 +1,6 @@
+# Azure OpenAI resource endpoints serve model-router on Chat Completions; it is not in the Responses API model list.
+# https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#supported-models
+# https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/model-router
 name = "Model Router"
 description = "Automatic model router for matching prompts to suitable backends and budgets"
 family = "model-router"
@@ -19,3 +22,6 @@ output = 16_384
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[provider]
+shape = "completions"

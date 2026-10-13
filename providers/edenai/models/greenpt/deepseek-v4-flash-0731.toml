@@ -1,0 +1,11 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 (Greenpt)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.156534
+output = 0.391335
+cache_read = 0.044724

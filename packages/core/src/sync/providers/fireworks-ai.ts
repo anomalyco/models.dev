@@ -5,6 +5,12 @@ import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.fireworks.ai/v1/serverless/models";
 const INVENTORY_ENDPOINT = "https://api.fireworks.ai/v1/accounts/fireworks/models";
+// Fireworks announced GLM 5.2 serverless retirement for 2026-09-25, but on
+// 2026-09-28 List Models still returns supportsServerless=true and no date.
+// https://docs.fireworks.ai/updates/changelog (2026-09-12)
+const DEPRECATION_DATE_FALLBACK: Record<string, string> = {
+  "accounts/fireworks/models/glm-5p2": "2026-09-25",
+};
 
 const FireworksPrice = z.object({
   sku: z.string().min(1),
@@ -29,15 +35,32 @@ export const FireworksModel = z.object({
   created: z.number().int().nonnegative(),
 }).passthrough();
 
+const FireworksRouter = z.object({
+  id: z.string().min(1),
+  object: z.literal("model"),
+  kind: z.literal("router"),
+  pricing_mode: z.string().min(1),
+  usage_identifier: z.string().min(1),
+}).passthrough();
+
 export const FireworksResponse = z.object({
   object: z.literal("list"),
-  data: z.array(FireworksModel),
+  // FireRouter auto shares the endpoint but routes to other models and has
+  // neither fixed modalities nor model-level token pricing.
+  // TODO: Sync routers separately once we can represent dynamic model selection and pricing.
+  data: z.array(z.union([FireworksRouter, FireworksModel]))
+    .transform((rows) => rows.filter((row): row is z.infer<typeof FireworksModel> => row.kind !== "router")),
 }).passthrough();
 
 export const FireworksInventoryModel = z.object({
   name: z.string().min(1),
   kind: z.string().min(1),
   supportsServerless: z.boolean(),
+  deprecationDate: z.object({
+    year: z.number().int().min(1),
+    month: z.number().int().min(1).max(12),
+    day: z.number().int().min(1).max(31),
+  }).nullish(),
 }).passthrough();
 
 export const FireworksInventoryResponse = z.object({
@@ -149,20 +172,34 @@ export async function fetchFireworksInventory(
 export function mergeFireworksModels(
   serverless: FireworksModel[],
   inventory: FireworksInventoryModel[],
+  now = new Date(),
 ): FireworksSourceModel[] {
   if (serverless.length === 0 || inventory.length === 0) {
     throw new Error("Fireworks AI returned an empty serverless source; refusing destructive sync");
   }
-  const expanded = expandFireworksModels(serverless);
+  const today = now.toISOString().slice(0, 10);
+  const available = inventory.filter((model) => {
+    if (!model.supportsServerless) return false;
+    const date = model.deprecationDate;
+    // A date has no time zone. Keep the model through that UTC day rather than
+    // removing it prematurely on the announced deprecation day.
+    const lastDay = date == null
+      ? DEPRECATION_DATE_FALLBACK[model.name]
+      : `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
+    return lastDay === undefined || lastDay >= today;
+  });
+  // Pricing rows can outlive serverless deployments. Only expand modes and
+  // aliases for models that the availability inventory still lists.
+  const availableIds = new Set(available.map((model) => model.name));
+  const expanded = expandFireworksModels(serverless.filter((model) => availableIds.has(model.id)));
   const ids = new Set(expanded.map((model) => model.catalogId));
+  const inventoryOnly = available.filter((model) => model.kind === "HF_BASE_MODEL" && !ids.has(model.name));
+  if (!expanded.some(supportsCatalogModel) && inventoryOnly.length === 0) {
+    throw new Error("Fireworks AI returned an empty active serverless inventory; refusing destructive sync");
+  }
   return [
     ...expanded,
-    ...inventory
-      .filter((model) =>
-        model.kind === "HF_BASE_MODEL"
-        && model.supportsServerless
-        && !ids.has(model.name)
-      )
+    ...inventoryOnly
       .map((model): FireworksInventoryCatalogModel => ({
         catalogId: model.name,
         inventoryOnly: true,

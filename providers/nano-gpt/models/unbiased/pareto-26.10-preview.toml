@@ -1,0 +1,23 @@
+name = "Pareto 26.10 Preview"
+description = "Pareto 26.10 Preview is Unbiased AI's multimodal composite model for research, coding, and agentic workflows. It accepts text and images, supports tool calling, and provides a 1M-token context window with up to 131K output tokens."
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.8
+output = 3.2
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

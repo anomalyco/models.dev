@@ -2,7 +2,9 @@
 # Standard US East (N. Virginia) pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json
 # Effort: additionalModelRequestFields.reasoning_effort = low|medium|high (Converse).
 # Request mapping: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-openai.html
-# AWS documents 16K max output. Converse accepts larger maxTokens settings up to the 128K context boundary, but that is not evidence of a larger generation cap.
+# AWS documents 16K max output, but live Converse (2026-09-23) generated 60000 output tokens
+# (stopReason max_tokens), accepts maxTokens=128000 and rejects larger values, and processed a
+# 129575-token prompt; the backend reports "maximum context length (131072)".
 base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
@@ -12,5 +14,4 @@ input = 0.07
 output = 0.30
 
 [limit]
-context = 128_000
-output = 16_384
+output = 128_000

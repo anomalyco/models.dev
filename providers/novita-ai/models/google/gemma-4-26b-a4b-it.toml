@@ -1,24 +1,14 @@
-name = "Gemma 4 26B A4B"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
+# https://novita.ai/models/model-detail/google-gemma-4-26b-a4b-it
+# Toggle: thinking.type = enabled|disabled
+base_model = "google/gemma-4-26b-a4b-it"
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.13
 output = 0.4
 
 [limit]
-context = 262_144
 output = 131_072
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

@@ -3,6 +3,8 @@
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Live Converse (us-east-1, 2026-09-09): forced toolUse works, but native toolResult continuation fails with a role-alternation error.
 # Tool calling remains disabled because a complete native tool-use round trip is unavailable.
+# Live Converse 2026-09-23: maxTokens at the Bedrock ceiling returned
+# "maximum context length is 131072 tokens" from the serving backend.
 base_model = "google/gemma-3-27b-it"
 tool_call = false
 structured_output = true
@@ -12,5 +14,4 @@ input = 0.23
 output = 0.38
 
 [limit]
-context = 202_752
 output = 8_192

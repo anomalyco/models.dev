@@ -1,12 +1,14 @@
-# Lab metadata carried over from providers/openrouter/models/mistralai/codestral-2508.toml (curated catalogue data already in this repo),
-# with provider-specific fields (cost, reasoning_options, status) stripped.
-name = "Codestral 2508"
-description = "Mistral coding model for code completion, generation, and developer workflows"
+# Sources: https://docs.mistral.ai/models/codestral-25-08 (128k context, $0.3/$0.9 pricing, July 30 2025, FIM/code generation)
+# https://docs.mistral.ai/inference/pricing (Codestral $0.3 input, $0.03 cached, $0.9 output)
+# https://mistral.ai/news/codestral-25-08 (Codestral 25.08 announcement July 30 2025)
+# https://docs.mistral.ai/resources/known-limitations (Codestral 128k max context)
+# Fallback for max output: https://opper.ai/mistral/codestral-2508 (Mistral-route 8K max output, text in/out)
+name = "Codestral 25.08"
+description = "Mistral code model for low-latency completion, fill-in-the-middle, and code generation"
 family = "codestral"
-release_date = "2025-08-01"
-last_updated = "2025-08-01"
-knowledge = "2025-03-31"
-attachment = true
+release_date = "2025-07-30"
+last_updated = "2025-07-30"
+attachment = false
 reasoning = false
 temperature = true
 tool_call = true
@@ -14,9 +16,9 @@ structured_output = true
 open_weights = false
 
 [limit]
-context = 256000
-output = 204800
+context = 128_000
+output = 8_192
 
 [modalities]
-input = ["text", "pdf"]
+input = ["text"]
 output = ["text"]

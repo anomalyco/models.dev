@@ -1,0 +1,18 @@
+# Sources (accessed 2026-09-20):
+# https://aihubmix.com/api/v1/models?type=llm (USD per million tokens)
+# https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-lite-image
+# Effort: reasoning_effort = minimal|high on /v1/chat/completions.
+# Gemini native: generationConfig.thinkingConfig.thinkingLevel uses the corresponding uppercase levels.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "google/gemini-3.1-flash-lite-image"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "high"]
+
+[cost]
+input = 0.25
+output = 1.5
+cache_read = 0.025

@@ -1,0 +1,28 @@
+name = "Solar Mini 4 Thinking"
+description = "Solar Mini 4 with reasoning enabled for agentic tasks and harder analysis across a 524K-token context window."
+family = "solar"
+release_date = "2026-09-23"
+last_updated = "2026-09-23"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.05
+output = 0.2
+cache_read = 0.005
+
+[limit]
+context = 524_288
+input = 524_288
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

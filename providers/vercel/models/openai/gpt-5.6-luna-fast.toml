@@ -10,3 +10,10 @@ input = 0.4
 output = 2.4
 cache_read = 0.04
 cache_write = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.8
+output = 3.6
+cache_read = 0.08
+cache_write = 1

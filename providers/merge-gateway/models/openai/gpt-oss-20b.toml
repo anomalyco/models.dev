@@ -3,7 +3,6 @@
 # routes reporting `supports_reasoning = true` carry `configurable = false` and
 # no controls, so the model reasons on the gateway but callers have no
 # reasoning control.
-
 base_model = "openai/gpt-oss-20b"
 name = "GPT-OSS 20B"
 tool_call = false
@@ -12,5 +11,9 @@ reasoning_options = []
 
 [cost]
 input = 0.04
-output = 0.2
+output = 0.15
 cache_read = 0.02
+
+[limit]
+context = 128_000
+output = 32_000

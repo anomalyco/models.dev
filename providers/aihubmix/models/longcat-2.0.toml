@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-20):
+# https://aihubmix.com/api/v1/models?type=llm (USD per million tokens)
+# https://github.com/meituan-longcat/LongCat-2.0
+# Toggle: enable_thinking = true|false on /v1/chat/completions.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "meituan/longcat-2.0"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.7746
+output = 3.0984
+cache_read = 0.015492

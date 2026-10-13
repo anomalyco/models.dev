@@ -1,10 +1,17 @@
+# Sources (accessed 2026-09-22):
+# https://help.aliyun.com/en/model-studio/model-pricing (China (Beijing) USD list prices)
+# https://help.aliyun.com/en/model-studio/qwen3-5-plus (capabilities and limits)
+# https://help.aliyun.com/en/model-studio/deep-thinking
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens, max 81,920)
 name = "Qwen3.5 Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
 release_date = "2026-02-16"
-last_updated = "2026-09-11"
-attachment = false
+last_updated = "2026-09-22"
+attachment = true
 reasoning = true
+structured_output = true
 temperature = true
 knowledge = "2025-04"
 tool_call = true
@@ -17,16 +24,25 @@ type = "toggle"
 type = "budget_tokens"
 max = 81_920
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
+input = 0.115
+output = 0.688
+reasoning = 0.688
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
 input = 0.287
-output = 1.722
-reasoning = 1.722
+output = 1.72
+reasoning = 1.72
 
 [[cost.tiers]]
 tier = { type = "context", size = 256_000 }
-input = 1.148
-output = 6.888
-reasoning = 6.888
+input = 0.573
+output = 3.44
+reasoning = 3.44
 
 [limit]
 context = 1_000_000

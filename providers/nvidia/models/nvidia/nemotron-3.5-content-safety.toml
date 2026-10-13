@@ -1,0 +1,14 @@
+# NIM wire syntax (verified against integrate.api.nvidia.com/v1, 2026-10-01):
+#   Toggle: chat_template_kwargs = { "enable_thinking": true | false }  (default: false)
+# Pricing: free endpoint on NVIDIA's API trial tier; no list rate is published.
+# https://build.nvidia.com/nvidia/nemotron-3.5-content-safety
+base_model = "nvidia/nemotron-3.5-content-safety"
+
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.0
+output = 0.0

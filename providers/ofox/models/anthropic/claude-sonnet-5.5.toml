@@ -1,0 +1,16 @@
+# Sources:
+# https://ofox.ai/models/anthropic/claude-sonnet-5.5 (model id anthropic/claude-sonnet-5.5, $2/$10 MTok, $0.2/$2.5 cache, 1M/128K, 2026-09-28)
+# https://platform.claude.com/docs/en/models/sonnet-5-5/overview (first-party $2/$10, $0.20/$2.50/$4 cache, 1M/128K, Adaptive, default effort high)
+# Lab: models/anthropic/claude-sonnet-5-5.toml; first-party effort: providers/anthropic/models/claude-sonnet-5-5.toml
+base_model = "anthropic/claude-sonnet-5-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.ofox.ai/anthropic/v1"

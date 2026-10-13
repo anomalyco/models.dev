@@ -1,0 +1,9 @@
+# LowRouter is an OpenAI-compatible router hosted in the EU. Model IDs of the
+# form auto/<creator>/<model> let LowRouter pick the provider and region per
+# request, within the routing policy set on the API key.
+# Prices are billed in EUR; see each model file for the USD conversion.
+name = "LowRouter"
+npm = "@ai-sdk/openai-compatible"
+env = ["LOWROUTER_API_KEY"]
+api = "https://api.lowrouter.ai/v1"
+doc = "https://lowrouter.ai/docs/models/available"

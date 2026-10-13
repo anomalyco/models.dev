@@ -11,22 +11,19 @@ structured_output = true
 open_weights = false
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-max = 63_999
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 1
-output = 5
-cache_read = 0.1
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125
 
 [limit]
-context = 200_000
-input = 200_000
-output = 64_000
+context = 1_000_000
+input = 1_000_000
+output = 128_000
 
 [modalities]
 input = ["text", "image", "pdf"]

@@ -1,5 +1,13 @@
+# Toggle: reasoning.enabled = true|false
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 base_model = "anthropic/claude-sonnet-4-20250514"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
 
 [cost]
 input = 3
@@ -7,6 +15,12 @@ output = 15
 cache_read = 0.3
 cache_write = 3.75
 
+[[cost.tiers]]
+tier = { type = "context", size = 200_001 }
+input = 6
+output = 22.5
+cache_read = 0.6
+cache_write = 7.5
+
 [limit]
 context = 1_000_000
-output = 8_192

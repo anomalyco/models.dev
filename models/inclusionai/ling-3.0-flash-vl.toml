@@ -1,21 +1,25 @@
-# Lab metadata carried over from providers/openrouter/models/inclusionai/ling-3.0-flash-vl.toml (curated catalogue data already in this repo),
-# with provider-specific fields (cost, reasoning_options, status) stripped.
+# https://huggingface.co/inclusionAI/Ling-3.0-flash-VL
+# https://openrouter.ai/inclusionai/ling-3.0-flash-vl
 name = "Ling 3.0 Flash VL"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+description = "Native multimodal hybrid MoE model for image and video understanding, reasoning, and visual agents"
 family = "ling"
 release_date = "2026-09-10"
 last_updated = "2026-09-10"
 attachment = true
 reasoning = true
-temperature = true
 tool_call = true
-structured_output = true
+temperature = true
 open_weights = true
+license = "MIT"
 
 [limit]
-context = 131072
-output = 32768
+context = 262_144
+output = 32_768
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/Ling-3.0-flash-VL"

@@ -6,7 +6,10 @@ import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
-const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
+// The bare endpoint lists text-output models only; decision models (output
+// modality `decisions`) are returned only when requested explicitly.
+// https://openrouter.ai/docs/guides/community/jev
+const API_ENDPOINT = "https://openrouter.ai/api/v1/models?output_modalities=text,decisions";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
@@ -19,7 +22,15 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
   "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
   "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
+  "typesafe/jev-1.13": "typesafe/jev-latest",
+  "~typesafe/jev-latest": "typesafe/jev-latest",
 } as const;
+
+const DECISION_DESCRIPTION = "Decision model for typed evaluation of shared state";
+
+const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
+  "minimax/minimax-01": 40_000,
+};
 
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
@@ -28,10 +39,12 @@ const CANONICAL_PROVIDER_PREFIXES = {
   cohere: { provider: "cohere", metadata: "cohere" },
   deepseek: { provider: "deepseek", metadata: "deepseek" },
   google: { provider: "google", metadata: "google" },
+  liquid: { provider: "liquid", metadata: "liquid" },
   meta: { provider: "llama", metadata: "meta" },
   "meta-llama": { provider: "llama", metadata: "meta" },
   minimax: { provider: "minimax", metadata: "minimax" },
   mistralai: { provider: "mistral", metadata: "mistral" },
+  "nace-ai": { provider: "nace-ai", metadata: "nace-ai" },
   moonshot: { provider: "moonshotai", metadata: "moonshotai" },
   moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
   openai: { provider: "openai", metadata: "openai" },
@@ -171,10 +184,15 @@ export const openrouter = {
 
 function isUnavailable(model: OpenRouterModel) {
   return (
-    model.supported_parameters.length === 0 ||
+    // Decision models take no sampling or tool parameters, so an empty list is normal for them.
+    (model.supported_parameters.length === 0 && !isDecisionModel(model)) ||
     Number(model.pricing.prompt) < 0 ||
     Number(model.pricing.completion) < 0
   );
+}
+
+function isDecisionModel(model: OpenRouterModel) {
+  return model.architecture.output_modalities.includes("decisions");
 }
 
 function dateFromTimestamp(timestamp: number) {
@@ -241,6 +259,8 @@ export function buildOpenRouterModel(
 ): SyncedModel {
   const params = new Set(model.supported_parameters);
   const name = model.name.replace(/^[^:]+:\s+/, "");
+  const decision = isDecisionModel(model);
+  const type = decision ? "decision" : existing?.type;
   const input = modalities(model.architecture.input_modalities, ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
   const prompt = price(model.pricing.prompt);
@@ -276,7 +296,10 @@ export function buildOpenRouterModel(
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
+    output: OUTPUT_LIMIT_OVERRIDES[model.id]
+      ?? model.top_provider.max_completion_tokens
+      ?? existing?.limit?.output
+      ?? context,
   };
   const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
@@ -285,10 +308,12 @@ export function buildOpenRouterModel(
     return factorBaseModel(
       canonical,
       {
+        type,
         name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
-        description: existing?.description ?? describeModel({
+        // The lab describes a decision model; don't override it with a generic chat description.
+        description: decision ? existing?.description : existing?.description ?? describeModel({
           id: model.id,
           name,
           family: familyValue,
@@ -302,9 +327,10 @@ export function buildOpenRouterModel(
         attachment,
         reasoning,
         reasoning_options,
-        temperature: params.has("temperature"),
+        // Decision models list no parameters; inherit these from the lab instead of reporting false.
+        temperature: decision ? undefined : params.has("temperature"),
         tool_call: toolCall,
-        structured_output: structuredOutput,
+        structured_output: decision ? undefined : structuredOutput,
         status: existing?.status,
         interleaved: existing?.interleaved,
         limit,
@@ -317,8 +343,9 @@ export function buildOpenRouterModel(
   }
 
   return {
+    type,
     name,
-    description: existing?.description ?? describeModel({
+    description: existing?.description ?? (decision ? DECISION_DESCRIPTION : describeModel({
       id: model.id,
       name,
       family: familyValue,
@@ -328,7 +355,7 @@ export function buildOpenRouterModel(
       open_weights: openWeights,
       limit,
       modalities: { input, output },
-    }),
+    })),
     family: familyValue,
     release_date: releaseDate,
     last_updated: releaseDate,

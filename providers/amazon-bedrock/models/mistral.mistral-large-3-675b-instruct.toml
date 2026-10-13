@@ -1,5 +1,7 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-large-3.html
 # https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+# Live Converse 2026-09-23: maxTokens at the Bedrock ceiling returned
+# "maximum context length is 262144 tokens" from the serving backend.
 base_model = "mistral/mistral-large-2512"
 structured_output = true
 
@@ -8,5 +10,4 @@ input = 0.50
 output = 1.50
 
 [limit]
-context = 256_000
 output = 8_192

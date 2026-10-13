@@ -1,5 +1,9 @@
+# https://docs.cline.bot/getting-started/clinepass
+# Lab Zhipu GLM-5.2: effective effort high|max; none|minimal skip thinking
+# (providers/zhipuai/models/glm-5.2.toml; https://docs.bigmodel.cn/cn/guide/capabilities/thinking)
+# Effort: reasoning_effort = none|high|max
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
 [cost]
 input = 1.4
