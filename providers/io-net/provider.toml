@@ -10,6 +10,11 @@
 #           model where it measurably changed usage.completion_tokens_details.reasoning_tokens; on the others
 #           it is accepted but has no effect, so only the on/off control is listed. Always-on models reject
 #           both fields with HTTP 400. Chain-of-thought is returned in choices[0].message.reasoning_content.
+#   How forwarding was measured: one fixed prompt ("How many positive integers n with 1 <= n <= 1000 satisfy:
+#           n^2 + n + 1 is divisible by 7? Think it through, then give only the final number.") at temperature 0.7,
+#           max_tokens 8000, two to five samples per level, reading usage.completion_tokens_details.reasoning_tokens.
+#           A level is listed only where the samples ordered cleanly with no overlap between levels; each model file
+#           carries its measured ranges so the check can be repeated with any IO Intelligence key.
 # https://io.net/docs/guides/intelligence/reasoning-for-chat-completions
 name = "IO.NET"
 env = ["IOINTELLIGENCE_API_KEY"]
