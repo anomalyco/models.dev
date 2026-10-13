@@ -1,5 +1,7 @@
 base_model = "openai/gpt-6.1-sol"
-reasoning_options = []
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 3.08
