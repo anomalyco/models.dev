@@ -1,22 +1,16 @@
+# NetMind model ID: openai/gpt-6-luna.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+# NetMind uses an OpenAI-compatible API; effort uses reasoning_effort.
+# Other reasoning controls follow the underlying lab and relay baseline.
+# https://www.netmind.ai/product/inference
 base_model = "openai/gpt-6-luna"
-name = "gpt-6-luna"
-reasoning_options = []
-reasoning = true
-tool_call = false
-
-[limit]
-context = 1000000
-output = 128000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.1
 output = 0.5
 cache_read = 0.01
+cache_write = 0.125
 
 [[cost.tiers]]
 tier = { type = "context", size = 272000 }

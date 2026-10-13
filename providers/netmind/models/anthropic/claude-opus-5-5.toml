@@ -1,19 +1,13 @@
+# NetMind model ID: anthropic/claude-opus-5-5.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+# NetMind uses an OpenAI-compatible API; effort uses reasoning_effort.
+# Other reasoning controls follow the underlying lab and relay baseline.
+# https://www.netmind.ai/product/inference
 base_model = "anthropic/claude-opus-5-5"
-name = "claude-opus-5-5"
-reasoning_options = []
-reasoning = true
-tool_call = true
-
-[limit]
-context = 1000000
-output = 128000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 4.0
 output = 20.0
 cache_read = 0.2
+cache_write = 5.0

@@ -1,26 +1,16 @@
+# NetMind model ID: anthropic/claude-haiku-5-5.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
-name = "claude-haiku-5-5"
-description = "claude-haiku-5-5 served by NetMind"
-attachment = true
-release_date = "2026-10-12"
-last_updated = "2026-10-12"
-open_weights = false
-reasoning_options = []
-reasoning = true
-tool_call = true
-
-[limit]
-context = 1000000
-output = 128000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+# NetMind uses an OpenAI-compatible API; effort uses reasoning_effort.
+# Other reasoning controls follow the underlying lab and relay baseline.
+# https://www.netmind.ai/product/inference
+base_model = "anthropic/claude-haiku-5-5"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.1
 output = 0.5
 cache_read = 0.01
+cache_write = 0.125
 
 [[cost.tiers]]
 tier = { type = "context", size = 100000 }

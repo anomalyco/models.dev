@@ -1,22 +1,16 @@
+# NetMind model ID: x-ai/grok-4.7.
 # Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+# NetMind uses an OpenAI-compatible API; effort uses reasoning_effort.
+# Other reasoning controls follow the underlying lab and relay baseline.
+# https://www.netmind.ai/product/inference
 base_model = "xai/grok-4.7"
-name = "grok-4.7"
-reasoning_options = []
-reasoning = true
-tool_call = true
-
-[limit]
-context = 500000
-output = 450000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 1.6
 output = 4.8
 cache_read = 0.4
+cache_write = 0
 
 [[cost.tiers]]
 tier = { type = "context", size = 200000 }
