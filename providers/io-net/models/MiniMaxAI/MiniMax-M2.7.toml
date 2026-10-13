@@ -1,9 +1,10 @@
 # io.net IO Intelligence listing of MiniMaxAI/MiniMax-M2.7.
+# Always reasons; no caller control.
 # Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
 # reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
-# Tier 3 only, so the reasoning controls could not be exercised; the io.net reasoning guide lists low/medium/high and documents none as a no-op for this model.
+# Requires IO Intelligence tier 3 (HTTP 402 below it), so it could not be exercised; the lab entry has no caller control and the io.net reasoning guide documents effort "none" as a no-op for this model.
 base_model = "minimax/MiniMax-M2.7"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"

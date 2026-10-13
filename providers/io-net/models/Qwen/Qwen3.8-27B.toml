@@ -1,8 +1,11 @@
 # io.net IO Intelligence listing of Qwen/Qwen3.8-27B.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also switches thinking off)
+# Effort: reasoning.effort = low|medium
 # Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
 # reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13, reasoning_tokens per level (three samples each): low 501-510, medium 603-733; high returned the medium trace and xhigh/max fell back to the default, so only the two distinct levels are listed. Off gives 0.
 base_model = "alibaba/qwen3.8-27b"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium"] }]
 
 [interleaved]
 field = "reasoning_content"

@@ -1,8 +1,10 @@
 # io.net IO Intelligence listing of zai-org/GLM-5.3.
+# Effort: reasoning.effort = low|high|max
 # Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
 # reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: reasoning.effort = "none" is rejected with HTTP 400 and reasoning.enabled = false is ignored; reasoning_tokens low 41-157, high 91-139, max 301-339.
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"

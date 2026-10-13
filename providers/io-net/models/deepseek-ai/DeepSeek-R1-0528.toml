@@ -1,8 +1,10 @@
 # io.net IO Intelligence listing of deepseek-ai/DeepSeek-R1-0528.
+# Always reasons: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400 (no caller control).
 # Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
 # reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: effort levels are accepted but the trace length is the same at every level (reasoning_tokens 3838-5189).
 base_model = "deepseek/deepseek-r1-0528"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"

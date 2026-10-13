@@ -1,8 +1,10 @@
 # io.net IO Intelligence listing of XiaomiMiMo/MiMo-V2.6-Flash.
+# Toggle: reasoning.effort = "none" switches thinking off; reasoning.enabled = false is ignored by this deployment (the trace is still generated and ends up in content)
 # Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
 # reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: thinking on 286-570 reasoning tokens, reasoning.effort = "none" gives 0; effort levels did not change the trace.
 base_model = "xiaomi/mimo-v2.6-flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
