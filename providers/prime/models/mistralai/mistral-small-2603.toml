@@ -1,0 +1,16 @@
+# Source: https://api.pinference.ai/api/v1/models (public, accessed 2026-10-12).
+# Prices are USD per million tokens; limits and efforts are provider-specific.
+# Effort: top-level reasoning_effort = high|none.
+base_model = "mistral/mistral-small-2603"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "none"]
+
+[cost]
+input = 0.165
+output = 0.66
+
+[limit]
+context = 262_144
+output = 209_715

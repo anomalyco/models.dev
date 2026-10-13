@@ -1,0 +1,17 @@
+# Source: https://api.pinference.ai/api/v1/models (public, accessed 2026-10-12).
+# Prices are USD per million tokens; limits and efforts are provider-specific.
+# Effort: top-level reasoning_effort = max|xhigh|high|medium|low|none.
+# Generic file input is not represented: models.dev has no generic file modality.
+base_model = "openai/gpt-6-sol"
+base_model_omit = ["limit.input"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["max", "xhigh", "high", "medium", "low", "none"]
+
+[cost]
+input = 2.0
+output = 10.0
+
+[modalities]
+input = ["image", "text"]

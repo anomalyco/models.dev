@@ -1,0 +1,22 @@
+# Lab metadata carried over from providers/openrouter/models/rekaai/reka-flash-3.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "Reka Flash 3"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "reka"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+knowledge = "2025-01-31"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[limit]
+context = 65536
+output = 58982
+
+[modalities]
+input = ["text"]
+output = ["text"]

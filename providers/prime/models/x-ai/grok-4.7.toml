@@ -1,0 +1,19 @@
+# Source: https://api.pinference.ai/api/v1/models (public, accessed 2026-10-12).
+# Prices are USD per million tokens; limits and efforts are provider-specific.
+# Effort: top-level reasoning_effort = xhigh|high|medium|low.
+# Generic file input is not represented: models.dev has no generic file modality.
+base_model = "xai/grok-4.7"
+
+[[reasoning_options]]
+type = "effort"
+values = ["xhigh", "high", "medium", "low"]
+
+[cost]
+input = 1.6
+output = 4.8
+
+[limit]
+output = 450_000
+
+[modalities]
+input = ["text", "image"]

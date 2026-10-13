@@ -1,10 +1,16 @@
+# Sources:
+# - https://docs.x.ai/docs/models
+# - https://docs.x.ai/developers/models/grok-imagine-image
+# - https://docs.x.ai/docs/guides/image-generation
+# Facts moved here verbatim from providers/xai/models/grok-imagine-image.toml, which carried
+# them inline; that file is now override-only, as AGENTS.md requires.
+
 name = "Grok Imagine Image"
-description = "Grok Imagine Image is xAI’s text-to-image generation model for creating visuals from prompts, with support for both text and image inputs."
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "grok"
-type = "image"
-release_date = "2026-05-15"
-last_updated = "2026-05-15"
-attachment = false
+release_date = "2026-01-28"
+last_updated = "2026-01-28"
+attachment = true
 reasoning = false
 temperature = false
 tool_call = false
@@ -15,5 +21,5 @@ context = 16_000
 output = 0
 
 [modalities]
-input = ["text"]
-output = ["image"]
+input = ["text", "image", "pdf"]
+output = ["image", "pdf"]

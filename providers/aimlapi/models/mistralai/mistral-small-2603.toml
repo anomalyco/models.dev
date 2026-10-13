@@ -1,0 +1,14 @@
+base_model = "mistral/mistral-small-2603"
+name = "Small 4"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.257888
+output = 1.03155
+cache_read = 0.020631
+
+[limit]
+context = 262_144

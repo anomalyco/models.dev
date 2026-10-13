@@ -1,8 +1,11 @@
+# Lab metadata carried over from providers/openrouter/models/mistralai/mistral-small-24b-instruct-2501.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
 name = "Mistral Small 3"
-description = "A 24B parameter model optimized for speed and efficiency while rivaling models 3x its size like Llama 3.3 70B."
-family = "mistral"
+description = "Efficient Mistral model for fast chat, extraction, and production assistants"
+family = "mistral-small"
 release_date = "2025-01-30"
 last_updated = "2025-01-30"
+knowledge = "2023-10-31"
 attachment = false
 reasoning = false
 temperature = true
@@ -11,8 +14,8 @@ structured_output = true
 open_weights = true
 
 [limit]
-context = 28_000
-output = 14_000
+context = 32768
+output = 16384
 
 [modalities]
 input = ["text"]

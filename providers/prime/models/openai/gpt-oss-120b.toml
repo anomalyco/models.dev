@@ -1,0 +1,15 @@
+# Source: https://api.pinference.ai/api/v1/models (public, accessed 2026-10-12).
+# Prices are USD per million tokens; limits and efforts are provider-specific.
+# Effort: top-level reasoning_effort = high|medium|low.
+base_model = "openai/gpt-oss-120b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "medium", "low"]
+
+[cost]
+input = 0.35
+output = 0.75
+
+[limit]
+output = 117_964

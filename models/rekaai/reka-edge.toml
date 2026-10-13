@@ -1,0 +1,21 @@
+# Lab metadata carried over from providers/openrouter/models/rekaai/reka-edge.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "Reka Edge"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+family = "reka"
+release_date = "2026-03-20"
+last_updated = "2026-03-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 16384
+output = 14745
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

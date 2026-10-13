@@ -1,0 +1,16 @@
+# Source: https://api.pinference.ai/api/v1/models (public, accessed 2026-10-12).
+# Prices are USD per million tokens; limits and efforts are provider-specific.
+# Effort: top-level reasoning_effort = max|high|low.
+base_model = "moonshotai/kimi-k3"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["max", "high", "low"]
+
+[cost]
+input = 3.45
+output = 17.25
+
+[limit]
+output = 943_718
