@@ -5,13 +5,17 @@
 # 2026-12-01 the published rates are $4.00 input, $20.00 output, and $0.20
 # cache read. Only implicit caching is supported (explicit caching is not).
 base_model = "google/gemini-4-argon"
+temperature = true
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
 
 [cost]
-input = 2.00
-output = 10.00
-cache_read = 0.10
-input_audio = 2.00
+input = 2
+output = 10
+cache_read = 0.1
+input_audio = 2
+
+[limit]
+output = 32_768
