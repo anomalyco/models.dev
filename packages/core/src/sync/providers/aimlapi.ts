@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
@@ -1121,17 +1121,31 @@ function wireHeader(id: string, reasoningOptions: Array<{ type: "effort"; values
 /**
  * The remote id to report for a chat candidate, or `undefined` for records
  * sync intentionally ignores: uncallable rows, dashed alias duplicates, and
- * anything that is not a text-output chat model. Shared by `sourceID` (report
- * the skip) and `missingModelID` (route the skip to the missing-model issue
- * flow): every remaining skip is "cannot fully populate" — no lab entry to
- * point `base_model` at, no resolvable reasoning control, or no price — which
- * is exactly what that flow exists to research.
+ * anything that is not a text-output chat model. `sourceID` reports every
+ * candidate skip in the sync report. `missingModelID` is narrower — it routes
+ * a skip to the missing-model issue flow only when an issue can fix it:
+ *
+ * - No lab entry to point `base_model` at: the issue flow authors it.
+ * - A card already on disk that sync can no longer state (its reasoning
+ *   control stopped resolving): preserved, and the issue asks for research.
+ *
+ * A new model whose lab exists but whose thinking control cannot be stated
+ * on this host is deliberately not issued: no entry an issue could write
+ * would make the control exist. It stays unlisted until the host offers one
+ * that resolves, and appears here only as a report notice.
  */
 function candidateID(model: AimlapiModel): string | undefined {
   if (BLACKLISTED.has(model.id)) return undefined;
   if (NOT_CALLABLE.has(model.id)) return undefined;
   if (ALIAS_DUPLICATE_IDS.has(model.id)) return undefined;
   return isChatTextModel(model) ? model.id : undefined;
+}
+
+function issueModelID(model: AimlapiModel): string | undefined {
+  if (candidateID(model) === undefined) return undefined;
+  if (baseModelFor(model.id) === undefined) return model.id;
+  const local = path.join(PROVIDERS_DIR, "aimlapi", "models", `${model.id}.toml`);
+  return existsSync(local) ? model.id : undefined;
 }
 
 export const aimlapi = {
@@ -1153,12 +1167,12 @@ export const aimlapi = {
     return candidateID(model);
   },
   missingModelID(model) {
-    return candidateID(model);
+    return issueModelID(model);
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} AI/ML API chat models were not written by sync: new models are routed to the missing-model issue flow for authoring, and models sync cannot fully populate (no lab entry to point \`base_model\` at, no resolvable reasoning control, or no published price) are reported there instead of being guessed. Existing files for those ids are preserved.`,
+      `${ids.length} AI/ML API chat models were not written by sync. Models with no lab entry to point \`base_model\` at are routed to the missing-model issue flow for authoring; models whose thinking control cannot be stated on this host stay unlisted until the host offers one that resolves, and are listed here only. Existing files for skipped ids are preserved.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },

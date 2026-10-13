@@ -169,11 +169,30 @@ test("only chat candidates are reported for the missing-model issue flow", () =>
   // an issue; intentional ignores (non-chat, alias duplicate, uncallable)
   // are neither, so sync can still delete those files when they go stale.
   expect(aimlapi.sourceID(byID.get("acme/chat-1")!)).toBe("acme/chat-1");
-  expect(aimlapi.missingModelID(byID.get("acme/chat-1")!)).toBe("acme/chat-1");
-  expect(aimlapi.sourceID(byID.get("acme/image-1")!)).toBeUndefined();
+  expect(aimlapi.missingModelID(byID.get("acme/chat-1")!)).toBe("acme/chat-1");  expect(aimlapi.sourceID(byID.get("acme/image-1")!)).toBeUndefined();
   expect(aimlapi.missingModelID(byID.get("acme/image-1")!)).toBeUndefined();
   expect(aimlapi.sourceID(byID.get("anthropic/claude-opus-4-8")!)).toBeUndefined();
   expect(aimlapi.missingModelID(byID.get("anthropic/claude-opus-4-8")!)).toBeUndefined();
   expect(aimlapi.sourceID(byID.get("anthropic/claude-opus-4.7-fast")!)).toBeUndefined();
   expect(aimlapi.missingModelID(byID.get("anthropic/claude-opus-4.7-fast")!)).toBeUndefined();
+});
+
+test("a lab-backed model with no card and no statable control is reported, not issued", () => {
+  // qwen3.7-max has a lab entry but publishes toggle/budget only, so sync
+  // cannot state its thinking control on this host. An issue cannot fix
+  // that; the model stays unlisted and is only reported. A candidate with
+  // no lab entry at all (acme/chat-1 above) is issued, because an issue
+  // can author the entry.
+  const [model] = aimlapi.parseModels({
+    data: [
+      {
+        id: "alibaba/qwen3.7-max",
+        type: "openai/chat-completions",
+        info: { name: "Qwen3.7 Max" },
+        modalities: { input: ["text"], output: ["text"] },
+      },
+    ],
+  });
+  expect(aimlapi.sourceID(model!)).toBe("alibaba/qwen3.7-max");
+  expect(aimlapi.missingModelID(model!)).toBeUndefined();
 });
