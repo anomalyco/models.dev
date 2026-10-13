@@ -483,6 +483,11 @@ const BLACKLISTED: ReadonlySet<string> = new Set([
   "bytedance/seed-2-0-lite",
   "bytedance/seed-2-0-mini",
   "google/gemini-3-1-flash-lite-preview",
+  // Dated duplicate spellings of canonical cards already published.
+  "anthropic/claude-haiku-4-5-20251001",
+  "anthropic/claude-sonnet-4-5-20250929",
+  "anthropic/claude-opus-4-5-20251101",
+  "openai/gpt-3.5-turbo-0125",
 ]);
 
 const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
