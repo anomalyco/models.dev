@@ -1,7 +1,5 @@
-# Toggle: thinking enabled|disabled
 base_model = "google/gemini-3.5-flash-lite"
 reasoning_options = [
-  { type = "toggle" },
   { type = "effort", values = ["minimal", "low", "medium", "high"] },
 ]
 
