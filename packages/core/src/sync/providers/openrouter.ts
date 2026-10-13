@@ -266,10 +266,11 @@ export function buildOpenRouterModel(
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: OUTPUT_LIMIT_OVERRIDES[model.id]
+    // Decision models evaluate state without generating completion tokens.
+    output: decision ? 0 : (OUTPUT_LIMIT_OVERRIDES[model.id]
       ?? model.top_provider.max_completion_tokens
       ?? existing?.limit?.output
-      ?? context,
+      ?? context),
   };
   const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
