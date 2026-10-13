@@ -14,13 +14,16 @@ npm = "@ai-sdk/openai-compatible"
 # disabled (`auto` is rejected on most models); `reasoning_effort` is accepted on
 # every model but only some values have effect, so each file declares just the
 # levels it honours, measured on this endpoint (n=4-6 per level, 2026-08-27):
-#   doubao-seed-2.1-turbo / 2.0-lite / evolving -> none|low|high
-#       (medium overlaps low, xhigh and max overlap high rather than exceeding it)
+#   doubao-seed-2.0-mini / 2.1-pro / evolving -> none|low|high
+#       (medium overlaps low, xhigh and max overlap high rather than exceeding it;
+#        measured on 2.0-lite / 2.1-turbo before they left the plan, see history)
 #   glm-5.3                                     -> low|high|max
 #       (rejects none and minimal outright; medium aliases low, xhigh aliases max)
-#   deepseek-v4-flash / -pro                    -> toggle only
+#   deepseek-v4-flash / -pro / v4.1-flash       -> toggle only
 #       (graded values fully overlap; on Flash 'high' lands below 'low')
 #   kimi-k2.7-code                              -> no controls
+#   kimi-k2.8-preview / kimi-k3                 -> toggle + effort low|high|max
+#       (relay convention; endpoint behavior not measured on k2.8-preview)
 #   minimax-m3                                  -> toggle only
 #       (tolerates none but still spends reasoning tokens on it, so it is not an
 #        off switch there; thinking.type is)
@@ -28,7 +31,7 @@ npm = "@ai-sdk/openai-compatible"
 # and the encrypted block in `choices[].message.encrypted_content`.
 # Anthropic: base https://ark.cn-beijing.volces.com/api/coding, POST /v1/messages
 # with `thinking.type` and `output_config.effort`.
-# Model names here are the short console labels (doubao-seed-2.1-turbo). This
+# Model names here are the short console labels (doubao-seed-2.0-mini). This
 # endpoint is the more permissive of the two: it accepts the dated IDs as well
 # (verified 2026-08-27 - doubao-seed-2-1-turbo-260628, doubao-seed-2-0-lite-260428
 # and glm-5-3-260930 all resolve here), whereas the pay-as-you-go /api/v3 accepts

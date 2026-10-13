@@ -1,0 +1,24 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-10-06), listed alongside kimi-k2.7-code and kimi-k3.
+# Subscription tier: no per-token price.
+# reasoning_options follow the relay convention set by kimi-k3 in this
+# directory: toggle via thinking.type = enabled|disabled plus effort
+# low|high|max on POST /api/coding/v3/chat/completions. Endpoint-specific
+# effort behavior was not measured on k2.8-preview; adjust if wire probing
+# shows levels collapsing as they do on kimi-k2.7-code (see that file).
+base_model = "moonshotai/kimi-k2.8-preview"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
