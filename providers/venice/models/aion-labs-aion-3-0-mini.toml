@@ -1,12 +1,9 @@
+base_model = "aion-labs/aion-3.0-mini"
 name = "Aion 3.0 Mini"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 release_date = "2026-07-08"
 last_updated = "2026-07-08"
-attachment = false
-reasoning = true
-tool_call = true
 structured_output = true
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -16,8 +13,3 @@ cache_read = 0.225
 
 [limit]
 context = 128_000
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
