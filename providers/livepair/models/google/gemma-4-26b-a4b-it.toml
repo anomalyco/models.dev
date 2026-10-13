@@ -1,0 +1,11 @@
+# Reasoning wire on this host: reasoning_effort = low|medium|high on
+# /v1/agent/chat (OpenAI-compatible). Uniform across reasoning-capable models;
+# lab-native params (enable_thinking, thinking_budget, none/xhigh) are not exposed.
+base_model = "google/gemma-4-26b-a4b-it"
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.12
+output = 0.49

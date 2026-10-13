@@ -1,0 +1,14 @@
+# POST /v1/agent/chat/completions (OpenAI-compatible). Reasoning control is
+# a single field, reasoning_effort = low|medium|high, forwarded to
+# reasoning-capable models; lab-native params (enable_thinking,
+# thinking_budget, none/xhigh effort) are not part of this API surface.
+# Authenticate with x-api-key: lp_... or Authorization: Bearer lp_... -- or
+# pay per call with x402 (USDC on Base) via POST /v1/agent/chat, no account
+# needed. Prices: USD/MTok from the live catalog at
+# https://livepairai.com/v1/agent/models (accessed 2026-10-10).
+# https://livepairai.com/v1/agent/openapi.json (accessed 2026-10-10)
+name = "LivePair"
+env = ["LIVEPAIR_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://livepairai.com/v1/agent"
+doc = "https://livepairai.com/docs"
