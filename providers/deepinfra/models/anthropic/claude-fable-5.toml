@@ -1,11 +1,10 @@
-# Deep Infra is a multi-model relay; Claude Fable 5 is served as partner
+# Host: Deep Infra (multi-model relay); Claude Fable 5 is served as partner
 # passthrough, so this entry inherits the lab metadata and carries only the
 # host's own pricing, capability flags, and reasoning surface.
 #
-# Reasoning: reasoning_effort (or reasoning.effort). "none" disables reasoning,
-# equivalently reasoning.enabled = false, so no separate toggle is authored.
-# The effort set mirrors the lab entry and the established relay peers for this
-# model.
+# Reasoning: reasoning_effort (or reasoning.effort). The values mirror the lab
+# entry and the same-surface relay peers for this model. Deep Infra publishes no
+# model-specific off switch for this ID, so no toggle is authored.
 #
 # Sources (accessed 2026-10-13):
 #   https://docs.deepinfra.com/chat/reasoning
@@ -17,7 +16,7 @@ structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 10
