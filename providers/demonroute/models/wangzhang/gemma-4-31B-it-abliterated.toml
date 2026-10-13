@@ -1,23 +1,8 @@
-# Source: https://demonroute.com model catalog (channel "wangzhang/gemma-4-31B-it-abliterated"); dates from https://huggingface.co/wangzhang/gemma-4-31B-it-abliterated
-name = "gemma-4-31B-it-abliterated"
-description = "Abliterated Gemma 4 31B with refusals removed"
-family = "gemma"
-release_date = "2026-04-05"
-last_updated = "2026-08-29"
-attachment = false
-reasoning = false
-tool_call = false
-temperature = true
-open_weights = true
+# Sources:
+# - Pricing/context: https://demonroute.com/models?q=gemma-4-31B-it-abliterated (API model id = channel "wangzhang/gemma-4-31B-it-abliterated")
+# - Model metadata: https://huggingface.co/wangzhang/gemma-4-31B-it-abliterated (via base_model)
+base_model = "wangzhang/gemma-4-31b-it-abliterated"
 
 [cost]
 input = 1.92
 output = 5.76
-
-[limit]
-context = 262_144
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

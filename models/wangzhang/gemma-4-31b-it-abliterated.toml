@@ -1,0 +1,25 @@
+# Source: https://huggingface.co/wangzhang/gemma-4-31B-it-abliterated (base model: google/gemma-4-31B-it)
+# Context from config.json max_position_embeddings; output limit is a conservative default.
+name = "gemma-4-31B-it-abliterated"
+description = "Abliterated Gemma 4 31B with refusals removed"
+family = "gemma"
+release_date = "2026-04-05"
+last_updated = "2026-08-29"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "apache-2.0"
+
+[limit]
+context = 262_144
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/wangzhang/gemma-4-31B-it-abliterated"

@@ -1,0 +1,25 @@
+# Source: https://huggingface.co/jwest33/gemma-3-4b-null-space-abliterated-RP-writer (base model: jwest33/gemma-3-4b-it-null-space-abliterated)
+# Context from config.json max_position_embeddings; output limit is a conservative default.
+name = "gemma-3-4b-null-space-abliterated-RP-writer"
+description = "Abliterated Gemma 3 4B roleplay and creative-writing fine-tune"
+family = "gemma"
+release_date = "2026-01-09"
+last_updated = "2026-01-09"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "gemma"
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/jwest33/gemma-3-4b-null-space-abliterated-RP-writer"

@@ -1,22 +1,12 @@
-# Source: https://demonroute.com model catalog (channel "huihui-ai/Huihui-Qwen3.5-27B-abliterated"); dates from https://huggingface.co/huihui-ai/Huihui-Qwen3.5-27B-abliterated
-name = "Huihui-Qwen3.5-27B-abliterated"
-description = "Abliterated Qwen3.5 27B with refusals removed"
-family = "qwen"
-release_date = "2026-02-27"
-last_updated = "2026-03-02"
+# Sources:
+# - Pricing/context: https://demonroute.com/models?q=Huihui-Qwen3.5-27B-abliterated (API model id = channel "huihui-ai/Huihui-Qwen3.5-27B-abliterated")
+# - Model metadata: https://huggingface.co/huihui-ai/Huihui-Qwen3.5-27B-abliterated (via base_model)
+base_model = "huihui-ai/huihui-qwen3.5-27b-abliterated"
 attachment = false
-reasoning = false
-tool_call = false
-temperature = true
-open_weights = true
 
 [cost]
 input = 1.2
-output = 9.60
-
-[limit]
-context = 262_144
-output = 8_192
+output = 9.6
 
 [modalities]
 input = ["text"]

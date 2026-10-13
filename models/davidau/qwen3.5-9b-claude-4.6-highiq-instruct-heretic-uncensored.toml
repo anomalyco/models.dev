@@ -1,0 +1,25 @@
+# Source: https://huggingface.co/DavidAU/Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED (base model: trohrbaugh/Qwen3.5-9B-heretic-v2)
+# Context from config.json max_position_embeddings; output limit is a conservative default.
+name = "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED"
+description = "Uncensored Heretic Qwen3.5 9B fine-tune distilled on Claude-style outputs"
+family = "qwen"
+release_date = "2026-03-04"
+last_updated = "2026-03-04"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "apache-2.0"
+
+[limit]
+context = 262_144
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/DavidAU/Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED"

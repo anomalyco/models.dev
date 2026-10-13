@@ -1,14 +1,7 @@
-# Source: https://demonroute.com model catalog (channel "DavidAU/Gemma-The-Writer-9B-HERETIC-Uncensored-Abliterated"); dates from https://huggingface.co/DavidAU/Gemma-The-Writer-9B-HERETIC-Uncensored-Abliterated
-name = "Gemma-The-Writer-9B-HERETIC-Uncensored-Abliterated"
-description = "Uncensored, abliterated Gemma 9B creative-writing fine-tune"
-family = "gemma"
-release_date = "2025-12-18"
-last_updated = "2025-12-18"
-attachment = false
-reasoning = false
-tool_call = false
-temperature = true
-open_weights = true
+# Sources:
+# - Pricing/context: https://demonroute.com/models?q=Gemma-The-Writer-9B-HERETIC-Uncensored-Abliterated (API model id = channel "DavidAU/Gemma-The-Writer-9B-HERETIC-Uncensored-Abliterated")
+# - Model metadata: https://huggingface.co/DavidAU/Gemma-The-Writer-9B-HERETIC-Uncensored-Abliterated (via base_model)
+base_model = "davidau/gemma-the-writer-9b-heretic-uncensored-abliterated"
 
 [cost]
 input = 1.724
@@ -17,7 +10,3 @@ output = 4.48
 [limit]
 context = 16_384
 output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

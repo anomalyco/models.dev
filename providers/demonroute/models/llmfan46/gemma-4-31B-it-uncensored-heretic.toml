@@ -1,22 +1,12 @@
-# Source: https://demonroute.com model catalog (channel "llmfan46/gemma-4-31B-it-uncensored-heretic"); dates from https://huggingface.co/llmfan46/gemma-4-31B-it-uncensored-heretic
-name = "gemma-4-31B-it-uncensored-heretic"
-description = "Uncensored Heretic Gemma 4 31B"
-family = "gemma"
-release_date = "2026-04-03"
-last_updated = "2026-09-19"
+# Sources:
+# - Pricing/context: https://demonroute.com/models?q=gemma-4-31B-it-uncensored-heretic (API model id = channel "llmfan46/gemma-4-31B-it-uncensored-heretic")
+# - Model metadata: https://huggingface.co/llmfan46/gemma-4-31B-it-uncensored-heretic (via base_model)
+base_model = "llmfan46/gemma-4-31b-it-uncensored-heretic"
 attachment = false
-reasoning = false
-tool_call = false
-temperature = true
-open_weights = true
 
 [cost]
 input = 1.92
 output = 5.76
-
-[limit]
-context = 262_144
-output = 8_192
 
 [modalities]
 input = ["text"]

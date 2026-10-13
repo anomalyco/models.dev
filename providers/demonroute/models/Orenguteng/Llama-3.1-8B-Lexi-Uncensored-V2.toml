@@ -1,23 +1,8 @@
-# Source: https://demonroute.com model catalog (channel "Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2"); dates from https://huggingface.co/Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2
-name = "Llama-3.1-8B-Lexi-Uncensored-V2"
-description = "Uncensored Llama 3.1 8B fine-tune"
-family = "llama"
-release_date = "2024-08-09"
-last_updated = "2024-09-25"
-attachment = false
-reasoning = false
-tool_call = false
-temperature = true
-open_weights = true
+# Sources:
+# - Pricing/context: https://demonroute.com/models?q=Llama-3.1-8B-Lexi-Uncensored-V2 (API model id = channel "Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2")
+# - Model metadata: https://huggingface.co/Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2 (via base_model)
+base_model = "orenguteng/llama-3.1-8b-lexi-uncensored-v2"
 
 [cost]
 input = 0.8
 output = 1.28
-
-[limit]
-context = 131_072
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
