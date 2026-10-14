@@ -7,6 +7,7 @@
 # Context is TokenLab's hosted window: the pricing data above lists maxInputTokens
 # tiers of 272,000 and 400,000. The lab's 1,050,000 is not offered on this host.
 base_model = "openai/gpt-5.4"
+base_model_omit = ["limit.input"]
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [cost]
