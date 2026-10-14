@@ -3,10 +3,11 @@
 #   262,144-token context, GA since 2026-10-01
 # - https://apex.callstack.com/legal/training-data-summary — knowledge cutoff: latest data
 #   collection September 2026; weights not distributed (hosted service only)
-# - https://github.com/callstack/apex-cli/blob/02d146d120abbbce6b08be1c7d17d58dd50e52f1/src/assistants.js#L18-L27
-#   — the limits and capabilities Callstack ships to coding tools: context 262_144,
-#   input 240_000, output 16_384, attachment true, input ["text","image"] (vision),
-#   tool_call true, reasoning true
+# - https://github.com/callstack/apex-cli/blob/beb91307a6a0dcfc627ca758ade41d3cc951546b/src/assistants.js#L48-L57
+#   (accessed 2026-10-14; @callstack/apex 0.4.2) — the limits and capabilities Callstack ships
+#   to coding tools: context 262_144, output 32_768, attachment true, input ["text","image"]
+#   (vision), tool_call true, reasoning true. No separate input budget is set; the CLI README
+#   states input limits and compaction thresholds are left to each harness's defaults.
 # - https://rn-evals.vercel.app — React Native agent evals by Callstack, Apex listed by name
 # - https://apex.callstack.com/llms.txt — Callstack's published model summary; claims the
 #   Next.js Agent Evals pass@4 figures (31 tasks, run 2026-09-25, 28/31 without docs and
@@ -25,8 +26,7 @@ open_weights = false
 
 [limit]
 context = 262_144
-input = 240_000
-output = 16_384
+output = 32_768
 
 [modalities]
 input = ["text", "image"]
