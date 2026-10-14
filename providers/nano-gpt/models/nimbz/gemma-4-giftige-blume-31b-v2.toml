@@ -4,10 +4,14 @@ family = "gemma"
 release_date = "2026-10-13"
 last_updated = "2026-10-13"
 attachment = false
-reasoning = false
+reasoning = true
 tool_call = false
 structured_output = false
 open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.1
