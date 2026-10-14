@@ -1,0 +1,16 @@
+# No caller control: reasoning_effort is validated (invalid value -> 400) but low/high
+# do not order reasoning tokens; toggle/budget fields are dropped by the gateway.
+base_model = "zhipuai/glm-4.6v"
+name = "GLM 4.6V"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.41262
+output = 1.23786
+cache_read = 0.075647
+
+[limit]
+context = 131_072

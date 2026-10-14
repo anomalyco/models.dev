@@ -1,0 +1,22 @@
+name = "kat-coder-pro"
+description = "KAT-Coder-Pro V2 by KwaiKAT is a non-reasoning model optimized for agentic coding. It delivers strong performance on reasoning-style tasks while requiring significantly fewer output tokens than peer models. With the 1210 release, it achieved a score of 64 on the Artificial Analysis Intelligence Index, placing it in the global Top 10 and ranking first among all non-reasoning models."
+family = "kat-coder"
+release_date = "2026-03-27"
+last_updated = "2026-03-27"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

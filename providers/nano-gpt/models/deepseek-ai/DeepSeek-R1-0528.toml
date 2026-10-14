@@ -1,21 +1,24 @@
 name = "DeepSeek R1 0528"
+description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
 family = "deepseek"
 release_date = "2025-05-28"
 last_updated = "2025-05-28"
 attachment = false
 reasoning = true
-tool_call = false
+tool_call = true
 structured_output = false
-open_weights = false
+open_weights = true
+reasoning_options = []
 
 [cost]
-input = 0.4
-output = 1.7
+input = 0.5
+output = 2.15
+cache_read = 0.35
 
 [limit]
-context = 128_000
-input = 128_000
-output = 163_840
+context = 163_840
+input = 163_840
+output = 32_768
 
 [modalities]
 input = ["text"]

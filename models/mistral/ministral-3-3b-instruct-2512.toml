@@ -1,0 +1,29 @@
+# https://mistral.ai/news/mistral-3
+# https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512
+# https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512/blob/main/generation_config.json
+# Native examples request max_tokens = 262144; generation_config.max_length is also 262144.
+# This is a shared prompt/generation ceiling, not a host-specific independent output cap.
+name = "Ministral 3 3B"
+description = "Compact open vision-language model for edge deployment, instruction following, and tool use"
+family = "ministral"
+release_date = "2025-12-02"
+last_updated = "2025-12-02"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512"

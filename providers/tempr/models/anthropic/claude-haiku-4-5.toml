@@ -1,0 +1,18 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# /v1/messages: thinking.type = enabled|disabled; thinking.budget_tokens
+# /v1/responses: reasoning.effort = none|low|medium|high (sized to a thinking budget)
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens", min = 1024 },
+]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25

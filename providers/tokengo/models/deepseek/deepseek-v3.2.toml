@@ -1,0 +1,14 @@
+# Toggle: thinking.type = enabled|disabled
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub (rounded $0.22/$0.33): https://www.tokengo.com/models
+# - Exact console rates incl. cache $0.2174/$0.326/$0.06 (TokenGo model table ratios)
+# TokenGo OpenAI-compatible extra_body; same hybrid on/off as typical DeepSeek V3.2 openai-compat peers.
+base_model = "deepseek/deepseek-v3.2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.2174
+output = 0.326
+cache_read = 0.06

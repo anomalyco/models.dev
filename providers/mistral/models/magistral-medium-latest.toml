@@ -1,22 +1,31 @@
+# Reasoning: https://docs.mistral.ai/studio/conversations/reasoning (reasoning_effort none = minimal/plain string, high = full thinking chunk)
+# API reference: https://docs.mistral.ai/api/ (reasoning_effort = none|minimal|low|medium|high|xhigh)
+# Effort: reasoning_effort = none|high — sync live rejection probe lists none|high; matches peers mistral-medium-latest, mistral-small-latest, mistral-large-4
 name = "Magistral Medium (latest)"
+description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
 family = "magistral-medium"
 release_date = "2025-03-17"
 last_updated = "2025-03-20"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
-knowledge = "2025-06"
 tool_call = true
+knowledge = "2025-06"
 open_weights = true
+status = "deprecated"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
-input = 2.00
-output = 5.00
+input = 2
+output = 5
 
 [limit]
-context = 128_000
+context = 262_144
 output = 16_384
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

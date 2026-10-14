@@ -1,0 +1,17 @@
+# Sources (accessed 2026-08-30):
+# models/tencent/hy4-preview.toml
+# providers/opencode-go/models/hy4-preview.toml
+# Effort: reasoning_effort = "none" | "high". Off is effort = "none", so
+# no toggle is authored. No interleaved field evidence on this host.
+# Lab cost (Tencent list): input 0.834 / output 2.501 / cache_read 0.042.
+# Vancine public pricing (/api/pricing) is 0.67 / 2.00 / 0.034 (USD/MTok).
+base_model = "tencent/hy4-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.67
+output = 2.00
+cache_read = 0.034

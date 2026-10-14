@@ -1,0 +1,18 @@
+# https://ofox.ai/models/bailian/qwen3.5-122b-a10b
+# https://api.ofox.ai/v1/models/bailian/qwen3.5-122b-a10b
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (DashScope/bailian chat path; same as ofox bailian/qwen3.7-max)
+base_model = "alibaba/qwen3.5-122b-a10b"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.29
+output = 2.29
+cache_read = 0.29
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]

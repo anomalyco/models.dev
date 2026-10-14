@@ -1,0 +1,24 @@
+name = "Gemma 4 Gutenberg 31B"
+description = "nbeerbower's Gemma 4 31B finetune for literary fiction, character interiority, and controlled narrative pacing. Its text decoder was trained with ORPO on 14,816 Athanorlite-DPO preference pairs. This text-only deployment supports a 65,536-token context window and up to 8,192 output tokens."
+family = "gemma"
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.45
+cache_read = 0.05
+
+[limit]
+context = 65_536
+input = 65_536
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

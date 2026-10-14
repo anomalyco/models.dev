@@ -1,0 +1,45 @@
+# Sources:
+# - https://www.minimax.io/blog/minimax-h3
+# - https://www.minimax.io/news/minimax-h3-open-source
+# - https://huggingface.co/MiniMaxAI/MiniMax-H3
+# Token limits are not applicable to this audio-video generation endpoint.
+# Zero follows existing non-token media catalog entries; it is not a measured token limit.
+name = "MiniMax H3"
+description = "MiniMax general-purpose video model with multimodal references and synchronized stereo audio. Open H3-Base checkpoints; Context-IR and 2K regeneration are not included in the initial weights release."
+family = "minimax"
+release_date = "2026-07-31"
+last_updated = "2026-10-04"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = true
+license = "MiniMax H3 Community License Agreement"
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video", "audio"]
+
+[[links]]
+url = "https://www.minimax.io/blog/minimax-h3"
+type = "announcement"
+
+[[links]]
+url = "https://www.minimax.io/news/minimax-h3-open-source"
+type = "announcement"
+
+[[links]]
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+type = "model_card"
+
+[[weights]]
+label = "Hugging Face: H3-Base FL2VA / Ref2VA"
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+format = "safetensors"
+
+[[links]]
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/LICENSE"
+type = "license"

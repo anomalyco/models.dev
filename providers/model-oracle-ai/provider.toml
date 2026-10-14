@@ -1,0 +1,9 @@
+# OpenAI-compatible endpoint and public model aliases:
+# https://modeloracle.com/setup/ (accessed 2026-07-07)
+# API contract and routing behavior:
+# https://github.com/anomalyco/ai-control-plane/blob/main/docs/api.md
+name = "Model Oracle AI"
+env = ["MODEL_ORACLE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.modeloracle.com/api/v1"
+doc = "https://modeloracle.com/setup/"

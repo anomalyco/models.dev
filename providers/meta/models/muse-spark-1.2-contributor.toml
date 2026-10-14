@@ -1,0 +1,14 @@
+# Sources:
+# https://dev.meta.ai/docs/overview/
+# https://dev.meta.ai/docs/pricing-rate-limits/
+# Contributor tier prompts and completions may be used to improve Meta's products.
+
+base_model = "meta/muse-spark-1.2"
+name = "Muse Spark 1.2 Contributor"
+
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.10
+output = 0.20
+cache_read = 0.002

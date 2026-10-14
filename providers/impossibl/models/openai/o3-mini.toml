@@ -1,0 +1,11 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "openai/o3-mini"
+
+[cost]
+input = 1.10
+output = 4.40
+cache_read = 0.55
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]

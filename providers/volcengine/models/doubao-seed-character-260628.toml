@@ -1,0 +1,36 @@
+# Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-character-260628`
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://www.volcengine.com/docs/82379/1544106
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = minimal|low|high, and it must be paired with
+# thinking.type=enabled. This model defaults thinking OFF, so a graded effort sent
+# on its own is rejected: "Invalid combination of reasoning_effort and thinking
+# type: low + disabled". 'none' is likewise unavailable; 'minimal' is the off value.
+# Only three levels are separable. With thinking enabled, n=4 runs per level on a
+# prompt hard enough to consume the budget:
+#   minimal 0 0 0 0                 low  1347/1258/1166/1149
+#   high    1709/2696/1695/1513     max  2304/1881/1985/1480
+# max overlaps high rather than exceeding it, and medium/xhigh sit inside the same
+# band, so they are dropped.
+base_model = "bytedance-seed/seed-character"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.11875
+output = 0.29687
+cache_read = 0.02375
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.17812
+output = 0.8906
+cache_read = 0.02375

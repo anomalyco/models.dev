@@ -1,0 +1,20 @@
+# Sources:
+# - Ofox model page: https://ofox.ai/models/openai/gpt-6.1-sol
+# - Ofox catalog API: https://api.ofox.ai/v2/models/catalog?include=provider_price&search=gpt-6.1-sol
+# - OpenAI model docs (pricing/reasoning): https://developers.openai.com/api/docs/models/gpt-6.1-sol
+# Ofox catalog shows flat list pricing with no provider_price override and no context tier, so no [[cost.tiers]].
+base_model = "openai/gpt-6.1-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.1
+cache_write = 2.5
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

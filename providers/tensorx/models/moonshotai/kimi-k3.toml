@@ -1,0 +1,10 @@
+# AI SDK auto-discovers native IDs via /v1/models — field values map those IDs
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"thinking": false}} (default on)
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.75

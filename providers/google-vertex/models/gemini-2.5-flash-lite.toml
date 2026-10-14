@@ -1,5 +1,8 @@
+# Structured output: "Supported"; maximum output tokens 65,536 (model page). responseSchema verified live 2026-10-08.
+# Retires 2026-10-20: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions
+# https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-lite
 base_model = "google/gemini-2.5-flash-lite"
-base_model_omit = ["structured_output"]
+status = "deprecated"
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24_576 }]
 
 [cost]

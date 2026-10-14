@@ -1,0 +1,10 @@
+# limit.output confirmed working at 100_000 via live test
+name = "Ornith-1.0-35B-FP8"
+base_model = "deepreinforce/ornith-1.0-35b"
+reasoning_options = []
+[limit]
+context = 262_000
+output = 100_000
+[cost]
+input = 0
+output = 0

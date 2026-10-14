@@ -1,0 +1,10 @@
+# Effort: reasoning_effort = low|medium|high
+# https://docs.cortecs.ai/routing/reasoning
+base_model = "openai/gpt-6-sol"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 2.4
+output = 11.999
+cache_read = 0.24
+cache_write = 3

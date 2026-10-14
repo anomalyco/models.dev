@@ -1,0 +1,24 @@
+name = "Gemma 4 31B Split-Untied"
+description = "Blazed-Forge's Split-Untied is a text-only Gemma 4 31B community finetune with an untied BF16 output head, built for creative writing, roleplay, expressive dialogue, and tool use."
+family = "gemma"
+release_date = "2026-09-17"
+last_updated = "2026-09-17"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.05
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

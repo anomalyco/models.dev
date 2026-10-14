@@ -1,0 +1,9 @@
+# Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+# Ofox reports capabilities.reasoning=false for this route, so it does not inherit Alibaba thinking controls.
+base_model = "alibaba/qwen-plus"
+reasoning = false
+
+[cost]
+input = 0.12
+output = 0.29
+cache_read = 0.023

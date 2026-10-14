@@ -1,0 +1,15 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# No caller-facing thinking control on this route. Measured 2026-08-16, two runs each:
+#   reasoning_effort (top-level and nested) -> 400 "does not expose a thinking mode";
+#   reasoning true|false, :think, :fast, reasoning.max_tokens, thinkingConfig.thinkingBudget,
+#   thinking_budget and enable_thinking all return no reasoning_content and no
+#   usage.completion_tokens_details.reasoning_tokens.
+# The same harness detected reasoning on six Qwen routes in the same run, so [] here means
+# "no caller control", not "untested".
+base_model = "google/gemini-2.5-flash-lite"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.1

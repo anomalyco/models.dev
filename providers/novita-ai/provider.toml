@@ -1,4 +1,8 @@
-name = "NovitaAI"
+# Public catalog: https://novita.ai/models
+# Inventory: https://api.novita.ai/openai/v1/models (account-scoped; absence is not retirement evidence).
+# Chat reasoning controls are model-specific; see each route's leading wire comments.
+# https://novita.ai/docs/api-reference/model-apis-llm-create-chat-completion
+name = "Novita AI"
 env = ["NOVITA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 doc = "https://novita.ai/docs/guides/introduction"

@@ -1,0 +1,20 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# Toggle: $.enable_thinking = true|false (Alibaba native field, forwarded by the gateway).
+# Budget: $.thinking_budget (integer reasoning tokens).
+# Measured: `thinking_budget` is honoured as a cap: 64 -> 65 reasoning tokens; at 600 the model used 586.
+# The bare `$.reasoning` boolean is inert on this route (no reasoning output with it set); `enable_thinking` is the control that works.
+base_model = "alibaba/qwen3-vl-plus"
+
+[cost]
+input = 0.2
+output = 1.6
+
+[limit]
+context = 256_000
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"

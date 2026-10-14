@@ -1,0 +1,20 @@
+# https://longcat.chat/platform/docs/change-log
+# https://longcat.chat/platform/docs/
+name = "LongCat-2.5-Preview"
+description = "Meituan's multimodal reasoning model for coding and agent tasks, with image understanding and a 1M-token context window"
+family = "longcat"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+release_date = "2026-09-25"
+last_updated = "2026-09-25"
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

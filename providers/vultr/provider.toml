@@ -1,4 +1,11 @@
 name = "Vultr"
+# POST /v1/chat/completions accepts reasoning.effort (or top-level
+# reasoning_effort), reasoning.enabled, and reasoning.max_tokens; Vultr maps
+# effort onto each model's native control. Per-model reasoning metadata is in
+# GET /v1/models (reasoning.supported_efforts, reasoning.supports_max_tokens).
+# Responses follow OpenRouter's shape: reasoning is always returned in
+# choices[].message.reasoning, never reasoning_content.
+# https://api.vultrinference.com/ (accessed 2026-09-30)
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.vultrinference.com/v1"
 env = ["VULTR_API_KEY"]

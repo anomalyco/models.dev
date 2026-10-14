@@ -1,0 +1,24 @@
+# Cost is USD per 1M tokens, matching the SCX rates carried in
+# theopenco/llmgateway (packages/models/src/models/minimax.ts).
+# Limits and capabilities verified directly against https://api.scx.ai/v1:
+# SCX enforces a single context budget (prompt + max_tokens <= context) with no
+# separate output cap, so output equals context. Probed on the live endpoint:
+# max_tokens 196540 -> 200 OK, 196608 -> 400 "This model's maximum context
+# length is 196608 tokens". Do not trust max_output_length from /v1/models --
+# it reports a placeholder 4096 for most models.
+# Reasoning is returned on a side channel, but this host names the field
+# `reasoning` rather than `reasoning_content`/`reasoning_details`, so
+# `interleaved` is the bare boolean instead of a field name.
+base_model = "minimax/MiniMax-M2.7"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+interleaved = true
+
+[cost]
+input = 0.48
+output = 1.79
+cache_read = 0.05
+
+[limit]
+context = 196_608
+output = 196_608

@@ -1,0 +1,12 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-7.html
+# Runtime Converse profile; Geo (US) CRIS Standard pricing ($2.20/$6.60, cache read $0.55). In-region and bedrock-mantle are not supported for 4.7.
+# Effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh. Structured outputs are supported on bedrock-runtime for 4.7 (inherited true).
+base_model = "xai/grok-4.7"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+name = "Grok 4.7 (US)"
+last_updated = "2026-09-28"
+
+[cost]
+input = 2.20
+output = 6.60
+cache_read = 0.55

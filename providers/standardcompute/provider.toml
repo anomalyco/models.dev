@@ -1,0 +1,23 @@
+# Flat-rate smart-routing gateway: per-token cost is $0 because pricing is
+# subscription-based (fixed monthly plans, each with a monthly compute budget;
+# https://standardcompute.com/pricing and
+# https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-13).
+# The "standardcompute" model id routes each request across the models the
+# customer has enabled from a curated catalog of ~1M-context models, or serves
+# the customer's pinned selection. Exact model ids: GET /v1/models (public).
+# API surfaces (https://docs.standardcompute.com/api, accessed 2026-10-13):
+# OpenAI-compatible POST /v1/chat/completions, /v1/responses (used by Codex
+# CLI) and /v1/completions at https://api.stdcmpt.com/v1; Anthropic
+# POST /v1/messages (Claude Code / Anthropic SDKs, base https://api.stdcmpt.com).
+# Reasoning HTTP format (https://docs.standardcompute.com/reasoning, accessed
+# 2026-10-13): /v1/chat/completions accepts top-level `reasoning_effort` and
+# the OpenRouter-style `reasoning` object ({enabled = bool} | {effort = ...} |
+# {max_tokens = N}); both pass through to the routed model. Requests without
+# reasoning fields use the per-model defaults saved in the customer dashboard.
+# Responses return `reasoning` plus OpenRouter-shape `reasoning_details`
+# (streaming included).
+name = "Standard Compute"
+env = ["STANDARDCOMPUTE_API_KEY"]
+npm = "@openrouter/ai-sdk-provider"
+api = "https://api.stdcmpt.com/v1"
+doc = "https://docs.standardcompute.com/models"

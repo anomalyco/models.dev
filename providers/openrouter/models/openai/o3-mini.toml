@@ -1,10 +1,10 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "openai/o3-mini"
-temperature = false
-structured_output = true
-tool_call = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-reasoning = true
 attachment = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1.1

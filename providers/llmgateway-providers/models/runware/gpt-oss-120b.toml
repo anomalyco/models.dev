@@ -1,0 +1,12 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Runware)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.032
+output = 0.14
+cache_read = 0.032

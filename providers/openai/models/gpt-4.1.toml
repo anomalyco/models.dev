@@ -1,4 +1,5 @@
 name = "GPT-4.1"
+description = "Long-lived GPT workhorse for coding, instruction following, and production apps"
 family = "gpt"
 release_date = "2025-04-14"
 last_updated = "2025-04-14"
@@ -22,3 +23,7 @@ output = 32_768
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[experimental.modes.fast]
+cost = { input = 3.50, output = 14.00, cache_read = 0.875 }
+provider = { body = { service_tier = "priority" } }

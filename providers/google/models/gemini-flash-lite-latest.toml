@@ -1,24 +1,31 @@
+# Alias for the current Gemini Flash-Lite release (gemini-3.5-flash-lite).
+# Keep reasoning_options and cost in sync with gemini-3.5-flash-lite.
 name = "Gemini Flash-Lite Latest"
+description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 family = "gemini-flash-lite"
-release_date = "2025-09-25"
-last_updated = "2025-09-25"
+release_date = "2026-07-21"
+last_updated = "2026-07-21"
 attachment = true
 reasoning = true
 temperature = true
-knowledge = "2025-01"
 tool_call = true
 structured_output = true
+knowledge = "2026-03"
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
 [cost]
-input = 0.10
-output = 0.40
-cache_read = 0.025
+input = 0.30
+output = 2.50
+cache_read = 0.03
 
 [limit]
 context = 1_048_576
 output = 65_536
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]

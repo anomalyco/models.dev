@@ -1,4 +1,6 @@
+# Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
 name = "Mistral Medium 3.5"
+description = "Balanced Mistral model for enterprise assistants, multilingual work, and tools"
 family = "mistral-medium"
 release_date = "2026-04-29"
 last_updated = "2026-04-29"
@@ -15,6 +17,7 @@ values = ["none", "high"]
 
 [cost]
 input = 1.50
+cache_read = 0.15
 output = 7.50
 
 [limit]

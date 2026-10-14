@@ -1,0 +1,19 @@
+base_model = "openai/gpt-6-sol"
+name = "GPT-6 Sol (Fast)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.4
+cache_write = 5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_001 }
+input = 8
+output = 30
+cache_read = 0.8
+cache_write = 10

@@ -1,0 +1,15 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-fable-5 (accessed 2026-07-21)
+# The selected route advertises reasoning.effort and supports disabling reasoning;
+# exact effort values are not exposed, so only the verified toggle is listed.
+
+base_model = "anthropic/claude-fable-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5

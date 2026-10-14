@@ -1,0 +1,28 @@
+name = "Muse Spark 1.3 Contributor"
+description = "Meta's Muse Spark 1.3 Contributor is a frontier multimodal reasoning model for long-horizon coding and agentic workflows, with strong gains in computer use, browsing, professional tool use, codebase understanding, and million-token retrieval. It accepts text, images, audio, video, and files, supports tool calling and structured output, and always reasons before answering. Prompts and outputs may be used by Meta for training and to improve its products."
+family = "muse"
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.002
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 943_718
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]

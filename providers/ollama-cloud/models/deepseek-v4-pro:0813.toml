@@ -1,0 +1,23 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15). Ollama bills
+# Base (off-peak) and Peak (2x, 12:00-18:00 UTC Mon-Fri) rates; the schema
+# cannot express time-based tiers, so the Base rate is recorded. See
+# https://github.com/anomalyco/models.dev/issues/5913.
+# Toggle: native POST /api/chat and /api/generate use `think = true|false`.
+# Effort: OpenAI POST /v1/chat/completions accepts top-level `reasoning_effort`
+# or `reasoning.effort` with high|max (DeepSeek V4 maps low/medium -> high).
+# Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
+# API-verified context: https://ollama.com/api/show (deepseek4.context_length = 1048576)
+# Output: Ollama has no separate output cap; deepseek4 peers on this host
+# (deepseek-v4-flash:0731, deepseek-v4-pro) serve output = 1048576.
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[limit]
+context = 1048576
+output = 1048576
+
+[cost]
+input = 0.66
+output = 1.98
+cache_read = 0.022

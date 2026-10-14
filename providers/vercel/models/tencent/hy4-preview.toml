@@ -1,0 +1,16 @@
+# Effort: reasoning.effort = none|high; none disables reasoning (no separate toggle).
+# Vercel routes this model to Tencent; use Tencent's native effort levels.
+# https://vercel.com/ai-gateway/models/hy4-preview
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# https://cloud.tencent.com/document/product/1823/131208
+base_model = "tencent/hy4-preview"
+name = "Tencent Hy4 Preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.834
+output = 2.501
+cache_read = 0.042

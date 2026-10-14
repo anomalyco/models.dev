@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import { describeModel } from "../../describe.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const API_BASE = "https://api.x.ai/v1";
 
@@ -14,6 +16,10 @@ const XAIModel = z.object({
   prompt_text_token_price: z.number().int().nonnegative().optional(),
   cached_prompt_text_token_price: z.number().int().nonnegative().optional(),
   completion_text_token_price: z.number().int().nonnegative().optional(),
+  prompt_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  cached_prompt_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  completion_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  long_context_threshold: z.number().int().nonnegative().optional(),
   max_prompt_length: z.number().int().nonnegative().optional(),
 }).passthrough();
 
@@ -37,7 +43,10 @@ export const xai = {
   modelsDir: "providers/xai/models",
   skipCreates: true,
   sourceID(model) {
-    return model.id;
+    // Alias rows (canonical_id set) exist only to update already-cataloged
+    // alias TOMLs; the canonical row carries the missing-model signal, so
+    // skipped aliases must not be reported as missing models.
+    return model.canonical_id === undefined ? model.id : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -67,7 +76,10 @@ export const xai = {
     for (const model of models) {
       if (!seen.has(model.id)) {
         seen.add(model.id);
-        expanded.push(model);
+        // Strip any API-provided canonical_id: sourceID relies on it being set
+        // exclusively by the synthetic alias expansion below, so an API row
+        // carrying it must not be mistaken for an alias and silently skipped.
+        expanded.push({ ...model, canonical_id: undefined });
       }
     }
 
@@ -117,10 +129,6 @@ async function fetchTypedModels(key: string, endpoint: string) {
   return XAIModelList.parse(await response.json()).models;
 }
 
-function dateFromTimestamp(timestamp: number) {
-  return new Date(timestamp * 1000).toISOString().slice(0, 10);
-}
-
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
 function modalities(values: string[] | undefined, fallback: Modality[]) {
@@ -137,9 +145,29 @@ function tokenPrice(value: number | undefined) {
   return value / 10_000;
 }
 
-function preservedCostTiers(existing: ExistingModel) {
-  // The xAI models API exposes base pricing only; long-context tiers are curated from xAI docs/console.
-  return existing.cost?.tiers;
+function costTiers(model: XAIModel, existing: ExistingModel) {
+  // 0 = no long-context band; omitted (image/video) = keep authored tiers.
+  // Long-context prices: 0 = same as base; undefined = field omitted, keep authored.
+  const size = model.long_context_threshold;
+  if (size === undefined) return existing.cost?.tiers;
+  if (size === 0) return undefined;
+
+  const longInput = model.prompt_text_token_price_long_context;
+  const longOutput = model.completion_text_token_price_long_context;
+  if (longInput === undefined || longOutput === undefined) return existing.cost?.tiers;
+
+  const input = tokenPrice(longInput || model.prompt_text_token_price);
+  const output = tokenPrice(longOutput || model.completion_text_token_price);
+  if (input === undefined || output === undefined) return existing.cost?.tiers;
+
+  return [{
+    tier: { type: "context" as const, size },
+    input,
+    output,
+    cache_read: tokenPrice(
+      model.cached_prompt_text_token_price_long_context || model.cached_prompt_text_token_price,
+    ),
+  }];
 }
 
 function cost(model: XAIModel, existing: ExistingModel) {
@@ -155,12 +183,13 @@ function cost(model: XAIModel, existing: ExistingModel) {
     cache_write: existing.cost?.cache_write,
     input_audio: existing.cost?.input_audio,
     output_audio: existing.cost?.output_audio,
-    tiers: preservedCostTiers(existing),
+    tiers: costTiers(model, existing),
   };
 }
 
 export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedModel {
   const name = existing.name;
+  const description = existing.description;
   const attachment = existing.attachment;
   const reasoning = existing.reasoning;
   const toolCall = existing.tool_call;
@@ -176,23 +205,35 @@ export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedM
     || toolCall === undefined
     || openWeights === undefined
     || limit === undefined
-    || (model.canonical_id !== undefined && releaseDate === undefined)
-    || (model.canonical_id !== undefined && lastUpdated === undefined)
+    || releaseDate === undefined
+    || lastUpdated === undefined
   ) {
     throw new Error(`xAI model ${model.id} has incomplete local TOML metadata required for sync`);
   }
 
   const input = modalities(model.input_modalities, existing.modalities?.input ?? ["text"]);
   const output = modalities(model.output_modalities, existing.modalities?.output ?? ["text"]);
-  const created = dateFromTimestamp(model.created);
 
-  return {
-    base_model: existing.base_model,
-    base_model_omit: existing.base_model_omit,
+  const values = {
     name,
+    description: description ?? describeModel({
+      id: model.id,
+      name,
+      family: existing.family,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: existing.structured_output,
+      open_weights: openWeights,
+      limit: {
+        input: limit.input,
+        context: model.max_prompt_length ?? limit.context,
+        output: limit.output,
+      },
+      modalities: { input, output },
+    }),
     family: existing.family,
-    release_date: model.canonical_id === undefined ? created : releaseDate!,
-    last_updated: model.canonical_id === undefined ? created : lastUpdated!,
+    release_date: releaseDate,
+    last_updated: lastUpdated,
     attachment: input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: existing.reasoning_options,
@@ -210,5 +251,9 @@ export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedM
       output: limit.output,
     },
     modalities: { input, output },
-  };
+  } satisfies SyncedFullModel;
+
+  return existing.base_model === undefined
+    ? values
+    : factorBaseModel(existing.base_model, values, values.limit, existing.base_model_omit);
 }

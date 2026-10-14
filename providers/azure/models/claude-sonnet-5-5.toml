@@ -1,0 +1,16 @@
+# Model ID and pricing: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
+# Foundry catalog: https://ai.azure.com/catalog/models/claude-sonnet-5-5
+# between_tools is not a full thinking-off toggle; disabled is rejected.
+base_model = "anthropic/claude-sonnet-5-5"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

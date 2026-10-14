@@ -1,0 +1,28 @@
+name = "Muse Spark 1.2 Contributor (Meta Contributor)"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+family = "muse"
+release_date = "2026-08-06"
+last_updated = "2026-08-06"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.002
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,15 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+description = "DeepSeek V4-Flash-0731 is an MoE model great for coding, reasoning, and agentic workloads."
+family = "deepseek"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.13
+output = 0.28
+cache_read = 0.07
+
+[limit]
+context = 262_144
+output = 262_144

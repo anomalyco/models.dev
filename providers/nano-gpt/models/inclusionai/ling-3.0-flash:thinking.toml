@@ -1,0 +1,15 @@
+base_model = "inclusionai/ling-3.0-flash"
+name = "Ling 3.0 Flash Thinking"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.075
+output = 0.22
+cache_read = 0.015
+
+[limit]
+input = 262_144

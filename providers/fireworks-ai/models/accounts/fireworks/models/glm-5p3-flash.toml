@@ -1,0 +1,38 @@
+# Pricing: https://fireworks.ai/models/fireworks/glm-5p3-flash (accessed 2026-09-02)
+# Released on Fireworks Serverless API 2026-08-26.
+# Thinking-only model: reasoning cannot be disabled. Three distinct effort
+# tiers like Fireworks GLM 5.3 (NOT the two-tier GLM 5.2 collapse): verified
+# empirically 2026-09-04 — same prompt yields ~9/17/559 reasoning tokens for
+# low/high/max. max/xhigh select max.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Serving limits verified 2026-09-07: GET /v1/models reports context_length
+# 1_048_576; an over-limit probe (1_200_012 prompt tokens) was rejected with
+# "model maximum context length: 1048573" — the enforced prompt cap, recorded
+# here (the lab default is 1M context). Output stays at the inherited
+# 131_072: Fireworks performs no pre-flight max_tokens validation (up to
+# 2_000_000 accepted), and Baseten documents 131_072 for GLM-5.3-Flash.
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+last_updated = "2026-09-07"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_573
+
+[modalities]
+input = ["text", "image"]
+
+[experimental.modes.priority]
+cost = { input = 0.1875, output = 0.625, cache_read = 0.0375 }
+provider = { body = { service_tier = "priority" } }

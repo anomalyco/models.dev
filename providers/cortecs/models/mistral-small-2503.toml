@@ -1,0 +1,22 @@
+name = "mistral-small-2503"
+description = "Combines advanced text and vision capabilities with 24 billion parameters, supporting multilingual tasks and long contexts up to 131k tokens, making it versatile for various applications without sacrificing performance."
+release_date = "2025-03-20"
+last_updated = "2025-03-20"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.111
+output = 0.334
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

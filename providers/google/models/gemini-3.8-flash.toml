@@ -1,0 +1,14 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/latest-model
+base_model = "google/gemini-3.8-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+input_audio = 0.75

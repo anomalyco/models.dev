@@ -1,0 +1,11 @@
+base_model = "mistral/ministral-8b-instruct-2410"
+
+[cost]
+input = 0.15
+output = 0.15
+cache_read = 0.15
+cache_write = 0.15
+
+[limit]
+context = 128_000
+output = 4_000

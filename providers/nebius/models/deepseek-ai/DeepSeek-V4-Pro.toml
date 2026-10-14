@@ -1,8 +1,17 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# Accessed 2026-08-29.
+# Effort: reasoning_effort = none|low|high|max (none = thinking off). Probed live against
+# api.tokenfactory.nebius.com chat completions on 2026-08-29: every schema effort value is
+# accepted, none disables thinking (default baseline is non-thinking), the mid tiers run
+# flat (same-family collapse note on DeepSeek-V4-Flash-0731: minimal=low=medium,
+# high=xhigh), and max is distinctly heavier. The lab's thinking.type field is accepted
+# but inert here (type=enabled does not turn thinking on), so reasoning_effort expresses off.
+# Served window: models_info max_model_len = 1_048_576 for this model with no separate
+# output cap, so context and output both take the full served window.
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "high"] },
-]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
@@ -11,3 +20,7 @@ field = "reasoning_content"
 input = 1.75
 output = 3.5
 cache_read = 0.15
+
+[limit]
+context = 1_048_576
+output = 1_048_576

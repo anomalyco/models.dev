@@ -1,0 +1,21 @@
+# Sources:
+# - https://ofox.ai/models/google/gemini-2.5-flash (pricing page)
+# - https://api.ofox.ai/v1/models (id google/gemini-2.5-flash; prompt/completion/cache/audio pricing; supported_parameters includes reasoning)
+# Toggle: thinking budget 0 disables thinking (Google thinkingConfig.thinkingBudget / OpenAI-compat reasoning)
+# Budget: thinking_budget / thinkingConfig.thinkingBudget 0..24576 (lab + openrouter/merge-gateway peers)
+base_model = "google/gemini-2.5-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 24_576
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.03
+cache_write = 1
+input_audio = 1

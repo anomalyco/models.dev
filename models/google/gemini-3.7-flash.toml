@@ -1,0 +1,68 @@
+name = "Gemini 3.7 Flash"
+description = "High-efficiency Gemini model for agentic workflows, coding, and multimodal reasoning"
+family = "gemini-flash"
+release_date = "2026-08-13"
+last_updated = "2026-08-13"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2026-03"
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]
+
+[[benchmarks]]
+name = "FrontierCode"
+score = 43.6
+metric = "score"
+version = "1.1 Main"
+source = "https://deepmind.google/models/model-cards/gemini-3-7-flash/"
+date = "2026-08-13"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 65.3
+metric = "resolve rate"
+version = "1.1"
+source = "https://deepmind.google/models/model-cards/gemini-3-7-flash/"
+date = "2026-08-13"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 85.8
+metric = "accuracy"
+version = "2.1"
+source = "https://deepmind.google/models/model-cards/gemini-3-7-flash/"
+date = "2026-08-13"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 30.4
+metric = "accuracy"
+dataset = "private set"
+source = "https://deepmind.google/models/model-cards/gemini-3-7-flash/"
+date = "2026-08-13"
+
+[[benchmarks]]
+name = "GDP.pdf"
+score = 34.0
+metric = "accuracy"
+source = "https://deepmind.google/models/model-cards/gemini-3-7-flash/"
+date = "2026-08-13"
+
+[[benchmarks]]
+name = "GDM-MRCR"
+score = 97.0
+metric = "accuracy"
+variant = "128k average, 8-needle"
+version = "v2"
+source = "https://deepmind.google/models/model-cards/gemini-3-7-flash/"
+date = "2026-08-13"

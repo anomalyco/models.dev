@@ -1,15 +1,11 @@
-reasoning_options = [{ type = "toggle" }]
-name = "Qwen3 30B A3B"
-family = "qwen"
-release_date = "2025-04-28"
-last_updated = "2025-04-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+base_model = "alibaba/qwen3-30b-a3b"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 structured_output = true
-knowledge = "2025-03-31"
-open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.12
@@ -17,8 +13,3 @@ output = 0.5
 
 [limit]
 context = 40_960
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]

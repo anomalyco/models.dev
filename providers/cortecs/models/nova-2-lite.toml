@@ -1,0 +1,15 @@
+base_model = "amazon/nova-2-lite"
+description = "Nova 2 Lite is an advanced multimodal reasoning model that combines efficiency and performance, delivering reliable AI for agentic workflows and enterprise applications."
+temperature = false
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.373
+output = 3.144
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image", "pdf"]

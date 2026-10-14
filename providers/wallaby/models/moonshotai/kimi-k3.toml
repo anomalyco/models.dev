@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = low|medium|high|max (verified on this host
+# 2026-09-14; same-prompt median reasoning tokens over 6 runs per level:
+# low 61 < medium 85 < high 105 < max 123 — four graded tiers, "max" accepted
+# and highest, "medium" a distinct intermediate tier). No wire path disables
+# reasoning: "none"/"minimal" are accepted but still reason, and
+# reasoning.enabled=false / thinking.type="disabled" are ignored — hence no
+# "none" in values and no toggle.
+# Pricing: https://wallabytoken.com/pricing.json (accessed 2026-09-14), USD per 1M tokens.
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.70
+output = 13.50
+cache_read = 0.27

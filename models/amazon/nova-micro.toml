@@ -1,0 +1,23 @@
+# Sources: https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-micro.html
+# Launch: https://aws.amazon.com/blogs/aws/introducing-amazon-nova-frontier-intelligence-and-industry-leading-price-performance/
+# Output: the Nova V1 guide's 10K is confirmed by US Bedrock Converse boundary checks (2026-09-09).
+name = "Nova Micro"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "nova-micro"
+release_date = "2024-12-03"
+last_updated = "2024-12-03"
+attachment = false
+reasoning = false
+temperature = true
+knowledge = "2024-10"
+tool_call = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 10_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

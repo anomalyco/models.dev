@@ -1,0 +1,15 @@
+base_model = "sakana/fugu-ultra"
+name = "Fugu Ultra (Sakana AI)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh", "max"]
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[limit]
+output = 1_000_000

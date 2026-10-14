@@ -1,0 +1,22 @@
+name = "Gemma-SEA-LION-v4-27B-IT"
+description = "Gemma 3 27B tuned by AI Singapore for Southeast Asian languages and instruction following"
+family = "gemma"
+release_date = "2025-09-23"
+last_updated = "2025-09-23"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/aisingapore/Gemma-SEA-LION-v4-27B-IT"

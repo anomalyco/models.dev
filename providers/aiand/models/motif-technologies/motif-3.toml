@@ -1,0 +1,21 @@
+# Effort: reasoning_effort = none|high
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-14: none|high → 200; minimal|low|medium|xhigh|max → 400.
+# Lab facts (release date, open weights, tool calling, temperature) live in
+# models/motif-technologies/motif-3.toml. structured_output stays false: live
+# probe 2026-09-14 — response_format json_schema is ignored (prose reply).
+# Reasoning side channel: message.reasoning_content
+base_model = "motif-technologies/motif-3"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.5
+output = 2
+cache_read = 0.2

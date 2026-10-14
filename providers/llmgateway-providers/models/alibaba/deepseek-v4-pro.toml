@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro (Alibaba Cloud)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2.4
+output = 4.8
+cache_read = 0.2
+
+[limit]
+output = 393_216

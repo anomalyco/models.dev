@@ -1,6 +1,7 @@
 name = "Manta Pro 1.0"
+description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "nova"
-release_date = "2025-12-20"
+release_date = "2025-09-20"
 last_updated = "2025-12-20"
 attachment = false
 reasoning = false
@@ -9,12 +10,13 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 0.060000000000000005
+input = 0.06
 output = 0.5
+cache_read = 0.03
 
 [limit]
-context = 32_768
-input = 32_768
+context = 65_536
+input = 65_536
 output = 32_768
 
 [modalities]

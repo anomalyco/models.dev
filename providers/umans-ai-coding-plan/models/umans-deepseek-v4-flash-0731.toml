@@ -1,0 +1,23 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Live metadata: levels none/low/high/max, default low, and `can_disable=true`
+# (accessed 2026-08-03): https://api.code.umans.ai/v1/models/info
+# limit.output is cap-1 on purpose: the gateway 400s max_tokens >=
+# max_completion_tokens (393216), so 393215 is the largest value that serves
+# (its advertised `recommended_max_tokens`).
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 1_048_576
+output = 393_215

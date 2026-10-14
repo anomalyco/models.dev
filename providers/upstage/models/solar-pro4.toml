@@ -1,0 +1,26 @@
+name = "Solar Pro 4"
+description = "Upstage's flagship model, specialized for agentic use"
+family = "solar-pro"
+release_date = "2026-08-06"
+last_updated = "2026-08-06"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+temperature = true
+knowledge = "2026-02"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.30
+output = 1.20
+cache_read = 0.06
+
+[limit]
+context = 524_288
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

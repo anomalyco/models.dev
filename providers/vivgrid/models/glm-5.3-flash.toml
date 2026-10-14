@@ -1,0 +1,12 @@
+# Pricing per https://docs.vivgrid.com/models (accessed 2026-08-27):
+# input $0.15 / cached input $0.04 / output $0.50 per 1M tokens.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.04

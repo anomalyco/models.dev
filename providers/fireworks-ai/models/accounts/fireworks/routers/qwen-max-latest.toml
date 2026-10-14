@@ -1,0 +1,26 @@
+# Version-tracking standard-path alias for Qwen 3.8 Max, advertised by
+# https://api.fireworks.ai/v1/serverless/models on 2026-09-16 as
+# accounts/fireworks/routers/qwen-max-latest. The same response supplies
+# standard and Priority pricing, text/image input, and the Priority recipe.
+# Toggle: thinking.type = enabled|disabled (matches the pinned Qwen 3.8 Max route).
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen Max Latest (Qwen3.8 Max)"
+last_updated = "2026-09-16"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]
+
+[experimental.modes.priority]
+cost = { input = 3, output = 9, cache_read = 0.375 }
+provider = { body = { service_tier = "priority" } }

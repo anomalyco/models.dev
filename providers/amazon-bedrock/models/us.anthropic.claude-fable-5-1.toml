@@ -1,0 +1,11 @@
+# Source: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
+# Fable 5.1 regional availability is US-only at launch; regional endpoints carry a 10% premium over global.
+base_model = "anthropic/claude-fable-5-1"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+name = "Claude Fable 5.1 (US)"
+
+[cost]
+input = 11
+output = 55
+cache_read = 0.275
+cache_write = 13.75

@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-28):
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (Singapore)
+# https://www.alibabacloud.com/help/en/model-studio/context-cache
+# https://www.qwencloud.com/models/qwen3.5-flash
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens, maximum 81920)
+base_model = "alibaba/qwen3.5-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 81_920 }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01
+cache_write = 0.125

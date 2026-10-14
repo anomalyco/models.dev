@@ -1,0 +1,34 @@
+# Sources: https://docs.mistral.ai/models/leanstral-1-5 (Leanstral 1.5 description, 256k context, 128k output, Free price, chat/function/agents/structured features, Deprecated 9/29/2026)
+# Schema: https://raw.githubusercontent.com/mistralai/platform-docs-public/main/src/schema/models/models/leanstral-1-5.ts (release 2026-06-30, Apache 2.0 weights https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B, pricing 0, apiNames labs-leanstral-1-5, input text+image/output text, retirement 2026-09-30)
+# Model card: https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B (119B total/6.5B active, 256k context, text+image in/text out, Temperature 1.0, Reasoning Effort none/high, tool calling)
+# Blog: https://mistral.ai/news/leanstral-1-5/ (free Apache-2.0, 119B total)
+# Fallback for 1.5.1 revision identity (same 119B/6.5B 256K recipe as 1.5): https://opper.ai/mistral/labs-leanstral-1-5-1
+# Mistral /v1/models exposes labs-leanstral-1-5-1 (this issue); docs list the same Leanstral 1.5 line as labs-leanstral-1-5.
+name = "Leanstral 1.5"
+description = "An updated Lean 4 formal proof engineering model optimised for automated theorem proving and autoformalization. 119B total parameters, 6.5B active."
+family = "leanstral"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+status = "deprecated"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

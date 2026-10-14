@@ -1,0 +1,38 @@
+# Version-tracking Fast serving-path alias for the current flagship GLM Fast
+# router. Same weights/quality as the pinned Fast path; higher $/token than
+# Standard; aims for 100+ tok/s (Fireworks serving paths).
+#
+# Current target (2026-09-15): GLM 5.3 Fast
+# (accounts/fireworks/routers/glm-5p3-fast). FireConnect prefers
+# glm-5p3-fast over glm-5p2-fast when the newer Fast router is in the
+# serverless catalog:
+#   https://github.com/fw-ai/fireconnect/blob/main/packages/setup-cli/lib/fireworks/model-specs.mjs
+#   (GLM_FAST_LATEST_BASE_CANDIDATES = ["glm-5p3-fast", "glm-5p2-fast"])
+# Docs:
+#   https://docs.fireworks.ai/ecosystem/fireconnect/models
+#     (glm-fast-latest: Fast text-only agent loops, 1M context)
+#   https://docs.fireworks.ai/serverless/serving-paths
+#   https://docs.fireworks.ai/serverless/pricing
+#     (GLM 5.3 Fast: $2.10 / $0.39 / $6.60 per 1M input / cached / output)
+# Peer limits/reasoning match authored glm-5p3-fast (thinking-only effort
+# low|high|max; context 1_048_572; output 262_144).
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Fast (Latest)"
+release_date = "2026-08-28"
+last_updated = "2026-09-15"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.10
+output = 6.60
+cache_read = 0.39
+
+[limit]
+context = 1_048_572
+output = 262_144

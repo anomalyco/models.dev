@@ -1,0 +1,25 @@
+# Pricing, limits, vision, and effort ladder from the public GET /v1/models
+# metadata (checked 2026-09-18): $0.15/$0.6/$0.015, 1,048,560-token context,
+# 393,216-token output cap, 20-image cap. Effort: reasoning_effort =
+# none|low|high|xhigh|max (default high, reasoning on by default; aliases
+# medium -> high, minimal -> low). Off is effort=none, so no separate toggle.
+# thinking_token_budget is rejected with a 400 on the V4-Flash generation
+# (checked 2026-08-26) and is not documented for V4.1-Flash, so it is not
+# declared.
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://portal.neuralwatt.com/docs/api/models
+base_model = "deepseek/deepseek-v4.1-flash"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "xhigh", "max"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015
+
+[limit]
+context = 1_048_560
+output = 393_216

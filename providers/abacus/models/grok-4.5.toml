@@ -1,0 +1,23 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 500000
+# RouteLLM max_completion_tokens: 32768
+# RouteLLM input_token_rate: 0.000002
+# RouteLLM output_token_rate: 0.000006
+# RouteLLM thinking: True
+base_model = "xai/grok-4.5"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+
+[limit]
+context = 500_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

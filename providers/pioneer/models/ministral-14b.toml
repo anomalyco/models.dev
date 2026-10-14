@@ -1,0 +1,12 @@
+# Source: https://api.pioneer.ai/v1/models (accessed 2026-09-11)
+base_model = "mistral/ministral-14b"
+
+[cost]
+input = 0.2
+output = 0.2
+cache_read = 0.2
+cache_write = 0.2
+
+[limit]
+context = 256_000
+output = 131_072

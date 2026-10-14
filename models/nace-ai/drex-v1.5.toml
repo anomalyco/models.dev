@@ -1,0 +1,31 @@
+# Sources:
+# - https://drex.nace.ai/docs/reference/models
+# - https://drex.nace.ai/docs/reference/limits
+# - https://drex.nace.ai/models (price: $0.00000005 per input token, output unbilled)
+# The 139,264-token context is the maximum published by the Drex catalog feed;
+# the state may be up to 131,072 tokens, and the limit applies to the state
+# plus the longest single question (questions are read one at a time).
+name = "Drex 1.5"
+type = "decision"
+description = "System One decision model for typed, calibrated probabilistic answers over text or structured state"
+release_date = "2026-09-28"
+last_updated = "2026-09-28"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 139_264
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[links]]
+label = "Documentation"
+url = "https://drex.nace.ai/docs"
+type = "docs"

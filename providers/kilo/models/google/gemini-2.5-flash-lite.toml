@@ -1,11 +1,9 @@
-name = "Google: Gemini 2.5 Flash Lite"
-release_date = "2025-06-17"
-last_updated = "2026-03-15"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
+base_model = "google/gemini-2.5-flash-lite"
+description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.1
@@ -15,9 +13,4 @@ cache_read = 0.01
 cache_write = 0.083333
 
 [limit]
-context = 1048576
-output = 65535
-
-[modalities]
-input = ["audio", "image", "pdf", "text", "video"]
-output = ["text"]
+output = 65_535

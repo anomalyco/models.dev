@@ -1,0 +1,15 @@
+base_model = "minimax/MiniMax-M2.5"
+
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": <value>}; reasoning is mandatory, "none" is rejected
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.075
+cache_write = 0.375
+
+[limit]
+context = 196608
+output = 65536

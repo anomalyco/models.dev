@@ -1,0 +1,16 @@
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi K2.7 Code TEE"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[limit]
+input = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

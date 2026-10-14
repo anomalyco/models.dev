@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-r1"
+name = "DeepSeek R1-0528"
+release_date = "2025-05-28"
+last_updated = "2025-05-28"
+
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": <value>}; reasoning is mandatory, "none" is rejected
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.66
+output = 2.6
+cache_read = 0.165
+cache_write = 0.825
+
+[limit]
+context = 164000
+output = 8192

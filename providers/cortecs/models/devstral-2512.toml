@@ -1,22 +1,12 @@
-name = "Devstral 2 2512"
-release_date = "2025-12-09"
-last_updated = "2025-12-09"
-knowledge = "2025-12"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-open_weights = true
-
+base_model = "mistral/devstral-2512"
+description = "Mistral coding agent model for repository tasks and software engineering workflows"
+structured_output = true
 
 [cost]
-input = 0
-output = 0
+input = 0.478
+output = 2.392
+cache_read = 0.045
 
 [limit]
-context = 262_000
-output = 262_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 256_000
+output = 256_000

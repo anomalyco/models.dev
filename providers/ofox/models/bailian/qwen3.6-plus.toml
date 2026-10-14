@@ -1,0 +1,13 @@
+# Sources:
+# - https://ofox.ai/models/bailian/qwen3.6-plus (pricing, context, capabilities; accessed 2026-08-06)
+# - https://ofox.ai/en/models (catalog listing bailian/qwen3.6-plus)
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen3.6-plus"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.05
+cache_write = 0.625

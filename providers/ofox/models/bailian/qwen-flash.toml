@@ -1,0 +1,18 @@
+# Sources:
+# - https://ofox.ai/models/bailian/qwen-flash (pricing, context, capabilities)
+# - https://api.ofox.ai/v2/models/catalog?include=provider_price&search=qwen-flash&limit=10
+#   pricing.input=0.000000022 → $0.022/MTok
+#   pricing.output=0.00000022 → $0.22/MTok
+#   pricing.input_cache_read=0.0000000043 → $0.0043/MTok
+#   pricing.input_cache_write=0.000000027 → $0.027/MTok
+# - https://help.aliyun.com/en/model-studio/deep-thinking (qwen-flash hybrid thinking)
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.022
+output = 0.22
+cache_read = 0.0043
+cache_write = 0.027

@@ -1,12 +1,5 @@
-name = "Gemma 3 27B"
-family = "gemma"
-release_date = "2025-03-25"
-last_updated = "2025-03-25"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
+# https://novita.ai/models/model-detail/google-gemma-3-27b-it
+base_model = "google/gemma-3-27b-it"
 
 [cost]
 input = 0.119
@@ -15,7 +8,3 @@ output = 0.2
 [limit]
 context = 98_304
 output = 16_384
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

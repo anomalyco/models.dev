@@ -1,0 +1,19 @@
+# Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
+# Cache hit: $0.028/MTok (Arcee correction, 2026-08-14).
+# No toggle: thinking.type=enabled|disabled is rejected by the live API.
+# Effort: reasoning_effort = high|max; low is rejected.
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash Latest"
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.028
+
+[limit]
+context = 1_048_576

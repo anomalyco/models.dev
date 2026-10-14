@@ -1,0 +1,16 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-11)
+# 320B-18B MoE, FP8, natively multimodal. 1M token context. 2B token monthly
+# quota per member. MIT license. Input is text and image on this host: no video
+# or PDF. Included in the membership, so no per-token price.
+# Effort: reasoning_effort = low|medium|high|max. NaN's reasoning table ("the
+# table is the contract", accessed 2026-09-28) lists glm5.3 and glm5.3-flash as
+# "Fully controllable"; max is the deepest. No off value, so no toggle.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]

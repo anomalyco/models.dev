@@ -1,0 +1,26 @@
+# Sources (accessed 2026-09-03):
+# https://developer.amd.com.cn/radeon/tokenfactory
+# Pricing from the Token Factory models API: input $0.15, output $0.47,
+# cache read $0.016 per MTok.
+# The AMD deployment accepts image input (GET /v1/models reports text+image
+# modalities) and image understanding was verified live: a rendered-digit
+# test image was read back correctly. The multimodal base entry is therefore
+# overridden to text+image (no video on this host).
+# Reasoning control verified live against POST /v1/chat/completions:
+# reasoning_effort is a validated enum low|medium|xhigh with xhigh the default
+# (values outside the enum return 400; no none, no toggle). No
+# reasoning_content is ever returned (stream + non-stream), so there is no
+# toggle and no interleaved channel on this host.
+base_model = "alibaba/qwen3.8-flash-next"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+]
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

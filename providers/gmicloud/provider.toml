@@ -1,4 +1,8 @@
 name = "GMI Cloud"
+# Reasoning HTTP format (accessed 2026-06-25): POST /v1/messages for Claude.
+# Native Messages uses thinking = { type = "enabled", budget_tokens = N };
+# GMI examples do not document disable, effort values, or numeric bounds.
+# https://docs.gmicloud.ai/model-quickstarts/text/anthropic-claude-opus-4-6
 env = ["GMICLOUD_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.gmi-serving.com/v1"

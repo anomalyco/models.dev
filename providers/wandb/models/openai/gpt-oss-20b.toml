@@ -1,22 +1,12 @@
+base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2026-03-12"
-attachment = false
-reasoning = false
-structured_output = true
-temperature = true
-tool_call = true
-open_weights = false
+description = "Lower latency Mixture-of-Experts model trained on OpenAI's Harmony response format with reasoning capabilities."
+reasoning_options = []
 
 [cost]
-input = 0.05
-output = 0.2
+input = 0.03
+output = 0.13
+cache_read = 0.03
 
 [limit]
-context = 131_072
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]

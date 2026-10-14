@@ -1,0 +1,115 @@
+name = "GPT-5.6 Sol"
+description = "Frontier GPT-5.6 model for complex professional work, coding, and agentic workflows"
+family = "gpt-sol"
+release_date = "2026-07-09"
+last_updated = "2026-07-09"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-02-16"
+open_weights = false
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 64.6
+metric = "resolve rate"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 88.8
+metric = "success rate"
+version = "2.1"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 72.7
+metric = "resolve rate"
+version = "1.1"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 94.6
+metric = "accuracy"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "FrontierMath"
+score = 89
+metric = "accuracy"
+dataset = "Tier 1-3"
+version = "v2"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 90.4
+metric = "accuracy"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 62.6
+metric = "success rate"
+version = "2.0"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "MMMU Pro"
+score = 83
+metric = "accuracy"
+variant = "no tools"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 52.7
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Toolathlon"
+score = 58
+metric = "success rate"
+source = "https://openai.com/index/gpt-5-6/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 58.9
+metric = "index score"
+variant = "max"
+version = "4.1"
+source = "https://artificialanalysis.ai/articles/gpt-5-6-has-landed"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index"
+score = 80
+metric = "index score"
+harness = "Codex"
+variant = "max"
+version = "1.1"
+source = "https://artificialanalysis.ai/articles/gpt-5-6-has-landed"
+date = "2026-07-09"

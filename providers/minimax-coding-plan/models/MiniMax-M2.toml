@@ -1,9 +1,11 @@
 name = "MiniMax-M2"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
 release_date = "2025-10-27"
 last_updated = "2025-10-27"
 attachment = false
 reasoning = true
+reasoning_options = []
 temperature = true
 tool_call = true
 open_weights = true
@@ -13,8 +15,8 @@ input = 0
 output = 0
 
 [limit]
-context = 196_608
-output = 128_000
+context = 204_800
+output = 131_072
 
 [modalities]
 input = ["text"]

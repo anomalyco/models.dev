@@ -1,0 +1,26 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.0000025
+# RouteLLM output_token_rate: 0.000015
+# RouteLLM cached_input_token_rate: 0.00000025
+# RouteLLM thinking: True
+base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["limit.input"]
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

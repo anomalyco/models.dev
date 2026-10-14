@@ -1,4 +1,9 @@
+# First-party API rejects max_tokens=131073 with range [1, 131072]
+# (POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions,
+# model qwen3.7-max, checked 2026-09-23).
+# Model card: https://www.qwencloud.com/models/qwen3.7-max
 name = "Qwen3.7 Max"
+description = "Qwen frontier model tuned for agent frameworks, coding assistants, and long tasks"
 family = "qwen"
 release_date = "2026-05-21"
 last_updated = "2026-05-21"
@@ -8,6 +13,12 @@ temperature = true
 tool_call = true
 open_weights = false
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
 input = 2.50
 output = 7.50
@@ -16,7 +27,7 @@ cache_write = 3.125
 
 [limit]
 context = 1_000_000
-output = 65_536
+output = 131_072
 
 [modalities]
 input = ["text"]

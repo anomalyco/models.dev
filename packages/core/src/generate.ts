@@ -39,7 +39,7 @@ export async function generateModels(directory: string) {
     absolute: true,
     followSymlinks: true,
   })) {
-    const modelID = path.relative(directory, modelPath).slice(0, -5);
+    const modelID = path.relative(directory, modelPath).split(path.sep).join("/").slice(0, -5);
     const toml = await import(modelPath, {
       with: {
         type: "toml",
@@ -89,12 +89,17 @@ async function generateProviders(
     }
 
     const modelsPath = path.join(directory, providerID, "models");
+    if (!existsSync(modelsPath)) {
+      throw new Error(`Provider "${providerID}" has no models`, {
+        cause: { providerPath },
+      });
+    }
     for await (const modelPath of new Bun.Glob("**/*.toml").scan({
       cwd: modelsPath,
       absolute: true,
       followSymlinks: true,
     })) {
-      const modelID = path.relative(modelsPath, modelPath).slice(0, -5);
+      const modelID = path.relative(modelsPath, modelPath).split(path.sep).join("/").slice(0, -5);
       const toml = await import(modelPath, {
         with: {
           type: "toml",
@@ -114,7 +119,10 @@ async function generateProviders(
           model.error.cause = { modelPath, toml: merged };
           throw model.error;
         }
-        provider.data.models[modelID] = normalizeModelCost(model.data);
+        provider.data.models[modelID] = {
+          ...normalizeModelCost(model.data),
+          canonical_model_id: baseModel.data.base_model,
+        };
         continue;
       }
       const model = AuthoredModel.safeParse(toml);
@@ -123,6 +131,11 @@ async function generateProviders(
         throw model.error;
       }
       provider.data.models[modelID] = normalizeModelCost(model.data);
+    }
+    if (Object.keys(provider.data.models).length === 0) {
+      throw new Error(`Provider "${providerID}" has no models`, {
+        cause: { providerPath },
+      });
     }
     result[providerID] = provider.data;
   }

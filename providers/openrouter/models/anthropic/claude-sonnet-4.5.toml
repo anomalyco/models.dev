@@ -1,10 +1,10 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "anthropic/claude-sonnet-4-5"
-temperature = true
-tool_call = true
-attachment = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 63999 }]
-reasoning = true
 structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 3

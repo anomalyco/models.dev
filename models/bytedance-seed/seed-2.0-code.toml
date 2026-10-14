@@ -1,0 +1,23 @@
+# Sources (accessed 2026-08-11):
+# - https://seed.bytedance.com/en/blog/seed-2-0-official-launch
+# - https://seed.bytedance.com/en/seed2
+# - https://www.volcengine.com/docs/82379/1330310
+name = "Seed 2.0 Code"
+description = "ByteDance Seed coding model for multimodal software engineering and long-running agents"
+family = "seed"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

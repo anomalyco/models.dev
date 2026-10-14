@@ -1,0 +1,23 @@
+# Sources:
+# - https://docs.x.ai/docs/models
+# - https://docs.x.ai/developers/models/grok-imagine-video-1.5
+# - https://docs.x.ai/docs/guides/video-generation
+
+name = "Grok Imagine Video 1.5"
+description = "Video model for image-to-video generation, editing, and extension workflows"
+family = "grok"
+release_date = "2026-05-30"
+last_updated = "2026-05-30"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_024
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

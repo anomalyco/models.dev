@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-fable-5"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 11
+output = 55
+cache_read = 1.1
+cache_write = 13.75

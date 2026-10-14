@@ -1,0 +1,21 @@
+name = "Gemini 3.5 Transcribe"
+description = "Speech transcription model for accurate audio-to-text and captioning workflows"
+family = "gemini"
+release_date = "2026-08-26"
+last_updated = "2026-08-26"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 2
+output = 12
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["audio"]
+output = ["text"]

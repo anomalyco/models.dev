@@ -1,0 +1,14 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# Native OpenAI effort levels verified through this single-member pool on 2026-09-08.
+# Effort: top-level reasoning_effort; levels shared by the pool members.
+base_model = "openai/gpt-5.4-mini"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.75
+output = 4.5
+cache_read = 0.075
+
+[interleaved]
+field = "reasoning_content"

@@ -1,4 +1,7 @@
 name = "Xpersona"
+# POST /v1/chat/completions accepts reasoning.effort set to "low", "medium",
+# "high", "xhigh", or "max"; no disable sentinel or token budget is documented.
+# https://www.xpersona.co/api/v1/openapi/ai-public (accessed 2026-06-25)
 env = ["XPERSONA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://www.xpersona.co/v1"

@@ -35,7 +35,17 @@ function stable(value: unknown): string {
 }
 
 describe("catalog generation", () => {
-  test("base_model can factor metadata without changing provider JSON", async () => {
+  test("rejects providers with no models", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/empty/provider.toml", providerToml("Empty"));
+
+      expect(generate(path.join(root, "providers"))).rejects.toThrow(
+        'Provider "empty" has no models',
+      );
+    });
+  });
+
+  test("base_model publishes canonical identity with the provider model", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
       await write(root, "providers/factored/provider.toml", providerToml("Factored"));
@@ -55,6 +65,7 @@ cache_read = 0.125
         root,
         "providers/factored/models/model.toml",
         `base_model = "lab/model"
+reasoning_options = []
 
 [cost]
 input = 1.25
@@ -85,9 +96,10 @@ cache_read = 0.125
         },
       ]);
 
-      expect(catalog.providers.factored?.models.model).toEqual(
-        catalog.providers.direct?.models.model,
-      );
+      expect(catalog.providers.factored?.models.model).toEqual({
+        ...catalog.providers.direct?.models.model,
+        canonical_model_id: "lab/model",
+      });
       expect(catalog.providers.factored?.models.model).not.toHaveProperty(
         "base_model",
       );
@@ -106,6 +118,7 @@ cache_read = 0.125
         "providers/provider/models/model.toml",
         `base_model = "lab/model"
 base_model_omit = ["limit.input", "structured_output"]
+reasoning_options = []
 
 [cost]
 input = 1.25
@@ -137,6 +150,7 @@ output = 32_000
         "providers/provider/models/model.toml",
         `base_model = "lab/model"
 open_weights = true
+reasoning_options = []
 
 [cost]
 input = 1.25
@@ -306,6 +320,7 @@ doc = "https://example.com/models"
 
 function modelMetadataToml() {
   return `name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
@@ -351,11 +366,13 @@ source = "https://example.com/benchmarks"
 
 function providerFieldsToml() {
   return `name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
 attachment = true
 reasoning = true
+reasoning_options = []
 temperature = false
 tool_call = true
 structured_output = true

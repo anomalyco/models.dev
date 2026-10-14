@@ -1,9 +1,11 @@
 name = "moonshotai/Kimi-K2.6"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi"
 release_date = "2026-04-21"
-last_updated = "2026-04-21"
+last_updated = "2026-06-15"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 temperature = true
 tool_call = true
 structured_output = true
@@ -13,9 +15,9 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
-input = 0.95
-output = 4.0
-cache_read = 0.16
+input = 0.77
+output = 3.4
+cache_read = 0.14
 
 [limit]
 context = 262_000

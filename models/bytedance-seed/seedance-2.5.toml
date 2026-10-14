@@ -1,0 +1,25 @@
+# Sources:
+# - https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5
+# Token limits are not applicable to this audio-video generation endpoint.
+# Zero follows existing non-token media catalog entries; it is not a measured token limit.
+name = "Seedance 2.5"
+description = "ByteDance multimodal audio-video model with up to 30-second single-pass generation, multi-round extension, reference inputs and timestamp-level editing."
+family = "seed"
+release_date = "2026-07-31"
+last_updated = "2026-10-04"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video", "audio"]
+
+[[links]]
+url = "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5"
+type = "announcement"

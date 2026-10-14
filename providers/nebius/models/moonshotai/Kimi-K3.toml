@@ -1,0 +1,34 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# - https://tokenfactory.nebius.com/model-catalog.md
+# Accessed 2026-07-27.
+# reasoning_effort verified live against api.tokenfactory.nebius.com/v1/chat/completions.
+# The gateway's generic schema accepts none/minimal/low/medium/high/xhigh/max (422 on other
+# input), but the model backend itself (sglang) rejects "minimal" and "xhigh" with a 400:
+# "Input should be 'none', 'low', 'medium', 'high' or 'max'". Only those 5 actually work.
+# Nebius does not offer a discounted prompt-cache tier for Kimi-K3: the models_info API has
+# no cache fields, the docs have no cache pricing for this model, and the public endpoint
+# page (tokenfactory.nebius.com) lists only "$3.00 / 1M In" and "$15.00 / 1M Out" with no
+# cache-hit rate. cache_read is set equal to input to reflect that cached and fresh input
+# tokens are billed identically, instead of leaving it unset (which downstream consumers
+# such as opencode were treating as $0/M, undercounting cost by ~18x on cache-heavy sessions).
+base_model = "moonshotai/kimi-k3"
+attachment = false
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3
+output = 15
+cache_read = 3
+
+[limit]
+context = 1_048_576
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

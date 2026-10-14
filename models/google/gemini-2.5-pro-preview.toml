@@ -1,0 +1,22 @@
+# Lab metadata carried over from providers/openrouter/models/google/gemini-2.5-pro-preview.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "Gemini 2.5 Pro Preview 06-05"
+description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
+family = "gemini"
+release_date = "2025-06-05"
+last_updated = "2025-06-05"
+knowledge = "2025-01-31"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["pdf", "image", "text", "audio"]
+output = ["text"]

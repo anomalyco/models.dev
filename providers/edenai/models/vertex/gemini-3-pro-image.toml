@@ -1,0 +1,15 @@
+base_model = "google/gemini-3-pro-image"
+name = "Nano Banana Pro (Vertex AI)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high"]
+
+[cost]
+input = 2
+output = 12
+reasoning = 12
+cache_read = 0.2
+cache_write = 0.375
+input_audio = 2

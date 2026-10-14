@@ -1,5 +1,17 @@
 name = "OpenRouter"
 env = ["OPENROUTER_API_KEY"]
 npm = "@openrouter/ai-sdk-provider"
+# Raw Chat: `reasoning.enabled` toggles, `reasoning.effort` selects effort,
+# `reasoning.max_tokens` sets a budget, and top-level `reasoning_effort` is an alias.
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens (accessed 2026-06-25)
+# Raw Responses: POST `/responses` uses `reasoning.effort`.
+# https://openrouter.ai/docs/api/reference/responses/reasoning (accessed 2026-06-25)
+# Raw Anthropic Messages: POST `/messages` uses `thinking.type`,
+# `thinking.budget_tokens`, and `output_config.effort`.
+# https://openrouter.ai/docs/api/api-reference/anthropic-messages/create-messages (accessed 2026-06-25)
+# Live `GET /api/v1/models` reasoning metadata is model-specific; use
+# `provider.require_parameters = true` to exclude routes that ignore requested controls.
+# https://openrouter.ai/api/v1/models (accessed 2026-06-25)
+# https://openrouter.ai/docs/guides/routing/provider-selection#requiring-providers-to-support-all-parameters (accessed 2026-06-25)
 api = "https://openrouter.ai/api/v1"
 doc = "https://openrouter.ai/models"

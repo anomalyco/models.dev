@@ -1,7 +1,8 @@
 base_model = "minimax/MiniMax-M2.5-highspeed"
 name = "MiniMax M2.5 High Speed"
-release_date = "2026-02-12"
-open_weights = false
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.6

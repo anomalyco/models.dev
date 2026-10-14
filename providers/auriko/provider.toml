@@ -1,5 +1,14 @@
 name = "Auriko"
 env = ["AURIKO_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (sources accessed 2026-06-25):
+# POST https://api.auriko.ai/v1/chat/completions accepts top-level
+# reasoning_effort = "low" | "medium" | "high" | "xhigh" | "max" | "off";
+# "off" disables thinking. Auriko translates values per model/provider and may
+# clamp them with a warning. No caller-specified reasoning-token budget exists;
+# translated budgets are internal, and budget fields in extensions are replaced.
+# Provider extension aliases google, google_ai, googleai, and gemini are equal.
+# https://docs.auriko.ai/guides/extensions-and-thinking
+# https://docs.auriko.ai/api-reference/chat-completions
 api = "https://api.auriko.ai/v1"
 doc = "https://docs.auriko.ai"

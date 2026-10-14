@@ -1,0 +1,11 @@
+# https://ofox.ai/en/models/bailian/qwen3.5-plus
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.5-plus"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.4
+output = 2.4
+cache_read = 0.04
+cache_write = 0.4

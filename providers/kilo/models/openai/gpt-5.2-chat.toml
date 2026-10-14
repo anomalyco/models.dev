@@ -1,10 +1,13 @@
 name = "OpenAI: GPT-5.2 Chat"
-release_date = "2025-12-11"
-last_updated = "2026-03-15"
+description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
+family = "gpt"
+release_date = "2025-12-10"
+last_updated = "2025-12-10"
 attachment = true
 reasoning = false
 temperature = false
 tool_call = true
+structured_output = true
 open_weights = false
 
 [cost]
@@ -13,9 +16,9 @@ output = 14
 cache_read = 0.175
 
 [limit]
-context = 128000
-output = 16384
+context = 128_000
+output = 32_000
 
 [modalities]
-input = ["image", "pdf", "text"]
+input = ["pdf", "image", "text"]
 output = ["text"]

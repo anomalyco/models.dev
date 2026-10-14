@@ -1,0 +1,14 @@
+base_model = "google/gemini-4-argon"
+description = "Gemini 4 Argon is Google's flagship reasoning model, built for complex software engineering, deep mathematical and scientific problem solving, and autonomous multi-step agents. Google trained it to keep context across..."
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 2
+output = 10
+reasoning = 10
+cache_read = 0.1
+cache_write = 0.1875

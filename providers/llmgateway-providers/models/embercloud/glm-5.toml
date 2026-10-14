@@ -1,0 +1,19 @@
+base_model = "zhipuai/glm-5"
+name = "GLM-5 (EmberCloud)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.72
+output = 2.3
+cache_read = 0.144
+
+[limit]
+context = 203_000
+output = 131_000

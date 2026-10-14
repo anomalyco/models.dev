@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = low|medium|high
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-14: low|medium|high → 200; none|minimal|xhigh|max → 400.
+# Reasoning side channel: message.reasoning_content
+base_model = "openai/gpt-oss-120b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.08

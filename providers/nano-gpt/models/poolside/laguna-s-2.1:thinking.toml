@@ -1,0 +1,12 @@
+base_model = "poolside/laguna-s-2.1"
+name = "Laguna S 2.1 Thinking"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.01
+
+[limit]
+input = 1_048_576
+output = 131_072

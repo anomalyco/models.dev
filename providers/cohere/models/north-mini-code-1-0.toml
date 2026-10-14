@@ -1,4 +1,9 @@
 base_model = "cohere/north-mini-code-1-0"
+# Model-specific reasoning HTTP values (accessed 2026-06-25):
+# OpenAI compatibility reasoning_effort = "none"|"high"; "low" and "medium"
+# are explicitly unsupported. Token-budget control is not documented.
+# Sources:
+# https://docs.cohere.com/docs/compatibility-api
 
 [[reasoning_options]]
 type = "effort"

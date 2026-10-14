@@ -1,0 +1,48 @@
+# Toggle: reasoning.enabled = true|false. Effort (reasoning_effort /
+# reasoning.effort) and reasoning.max_tokens are also accepted and passed
+# through, but their effect depends on the routed model, so only the toggle is
+# listed (auto-router convention: reliable caller controls only). On models
+# whose upstream makes reasoning mandatory, a disable request is served at the
+# model's lowest effort instead of failing
+# (https://docs.standardcompute.com/reasoning, accessed 2026-10-13).
+# Verified against the live endpoint (https://api.stdcmpt.com/v1/chat/completions):
+# tool_call + structured_output 2026-07-17; reasoning pass-through, image
+# attachment and streaming reasoning_details 2026-08-23/24.
+# Limits (https://docs.standardcompute.com/budgets-and-limits, accessed
+# 2026-10-13, and the gateway's catalog invariant): every model the router may
+# select declares a >= 1,000,000-token context window; input is capped at
+# ~850,000 tokens per request and output at 50,000 tokens on paid plans
+# (free trial: ~500,000 input / 32,768 output). The 50,000 output ceiling
+# replaced the earlier 24,576 cap on 2026-08-27.
+# release_date is the public launch month as stated by the operator.
+name = "Standard Compute"
+description = "Flat-rate smart-routing gateway: one model id, each request routed across the customer's enabled models from a curated ~1M-context catalog (Claude, GPT, Gemini, DeepSeek, GLM, Qwen, Kimi, MiniMax, Grok, MiMo) or pinned to a user-selected model"
+family = "auto"
+release_date = "2026-03-01"
+last_updated = "2026-10-13"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_details"
+
+# Subscription pricing (fixed monthly plans, https://standardcompute.com/pricing,
+# accessed 2026-10-13) — no per-token billing, hence cost 0 per the registry
+# convention for subscription providers.
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+context = 1_000_000
+input = 850_000
+output = 50_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

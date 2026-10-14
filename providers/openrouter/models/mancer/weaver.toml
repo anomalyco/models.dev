@@ -1,4 +1,5 @@
 name = "Weaver (alpha)"
+description = "General-purpose chat model for instruction following, writing, and analysis"
 family = "alpha"
 release_date = "2023-08-02"
 last_updated = "2023-08-02"
@@ -11,12 +12,12 @@ knowledge = "2023-06-30"
 open_weights = false
 
 [cost]
-input = 0.75
-output = 1
+input = 0.4
+output = 0.75
 
 [limit]
 context = 8_000
-output = 2_000
+output = 6_000
 
 [modalities]
 input = ["text"]

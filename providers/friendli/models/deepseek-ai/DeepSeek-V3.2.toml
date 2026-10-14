@@ -1,0 +1,22 @@
+# Toggle: chat_template_kwargs.enable_thinking = true | false
+# https://friendli.ai/docs/guides/reasoning
+# Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
+base_model = "deepseek/deepseek-v3.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.5
+output = 1.5
+cache_read = 0.25
+
+[limit]
+context = 163_840

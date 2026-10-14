@@ -1,0 +1,26 @@
+name = "Atria Dawn Preview (Atria)"
+description = "Preview model for early access evaluation, prototyping, and compatibility testing"
+release_date = "2026-09-12"
+last_updated = "2026-09-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

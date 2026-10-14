@@ -1,0 +1,19 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro (DeepInfra)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 1.3
+output = 2.6
+cache_read = 0.1
+
+[limit]
+context = 1_048_576
+output = 64_000

@@ -1,0 +1,22 @@
+# Toggle: $.reasoning_effort = "none" disables thinking; any other accepted
+# value (or omitting the field) leaves it on. The gateway maps it to the
+# deployment's thinking switch.
+# https://docs.llmgateway.io/features/reasoning
+base_model = "zhipuai/glm-4.7"
+name = "GLM-4.7 (EmberCloud)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.38
+output = 1.98
+cache_read = 0.19
+
+[limit]
+context = 200_000
+output = 131_000

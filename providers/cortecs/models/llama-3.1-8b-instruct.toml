@@ -1,0 +1,13 @@
+base_model = "meta/llama-3.1-8b-instruct"
+description = "Optimized for dialogue, this LLM by Meta outperforms other open-source chat models in benchmarks while prioritizing helpfulness and safety."
+reasoning = true
+temperature = false
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.167
+output = 0.167
+
+[limit]
+output = 128_000

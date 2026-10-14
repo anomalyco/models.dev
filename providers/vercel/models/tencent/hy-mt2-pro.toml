@@ -1,0 +1,21 @@
+name = "Tencent Hy-MT2-Pro"
+description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
+family = "Hy"
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.074
+output = 0.295
+
+[limit]
+context = 8_000
+output = 4_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

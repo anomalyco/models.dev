@@ -1,4 +1,5 @@
 name = "Gemini 3.1 Flash Lite Preview"
+description = "Legacy model retained for compatibility with older integrations"
 family = "gemini-flash-lite"
 release_date = "2026-03-03"
 last_updated = "2026-03-03"
@@ -10,6 +11,10 @@ structured_output = true
 knowledge = "2025-01"
 open_weights = false
 status = "deprecated"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
 
 [cost]
 input = 0.25

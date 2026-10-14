@@ -1,0 +1,18 @@
+base_model = "zhipuai/glm-5"
+name = "GLM-5 (Alibaba Cloud)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.573
+output = 2.58
+
+[limit]
+context = 202_752
+output = 16_384

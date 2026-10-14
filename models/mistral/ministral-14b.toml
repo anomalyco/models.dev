@@ -1,0 +1,26 @@
+# Sources:
+# https://mistral.ai/news/mistral-3/
+# https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512
+name = "Ministral 14B"
+description = "Compact multimodal Mistral model for local assistants, edge agents, and efficient tool use"
+family = "ministral"
+release_date = "2025-12-02"
+last_updated = "2025-12-02"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512"

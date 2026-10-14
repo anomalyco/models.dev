@@ -1,20 +1,15 @@
-name = "Qwen: Qwen3 Next 80B A3B Thinking"
-release_date = "2025-09-11"
-last_updated = "2026-03-15"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
+description = "Qwen reasoning model for deliberate problem solving, math, and coding"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
 
 [cost]
-input = 0.0975
-output = 0.78
+input = 0.15
+output = 1.2
 
 [limit]
-context = 131072
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 262_144
+output = 235_929

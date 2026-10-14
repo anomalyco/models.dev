@@ -1,0 +1,16 @@
+# Sources:
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon
+# Global-endpoint Standard pricing. Promotional pricing through 2026-11-30 is
+# delivered as 50% credits back on net spend; from 2026-12-01 the published
+# global rates are $4.00 input, $20.00 output, and $0.20 cache read.
+# Non-global (us, eu) endpoints cost 10% more: $2.20 input, $11.00 output,
+# and $0.11 cache read during the promotion, then $4.40 / $22.00 / $0.22.
+base_model = "google/gemini-4-argon"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.10
+input_audio = 2.00

@@ -1,0 +1,18 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image', 'video']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.000002
+# RouteLLM output_token_rate: 0.000006
+# RouteLLM thinking: True
+base_model = "alibaba/qwen3.8-max"
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

@@ -1,0 +1,15 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+base_model = "deepseek/deepseek-v4-pro"
+
+reasoning_options = []
+
+[cost]
+input = 1.78812
+output = 3.57624
+
+[limit]
+output = 65536
+
+[interleaved]
+field = "reasoning_content"

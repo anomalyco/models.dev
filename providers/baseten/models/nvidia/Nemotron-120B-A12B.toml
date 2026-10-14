@@ -1,3 +1,7 @@
+# Opt in with chat_template_args.enable_thinking=true. Baseten documents no
+# explicit false behavior, effort values, or reasoning-token budget.
+# https://docs.baseten.co/inference/model-apis/reasoning
+
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron Super"
 structured_output = true
@@ -10,7 +14,7 @@ type = "toggle"
 field = "reasoning_content"
 
 [cost]
-input = 0.06
+input = 0.3
 output = 0.75
 cache_read = 0.06
 

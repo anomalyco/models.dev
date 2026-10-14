@@ -2,6 +2,9 @@ base_model = "minimax/MiniMax-M2.7"
 name = "Minimax M2.7"
 attachment = true
 
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
 input = 0.3
 output = 1.2

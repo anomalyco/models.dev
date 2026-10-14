@@ -1,0 +1,11 @@
+# Vispark Lab — first-party host for Vispark Vision models.
+# API: https://api.lab.vispark.in/v1
+# Endpoints: GET /v1/models, POST /v1/chat/completions, POST /v1/completions
+# Auth: X-API-Key header or Authorization: Bearer <key> (keys like vl_...)
+# Platform: https://lab.vispark.in/ — get API key: https://lab.vispark.in/profile#api
+# Vision docs: https://lab.vispark.in/#vision — company: https://vispark.in
+name = "Vispark"
+npm = "@ai-sdk/openai-compatible"
+env = ["VISPARK_LAB_API_KEY"]
+api = "https://api.lab.vispark.in/v1"
+doc = "https://lab.vispark.in/#vision"

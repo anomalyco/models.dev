@@ -1,0 +1,10 @@
+base_model = "mistral/mistral-large-latest"
+structured_output = true
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.2
+
+[modalities]
+input = ["text", "image", "pdf"]

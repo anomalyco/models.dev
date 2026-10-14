@@ -1,0 +1,22 @@
+base_model = "tencent/hy3"
+name = "Hy3 Free"
+family = "hy3-free"
+structured_output = true
+status = "deprecated"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 190_000
+output = 64_000

@@ -1,0 +1,15 @@
+# Sources:
+# https://ofox.ai/models/bailian/qwen3-max
+# https://api.ofox.ai/v1/models/bailian/qwen3-max
+# https://www.alibabacloud.com/help/en/model-studio/deep-thinking
+# Pricing (USD/MTok): input 0.36, output 1.43, cache_read 0.072
+# Toggle: enable_thinking true|false (hybrid; default off)
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen3-max"
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.36
+output = 1.43
+cache_read = 0.072

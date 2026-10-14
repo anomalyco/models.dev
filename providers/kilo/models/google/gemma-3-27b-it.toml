@@ -1,21 +1,11 @@
-name = "Google: Gemma 3 27B"
-release_date = "2025-03-12"
-last_updated = "2026-03-15"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "google/gemma-3-27b-it"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+structured_output = true
 
 [cost]
-input = 0.03
-output = 0.11
-cache_read = 0.02
+input = 0.07
+output = 0.275
+cache_read = 0.04
 
 [limit]
-context = 128000
-output = 65536
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]
+output = 117_964

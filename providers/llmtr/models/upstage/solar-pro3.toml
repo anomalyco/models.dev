@@ -1,0 +1,17 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# Effort: $.reasoning_effort
+# Values follow the first-party Upstage baseline. LLMTR's gateway additionally
+# accepts `none` and `minimal` (its per-model 400 reads
+# `Supported: none, minimal, low, medium, high`), but measured against
+# POST /v1/chat/completions on 2026-08-16 they are not distinct controls:
+# `none`, `minimal` and `low` all return no reasoning tokens, so they are three
+# spellings of the same off path. `medium` and `high` both return reasoning.
+base_model = "upstage/solar-pro3"
+
+[cost]
+input = 0.15
+output = 0.6
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]

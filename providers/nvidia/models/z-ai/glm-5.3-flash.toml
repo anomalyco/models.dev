@@ -1,0 +1,14 @@
+# Hosted NIM: model listed at GET https://integrate.api.nvidia.com/v1/models
+# (verified 2026-09-12). Thinking is always enabled; reasoning budget controlled
+# with top-level `reasoning_effort`: low|high|max, default max.
+# https://docs.nvidia.com/nim/vision-language-models/latest/get-started/advanced/get-started-glm-5-3-flash.html
+base_model = "zhipuai/glm-5.3-flash"
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.0
+output = 0.0

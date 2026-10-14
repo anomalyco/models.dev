@@ -1,0 +1,19 @@
+# https://docs.cline.bot/getting-started/clinepass
+# Lab Alibaba Qwen3.7 Plus: enable_thinking + thinking_budget (providers/alibaba/models/qwen3.7-plus.toml)
+# ClinePass OpenAI-compatible Chat Completions path: peers (OpenRouter) expose on/off only, not budget_tokens.
+# Toggle: enable_thinking / reasoning enabled|disabled
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.04
+cache_write = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 1.2
+output = 4.8
+cache_read = 0.12
+cache_write = 1.5

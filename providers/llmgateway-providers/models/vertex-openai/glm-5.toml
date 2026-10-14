@@ -1,0 +1,19 @@
+base_model = "zhipuai/glm-5"
+name = "GLM-5 (Vertex AI (OpenAI-compatible))"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.1
+
+[limit]
+context = 202_752
+output = 32_768

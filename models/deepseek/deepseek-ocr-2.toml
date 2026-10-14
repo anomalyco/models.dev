@@ -1,0 +1,16 @@
+name = "DeepSeek OCR 2"
+description = "High-accuracy OCR model for extracting text from documents, screenshots, receipts, and natural scenes"
+release_date = "2026-01-27"
+last_updated = "2026-01-27"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

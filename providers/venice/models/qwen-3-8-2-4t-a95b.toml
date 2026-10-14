@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+name = "Qwen 3.8 2.4T"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+last_updated = "2026-08-13"
+reasoning_options = []
+
+[cost]
+input = 2.5
+output = 7.5
+cache_read = 0.3125
+
+[limit]
+output = 65_536

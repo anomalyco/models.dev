@@ -1,0 +1,11 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (SCX.ai (Turbo))"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.17
+output = 0.55

@@ -1,0 +1,12 @@
+base_model = "deepseek/deepseek-v3.1"
+name = "DeepSeek V3.1"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 1.5
+
+[limit]
+context = 164_000
+output = 41_000

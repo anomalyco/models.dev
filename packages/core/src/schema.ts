@@ -1,8 +1,9 @@
 import { z } from "zod";
 
 import { ModelFamily } from "./family";
+import { MODEL_TYPES } from "./filter";
 
-type JsonValue =
+export type JsonValue =
   | string
   | number
   | boolean
@@ -10,7 +11,7 @@ type JsonValue =
   | { [key: string]: JsonValue }
   | JsonValue[];
 
-const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
+export const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
   z.union([
     z.string(),
     z.number(),
@@ -29,7 +30,7 @@ const ReasoningEffortValue = z.preprocess(
   ]),
 );
 
-const ReasoningOption = z
+export const ReasoningOption = z
   .discriminatedUnion("type", [
     z
       .object({
@@ -89,7 +90,7 @@ const Cost = z.object({
     .number()
     .min(0, "Audio output price cannot be negative")
     .optional(),
-});
+}).strict();
 
 const CostTier = Cost.extend({
   tier: z
@@ -103,18 +104,52 @@ const CostTier = Cost.extend({
 const AuthoredCost = Cost.extend({
   context_over_200k: z.never().optional(),
   tiers: z.array(CostTier).optional(),
-});
+}).strict();
 
 const OutputCost = Cost.extend({
   context_over_200k: Cost.optional(),
   tiers: z.array(CostTier).optional(),
-});
+}).strict();
 
-const DateString = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-  message: "Must be in YYYY-MM or YYYY-MM-DD format",
-});
+export const DateString = z
+  .string()
+  .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
+    message: "Must be in YYYY-MM or YYYY-MM-DD format",
+  })
+  .refine(
+    (value) => {
+      const [year, month, day] = value.split("-").map(Number);
+      if (month === undefined || month < 1 || month > 12) return false;
+      if (day === undefined) return true;
+
+      const leapYear =
+        year !== undefined &&
+        year % 4 === 0 &&
+        (year % 100 !== 0 || year % 400 === 0);
+      const daysInMonth = [
+        31,
+        leapYear ? 29 : 28,
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+      ];
+      return day >= 1 && day <= daysInMonth[month - 1]!;
+    },
+    {
+      message: "Must be a valid calendar date",
+    },
+  );
 
 const Modality = z.enum(["text", "audio", "image", "video", "pdf"]);
+
+export const ModelType = z.enum(MODEL_TYPES);
 
 const Modalities = z
   .object({
@@ -187,7 +222,9 @@ export const BenchmarkResult = z
 
 const ModelMetadataBase = z.object({
   id: z.string(),
+  type: ModelType.optional(),
   name: z.string().min(1, "Model name cannot be empty"),
+  description: z.string().min(1, "Model description cannot be empty"),
   family: ModelFamily.optional(),
   attachment: z.boolean().optional(),
   reasoning: z.boolean().optional(),
@@ -212,7 +249,9 @@ export type ModelMetadata = z.infer<typeof ModelMetadata>;
 
 const ModelBase = z.object({
   id: z.string(),
+  type: ModelType.optional(),
   name: z.string().min(1, "Model name cannot be empty"),
+  description: z.string().min(1, "Model description cannot be empty"),
   family: ModelFamily.optional(),
   attachment: z.boolean(),
   reasoning: z.boolean(),
@@ -230,12 +269,7 @@ const ModelBase = z.object({
     .optional(),
   structured_output: z.boolean().optional(),
   temperature: z.boolean().optional(),
-  knowledge: z
-    .string()
-    .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-      message: "Must be in YYYY-MM or YYYY-MM-DD format",
-    })
-    .optional(),
+  knowledge: DateString.optional(),
   release_date: DateString,
   last_updated: DateString,
   modalities: Modalities,
@@ -246,18 +280,22 @@ const ModelBase = z.object({
     .object({
       modes: z
         .record(
-          z.object({
-            cost: Cost.optional(),
-            provider: z
-              .object({
-                body: z.record(JsonValue).optional(),
-                headers: z.record(z.string()).optional(),
-              })
-              .optional(),
-          }),
+          z
+            .object({
+              cost: Cost.optional(),
+              provider: z
+                .object({
+                  body: z.record(JsonValue).optional(),
+                  headers: z.record(z.string()).optional(),
+                })
+                .strict()
+                .optional(),
+            })
+            .strict(),
         )
         .optional(),
     })
+    .strict()
     .optional(),
   provider: z
     .object({
@@ -267,11 +305,34 @@ const ModelBase = z.object({
       body: z.record(JsonValue).optional(),
       headers: z.record(z.string()).optional(),
     })
+    .strict()
     .optional(),
 });
 
-function refineModel<T extends z.ZodTypeAny>(schema: T) {
+function refineModel<
+  Output extends z.infer<typeof ModelShape> | z.infer<typeof AuthoredModelShape>,
+  Def extends z.ZodTypeDef,
+  Input,
+>(schema: z.ZodType<Output, Def, Input>) {
   return schema
+    .refine(
+      (data) => {
+        return data.reasoning !== true || data.reasoning_options !== undefined;
+      },
+      {
+        message: "Must set reasoning_options when reasoning is true",
+        path: ["reasoning_options"],
+      },
+    )
+    .refine(
+      (data) => {
+        return data.reasoning !== false || data.reasoning_options === undefined;
+      },
+      {
+        message: "Cannot set reasoning_options when reasoning is false",
+        path: ["reasoning_options"],
+      },
+    )
     .refine(
       (data) => {
         return !(
@@ -303,6 +364,8 @@ function refineModel<T extends z.ZodTypeAny>(schema: T) {
 export const ModelShape = z
   .object({
     ...ModelBase.shape,
+    /** Canonical lab/model ID for this provider offering, when linked to model metadata. */
+    canonical_model_id: z.string().optional(),
     cost: OutputCost.optional(),
   })
   .strict();
@@ -341,6 +404,7 @@ export const Provider = z
       const isOpenAI = data.npm === "@ai-sdk/openai";
       const isOpenAIcompatible = data.npm === "@ai-sdk/openai-compatible";
       const isOpenrouter = data.npm === "@openrouter/ai-sdk-provider";
+      const isMergeGateway = data.npm === "merge-gateway-ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
       const isKiro = data.npm === "kiro-acp-ai-provider";
       const hasApi = data.api !== undefined;
@@ -350,6 +414,8 @@ export const Provider = z
         (isOpenAIcompatible && hasApi) ||
         // openrouter: must have api
         (isOpenrouter && hasApi) ||
+        // Merge Gateway: native provider with an OpenAI-compatible fallback
+        (isMergeGateway && hasApi) ||
         // anthropic: api optional (always allowed)
         isAnthropic ||
         // openai: api optional (always allowed)
@@ -360,6 +426,7 @@ export const Provider = z
         (!isOpenAI &&
           !isOpenAIcompatible &&
           !isOpenrouter &&
+          !isMergeGateway &&
           !isAnthropic &&
           !isKiro &&
           !hasApi)
@@ -367,7 +434,7 @@ export const Provider = z
     },
     {
       message:
-        "'api' is required for openai-compatible and openrouter, optional for anthropic, openai, and kiro, forbidden otherwise",
+        "'api' is required for openai-compatible, openrouter, and Merge Gateway; optional for anthropic, openai, and kiro; forbidden otherwise",
       path: ["api"],
     },
   );

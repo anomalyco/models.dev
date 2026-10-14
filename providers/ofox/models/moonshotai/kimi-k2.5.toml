@@ -1,0 +1,11 @@
+# https://ofox.ai/en/models/moonshotai/kimi-k2.5
+# https://api.ofox.ai/v1/models (id moonshotai/kimi-k2.5)
+# Pricing: $0.60/M input, $3/M output, $0.10/M cache read (USD)
+# Toggle: thinking.type = enabled|disabled (Moonshot K2.5 lab API; Ofox supported_parameters includes reasoning)
+base_model = "moonshotai/kimi-k2.5"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.6
+output = 3
+cache_read = 0.1

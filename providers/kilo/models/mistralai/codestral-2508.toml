@@ -1,20 +1,15 @@
-name = "Mistral: Codestral 2508"
-release_date = "2025-08-01"
-last_updated = "2025-08-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "mistral/codestral-2508"
+description = "Mistral coding model for code completion, generation, and developer workflows"
+attachment = true
 
 [cost]
 input = 0.3
 output = 0.9
+cache_read = 0.03
 
 [limit]
-context = 256000
-output = 51200
+context = 256_000
+output = 204_800
 
 [modalities]
-input = ["text"]
-output = ["text"]
+input = ["text", "pdf"]

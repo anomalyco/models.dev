@@ -1,0 +1,15 @@
+base_model = "mistral/mistral-large-latest"
+name = "Mistral Large Latest (Mistral AI)"
+attachment = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 4
+output = 12
+
+[limit]
+context = 128_000
+
+[modalities]
+input = ["text"]

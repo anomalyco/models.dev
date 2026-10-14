@@ -1,0 +1,26 @@
+# Sources:
+# - https://docs.x.ai/docs/models
+# - https://docs.x.ai/developers/models/grok-imagine-image-2.0
+# - https://docs.x.ai/docs/guides/image-generation
+# - https://x.ai/news/grok-imagine-image-2
+# Pricing: $0.04 per image (not token-based; no [cost] authored)
+# Release: 2026-08-07 (GA as Quality Mode; API model id grok-imagine-image-2.0)
+
+name = "Grok Imagine Image 2.0"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "grok"
+release_date = "2026-08-07"
+last_updated = "2026-08-07"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 8_000
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

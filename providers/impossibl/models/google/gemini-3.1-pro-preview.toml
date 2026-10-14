@@ -1,0 +1,17 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "google/gemini-3.1-pro-preview"
+
+[cost]
+input = 2.00
+output = 12.00
+cache_read = 0.20
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 4.00
+output = 18.00
+cache_read = 0.40
+
+[[reasoning_options]]
+type = "effort" # API: {"generationConfig":{"thinkingConfig":{"thinkingLevel":"low"}}}
+values = ["low", "medium", "high"]

@@ -1,0 +1,10 @@
+base_model = "deepseek/deepseek-v4-pro-0813"
+description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
+open_weights = true
+# The model card documents low, high, and max reasoning effort levels.
+# https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813#chat-template
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.32
+output = 3.96

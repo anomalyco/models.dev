@@ -1,0 +1,19 @@
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2.9
+output = 14
+cache_read = 0.3
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]

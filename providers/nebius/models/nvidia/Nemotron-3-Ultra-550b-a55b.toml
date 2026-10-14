@@ -1,0 +1,28 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/model-catalog.md (pricing)
+# - https://tokenfactory.nebius.com/api/public/models_info (context, max length)
+# Accessed 2026-08-29.
+# Effort: reasoning_effort = none|high (none = thinking off). Probed live against
+# api.tokenfactory.nebius.com chat completions on 2026-08-29: thinking is ON by default,
+# reasoning_effort=none returns zero reasoning tokens, and high enables thinking. Other
+# accepted non-none levels did not show a distinct graded effect at probe scale, so they
+# are not exposed. The undocumented chat_template_kwargs.enable_thinking kwarg is also
+# forwarded, but reasoning_effort is the host's documented control.
+# Served window: models_info max_model_len = 1_048_576 with no separate output cap, so
+# context and output both take the full served window.
+
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 1
+output = 3
+cache_read = 1
+
+[limit]
+context = 1_048_576
+output = 1_048_576

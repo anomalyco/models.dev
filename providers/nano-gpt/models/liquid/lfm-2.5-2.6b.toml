@@ -1,0 +1,28 @@
+name = "LFM2.5 2.6B"
+description = "Liquid AI's compact 2.6B reasoning model for agent workflows, data extraction, RAG, and long-context processing. It supports tool calling and structured output, but Liquid advises against using it for agentic coding. Warning: prompts and responses may be logged and used for model training or service improvement; do not send sensitive data."
+family = "liquid"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.05
+
+[limit]
+context = 128_000
+input = 128_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

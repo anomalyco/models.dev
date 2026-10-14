@@ -1,0 +1,13 @@
+# Sources: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock
+# https://platform.claude.com/docs/en/about-claude/pricing
+# Bedrock regional endpoints carry a 10% pricing premium over global endpoints.
+# Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel).
+base_model = "anthropic/claude-opus-5-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+name = "Claude Opus 5.5 (EU)"
+
+[cost]
+input = 4.4
+output = 22
+cache_read = 0.22
+cache_write = 5.5

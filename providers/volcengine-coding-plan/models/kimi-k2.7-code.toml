@@ -1,0 +1,19 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-08-26). Subscription tier: no per-token price.
+# reasoning_options = [] matches the lab (providers/moonshotai) and the other
+# relays: thinking is always on with no caller control. POST /api/coding/v3 does
+# accept reasoning_effort here, but acceptance is not effect -- over n=3 runs per
+# level on a hard arithmetic prompt, reasoning_content length came back
+# minimal 707/697/917, high 823/892/755, max 712/861/690, i.e. fully overlapping,
+# so no graded control is declared.
+base_model = "moonshotai/kimi-k2.7-code"
+
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

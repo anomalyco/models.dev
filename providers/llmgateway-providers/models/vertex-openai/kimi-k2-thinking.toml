@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k2-thinking"
+name = "Kimi K2 Thinking (Vertex AI (OpenAI-compatible))"
+structured_output = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.6
+output = 2.5
+cache_read = 0.06
+
+[limit]
+output = 32_768

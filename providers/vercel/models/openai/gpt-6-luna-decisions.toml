@@ -1,0 +1,19 @@
+type = "decision"
+name = "GPT-6 Luna Decisions"
+description = "GPT-6 Luna Decisions evaluates classification and scoring questions against shared text and image input using OpenAI's Decisions API. It supports predicate, choice, and score questions with probabilities and confidence values."
+family = "gpt"
+release_date = "2026-10-06"
+last_updated = "2026-10-06"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_050_000
+input = 1_050_000
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]

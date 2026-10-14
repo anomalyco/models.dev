@@ -1,0 +1,19 @@
+# Sources (accessed 2026-09-20):
+# AIHubMix catalog row model_id=gemini-3.5-flash-lite publishes
+# pricing={"input":0.3,"output":2.499999,"cache_read":0.03}.
+# Preserve the host's exact published price; Google's 2.50 is a different host.
+# https://aihubmix.com/api/v1/models?type=llm (USD per million tokens)
+# https://ai.google.dev/gemini-api/docs/thinking
+# Effort: reasoning_effort = minimal|low|medium|high on /v1/chat/completions.
+# Gemini native: generationConfig.thinkingConfig.thinkingLevel uses the corresponding uppercase levels.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "google/gemini-3.5-flash-lite"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.3
+output = 2.499999
+cache_read = 0.03

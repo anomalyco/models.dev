@@ -1,20 +1,11 @@
-name = "Meta: Llama 3.1 8B Instruct"
-release_date = "2024-07-23"
-last_updated = "2025-12-23"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "meta/llama-3.1-8b-instruct"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+structured_output = true
 
 [cost]
 input = 0.02
-output = 0.05
+output = 0.04
 
 [limit]
-context = 16384
-output = 16384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 131_072
+output = 117_964

@@ -1,0 +1,48 @@
+# Model id matches Infomaniak's catalog/pricing string exactly: `swiss-ai/Apertus-v1.5-70B`
+# (both the EN and FR product pages spell it this way; the `apertus-ai/...` form that appears in
+# the chat/completions `reasoning_effort` docs is a typo — Infomaniak's GET /1/ai/models has
+# always used the `swiss-ai/` prefix for this family, though that endpoint is auth-gated and was
+# not queried for v1.5 here).
+# Defined inline (no `base_model`) because models/ has no swiss-ai metadata entry.
+# Pricing: Infomaniak bills in CHF; the USD values below are converted at
+# 1 CHF = 1.24 USD (mid-market, checked 2026-08-01; live rate 1.2374).
+# Infomaniak-listed price: CHF 0.70 input / CHF 2.50 output per 1M tokens.
+# Catalog: Image-Audio-Text to Text, max input 100'000 (the upstream model goes to 262'144;
+# Infomaniak serves the smaller window), flagged Beta.
+# Reasoning: `reasoning = false` here, unlike gemma-4-31B-it and Mistral-Small-4 which keep
+# `reasoning = true` with `reasoning_options = []`. The difference is the default, not the
+# absence of a toggle: Apertus 1.5 is opt-in thinking upstream ("Pass `enable_thinking=True` to
+# `apply_chat_template` to activate it"), and Infomaniak names this model as one that does not
+# support `reasoning_effort` at all — so there is no way to switch thinking ON through their
+# OpenAI-compatible API and the model as served never emits reasoning. Gemma, by contrast, is
+# not in that exclusion list and thinking is on by default there.
+# limit.output = 8_192 is an estimate: Infomaniak publishes only a max *input* cap, and the
+# schema requires limit.output on provider models that have no models/ base entry.
+# Sources:
+#   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
+#   https://www.infomaniak.com/en/hosting/ai-services/prices
+#   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+#   https://huggingface.co/swiss-ai/Apertus-v1.5-70B
+name = "Apertus v1.5 70B"
+description = "Open, ethically-sourced Swiss AI model for multilingual, multimodal chat and instruction following"
+release_date = "2026-07-24"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+status = "beta"
+
+[cost]
+input = 0.87
+output = 3.10
+
+[limit]
+context = 100_000
+input = 100_000
+output = 8_192
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]

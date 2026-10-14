@@ -1,0 +1,27 @@
+# Sources (reviewed 2026-10-02):
+# https://huggingface.co/sakamakismile/Qwen3.8-27B-MTP-NVFP4/blob/main/chat_template.jinja
+# https://docs.vllm.ai/en/latest/features/reasoning_outputs/#request-level-override
+# https://docs.vllm.ai/en/latest/configuration/engine_args/#max-model-len
+# https://docs.vllm.ai/en/latest/configuration/engine_args/#language-model-only-no-language-model-only
+# Blueclaw operator-provided deployment (2026-10-02):
+# sakamakismile/Qwen3.8-27B-MTP-NVFP4, served as Qwen3.8-27B
+# Operator confirms Qwen3.6-27B and Qwen3.6-35B-A3B-FP8 are retired.
+# --max-model-len 131072 --language-model-only
+# --default-chat-template-kwargs '{"enable_thinking": false}'
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default false)
+# Effort: chat_template_kwargs.reasoning_effort = low|medium|xhigh
+# Request-level kwargs override the server defaults; default-off is not no control.
+base_model = "alibaba/qwen3.8-27b"
+attachment = false
+status = "beta"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+]
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text"]

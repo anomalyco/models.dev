@@ -1,0 +1,15 @@
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B IT (Runware)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh", "max"]
+
+[cost]
+input = 0.102
+output = 0.297
+cache_read = 0.012
+
+[limit]
+output = 65_536

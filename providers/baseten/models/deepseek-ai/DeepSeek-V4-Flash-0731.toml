@@ -1,0 +1,24 @@
+# Baseten documents top-level reasoning_effort = none | minimal | low | medium |
+# high (default) | xhigh | max for DeepSeek V4 Flash 0731. Reasoning output is
+# returned in reasoning_content.
+# Baseten serves at most 384k output tokens for this model; keep this explicit
+# because its catalog has reported the 1,048,576-token context as the output cap.
+# https://docs.baseten.co/inference/model-apis/overview
+# https://docs.baseten.co/inference/model-apis/reasoning
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.13
+output = 0.26
+cache_read = 0.028
+
+[limit]
+context = 1_048_576
+output = 384_000
