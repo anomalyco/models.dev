@@ -1,4 +1,7 @@
 # Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Tested on api.saygm.com/v1/chat/completions 2026-10-14.
+# thinking_budget (top-level and in chat_template_kwargs) had no effect, so no budget_tokens.
 base_model = "alibaba/qwen3.6-35b-a3b"
 reasoning_options = [{ type = "toggle" }]
 

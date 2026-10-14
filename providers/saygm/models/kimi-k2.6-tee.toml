@@ -1,7 +1,9 @@
 # Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
 # Confidential tier: served inside a TEE (Intel TDX), prompt decrypted only in the enclave.
+# No caller reasoning control: thinking.type, enable_thinking and chat_template_kwargs all left reasoning on.
+# Tested on api.saygm.com/v1/chat/completions 2026-10-14.
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [cost]
 input = 0.475
