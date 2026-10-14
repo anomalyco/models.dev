@@ -433,9 +433,7 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 
 ## Gradiated Notes
 
-- Run `bun models:sync gradiated`. The provider participates in the direct sync group and hourly provider matrix.
-- Source: public `GET https://api.gradiated.com/api/v1/models`, without authentication. All cursor pages are fetched before applying changes; HTTP/schema errors, duplicate IDs, repeated cursors, and an empty available chat catalog fail closed.
-- Only available chat models are included. Unavailable training bases and `jaredpalmer/kev-9b` (served through the separate `/v1/systemone` decision API) are excluded. Removed/unavailable chat models are removed from the provider catalog.
-- Prices are integer nano-USD per token, divided by 1,000 for USD per million tokens. Standard/default service-tier prices are published; flex/fast multipliers are not context price tiers. `pricing_overrides` maps to context-based `cost.tiers`, inheriting unspecified token rates.
-- The API owns token prices, serving limits, text modalities, temperature, tools, and structured-output support. Lab facts are inherited through `base_model`; reasoning controls and interleaved response fields remain hand-authored because the catalog does not enumerate their wire values.
-- New models without canonical lab metadata are reported as missing. New reasoning routes require authored reasoning controls rather than inventing a default.
+- Public source: `https://api.gradiated.com/api/v1/models`; no auth. The endpoint returns the complete catalog (`next_cursor: null`).
+- Sync includes only available `properties.type = "chat"` models. Older feeds without `type` are classified using canonical lab metadata; unclassified models are skipped. Decision models and unavailable training bases are excluded.
+- Prices are nano-USD/token, divided by 1,000 for USD/million tokens. Publish default service-tier rates; map `pricing_overrides` to context tiers with unspecified rates inherited from the base price.
+- Enumerated `reasoning_effort` values come from the feed when available; other reasoning controls and interleaved fields stay authored. Unknown lab metadata or missing reasoning controls use the shared runner's missing-model flow.
