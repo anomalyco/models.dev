@@ -1,4 +1,4 @@
-name = "Weights & Biases"
+name = "CoreWeave"
 # POST /v1/chat/completions toggles eligible models with
 # chat_template_kwargs.enable_thinking=true|false; output is choices[].message.reasoning.
 # DeepSeek V4 and Gemma 4 default off; Nemotron 3, Qwen3.5/3.6, and GLM-5.1/5.2
@@ -8,4 +8,4 @@ name = "Weights & Biases"
 env = ["WANDB_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.inference.wandb.ai/v1"
-doc = "https://docs.wandb.ai/guides/integrations/inference/"
+doc = "https://docs.wandb.ai/inference"

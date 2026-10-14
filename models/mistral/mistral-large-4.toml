@@ -1,0 +1,19 @@
+name = "Mistral Large 4"
+description = "Mistral's 1T-parameter multimodal MoE for reasoning, coding, and agentic work"
+family = "mistral-large"
+release_date = "2026-10-06"
+last_updated = "2026-10-06"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

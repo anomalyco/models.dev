@@ -1,0 +1,26 @@
+name = "LFM2.5-24B-A2B"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "liquid"
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.05
+output = 0.7
+cache_read = 0.025
+
+[limit]
+context = 128_000
+output = 8_200
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,26 +1,25 @@
+# Toggle: reasoning.enabled = true|false
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5V Turbo"
-description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = false
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.726
 output = 3.1946
 cache_read = 0.1743
 
-[limit]
-context = 200_000
-output = 128_000
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 1.0165
+output = 3.7754
+cache_read = 0.2614
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+[limit]
+output = 128_000

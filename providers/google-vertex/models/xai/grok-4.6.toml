@@ -2,9 +2,11 @@
 # - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-6
 # - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/capabilities/reasoning
 # - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Effort: reasoning_effort = low|medium|high. Live test 2026-10-08 on the global endpoint: reasoning tokens
+# unset 3409, low 495, high 6180. The endpoint rejects xhigh and none. The reasoning page claim that Grok
+# reasoning models ignore reasoning_effort holds for grok-4.20 and grok-4.1-fast, not grok-4.6.
 base_model = "xai/grok-4.6"
-reasoning_options = []
-status = "beta"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 2

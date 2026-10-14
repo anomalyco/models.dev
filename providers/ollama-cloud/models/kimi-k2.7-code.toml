@@ -1,3 +1,4 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15).
 base_model = "moonshotai/kimi-k2.7-code"
 name = "kimi-k2.7-code"
 reasoning_options = [{ type = "toggle" }]
@@ -5,3 +6,8 @@ reasoning_options = [{ type = "toggle" }]
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19

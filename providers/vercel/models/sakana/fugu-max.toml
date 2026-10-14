@@ -1,0 +1,19 @@
+# Effort: reasoning.effort = high|xhigh|max
+# https://console.sakana.ai/models
+base_model = "sakana/fugu-max"
+description = "Multi-agent model for routing expert agents across complex analytical tasks"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]

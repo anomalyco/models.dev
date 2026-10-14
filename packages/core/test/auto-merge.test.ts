@@ -94,7 +94,7 @@ test("does not inspect deleted models", async () => {
 });
 
 test("allows reviewed providers with explicit reasoning options", async () => {
-  for (const provider of ["crossmodel", "edenai", "empiriolabs", "hyper", "kilo", "llmgateway", "llmgateway-providers", "merge-gateway", "nano-gpt", "openrouter", "venice"]) {
+  for (const provider of ["aiand", "crossmodel", "edenai", "empiriolabs", "hyper", "kilo", "llmgateway", "llmgateway-providers", "merge-gateway", "nano-gpt", "openrouter", "venice", "vercel"]) {
     const decision = await classifyAutoMerge(
       [{ status: "updated", path: `providers/${provider}/models/reasoner.toml` }],
       async () => fullModel(true, 'reasoning_options = [{ type = "toggle" }]'),
@@ -103,6 +103,17 @@ test("allows reviewed providers with explicit reasoning options", async () => {
 
     expect(decision.safe).toBe(true);
   }
+});
+
+test("allows new Vercel reasoning models only with explicit options", async () => {
+  const changes = [{ status: "created" as const, path: "providers/vercel/models/deepseek/reasoner.toml" }];
+  const load = (options: string) => async (path: string) =>
+    path.startsWith("models/") ? fullModel(true) : `base_model = "deepseek/reasoner"\n${options}`;
+
+  expect((await classifyAutoMerge(changes, load("reasoning_options = []"))).safe).toBe(true);
+  expect((await classifyAutoMerge(changes, load(""))).reasons).toContain(
+    "providers/vercel/models/deepseek/reasoner.toml is a reasoning model without explicit reasoning_options",
+  );
 });
 
 test("requires manual review for Inceptron reasoning updates", async () => {

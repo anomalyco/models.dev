@@ -1,10 +1,7 @@
-# API: thinking.type = enabled|disabled|adaptive; in adaptive mode the
-# reasoning depth is set by output_config.effort = low|high|max.
+# Kimi K3 always thinks; thinking.type is not supported. Effort: reasoning_effort = low|high|max.
+# Sources: https://platform.kimi.ai/docs/api/models-overview ; https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3/
 
 base_model = "moonshotai/kimi-k3"
-
-[[reasoning_options]]
-type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

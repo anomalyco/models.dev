@@ -1,29 +1,27 @@
-# Toggle: reasoning.enabled = true|false — the one control verified
-# effective on every backend the auto id can route to (per pinned backend
-# 2026-08-22/24).
-# The endpoint also accepts OpenRouter-style reasoning.effort / top-level
-# reasoning_effort and reasoning.max_tokens as pass-through, but their
-# effect depends on the routed model, so they are intentionally not listed
-# in reasoning_options (auto-router convention: reliable caller controls
-# only).
+# Toggle: reasoning.enabled = true|false. Effort (reasoning_effort /
+# reasoning.effort) and reasoning.max_tokens are also accepted and passed
+# through, but their effect depends on the routed model, so only the toggle is
+# listed (auto-router convention: reliable caller controls only). On models
+# whose upstream makes reasoning mandatory, a disable request is served at the
+# model's lowest effort instead of failing
+# (https://docs.standardcompute.com/reasoning, accessed 2026-10-13).
 # Verified against the live endpoint (https://api.stdcmpt.com/v1/chat/completions):
 # tool_call + structured_output 2026-07-17; reasoning pass-through, image
-# attachment and streaming reasoning_details 2026-08-23/24. limit.context and
-# limit.output are the operator's serving guarantee: every catalog model the
-# router may select serves >= 1M context (enforced as a catalog invariant);
-# 24,576 is the max output cap across plans. release_date is the public
-# launch month as stated by the operator.
+# attachment and streaming reasoning_details 2026-08-23/24.
+# Limits (https://docs.standardcompute.com/budgets-and-limits, accessed
+# 2026-10-13, and the gateway's catalog invariant): every model the router may
+# select declares a >= 1,000,000-token context window; input is capped at
+# ~850,000 tokens per request and output at 50,000 tokens on paid plans
+# (free trial: ~500,000 input / 32,768 output). The 50,000 output ceiling
+# replaced the earlier 24,576 cap on 2026-08-27.
+# release_date is the public launch month as stated by the operator.
 name = "Standard Compute"
-description = "Flat-rate smart-routing gateway: one model id, each request routed across a curated catalog of 1M-context models (DeepSeek, GLM, MiniMax, Qwen, GPT-5.6, Claude 5, Gemini 2.5, Kimi) or pinned to a user-selected model"
+description = "Flat-rate smart-routing gateway: one model id, each request routed across the customer's enabled models from a curated ~1M-context catalog (Claude, GPT, Gemini, DeepSeek, GLM, Qwen, Kimi, MiniMax, Grok, MiMo) or pinned to a user-selected model"
 family = "auto"
 release_date = "2026-03-01"
-last_updated = "2026-08-24"
+last_updated = "2026-10-13"
 attachment = true
 reasoning = true
-# Only the toggle is reliable across every catalog backend; effort and
-# budget pass through with backend-dependent effect (true effort levels on
-# OpenAI/Anthropic-class only), so they are not advertised as options here.
-# Per-model defaults are configurable in the provider dashboard.
 reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
@@ -33,8 +31,8 @@ open_weights = false
 [interleaved]
 field = "reasoning_details"
 
-# Subscription pricing (flat monthly tiers, https://standardcompute.com/pricing,
-# accessed 2026-08-24) — no per-token billing, hence cost 0 per the registry
+# Subscription pricing (fixed monthly plans, https://standardcompute.com/pricing,
+# accessed 2026-10-13) — no per-token billing, hence cost 0 per the registry
 # convention for subscription providers.
 [cost]
 input = 0.00
@@ -42,7 +40,8 @@ output = 0.00
 
 [limit]
 context = 1_000_000
-output = 24_576
+input = 850_000
+output = 50_000
 
 [modalities]
 input = ["text", "image"]

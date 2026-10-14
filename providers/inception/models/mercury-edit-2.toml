@@ -1,15 +1,23 @@
-name = "Mercury Edit 2"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-# Model exception (accessed 2026-06-25): the /v1/edit/completions and
-# /v1/fim/completions request schemas expose no reasoning-control field.
+# Sources (accessed 2026-09-10): Mercury Edit 2 is served only on
+# /v1/edit/completions and /v1/fim/completions, which cap context at 32K and
+# output at 8,192 tokens; it is not offered on chat completions. Neither the
+# edit nor the FIM request/response schema exposes a reasoning field, and
+# `reasoning_effort` is documented as applying to mercury-2.5 and mercury-2 on
+# chat completions only. The docs model table lists no tool-calling or
+# structured-output support for this model.
+# https://docs.inceptionlabs.ai/get-started/models
+# https://docs.inceptionlabs.ai/capabilities/reasoning-efforts
 # https://api.inceptionlabs.ai/openapi.json
+name = "Mercury Edit 2"
+description = "Code editing dLLM for autocomplete (FIM) and next-edit suggestions"
+family = "mercury"
 release_date = "2026-03-30"
 last_updated = "2026-03-30"
 attachment = false
-reasoning = true
-reasoning_options = []
+reasoning = false
 temperature = true
 tool_call = false
+structured_output = false
 open_weights = false
 
 [cost]
@@ -18,8 +26,8 @@ output = 0.75
 cache_read = 0.025
 
 [limit]
-context = 128000
-output = 8192
+context = 32_000
+output = 8_192
 
 [modalities]
 input = ["text"]

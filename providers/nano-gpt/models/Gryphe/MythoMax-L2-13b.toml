@@ -1,13 +1,6 @@
+base_model = "gryphe/mythomax-l2-13b"
 name = "MythoMax 13B"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-release_date = "2025-08-08"
-last_updated = "2025-08-08"
-attachment = false
-reasoning = false
-tool_call = false
 structured_output = false
-open_weights = true
 
 [cost]
 input = 0.1003
@@ -15,10 +8,5 @@ output = 0.1003
 cache_read = 0.05015
 
 [limit]
-context = 4_096
 input = 4_096
 output = 3_686
-
-[modalities]
-input = ["text"]
-output = ["text"]

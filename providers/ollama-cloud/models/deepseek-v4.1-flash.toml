@@ -1,3 +1,7 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15). Ollama bills
+# Base (off-peak) and Peak (2x, 12:00-18:00 UTC Mon-Fri) rates; the schema
+# cannot express time-based tiers, so the Base rate is recorded. See
+# https://github.com/anomalyco/models.dev/issues/5913.
 # Toggle: native POST /api/chat and /api/generate use `think = true|false`.
 # Effort: OpenAI POST /v1/chat/completions accepts top-level `reasoning_effort`
 # or `reasoning.effort` with low|high|max (Flash maps requested low -> low).
@@ -12,3 +16,8 @@ field = "reasoning_content"
 
 [limit]
 context = 1048576
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.003

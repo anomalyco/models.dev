@@ -18,38 +18,100 @@ const MetaModel = z.object({
 
 export type MetaModel = z.infer<typeof MetaModel>;
 
+const AVAILABILITY = ["Model API (pay-as-you-go)", "Muse Code"];
+const PRICES = ["Usage", "Standard mode (per 1M tokens)", "Contributor mode (per 1M tokens)"];
+
+type Mode = "standard" | "contributor";
+
+// The "Model API (pay-as-you-go)" column's values for available models.
+const API_MODES = new Map<string, Mode>([
+  ["Standard mode", "standard"],
+  ["Available (Standard mode only)", "standard"],
+  ["Contributor mode", "contributor"],
+]);
+
 function cells(line: string) {
   return line.trim().split("|").slice(1, -1).map((cell) => cell.trim());
 }
 
-function table(markdown: string, header: string[]) {
+// Returns the rows of every table whose header satisfies `matches`.
+function tables(markdown: string, matches: (header: string[]) => boolean) {
   const lines = markdown.split("\n");
-  const start = lines.findIndex((line) => JSON.stringify(cells(line)) === JSON.stringify(header));
-  if (start < 0) throw new Error(`Meta docs are missing the ${header.join(" / ")} table`);
-  const separator = cells(lines[start + 1] ?? "");
-  if (separator.length !== header.length || separator.some((cell) => !/^:?-+:?$/.test(cell))) {
-    throw new Error("Meta docs have an invalid table separator");
+  const found: string[][][] = [];
+  for (const [index, line] of lines.entries()) {
+    const header = cells(line);
+    if (!line.trim().startsWith("|") || !matches(header)) continue;
+    const separator = cells(lines[index + 1] ?? "");
+    if (separator.length !== header.length || separator.some((cell) => !/^:?-+:?$/.test(cell))) {
+      throw new Error("Meta docs have an invalid table separator");
+    }
+    const rows: string[][] = [];
+    for (const row of lines.slice(index + 2)) {
+      if (!row.trim().startsWith("|")) break;
+      const values = cells(row);
+      if (values.length !== header.length) throw new Error("Meta docs have an invalid table row");
+      rows.push(values);
+    }
+    if (rows.length === 0) throw new Error("Meta docs table is empty");
+    found.push(rows);
   }
-  const rows: string[][] = [];
-  for (const line of lines.slice(start + 2)) {
-    if (!line.trim().startsWith("|")) break;
-    const row = cells(line);
-    if (row.length !== header.length) throw new Error("Meta docs have an invalid table row");
-    rows.push(row);
-  }
-  if (rows.length === 0) throw new Error("Meta docs table is empty");
-  return rows;
+  return found;
 }
 
-function tierCost(markdown: string, tier: string) {
-  const sections = markdown.split(/^### /m).filter((section) => section.split("\n")[0]?.includes(`{#${tier}}`));
-  if (sections.length !== 1) throw new Error(`Meta docs need exactly one pricing section for ${tier}`);
-  const prices = new Map<string, number>();
-  for (const [usage, price] of table(sections[0]!, ["Usage", "Price per 1M tokens"])) {
-    if (!/^\$\d+(?:\.\d+)?$/.test(price!) || prices.has(usage!)) {
-      throw new Error(`Meta docs have invalid or duplicate ${tier} pricing`);
+function same(header: string[], expected: string[]) {
+  return JSON.stringify(header) === JSON.stringify(expected);
+}
+
+function sections(markdown: string, level: "##" | "###") {
+  return markdown.split(new RegExp(`^${level} `, "m")).slice(1);
+}
+
+function sectionID(section: string) {
+  const heading = section.split("\n")[0]?.trim() ?? "";
+  const explicit = heading.match(/\{#([a-z0-9-]+)\}$/)?.[1];
+  if (explicit !== undefined) return explicit;
+  return heading.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+// Model families document their API IDs in an availability table such as
+// `| Version | Model API (pay-as-you-go) | Muse Code |`.
+function familyModels(section: string) {
+  const found = tables(section, (header) => header.length === 3 && same(header.slice(1), AVAILABILITY));
+  if (found.length > 1) throw new Error(`Meta docs have multiple ${sectionID(section)} availability tables`);
+  return (found[0] ?? []).flatMap(([variant, api]) => {
+    if (api === "Not available") return [];
+    const id = variant!.match(/\(`([^`]+)`\)$/)?.[1];
+    const mode = API_MODES.get(api!);
+    if (id === undefined || mode === undefined || id.endsWith("-contributor") !== (mode === "contributor")) {
+      throw new Error("Meta docs have an unsupported model availability row");
     }
-    prices.set(usage!, Number(price!.slice(1)));
+    return [{ id, mode }];
+  });
+}
+
+function familyContext(section: string) {
+  const windows = new Set(
+    [...section.matchAll(/(?<![\d,])(\d{1,3}(?:,\d{3})+|\d+)-token context window/g)]
+      .map((match) => Number(match[1]!.replaceAll(",", ""))),
+  );
+  if (windows.size !== 1) throw new Error(`Meta docs need exactly one ${sectionID(section)} context window`);
+  return [...windows][0]!;
+}
+
+function familyCost(pricing: string, family: string, mode: Mode) {
+  const matches = sections(pricing, "###").filter((section) => sectionID(section) === family);
+  if (matches.length !== 1) throw new Error(`Meta docs need exactly one pricing section for ${family}`);
+  const found = tables(matches[0]!, (header) => same(header, PRICES));
+  if (found.length !== 1) throw new Error(`Meta docs need exactly one ${family} token price table`);
+  const column = mode === "standard" ? 1 : 2;
+  const prices = new Map<string, number>();
+  for (const row of found[0]!) {
+    const usage = row[0]!;
+    const price = row[column]!;
+    if (!/^\$\d+(?:\.\d+)?$/.test(price) || prices.has(usage)) {
+      throw new Error(`Meta docs have invalid or duplicate ${family} ${mode} mode pricing`);
+    }
+    prices.set(usage, Number(price.slice(1)));
   }
   return {
     input: prices.get("Input"),
@@ -60,28 +122,25 @@ function tierCost(markdown: string, tier: string) {
 
 export function parseMetaModels(raw: unknown): MetaModel[] {
   const response = MetaResponse.parse(raw);
-  const rows = table(response.models, ["Model ID", "Tier", "Input modalities", "Output modalities", "Context window"]);
   const ids = new Set<string>();
-  return rows.map(([model, tierLink, _input, output, window]) => {
-    const id = model?.match(/^`([^`]+)`$/)?.[1];
-    const tier = tierLink?.match(/^\[[^\]]+\]\([^)]*#([a-z-]+)\)$/)?.[1];
-    const tokens = window?.match(/^(\d+|\d{1,3}(?:,\d{3})+) tokens$/)?.[1];
-    if (id === undefined || tier === undefined || tokens === undefined || output !== "Text") {
-      throw new Error("Meta docs have an unsupported token-priced model row");
-    }
-    if (ids.has(id)) throw new Error(`Meta docs have a duplicate model: ${id}`);
-    ids.add(id);
-    const parsed = MetaModel.safeParse({
-      id,
-      context: Number(tokens.replaceAll(",", "")),
-      cost: tierCost(response.pricing, tier),
+  const models = sections(response.models, "##").flatMap((section) => {
+    const documented = familyModels(section);
+    if (documented.length === 0) return [];
+    const family = sectionID(section);
+    const context = familyContext(section);
+    return documented.map(({ id, mode }) => {
+      if (ids.has(id)) throw new Error(`Meta docs have a duplicate model: ${id}`);
+      ids.add(id);
+      const parsed = MetaModel.safeParse({ id, context, cost: familyCost(response.pricing, family, mode) });
+      if (!parsed.success) {
+        parsed.error.cause = { provider: "meta", model: id };
+        throw parsed.error;
+      }
+      return parsed.data;
     });
-    if (!parsed.success) {
-      parsed.error.cause = { provider: "meta", model: id };
-      throw parsed.error;
-    }
-    return parsed.data;
   });
+  if (models.length === 0) throw new Error("Meta docs are missing token-priced model availability tables");
+  return models;
 }
 
 export async function fetchMetaModels(fetcher: typeof fetch = fetch) {

@@ -1,0 +1,39 @@
+# Sources:
+# - https://tokenfactory.nebius.com/?modals=endpoint-details&model-id=Qwen/Qwen3.8-27B
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# Accessed 2026-09-28.
+# Serverless NVFP4 deployment (us-central1). Server reports model type text2text, and an
+# image_url content part is rejected live with 400 "This model does not support image
+# input", so image/video input from the lab entry is narrowed to text-only here.
+# Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off; off is
+# effort=none, so no separate toggle). Probed live against
+# api.tokenfactory.nebius.com/v1/chat/completions on 2026-09-28 (temperature 0, fixed
+# prompt, three runs per level): none returns no reasoning_content (6 completion tokens);
+# low (~390-600) and medium (~730-840) are distinct; xhigh matches the omitted default.
+# The backend rejects minimal and max with 400 "Supported types are xhigh (default),
+# medium, and low"; high is accepted but behaves like xhigh, so it is not listed.
+# chat_template_kwargs.enable_thinking = false also disables thinking (same as none).
+# Reasoning text is returned on message.reasoning_content.
+# Served window: models_info max_model_len = 262_144 with no separate output cap, so
+# output takes the full served window (context matches the lab entry).
+# No discounted prompt-cache tier is published in the public catalog: cached and fresh
+# input are billed identically, so cache_read = input (same rationale as
+# DeepSeek-V4-Flash-0731 / Kimi-K3 / GLM-5.3).
+base_model = "alibaba/qwen3.8-27b"
+description = "Dense 27B reasoning model for coding, research, and long-horizon agent tasks"
+attachment = false
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.45
+output = 3
+cache_read = 0.45
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text"]

@@ -102,7 +102,7 @@ const modalityMap: Record<string, SupportedModality | undefined> = {
 
 export const wandb = {
   id: "wandb",
-  name: "Weights & Biases",
+  name: "CoreWeave",
   modelsDir: "providers/wandb/models",
   deleteMissing: true,
   sourceID(model) {
@@ -111,7 +111,7 @@ export const wandb = {
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
-      throw new Error(`W&B Inference request failed: ${response.status} ${response.statusText}`);
+      throw new Error(`CoreWeave Inference request failed: ${response.status} ${response.statusText}`);
     }
     return response.json();
   },

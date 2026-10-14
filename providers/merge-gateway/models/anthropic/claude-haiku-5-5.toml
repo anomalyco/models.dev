@@ -1,0 +1,10 @@
+base_model = "anthropic/claude-haiku-5-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125

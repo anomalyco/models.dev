@@ -1,0 +1,19 @@
+# DeepSeek-V4.1-Flash on 302.AI, served as `deepseek-flash` (catalog SKU created 2026-09-08).
+# Cost: 302.AI catalog, $0.150 / $0.600 per MTok with $0.003 cache-read, https://api.302.ai/v1/models (retrieved 2026-09-14).
+# Toggle and `reasoning_content` side channel verified live against POST https://api.302.ai/v1/chat/completions (2026-09-14):
+# `thinking.type = disabled` suppresses reasoning output; invalid `reasoning_effort` values are rejected (-10003).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.003

@@ -1,3 +1,4 @@
+# Scores transcribed from the model card coding and multimodal benchmark charts.
 name = "MiMo-V2.5"
 description = "Open MiMo model for multimodal coding agents and long-context automation"
 family = "mimo"
@@ -21,3 +22,79 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "MiMo Coding Bench"
+score = 71.8
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "Claw-Eval"
+score = 62.3
+metric = "score"
+variant = "text"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 65.8
+metric = "score"
+version = "2.0"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 56.1
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 81
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "MMMU-Pro"
+score = 77.9
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "HR-Bench"
+score = 88.5
+metric = "score"
+variant = "4K"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "OmniDocBench"
+score = 87.2
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "Claw-Eval"
+score = 23.8
+metric = "score"
+variant = "multimodal"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "Video-MME"
+score = 87.7
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "DailyOmni"
+score = 83.5
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"
+
+[[benchmarks]]
+name = "VideoHolmes"
+score = 64
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5"

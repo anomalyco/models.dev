@@ -1,0 +1,25 @@
+# https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Thinking
+# https://qwen.ai/blog?id=qwen3-omni
+name = "Qwen3 Omni 30B A3B Thinking"
+description = "Multimodal reasoning model accepting text, images, video, and audio with text output"
+family = "qwen"
+release_date = "2025-09-22"
+last_updated = "2025-09-22"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 65_536
+output = 16_384
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Thinking"

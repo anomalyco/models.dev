@@ -1,0 +1,19 @@
+# Source: https://ai.azure.com/catalog/models/DeepSeek-V4.1-Flash
+# Pricing not yet published on Azure's public pricing page.
+# Azure catalog lists context 1000k (same as the base model) and output 128k (base is 384k).
+# Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
+# Its published request schema documents no toggle, effort, or reasoning budget.
+# https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-10-08)
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek-V4.1-Flash"
+status = "beta"
+
+reasoning_options = []
+
+[limit]
+output = 128_000
+
+[provider]
+shape = "completions"
+npm = "@ai-sdk/openai-compatible"
+api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"

@@ -1,0 +1,30 @@
+# Flex-tier variant of glm-5.3: same model, context (1,048,560), and effort
+# ladder as the standard tier; requested via the `-flex` model ID or
+# service_tier="flex" and requires stream=true (non-streaming requests fall
+# through to the standard tier). Cost is the flex rate: 0.65x of standard
+# pricing (35% off) per the flex-tier guide, applied to the standard rates
+# advertised by GET /v1/models ($1.45/$4.5/$0.145, checked 2026-09-18).
+# Budget: thinking_token_budget (integer reasoning tokens)
+# https://portal.neuralwatt.com/docs/guides/flex-tier
+# https://portal.neuralwatt.com/docs/api/chat-completions
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Flex"
+structured_output = false
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.9425
+output = 2.925
+cache_read = 0.09425
+
+[limit]
+context = 1_048_560
+output = 1_048_560

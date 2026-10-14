@@ -1,12 +1,17 @@
+# Toggle: chat_template_kwargs.enable_thinking = true | false
+# https://friendli.ai/docs/guides/reasoning
+# Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
 base_model = "zhipuai/glm-5.1"
-name = "GLM-5.1"
-release_date = "2026-04-07"
-last_updated = "2026-04-07"
-structured_output = true
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 1.4
@@ -15,4 +20,3 @@ cache_read = 0.26
 
 [limit]
 context = 202_752
-output = 202_752

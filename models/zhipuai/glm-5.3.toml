@@ -1,3 +1,4 @@
+# Benchmark settings and caveats: https://huggingface.co/zai-org/GLM-5.3#footnotes
 name = "GLM-5.3"
 description = "Flagship GLM model for long-horizon coding, agents, and complex project delivery"
 family = "glm"
@@ -17,3 +18,141 @@ output = 131_072
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 88.2
+metric = "pass@1"
+variant = "max effort"
+version = "2.1"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 28.3
+metric = "avg@3"
+variant = "max effort"
+version = "3.0"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 66.9
+metric = "resolved"
+variant = "max effort; 6h timeout; 400K context"
+version = "1.1"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+harness = "mini-swe-agent"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 58.0
+metric = "score"
+variant = "max effort"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "ProgramBench"
+score = 19.0
+metric = "almost solved"
+variant = "max effort"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "FrontierSWE"
+score = 78.1
+metric = "dominance score"
+variant = "max effort"
+date = "2026-08-14"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "SWE-Marathon"
+score = 42.5
+metric = "score"
+variant = "max effort; modified anti-cheat checks"
+version = "1.1"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "PostTrainBench"
+score = 39.8
+metric = "weighted average"
+variant = "max effort; 3 runs; modified external-API checks"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "CyberGym"
+score = 84.5
+metric = "pass@1"
+variant = "max effort"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "ExploitGym"
+score = 105
+metric = "tasks solved"
+variant = "max effort; 2h rescaled timeout"
+dataset = "869 tasks"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "ExploitGym"
+score = 130
+metric = "tasks solved"
+variant = "max effort; 6h rescaled timeout"
+dataset = "869 tasks"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "ExploitBench"
+score = 54.4
+metric = "average coverage"
+variant = "max effort; union over 3 revisions"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 73
+metric = "pass@1"
+variant = "max effort"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 48.2
+metric = "pass@1"
+variant = "max effort"
+version = "1.0.6"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 28.5
+metric = "score"
+variant = "max effort; CLI"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 62.5
+metric = "accuracy"
+variant = "max effort; with tools"
+source = "https://huggingface.co/zai-org/GLM-5.3"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1769
+metric = "Elo"
+variant = "max effort"
+version = "2"
+source = "https://huggingface.co/zai-org/GLM-5.3"

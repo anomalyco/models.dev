@@ -1,0 +1,28 @@
+name = "Solar Mini 4"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "solar"
+release_date = "2026-09-23"
+last_updated = "2026-09-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.05
+output = 0.2
+cache_read = 0.005
+
+[limit]
+context = 524_288
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

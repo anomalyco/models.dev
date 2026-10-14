@@ -9,6 +9,7 @@ reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = true
 status = "deprecated"
 
@@ -24,3 +25,7 @@ output = 32_768
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"

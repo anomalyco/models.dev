@@ -1,0 +1,28 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-26)
+# The newest Xiaomi MiMo, natively omnimodal with dedicated vision and audio
+# encoders. 1M context. Same limits as mimo-v2.5: 1.0B token monthly quota per
+# member, 1.5M tpm and 5 concurrent requests. No video input on this host.
+# Included in the membership, so no per-token price.
+# Reasoning: affirmative no caller control on this surface. NaN documents a
+# single reasoning parameter, reasoning_effort, and its reasoning table ("the
+# table is the contract") states for qwen3.8-flash, mimo-v2.5 and
+# mimo-v2.6-flash that the parameter "is accepted and never rejected, but
+# these models manage their own reasoning depth" -- it has no effect on this
+# model. The toggle fields of other surfaces (thinking.type on Xiaomi's
+# first-party API, reasoning.enabled on OpenRouter) are not part of NaN's
+# contract and no toggle field is documented on this host, so
+# reasoning_options stays [].
+# Context is inherited: NaN publishes "1M tokens", the same wording it uses for
+# deepseek-v4-flash and glm5.3-flash, with no documented trim of the model's
+# native 1_048_576 window. The docs/examples opencode.json snippet caps
+# contextWindow at 500000, but that snippet also trims maxTokens to a
+# per-request value rather than the ceiling.
+base_model = "xiaomi/mimo-v2.6-flash"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "audio"]

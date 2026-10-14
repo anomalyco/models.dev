@@ -1,0 +1,19 @@
+# Sources (accessed 2026-09-15):
+# https://api.iteracompute.com/v1/models (canonical model ID, availability, capabilities, limits, and pricing)
+# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
+# Prices are in USD per million tokens.
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.30
+output = 2.50
+cache_read = 0.03
+
+[limit]
+context = 327_680
+input = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

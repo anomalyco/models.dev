@@ -1,4 +1,6 @@
 # Source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Structured output: "Supported" (model page), and responseSchema verified live 2026-10-08. Retires 2026-10-20.
+# https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash
 name = "Gemini 2.5 Flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 family = "gemini-flash"
@@ -10,7 +12,9 @@ reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max
 temperature = true
 knowledge = "2025-01"
 tool_call = true
+structured_output = true
 open_weights = false
+status = "deprecated"
 
 [cost]
 input = 0.30

@@ -1,12 +1,14 @@
-# Sources (accessed 2026-08-10):
+# Sources (accessed 2026-09-16):
 # Model overview & reasoning toggle: https://docs.privatemode.ai/models/overview/#kimi-k26
 # Pricing (EUR): https://docs.privatemode.ai/pricing/
 # Added in v1.40.0 (default model): https://docs.privatemode.ai/release/#v1400
+# Deprecated in v1.56.0 (migrate to GLM-5.3 or GLM-5.3-Flash): https://docs.privatemode.ai/release/#v1560
 # Upstream: https://huggingface.co/moonshotai/Kimi-K2.6
 # Toggle: chat_template_kwargs.thinking = true|false (default true / reasoning on).
 # Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10).
 # EUR/MTok: input 1.55 / output 7.74 / cached input 0.15
 base_model = "moonshotai/kimi-k2.6"
+status = "deprecated"
 reasoning_options = [{ type = "toggle" }]
 
 [modalities]

@@ -1,0 +1,71 @@
+# Specs: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
+# Evaluations: https://www.anthropic.com/claude-sonnet-5-5
+name = "Claude Sonnet 5.5"
+description = "Fast Claude model for everyday coding, agents, and knowledge work"
+family = "claude-sonnet"
+release_date = "2026-09-28"
+last_updated = "2026-09-28"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+knowledge = "2026-06"
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 70.6
+metric = "score"
+version = "4.0"
+source = "https://www.anthropic.com/claude-sonnet-5-5"
+date = "2026-09-28"
+
+[[benchmarks]]
+name = "FrontierCode"
+score = 46.2
+metric = "score"
+variant = "max effort"
+version = "1.1"
+dataset = "Main"
+source = "https://www.anthropic.com/claude-sonnet-5-5"
+date = "2026-09-28"
+
+[[benchmarks]]
+name = "CursorBench"
+score = 55.5
+metric = "score"
+version = "4.0"
+source = "https://www.anthropic.com/claude-sonnet-5-5"
+date = "2026-09-28"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1844
+metric = "Elo"
+version = "2.1"
+source = "https://www.anthropic.com/claude-sonnet-5-5"
+date = "2026-09-28"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 64.5
+metric = "score"
+variant = "with tools"
+source = "https://www.anthropic.com/claude-sonnet-5-5"
+date = "2026-09-28"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 80.1
+metric = "partial score"
+version = "2.1"
+source = "https://www.anthropic.com/claude-sonnet-5-5"
+date = "2026-09-28"

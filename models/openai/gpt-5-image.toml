@@ -1,0 +1,22 @@
+# Lab metadata carried over from providers/openrouter/models/openai/gpt-5-image.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "GPT-5 Image"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "gpt"
+release_date = "2025-10-14"
+last_updated = "2025-10-14"
+knowledge = "2024-10-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["image", "text", "pdf"]
+output = ["image", "text"]

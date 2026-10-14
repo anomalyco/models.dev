@@ -1,3 +1,4 @@
+# Public code-agent benchmarks use DeepSeek Harness minimal mode, max effort, temperature=1.0, top_p=0.95.
 # https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813
 name = "DeepSeek V4 Pro 0813"
 description = "DeepSeek V4 Pro snapshot with million-token context and support for thinking and non-thinking modes"
@@ -23,3 +24,83 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 42.7
+metric = "score"
+variant = "without tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 60
+metric = "score"
+variant = "with tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 87.9
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+version = "2.1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 61.5
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "CyberGym"
+score = 83.3
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 62.7
+metric = "score"
+harness = "DeepSeek Harness minimal mode"
+variant = "max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 74.1
+metric = "score"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 25.7
+metric = "score"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 31.8
+metric = "score"
+dataset = "public"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "DSBench-FullStack"
+score = 71.1
+metric = "score"
+dataset = "internal"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "DSBench-Hard"
+score = 67.2
+metric = "score"
+dataset = "internal"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"

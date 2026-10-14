@@ -1,0 +1,23 @@
+type = "decision"
+name = "Clef Flash"
+description = "Decision model for typed evaluation of shared state"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.021
+output = 0
+
+[limit]
+context = 24_576
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

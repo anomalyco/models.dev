@@ -1,6 +1,8 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-nvidia-nvidia-nemotron-nano-12b-v2-vl-bf16.html
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Live 2026-09-09: maxTokens=8192 accepted; reasoning_config=high returned no reasoningContent.
+# Live Converse 2026-09-23: maxTokens at the Bedrock ceiling returned
+# "maximum context length is 131072 tokens" from the serving backend.
 name = "NVIDIA Nemotron Nano 12B v2 VL BF16"
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
 reasoning = false
@@ -11,6 +13,7 @@ input = 0.20
 output = 0.60
 
 [limit]
+context = 131_072
 output = 8_192
 
 [modalities]

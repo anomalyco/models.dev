@@ -1,5 +1,6 @@
 base_model = "xai/grok-4.5"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
@@ -8,6 +9,12 @@ values = ["low", "medium", "high"]
 input = 2
 output = 6
 cache_read = 0.3
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_001 }
+input = 4
+output = 12
+cache_read = 0.6
 
 [modalities]
 input = ["text", "image", "pdf"]

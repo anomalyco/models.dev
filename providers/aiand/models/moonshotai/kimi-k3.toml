@@ -1,17 +1,15 @@
-# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
-# 2026-07-28). Pricing is aiand-specific: $3.00 input, $0.50 cache_read,
-# $12.50 output (differs from Moonshot official rates).
-# Modalities: text + image + pdf accepted per GET /v1/models; video rejected
-# ("does not support video input") — overridden from shared base
-# text+image+video. PDF kept: sibling aiand Moonshot entries (kimi-k2.6,
-# kimi-k2.7-code) include pdf after catalog/probe evidence; aiand treats
-# PDF as a provider-level Files API modality.
-# reasoning_effort: K3 backend accepts only low/high/max per official docs
-# (https://platform.kimi.ai/docs/guide/kimi-k3-quickstart). The aiand gateway
-# schema lists none/minimal/low/medium/high/xhigh/max but K3 rejects
-# none/minimal/medium/xhigh with 400. aiand does not expose a separate off
-# toggle; K3 always reasons.
+# Effort: reasoning_effort = low|high|max (always-on; no none)
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-14: low|high|max → 200; none|minimal|medium|xhigh → 400.
+# Modalities: text + image + PDF; video rejected on this host.
+# temperature = true: the host accepts the parameter (live probe 2026-09-14: 200 at 0.0 and 1.8); the lab file records Moonshot's own API as false.
+# Reasoning side channel: message.reasoning_content
 base_model = "moonshotai/kimi-k3"
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"

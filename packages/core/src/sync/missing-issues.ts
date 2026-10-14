@@ -26,7 +26,7 @@ function issueBody(provider: MissingModelIssueTarget, modelId: string, reason?: 
     `| Expected path | \`${provider.modelsDir}/${modelId}.toml\` |`,
     "",
     reason === undefined
-      ? "This provider uses `skipCreates` because the remote source is not enough to auto-author a full TOML."
+      ? "Automatic creation was skipped because the remote source is not enough to auto-author a complete catalog entry."
       : `Sync diagnostic: ${reason}`,
     "Add the model manually (prefer `base_model` when matching `models/` metadata exists).",
     ...(reason === undefined ? [] : [

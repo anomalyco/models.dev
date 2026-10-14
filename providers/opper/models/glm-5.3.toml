@@ -1,0 +1,14 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: members do not share a supported effort level.
+base_model = "zhipuai/glm-5.3"
+structured_output = false
+
+reasoning_options = []
+
+[cost]
+input = 1.75
+output = 4.6488
+cache_read = 0.44
+
+[interleaved]
+field = "reasoning_content"

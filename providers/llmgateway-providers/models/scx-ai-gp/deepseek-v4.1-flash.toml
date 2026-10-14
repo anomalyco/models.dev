@@ -1,0 +1,14 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash (SCX.ai)"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.01
+
+[modalities]
+input = ["text"]

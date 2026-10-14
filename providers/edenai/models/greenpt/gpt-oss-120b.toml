@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Greenpt)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.22376
+output = 0.78316
+
+[limit]
+context = 128_000

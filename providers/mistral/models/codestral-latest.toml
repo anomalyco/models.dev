@@ -1,3 +1,4 @@
+# Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
 name = "Codestral (latest)"
 description = "Mistral code model for completions, refactors, and developer IDE workflows"
 family = "codestral"
@@ -12,6 +13,7 @@ open_weights = true
 
 [cost]
 input = 0.30
+cache_read = 0.03
 output = 0.90
 
 [limit]

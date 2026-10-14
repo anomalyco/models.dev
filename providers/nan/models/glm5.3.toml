@@ -4,10 +4,11 @@
 # 1M token context, 3,000M token quota per billing period, capped at 400M tokens
 # per rolling 4h window, 5 concurrent requests. Included in the tier, so no
 # per-token price.
-# Reasoning: no caller control on this surface. NaN documents a reasoning trace
-# but no request field for it.
+# Effort: reasoning_effort = low|medium|high|max. NaN's reasoning table ("the
+# table is the contract", accessed 2026-09-28) lists glm5.3 and glm5.3-flash as
+# "Fully controllable"; max is the deepest. No off value, so no toggle.
 base_model = "zhipuai/glm-5.3"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 
 [cost]
 input = 0

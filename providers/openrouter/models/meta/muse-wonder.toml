@@ -1,0 +1,28 @@
+name = "Muse Wonder"
+description = "Open Llama multimodal model for image understanding and text reasoning"
+family = "muse"
+release_date = "2026-10-12"
+last_updated = "2026-10-12"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[modalities]
+input = ["text", "image", "video", "pdf", "audio"]
+output = ["text"]

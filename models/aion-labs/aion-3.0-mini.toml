@@ -1,0 +1,20 @@
+# Lab metadata carried over from providers/openrouter/models/aion-labs/aion-3.0-mini.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "Aion-3.0-Mini"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+release_date = "2026-07-07"
+last_updated = "2026-07-07"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 131072
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,26 @@
+# Speed variant serving the DeepSeek V4 Flash 0731 checkpoint: same pricing
+# as deepseek-v4-flash ($0.14/$0.28/$0.028) with a 393,216-token output cap,
+# per the public GET /v1/models metadata (checked 2026-09-18). Text-only
+# input on this host. Reasoning matches the standard tier: reasoning_effort
+# = none|high|max (default none, reasoning off by default; aliases
+# low/minimal/medium -> high, xhigh -> max). Off is effort=none, so no
+# separate toggle. thinking_token_budget is rejected with a 400 on this
+# generation, so it is not declared.
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://portal.neuralwatt.com/docs/api/models
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash (Speed)"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.028
+
+[limit]
+context = 1_048_560
+output = 393_216

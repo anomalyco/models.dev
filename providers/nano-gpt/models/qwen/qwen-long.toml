@@ -1,0 +1,24 @@
+name = "Qwen Long 10M"
+description = "Alibaba's huge context window model. Takes in up to 10 million tokens, which is equivalent to dozens of books."
+family = "qwen"
+release_date = "2024-08-01"
+last_updated = "2024-08-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.1003
+output = 0.408
+cache_read = 0.05015
+
+[limit]
+context = 10_000_000
+input = 10_000_000
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

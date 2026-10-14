@@ -1,9 +1,12 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-fable-5.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json
+# US source us-east-1: standard regional USD/MTok; cache_write is the 5-minute rate.
 base_model = "anthropic/claude-fable-5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 name = "Claude Fable 5 (US)"
 
 [cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+input = 11
+output = 55
+cache_read = 1.1
+cache_write = 13.75

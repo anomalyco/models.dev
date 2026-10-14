@@ -1,0 +1,22 @@
+# Sources (accessed 2026-09-15):
+# https://api.iteracompute.com/v1/models (canonical model ID, availability, capabilities, limits, and pricing)
+# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
+# Toggle wire path: reasoning_effort = "none" disables thinking; responses expose reasoning_content.
+# Prices are in USD per million tokens.
+base_model = "deepreinforce/ornith-1.5-35b-a3b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.30
+output = 3.00
+cache_read = 0.03
+
+[limit]
+context = 327_680
+input = 262_144
+output = 65_536

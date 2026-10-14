@@ -1,3 +1,4 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15).
 name = "gpt-oss:20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
@@ -16,3 +17,8 @@ output = 32768
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[cost]
+input = 0.07
+output = 0.3
+cache_read = 0.035

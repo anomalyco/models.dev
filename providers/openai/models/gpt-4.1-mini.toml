@@ -23,3 +23,7 @@ output = 32768
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[experimental.modes.fast]
+cost = { input = 0.70, output = 2.80, cache_read = 0.175 }
+provider = { body = { service_tier = "priority" } }

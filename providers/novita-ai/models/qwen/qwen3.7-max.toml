@@ -1,26 +1,15 @@
-name = "Qwen3.7-Max"
-description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
-family = "qwen"
-release_date = "2026-05-21"
-last_updated = "2026-05-27"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
+# https://novita.ai/models/model-detail/qwen-qwen3.7-max
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking_budget (reasoning tokens)
+# Public pricing does not advertise a cache-write charge.
+base_model = "alibaba/qwen3.7-max"
 structured_output = true
-open_weights = false
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.25
 output = 3.75
 cache_read = 0.25
-cache_write = 1.5625
-
-[limit]
-context = 1_000_000
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

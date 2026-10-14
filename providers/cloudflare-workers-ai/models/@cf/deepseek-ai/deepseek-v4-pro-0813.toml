@@ -1,8 +1,12 @@
-# Toggle: thinking.type = enabled|disabled.
-# Effort: reasoning_effort = high|max.
+# Effort: reasoning_effort = none|low|high|max; none disables thinking.
+# Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
+# This dated release adds a distinct low effort; the older preview does not.
+# Creator: https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813#chat-template
 base_model = "deepseek/deepseek-v4-pro-0813"
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 1.32

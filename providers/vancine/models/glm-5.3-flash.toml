@@ -1,8 +1,14 @@
-# Sources (accessed 2026-08-26):
+# Sources (accessed 2026-09-11):
 # https://docs.bigmodel.cn/cn/guide/capabilities/thinking
 # https://docs.z.ai/guides/overview/pricing
 # Lab cost (no 50% promo): input 0.15 / output 0.50 / cache_read 0.03.
-# Vancine public pricing (/api/pricing) is 0.06 / 0.20 / 0.012 (USD/MTok).
+# The Vancine half-price promotion for GLM-5.3-Flash has ended; the prices
+# below are the regular production rates, not promo rates.
+# Vancine public pricing (/api/pricing, verified 2026-09-11) is
+# ModelRatio 0.06, CompletionRatio 3.333333333333, CacheRatio 0.2, which
+# converts to USD/MTok as input = model_ratio * 2 = 0.12,
+# output = input * completion_ratio = 0.40, cache_read = input * cache_ratio
+# = 0.024, cache_write 0 (no create_cache_ratio configured).
 # Thinking is always enabled, so no toggle.
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -11,6 +17,6 @@ type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.06
-output = 0.20
-cache_read = 0.012
+input = 0.12
+output = 0.40
+cache_read = 0.024

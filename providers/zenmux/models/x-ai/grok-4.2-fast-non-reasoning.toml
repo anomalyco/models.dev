@@ -1,22 +1,20 @@
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "xai/grok-4.20-0309-non-reasoning"
 name = "Grok 4.2 Fast Non Reasoning"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-release_date = "2026-03-20"
-last_updated = "2026-03-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-08-31"
-open_weights = false
 
 [cost]
-input = 3.00
-output = 9.00
+input = 2
+output = 6
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 4
+output = 12
+cache_read = 0.2
 
 [limit]
 context = 2_000_000
-output = 30_000
 
 [modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+input = ["text", "image"]

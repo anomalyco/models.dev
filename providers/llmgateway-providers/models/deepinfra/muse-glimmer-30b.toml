@@ -1,0 +1,14 @@
+base_model = "meta/muse-glimmer-30b"
+name = "Muse Glimmer 30B (DeepInfra)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.04
+
+[limit]
+output = 16_384

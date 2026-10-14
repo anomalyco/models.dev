@@ -1,3 +1,4 @@
+# Fast mode is Azure priority processing (Global Standard): https://azure.microsoft.com/en-us/pricing/details/azure-openai/ and https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/priority-processing
 name = "GPT-5.1"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "gpt"
@@ -25,3 +26,7 @@ output = 128_000
 [modalities]
 input = ["text", "image", "audio"]
 output = ["text", "image", "audio"]
+
+[experimental.modes.fast]
+cost = { input = 2.50, output = 20.00, cache_read = 0.25 }
+provider = { body = { service_tier = "priority" } }

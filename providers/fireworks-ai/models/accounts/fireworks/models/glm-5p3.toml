@@ -19,18 +19,22 @@ base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
 last_updated = "2026-09-07"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 1.40
-output = 4.40
+input = 1.4
+output = 4.4
 cache_read = 0.26
 
 [limit]
 context = 1_048_573
 output = 262_144
+
+[experimental.modes.priority]
+cost = { input = 1.75, output = 5.5, cache_read = 0.325 }
+provider = { body = { service_tier = "priority" } }

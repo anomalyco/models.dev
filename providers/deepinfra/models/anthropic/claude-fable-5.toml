@@ -1,0 +1,23 @@
+# Host: Deep Infra (multi-model relay); Claude Fable 5 is served as partner
+# passthrough, so this entry inherits the lab metadata and carries only the
+# host's own pricing, capability flags, and reasoning surface.
+#
+# Reasoning: reasoning_effort (or reasoning.effort). The values mirror the lab
+# entry and the same-surface relay peers for this model. Deep Infra publishes no
+# model-specific off switch for this ID, so no toggle is authored.
+#
+# Sources (accessed 2026-10-13):
+#   https://docs.deepinfra.com/chat/reasoning
+#   https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
+#   https://api.deepinfra.com/models/list?type=text-generation
+#   https://deepinfra.com/anthropic/claude-fable-5
+base_model = "anthropic/claude-fable-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50

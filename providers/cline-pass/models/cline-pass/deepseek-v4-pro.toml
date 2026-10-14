@@ -1,5 +1,9 @@
+# https://docs.cline.bot/getting-started/clinepass
+# https://api-docs.deepseek.com/guides/thinking_mode/ (OpenAI: thinking.type + reasoning_effort)
+# First-party DeepSeek Pro: effort high|max (lab providers/deepseek/models/deepseek-v4-pro.toml)
+# Effort: reasoning_effort = none|high|max (none disables thinking)
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
 [cost]
 input = 1.74

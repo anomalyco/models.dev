@@ -1,10 +1,17 @@
+# Model controls: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-5.html
+# Pricing: Tokyo Standard dimensions, https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/ap-northeast-1/index.json
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# API: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html
+# Live US/global Sonnet 5 schema probes, 2026-09-09: outputConfig.textFormat rejected (output_config.format: Extra inputs are not permitted).
+# Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
+# Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel).
 base_model = "anthropic/claude-sonnet-5"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 name = "Claude Sonnet 5 (JP)"
-structured_output = true
+structured_output = false
 
 [cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+input = 2.2
+output = 11
+cache_read = 0.22
+cache_write = 2.75

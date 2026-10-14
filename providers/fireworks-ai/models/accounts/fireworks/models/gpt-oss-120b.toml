@@ -1,7 +1,5 @@
 name = "GPT OSS 120B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-# $.reasoning_effort = "low" | "medium" | "high".
-# https://docs.fireworks.ai/guides/reasoning (accessed 2026-06-25)
 family = "gpt-oss"
 release_date = "2025-08-05"
 last_updated = "2026-06-16"
@@ -17,7 +15,7 @@ values = ["low", "medium", "high"]
 
 [cost]
 input = 0.15
-output = 0.60
+output = 0.6
 cache_read = 0.015
 
 [limit]
@@ -27,3 +25,7 @@ output = 32_768
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[experimental.modes.priority]
+cost = { input = 0.18, output = 0.72, cache_read = 0.018 }
+provider = { body = { service_tier = "priority" } }

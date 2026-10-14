@@ -1,24 +1,10 @@
-name = "baichuan-m2-32b"
-description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-family = "baichuan"
-release_date = "2025-08-13"
-last_updated = "2025-08-13"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-12"
-tool_call = false
-structured_output = false
-open_weights = true
+# https://novita.ai/models/model-detail/baichuan-baichuan-m2-32b
+# https://huggingface.co/baichuan-inc/Baichuan-M2-32B
+# Toggle: chat_template_kwargs.thinking_mode = on|off (native OpenAI-compatible serving baseline).
+# Novita probes returned server_overload for default/on/off requests; the toggle is not live-verified on this host. Missing inventory features are not evidence that the checkpoint cannot reason.
+base_model = "baichuan/baichuan-m2-32b"
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.07
 output = 0.07
-
-[limit]
-context = 131072
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]
