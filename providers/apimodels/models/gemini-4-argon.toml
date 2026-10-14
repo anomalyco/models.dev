@@ -1,0 +1,17 @@
+# Sources (accessed 2026-10-14):
+# - Pricing: https://apimodels.app/models/gemini-4-argon ($1.10 input / $5.50 output / $0.055 cache read per 1M tokens)
+#   Priced at 55% of Google's introductory list ($2 / $10 / $0.10). Google's list rises to
+#   $4 / $20 / $0.20 on 2026-12-01; apimodels.app will follow with $1.10 -> $2.20 input,
+#   $5.50 -> $11.00 output, $0.055 -> $0.11 cache read, and this entry will be updated then.
+# - Model ID: https://api.apimodels.app/v1/models ("gemini-4-argon")
+base_model = "google/gemini-4-argon"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.10
+output = 5.50
+cache_read = 0.055
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.apimodels.app/v1beta"
