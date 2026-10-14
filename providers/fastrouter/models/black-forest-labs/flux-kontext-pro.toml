@@ -1,7 +1,2 @@
-# Input: architecture.input_modalities is ["text"]. Parameters are prompt, n, and size.
+# Input: contextImages accepts up to 4 reference images. Modalities are inherited from the lab.
 base_model = "black-forest-labs/flux-kontext-pro"
-attachment = false
-
-[modalities]
-input = ["text"]
-output = ["image"]

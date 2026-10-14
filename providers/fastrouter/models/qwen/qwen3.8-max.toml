@@ -1,4 +1,5 @@
 # Effort: reasoning_effort = low|medium|xhigh
+# No enable_thinking or thinking_budget. supported_parameters includes reasoning_effort only.
 # Limit: context_length 1048576
 base_model = "alibaba/qwen3.8-max"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
