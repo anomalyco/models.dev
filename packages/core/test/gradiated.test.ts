@@ -118,15 +118,19 @@ test("uses enumerated effort controls from the API and rejects invented effort n
   expect(() => gradiated.translateModel(item, context(null))).toThrow(MissingReasoningOptionsError);
 });
 
-test("keeps GLM's current lack of caller controls until the API advertises effort", () => {
+test("preserves authored GLM effort controls for legacy feeds and imports published updates", () => {
   const glm = model({ id: "z-ai/glm-5.3-flash" });
-  const current = { base_model: "zhipuai/glm-5.3-flash", reasoning_options: [] };
-  expect(buildGradiatedModel(glm, current.base_model, current).reasoning_options).toEqual([]);
+  const current = {
+    base_model: "zhipuai/glm-5.3-flash",
+    reasoning_options: [{ type: "effort", values: ["low", "high", "max"] }],
+  } satisfies ExistingModel;
+  expect(buildGradiatedModel(glm, current.base_model, current).reasoning_options)
+    .toEqual(current.reasoning_options);
   glm.properties.output_modalities[0]!.supported_parameters.reasoning_effort = {
-    type: "enum", values: ["low", "high", "max"],
+    type: "enum", values: ["high", "max"],
   };
   expect(buildGradiatedModel(glm, current.base_model, current).reasoning_options)
-    .toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
+    .toEqual([{ type: "effort", values: ["high", "max"] }]);
 });
 
 test("does not retain stale optional prices, tiers, or capabilities", () => {
