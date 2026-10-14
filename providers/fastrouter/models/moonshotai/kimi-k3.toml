@@ -1,3 +1,6 @@
+# Effort: reasoning_effort = low|high|max
+# Kimi K3 has no on/off field. FastRouter publishes reasoning_effort with an empty schema.
+# Limit: max_completion_tokens 1048576
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
