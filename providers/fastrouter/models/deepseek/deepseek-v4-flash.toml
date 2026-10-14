@@ -1,7 +1,11 @@
-# GET /api/v1/models deepseek/deepseek-v4-flash: supported_parameters and supported_params_details are max_tokens, temperature, top_p, top_k, stop, tools, tool_choice, response_format, stream, max_completion_tokens. reasoning, reasoning_effort, and thinking are absent.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 # Limit: context_length 1048576, max_completion_tokens 65536
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = []
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
 
 [cost]
 input = 0.09

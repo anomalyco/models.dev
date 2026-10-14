@@ -1,7 +1,10 @@
 # Toggle: reasoning true|false
-# reasoning and include_reasoning have empty schemas. No reasoning enum or thinking_budget.
+# Effort: low|medium|high|max, matching the OpenRouter peer. No thinking_budget on this route.
 base_model = "anthropic/claude-opus-4-6"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+]
 
 [cost]
 input = 5

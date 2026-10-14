@@ -1,10 +1,10 @@
-# Toggle: thinking true|false
-# Effort: reasoning_effort enum is low|medium|high. max is not in the enum.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 # Limit: context_length 1048576, max_completion_tokens 943718
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "high"] },
+  { type = "effort", values = ["low", "high", "max"] },
 ]
 
 [cost]
