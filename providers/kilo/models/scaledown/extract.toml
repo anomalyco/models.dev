@@ -1,0 +1,22 @@
+name = "ScaleDown: Extract"
+description = "Extract is a description-driven entity extraction model from ScaleDown. Instead of a fixed set of entity types, callers describe the fields they want in plain English through `provider.options.scaledown.entities`, and the..."
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0
+
+[limit]
+context = 1_000_000
+output = 900_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

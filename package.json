@@ -18,6 +18,7 @@
     "test": "bun test",
     "validate": "bun ./packages/core/script/validate.ts",
     "compare:migrations": "bun ./packages/core/script/compare-model-migrations.ts",
+    "aimlapi:sync": "bun ./packages/core/script/sync-models.ts aimlapi",
     "anthropic:sync": "bun ./packages/core/script/sync-models.ts anthropic",
     "baseten:sync": "bun ./packages/core/script/sync-models.ts baseten",
     "deepinfra:sync": "bun ./packages/core/script/sync-models.ts deepinfra",
@@ -44,6 +45,7 @@
     "fireworks:sync": "bun ./packages/core/script/sync-models.ts fireworks-ai",
     "ambient:sync": "bun ./packages/core/script/sync-models.ts ambient",
     "models:sync": "bun ./packages/core/script/sync-models.ts",
+    "prime:sync": "bun ./packages/core/script/sync-models.ts prime",
     "sync:models": "bun ./packages/core/script/sync-models.ts",
     "sync:auto-merge": "bun ./packages/core/script/check-sync-auto-merge.ts"
   },

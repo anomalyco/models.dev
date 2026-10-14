@@ -7,6 +7,7 @@ import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
+import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -40,6 +41,7 @@ import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
+import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
@@ -144,6 +146,7 @@ export interface SyncResult {
 
 export const providers: {
   aiand: SyncProvider<any>;
+  aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
@@ -178,6 +181,7 @@ export const providers: {
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
+  prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
@@ -186,6 +190,7 @@ export const providers: {
   xai: SyncProvider<any>;
 } = {
   aiand,
+  aimlapi,
   ambient,
   anthropic,
   baseten,
@@ -220,6 +225,7 @@ export const providers: {
   openrouter,
   ovhcloud,
   pioneer,
+  prime,
   requesty,
   tinfoil,
   vercel,
@@ -230,6 +236,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "aimlapi",
     "crossmodel",
     "edenai",
     "empiriolabs",
@@ -244,6 +251,7 @@ export const groups = {
     "ofox",
     "requesty",
     "openrouter",
+    "prime",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],

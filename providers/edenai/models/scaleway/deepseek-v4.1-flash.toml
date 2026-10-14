@@ -1,6 +1,5 @@
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash (Scaleway)"
-attachment = false
 structured_output = false
 
 [[reasoning_options]]
@@ -8,12 +7,9 @@ type = "effort"
 values = ["none", "low", "high", "max"]
 
 [cost]
-input = 0.67086
-output = 2.012581
-cache_read = 0.134172
+input = 0.67128
+output = 2.01384
+cache_read = 0.134256
 
 [limit]
 context = 256_000
-
-[modalities]
-input = ["text"]

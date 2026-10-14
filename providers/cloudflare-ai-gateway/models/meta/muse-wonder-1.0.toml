@@ -1,0 +1,10 @@
+base_model = "meta/muse-wonder-1.0"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2

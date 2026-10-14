@@ -1,0 +1,28 @@
+name = "DeepSeek V4 Flash Vision Exp Cybersecurity"
+description = "A cybersecurity-focused variant of DeepSeek V4 Flash Vision Exp, with image understanding, tool calling, optional reasoning, and a 1,048,576-token context window."
+family = "deepseek"
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "xhigh"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.075
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

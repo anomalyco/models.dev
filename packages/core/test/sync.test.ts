@@ -4776,6 +4776,22 @@ test("Vercel sync accepts evaluation and unknown future model types", () => {
   expect(buildVercelModel(future!, undefined).type).toBeUndefined();
 });
 
+test("Vercel sync skips batch routes", () => {
+  const route = (id: string) => ({
+    id,
+    name: id,
+    created: 1_755_815_280,
+    context_window: 200_000,
+    max_tokens: 64_000,
+    type: "language",
+  });
+  const models = vercel.parseModels({
+    data: [route("anthropic/claude-sonnet-4.5"), route("anthropic/claude-sonnet-4.5-batch")],
+  });
+
+  expect(models.map((model) => model.id)).toEqual(["anthropic/claude-sonnet-4.5"]);
+});
+
 test("Vercel sync preserves Liquid d1 as a decision model via its lab metadata", () => {
   const [model] = vercel.parseModels({
     data: [{
@@ -5173,6 +5189,7 @@ test("syncs OpenRouter decision models with no supported parameters as decision 
     description: "Decision model for typed evaluation of shared state",
     modalities: { input: ["text", "image"], output: ["text"] },
     cost: { input: 0.15, output: 0 },
+    limit: { context: 65_536, output: 0 },
   });
   expect(openrouter.translateModel(openRouterModel(), {
     existing: () => undefined,
@@ -5198,6 +5215,27 @@ test("factors OpenRouter decision models onto decision lab metadata without a ch
   expect(translated?.model).toMatchObject({ base_model: "liquid/d1", cost: { input: 0.04, output: 0 } });
   expect(translated?.model).not.toHaveProperty("type"); // inherited from lab metadata
   expect(translated?.model).not.toHaveProperty("description");
+  expect(translated?.model).not.toHaveProperty("limit");
+});
+
+test("inherits canonical Drex2 metadata instead of retaining an OpenRouter completion limit", () => {
+  for (const existing of [undefined, { limit: { output: 117_964 } }]) {
+    const model = buildOpenRouterModel(openRouterModel({
+      id: "nace-ai/drex-v2.0",
+      name: "Nace AI: Drex v2.0",
+      knowledge_cutoff: null,
+      context_length: 131_072,
+      architecture: { input_modalities: ["text"], output_modalities: ["decisions"] },
+      pricing: { prompt: "0.00000006", completion: "0" },
+      top_provider: { context_length: 131_072, max_completion_tokens: 117_964 },
+      supported_parameters: [],
+    }), existing);
+
+    expect(model).toMatchObject({ base_model: "nace-ai/drex-v2.0", cost: { input: 0.06, output: 0 } });
+    for (const inherited of ["type", "description", "limit", "structured_output", "open_weights"]) {
+      expect(model).not.toHaveProperty(inherited);
+    }
+  }
 });
 
 test("parses nullable EmpirioLabs release dates", () => {

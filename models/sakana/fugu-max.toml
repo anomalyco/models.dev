@@ -1,0 +1,21 @@
+# Lab metadata carried over from providers/openrouter/models/sakana/fugu-max.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+name = "Fugu Max"
+description = "Multi-agent model for routing expert agents across complex analytical tasks"
+family = "fugu"
+release_date = "2026-09-11"
+last_updated = "2026-09-11"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

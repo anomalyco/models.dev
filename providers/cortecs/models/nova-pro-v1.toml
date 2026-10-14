@@ -1,15 +1,7 @@
-name = "Nova Pro 1.0"
+base_model = "amazon/nova-pro-v1"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "nova-pro"
-release_date = "2024-12-03"
-last_updated = "2024-12-03"
-attachment = true
 reasoning = true
-temperature = true
-tool_call = true
 structured_output = true
-knowledge = "2024-04"
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -17,9 +9,7 @@ input = 0.918
 output = 3.671
 
 [limit]
-context = 300_000
 output = 10_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]

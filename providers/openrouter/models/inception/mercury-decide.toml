@@ -4,7 +4,7 @@ description = "Decision model for typed evaluation of shared state"
 family = "mercury"
 release_date = "2026-09-30"
 last_updated = "2026-09-30"
-attachment = false
+attachment = true
 reasoning = false
 temperature = false
 tool_call = false
@@ -18,8 +18,8 @@ cache_read = 0
 
 [limit]
 context = 65_536
-output = 58_982
+output = 0
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
