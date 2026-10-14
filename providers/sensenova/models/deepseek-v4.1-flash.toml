@@ -8,24 +8,17 @@
 # not a schema-supported interleaved field, so no interleaved is authored.
 
 base_model = "deepseek/deepseek-v4.1-flash"
-name = "DeepSeek V4.1 Flash"
 description = "DeepSeek V4.1 Flash is a high-performance conversational model by DeepSeek, supporting thinking/non-thinking modes, 1M context window, and tool calling."
-last_updated = "2026-10-13"
-reasoning = true
 reasoning_options = [
   { type = "effort", values = ["none", "low", "high", "max"] },
 ]
-temperature = true
-tool_call = true
-structured_output = true
+
+[interleaved]
+field = "reasoning_content"
 
 [limit]
 context = 1_048_576
 output = 65_536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [cost]
 input = 0
