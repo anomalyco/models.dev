@@ -1,9 +1,10 @@
-# Effort: reasoning_effort = none|low|high|max on POST /v1/chat/completions; none turns thinking off.
+# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions.
+# none doesn't switch thinking off for this model on this host (tested 2026-10-14, 3 of 3), so it isn't listed.
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "high", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.23

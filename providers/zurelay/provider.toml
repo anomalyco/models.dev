@@ -4,8 +4,9 @@
 # https://zurelay.com/docs/models
 # Reasoning: POST /v1/chat/completions takes top-level reasoning_effort. Each
 # model takes the levels in its file; a level it doesn't take runs at the
-# closest one it does, and none turns thinking off where listed.
-# https://zurelay.com/docs/chat (accessed 2026-10-12)
+# closest one it does, and none turns thinking off where listed. A few
+# models switch thinking another way, as their files say.
+# https://zurelay.com/docs/chat (accessed 2026-10-14)
 name = "Zurelay"
 npm = "@ai-sdk/openai-compatible"
 env = ["ZURELAY_API_KEY"]
