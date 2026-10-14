@@ -5,7 +5,7 @@ family = "flux"
 type = "image"
 release_date = "2025-05-29"
 last_updated = "2025-05-29"
-attachment = false
+attachment = true
 reasoning = false
 temperature = false
 tool_call = false
@@ -16,5 +16,5 @@ context = 0
 output = 0
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["image"]
