@@ -1,3 +1,4 @@
+# https://huggingface.co/Qwen/Qwen3-14B
 name = "Qwen3 14B"
 description = "A versatile dense model offering powerful reasoning abilities paired with efficient dialogue processing."
 family = "qwen"
@@ -11,8 +12,8 @@ structured_output = true
 open_weights = true
 
 [limit]
-context = 40_960
-output = 40_960
+context = 131_072
+output = 8_192
 
 [modalities]
 input = ["text"]

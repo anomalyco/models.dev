@@ -1,3 +1,4 @@
+# https://huggingface.co/Qwen/Qwen2.5-72B-Instruct
 name = "Qwen2.5 72B Instruct"
 description = "Alibaba's largest Qwen2.5 model featuring improved capabilities in coding, mathematics, and instruction following across more than 29 languages."
 family = "qwen"
@@ -11,8 +12,8 @@ structured_output = true
 open_weights = true
 
 [limit]
-context = 32_768
-output = 16_384
+context = 131_072
+output = 8_192
 
 [modalities]
 input = ["text"]
