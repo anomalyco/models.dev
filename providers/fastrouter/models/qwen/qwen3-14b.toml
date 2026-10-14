@@ -1,4 +1,5 @@
-# Toggle: reasoning enabled|disabled on POST /api/v1/chat/completions
+# Limit: context_length 40960, max_completion_tokens 40960
+# Toggle: reasoning true|false
 base_model = "alibaba/qwen3-14b"
 reasoning_options = [{ type = "toggle" }]
 
