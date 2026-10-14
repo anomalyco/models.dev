@@ -1,0 +1,25 @@
+name = "Grok 4 (xAI)"
+description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
+family = "grok"
+release_date = "2025-07-09"
+last_updated = "2025-07-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.75
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,18 @@
+# OCI list price, pay as you go, USD (public price list, part B111035, accessed 2026-09-14):
+# $0.0018 per 10,000 transactions, where one transaction is one character of input or
+# output. OCI's model pages estimate four characters per token, so the per-token price used
+# here is $0.0018 / 10,000 * 4 * 1,000,000 = $0.72 per 1M input and output tokens.
+# Limits from https://docs.oracle.com/en-us/iaas/Content/generative-ai/meta-llama-4-scout.htm
+# The endpoint returns tool-call arguments as JSON strings and requires the first message
+# of a tool-calling request to be a user message.
+base_model = "meta/llama-4-scout-17b-instruct"
+# opencode sends its system prompt first with tools; OCI rejects that for Llama models
+# (400 "Tool calling for this Llama model requires the first message to be a user message").
+tool_call = false
+
+[cost]
+input = 0.72
+output = 0.72
+
+[limit]
+context = 192_000

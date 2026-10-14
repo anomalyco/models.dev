@@ -1,0 +1,18 @@
+# Live inventory and pricing: https://api.arcee.ai/api/v1/models (verified 2026-08-17).
+# This dated route is not yet listed on Arcee's public pricing page.
+# No toggle: thinking.type=enabled|disabled is rejected by the live API.
+# Effort: reasoning_effort = high|max; low is rejected.
+base_model = "deepseek/deepseek-v4-pro-0813"
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.044
+
+[limit]
+context = 1_048_576

@@ -1,0 +1,11 @@
+base_model = "xai/grok-4.6"
+name = "Grok 4.6 (AWS Bedrock)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5

@@ -1,1 +1,10 @@
-../../../groq/models/moonshotai/kimi-k2-instruct.toml
+base_model = "moonshotai/kimi-k2"
+name = "Kimi K2 Instruct"
+description = "Kimi model for long-context chat, coding, and agentic reasoning"
+
+[cost]
+input = 0.57
+output = 2.3
+
+[limit]
+output = 131_072

@@ -1,0 +1,11 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/nano-banana-2-1
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking (thinking_level MINIMAL, MEDIUM, HIGH)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (text output $7.50; image output $30)
+base_model = "google/gemini-nano-banana-2.1"
+reasoning_options = [{ type = "effort", values = ["minimal", "medium", "high"] }]
+
+[cost]
+input = 1.5
+output = 30
+cache_read = 0.15

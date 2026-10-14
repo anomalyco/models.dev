@@ -1,0 +1,24 @@
+# Effort: reasoning_effort = low|high|max (always-on; no none)
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-14: low|high|max → 200; none|minimal|medium|xhigh → 400.
+# Modalities: text + image + PDF; video rejected on this host.
+# temperature = true: the host accepts the parameter (live probe 2026-09-14: 200 at 0.0 and 1.8); the lab file records Moonshot's own API as false.
+# Reasoning side channel: message.reasoning_content
+base_model = "moonshotai/kimi-k3"
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3
+output = 12.5
+cache_read = 0.5
+
+[modalities]
+input = ["text", "image", "pdf"]

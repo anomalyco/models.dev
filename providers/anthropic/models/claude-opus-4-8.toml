@@ -1,4 +1,5 @@
 name = "Claude Opus 4.8"
+description = "Top Claude Opus tier for the hardest reasoning, coding, and long-horizon agents"
 family = "claude-opus"
 release_date = "2026-05-28"
 last_updated = "2026-05-28"
@@ -6,6 +7,8 @@ attachment = true
 reasoning = true
 temperature = false
 tool_call = true
+structured_output = true
+knowledge = "2026-01"
 open_weights = false
 
 [[reasoning_options]]
@@ -13,9 +16,9 @@ type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
+input = 5
+output = 25
+cache_read = 0.5
 cache_write = 6.25
 
 [limit]

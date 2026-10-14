@@ -1,0 +1,33 @@
+# Sources (accessed 2026-08-16):
+#   https://huggingface.co/swiss-ai/Apertus-8B-Instruct-2509
+#   https://arxiv.org/abs/2509.14233
+# The model card states "Apertus by default supports a context length up to 65,536 tokens",
+# Apache-2.0 licensing, and tool use support. Sibling entry: models/swiss-ai/apertus-70b.toml.
+name = "Apertus 8B"
+description = "Fully open 8B multilingual LLM supporting 1800+ languages with 65K context. Trained on compliant open data. Apache 2.0, EU AI Act compliant."
+release_date = "2025-09-02"
+last_updated = "2025-09-02"
+knowledge = "2025-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 65_536
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/swiss-ai/Apertus-8B-Instruct-2509"
+
+[[links]]
+label = "Paper"
+url = "https://arxiv.org/abs/2509.14233"
+type = "paper"

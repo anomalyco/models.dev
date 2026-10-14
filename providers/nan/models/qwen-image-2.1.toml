@@ -1,0 +1,20 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-26)
+# Qwen image model for text-to-image with strong prompt adherence and clean
+# text rendering inside the image. Served through the OpenAI Images API
+# (/v1/images/generations): text-to-image only, there is no editing endpoint on
+# this host, so the lab model's image input (reference-image editing) is not
+# exposed here and attachments are unsupported (attachment = false).
+# Resolution 512-1280 px (multiples of 16), 1-4 images per request,
+# output as a temporary URL (R2, ~60 min) or base64, reproducible via seed
+# (0-2147483647).
+# Requires the inference tier; billed as a monthly quota of 100 requests per
+# member shared with flux-2-klein, so no per-token price.
+base_model = "alibaba/qwen-image-2.1"
+attachment = false
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text"]

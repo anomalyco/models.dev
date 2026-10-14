@@ -1,0 +1,12 @@
+base_model = "meituan/longcat-2.0"
+name = "LongCat 2.0"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.75
+output = 3
+cache_read = 0.015
+
+[limit]
+input = 1_000_000

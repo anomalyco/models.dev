@@ -1,12 +1,14 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "alibaba/qwen3.6-35b-a3b"
 
-[cost]
-input = 0.14
-output = 1
+[[reasoning_options]]
+type = "toggle"
 
-[limit]
-context = 262_140
-output = 262_140
+[cost]
+input = 0.1
+output = 0.95
+cache_read = 0.1
 
 [modalities]
 input = ["text", "image", "video"]

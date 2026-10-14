@@ -1,0 +1,19 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro (DeepSeek)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.003625
+
+[limit]
+context = 1_050_000
+output = 393_216

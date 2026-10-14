@@ -1,0 +1,11 @@
+base_model = "perplexity/sonar-deep-research"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 2
+output = 8
+reasoning = 3

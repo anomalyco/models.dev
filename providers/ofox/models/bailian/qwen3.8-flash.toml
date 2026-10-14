@@ -1,0 +1,14 @@
+# Sources (accessed 2026-08-27):
+# https://ofox.ai/en/models/bailian/qwen3.8-flash (pricing, context 1M/131K, capabilities)
+# https://www.qwencloud.com/models/qwen3.8-flash (lab pricing/limits; enable_thinking example)
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+# Toggle: enable_thinking true|false (Bailian/DashScope chat path via Ofox; same surface as ofox bailian/qwen3.5-flash, qwen3.6-flash)
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+cache_write = 0.2

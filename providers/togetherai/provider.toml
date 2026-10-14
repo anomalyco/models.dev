@@ -1,4 +1,13 @@
 name = "Together AI"
 env = ["TOGETHER_API_KEY"]
 npm = "@ai-sdk/togetherai"
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.together.ai/v1/chat/completions
+# JSON reasoning.enabled: true | false; reasoning_effort: "low" | "medium" |
+# "high" in the generic schema. Compatibility form:
+# chat_template_kwargs.thinking or .enable_thinking: true | false.
+# No reasoning-token budget is documented; max_tokens caps total output.
+# Sources:
+# https://docs.together.ai/reference/chat-completions
+# https://docs.together.ai/docs/inference/chat/reasoning
 doc = "https://docs.together.ai/docs/serverless-models"

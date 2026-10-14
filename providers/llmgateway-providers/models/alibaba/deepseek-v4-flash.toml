@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (Alibaba Cloud)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.2
+output = 0.4
+cache_read = 0.04
+
+[limit]
+output = 393_216

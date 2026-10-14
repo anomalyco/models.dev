@@ -1,0 +1,17 @@
+base_model = "nvidia/nemotron-3.5-content-safety"
+attachment = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.05
+output = 0.15
+cache_read = 0.025
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]

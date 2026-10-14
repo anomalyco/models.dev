@@ -1,0 +1,24 @@
+name = "Jamba Large"
+description = "AI21's hybrid SSM-Transformer long-context model for enterprise agents and grounded generation"
+family = "jamba"
+release_date = "2025-07-01"
+last_updated = "2025-07-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2024-08-22"
+open_weights = true
+
+[limit]
+context = 256_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ai21labs/AI21-Jamba-Large-1.6"

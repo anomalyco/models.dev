@@ -1,0 +1,17 @@
+# Sources:
+# - https://ofox.ai/en/models/anthropic/claude-opus-4.6 (pricing, context, capabilities; accessed 2026-08-06)
+# - https://api.ofox.ai/v2/models/catalog (remote id anthropic/claude-opus-4.6)
+# - Lab: models/anthropic/claude-opus-4-6.toml; first-party effort: providers/anthropic/models/claude-opus-4-6.toml
+# Effort: Anthropic adaptive thinking effort on Ofox Anthropic protocol (same surface as other ofox anthropic/* entries)
+base_model = "anthropic/claude-opus-4-6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.ofox.ai/anthropic/v1"

@@ -1,0 +1,24 @@
+name = "Pokee-Isaac 28B"
+description = "Pokee-Isaac is a 28B agentic model with a roughly 10-million-token context window, function calling, and OpenAI-compatible structured output. Pokee bills in $0.01 increments, rounding each non-zero request up to the next cent."
+release_date = "2026-08-04"
+last_updated = "2026-08-04"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 1
+cache_read = 0.075
+
+[limit]
+context = 10_000_000
+input = 10_000_000
+output = 60_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,18 @@
+# https://novita.ai/models/model-detail/inclusionai-ling-3.1-flash
+# Toggle: thinking.type = enabled|disabled (Ling peer baseline; live checks returned server_overload).
+# The public model page and /models both list zero input/output prices on 2026-10-09.
+base_model = "inclusionai/ling-3.1-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3
+output = 0.9
+cache_read = 0.06
+
+[limit]
+output = 262_144

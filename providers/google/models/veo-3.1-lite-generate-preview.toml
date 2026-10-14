@@ -1,0 +1,15 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/veo-3.1-lite-generate-preview
+#   (Gemini API model code veo-3.1-lite-generate-preview; text+image → video with audio;
+#    text input limit 1,024 tokens; latest update March 2026)
+# - https://blog.google/innovation-and-ai/technology/ai/veo-3-1-lite/
+#   (launched 2026-03-31 on Gemini API paid tier / Google AI Studio)
+# - https://ai.google.dev/gemini-api/docs/pricing
+#   (Veo 3.1 Lite default video+audio: $0.05/s 720p, $0.08/s 1080p; 4k not supported.
+#    Catalog cost fields are USD per million tokens, so token cost is omitted.)
+base_model = "google/veo-3.1-lite-generate-preview"
+name = "Veo 3.1 lite"
+
+[limit]
+context = 480
+output = 8_192

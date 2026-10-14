@@ -1,0 +1,10 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# No caller-facing thinking control on this route, and no reasoning emitted. Measured 2026-08-16:
+#   reasoning_effort -> 400 "does not expose a thinking mode"; default, enable_thinking=true and
+#   enable_thinking=false all return no reasoning_content and no reasoning tokens.
+base_model = "alibaba/qwen3-coder-flash"
+
+[cost]
+input = 0.3
+output = 1.5

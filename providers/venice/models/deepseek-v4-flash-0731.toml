@@ -1,0 +1,14 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+last_updated = "2026-08-01"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.13
+output = 0.26
+cache_read = 0.028
+
+[limit]
+output = 32_768

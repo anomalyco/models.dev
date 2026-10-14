@@ -1,34 +1,30 @@
+# Legacy alias. The DeepSeek-V4-Flash model is retired; requests to
+# `deepseek-v4-flash` are still accepted but served by DeepSeek-V4.1-Flash and
+# billed at the Flash price.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-10)
+# Served by deepseek-flash; Chat API max_tokens <= 393216:
+# https://api-docs.deepseek.com/api/create-chat-completion/
+base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4 Flash"
-family = "deepseek-flash"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2025-05"
-tool_call = true
-structured_output = true
-open_weights = true
+status = "deprecated"
 
 [[reasoning_options]]
 type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
+input = 0.15
+output = 0.6
+reasoning = 0.6
+cache_read = 0.003
 
 [limit]
-context = 1_000_000
-output = 384_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 393_216

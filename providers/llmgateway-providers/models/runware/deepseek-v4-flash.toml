@@ -1,0 +1,17 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (Runware)"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh", "max"]
+
+[cost]
+input = 0.076
+output = 0.153
+cache_read = 0.014
+
+[limit]
+context = 1_048_576

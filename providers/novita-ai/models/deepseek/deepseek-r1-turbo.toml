@@ -1,11 +1,9 @@
-name = "DeepSeek R1 (Turbo)	"
-release_date = "2025-03-05"
-last_updated = "2025-03-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+# https://novita.ai/models/model-detail/deepseek-deepseek-r1-turbo
+# thinking.type and separate_reasoning did not change the inline <think> reasoning observed on this route.
+base_model = "deepseek/deepseek-r1"
+name = "DeepSeek R1 (Turbo)"
+structured_output = true
+reasoning_options = []
 
 [cost]
 input = 0.7
@@ -14,7 +12,3 @@ output = 2.5
 [limit]
 context = 64_000
 output = 16_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

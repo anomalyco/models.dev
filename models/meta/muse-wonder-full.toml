@@ -1,0 +1,145 @@
+# Sources:
+# https://research.meta.ai/blog/muse-wonder
+# https://research.meta.ai/static/muse-wonder-model-card (PDF; scores on the capabilities scorecard)
+# The model card states a 1M-token context; Meta documents its 1M Muse context as 1,048,576 tokens.
+# Meta has not yet published an output limit, knowledge cutoff, or API reference for this model.
+
+name = "Muse Wonder Full"
+description = "Muse Wonder Full is the most capable model in Meta's Muse Wonder series, built for long-running professional agents and ultra-long-horizon software engineering. It shares Muse Wonder's Active Memory and Active Focus capabilities and generally scores higher on Meta's agentic and coding evaluations."
+family = "muse"
+release_date = "2026-10-12"
+last_updated = "2026-10-12"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[[links]]
+label = "Announcement"
+url = "https://research.meta.ai/blog/muse-wonder"
+type = "announcement"
+
+[[links]]
+label = "Model card"
+url = "https://research.meta.ai/static/muse-wonder-model-card"
+type = "model_card"
+
+[[benchmarks]]
+name = "Harvey Legal Agent Benchmark"
+score = 13.1
+metric = "all-pass rate"
+variant = "max effort; Artificial Analysis LAB-AA"
+version = "1.1"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "Finance Agent"
+score = 59.1
+metric = "accuracy"
+variant = "max effort"
+version = "v2"
+dataset = "Vals AI private test set"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "HealthBench Professional"
+score = 62.3
+metric = "length-normalized weighted rubric score"
+variant = "max effort"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 45.4
+metric = "strict pass@1"
+variant = "max effort; Artificial Analysis AutomationBench-AA"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "GDP.pdf"
+score = 33.2
+metric = "score"
+variant = "max effort"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "JobBench"
+score = 75.3
+metric = "mean reward"
+variant = "max effort"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 78.4
+metric = "mean partial score"
+variant = "max effort"
+version = "2.1"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 39.4
+metric = "binary completion rate"
+variant = "max effort"
+version = "2.1"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 57.1
+metric = "accuracy"
+variant = "max effort; Artificial Analysis Terminal-Bench 4.0-AA"
+version = "4.0"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 79.0
+metric = "pass@1"
+variant = "max effort"
+version = "1.1"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "SWE-Marathon"
+score = 57.5
+metric = "pass@1"
+variant = "xhigh effort"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "ProgramBench"
+score = 59.0
+metric = "share of rollouts passing at least 95% of tests"
+variant = "max effort"
+harness = "mini-swe-agent"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 56
+metric = "index score"
+variant = "max effort"
+version = "4.3"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"

@@ -1,6 +1,8 @@
 name = "gpt-oss-120b"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 tool_call = true
 structured_output = true
 temperature = true
@@ -17,7 +19,7 @@ cache_read = 0.015
 cache_write = 0.18
 
 [limit]
-context = 128_000
+context = 131_072
 input = 124_000
 output = 8_192
 

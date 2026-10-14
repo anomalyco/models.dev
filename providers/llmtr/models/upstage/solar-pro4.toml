@@ -1,0 +1,15 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# Effort: $.reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# The nested $.reasoning.effort form is also accepted by the gateway; the
+# top-level field is documented here to match the sibling solar-pro2/pro3
+# entries and Upstage's own chat-completions field.
+base_model = "upstage/solar-pro4"
+
+[cost]
+input = 0.03
+output = 0.12
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]

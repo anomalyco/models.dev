@@ -1,4 +1,5 @@
 name = "Llama 3.3 70B"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
 release_date = "2025-07-03"
 last_updated = "2025-07-03"
@@ -6,11 +7,12 @@ attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 2.00
-output = 2.00
+input = 1.75
+output = 2.75
+cache_read = 1.75
 
 [limit]
 context = 128_000

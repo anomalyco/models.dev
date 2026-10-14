@@ -1,0 +1,17 @@
+# https://novita.ai/models/model-detail/tencent-hy3
+# Effort: reasoning_effort = none|high; none suppresses reasoning. Native effort baseline retained; accepted aliases are not additional distinct levels.
+base_model = "tencent/hy3"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.58
+cache_read = 0.035
+
+[limit]
+context = 262_144
+output = 262_144

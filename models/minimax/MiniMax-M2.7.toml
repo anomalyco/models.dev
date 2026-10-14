@@ -1,4 +1,5 @@
 name = "MiniMax-M2.7"
+description = "Open MiniMax flagship for coding agents, office automation, and complex environments"
 family = "minimax"
 release_date = "2026-03-18"
 last_updated = "2026-03-18"
@@ -19,3 +20,27 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/MiniMaxAI/MiniMax-M2.7"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 79.9
+metric = "resolved"
+harness = "Claude Code"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 56.2
+metric = "resolve rate"
+harness = "Claude Code"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 51.1
+metric = "success rate"
+version = "2.1"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"

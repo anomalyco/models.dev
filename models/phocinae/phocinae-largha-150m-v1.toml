@@ -1,0 +1,29 @@
+name = "Phocinae Largha 150M v1"
+type = "decision"
+description = "Encoder decision model that answers typed questions (noul, choice, score) over text with calibrated probabilities, on CPU and GPU"
+release_date = "2026-10-08"
+last_updated = "2026-10-09"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = true
+temperature = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 8_192
+output = 0 # decisions return no output tokens; the decision sequence is 512 tokens by default
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Phocinae/Phocinae-Largha-150M-v1"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/Phocinae/Phocinae-Largha-150M-v1"
+type = "model_card"

@@ -1,0 +1,19 @@
+# Azure AI Foundry serves Claude Opus 4.7 at Anthropic list pricing:
+# https://platform.claude.com/docs/en/about-claude/pricing
+# Claude 4.6+ bills the full 1M context window at standard rates (no long-context
+# premium), so no [[cost.tiers]] here — the tiers on azure's claude-opus-4-6/4-8
+# entries predate that policy. Model availability:
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models?tabs=pay-go#available-claude-models
+base_model = "anthropic/claude-opus-4-7"
+# Possible values described at https://platform.claude.com/docs/en/build-with-claude/effort#effort-levels
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 5.00
+output = 25.00
+cache_read = 0.50
+cache_write = 6.25
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

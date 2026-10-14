@@ -1,0 +1,12 @@
+base_model = "mistral/mistral-small-24b-instruct-2501"
+name = "Mistral Small 24B"
+tool_call = true
+structured_output = false
+
+[cost]
+input = 0.1155
+output = 0.3465
+
+[limit]
+input = 32_768
+output = 8_192

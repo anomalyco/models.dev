@@ -1,0 +1,27 @@
+# Sources:
+# https://mistral.ai/news/devstral-2-vibe-cli/
+# https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512
+name = "Devstral Small 2"
+description = "Compact multimodal coding model for repository exploration, file editing, and software agents"
+family = "devstral"
+release_date = "2025-12-09"
+last_updated = "2025-12-09"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2025-12"
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512"

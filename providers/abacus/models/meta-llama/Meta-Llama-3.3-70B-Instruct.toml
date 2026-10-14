@@ -1,0 +1,21 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 131072
+# RouteLLM max_completion_tokens: 8192
+# RouteLLM input_token_rate: 0.00000059
+# RouteLLM output_token_rate: 0.00000079
+base_model = "meta/llama-3.3-70b-instruct"
+reasoning = false
+
+[cost]
+input = 0.59
+output = 0.79
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,20 +1,11 @@
-name = "DeepSeek: DeepSeek V3.1"
-release_date = "2025-08-21"
-last_updated = "2025-08-21"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "deepseek/deepseek-chat-v3.1"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
-input = 0.15
-output = 0.75
-
-[limit]
-context = 32768
-output = 7168
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 0.25
+output = 0.95
+cache_read = 0.13

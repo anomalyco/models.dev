@@ -1,23 +1,12 @@
-name = "Qwen3 Omni 30B A3B Thinking"
-release_date = "2025-09-24"
-last_updated = "2025-09-24"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+# https://novita.ai/models/model-detail/qwen-qwen3-omni-30b-a3b-thinking
+# https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Thinking
+# Native thinking-only checkpoint; no caller toggle/budget is established. Novita rejects the tested enable/effort controls and emits no separate reasoning on the tested prompts, which does not establish that the checkpoint lacks reasoning capability.
+# Preserve the curated input-audio rate, which the inventory does not return; output-audio pricing is inapplicable to this text-output checkpoint.
+base_model = "alibaba/qwen3-omni-30b-a3b-thinking"
+reasoning_options = []
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.25
 output = 0.97
-input_audio = 2.2        # Cost per million audio input tokens (USD)
-output_audio = 1.788
-
-[limit]
-context = 65_536
-output = 16_384
-
-[modalities]
-input = ["text", "audio", "video", "image"]
-output = ["text"]
+input_audio = 2.2

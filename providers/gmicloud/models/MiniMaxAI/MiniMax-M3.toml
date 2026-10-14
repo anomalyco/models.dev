@@ -1,0 +1,30 @@
+# Sources verified 2026-08-25:
+# Authenticated GET https://api.gmi-serving.com/v1/models paid record:
+# context_length=1048576; pricing.prompt=0.000000600,
+# pricing.completion=0.000002400, pricing.input_cache_read=0.000000120.
+# pricing.overrides[0]: min_prompt_tokens=512000, prompt=0.000001200,
+# completion=0.000004800, input_cache_read=0.000000240.
+# Costs below convert those per-token USD values to USD per million tokens.
+# https://docs.gmicloud.ai/inference-engine/billing/price directs users to the
+# live GMI rate card; https://www.gmicloud.ai/minimax-week documents the
+# duplicate zero-price record as a temporary 14-day promotion.
+# Toggle: $.thinking.type = adaptive|disabled
+# A GMI Chat Completions probe with reasoning_split=true returned 170 chars of
+# reasoning_content for adaptive and omitted reasoning_content for disabled.
+# Native wire docs: https://platform.minimax.io/docs/api-reference/text-openai-api
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.60
+output = 2.40
+cache_read = 0.12
+
+[[cost.tiers]]
+tier = { type = "context", size = 512_000 }
+input = 1.20
+output = 4.80
+cache_read = 0.24
+
+[limit]
+context = 1_048_576

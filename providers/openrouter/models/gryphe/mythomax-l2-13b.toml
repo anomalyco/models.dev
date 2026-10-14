@@ -1,4 +1,5 @@
 name = "MythoMax 13B"
+description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
 release_date = "2023-07-02"
 last_updated = "2023-07-02"
 attachment = false
@@ -10,12 +11,12 @@ knowledge = "2023-06-30"
 open_weights = true
 
 [cost]
-input = 0.06
-output = 0.06
+input = 0.08
+output = 0.11
 
 [limit]
-context = 4_096
-output = 4_096
+context = 8_192
+output = 3_686
 
 [modalities]
 input = ["text"]

@@ -1,0 +1,15 @@
+# Azure catalog: https://ai.azure.com/catalog/models/claude-mythos-5
+# Effort: output_config.effort = low|medium|high|xhigh|max; thinking is always on.
+base_model = "anthropic/claude-mythos-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+status = "beta"
+
+[cost]
+input = 10.00
+output = 50.00
+cache_read = 1.00
+cache_write = 12.50
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://${AZURE_COGNITIVE_SERVICES_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

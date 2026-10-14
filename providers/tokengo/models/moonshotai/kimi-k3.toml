@@ -1,0 +1,19 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub $3.00/$15.00: https://www.tokengo.com/models
+# - Exact console rates incl. cache $3.00/$15.00/$0.30 (TokenGo model table ratios)
+# TokenGo OpenAI-compatible extra_body; same controls as typical Kimi K3 openai-compat peers.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3

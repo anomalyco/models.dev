@@ -1,6 +1,12 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-deepseek.html
+# R1 has always-on reasoning; the API accepts 32,768 output tokens (8,192 recommended).
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-r1.html
+# Live Converse (us-east-1, 2026-09-09): toolConfig rejected with HTTP 400,
+# "This model doesn't support tool use." with AUTO or omitted toolChoice.
 base_model = "deepseek/deepseek-r1"
 reasoning_options = []
 name = "DeepSeek-R1 (US)"
+tool_call = false
 
 [cost]
 input = 1.35

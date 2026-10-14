@@ -22,6 +22,17 @@ You can access this data through an API.
 curl https://models.dev/api.json
 ```
 
+Specialized model types are omitted by default. Filter by one or more
+comma-separated model types, or use `all` for the complete catalog:
+
+```bash
+curl "https://models.dev/api.json?type=decision"
+curl "https://models.dev/api.json?type=all"
+```
+
+The currently supported model type is `decision`. The `type` parameter is also
+available on `models.json`, `catalog.json`, and `model-schema.json`.
+
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
 Provider-agnostic model metadata is available separately:
@@ -116,6 +127,8 @@ output = 32_000
 
 Provider fields win over model metadata during generation. Use this when the underlying model is the same but a provider serves it with different context limits, modalities, features, or pricing.
 
+Generated provider models that use `base_model` expose its canonical lab/model ID as `canonical_model_id` in `api.json` and `catalog.json`. Consumers can use this field to attribute a provider-specific model ID to its originating lab without guessing from the model name.
+
 ### Adding a New Provider Model
 
 To add a new model, start by checking if the provider already exists in the `providers/` directory. If not, then:
@@ -141,7 +154,7 @@ If the provider isn't already in `providers/`:
    api = "https://api.example.com/v1" # Required with openai-compatible
    ```
 
-#### 2. Add a Logo (optional)
+#### 2. Add a Logo (required for new providers)
 
 To add a logo for the provider:
 
@@ -204,6 +217,11 @@ Use `base_model` when the provider serves the same underlying model and only pro
 
 ```toml
 base_model = "anthropic/claude-opus-4-6"
+# Match lab/peer controls for this model (not a stripped L/M/H guess)
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1_024 },
+]
 
 [cost]
 input = 5.00
@@ -213,10 +231,14 @@ output = 25.00
 Rules:
 
 - `base_model` must point to a TOML file in `models/` using `<provider>/<model-id>`.
-- You can override any top-level model field locally.
-- If you override a nested table like `[cost]`, `[limit]`, or `[modalities]`, include the full values needed for that table.
+- **Override-only:** after `base_model`, write only provider-specific fields and values that **differ** from the base. Do not restate the same `description`, `structured_output`, `modalities`, `tool_call`, dates, etc.
+- You may override any top-level model field when the provider actually differs.
+- If you override a nested table like `[cost]`, `[limit]`, or `[modalities]`, include the full values needed for that table (arrays/primitives replace; plain objects deep-merge).
 - `base_model_omit` is optional and removes inherited model metadata fields after local overrides are merged. Use dot-path strings, for example `base_model_omit = ["limit.input"]`.
+- Provider-specific fields (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`, `experimental`) belong on the provider model when needed.
 - `id` still comes from the filename; do not add it to the TOML.
+
+**Reasoning options (short):** classify first-party lab vs multi-model relay (not by npm). Copy the underlying model’s controls from the lab entry and same-surface peers — often `low`/`medium`/`high` on GPT-style relays, but DeepSeek V4 is `toggle`+`high`/`max`, etc. Do not use `[]` from uncertainty on relays. Full policy: `AGENTS.md`.
 
 Use `base_model` when the wrapper model is materially the same as the source model and only differs by provider-specific pricing, limits, modalities, provider request shape, or lifecycle flags.
 
@@ -261,6 +283,7 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 **Model Schema:**
 
 - `name`: String — Display name of the model
+- `type` _(optional)_: String — Specialized model behavior; currently supports `decision`
 - `attachment`: Boolean — Supports file attachments
 - `reasoning`: Boolean — Supports reasoning / chain-of-thought
 - `tool_call`: Boolean - Supports tool calling

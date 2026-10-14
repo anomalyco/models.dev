@@ -1,4 +1,5 @@
 name = "SAP AI Core"
 env = ["AICORE_SERVICE_KEY"]
 npm = "@jerome-benoit/sap-ai-provider-v2"
+# Raw orchestration v2 nests routed controls at $.config.modules.prompt_templating.model.params.<field>; for example, reasoning_effort stays under params rather than at request root. https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/orchestration-workflow-v2 (accessed 2026-06-25)
 doc = "https://help.sap.com/docs/sap-ai-core"

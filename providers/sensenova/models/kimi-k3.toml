@@ -1,0 +1,30 @@
+# Sources (accessed 2026-09-06):
+# https://platform.sensenova.cn/docs
+# GET /v1/models: context 1048576, max output 65536, fp8, text -> text,
+# supported features tools+json_mode+reasoning; pricing all zero (public beta
+# free on TokenPlan).
+# Reasoning: host docs give reasoning_effort low|high|max (default max); live
+# calls show clear grading (low = 1-14 reasoning tokens, high = 7-36, max =
+# 593-626 on the same prompt). No separate on/off toggle is documented on this
+# host, so the documented effort levels are authored as-is.
+# Image input via base64 image_url is verified live and documented (native
+# multimodal agent model); host docs require base64 (public URLs rejected) and
+# do not document video, so input is limited to text+image.
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

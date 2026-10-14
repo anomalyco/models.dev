@@ -1,0 +1,25 @@
+# Sources:
+# - https://seed.bytedance.com/en/blog/seedance-2-0-official-launch
+# Token limits are not applicable to this audio-video generation endpoint.
+# Zero follows existing non-token media catalog entries; it is not a measured token limit.
+name = "Seedance 2.0"
+description = "ByteDance unified multimodal audio-video model supporting text, image, video and audio references, editing, extension and synchronized stereo sound."
+family = "seed"
+release_date = "2026-02-12"
+last_updated = "2026-10-04"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video", "audio"]
+
+[[links]]
+url = "https://seed.bytedance.com/en/blog/seedance-2-0-official-launch"
+type = "announcement"

@@ -1,0 +1,9 @@
+# Docs: https://runinfra.ai/docs
+# Per-model pages: https://runinfra.ai/inference-api/<slug>
+# API: OpenAI-compatible chat completions at https://api.runinfra.ai/v1 (/chat/completions, /models)
+# Pricing: USD per million tokens, from the per-model pages above
+name = "RunInfra"
+env = ["RUNINFRA_GATEWAY_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.runinfra.ai/v1"
+doc = "https://runinfra.ai/docs"

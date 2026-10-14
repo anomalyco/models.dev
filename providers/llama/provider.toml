@@ -1,3 +1,6 @@
+# POST /compat/v1/chat/completions follows Meta's published Chat request
+# schema, which lists no toggle, effort, or reasoning-token-budget field.
+# https://llama.developer.meta.com/docs/api-reference/chat-completions (accessed 2026-06-25)
 name = "Llama"
 env = ["LLAMA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,0 +1,59 @@
+name = "Sakana Namazu"
+description = "Japanese-specialized reasoning model based on Kimi K2.6 and tuned for Japanese language, culture, and business workflows"
+family = "sakana-namazu"
+release_date = "2026-08-03"
+last_updated = "2026-08-03"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[[links]]
+label = "Official product page"
+url = "https://sakana.ai/namazu/"
+type = "announcement"
+
+[[links]]
+label = "Official model documentation"
+url = "https://console.sakana.ai/models?model=sakana-namazu"
+type = "docs"
+
+[[benchmarks]]
+name = "AIME26"
+score = 96.67
+source = "https://console.sakana.ai/models?model=sakana-namazu"
+
+[[benchmarks]]
+name = "MMLU-Pro"
+score = 90.33
+source = "https://console.sakana.ai/models?model=sakana-namazu"
+
+[[benchmarks]]
+name = "LiveCodeBench v6"
+score = 90.33
+source = "https://console.sakana.ai/models?model=sakana-namazu"
+
+[[benchmarks]]
+name = "JFBench"
+score = 37.40
+source = "https://console.sakana.ai/models?model=sakana-namazu"
+
+[[benchmarks]]
+name = "Translation"
+score = 52.20
+source = "https://console.sakana.ai/models?model=sakana-namazu"
+
+[[benchmarks]]
+name = "FairPoliticsQA"
+score = 56.30
+source = "https://console.sakana.ai/models?model=sakana-namazu"

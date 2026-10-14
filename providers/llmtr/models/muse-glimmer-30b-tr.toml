@@ -1,0 +1,16 @@
+# LLMTR's Turkey-hosted deployment of Meta's Muse Glimmer 30B.
+# Pricing from https://llmtr.com/api/models (accessed 2026-08-16).
+# No reasoning control: verified 2026-08-16 that reasoning output is returned
+# unconditionally, `reasoning = true|false` changes nothing, and every
+# `reasoning_effort` value (none/minimal/low/medium/high/xhigh/max) is rejected
+# with `The "reasoning_effort" parameter is not supported by
+# "llmtr/muse-glimmer-30b-tr". This model does not expose a thinking mode.`
+# Hence always-on with no caller control, not a toggle.
+name = "Muse Glimmer 30B (TR)"
+base_model = "meta/muse-glimmer-30b"
+reasoning_options = []
+
+[cost]
+input = 2.0
+output = 5.0
+cache_read = 0.5

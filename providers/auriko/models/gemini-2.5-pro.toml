@@ -1,5 +1,10 @@
 base_model = "google/gemini-2.5-pro"
 
+# Auriko derives a Gemini thinking budget from effort. Although schema-level
+# "off" exists, this model metadata does not claim a toggle.
+# https://docs.auriko.ai/guides/extensions-and-thinking
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
 [cost]
 input = 1.25
 output = 10

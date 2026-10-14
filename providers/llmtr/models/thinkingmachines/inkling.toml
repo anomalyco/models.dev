@@ -1,0 +1,16 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# Effort: $.reasoning.effort = none|minimal|low|medium|high|xhigh
+base_model = "thinkingmachines/inkling"
+
+[cost]
+input = 1.87
+output = 4.68
+
+[limit]
+context = 262_144
+output = 262_144
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]

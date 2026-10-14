@@ -1,6 +1,18 @@
 import Index from "../index.html";
-import { getRenderedPage, Models, Providers } from "./render";
+import { getRenderedPage, Models, Providers, SearchIndexJson, renderDocument } from "./render";
+import {
+  filterCatalogByModelType,
+  filterModelsByModelType,
+  filterProvidersByModelType,
+  generateV2,
+  InvalidModelTypeError,
+  parseModelTypes,
+} from "@models.dev/core";
 import path from "path";
+
+const ProvidersV2 = await generateV2(
+  path.join(import.meta.dir, "..", "..", "..", "providers"),
+);
 
 const assetPort = Number(Bun.env.ASSET_PORT ?? 16000);
 
@@ -99,29 +111,49 @@ Bun.serve({
         },
       });
     },
-    "/api.json": () =>
-      Response.json(Providers, {
+    "/experimental/v2.0/api.json": () =>
+      Response.json(ProvidersV2, {
         headers: {
           "Cache-Control": "public, max-age=3600",
         },
       }),
-    "/models.json": () =>
-      Response.json(Models, {
+    "/search-index.json": () =>
+      new Response(SearchIndexJson, {
         headers: {
+          "Content-Type": "application/json",
           "Cache-Control": "public, max-age=3600",
         },
       }),
-    "/catalog.json": () =>
-      Response.json(
-        { models: Models, providers: Providers },
-        {
-          headers: {
-            "Cache-Control": "public, max-age=3600",
-          },
-        },
-      ),
+    "/api.json": (req) => catalogResponse(req, "api"),
+    "/models.json": (req) => catalogResponse(req, "models"),
+    "/catalog.json": (req) => catalogResponse(req, "catalog"),
   },
 });
+
+function catalogResponse(req: Request, endpoint: "api" | "models" | "catalog") {
+  let filter;
+  try {
+    filter = parseModelTypes(new URL(req.url).searchParams.get("type"));
+  } catch (error) {
+    if (!(error instanceof InvalidModelTypeError)) throw error;
+    return Response.json({ error: error.message }, { status: 400 });
+  }
+
+  const value = endpoint === "api"
+    ? filterProvidersByModelType(Providers, filter)
+    : endpoint === "models"
+      ? filterModelsByModelType(Models, filter)
+      : filterCatalogByModelType(
+          { models: Models, providers: Providers },
+          filter,
+        );
+
+  return Response.json(value, {
+    headers: {
+      "Cache-Control": "public, max-age=3600",
+    },
+  });
+}
 
 const server = Bun.serve({
   development: true,
@@ -147,7 +179,7 @@ const server = Bun.serve({
       shellUrl.search = "";
 
       let html = await fetch(shellUrl.toString(), req).then((r) => r.text());
-      html = html.replace("<!--static-->", rendered);
+      html = renderDocument(html, rendered);
       return new Response(html, {
         headers: {
           "Content-Type": "text/html",

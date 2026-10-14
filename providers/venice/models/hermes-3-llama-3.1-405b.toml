@@ -1,13 +1,9 @@
+base_model = "nousresearch/hermes-3-llama-3.1-405b"
 name = "Hermes 3 Llama 3.1 405b"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "hermes"
-attachment = false
-reasoning = false
-tool_call = false
-temperature = true
-knowledge = "2024-04"
 release_date = "2025-09-25"
-last_updated = "2026-03-12"
-open_weights = true
+last_updated = "2026-06-11"
 
 [cost]
 input = 1.1
@@ -15,8 +11,3 @@ output = 3
 
 [limit]
 context = 128_000
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]

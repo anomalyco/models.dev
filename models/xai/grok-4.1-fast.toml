@@ -1,0 +1,24 @@
+# xAI Grok 4.1 Fast (non-reasoning).
+# Sources:
+# - https://x.ai/news/grok-4-1-fast (release 2025-11-19; variants + $0.20/$0.50/$0.05 pricing)
+# - https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-1-fast.htm (2M context, text+image, tools, structured outputs, non-reasoning mode)
+# - https://api.ofox.ai/v1/models/x-ai/grok-4.1-fast (canonical_slug grok-4-1-fast-non-reasoning; context 2M; max_completion 30k)
+name = "Grok 4.1 Fast"
+description = "xAI's fast agentic tool-calling model with a 2M context window; non-reasoning variant for low-latency responses"
+family = "grok"
+release_date = "2025-11-19"
+last_updated = "2025-11-19"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 2_000_000
+output = 30_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

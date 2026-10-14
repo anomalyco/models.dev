@@ -1,0 +1,30 @@
+# `cost` is a fixed rate. This SKU never escalates above its own tier, so every
+# request bills exactly the rate below.
+# Source: NeoSmith's first-party rate card — the per-tier table shown to every
+# customer on their billing dashboard. There is no public pricing page yet; the
+# `doc` URL in provider.toml is product documentation, not a price list.
+name = "NeoSmith Basic"
+description = "Cost-capped tier. Intelligent routing with a Claude Sonnet ceiling — Opus is never invoked."
+release_date = "2026-04-26"
+last_updated = "2026-08-03"
+open_weights = false
+attachment = true
+reasoning = true
+reasoning_options = []
+tool_call = true
+structured_output = false
+temperature = true
+
+[cost]
+input = 1.17
+output = 4.37
+cache_read = 0.22
+cache_write = 0.0
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

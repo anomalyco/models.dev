@@ -1,0 +1,18 @@
+base_model = "moonshotai/kimi-k2.5"
+name = "Kimi K2.5 (Moonshot AI)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.6
+output = 3
+cache_read = 0.1
+
+[limit]
+output = 32_768

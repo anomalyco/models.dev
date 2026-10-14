@@ -1,0 +1,8 @@
+base_model = "sakana/fugu"
+reasoning_options = [{ type = "effort", values = ["high", "xhigh"] }]
+
+[limit]
+output = 1_000_000
+
+[provider]
+shape = "responses"

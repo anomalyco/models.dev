@@ -1,13 +1,14 @@
-name = "Claude Opus 4.5"
-family = "claude-opus"
-release_date = "2025-11-01"
-last_updated = "2025-11-01"
-attachment = true
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 200000
+# RouteLLM max_completion_tokens: 64000
+# RouteLLM input_token_rate: 0.000005
+# RouteLLM output_token_rate: 0.000025
+# RouteLLM thinking: True
+base_model = "anthropic/claude-opus-4-5-20251101"
 reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-03-31"
-open_weights = false
+reasoning_options = []
 
 [cost]
 input = 5.00
@@ -18,5 +19,5 @@ context = 200_000
 output = 64_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image"]
 output = ["text"]

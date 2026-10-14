@@ -1,3 +1,18 @@
+# Reasoning controls (sources accessed 2026-09-04):
+# - OpenAI Chat: POST /ai/v1/proxy/openai/v1/chat/completions uses top-level
+#   `reasoning_effort`; Responses: POST /ai/v1/proxy/openai/v1/responses uses
+#   `reasoning = { effort = "..." }`.
+#   https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort
+#   https://platform.openai.com/docs/api-reference/responses/create#responses-create-reasoning
+# - Anthropic: POST /ai/v1/proxy/anthropic/v1/messages uses
+#   `thinking = { type = "enabled", budget_tokens = N }` or
+#   `thinking = { type = "disabled" }`; effort is `output_config.effort`.
+#   https://docs.anthropic.com/en/api/messages
+# gitlab-ai-provider 6.14.0 exposes OpenAI `reasoningEffort` and Anthropic
+# `thinking` options through model defaults and per-call provider options.
+# https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/gitlab-direct-access.ts
+# https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/gitlab-openai-language-model.ts
+# https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/gitlab-anthropic-language-model.ts
 name = "GitLab Duo"
 env = ["GITLAB_TOKEN"]
 npm = "gitlab-ai-provider"

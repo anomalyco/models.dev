@@ -1,0 +1,17 @@
+# Azure OpenAI deployment adapter: raw Chat uses top-level $.reasoning_effort = "none"|"low"|"medium"|"high"|"xhigh"|"max"; "none" is off. https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/reasoning (accessed 2026-07-09)
+
+base_model = "openai/gpt-5.6-terra"
+
+name = "gpt-5.6-terra"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.50
+output = 15.00
+cache_read = 0.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 5.00
+output = 22.50
+cache_read = 0.50

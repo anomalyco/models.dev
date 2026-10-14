@@ -1,0 +1,25 @@
+# https://docs.cohere.com/docs/command-a-reasoning
+# https://huggingface.co/CohereLabs/c4ai-command-a-reasoning-08-2025
+name = "Command A Reasoning"
+description = "Cohere reasoning model for multilingual enterprise agents, tools, and complex workflows"
+family = "command-a"
+release_date = "2025-08-21"
+last_updated = "2025-08-21"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2024-06-01"
+tool_call = true
+open_weights = true
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/c4ai-command-a-reasoning-08-2025"

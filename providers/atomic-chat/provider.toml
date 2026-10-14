@@ -1,5 +1,13 @@
 name = "Atomic Chat"
 env = ["ATOMIC_CHAT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (sources accessed 2026-06-25):
+# POST http://127.0.0.1:1337/v1/chat/completions. Current source accepts
+# chat_template_kwargs.enable_thinking = true | false for template-supported
+# models. The former process-level --reasoning-budget accepted -1 (unlimited)
+# or 0 (disabled), but was removed; no effort or token-budget HTTP field is
+# documented. Request-schema acceptance still depends on the loaded backend.
+# https://github.com/AtomicBot-ai/Atomic-Chat/commit/92703bceb2c65e3218f81a15b4e9058f171d4ff2
+# https://github.com/AtomicBot-ai/Atomic-Chat/commit/742e731e966b1b59cedad36301e32fc7613e4bce
 api = "http://127.0.0.1:1337/v1"
 doc = "https://atomic.chat"

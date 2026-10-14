@@ -1,0 +1,17 @@
+# Sources (accessed 2026-08-21):
+# https://ofox.ai/en/models/bailian/qwen3.8-27b (pricing, context 1M/131K marketing, capabilities)
+# https://api.ofox.ai/v1/models/bailian/qwen3.8-27b (context_length 1131072, max_completion_tokens 131072, pricing)
+# Toggle: enable_thinking true|false (Bailian/DashScope chat path via Ofox; same surface as ofox bailian/qwen3.5-27b, qwen3.6-27b)
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.45
+output = 3.2
+cache_read = 0.05
+cache_write = 0.5625
+
+[limit]
+context = 1_131_072
+output = 131_072

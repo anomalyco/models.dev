@@ -1,0 +1,10 @@
+# NOTE: api.kimi.com/coding serves BOTH Anthropic (/v1/messages) and
+# OpenAI-compatible (/v1/chat/completions) protocols. All four models
+# verified on /chat/completions 2026-09-18 with kimi-code OAuth credentials
+# (reasoning returned via reasoning_content). The global deployment
+# (api.kimi.ai) is the separate kimi-code-plan-global provider.
+name = "Kimi For Coding (kimi.com)"
+env = ["KIMI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://www.kimi.com/code/docs/en/kimi-code/models.html"
+api = "https://api.kimi.com/coding/v1"

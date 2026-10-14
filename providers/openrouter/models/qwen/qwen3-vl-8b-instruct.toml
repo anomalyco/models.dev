@@ -1,4 +1,5 @@
 name = "Qwen3 VL 8B Instruct"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
 release_date = "2025-10-14"
 last_updated = "2025-10-14"
@@ -10,12 +11,13 @@ structured_output = true
 open_weights = true
 
 [cost]
-input = 0.08
-output = 0.5
+input = 0.25
+output = 0.75
+cache_read = 0.12
 
 [limit]
-context = 131_072
-output = 32_768
+context = 262_144
+output = 235_929
 
 [modalities]
 input = ["image", "text"]

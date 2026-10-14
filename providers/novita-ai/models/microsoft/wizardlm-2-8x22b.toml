@@ -1,11 +1,6 @@
-name = "Wizardlm 2 8x22B"
-release_date = "2024-04-24"
-last_updated = "2024-04-24"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
+# https://novita.ai/models/model-detail/microsoft-wizardlm-2-8x22b
+base_model = "microsoft/wizardlm-2-8x22b"
+structured_output = true
 
 [cost]
 input = 0.62
@@ -13,8 +8,3 @@ output = 0.62
 
 [limit]
 context = 65_535
-output = 8_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

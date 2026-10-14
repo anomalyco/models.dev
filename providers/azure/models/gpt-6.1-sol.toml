@@ -1,0 +1,21 @@
+# Availability: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-6
+# Region matrix: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability
+# Provisional Global Standard rates: Azure's published GPT-6 Astra/Sol/Luna Global Standard
+# rates match OpenAI's direct rates; GPT-6.1 Sol-specific Azure meters are not yet published.
+# https://azure.microsoft.com/en-us/blog/gpt-6-astra-sol-and-luna-for-production-agents-in-microsoft-foundry/
+# https://developers.openai.com/api/docs/models/gpt-6.1-sol
+base_model = "openai/gpt-6.1-sol"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.10
+cache_write = 2.50
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4.00
+output = 15.00
+cache_read = 0.20
+cache_write = 5.00

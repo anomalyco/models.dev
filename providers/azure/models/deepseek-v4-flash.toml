@@ -1,0 +1,17 @@
+# Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
+# Its published request schema documents no toggle, effort, or reasoning budget.
+# https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-06-25)
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek-V4-Flash"
+tool_call = false
+
+reasoning_options = []
+
+[cost]
+input = 0.19
+output = 0.51
+
+[provider]
+shape = "completions"
+npm = "@ai-sdk/openai-compatible"
+api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"

@@ -1,6 +1,8 @@
 name = "Hermes-4-405B"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 attachment = false
 reasoning = true
+reasoning_options = []
 tool_call = true
 structured_output = true
 temperature = true
@@ -17,7 +19,7 @@ cache_read = 0.10
 cache_write = 1.25
 
 [limit]
-context = 128_000
+context = 131_072
 input = 120_000
 output = 8_192
 

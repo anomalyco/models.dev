@@ -1,25 +1,20 @@
-name = "Kimi K2.6"
-family = "kimi-thinking"
-release_date = "2026-04-17"
-last_updated = "2026-04-17"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "moonshotai/kimi-k2.6"
+description = "Kimi reasoning model for long-horizon research, planning, and tool use"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
-cache_read = 0.20
-input = 0.81
-output = 3.54
+input = 0.475
+output = 2.97
+cache_read = 0.1
 
 [limit]
 context = 256_000
 output = 256_000
 
 [modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[interleaved]
-field = "reasoning_content"
+input = ["text", "image", "pdf"]

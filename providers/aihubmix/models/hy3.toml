@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-20):
+# https://aihubmix.com/api/v1/models?type=llm (USD per million tokens)
+# https://huggingface.co/tencent/Hy3
+# Effort: reasoning_effort = none|low|high on /v1/chat/completions.
+# Off is effort=none; AIHubMix no_think is normalized to none, so no separate toggle.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "tencent/hy3"
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.1562
+output = 0.6248
+cache_read = 0.03905

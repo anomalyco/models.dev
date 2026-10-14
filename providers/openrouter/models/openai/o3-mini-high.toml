@@ -1,4 +1,5 @@
 name = "o3 Mini High"
+description = "O-series reasoning model for hard analysis, math, coding, and planning"
 family = "o"
 release_date = "2025-02-12"
 last_updated = "2025-02-12"
@@ -9,6 +10,10 @@ tool_call = true
 structured_output = true
 knowledge = "2023-10-31"
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
 
 [cost]
 input = 1.1

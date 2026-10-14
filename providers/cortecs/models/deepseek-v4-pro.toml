@@ -4,10 +4,11 @@ base_model_omit = ["structured_output"]
 [interleaved]
 field = "reasoning_content"
 
-[cost]
-input = 1.553
-output = 3.106
-cache_read = 0.003625
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
-[limit]
-context = 1_048_576
+[cost]
+input = 1.7
+output = 3.4
+cache_read = 0.15

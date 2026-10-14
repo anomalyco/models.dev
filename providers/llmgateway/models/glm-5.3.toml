@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.924
+output = 2.904
+cache_read = 0.1716
+
+[limit]
+context = 1_048_576

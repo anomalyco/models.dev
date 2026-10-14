@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 Fast"
+description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 2.8
+output = 8.8
+cache_read = 0.56
+
+[limit]
+output = 128_000

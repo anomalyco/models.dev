@@ -1,0 +1,24 @@
+name = "Mercury Coder Small"
+description = "Model by Inception AI. A diffusion large language model that runs incredibly quickly (500+ tokens/second) while matching Claude 3.5 Haiku and GPT-4o-mini. 1st in speed on Copilot arena, and matching 2nd in quality."
+family = "mercury"
+release_date = "2024-01-01"
+last_updated = "2024-01-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1
+cache_read = 0.125
+
+[limit]
+context = 32_768
+input = 32_768
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

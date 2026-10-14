@@ -1,0 +1,22 @@
+base_model = "anthropic/claude-opus-5-5"
+name = "Anthropic Claude Opus 5.5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+cache_write = 5
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 8
+output = 30
+cache_read = 0.4
+cache_write = 10
+
+[modalities]
+input = ["text", "image"]

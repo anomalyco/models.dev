@@ -1,0 +1,21 @@
+type = "decision"
+name = "Classify-1"
+description = "ScaleDown Classify-1 is a task-specific small language model for text classification. It assigns text to custom labels and returns probability scores, supporting intent detection, content categorization, and routing workflows. Its deterministic, encoder-only approach produces consistent classification results without sampling variability."
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]

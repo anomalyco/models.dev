@@ -1,9 +1,11 @@
 name = "Grok 3 Mini"
+description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
 family = "grok"
 release_date = "2025-04-11"
 last_updated = "2025-04-11"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = false
 open_weights = false
 tool_call = true

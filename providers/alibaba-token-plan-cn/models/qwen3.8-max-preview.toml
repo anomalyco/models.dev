@@ -1,0 +1,28 @@
+# Sources (accessed 2026-09-10):
+# https://platform.qianwenai.com/docs/token-plan/personal/token-plan-personal-overview
+# https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
+# Model update: qwen3.8-max-preview ended preview and is officially retired from
+# the Token Plan supported-models allowlist. Docs say legacy calls may still
+# route to production qwen3.8-max (Credits billed as qwen3.8-max); clients should
+# use model ID qwen3.8-max. Marked deprecated so it is not offered as a current
+# Token Plan selection. Prefer providers/.../qwen3.8-max.toml.
+# Prior sources (accessed 2026-07-20): thinking always-on; OpenAI-compatible Chat
+# effort low/medium/xhigh (high aliases to xhigh); thinking_budget 0..262144
+# mutually exclusive with reasoning_effort; preserve_thinking defaults true.
+
+base_model = "alibaba/qwen3.8-max-preview"
+structured_output = true
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+status = "deprecated"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

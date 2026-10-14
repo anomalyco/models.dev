@@ -1,0 +1,19 @@
+# Sources (accessed 2026-09-19):
+# https://www.mixedbread.com/docs/agent/models
+# https://www.mixedbread.com/docs/agent/chat-completions
+name = "Toast 1"
+description = "Specialized search model for knowledge-intensive questions, multi-step retrieval, and evidence synthesis"
+release_date = "2026-08-13"
+last_updated = "2026-08-13"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[limit]
+context = 131_000
+output = 4_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

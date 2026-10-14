@@ -1,0 +1,17 @@
+# Sources (accessed 2026-08-08):
+# https://www.alibabacloud.com/help/en/model-studio/glm
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (Singapore list)
+# https://www.qwencloud.com/models/glm-5.2 (implicit cache price)
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# (none disables reasoning, so a separate toggle is not needed).
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.28
+cache_write = 0

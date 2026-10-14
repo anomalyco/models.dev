@@ -1,22 +1,23 @@
 name = "Ministral 8B (latest)"
+description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "ministral"
 release_date = "2024-10-01"
 last_updated = "2024-10-04"
-attachment = false
+attachment = true
 reasoning = false
 temperature = true
-knowledge = "2024-10"
 tool_call = true
+knowledge = "2024-10"
 open_weights = true
 
 [cost]
-input = 0.10
-output = 0.10
+input = 0.1
+output = 0.1
 
 [limit]
-context = 128_000
+context = 262_144
 output = 128_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

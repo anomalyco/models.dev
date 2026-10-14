@@ -1,0 +1,10 @@
+base_model = "deepseek/deepseek-v4-flash"
+
+# Pendra forwards OpenAI `reasoning_effort` (low|high|max) on chat completions.
+# Effort-only: no thinking on/off toggle is surfaced through Pendra.
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+# Self-hosted on your own workers — no per-token charge at the API.
+[cost]
+input = 0
+output = 0

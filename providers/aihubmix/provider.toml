@@ -1,5 +1,9 @@
 name = "AIHubMix"
 npm = "@aihubmix/ai-sdk-provider"
+# Raw Chat: $.reasoning_effort = "none"|"minimal"|"low"|"medium"|"high"|"xhigh"; aliases are $.reasoning.effort and integer $.reasoning.max_tokens. "none" disables models that permit it. https://docs.aihubmix.com/cn/api/unified-inference (accessed 2026-06-25)
+# Raw Responses: $.reasoning.effort carries effort; this endpoint has no reasoning-token budget field. https://docs.aihubmix.com/cn/api-reference/openai-compatible/create-a-model-response (accessed 2026-06-25)
+# Raw Messages: $.thinking.type = "enabled"|"disabled"|"adaptive"; enabled uses $.thinking.budget_tokens >= 1024, and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max" subject to model support. https://docs.aihubmix.com/cn/api-reference/anthropic-compatible/create-a-message (accessed 2026-06-25)
+# Raw Gemini native: $.generationConfig.thinkingConfig uses integer thinkingBudget (-1 dynamic; 0 off where supported) or string thinkingLevel; model bounds differ below. https://docs.aihubmix.com/cn/api-reference/google-vertex-ai-compatible/generate-content (accessed 2026-06-25)
 env = ["AIHUBMIX_API_KEY"]
 doc = "https://docs.aihubmix.com"
 

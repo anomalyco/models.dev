@@ -1,0 +1,22 @@
+name = "Nomic Embed Text v1.5"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+attachment = false
+reasoning = false
+structured_output = false
+temperature = false
+tool_call = false
+release_date = "2024-02"
+last_updated = "2024-02"
+open_weights = true
+
+[cost]
+input = 0.05
+output = 0
+
+[limit]
+context = 8_192
+output = 768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,25 @@
+# Sources (accessed 2026-08-16):
+#   https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research
+#   https://docs.perplexity.ai/api-reference/sonar-post
+# Field values mirror Perplexity's own first-party host entry in this repo
+# (providers/perplexity/models/sonar-deep-research.toml); host-scoped keys
+# (cost, reasoning_options) are intentionally left to the provider files.
+name = "Sonar Deep Research"
+description = "Sonar search model for autonomous research and citation-backed long-form reports"
+family = "sonar"
+release_date = "2025-02-01"
+last_updated = "2025-09-01"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = false
+knowledge = "2025-01"
+open_weights = false
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

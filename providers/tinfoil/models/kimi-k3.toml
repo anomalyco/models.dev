@@ -1,0 +1,17 @@
+# Sources (accessed 2026-08-26):
+# - https://inference.tinfoil.sh/v1/models
+# - https://docs.tinfoil.sh/guides/reasoning.md
+# Effort: reasoning_effort = low|high|max on Tinfoil; reasoning is always on.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.8
+
+[limit]
+context = 262_144

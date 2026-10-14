@@ -1,0 +1,25 @@
+name = "Qwen Plus Latest (Alibaba Cloud)"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2024-09-09"
+last_updated = "2024-09-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.4
+output = 1.2
+cache_read = 0.08
+cache_write = 0.5
+
+[limit]
+context = 1_000_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

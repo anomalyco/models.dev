@@ -1,0 +1,36 @@
+# $.reasoning_effort = "low" | "medium" | "high".
+# https://docs.fireworks.ai/guides/reasoning (accessed 2026-06-25)
+name = "MiniMax-M3"
+description = "Fireworks text-only MiniMax coding model for long-context reasoning and agent tasks"
+family = "minimax"
+release_date = "2026-06-12"
+last_updated = "2026-06-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 512_000
+output = 512_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[experimental.modes.priority]
+cost = { input = 0.45, output = 1.8, cache_read = 0.09 }
+provider = { body = { service_tier = "priority" } }

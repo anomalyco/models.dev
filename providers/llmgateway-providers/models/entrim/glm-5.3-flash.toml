@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3 Flash (entrim)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1
+output = 0.35
+cache_read = 0.0175
+
+[limit]
+context = 1_048_576

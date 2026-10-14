@@ -1,20 +1,7 @@
-name = "Mistral: Ministral 3 3B 2512"
-release_date = "2025-12-02"
-last_updated = "2026-03-15"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "mistral/ministral-3b-2512"
+description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 
 [cost]
 input = 0.1
 output = 0.1
-
-[limit]
-context = 131072
-output = 32768
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]
+cache_read = 0.01

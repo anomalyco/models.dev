@@ -1,0 +1,18 @@
+# Pricing: https://docs.paretoinference.com/pricing (checked 2026-09-19).
+# API: https://docs.paretoinference.com/api-reference
+# Effort: reasoning_effort = low|high|max; no thinking/reasoning toggle.
+# Context follows the 1M dashboard model entry; output is capped at 131,072.
+# PDF input is not advertised on this API.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.03
+output = 0.10
+cache_read = 0.006
+
+[modalities]
+input = ["text", "image", "video"]

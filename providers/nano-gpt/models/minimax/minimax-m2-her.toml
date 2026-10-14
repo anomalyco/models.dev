@@ -1,22 +1,14 @@
+base_model = "minimax/MiniMax-M2-Her"
 name = "MiniMax M2-her"
-family = "minimax"
-release_date = "2026-01-24"
-last_updated = "2026-01-24"
-attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
-input = 0.30200000000000005
-output = 1.2069999999999999
+input = 0.302
+output = 1.207
+cache_read = 0.151
 
 [limit]
 context = 65_532
 input = 65_532
-output = 2_048
-
-[modalities]
-input = ["text"]
-output = ["text"]

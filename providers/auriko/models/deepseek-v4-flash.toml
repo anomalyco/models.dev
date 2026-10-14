@@ -1,5 +1,10 @@
 base_model = "deepseek/deepseek-v4-flash"
 
+# Also aliased as deepseek-chat and deepseek-reasoner; aliases are not modes.
+# Effort controls a derived budget and "off" requests non-thinking output.
+# https://docs.auriko.ai/guides/extensions-and-thinking
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
 [interleaved]
 field = "reasoning_content"
 

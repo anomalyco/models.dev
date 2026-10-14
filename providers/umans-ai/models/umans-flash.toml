@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Umans Flash"
+temperature = false
+# Live metadata: levels none/low/medium/high, default medium, and
+# `can_disable=true` (accessed 2026-06-25).
+# https://api.code.umans.ai/v1/models/info
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 1.00
+cache_read = 0.05
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

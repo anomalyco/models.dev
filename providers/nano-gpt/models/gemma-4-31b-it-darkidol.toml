@@ -1,0 +1,25 @@
+name = "DarkIdol"
+description = "DarkIdol is a multimodal Gemma 4 31B creative finetune for expressive dialogue, long-form storytelling, and roleplay."
+family = "gemma"
+release_date = "2026-07-29"
+last_updated = "2026-07-29"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.45
+cache_read = 0.05
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,16 @@
+base_model = "zhipuai/glm-5.3"
+
+# GLM-5.3 always reasons; low, high, and max are the effective effort levels.
+# https://docs.z.ai/devpack/latest-model (accessed 2026-08-14)
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

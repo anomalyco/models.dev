@@ -1,0 +1,17 @@
+# attachment are not supported on AKI.IO for security reasons and therefore are disabled
+# AKI.IO uses the reasoning_option 'none' to disable reasoning
+base_model = "mistral/mistral-small-2603"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.20
+output = 0.60
+
+[limit]
+context = 262_144
+output = 81_920
+
+[modalities]
+input = ["text", "image"]

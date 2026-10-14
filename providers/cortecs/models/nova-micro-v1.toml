@@ -1,0 +1,17 @@
+base_model = "amazon/nova-micro-v1"
+description = "Nova Micro is a multilingual text-to-text foundation model with strong reasoning capabilities and broad language coverage across 200+ languages."
+attachment = true
+reasoning = true
+temperature = false
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.04
+output = 0.159
+
+[limit]
+output = 10_000
+
+[modalities]
+input = ["text", "image"]

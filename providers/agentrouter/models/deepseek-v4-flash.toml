@@ -1,0 +1,6 @@
+# Catalog and endpoint support: https://agentrouter.org/api/pricing
+# AgentRouter publishes relative token ratios, not USD prices, so cost is intentionally omitted.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]

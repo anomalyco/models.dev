@@ -1,0 +1,23 @@
+# https://build.nvidia.com/google/gemma-3-4b-it
+name = "Gemma 3 4B IT"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,13 +1,12 @@
-name = "MiniMax M2.5"
-family = "minimax"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+# https://novita.ai/models/model-detail/minimax-minimax-m2.5
+# Novita's /models reports max_output_tokens=131100, and the linked model page's example uses max_tokens=131100 (verified 2026-10-09); this is a host delta, not a transcription of the lab's 131072 limit.
+# Always-on reasoning: thinking.type, enable_thinking, chat_template_kwargs.enable_thinking, and effort=none did not suppress it.
+base_model = "minimax/MiniMax-M2.5"
 structured_output = true
-open_weights = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.3
@@ -15,12 +14,4 @@ output = 1.2
 cache_read = 0.03
 
 [limit]
-context = 204_800
 output = 131_100
-
-[interleaved]
-field = "reasoning_content"
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,0 +1,17 @@
+# Turkey-hosted deployment of Gemma 4 31B IT. Context window, output cap and
+# pricing come from LLMTR's public catalog API (https://llmtr.com/api/models,
+# accessed 2026-08-16). Tool calling and the reasoning toggle were verified
+# against POST https://llmtr.com/v1/chat/completions on the same date.
+# Toggle: reasoning = true|false
+name = "Gemma 4"
+base_model = "google/gemma-4-31b-it"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 2.0
+output = 5.0
+cache_read = 0.5
+
+[limit]
+context = 131_072
+output = 131_072

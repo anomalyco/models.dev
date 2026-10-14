@@ -1,0 +1,24 @@
+name = "Doubao Seed 2.1 Turbo"
+description = "Fast, lower-cost model in the Doubao Seed 2.1 family for everyday chat, coding assistance, document work, and high-throughput productivity tasks. Supports a 256k context window and up to 128k output tokens. Note: privacy and logging guarantees may be limited."
+family = "seed"
+release_date = "2026-06-23"
+last_updated = "2026-06-23"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.5
+output = 2.5
+cache_read = 0.25
+
+[limit]
+context = 256_000
+input = 256_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

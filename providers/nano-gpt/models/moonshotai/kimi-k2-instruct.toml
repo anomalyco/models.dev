@@ -1,22 +1,12 @@
-name = "Kimi K2 Instruct"
-family = "kimi"
-release_date = "2025-07-01"
-last_updated = "2025-07-01"
-attachment = false
-reasoning = false
-tool_call = true
+base_model = "moonshotai/kimi-k2-instruct"
 structured_output = true
-open_weights = false
 
 [cost]
-input = 0.1
-output = 2.00
+input = 0.4
+output = 1.8
+cache_read = 0.2
 
 [limit]
 context = 256_000
 input = 256_000
 output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

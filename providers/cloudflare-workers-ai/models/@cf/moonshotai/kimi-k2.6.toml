@@ -1,5 +1,13 @@
+# Effort: reasoning_effort = none|high; none selects instant mode.
+# Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
+# Per-model Search config normalizes low/medium to high; these are aliases,
+# not distinct levels despite the generic sync-input.json effort enum.
+
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [interleaved]
 field = "reasoning_content"

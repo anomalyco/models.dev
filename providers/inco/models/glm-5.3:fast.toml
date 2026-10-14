@@ -1,0 +1,15 @@
+# Standard-speed endpoint at 2x credit pricing.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Verified against Inco; reasons by default.
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Fast"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.8
+output = 8.8

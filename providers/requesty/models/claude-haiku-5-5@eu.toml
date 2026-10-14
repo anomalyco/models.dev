@@ -1,0 +1,19 @@
+base_model = "anthropic/claude-haiku-5-5"
+name = "Claude Haiku 5.5 (EU)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.11
+output = 0.55
+cache_read = 0.02
+cache_write = 0.14
+
+[[cost.tiers]]
+tier = { type = "context", size = 100_000 }
+input = 0.55
+output = 2.75
+cache_read = 0.06
+cache_write = 0.69

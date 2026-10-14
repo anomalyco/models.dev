@@ -1,0 +1,19 @@
+base_model = "deepseek/deepseek-v4-pro-0813"
+# DeepSeek V4 reasons off by default; toggle chat_template_kwargs.thinking, effort high|max when on.
+# https://docs.tensorx.ai/api-reference/reasoning
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 2.0
+output = 4.0
+cache_read = 0.5
+
+[limit]
+context = 1048576
+output = 64000

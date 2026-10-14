@@ -1,0 +1,28 @@
+name = "Cohere: Command A+"
+description = "Command A+ is Cohere's flagship model for enterprise agentic workflows. It accepts text and image inputs with a 192K context window, supports native tool calling with strict tool schemas, structured..."
+family = "command-a"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.3
+output = 1.5
+cache_read = 0.15
+
+[limit]
+context = 192_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,4 +1,5 @@
 name = "GPT-3.5 Turbo Instruct"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
 release_date = "2023-09-28"
 last_updated = "2023-09-28"
@@ -16,7 +17,7 @@ output = 2
 
 [limit]
 context = 4_095
-output = 4_096
+output = 3_685
 
 [modalities]
 input = ["text"]

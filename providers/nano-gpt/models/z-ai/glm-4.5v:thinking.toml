@@ -1,22 +1,17 @@
+base_model = "zhipuai/glm-4.5v"
 name = "GLM 4.5V Thinking"
-family = "glmv"
-release_date = "2025-11-22"
-last_updated = "2025-11-22"
-attachment = true
-reasoning = true
 tool_call = false
 structured_output = false
-open_weights = false
+reasoning_options = []
 
 [cost]
 input = 0.6
-output = 1.7999999999999998
+output = 1.8
+cache_read = 0.3
 
 [limit]
-context = 64_000
-input = 64_000
-output = 96_000
+context = 65_536
+input = 65_536
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

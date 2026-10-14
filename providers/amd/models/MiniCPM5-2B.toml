@@ -1,0 +1,17 @@
+# Live probes against the AMD Radeon Cloud Model API (accessed 2026-09-14):
+# GET /v1/models reports 131072 context, text-only input, tools, and
+# reasoning. reasoning_effort is accepted as low|medium|high (none / minimal /
+# xhigh / max return 422) but is inert on this host: no separated reasoning is
+# ever returned and reasoning_tokens stays 0, so the model answers inline in
+# content. No caller control over reasoning is published.
+# Tools and json_object both work; image input is refused with 400.
+# Pricing from GET /v1/models: input $0.124, output $0.7425, cache read
+# $0.124 per MTok.
+base_model = "openbmb/minicpm5-2b"
+
+reasoning_options = []
+
+[cost]
+input = 0.124
+output = 0.7425
+cache_read = 0.124

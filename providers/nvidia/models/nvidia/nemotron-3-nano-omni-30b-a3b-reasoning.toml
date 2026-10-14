@@ -6,6 +6,11 @@ release_date = "2026-04-28"
 last_updated = "2026-04-28"
 attachment = true
 reasoning = true
+# NIM Chat schema: `reasoning_budget` is -1..32768 (default 16384); -1 means
+# unlimited/no budget enforcement, not reasoning off. `/think` and `/no_think`
+# go in a system message; video and audio requests should use `/no_think`.
+# https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-infer
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = -1, max = 32768 }]
 temperature = true
 tool_call = true
 structured_output = true

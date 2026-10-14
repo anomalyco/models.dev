@@ -1,0 +1,9 @@
+# GA on Vertex AI Model Garden: publishers/anthropic/models/claude-fable-5 (versionId: default)
+base_model = "anthropic/claude-fable-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5

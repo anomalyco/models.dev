@@ -1,20 +1,13 @@
-name = "OpenAI: o3 Pro"
-release_date = "2025-04-16"
-last_updated = "2026-03-15"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-open_weights = false
+base_model = "openai/o3-pro"
+description = "O-series reasoning model for hard analysis, math, coding, and planning"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 20
 output = 80
 
-[limit]
-context = 200000
-output = 100000
-
 [modalities]
-input = ["image", "pdf", "text"]
-output = ["text"]
+input = ["text", "pdf", "image"]

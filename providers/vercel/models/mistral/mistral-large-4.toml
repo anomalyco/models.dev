@@ -1,0 +1,26 @@
+name = "Mistral Large 4"
+description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
+family = "mistral-large"
+release_date = "2026-10-06"
+last_updated = "2026-10-06"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.68
+output = 2.09
+cache_read = 0.07
+
+[limit]
+context = 524_288
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

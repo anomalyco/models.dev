@@ -1,0 +1,28 @@
+# Deprecated: Neuralwatt retired the GLM-5.2 family from GET /v1/models
+# (checked 2026-09-18); retained for pricing history.
+# Budget: thinking_token_budget (integer reasoning tokens)
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 Short Flex"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+release_date = "2026-06-17"
+last_updated = "2026-06-17"
+structured_output = false
+status = "deprecated"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.9425
+output = 2.925
+cache_read = 0.09425
+
+[limit]
+context = 199_984
+output = 32_000

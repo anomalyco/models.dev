@@ -1,0 +1,13 @@
+base_model = "deepseek/deepseek-v3.2"
+name = "DeepSeek V3.2 (DeepInfra)"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.26
+output = 0.38
+cache_read = 0.13
+
+[limit]
+context = 160_000
+output = 65_536

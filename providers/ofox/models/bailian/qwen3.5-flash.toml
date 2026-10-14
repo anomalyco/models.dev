@@ -1,0 +1,13 @@
+# https://ofox.ai/en/models/bailian/qwen3.5-flash
+# https://help.aliyun.com/en/model-studio/qwen3-5-flash
+# https://www.alibabacloud.com/help/en/model-studio/deep-thinking
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.5-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.01
+cache_write = 0.125

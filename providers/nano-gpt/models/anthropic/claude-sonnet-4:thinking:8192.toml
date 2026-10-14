@@ -1,0 +1,25 @@
+name = "Claude 4 Sonnet Thinking (8K)"
+description = "Claude 4 Sonnet with reduced thinking budget (8,192 tokens)."
+family = "claude-sonnet"
+release_date = "2024-01-01"
+last_updated = "2024-01-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

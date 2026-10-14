@@ -1,0 +1,20 @@
+# Source: https://infer.flow7.org/api/public/catalog (2026-09-12 UTC)
+# Exact selector: infer/gpt-6-astra:official
+# Responses request reasoning.effort follows the underlying OpenAI model.
+base_model = "openai/gpt-6-astra"
+base_model_omit = ["limit.input"]
+name = "GPT-6 Astra (Official API)"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 12.5
+output = 62.5
+cache_read = 1.25
+cache_write = 15.625
+
+[limit]
+context = 271999
+output = 128000
+
+[provider]
+shape = "responses"

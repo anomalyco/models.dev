@@ -1,6 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-structured_output = false
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
-input = 0.09
+input = 0.08
 output = 0.45
+
+[limit]
+output = 235_929

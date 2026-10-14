@@ -1,4 +1,5 @@
 base_model = "anthropic/claude-haiku-4-5"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 name = "Claude Haiku 4.5"
 
 interleaved = true

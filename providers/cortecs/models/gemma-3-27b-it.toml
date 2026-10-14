@@ -1,0 +1,15 @@
+base_model = "google/gemma-3-27b-it"
+description = "Gemma 3 is a family of lightweight, multimodal models from Google, supporting text and image inputs, multilingual capabilities, and a 131K context window."
+reasoning = true
+temperature = false
+tool_call = false
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.099
+output = 0.299
+
+[limit]
+context = 131_000
+output = 110_000

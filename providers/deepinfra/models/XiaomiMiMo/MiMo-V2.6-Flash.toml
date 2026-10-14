@@ -1,0 +1,13 @@
+# Toggle: reasoning.enabled = true|false (DeepInfra OpenAI Chat Completions).
+# https://docs.deepinfra.com/chat/reasoning
+# https://mimo.mi.com/docs/zh-CN/api/chat/openai-api
+base_model = "xiaomi/mimo-v2.6-flash"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028

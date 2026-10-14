@@ -1,0 +1,24 @@
+# Source: https://runinfra.ai/inference-api/deepseek-v4-flash
+# Reasoning control via the reasoning_effort wire field, verified live 2026-08-16 (temperature 0,
+# fixed prompt, three runs per level): "none" disables reasoning (35 to 3 completion tokens,
+# reasoning content to zero); "low" is reproducibly distinct from the default (62/62/62 vs
+# 57/57/57); "medium" produced the identical 62/62/62 as "low", so it is not published as a
+# separate rung; omitting the field applies "max", and explicit "high" and "xhigh" fold to "max"
+# before dispatch (all three measured 57/57/57, identical to omitted), so "max" is the published
+# ceiling. enable_thinking / chat_template_kwargs / thinking_budget are accepted but have no
+# effect.
+# cache_read is the cached input price
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "max"]
+
+[cost]
+input = 0.13
+output = 0.27
+cache_read = 0.01
+
+[limit]
+context = 1_048_576
+output = 32_768

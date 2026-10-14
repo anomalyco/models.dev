@@ -1,0 +1,17 @@
+# Source: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-grok
+# Pricing: https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/grok/
+base_model = "xai/grok-4.6"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2.00
+output = 6.00
+cache_read = 0.50
+
+[limit]
+context = 200_000
+output = 128_000

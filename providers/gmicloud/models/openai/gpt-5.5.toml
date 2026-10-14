@@ -1,0 +1,8 @@
+base_model = "openai/gpt-5.5"
+# GMI's Responses endpoint sends reasoning effort as reasoning = { effort = "low" }.
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5

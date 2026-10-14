@@ -1,0 +1,16 @@
+# Sources:
+# - https://ofox.ai/en/models/google/gemini-2.5-pro (pricing, capabilities; accessed 2026-08-06)
+# - https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500 (id google/gemini-2.5-pro; input/output/cache $/token)
+# Reasoning: Gemini 2.5 Pro native thinkingBudget (lab + OpenRouter/Vertex peers); Ofox exposes Gemini native + OpenAI protocols.
+base_model = "google/gemini-2.5-pro"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 128
+max = 32_768
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.125
+cache_write = 4.5

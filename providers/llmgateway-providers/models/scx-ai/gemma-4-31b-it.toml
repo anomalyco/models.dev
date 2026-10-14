@@ -1,0 +1,16 @@
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B IT (SCX.ai (Turbo))"
+attachment = false
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.3
+output = 0.91
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]

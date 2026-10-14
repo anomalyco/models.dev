@@ -1,0 +1,17 @@
+# Live model and rates: https://ai-gateway.vercel.sh/v1/models/openai/gpt-6.1-sol-fast
+base_model = "openai/gpt-6.1-sol"
+name = "GPT-6.1 Sol (Fast)"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4.00
+output = 20.00
+cache_read = 0.20
+cache_write = 5.00
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_001 }
+input = 8.00
+output = 30.00
+cache_read = 0.40
+cache_write = 10.00

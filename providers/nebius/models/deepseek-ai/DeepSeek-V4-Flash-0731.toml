@@ -1,0 +1,26 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# Accessed 2026-08-29.
+# Same gateway effort behavior as DeepSeek-V4-Flash on this host: reasoning_effort
+# accepts none/minimal/low/medium/high/xhigh/max, but minimal=low=medium and
+# high=xhigh collapse, leaving none/low/high/max as the distinct levels.
+# No discounted prompt-cache tier on Nebius: cached input is billed at the full
+# input rate, so cache_read equals input (same rationale as Kimi-K3 / V4-Flash).
+# Context/output use this model's exact models_info max_model_len (1_024_000), which
+# intentionally differs from other "1M" IDs on this host (DeepSeek-V4-Pro, GLM-5.2,
+# Nemotron entries serve max_model_len = 1_048_576).
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.14
+
+[limit]
+context = 1_024_000
+output = 1_024_000

@@ -1,9 +1,11 @@
 name = "openai/gpt-oss-120b"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
 release_date = "2025-08-13"
 last_updated = "2025-11-25"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 temperature = true
 tool_call = true
 structured_output = true

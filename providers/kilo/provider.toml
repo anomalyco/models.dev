@@ -1,5 +1,24 @@
 name = "Kilo Gateway"
 env = ["KILO_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP formats (accessed 2026-06-25): Kilo accepts POST
+# /api/gateway/chat/completions, /responses, and /messages (also under /v1).
+# Chat uses `reasoning.enabled` = true|false, `reasoning.effort` = none, minimal,
+# low, medium, high, xhigh, or max, and integer `reasoning.max_tokens`; legacy
+# top-level `reasoning_effort` is also read. none is the disable sentinel.
+# Responses uses `reasoning.effort` with the same model-dependent effort set;
+# none disables and any other supplied value enables.
+# Messages uses `thinking.type` = enabled|adaptive|disabled and, for enabled
+# thinking, integer `thinking.budget_tokens` >=1024 and below `max_tokens`;
+# Anthropic `output_config.effort` = low, medium, high, or max. Exact accepted
+# subsets and maximum budgets remain model-specific. These are route-native
+# mappings, not one JSON shape forwarded unchanged to every route.
+# Sources:
+# https://kilo.ai/docs/gateway
+# https://github.com/Kilo-Org/cloud/blob/deec94c0a6515cfeaf5748993ad9b2d601921e78/apps/web/src/app/api/openrouter/%5B...path%5D/route.ts
+# https://github.com/Kilo-Org/cloud/blob/deec94c0a6515cfeaf5748993ad9b2d601921e78/apps/web/src/lib/ai-gateway/providers/openrouter/request-helpers.ts
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# https://platform.openai.com/docs/api-reference/responses/create#responses-create-reasoning
+# https://docs.anthropic.com/en/api/messages
 api = "https://api.kilo.ai/api/gateway"
 doc = "https://kilo.ai"

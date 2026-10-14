@@ -1,9 +1,11 @@
 name = "GPT-5.1 Codex mini"
+description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
 family = "gpt-codex"
 release_date = "2025-11-13"
 last_updated = "2025-11-13"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = false
 knowledge = "2024-09-30"
 tool_call = true

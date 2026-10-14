@@ -1,0 +1,10 @@
+base_model = "anthropic/claude-opus-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 6.5
+output = 32.5
+cache_read = 0.65

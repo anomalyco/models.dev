@@ -1,0 +1,19 @@
+# CoralBricks renamed its public model IDs on 2026-10-04: glm-5.3-fast is the advertised ID for the model that
+# glm-5.3-fp4 names. Both resolve to the same model at the same rates; the older ID keeps working.
+# Pricing per https://www.coralbricks.ai/pricing and https://www.coralbricks.ai/api/public/models (accessed 2026-10-04):
+# input $1.12, output $4.40, cache write $1.68 per 1M tokens; cached input is free.
+# Effort: reasoning_effort = low|high|max, the same controls as glm-5.3-fp4. Verified live against
+# POST https://inference.coralbricks.ai/v1/chat/completions (2026-10-04): all three return HTTP 200 on this ID.
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+interleaved = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost]
+input = 1.12
+output = 4.4
+cache_read = 0
+cache_write = 1.68

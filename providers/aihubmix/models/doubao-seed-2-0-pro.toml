@@ -1,9 +1,11 @@
 name = "Doubao Seed 2.0 Pro"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
 release_date = "2026-02-14"
 last_updated = "2026-02-14"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true

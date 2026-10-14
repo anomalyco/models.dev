@@ -1,0 +1,24 @@
+# Effort: reasoning_effort = none|low|high|max (none disables thinking)
+# Budget: thinking_token_budget (integer reasoning tokens)
+base_model = "moonshotai/kimi-k3"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+context = 1_048_560
+output = 1_048_560
+
+[modalities]
+input = ["text", "image"]

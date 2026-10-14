@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M3"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]

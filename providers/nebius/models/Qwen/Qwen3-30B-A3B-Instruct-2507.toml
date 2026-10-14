@@ -1,4 +1,5 @@
 name = "Qwen3-30B-A3B-Instruct-2507"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 attachment = false
 reasoning = false
 tool_call = true
@@ -16,8 +17,8 @@ cache_read = 0.01
 cache_write = 0.125
 
 [limit]
-context = 128_000
-input = 120_000
+context = 262_144
+input = 262_144
 output = 8_192
 
 [modalities]

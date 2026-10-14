@@ -1,0 +1,19 @@
+# GET https://api.synthetic.new/openai/v1/models (accessed 2026-09-16) lists
+# hf:deepseek-ai/DeepSeek-V4.1-Flash with reasoning_parameters.efforts
+# none|low|high|xhigh|max, text+image input, fp8 quantization.
+# Live probes: `reasoning_effort = "none"` disables reasoning; `"xhigh"` streams it.
+# Reasoning is returned in the `reasoning` message field.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "xhigh", "max"] }]
+
+interleaved = true
+
+[cost]
+input = 0.6
+output = 1.2
+cache_read = 0.03
+
+[limit]
+context = 524_288
+output = 65_536

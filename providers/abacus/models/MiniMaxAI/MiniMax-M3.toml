@@ -1,0 +1,23 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM API does not report thinking: true for this ID.
+# RouteLLM input_modalities: ['text', 'image', 'video']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.0000003
+# RouteLLM output_token_rate: 0.0000012
+base_model = "minimax/MiniMax-M3"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

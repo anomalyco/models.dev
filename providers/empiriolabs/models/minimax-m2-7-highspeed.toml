@@ -1,0 +1,13 @@
+base_model = "minimax/MiniMax-M2.7-highspeed"
+name = "MiniMax M2.7 Highspeed"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+
+[limit]
+context = 200_000
+output = 32_768

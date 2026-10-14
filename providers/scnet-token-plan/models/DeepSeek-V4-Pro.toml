@@ -1,0 +1,13 @@
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = high|max
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html (accessed 2026-08-20)
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
