@@ -1,6 +1,11 @@
 # River serves GLM-5.3-Flash at `zai-org/GLM-5.3-Flash`.
-# GLM always reasons; Chat `reasoning_effort`: `low`, `high`, `max`.
+# GLM requires reasoning. Chat `reasoning_effort` is `low`, `high`, `max`, per the
+# API controls page and verified live on POST /v1/chat/completions (2026-10-16):
+# `low`/`high`/`max` return 200; `none`/`minimal`/`medium`/`xhigh` return 400.
+# No `toggle` and no `none`, since GLM always reasons.
 # Reasoning returns in `reasoning_content` and bills as output.
+# Pricing (USD per 1M tokens): input 0.12, cached 0.024, output 0.40.
+# Limits: context 1,048,576; max output 131,072 (River: 128K).
 # https://docs.river.ai/guides/inference-controls/ (accessed 2026-10-16)
 # https://docs.river.ai/guides/inference-models/ (accessed 2026-10-16)
 base_model = "zhipuai/glm-5.3-flash"
