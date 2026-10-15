@@ -9,8 +9,8 @@ import { modelMetadata } from "../src/sync/providers/openrouter.js";
 import { fetchVoidModels, voidApi } from "../src/sync/providers/void-api.js";
 import snapshot from "./fixtures/void-api-resolved.json";
 
-// Canonical identities in this enriched fixture were recovered from the
-// factored Void catalog at 5059e6c67, not inferred from invocation IDs.
+// canonical identities come from saved references, never invocation IDs.
+// active models carry the latest public API metadata and selling prices.
 const baseID = snapshot["gpt-6-astra"].base_model;
 const { base_model: _base, cost: _cost, ...fixtureBase } = snapshot["gpt-6-astra"];
 const { id: _fixtureID, ...base } = AuthoredModel.parse({ id: "fixture", ...fixtureBase });
@@ -21,7 +21,7 @@ const row = (id = "route") => ({ id, object: "model", created: 1700000000, owned
 const envelope = (...data: unknown[]) => ({ object: "list", data });
 const parsed = (raw: unknown = row()) => voidApi.parseModels(envelope(raw))[0]!;
 function canonical(id: string) {
-  // The runner intentionally excludes enrichment from inherited host metadata.
+  // the runner intentionally excludes enrichment from inherited host metadata.
   const { benchmarks: _benchmarks, license: _license, links: _links, weights: _weights, ...fields } = modelMetadata(id);
   return fields;
 }
@@ -96,6 +96,22 @@ test("controls come directly from the API, including [] and server-filtered sets
   expect(model).not.toHaveProperty("reasoning_options");
 });
 
+test("reasoning headers remove stale controls while preserving curated notes", () => {
+  const header = "# Curated source\n# Effort: stale\n# Toggle: stale\n# Budget: stale\n# Void sync reasoning: stale\n# Reasoning controls: stale";
+  const remote = parsed({ ...row(), reasoning_options: [] });
+  const translated = voidApi.translateModel(remote, context(undefined, canonical(baseID), header))!;
+  expect(translated.header).toBe("# Curated source");
+  expect(voidApi.translateModel(remote, context(undefined, canonical(baseID), translated.header))!.header)
+    .toBe(translated.header);
+});
+
+test("non-Anthropic toggle and budget controls do not advertise Anthropic wire paths", () => {
+  const remote = parsed({ ...row(), reasoning_options: [{ type: "toggle" }, { type: "budget_tokens", min: 1024 }] });
+  const translated = voidApi.translateModel(remote, context())!;
+  expect(translated.model.reasoning_options).toEqual([{ type: "toggle" }, { type: "budget_tokens", min: 1024 }]);
+  expect(translated.header).toBe("");
+});
+
 test("missing, invalid, unresolved or changed identity never guesses or replaces references", () => {
   for (const base_model of [undefined, null, "", 7, {}, "gpt-6-astra", "openai/unknown", "../escape", "openai/%2e%2e", "openai/gpt-6-astra/../other"]) {
     const remote = parsed({ ...row("gpt-6-astra"), owned_by: "openai", base_model });
@@ -120,21 +136,26 @@ test("incomplete or invalid API metadata skips even with complete local fields",
 
 test("schema fails closed on unsafe IDs, empty envelopes and malformed prices", () => {
   const invalid = [null, [], envelope(), envelope(row(), row()), envelope(row("Route"), row("route")),
-    ...["../escape", "a/../escape", "/absolute", "a\\b", "a//b", "a/%2e%2e/b"].map((id) => envelope(row(id))),
+    ...[".", "..", "a/.", "a/..", "./a", "../escape", "a/../escape", "/absolute", "a\\b", "a//b", "a/%2e%2e/b"].map((id) => envelope(row(id))),
     ...["-1", "NaN", "Infinity", "", " 1", "1e999", "9".repeat(400)].map((input) => envelope({ ...row(), pricing: { ...row().pricing, input } })),
     envelope({ ...row(), pricing: { ...row().pricing, unit: "USD_per_token" } })];
   for (const raw of invalid) expect(() => voidApi.parseModels(raw)).toThrow();
   expect(parsed(row("lab/nested:v1@region")).id).toBe("lab/nested:v1@region");
 });
 
-test("13 factored TOMLs preserve resolved metadata/prices and contain no copied lab fields", async () => {
+test("factored TOMLs preserve current metadata/prices and contain only genuine overrides", async () => {
   expect(Object.keys(snapshot)).toHaveLength(13);
   for (const [id, enriched] of Object.entries(snapshot)) {
     const { base_model, ...fixtureFields } = enriched;
     const { id: _id, ...expected } = AuthoredModel.parse({ id, ...fixtureFields });
     const text = await Bun.file(`providers/void-api/models/${id}.toml`).text();
     const authored = Bun.TOML.parse(text) as ExistingModel;
-    expect(authored).toEqual({ base_model, reasoning_options: expected.reasoning_options, cost: expected.cost });
+    expect(authored).toMatchObject({ base_model, reasoning_options: expected.reasoning_options, cost: expected.cost });
+    const inherited = canonical(base_model);
+    for (const [key, value] of Object.entries(authored)) {
+      if (["base_model", "base_model_omit", "reasoning_options", "cost"].includes(key)) continue;
+      expect(value).not.toEqual(inherited[key]);
+    }
     expect(resolve(authored, id)).toEqual(expected);
     expect(AuthoredModel.safeParse({ id, ...resolve(authored, id) }).success).toBe(true);
     expect(text).not.toContain("Responses");
