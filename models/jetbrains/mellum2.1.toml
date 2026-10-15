@@ -1,0 +1,28 @@
+name = "Mellum2.1 Thinking"
+family = "mellum"
+release_date = "2026-10-08"
+last_updated = "2026-10-08"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 131072
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/JetBrains/Mellum2.1-12B-A2.5B-Thinking"
+format = "safetensors"
+
+[[links]]
+url = "https://blog.jetbrains.com/ai/2026/10/mellum2-1-gets-to-work-a-fast-open-model-for-coding-agents/"
+type = "announcement"

@@ -1,0 +1,29 @@
+name = "Kolibri-1"
+family = "kolibri"
+release_date = "2026-10-03"
+last_updated = "2026-10-03"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2026-06"
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 1048576
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face (FP8)"
+url = "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+format = "safetensors"
+
+[[links]]
+url = "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+type = "model"
