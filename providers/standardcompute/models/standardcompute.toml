@@ -46,3 +46,9 @@ output = 50_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+# Responses carry OpenRouter-shape `reasoning_details` (reasoning.text,
+# reasoning.summary, reasoning.encrypted). The OpenRouter adapter replays them
+# as arrays on tool turns; the generic adapter would send them as a string.
+[provider]
+npm = "@openrouter/ai-sdk-provider"
