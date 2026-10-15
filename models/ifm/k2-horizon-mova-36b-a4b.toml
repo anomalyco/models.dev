@@ -1,0 +1,31 @@
+# Sources:
+# - https://huggingface.co/IFM/K2-Horizon-MoVA-36B-A4B
+name = "K2-Horizon MoVA 36B-A4B"
+description = "IFM (MBZUAI) open-weight sparse MoE with Mixture-of-Values attention (36B total / 4B active), 512K context, fully open training data and code under Apache 2.0"
+release_date = "2026-09-28"
+last_updated = "2026-10-15"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 524_288
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/IFM/K2-Horizon-MoVA-36B-A4B"
+format = "safetensors"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/IFM/K2-Horizon-MoVA-36B-A4B"
+type = "model_card"

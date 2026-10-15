@@ -1,0 +1,37 @@
+# Sources:
+# - https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/
+# - https://research.nvidia.com/labs/nemotron/Nemotron-3.5-Bolt-24GB/
+name = "Nemotron 3.5 Bolt 74B-A9B"
+family = "nemotron"
+description = "NVIDIA open-weight hybrid MoE vision-language agent model compressed from Super VL (74B total / 9B active), designed for local 24GB deployment with text/image/video input"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia"
+format = "safetensors"
+
+[[links]]
+label = "Announcement"
+url = "https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/"
+type = "announcement"
+
+[[links]]
+label = "Model card"
+url = "https://research.nvidia.com/labs/nemotron/Nemotron-3.5-Bolt-24GB/"
+type = "model_card"

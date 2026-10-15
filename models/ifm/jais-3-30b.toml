@@ -1,0 +1,27 @@
+# Sources:
+# - https://ifm.ai/blog/jais3/
+name = "Jais 3 30B"
+family = "jais"
+description = "Open Arabic-centric 30B dense model from the Jais 3 family by IFM (MBZUAI) and Inception42, mid-size variant with long context and agentic capabilities, Apache 2.0"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 512_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[links]]
+label = "Announcement"
+url = "https://ifm.ai/blog/jais3/"
+type = "announcement"

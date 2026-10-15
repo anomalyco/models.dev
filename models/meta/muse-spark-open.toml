@@ -1,0 +1,38 @@
+# Sources:
+# - https://research.meta.ai/blog/muse-spark-open
+# - https://huggingface.co/collections/meta-models/muse-spark-open
+# - https://dev.meta.ai/docs/muse-spark-open
+name = "Muse Spark Open"
+family = "muse"
+description = "Meta open-weight multimodal MoE (816B total / 42B active) for agentic coding and long-horizon work, with 1M context and text/image/audio/video input under the Muse Model License"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/collections/meta-models/muse-spark-open"
+format = "safetensors"
+
+[[links]]
+label = "Announcement"
+url = "https://research.meta.ai/blog/muse-spark-open"
+type = "announcement"
+
+[[links]]
+label = "Docs"
+url = "https://dev.meta.ai/docs/muse-spark-open"
+type = "docs"

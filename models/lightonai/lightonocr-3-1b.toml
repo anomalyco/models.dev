@@ -1,0 +1,26 @@
+# Sources:
+# - https://huggingface.co/blog/lightonai/lightonocr-3
+name = "LightOnOCR-3 1B"
+description = "LightOn open-weight OCR and document layout model with transcription, bounding boxes, and chart data extraction under Apache 2.0"
+release_date = "2026-10-08"
+last_updated = "2026-10-08"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+temperature = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 16_384
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+label = "Announcement"
+url = "https://huggingface.co/blog/lightonai/lightonocr-3"
+type = "announcement"
