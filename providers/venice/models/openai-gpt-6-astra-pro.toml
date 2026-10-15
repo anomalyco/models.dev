@@ -14,17 +14,17 @@ type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 12.5
-output = 62.5
-cache_read = 1.25
-cache_write = 15.625
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 25
-output = 93.75
-cache_read = 2.5
-cache_write = 31.25
+input = 20
+output = 75
+cache_read = 2
+cache_write = 25
 
 [limit]
 context = 1_050_000
