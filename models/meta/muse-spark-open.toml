@@ -5,6 +5,11 @@
 # https://dev.meta.ai/models/muse-spark-open/ (takes text, image, video and audio input, 1M context, 816B/42B)
 # https://openrouter.ai/meta/muse-spark-open/llms.txt (temperature, tools, response_format, reasoning_effort accepted)
 # Output 131072 follows Muse Spark 1.2/1.3 lab convention (1M context / 131K output); no separate first-party max-output doc found for Open yet.
+# https://dev.meta.ai/docs/muse-spark-open (model variants table: text, image, audio, video in; text out)
+# https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B-NVFP4 (NVFP4 weights)
+# Benchmarks: Muse Spark Open (xhigh) column of the Hugging Face model card benchmark table
+# (xhigh reasoning effort, temperature 1.0, top_p 1.0, top_k disabled). Safety rows omitted.
+# Methodology: https://research.meta.ai/static/muse-spark-open-evaluation-methodology
 name = "Muse Spark Open"
 description = "Muse Spark Open is an 816B total / 42B active open-weight multimodal reasoning model from Meta for coding and long-horizon agentic work, with 1M-token context."
 family = "muse"
@@ -28,8 +33,12 @@ input = ["text", "image", "video", "audio"]
 output = ["text"]
 
 [[weights]]
-label = "Hugging Face"
+label = "Hugging Face (BF16)"
 url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+
+[[weights]]
+label = "Hugging Face (NVFP4)"
+url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B-NVFP4"
 
 [[links]]
 label = "Announcement"
@@ -40,3 +49,162 @@ type = "announcement"
 label = "Model card"
 url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
 type = "model_card"
+
+[[links]]
+label = "Developer docs"
+url = "https://dev.meta.ai/docs/muse-spark-open"
+type = "docs"
+
+[[links]]
+label = "License"
+url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B/blob/main/LICENSE.md"
+type = "license"
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 39
+metric = "index score"
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "JobBench"
+score = 61.8
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 89.2
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1401
+metric = "Elo"
+variant = "xhigh effort"
+version = "2"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 80.4
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 72.8
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "HLE-Diamond"
+score = 26.1
+variant = "xhigh effort, no tools"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "AA-Omniscience"
+score = 25
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "SciCode"
+score = 58.5
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 61.0
+variant = "xhigh effort, with tools"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 89.0
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 60
+variant = "xhigh effort"
+version = "1.1"
+harness = "preferred harness"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 58
+variant = "xhigh effort"
+harness = "preferred harness"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 76.4
+variant = "xhigh effort"
+version = "2.1"
+harness = "Terminus 2"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "ZeroBench"
+score = 50.0
+variant = "xhigh effort, with tools"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "BabyVision"
+score = 80.2
+variant = "xhigh effort, with tools"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "SimpleVQA"
+score = 73.6
+variant = "xhigh effort, with tools"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "WorldVQA"
+score = 49.4
+variant = "xhigh effort, with tools"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "IntPhys2"
+score = 68.3
+variant = "xhigh effort"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
+
+[[benchmarks]]
+name = "Video-MME"
+score = 61.5
+variant = "xhigh effort"
+version = "2"
+source = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+date = "2026-10-15"
