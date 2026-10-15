@@ -1,14 +1,16 @@
 # River serves Nemotron-3.5-Super-VL-120B-A12B at
 # `nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4`.
 # River documents no reasoning controls for this model. Its wire is Chat
-# `reasoning_effort`, where `none` turns reasoning off, so this entry authors
-# `effort` only (no `toggle`): when `none` sits in the effort list beside graded
-# levels, `effort` is the surface (models.dev AGENTS.md, Reasoning options).
-# The values are the effort set of the same-surface relay peers for this model:
-# `vercel` (`none,low,medium,high`), `kilo` (`none,high`), `opencode`
-# (`none,minimal,low,medium,high,xhigh`). Each listed value returns HTTP 200 on
-# POST /v1/chat/completions (2026-10-16), `none` with 0 reasoning tokens and the
-# graded levels above it.
+# `reasoning_effort`, where `none` turns reasoning off, so the surface is
+# `effort`, not `toggle` (`none` is an effort value, not a separate on/off field).
+# Values are what the same-surface relay peers have in common: `vercel`
+# (`none,low,medium,high`), `kilo` (`none,high`), and `opencode`
+# (`none,minimal,low,medium,high,xhigh`) all expose `none` and `high`, so those
+# two are the intersection.
+# Live probe, POST /v1/chat/completions (2026-10-16, three runs per value):
+# `none` returns 0 reasoning tokens every time, and graded values do reason, but
+# the graded levels are not distinctly ordered, so a wider graded set is not
+# claimed.
 # Reasoning returns in `reasoning_content` and bills as output.
 # Pricing (USD per 1M tokens): input 0.07, cached 0.024, output 0.37.
 # Limits: context 1,048,576; max output 131,072 (River: 128K).
@@ -17,7 +19,7 @@ base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+values = ["none", "high"]
 
 [interleaved]
 field = "reasoning_content"
