@@ -1,0 +1,11 @@
+# Pricing as of 2026-10-15: $0.15 input / $0.50 output / $0.03 cached input
+# https://www.paperinstruments.com/ultramarine
+# Reasoning effort: low, high, max (default max). Cannot disable reasoning.
+base_model = "paperinstruments/ultramarine-1-flash"
+
+[cost]
+input = 0.15
+output = 0.50
+cache_read = 0.03
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]

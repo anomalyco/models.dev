@@ -1,0 +1,23 @@
+# Sources:
+# https://www.liquid.ai/blog/lfm2-5-24b-a2b
+# https://huggingface.co/LiquidAI/LFM2.5-24B-A2B
+# https://docs.liquid.ai/lfm/models/lfm25-24b-a2b
+name = "LFM2.5-24B-A2B"
+description = "Open-weight 24B-parameter MoE reasoning model with approximately 2B active parameters per token. Designed for fast, private on-device agents with tool use and 131K context window."
+family = "lfm2.5"
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+temperature = true
+structured_output = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+# Sources:
+# https://www.paperinstruments.com/blog/ultramarine
+# https://docs.paperinstruments.com/docs/ultramarine
+name = "Ultramarine 1 Flash"
+description = "Agentic model specialized for professional knowledge work in finance, law, consulting, and operations. Post-trained from GLM-5.3 Flash using large-scale non-verifiable RL on synthetic tasks. API available; open weights planned."
+family = "ultramarine"
+release_date = "2026-10-14"
+last_updated = "2026-10-14"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+temperature = true
+structured_output = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
