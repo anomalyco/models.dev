@@ -1,4 +1,10 @@
-# Underlying model available on Modelflare as "deepseek-v4-flash" (GET /v1/models, 2026-10-15); reasoning controls mirror relay peer providers/openrouter/models/deepseek/deepseek-v4-flash.toml.
-# Toggle: OpenAI-compatible $.reasoning_effort is forwarded to the underlying provider; reasoning_effort="low" verified live on this ID 2026-10-15.
+# Modelflare ID "deepseek-v4-flash" from GET https://modelflare.dev/v1/models (2026-10-15).
+# Effort: $.reasoning_effort on /v1/chat/completions; matches first-party providers/deepseek effort set; reasoning_effort accepted live.
+# Cost: list price from https://modelflare.dev/api/pricing (2026-10-15): input_price=0.428571 USD/MTok, output = input_price * completion_ratio (3.0), cache_read = input_price * cache_ratio (0.0333333).
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.428571
+output = 1.28571
+cache_read = 0.0142857

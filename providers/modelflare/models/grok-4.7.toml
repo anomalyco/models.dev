@@ -1,4 +1,10 @@
-# Underlying model available on Modelflare as "grok-4.7" (GET /v1/models, 2026-10-15); reasoning controls mirror relay peer providers/aihubmix/models/grok-4.7.toml.
-# reasoning_effort verified live via POST https://modelflare.dev/v1/chat/completions 2026-10-15.
+# Modelflare ID "grok-4.7" from GET https://modelflare.dev/v1/models (2026-10-15).
+# Effort: $.reasoning_effort on /v1/chat/completions; mirrors relay peer providers/aihubmix/models/grok-4.7.toml; reasoning_effort verified live.
+# Cost: list price from https://modelflare.dev/api/pricing (2026-10-15): input_price=2.0 USD/MTok, output = input_price * completion_ratio (3.0), cache_read = input_price * cache_ratio (0.25).
 base_model = "xai/grok-4.7"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2.0
+output = 6.0
+cache_read = 0.5
