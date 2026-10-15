@@ -1,23 +1,22 @@
-# Sources:
-# https://research.meta.ai/blog/muse-spark-open (released Oct 15, 2026; 816B total / 42B active; 1M-token context; open weights; Fireworks AI launch partner)
-# https://dev.meta.ai/docs/muse-spark-open (816B total, 42B active sparse MoE; 1,048,576 tokens; text, image, audio, and video input with text output; Muse Model License)
-# https://dev.meta.ai/docs/muse-spark-open/prompting (reasoning_effort low|medium|high|xhigh, default xhigh, cannot be turned off; knowledge cutoff 2026-01-04; tool calling; image/video/audio parts)
-# https://dev.meta.ai/docs/muse-spark-open/settings (recommended temperature 1.0; reasoning strengths 8/32/256/512)
-# https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B (Date of Release October 15th, 2026; 816B/42B; 1M context; Text+Image+Video+Audio in, Text out; temperature 1.0)
-# https://fireworks.ai/models/fireworks/muse-spark-open (Fireworks: text and images in, text out; Function Calling Supported; Image Input Supported)
-# https://app.fireworks.ai/models/fireworks/muse-spark-open (usage example max_tokens 131072)
-# https://www.baseten.co/library/muse-spark-open/ (Input Text/Image/Video/Audio, Output Text; $1.25/$0.15/$4.25 per 1M)
+# Sources (accessed 2026-10-15):
+# https://research.meta.ai/blog/muse-spark-open (816B total/42B active, 1M context, released Oct 15 2026, coding/agentic)
+# https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B (1M context, Input Text+Image+Video+Audio/Output Text, reasoning effort low/medium/high/xhigh default xhigh, temp 1.0, tool calling, Muse Model License, release Oct 15 2026)
+# https://huggingface.co/blog/meta-muse-spark-open (inputs text/images/audio/video, output text, knowledge cutoff 2026-01-04, reasoning cannot be disabled, tool calling)
+# https://dev.meta.ai/models/muse-spark-open/ (takes text, image, video and audio input, 1M context, 816B/42B)
+# https://openrouter.ai/meta/muse-spark-open/llms.txt (temperature, tools, response_format, reasoning_effort accepted)
+# Output 131072 follows Muse Spark 1.2/1.3 lab convention (1M context / 131K output); no separate first-party max-output doc found for Open yet.
 name = "Muse Spark Open"
-description = "Muse Spark Open is the open-weight release of Muse Spark, Meta's agentic and coding model. It is an 816B total / 42B active parameter sparse mixture-of-experts model with a 1M-token context window for coding and long-horizon agentic work."
+description = "Muse Spark Open is an 816B total / 42B active open-weight multimodal reasoning model from Meta for coding and long-horizon agentic work, with 1M-token context."
 family = "muse"
 release_date = "2026-10-15"
 last_updated = "2026-10-15"
 attachment = true
 reasoning = true
-temperature = true
 tool_call = true
-open_weights = true
+temperature = true
+structured_output = true
 knowledge = "2026-01-04"
+open_weights = true
 license = "Muse Model License"
 
 [limit]
@@ -41,8 +40,3 @@ type = "announcement"
 label = "Model card"
 url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
 type = "model_card"
-
-[[links]]
-label = "Developer docs"
-url = "https://dev.meta.ai/docs/muse-spark-open"
-type = "docs"

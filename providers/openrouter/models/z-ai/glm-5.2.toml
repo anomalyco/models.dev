@@ -6,11 +6,8 @@ base_model = "zhipuai/glm-5.2"
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["none", "high", "xhigh"]
 
 [cost]
 input = 0.1
