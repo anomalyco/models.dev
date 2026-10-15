@@ -1,0 +1,48 @@
+# Sources:
+# https://research.meta.ai/blog/muse-spark-open (released Oct 15, 2026; 816B total / 42B active; 1M-token context; open weights; Fireworks AI launch partner)
+# https://dev.meta.ai/docs/muse-spark-open (816B total, 42B active sparse MoE; 1,048,576 tokens; text, image, audio, and video input with text output; Muse Model License)
+# https://dev.meta.ai/docs/muse-spark-open/prompting (reasoning_effort low|medium|high|xhigh, default xhigh, cannot be turned off; knowledge cutoff 2026-01-04; tool calling; image/video/audio parts)
+# https://dev.meta.ai/docs/muse-spark-open/settings (recommended temperature 1.0; reasoning strengths 8/32/256/512)
+# https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B (Date of Release October 15th, 2026; 816B/42B; 1M context; Text+Image+Video+Audio in, Text out; temperature 1.0)
+# https://fireworks.ai/models/fireworks/muse-spark-open (Fireworks: text and images in, text out; Function Calling Supported; Image Input Supported)
+# https://app.fireworks.ai/models/fireworks/muse-spark-open (usage example max_tokens 131072)
+# https://www.baseten.co/library/muse-spark-open/ (Input Text/Image/Video/Audio, Output Text; $1.25/$0.15/$4.25 per 1M)
+name = "Muse Spark Open"
+description = "Muse Spark Open is the open-weight release of Muse Spark, Meta's agentic and coding model. It is an 816B total / 42B active parameter sparse mixture-of-experts model with a 1M-token context window for coding and long-horizon agentic work."
+family = "muse"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+knowledge = "2026-01-04"
+license = "Muse Model License"
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+
+[[links]]
+label = "Announcement"
+url = "https://research.meta.ai/blog/muse-spark-open"
+type = "announcement"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+type = "model_card"
+
+[[links]]
+label = "Developer docs"
+url = "https://dev.meta.ai/docs/muse-spark-open"
+type = "docs"
