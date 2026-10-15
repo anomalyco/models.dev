@@ -1,0 +1,13 @@
+base_model = "google/gemini-4-argon"
+reasoning_options = []
+
+[cost]
+input = 2.25
+output = 11.249
+cache_read = 0.113
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image", "audio", "pdf"]
