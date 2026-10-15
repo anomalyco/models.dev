@@ -1,3 +1,4 @@
+# Source: opencode Go console, per 1M tokens (accessed 2026-10-04)
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash"
 
@@ -9,6 +10,6 @@ values = ["low", "high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 0.15
-output = 0.6
-cache_read = 0.003
+input = 0.3
+output = 1.2
+cache_read = 0.01
