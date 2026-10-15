@@ -1,0 +1,13 @@
+# Reasoning controls copied from the providers/minimax/models/MiniMax-M2.toml lab baseline: it authors `reasoning_options = []` — no caller control is documented.
+base_model = "minimax/MiniMax-M2"
+name = "Minimax M2"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 196_608
+input = 65_536

@@ -1,0 +1,18 @@
+# Reasoning controls copied from the providers/deepseek/models/deepseek-v4-pro.toml lab baseline.
+# Effort: reasoning_effort = low|high|max
+# Toggle and budget controls from the source are not emitted: the Experiential Labs chat surface exposes no native on/off or budget request field - thinking_budget is rejected and thinking/enable_thinking are translated to reasoning_effort (live-tested 2026-10-07 on deepseek-v4-pro-0813: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters ["thinking->translated(reasoning_effort)"]; the route's own error lists supported efforts low|high|max) (see platform.experientiallabs.ai/llms.txt).
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.44
+output = 2.88
+cache_read = 0.1215
+
+[limit]
+context = 1_048_576
+input = 655_360
+output = 393_216

@@ -1,0 +1,14 @@
+base_model = "openai/gpt-4.1-nano"
+name = "GPT-4.1 Nano"
+attachment = false
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.025
+
+[limit]
+input = 1_014_808
+
+[modalities]
+input = ["text"]

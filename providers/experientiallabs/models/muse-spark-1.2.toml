@@ -1,0 +1,16 @@
+# Reasoning controls copied from the providers/meta/models/muse-spark-1.2.toml lab baseline.
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh
+base_model = "meta/muse-spark-1.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[limit]
+input = 1_032_192
+output = 16_384

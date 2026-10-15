@@ -1,0 +1,16 @@
+# Reasoning controls copied from the providers/zhipuai/models/glm-5.toml lab baseline.
+# Toggle and budget controls from the source are not emitted: the Experiential Labs chat surface exposes no native on/off or budget request field - thinking_budget is rejected and enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on glm-5.3-flash: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)"]) (see platform.experientiallabs.ai/llms.txt).
+# Reasoning controls: none emitted - the lab/peer baseline documents no effort levels, and its toggle/budget controls have no native request fields on this surface: thinking_budget is rejected and enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on glm-5.3-flash: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)"]). reasoning_effort is the only reasoning wire and passes through unchanged where the route supports it (platform.experientiallabs.ai/llms.txt).
+base_model = "zhipuai/glm-5"
+name = "GLM 5"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.1
+
+[limit]
+input = 76_800
+output = 128_000

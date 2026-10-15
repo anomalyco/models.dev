@@ -1,0 +1,15 @@
+# Reasoning controls copied from the providers/perplexity/models/sonar-reasoning-pro.toml lab baseline.
+# Effort: reasoning_effort = medium
+base_model = "perplexity/sonar-reasoning-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 2
+output = 8
+cache_read = 2
+
+[limit]
+input = 128_000

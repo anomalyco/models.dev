@@ -1,0 +1,15 @@
+# Reasoning controls copied from the providers/moonshotai/models/kimi-k2.7-code.toml lab baseline: it authors `reasoning_options = []` — no caller control is documented.
+base_model = "moonshotai/kimi-k2.7-code"
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 0.67
+output = 3.4
+cache_read = 0.18
+
+[limit]
+input = 262_144
+
+[modalities]
+input = ["text", "image"]

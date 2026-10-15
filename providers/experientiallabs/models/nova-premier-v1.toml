@@ -1,0 +1,13 @@
+base_model = "amazon/nova-premier"
+name = "Nova Premier 1.0"
+
+[cost]
+input = 2.5
+output = 12.5
+cache_read = 0.625
+
+[limit]
+input = 1_000_000
+
+[modalities]
+input = ["text", "image"]

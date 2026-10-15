@@ -1,0 +1,19 @@
+# Reasoning controls copied from the providers/google/models/deep-research-preview-04-2026.toml lab baseline: it authors `reasoning_options = []` — no caller control is documented.
+base_model = "google/deep-research-preview-04-2026"
+name = "Deep Research Preview (Apr-21-2026)"
+attachment = false
+temperature = true
+tool_call = false
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 131_072
+input = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

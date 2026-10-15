@@ -1,0 +1,13 @@
+base_model = "mistral/voxtral-mini-3b-2507"
+attachment = false
+tool_call = false
+
+[cost]
+input = 0.04
+output = 0.04
+
+[limit]
+input = 32_768
+
+[modalities]
+input = ["text"]

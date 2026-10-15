@@ -1,0 +1,16 @@
+# Reasoning controls copied from the providers/moonshotai/models/kimi-k2.6.toml lab baseline.
+# Toggle and budget controls from the source are not emitted: the Experiential Labs chat surface exposes no native on/off or budget request field - enable_thinking is translated to reasoning_effort, and the resulting reasoning_effort is then dropped (live-tested 2026-10-07 on kimi-k2.6, single request on the azure route: x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)", "reasoning_effort"]) (see platform.experientiallabs.ai/llms.txt).
+# Reasoning controls: none emitted - the lab/peer baseline documents no effort levels, and its toggle/budget controls have no native request fields on this surface: enable_thinking is translated to reasoning_effort, and the resulting reasoning_effort is then dropped (live-tested 2026-10-07 on kimi-k2.6, single request on the azure route: x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)", "reasoning_effort"]). reasoning_effort is the only reasoning wire and passes through unchanged where the route supports it (platform.experientiallabs.ai/llms.txt).
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.16
+
+[limit]
+input = 262_144
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,22 @@
+# Reasoning controls copied from the providers/openrouter/models/bytedance-seed/seed-2.0-code.toml relay peer baseline.
+# Effort: reasoning_effort = low|medium|high
+# Toggle and budget controls from the source are not emitted: the Experiential Labs chat surface exposes no native on/off or budget request field - (live-tested battery 2026-10-07: thinking_budget rejected on Anthropic, Google, Qwen, DeepSeek and GLM routes; enable_thinking and thinking translated to reasoning_effort on Qwen, DeepSeek, GLM, Xiaomi, Moonshot and Google routes) (see platform.experientiallabs.ai/llms.txt).
+base_model = "bytedance-seed/seed-2.0-code"
+name = "Seed-2.0-Code"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_001 }
+input = 1
+output = 6
+
+[limit]
+input = 131_072

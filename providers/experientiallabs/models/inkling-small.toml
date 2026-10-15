@@ -1,0 +1,17 @@
+# Reasoning controls copied from the providers/openrouter/models/thinkingmachines/inkling-small.toml relay peer baseline.
+# Effort: reasoning_effort = none|minimal|low|medium|high|max
+base_model = "thinkingmachines/inkling-small"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.45
+output = 1.2
+cache_read = 0.1
+
+[limit]
+context = 524_288
+input = 458_752
+output = 65_536

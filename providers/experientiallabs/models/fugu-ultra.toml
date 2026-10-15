@@ -1,0 +1,22 @@
+# Reasoning controls copied from the providers/sakana/models/fugu-ultra.toml lab baseline.
+# Effort: reasoning_effort = high|xhigh
+base_model = "sakana/fugu-ultra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_001 }
+input = 10
+output = 45
+cache_read = 1
+
+[limit]
+input = 872_000
+output = 128_000

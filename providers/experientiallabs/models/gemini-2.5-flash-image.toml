@@ -1,0 +1,13 @@
+# Reasoning controls copied from the providers/google/models/gemini-2.5-flash-image.toml lab baseline: it authors `reasoning_options = []` — no caller control is documented.
+base_model = "google/gemini-2.5-flash-image"
+name = "Gemini 2.5 Flash Image"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.03
+
+[limit]
+input = 32_768
