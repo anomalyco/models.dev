@@ -1,0 +1,26 @@
+# Sources:
+# - https://build.nvidia.com/ (Nemotron 3.5 Super VL model card, 2026-10-15)
+name = "Nemotron 3.5 Super VL"
+family = "nemotron"
+description = "NVIDIA open-weight 120B multimodal agent model (Nemotron 3.5 Super VL) for specialized always-on agents, with edge siblings Bolt 74B-A9B and Bolt E4B"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+label = "Announcement"
+url = "https://www.zdnet.com/innovation/nvidia-nemotron-3-5-super-vl-model-us-open-weight-ai/"
+type = "announcement"
