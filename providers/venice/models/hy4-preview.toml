@@ -1,0 +1,17 @@
+base_model = "tencent/hy4-preview"
+name = "Hy4 Preview"
+description = "Preview model for early access evaluation, prototyping, and compatibility testing"
+last_updated = "2026-10-15"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 1.0425
+output = 3.12625
+cache_read = 0.0525
+
+[limit]
+context = 1_048_576
