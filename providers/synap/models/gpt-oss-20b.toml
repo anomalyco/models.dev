@@ -1,0 +1,21 @@
+# Sources (accessed 2026-10-15):
+# - Model id, USD pricing and limits: https://pool.linkrra.com/v1/models?format=openrouter
+#   (cost_usd is per token: 0.000000017 prompt / 0.000000085 completion).
+# - limit: the live feed declares a 32,768-token window shared between prompt
+#   and output (the deployment's --max-model-len, below the lab model's 131k).
+# - tool_call = true: live probe - a request carrying `tools` with tool_choice
+#   auto returns finish_reason "tool_calls" with a well-formed function call.
+# - structured_output = true: live probe - response_format json_schema returns
+#   schema-conforming JSON.
+# - reasoning_options: live probe - `reasoning_effort: "low"` is accepted
+#   (HTTP 200); the vLLM backend supports effort levels for gpt-oss natively.
+base_model = "openai/gpt-oss-20b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.017
+output = 0.085
+
+[limit]
+context = 32_768
+output = 32_768
