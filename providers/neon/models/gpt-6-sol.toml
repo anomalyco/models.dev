@@ -1,0 +1,24 @@
+# Cost: https://neon.com/models.json gpt-6-sol (USD / 1M tokens).
+# Effort values are the gateway's own list:
+# "'reasoning_effort' does not support 'max' with this model. Supported values are: 'none', 'low', 'medium', 'high', and 'xhigh'".
+# Measured 2026-10-13.
+base_model = "openai/gpt-6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4
+output = 15
+cache_read = 0.4
+cache_write = 5
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+shape = "responses"

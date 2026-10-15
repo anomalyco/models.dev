@@ -1,0 +1,25 @@
+name = "LFM2.5 24B A2B"
+description = "Liquid AI's text-only mixture-of-experts model for reasoning and tool-using agents, with 24B total and 2.45B active parameters. It always thinks before answering and supports structured output. Pair it with retrieval for knowledge-heavy tasks. Open weights use the LFM Open License v1.0, with a $10M annual-revenue commercial threshold; hosted API use is subject to separate service terms that permit retention and use of prompts and responses for model training."
+family = "liquid"
+release_date = "2026-10-14"
+last_updated = "2026-10-14"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.05
+output = 0.7
+cache_read = 0.025
+
+[limit]
+context = 128_000
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,17 @@
+# see: https://www.scaleway.com/en/docs/generative-apis/reference-content/supported-models/
+# last update: 2026-10-14
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-14)
+# Billed in EUR: €1.80 input / €5.50 output per 1M tokens. Batch API: €0.90 / €2.75.
+# Converted at 1 EUR = 1.1188 USD on 2026-10-13 (models.dev publishes USD).
+
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+status = "beta"
+
+[limit]
+context = 256_000
+output = 16_384
+
+[cost]
+input = 2.01
+output = 6.15

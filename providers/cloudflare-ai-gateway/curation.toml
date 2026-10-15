@@ -247,3 +247,17 @@ note = [
 ]
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 limit = { output = 65_536 }
+
+# Gemini 4 Argon: Google native thinkingLevel only (low|medium|high, default medium).
+# Thinking cannot be disabled and thinking_budget is deprecated (400 on Gemini 4).
+# Wire is preserved via the Google AI Studio native route through AI Gateway.
+# https://ai.google.dev/gemini-api/docs/thinking
+# https://ai.google.dev/gemini-api/docs/generate-content/thinking
+# https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
+# https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/
+[models."google/gemini-4-argon"]
+note = [
+  "Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (Google AI Studio native route preserved via AI Gateway; default medium, thinking cannot be disabled).",
+  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-argon ; https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

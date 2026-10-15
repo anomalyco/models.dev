@@ -1,0 +1,15 @@
+base_model = "google/gemini-4-argon"
+description = "Gemini multimodal model for text, image, audio, video, and document tasks"
+last_updated = "2026-10-14"
+reasoning_options = []
+
+[cost]
+input = 2.5
+output = 12.5
+cache_read = 0.125
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image", "audio", "video"]

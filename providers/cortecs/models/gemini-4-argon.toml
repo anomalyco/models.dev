@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|medium|high
+# Source: https://docs.cortecs.ai/examples/reasoning
+base_model = "google/gemini-4-argon"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 2.25
+output = 11.249
+cache_read = 0.113
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image", "audio", "pdf"]
