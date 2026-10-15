@@ -24,6 +24,7 @@ import { fireworksAi } from "./providers/fireworks-ai.js";
 import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
+import { gradiated } from "./providers/gradiated.js";
 import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
@@ -163,6 +164,7 @@ export const providers: {
   friendli: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
+  gradiated: SyncProvider<any>;
   hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
@@ -207,6 +209,7 @@ export const providers: {
   friendli,
   "github-copilot": githubCopilot,
   google,
+  gradiated,
   hyper,
   huggingface,
   inceptron,
@@ -255,7 +258,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "nearai", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "gradiated", "hyper", "meta", "mistral", "nearai", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
