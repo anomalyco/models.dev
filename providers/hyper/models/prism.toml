@@ -1,0 +1,21 @@
+name = "Prism"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+release_date = "1970-01-01"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 3.2664
+output = 16.332
+cache_read = 0.32664
+
+[limit]
+context = 1_000_000
+output = 16_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
