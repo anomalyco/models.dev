@@ -1,0 +1,23 @@
+name = "Reka Edge 2603"
+description = "Reka's compact multimodal model for visual understanding and tool use, served directly by Reka."
+family = "reka"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.105
+output = 0.105
+
+[limit]
+context = 16_384
+input = 16_384
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
