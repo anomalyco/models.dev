@@ -1,17 +1,23 @@
 # River serves Nemotron-3.5-Super-VL-120B-A12B at
 # `nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4`.
-# River documents no reasoning controls for this model. The lab entry and the
-# same-model peers (first-party `nvidia`, relay `openrouter`) expose `toggle`
-# only, so this entry keeps that baseline instead of inventing graded efforts.
-# River's wire expresses off as `reasoning_effort: "none"`; there is no separate
-# on/off field.
+# River documents no reasoning controls for this model. Its wire is Chat
+# `reasoning_effort`, where `none` turns reasoning off, so this entry authors
+# `effort` only (no `toggle`): when `none` sits in the effort list beside graded
+# levels, `effort` is the surface (models.dev AGENTS.md, Reasoning options).
+# The values are the effort set of the same-surface relay peers for this model:
+# `vercel` (`none,low,medium,high`), `kilo` (`none,high`), `opencode`
+# (`none,minimal,low,medium,high,xhigh`). Each listed value returns HTTP 200 on
+# POST /v1/chat/completions (2026-10-16), `none` with 0 reasoning tokens and the
+# graded levels above it.
 # Reasoning returns in `reasoning_content` and bills as output.
 # Pricing (USD per 1M tokens): input 0.07, cached 0.024, output 0.37.
 # Limits: context 1,048,576; max output 131,072 (River: 128K).
 # https://docs.river.ai/guides/inference-models/ (accessed 2026-10-16)
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 
-reasoning_options = [{ type = "toggle" }]
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
 
 [interleaved]
 field = "reasoning_content"
