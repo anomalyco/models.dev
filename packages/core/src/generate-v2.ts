@@ -233,6 +233,7 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "@ai-sdk/amazon-bedrock":
     "https://bedrock-runtime.${AWS_REGION}.amazonaws.com",
   "@ai-sdk/mistral": "https://api.mistral.ai/v1",
+  "@ai-sdk/typesafe-ai": "https://api.typesafe.ai/v1",
   "@ai-sdk/cerebras": "https://api.cerebras.ai/v1",
   "@ai-sdk/xai": "https://api.x.ai/v1",
   "@ai-sdk/groq": "https://api.groq.com/openai/v1",
