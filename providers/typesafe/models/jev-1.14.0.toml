@@ -1,0 +1,16 @@
+# Sources (accessed 2026-10-27): https://docs.typesafe.ai/models.md, https://docs.typesafe.ai/images.md
+# USD 0.042 per 1M input tokens; output tokens are free. POST https://api.typesafe.ai/v1/systemone.
+schema = 2
+base_model = "typesafe/jev-1.14.0"
+
+[capabilities]
+structured_output = true
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0
