@@ -1,0 +1,23 @@
+# River serves DeepSeek-V4.1-Flash at `deepseek-ai/DeepSeek-V4.1-Flash`.
+# Chat `reasoning_effort`: `none` (off), `high`, `max`. There is no separate
+# on/off field, so off is expressed as `effort = none` (no toggle).
+# Reasoning returns in `reasoning_content` and bills as output.
+# https://docs.river.ai/guides/inference-controls/ (accessed 2026-10-16)
+# https://docs.river.ai/guides/inference-models/ (accessed 2026-10-16)
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.12
+output = 0.48
+reasoning = 0.48
+cache_read = 0.0024
+
+[limit]
+context = 1_048_576

@@ -1,0 +1,25 @@
+# River serves Nemotron-3.5-Super-VL-120B-A12B at
+# `nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4`.
+# River documents no reasoning controls for this model, so the accepted set was
+# verified live on POST https://api.river.ai/v1/chat/completions (2026-10-16):
+# `none` returns 0 reasoning tokens (off), graded levels return reasoning tokens.
+# Off is expressed as `effort = none` (no separate toggle).
+# Reasoning returns in `reasoning_content` and bills as output.
+# https://docs.river.ai/guides/inference-models/ (accessed 2026-10-16)
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.07
+output = 0.37
+reasoning = 0.37
+cache_read = 0.024
+
+[limit]
+output = 131_072
