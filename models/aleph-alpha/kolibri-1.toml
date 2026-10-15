@@ -1,0 +1,33 @@
+# Sources:
+# - https://huggingface.co/Aleph-Alpha/Kolibri-1
+# - https://www.aleph-alpha.com/ (Kolibri-1 announcement, 2026-10-03)
+name = "Kolibri-1"
+description = "Aleph Alpha open-weight German-English MoE reasoning model with 78B total / 3.46B active parameters, 1M context, tool calling, and Apache 2.0 weights"
+release_date = "2026-10-03"
+last_updated = "2026-10-03"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2026-06"
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face (FP8)"
+url = "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+format = "safetensors"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+type = "model_card"

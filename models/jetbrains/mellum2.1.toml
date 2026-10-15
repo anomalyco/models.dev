@@ -1,0 +1,37 @@
+# Sources:
+# - https://huggingface.co/JetBrains/Mellum2.1-12B-A2.5B-Thinking
+# - https://blog.jetbrains.com/ai/2026/10/mellum2-1-gets-to-work-a-fast-open-model-for-coding-agents/
+name = "Mellum2.1 Thinking"
+description = "JetBrains open-weight 12B MoE coding agent model with 2.5B active parameters, trained with RL in real repository environments, 131K context, Apache 2.0"
+release_date = "2026-10-08"
+last_updated = "2026-10-08"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/JetBrains/Mellum2.1-12B-A2.5B-Thinking"
+format = "safetensors"
+
+[[links]]
+label = "Announcement"
+url = "https://blog.jetbrains.com/ai/2026/10/mellum2-1-gets-to-work-a-fast-open-model-for-coding-agents/"
+type = "announcement"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/JetBrains/Mellum2.1-12B-A2.5B-Thinking"
+type = "model_card"

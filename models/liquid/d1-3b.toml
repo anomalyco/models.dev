@@ -1,0 +1,31 @@
+# Sources:
+# - https://huggingface.co/blog/LiquidAI/open-d1
+name = "d1-3B"
+family = "liquid"
+description = "Liquid AI open-weight multimodal decision model (text + image) built on LFM, optimized for fast calibrated decisions on edge hardware"
+release_date = "2026-10-07"
+last_updated = "2026-10-07"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+temperature = false
+open_weights = true
+
+[limit]
+context = 65_536
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LiquidAI"
+format = "safetensors"
+
+[[links]]
+label = "Announcement"
+url = "https://huggingface.co/blog/LiquidAI/open-d1"
+type = "announcement"

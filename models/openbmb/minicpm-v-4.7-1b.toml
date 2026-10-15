@@ -1,0 +1,31 @@
+# Sources:
+# - OpenBMB / ModelBest MiniCPM-V 4.7 release (2026-10-12)
+name = "MiniCPM-V 4.7 1B"
+description = "OpenBMB / ModelBest open 1.5B-parameter on-device multimodal model for image and document understanding with strong OCR, Apache 2.0"
+release_date = "2026-10-12"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 32_768
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openbmb"
+format = "safetensors"
+
+[[links]]
+label = "Announcement"
+url = "https://rits.shanghai.nyu.edu/ai/openbmb-releases-minicpm-v-4-7-its-first-moe-multimodal-model/"
+type = "announcement"

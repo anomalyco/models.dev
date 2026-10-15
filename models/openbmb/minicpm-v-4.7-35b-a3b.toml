@@ -1,0 +1,31 @@
+# Sources:
+# - OpenBMB / ModelBest MiniCPM-V 4.7 release (2026-10-12)
+name = "MiniCPM-V 4.7 35B-A3B"
+description = "OpenBMB / ModelBest open on-device multimodal MoE (35B total / ~3B active) for image, document and video understanding, runnable in ~3GB memory on phones and tablets"
+release_date = "2026-10-12"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 65_536
+output = 8_192
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openbmb"
+format = "safetensors"
+
+[[links]]
+label = "Announcement"
+url = "https://www.manilatimes.net/2026/10/15/tmt-newswire/pr-newswire/modelbest-and-openbmb-launch-minicpm-v-47-bringing-a-35b-multimodal-moe-model-to-phones-and-tablets-with-about-3-gb-of-memory/2446459"
+type = "announcement"

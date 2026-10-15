@@ -1,0 +1,31 @@
+# Sources:
+# - https://huggingface.co/blog/LiquidAI/open-d1
+name = "d1-omni-600M"
+family = "liquid"
+description = "Liquid AI experimental open-weight decision model with text+image or text+audio input, built on LFM2.5 encoder for edge multimodal decisions"
+release_date = "2026-10-07"
+last_updated = "2026-10-07"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+temperature = false
+open_weights = true
+
+[limit]
+context = 8_192
+output = 0
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LiquidAI"
+format = "safetensors"
+
+[[links]]
+label = "Announcement"
+url = "https://huggingface.co/blog/LiquidAI/open-d1"
+type = "announcement"

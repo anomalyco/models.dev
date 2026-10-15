@@ -1,0 +1,26 @@
+# Sources:
+# - https://huggingface.co/blog/lightonai/lightonocr-3
+name = "LightOnOCR-3 4B"
+description = "LightOn open-weight 4B OCR and document understanding model (Qwen3.5 VL-based) with layout, bounding boxes and chart extraction, Apache 2.0"
+release_date = "2026-10-08"
+last_updated = "2026-10-08"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+temperature = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+label = "Announcement"
+url = "https://huggingface.co/blog/lightonai/lightonocr-3"
+type = "announcement"
