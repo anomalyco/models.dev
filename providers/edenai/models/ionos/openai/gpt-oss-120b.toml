@@ -1,7 +1,5 @@
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (IONOS)"
-tool_call = false
-structured_output = false
 
 [[reasoning_options]]
 type = "effort"
@@ -10,3 +8,6 @@ values = ["low", "medium", "high"]
 [cost]
 input = 0.167925
 output = 0.727675
+
+[limit]
+context = 128_000
