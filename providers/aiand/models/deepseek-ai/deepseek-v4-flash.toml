@@ -5,7 +5,6 @@
 # context_window = 1048576 on this host overrides the lab's 1_000_000.
 # Reasoning side channel: message.reasoning_content
 base_model = "deepseek/deepseek-v4-flash"
-attachment = true
 
 [interleaved]
 field = "reasoning_content"
@@ -21,6 +20,3 @@ cache_read = 0.08
 
 [limit]
 context = 1_048_576
-
-[modalities]
-input = ["text", "image", "pdf"]
