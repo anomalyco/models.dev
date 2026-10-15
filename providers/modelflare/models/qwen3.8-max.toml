@@ -1,0 +1,4 @@
+# Underlying model available on Modelflare as "qwen3.8-max" (GET /v1/models, 2026-10-15); reasoning controls mirror relay peer providers/aihubmix/models/qwen3.8-max.toml.
+# Toggle: OpenAI-compatible $.reasoning_effort is forwarded to the underlying provider; reasoning_effort="low" verified live on this ID 2026-10-15.
+base_model = "alibaba/qwen3.8-max"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]

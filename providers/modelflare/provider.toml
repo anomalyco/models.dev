@@ -1,0 +1,8 @@
+# Modelflare is a multi-model OpenAI-compatible gateway operated by Havenbyte LLC.
+# Chat Completions: $.reasoning_effort is passed through to the underlying model. https://docs.modelflare.dev
+# Model IDs taken from GET https://modelflare.dev/v1/models (accessed 2026-10-15).
+name = "Modelflare"
+npm = "@ai-sdk/openai-compatible"
+api = "https://modelflare.dev/v1"
+env = ["MODELFLARE_API_KEY"]
+doc = "https://docs.modelflare.dev"

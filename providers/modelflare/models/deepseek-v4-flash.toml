@@ -1,0 +1,4 @@
+# Underlying model available on Modelflare as "deepseek-v4-flash" (GET /v1/models, 2026-10-15); reasoning controls mirror relay peer providers/openrouter/models/deepseek/deepseek-v4-flash.toml.
+# Toggle: OpenAI-compatible $.reasoning_effort is forwarded to the underlying provider; reasoning_effort="low" verified live on this ID 2026-10-15.
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]

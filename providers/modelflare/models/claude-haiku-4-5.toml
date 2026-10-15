@@ -1,0 +1,4 @@
+# Underlying model available on Modelflare as "claude-haiku-4-5" (GET /v1/models, 2026-10-15); reasoning controls mirror relay peer providers/aihubmix/models/claude-haiku-4-5.toml.
+# Toggle: OpenAI-compatible $.reasoning_effort is forwarded to the underlying provider; reasoning_effort="low" verified live on this ID 2026-10-15.
+base_model = "anthropic/claude-haiku-4-5"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
