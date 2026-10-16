@@ -1,7 +1,9 @@
 # Model ID deepseek/deepseek-v4-flash. Each request is charged against the plan's monthly compute budget
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
-# OpenRouter reports for that request, so the rates are OpenRouter's "Baidu" endpoint
-# pricing (https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-flash/endpoints, accessed 2026-10-16).
+# OpenRouter reports for that request. The gateway routes this model to OpenRouter's "StreamLake"
+# endpoint, so the rates are that endpoint's current pricing
+# (https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-flash/endpoints, accessed 2026-10-16).
+# Includes a 41% promotion (end date not published); regular $0.14 / $0.28, cache read $0.028.
 base_model = "deepseek/deepseek-v4-flash"
 reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 
@@ -9,9 +11,9 @@ reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 field = "reasoning_details"
 
 [cost]
-input = 0.14
-output = 0.28
-cache_read = 0.028
+input = 0.0826
+output = 0.1652
+cache_read = 0.01652
 
 [limit]
 input = 850_000

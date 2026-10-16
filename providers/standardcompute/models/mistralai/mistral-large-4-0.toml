@@ -1,10 +1,10 @@
 # Model ID mistralai/mistral-large-4-0. Each request is charged against the plan's monthly compute budget
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
-# OpenRouter reports for that request, so the rates are OpenRouter's "Mistral" endpoint
-# pricing (https://openrouter.ai/api/v1/models/mistralai/mistral-large-4-0/endpoints, accessed 2026-10-16).
-# Costs are the endpoint's regular list price ($1.36 / $4.18, cache read $0.14,
-# https://docs.mistral.ai/models/mistral-large-4-0). Currently discounted 50% at Mistral
-# (launch discount, end date not published; $0.68 / $2.09); budget is charged at the cost OpenRouter reports.
+# OpenRouter reports for that request. The gateway routes this model to OpenRouter's "Mistral"
+# endpoint, so the rates are that endpoint's current pricing
+# (https://openrouter.ai/api/v1/models/mistralai/mistral-large-4-0/endpoints, accessed 2026-10-16).
+# Includes a 50% launch promotion (end date not published); regular $1.36 / $4.18, cache read
+# $0.14 (https://docs.mistral.ai/models/mistral-large-4-0).
 base_model = "mistral/mistral-large-4"
 reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
@@ -12,9 +12,9 @@ reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 field = "reasoning_details"
 
 [cost]
-input = 1.36
-output = 4.18
-cache_read = 0.14
+input = 0.68
+output = 2.09
+cache_read = 0.07
 
 [limit]
 input = 850_000

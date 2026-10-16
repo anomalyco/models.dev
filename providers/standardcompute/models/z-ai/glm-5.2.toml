@@ -1,7 +1,10 @@
 # Model ID z-ai/glm-5.2. Each request is charged against the plan's monthly compute budget
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
-# OpenRouter reports for that request, so the rates are OpenRouter's "Z.AI" endpoint
-# pricing (https://openrouter.ai/api/v1/models/z-ai/glm-5.2/endpoints, accessed 2026-10-16).
+# OpenRouter reports for that request. The gateway assigns each API key to OpenRouter's "DeepInfra"
+# or "Novita" endpoint for this model; the rates are DeepInfra's current pricing
+# (https://openrouter.ai/api/v1/models/z-ai/glm-5.2/endpoints, accessed 2026-10-16).
+# Novita currently charges $0.6496 / $2.0416, cache read $0.12064.
+# DeepInfra includes a 25% promotion (end date not published); regular $0.75 / $2.40, cache read $0.14.
 base_model = "zhipuai/glm-5.2"
 reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 
@@ -9,9 +12,9 @@ reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 field = "reasoning_details"
 
 [cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+input = 0.5625
+output = 1.8
+cache_read = 0.105
 
 [limit]
 input = 850_000

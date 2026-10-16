@@ -1,7 +1,8 @@
 # Model ID z-ai/glm-5.3. Each request is charged against the plan's monthly compute budget
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
-# OpenRouter reports for that request, so the rates are OpenRouter's "Z.AI" endpoint
-# pricing (https://openrouter.ai/api/v1/models/z-ai/glm-5.3/endpoints, accessed 2026-10-16).
+# OpenRouter reports for that request. The gateway routes this model to OpenRouter's "Baidu"
+# endpoint first (Z.AI as fallback, same price), so the rates are that endpoint's current pricing
+# (https://openrouter.ai/api/v1/models/z-ai/glm-5.3/endpoints, accessed 2026-10-16).
 base_model = "zhipuai/glm-5.3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 

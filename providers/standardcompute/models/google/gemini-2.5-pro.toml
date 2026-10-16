@@ -1,7 +1,8 @@
 # Model ID google/gemini-2.5-pro. Each request is charged against the plan's monthly compute budget
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
-# OpenRouter reports for that request, so the rates are OpenRouter's "Google AI Studio" endpoint
-# pricing (https://openrouter.ai/api/v1/models/google/gemini-2.5-pro/endpoints, accessed 2026-10-16).
+# OpenRouter reports for that request. The gateway routes this model to OpenRouter's "Google"
+# (Vertex) endpoint, so the rates are that endpoint's current pricing, the same as "Google AI Studio"
+# (https://openrouter.ai/api/v1/models/google/gemini-2.5-pro/endpoints, accessed 2026-10-16).
 # Context tiers start at 200,000 prompt tokens, as on that endpoint.
 base_model = "google/gemini-2.5-pro"
 reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]

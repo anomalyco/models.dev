@@ -1,9 +1,9 @@
 # Model ID xiaomi/mimo-v2.5-pro. Each request is charged against the plan's monthly compute budget
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
-# OpenRouter reports for that request, so the rates are OpenRouter's "Novita" endpoint
-# pricing (https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.5-pro/endpoints, accessed 2026-10-16).
-# Costs are the endpoint's regular list price. Currently discounted 8% at Novita
-# (end date not published; $0.48024 / $0.96048); budget is charged at the cost OpenRouter reports.
+# OpenRouter reports for that request. The gateway assigns each API key to OpenRouter's "Xiaomi"
+# or "Novita" endpoint for this model; the rates are Xiaomi's current pricing
+# (https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.5-pro/endpoints, accessed 2026-10-16).
+# Novita currently charges $0.48024 / $0.96048, cache read $0.003956.
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 base_model = "xiaomi/mimo-v2.5-pro"
 reasoning_options = [{ type = "toggle" }]
@@ -12,9 +12,9 @@ reasoning_options = [{ type = "toggle" }]
 field = "reasoning_details"
 
 [cost]
-input = 0.522
-output = 1.044
-cache_read = 0.0043
+input = 0.435
+output = 0.87
+cache_read = 0.0036
 
 [limit]
 input = 850_000

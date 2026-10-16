@@ -1,8 +1,9 @@
 # Model ID minimax/minimax-m3. Each request is charged against the plan's monthly compute budget
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
-# OpenRouter reports for that request, so the rates are OpenRouter's "Minimax" endpoint
-# pricing (https://openrouter.ai/api/v1/models/minimax/minimax-m3/endpoints, accessed 2026-10-16).
-# This endpoint is flat-priced (no context tier), unlike MiniMax's first-party 512K tier.
+# OpenRouter reports for that request. The gateway assigns each API key to OpenRouter's "Novita"
+# or "Minimax" endpoint for this model; both list the same current pricing
+# (https://openrouter.ai/api/v1/models/minimax/minimax-m3/endpoints, accessed 2026-10-16).
+# Both endpoints are flat-priced (no context tier), unlike MiniMax's first-party 512K tier.
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 base_model = "minimax/MiniMax-M3"
 reasoning_options = [{ type = "toggle" }]
