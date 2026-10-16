@@ -1,0 +1,23 @@
+name = "Moondream 3.1 9B A2B"
+description = "Moondream 3.1 is the successor to Moondream 3 Preview: a distinct 9B mixture-of-experts vision-language checkpoint with 2B active parameters, for visual question answering, captioning, OCR, and visual reasoning. It accepts text or one image with optional reasoning, a 32,000-token context, and up to 4,096 output tokens."
+release_date = "2026-10-16"
+last_updated = "2026-10-16"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 2.5
+
+[limit]
+context = 32_000
+input = 32_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
