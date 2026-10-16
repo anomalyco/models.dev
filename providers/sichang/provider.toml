@@ -1,0 +1,14 @@
+# Sources (accessed 2026-10-15):
+# - Chat models, per-token pricing, tool support: https://sichang.xyz/docs/models/chat
+# - Billing (prepaid credits, cache-hit pricing): https://sichang.xyz/docs/billing
+# The same API also serves Anthropic Messages at https://sichang.xyz/api/v1/messages.
+# Prices are published in credits per million tokens; USD values in this provider
+# are converted at the 2,500-credit pack (US$20.99, i.e. US$0.008396 per credit).
+# The chat API is text-only, does not accept response_format, and runs every model
+# with reasoning disabled except GLM-5.3 Uncensored, which always reasons and
+# exposes no effort control.
+name = "Sichang AI"
+env = ["SICHANG_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://sichang.xyz/api/v1"
+doc = "https://sichang.xyz/docs"

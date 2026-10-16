@@ -1,0 +1,24 @@
+# https://sichang.xyz/docs/models/chat/gemma-4-uncensored (accessed 2026-10-15)
+name = "Gemma 4 Uncensored"
+description = "Uncensored Gemma 4 for unrestricted chat, creative writing, roleplay, and tool use"
+family = "gemma"
+release_date = "2026-04-13"
+last_updated = "2026-10-15"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.3888
+output = 1.1964
+
+[limit]
+context = 256_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

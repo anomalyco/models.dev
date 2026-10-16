@@ -1,0 +1,25 @@
+# https://sichang.xyz/docs/models/chat/olafangensan-glm-4.7-flash-heretic (accessed 2026-10-15)
+name = "GLM 4.7 Flash Heretic"
+description = "Abliterated GLM-4.7 Flash with strong Chinese writing, for uncensored chat and agent loops"
+family = "glm-flash"
+release_date = "2026-02-04"
+last_updated = "2026-10-15"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.1675
+output = 0.9571
+cache_read = 0.0838
+
+[limit]
+context = 200_000
+output = 16_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

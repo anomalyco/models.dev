@@ -1,0 +1,27 @@
+# https://sichang.xyz/docs/models/chat/z-ai--glm-5.3-uncensored (accessed 2026-10-15)
+# Always reasons on this API; no request field changes reasoning effort.
+name = "GLM 5.3 Uncensored"
+description = "Uncensored GLM-5.3 that always reasons, for complex fiction, worldbuilding, and agentic work"
+family = "glm"
+release_date = "2026-09-26"
+last_updated = "2026-10-15"
+attachment = false
+reasoning = true
+reasoning_options = []
+tool_call = true
+structured_output = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 7.1786
+output = 11.9643
+cache_read = 0.7179
+
+[limit]
+context = 1_000_000
+output = 16_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
