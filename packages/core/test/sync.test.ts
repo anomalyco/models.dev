@@ -1959,6 +1959,31 @@ test("existing DigitalOcean base models use explicit text-only catalog modalitie
   });
 });
 
+test("drops DigitalOcean catalog modalities the serverless endpoint rejects", () => {
+  const model = buildDigitalOceanModel(
+    digitalOceanModel({
+      id: "glm-5.3-flash",
+      name: "GLM5.3 Flash",
+      modalities: { input: ["text", "image", "video"], output: ["text"] },
+      context_window: 1_048_576,
+      max_output_tokens: 131_072,
+      pricing: { input: 0.15, output: 0.5, cacheRead: 0.03 },
+    }),
+    {
+      base_model: "zhipuai/glm-5.3-flash",
+      name: "GLM5.3 Flash",
+      attachment: false,
+      modalities: { input: ["text"], output: ["text"] },
+    },
+  );
+
+  expect(model).toMatchObject({
+    base_model: "zhipuai/glm-5.3-flash",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+});
+
 test("resolves DigitalOcean IDs to canonical model metadata", () => {
   expect(resolveDigitalOceanBaseModel("openai-gpt-5.5")).toBe("openai/gpt-5.5");
   expect(resolveDigitalOceanBaseModel("deepseek-v4-pro")).toBe("deepseek/deepseek-v4-pro");
