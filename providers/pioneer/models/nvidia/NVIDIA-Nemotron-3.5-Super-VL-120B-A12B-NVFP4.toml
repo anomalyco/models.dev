@@ -1,0 +1,24 @@
+# Sources (accessed 2026-10-16):
+# - https://api.fastino.ai/v1/models (id=nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4: max_input_tokens=262144, max_tokens=4096, input=0.08, output=0.45, cache_read=0.04, cache_write=0.08, supported_reasoning_levels=low|medium|high|xhigh, context_window=262144, max_output_tokens=4096)
+# - https://api.fastino.ai/v1/base-models?supports_inference=true (id=nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4: context_window=262144, max_input_tokens=262144, max_output_tokens=4096, input=0.08, output=0.45, cache_read=0.04, cache_write=0.08)
+# - https://docs.fastino.ai/concepts/models (Nemotron 3.5 Super VL inference table: 120B total / 12B active, 262144 tokens, input $0.08 / output $0.45 per 1M)
+# - https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4 (NVFP4 quantized release of Nemotron 3.5 Super VL; 120B total / 12B active; up to 1M context; text/image/video in, text out; enable_thinking True/False; release 10/15/2026)
+# Effort: reasoning.effort via Pioneer unified reasoning object (low|medium|high|xhigh), matching Pioneer Nemotron peer NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16; reasoning traces on reasoning_content.
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.08
+output = 0.45
+cache_read = 0.04
+cache_write = 0.08
+
+[limit]
+context = 262_144
+output = 4_096
