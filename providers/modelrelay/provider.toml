@@ -1,0 +1,16 @@
+name = "ModelRelay"
+env = ["MODELRELAY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI-compatible Chat Completions: POST https://api.modelrelay.ai/v1/chat/completions.
+# Reasoning: top-level reasoning_effort on the ladder none|minimal|low|medium|high|xhigh|max;
+# each model accepts a documented subset and a value outside it is rejected with HTTP 400.
+# OpenRouter-style reasoning.effort / reasoning.exclude are also accepted.
+# temperature is rejected for models with a mapped reasoning control.
+# Image input: user-message image_url parts carrying data: URLs only (no HTTP(S) URLs).
+# Model catalog: GET https://api.modelrelay.ai/v1/models (OpenRouter-style schema; "file" input = PDF).
+# Sources (accessed 2026-10-09):
+# https://docs.modelrelay.ai/api-reference/chat-completions
+# https://docs.modelrelay.ai/core/reasoning-effort
+# https://docs.modelrelay.ai/api-reference/models
+api = "https://api.modelrelay.ai/v1"
+doc = "https://modelrelay.ai/models"
