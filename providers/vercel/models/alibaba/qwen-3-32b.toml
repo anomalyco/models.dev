@@ -13,12 +13,8 @@ knowledge = "2025-04"
 open_weights = false
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 38_912
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.15
