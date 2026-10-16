@@ -4776,6 +4776,30 @@ test("Vercel sync accepts evaluation and unknown future model types", () => {
   expect(buildVercelModel(future!, undefined).type).toBeUndefined();
 });
 
+test("Vercel sync states the model type for non-language models", () => {
+  const route = (id: string, type: string) => ({
+    id,
+    name: id,
+    created: 1_755_815_280,
+    context_window: 8_192,
+    max_tokens: 0,
+    type,
+  });
+  const [embedding, video, reranking, language] = vercel.parseModels({
+    data: [
+      route("openai/text-embedding-3-small", "embedding"),
+      route("google/veo-3.0-generate-001", "video"),
+      route("voyage/rerank-2.5", "reranking"),
+      route("openai/gpt-5", "language"),
+    ],
+  });
+
+  expect(buildVercelModel(embedding!, undefined).type).toBe("embedding");
+  expect(buildVercelModel(video!, undefined).type).toBe("video");
+  expect(buildVercelModel(reranking!, undefined).type).toBe("reranking");
+  expect(buildVercelModel(language!, undefined).type).toBeUndefined();
+});
+
 test("Vercel sync skips batch routes", () => {
   const route = (id: string) => ({
     id,
