@@ -1,0 +1,15 @@
+# Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, CNY.
+# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# CNY→USD rate: 6.700304, 2026-10-12, source: https://open.er-api.com/v6/latest/USD
+# Reasoning controls mirror providers/zhipuai/models/glm-5.2.toml (relay forwards the upstream request body).
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 1.194
+output = 4.1789
+cache_read = 0.2985
+
+[limit]
+context = 200_000
+output = 65_536

@@ -1,0 +1,25 @@
+# Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, USD.
+# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12; context_window = 400000, re-checked 2026-10-13).
+# No long-context tier: relay pricing data for gpt-5.5 has no long_context_pricing (unlike gpt-5.6-sol, threshold 272000).
+# input = context - output (same split as openai lab 1_050_000/922_000/128_000); overrides inherited 922_000 which exceeds this context.
+# Reasoning controls mirror providers/openai/models/gpt-5.5.toml (relay forwards the upstream request body).
+base_model = "openai/gpt-5.5"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.aicodewith.ai/v1"
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
