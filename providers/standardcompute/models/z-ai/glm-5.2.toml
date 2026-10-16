@@ -1,0 +1,20 @@
+# Model ID z-ai/glm-5.2; reference rates $1.4 / $4.4 per 1M tokens (input/output), charged against the plan's monthly compute budget.
+# Z.ai list rate; catalog value $1.19 / $3.74 was a promotional rate.
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 1.4
+output = 4.4
+
+[limit]
+context = 1_048_576
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

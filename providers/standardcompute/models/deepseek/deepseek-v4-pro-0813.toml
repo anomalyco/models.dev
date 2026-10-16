@@ -1,0 +1,19 @@
+# Model ID deepseek/deepseek-v4-pro-0813; reference rates $1.32 / $3.96 per 1M tokens (input/output), charged against the plan's monthly compute budget.
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 1.32
+output = 3.96
+
+[limit]
+context = 1_048_576
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

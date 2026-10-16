@@ -1,0 +1,18 @@
+# Model ID anthropic/claude-haiku-5.5; reference rates $0.1 / $0.5 per 1M tokens (input/output), charged against the plan's monthly compute budget.
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+base_model = "anthropic/claude-haiku-5-5"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.1
+output = 0.5
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

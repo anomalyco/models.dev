@@ -1,0 +1,19 @@
+# Model ID z-ai/glm-5.3-flash; reference rates $0.15 / $0.5 per 1M tokens (input/output), charged against the plan's monthly compute budget.
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.15
+output = 0.5
+
+[limit]
+context = 1_048_576
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

@@ -1,0 +1,21 @@
+# Model ID qwen/qwen3.7-max; reference rates $1.475 / $4.425 / $0.295 per 1M tokens (input/output/cache read), charged against the plan's monthly compute budget.
+# Exact Alibaba list rate (catalog rounds to $1.48 / $4.42).
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
+base_model = "alibaba/qwen3.7-max"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 1.475
+output = 4.425
+cache_read = 0.295
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

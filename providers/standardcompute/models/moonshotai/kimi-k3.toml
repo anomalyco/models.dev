@@ -1,0 +1,19 @@
+# Model ID moonshotai/kimi-k3; reference rates $3 / $15 / $0.3 per 1M tokens (input/output/cache read), charged against the plan's monthly compute budget.
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

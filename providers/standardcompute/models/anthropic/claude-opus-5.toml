@@ -1,0 +1,18 @@
+# Model ID anthropic/claude-opus-5; reference rates $5 / $25 per 1M tokens (input/output), charged against the plan's monthly compute budget.
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+base_model = "anthropic/claude-opus-5"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 5
+output = 25
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

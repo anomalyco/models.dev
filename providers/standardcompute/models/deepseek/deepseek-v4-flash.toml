@@ -1,0 +1,20 @@
+# Model ID deepseek/deepseek-v4-flash; reference rates $0.14 / $0.28 / $0.028 per 1M tokens (input/output/cache read), charged against the plan's monthly compute budget.
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.028
+
+[limit]
+context = 1_048_576
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

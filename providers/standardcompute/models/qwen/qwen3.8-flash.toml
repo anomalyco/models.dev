@@ -1,0 +1,19 @@
+# Model ID qwen/qwen3.8-flash; reference rates $0.15 / $0.47 per 1M tokens (input/output), charged against the plan's monthly compute budget.
+# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.15
+output = 0.47
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

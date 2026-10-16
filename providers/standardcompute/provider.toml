@@ -16,6 +16,15 @@
 # reasoning fields use the per-model defaults saved in the customer dashboard.
 # Responses return `reasoning` plus OpenRouter-shape `reasoning_details`
 # (streaming included).
+# Pinned model ids (models/<lab>/<model>.toml, the base ids from GET /v1/models)
+# serve one catalog model each. Billing stays plan-based: their costs are the
+# reference per-1M-token USD rates charged against the plan's monthly compute
+# budget ("each request counts against the budget at the model's per-token
+# rate", https://docs.standardcompute.com/budgets-and-limits, accessed
+# 2026-10-16). Cache rates are listed only where a reference rate is known.
+# Region-pinned variants (`:eu` / `:us` suffixes) are not listed. Like the
+# router, pinned models use the OpenRouter adapter so `reasoning_details` are
+# replayed as arrays, and share the gateway's 850,000 input / 50,000 output cap.
 name = "Standard Compute"
 env = ["STANDARDCOMPUTE_API_KEY"]
 # The endpoint is plain OpenAI Chat Completions, so the provider uses the
