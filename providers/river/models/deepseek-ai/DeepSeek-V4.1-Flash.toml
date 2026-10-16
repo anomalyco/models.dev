@@ -1,0 +1,29 @@
+# River serves DeepSeek-V4.1-Flash at `deepseek-ai/DeepSeek-V4.1-Flash`.
+# Chat `reasoning_effort`, verified live on POST /v1/chat/completions (2026-10-16):
+# `none` (off), `low`, `high`, `max` each return 200; `minimal`, `medium`, `xhigh`
+# return 400. River's API controls page lists only `none`/`high`/`max`, so `low`
+# rests on the live probe plus the same-model peer baseline, which is
+# `none,low,high,max` on kilo, vercel, and nvidia.
+# There is no separate on/off field, so off is expressed as `effort = none`.
+# Reasoning returns in `reasoning_content` and bills as output.
+# Pricing (USD per 1M tokens): input 0.12, cached 0.0024, output 0.48.
+# Limits: context 1,048,576; max output 384,000.
+# https://docs.river.ai/guides/inference-controls/ (accessed 2026-10-16)
+# https://docs.river.ai/guides/inference-models/ (accessed 2026-10-16)
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.12
+output = 0.48
+reasoning = 0.48
+cache_read = 0.0024
+
+[limit]
+context = 1_048_576
