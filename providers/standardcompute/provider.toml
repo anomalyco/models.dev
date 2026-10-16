@@ -24,7 +24,9 @@
 # 2026-10-16). Cache rates are listed only where a reference rate is known.
 # Region-pinned variants (`:eu` / `:us` suffixes) are not listed. Like the
 # router, pinned models use the OpenRouter adapter so `reasoning_details` are
-# replayed as arrays, and share the gateway's 850,000 input / 50,000 output cap.
+# replayed as arrays. Limits inherit the lab entries; a pinned model overrides
+# only the gateway's per-request caps (850,000 input / 50,000 output on paid
+# plans) where a cap is smaller than the lab limit.
 name = "Standard Compute"
 env = ["STANDARDCOMPUTE_API_KEY"]
 # The endpoint is plain OpenAI Chat Completions, so the provider uses the
