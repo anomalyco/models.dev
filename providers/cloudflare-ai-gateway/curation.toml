@@ -256,6 +256,21 @@ note = [
 interleaved = { field = "reasoning_content" }
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
+# Reflection's catalog id (reflection-ai/...) differs from the lab dir (reflection/...).
+# Live CF chat-completions (2026-10-16, unified billing): reasoning_effort accepts
+# low|medium|high|xhigh|max and rejects none|minimal (code 7003); reasoning is always on and
+# returned in reasoning_content, and omitting it from a prior assistant turn is rejected.
+# The catalog row has provider_details = null, so cost comes from its flat display pricing.
+[models."reflection-ai/beam-1.0-501b-a23b"]
+base_model = "reflection/beam-1.0-501b-a23b"
+note = [
+  "Always reasons; effort: reasoning_effort = low|medium|high|xhigh|max (none/minimal rejected).",
+  "Interleaved: reasoning_content must be sent back on every prior assistant message.",
+  "Source: https://developers.reflection.ai/reasoning",
+]
+interleaved = { field = "reasoning_content" }
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
 [models."thinkingmachines/inkling"]
 note = [
   "Tinker's Anthropic-compatible route: thinking.type = adaptive|disabled toggles reasoning;",

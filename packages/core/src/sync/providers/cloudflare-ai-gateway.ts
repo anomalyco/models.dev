@@ -42,11 +42,24 @@ const CatalogEntry = z.object({
   context_length: z.number().int().positive().nullish(),
   provider_details: z.array(ProviderDetail).nullish(),
 }).passthrough();
+// Some proxied models (e.g. reflection-ai/beam-1.0-501b-a23b at launch) ship with
+// provider_details = null and only the display-label `pricing` map. Structured
+// provider_details stays authoritative whenever present.
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  provider_details: z.array(ProviderDetail).length(1),
+  provider_details: z.array(ProviderDetail).length(1).nullish(),
+  pricing: z.unknown().optional(),
 });
+
+// Only flat display labels are accepted as a fallback; tiered or unknown labels fail
+// closed so a pricing shape change cannot silently drop a tier.
+const DisplayFlatPricing = z.object({
+  "Input tokens (per 1M)": Price,
+  "Output tokens (per 1M)": Price,
+  "Cached input tokens (per 1M)": Price.optional(),
+  "Cache creation tokens (per 1M)": Price.optional(),
+}).strict();
 
 const FlatPricing = z.object({
   input_tokens: Price,
@@ -150,7 +163,11 @@ export const cloudflareAiGateway = {
 
     const emittedModels = textModels.filter(
       (model) => !model.model_id.startsWith("@cf/") && !skippedModels.has(model.model_id),
-    ).map((model) => CatalogModel.parse(model));
+    ).map((model) => {
+      const parsed = CatalogModel.safeParse(model);
+      if (!parsed.success) throw new Error(`${model.model_id}: invalid catalog entry: ${parsed.error.message}`);
+      return parsed.data;
+    });
     if (emittedModels.length === 0) {
       throw new Error("Cloudflare AI Gateway catalog returned no eligible proxied models");
     }
@@ -193,7 +210,7 @@ export function buildCloudflareAiGatewayModel(
 ): SyncedBaseModel {
   const id = catalog.model_id;
   // Pricing failures must not be hidden by missing reasoning controls.
-  const cost = proxiedCost(catalog.provider_details[0]!.pricing, id);
+  const cost = catalogCost(catalog);
   const baseModel = curated.base_model ?? resolveBaseModel(id);
   if (baseModel === undefined) {
     throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
@@ -479,6 +496,22 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
     }
   }));
   return results;
+}
+
+function catalogCost(catalog: CatalogModel): NonNullable<SyncedBaseModel["cost"]> {
+  const id = catalog.model_id;
+  const detail = catalog.provider_details?.[0];
+  if (detail !== undefined) return proxiedCost(detail.pricing, id);
+  if (catalog.pricing == null) throw new Error(`${id}: catalog has neither provider_details nor pricing`);
+  const parsed = DisplayFlatPricing.safeParse(catalog.pricing);
+  if (!parsed.success) throw new Error(`${id}: unsupported display pricing: ${parsed.error.message}`);
+  const value = parsed.data;
+  return tokenCost(
+    value["Input tokens (per 1M)"],
+    value["Output tokens (per 1M)"],
+    value["Cached input tokens (per 1M)"],
+    value["Cache creation tokens (per 1M)"],
+  );
 }
 
 function proxiedCost(pricing: Record<string, number>, id: string): NonNullable<SyncedBaseModel["cost"]> {
