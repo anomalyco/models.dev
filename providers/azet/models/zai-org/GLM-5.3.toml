@@ -1,6 +1,9 @@
 # Pricing: GET https://api.azet.io/v1/models (accessed 2026-10-13)
 base_model = "zhipuai/glm-5.3"
-reasoning_options = []
+# reasoning_effort is forwarded (probe 2026-10-16: low 90 vs max 899 completion tokens).
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 1.40

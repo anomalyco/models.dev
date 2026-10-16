@@ -1,10 +1,9 @@
 # Pricing: GET https://api.azet.io/v1/models (accessed 2026-10-13)
 base_model = "moonshotai/kimi-k2.6"
+# The gateway does not forward the thinking toggle: thinking={"type":"disabled"} still
+# returns reasoning (probe 2026-10-16), so callers have no reasoning control here.
 reasoning_options = []
 
 [cost]
 input = 0.855
 output = 3.60
-
-[limit]
-context = 262_144
