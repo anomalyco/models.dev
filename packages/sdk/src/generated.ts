@@ -7,6 +7,7 @@ export type ModelFamily =
   | "allam"
   | "allenai"
   | "alpha"
+  | "apex"
   | "aura"
   | "auto"
   | "baichuan"
