@@ -1,0 +1,44 @@
+# Sources:
+# - https://www.respan.ai/docs/documentation/span-02/concept
+# - https://www.respan.ai/blog/introducing-span-2
+# - https://huggingface.co/respanai/span-02
+# Context is per question, including prompt, images, and thought.
+# Only number answers generate output tokens, capped at 32; other answers are probabilities.
+name = "Span-02"
+type = "decision"
+description = "Open-weight decision model with optional anytime reasoning over text, JSON state, and images, returning typed choices, yes/no probabilities, scores, and numbers"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 131_072
+output = 32
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+type = "docs"
+url = "https://www.respan.ai/docs/documentation/span-02/concept"
+
+[[links]]
+type = "announcement"
+url = "https://www.respan.ai/blog/introducing-span-2"
+
+[[links]]
+type = "model_card"
+url = "https://huggingface.co/respanai/span-02"
+
+[[weights]]
+label = "NVFP4/FP8 weights and Rust/CUDA inference engine"
+url = "https://huggingface.co/respanai/span-02"
+format = "safetensors"
+quantization = "NVFP4/FP8"
