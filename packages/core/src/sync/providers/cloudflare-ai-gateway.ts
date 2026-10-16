@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
-import { ReasoningOption } from "../../schema.js";
+import { AuthoredModelShape, ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 
@@ -42,24 +42,13 @@ const CatalogEntry = z.object({
   context_length: z.number().int().positive().nullish(),
   provider_details: z.array(ProviderDetail).nullish(),
 }).passthrough();
-// Some proxied models (e.g. reflection-ai/beam-1.0-501b-a23b at launch) ship with
-// provider_details = null and only the display-label `pricing` map. Structured
-// provider_details stays authoritative whenever present.
+// Some proxied rows (e.g. reflection-ai/beam-1.0-501b-a23b at launch) ship with
+// provider_details = null. Those need a curated cost; see catalogCost.
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
   provider_details: z.array(ProviderDetail).length(1).nullish(),
-  pricing: z.unknown().optional(),
 });
-
-// Only flat display labels are accepted as a fallback; tiered or unknown labels fail
-// closed so a pricing shape change cannot silently drop a tier.
-const DisplayFlatPricing = z.object({
-  "Input tokens (per 1M)": Price,
-  "Output tokens (per 1M)": Price,
-  "Cached input tokens (per 1M)": Price.optional(),
-  "Cache creation tokens (per 1M)": Price.optional(),
-}).strict();
 
 const FlatPricing = z.object({
   input_tokens: Price,
@@ -118,6 +107,8 @@ const SourceModel = z.object({
 const CuratedModel = z.object({
   base_model: z.string().refine(isSafeModelID, "base_model must be a safe relative provider/model path").optional(),
   structured_output: z.boolean().optional(),
+  // Only for rows without structured provider_details; see catalogCost.
+  cost: AuthoredModelShape.shape.cost,
   reasoning_options: z.array(ReasoningOption).optional(),
   limit: z.object({
     context: z.number().optional(),
@@ -210,7 +201,7 @@ export function buildCloudflareAiGatewayModel(
 ): SyncedBaseModel {
   const id = catalog.model_id;
   // Pricing failures must not be hidden by missing reasoning controls.
-  const cost = catalogCost(catalog);
+  const cost = catalogCost(catalog, curated);
   const baseModel = curated.base_model ?? resolveBaseModel(id);
   if (baseModel === undefined) {
     throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
@@ -498,20 +489,21 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
   return results;
 }
 
-function catalogCost(catalog: CatalogModel): NonNullable<SyncedBaseModel["cost"]> {
+// Structured provider_details is the source of truth. A curated cost is only allowed
+// (and then required) when Cloudflare omits it, so a stale override can't outlive it.
+function catalogCost(catalog: CatalogModel, curated: CuratedModel): NonNullable<SyncedBaseModel["cost"]> {
   const id = catalog.model_id;
   const detail = catalog.provider_details?.[0];
-  if (detail !== undefined) return proxiedCost(detail.pricing, id);
-  if (catalog.pricing == null) throw new Error(`${id}: catalog has neither provider_details nor pricing`);
-  const parsed = DisplayFlatPricing.safeParse(catalog.pricing);
-  if (!parsed.success) throw new Error(`${id}: unsupported display pricing: ${parsed.error.message}`);
-  const value = parsed.data;
-  return tokenCost(
-    value["Input tokens (per 1M)"],
-    value["Output tokens (per 1M)"],
-    value["Cached input tokens (per 1M)"],
-    value["Cache creation tokens (per 1M)"],
-  );
+  if (detail !== undefined) {
+    if (curated.cost !== undefined) {
+      throw new Error(`${id}: catalog now has provider_details pricing; remove the curated cost`);
+    }
+    return proxiedCost(detail.pricing, id);
+  }
+  if (curated.cost === undefined) {
+    throw new Error(`${id}: catalog has no provider_details pricing; add a curated cost`);
+  }
+  return curated.cost;
 }
 
 function proxiedCost(pricing: Record<string, number>, id: string): NonNullable<SyncedBaseModel["cost"]> {

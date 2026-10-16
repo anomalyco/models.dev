@@ -9,6 +9,9 @@
 #     incomplete or route-specific reasoning shapes are curated here.
 #   - interleaved: whether a wire returns reasoning content as a separate field. Never
 #     inheritable from base_model (this deployment's wire format can differ from the lab's).
+#   - cost: only for proxied rows whose catalog entry has provider_details = null (no
+#     structured pricing). Sync fails if such a row has no curated cost, and fails if a
+#     curated cost remains after Cloudflare adds provider_details.
 #   - limit.output: the catalog's max_output_tokens is not a reliable ceiling (verified wrong
 #     against lab/first-party for several models), so output is hand-curated; only
 #     limit.context is auto-derived.
@@ -260,7 +263,8 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] 
 # Live CF chat-completions (2026-10-16, unified billing): reasoning_effort accepts
 # low|medium|high|xhigh|max and rejects none|minimal (code 7003); reasoning is always on and
 # returned in reasoning_content, and omitting it from a prior assistant turn is rejected.
-# The catalog row has provider_details = null, so cost comes from its flat display pricing.
+# The catalog row has provider_details = null, so cost is curated: free, matching the
+# catalog's display pricing (input/cached input/output $0 per 1M) on 2026-10-16.
 [models."reflection-ai/beam-1.0-501b-a23b"]
 base_model = "reflection/beam-1.0-501b-a23b"
 note = [
@@ -270,6 +274,7 @@ note = [
 ]
 interleaved = { field = "reasoning_content" }
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+cost = { input = 0, output = 0, cache_read = 0 }
 
 [models."thinkingmachines/inkling"]
 note = [

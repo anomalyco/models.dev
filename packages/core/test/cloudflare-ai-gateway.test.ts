@@ -226,44 +226,34 @@ test("ignores advertised reasoning controls for non-reasoning base models", () =
   expect(model.reasoning_options).toBeUndefined();
 });
 
-test("falls back to flat display pricing when provider_details is null", () => {
-  const model = buildCloudflareAiGatewayModel(
-    {
-      model_id: "reflection-ai/beam-1.0-501b-a23b",
-      task: "Text Generation",
-      context_length: 262_144,
-      provider_details: null,
-      pricing: {
-        "Input tokens (per 1M)": 0,
-        "Cached input tokens (per 1M)": 0,
-        "Output tokens (per 1M)": 0,
-      },
-    },
-    undefined,
-    {
-      base_model: "reflection/beam-1.0-501b-a23b",
-      reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
-      interleaved: { field: "reasoning_content" },
-    },
-  );
+test("uses curated cost only when provider_details is null", () => {
+  const curated = {
+    base_model: "reflection/beam-1.0-501b-a23b",
+    reasoning_options: [{ type: "effort" as const, values: ["low" as const, "medium" as const, "high" as const, "xhigh" as const, "max" as const] }],
+    interleaved: { field: "reasoning_content" as const },
+    cost: { input: 0, output: 0, cache_read: 0 },
+  };
+  const catalog = {
+    model_id: "reflection-ai/beam-1.0-501b-a23b",
+    task: "Text Generation" as const,
+    context_length: 262_144,
+    provider_details: null,
+    pricing: { "Input tokens (per 1M)": 999, "Output tokens (per 1M)": 999 },
+  };
 
-  expect(model).toEqual({
+  expect(buildCloudflareAiGatewayModel(catalog, undefined, curated)).toEqual({
     base_model: "reflection/beam-1.0-501b-a23b",
     interleaved: { field: "reasoning_content" },
     reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
     cost: { input: 0, output: 0, cache_read: 0 },
     limit: { context: 262_144 },
   });
-});
-
-test("fails closed on tiered or missing display pricing without provider_details", () => {
-  const catalog = { model_id: "openai/gpt-4.1", task: "Text Generation" as const, provider_details: null };
+  expect(() => buildCloudflareAiGatewayModel(catalog, undefined, { ...curated, cost: undefined }))
+    .toThrow("no provider_details pricing; add a curated cost");
   expect(() => buildCloudflareAiGatewayModel({
     ...catalog,
-    pricing: { "Input <=200k (per 1M)": 1, "Output <=200k (per 1M)": 2 },
-  }, undefined)).toThrow("unsupported display pricing");
-  expect(() => buildCloudflareAiGatewayModel(catalog, undefined))
-    .toThrow("neither provider_details nor pricing");
+    provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+  }, undefined, curated)).toThrow("remove the curated cost");
 });
 
 test("names the catalog model when an entry fails validation", async () => {

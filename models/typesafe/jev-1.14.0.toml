@@ -1,0 +1,25 @@
+# Sources:
+# - https://docs.typesafe.ai/models.md
+# - https://docs.typesafe.ai/api.md
+# Jev 1.14 (`jev-1.14.0`) is available from 2026-10-14 and is currently the `jev-preview`
+# alias; `jev-latest` still points to 1.13. Same endpoint, pricing, and limits as 1.13.
+# The 64k context limit covers the state plus all questions in one request.
+name = "Jev 1.14"
+type = "decision"
+description = "System One model for fast, typed probabilistic decisions over text or structured state"
+release_date = "2026-10-14"
+last_updated = "2026-10-14"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 64000
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
