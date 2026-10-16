@@ -21,9 +21,10 @@
 # against the budget at the model's per-token rate"
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16).
 # The amount counted is the upstream cost OpenRouter reports for the request,
-# so each pinned model lists the per-1M-token USD pricing (cache rates and
-# context tiers included) of one reviewed OpenRouter endpoint, named in the
-# file header (GET https://openrouter.ai/api/v1/models/<id>/endpoints).
+# so each pinned model lists the regular per-1M-token USD list pricing (cache
+# rates and context tiers included) of one reviewed OpenRouter endpoint, named
+# in the file header (GET https://openrouter.ai/api/v1/models/<id>/endpoints).
+# Temporary promotions are noted in the header, not used as the cost.
 # Region-pinned variants (`:eu` / `:us` suffixes) are not listed. Like the
 # router, pinned models use the OpenRouter adapter so `reasoning_details` are
 # replayed as arrays. Limits inherit the lab entries; a pinned model overrides

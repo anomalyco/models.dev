@@ -2,7 +2,8 @@
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
 # OpenRouter reports for that request, so the rates are OpenRouter's "StreamLake" endpoint
 # pricing (https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro/endpoints, accessed 2026-10-16).
-# The current rate includes a 45.1% promotion listed by OpenRouter (regular $1.74 / $3.48).
+# Costs are the endpoint's regular list price. Currently discounted 45.1% at StreamLake
+# (end date not published; $0.95526 / $1.91052); budget is charged at the cost OpenRouter reports.
 base_model = "deepseek/deepseek-v4-pro"
 reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 
@@ -10,9 +11,9 @@ reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 field = "reasoning_details"
 
 [cost]
-input = 0.95526
-output = 1.91052
-cache_read = 0.079605
+input = 1.74
+output = 3.48
+cache_read = 0.145
 
 [limit]
 input = 850_000
