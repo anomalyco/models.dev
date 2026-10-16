@@ -4,15 +4,12 @@ base_model = "deepseek/deepseek-v4.1-flash"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]
 
 [cost]
-input = 0.0216
-output = 0.72
+input = 0.036
+output = 0.684
 cache_read = 0.0054
 
 [limit]

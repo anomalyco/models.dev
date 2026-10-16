@@ -10,13 +10,13 @@ type = "effort"
 values = ["none", "medium", "high", "xhigh"]
 
 [cost]
-input = 37.5
-output = 225
+input = 30
+output = 180
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 75
-output = 337.5
+input = 60
+output = 270
 
 [limit]
 context = 1_000_000

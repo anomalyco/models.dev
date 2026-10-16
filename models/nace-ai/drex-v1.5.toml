@@ -1,4 +1,5 @@
 # Sources:
+# - https://huggingface.co/nace-ai/drex-v1.5
 # - https://drex.nace.ai/docs/reference/models
 # - https://drex.nace.ai/docs/reference/limits
 # - https://drex.nace.ai/models (price: $0.00000005 per input token, output unbilled)
@@ -15,7 +16,8 @@ reasoning = false
 temperature = false
 tool_call = false
 structured_output = true
-open_weights = false
+open_weights = true
+license = "Nace.AI Open RAIL-M"
 
 [limit]
 context = 139_264
@@ -29,3 +31,12 @@ output = ["text"]
 label = "Documentation"
 url = "https://drex.nace.ai/docs"
 type = "docs"
+
+[[links]]
+label = "License"
+url = "https://huggingface.co/nace-ai/drex-v1.5/blob/main/LICENSE"
+type = "license"
+
+[[weights]]
+url = "https://huggingface.co/nace-ai/drex-v1.5"
+format = "safetensors"

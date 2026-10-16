@@ -18,6 +18,9 @@
 # (streaming included).
 name = "Standard Compute"
 env = ["STANDARDCOMPUTE_API_KEY"]
-npm = "@openrouter/ai-sdk-provider"
+# The endpoint is plain OpenAI Chat Completions, so the provider uses the
+# generic adapter. The model overrides `provider.npm` with the OpenRouter
+# adapter, which replays structured `reasoning_details` arrays on tool turns.
+npm = "@ai-sdk/openai-compatible"
 api = "https://api.stdcmpt.com/v1"
 doc = "https://docs.standardcompute.com/models"

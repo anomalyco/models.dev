@@ -1,0 +1,15 @@
+base_model = "fireworks/ember-1"
+name = "Ember 1"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+input = 1_048_576

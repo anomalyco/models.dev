@@ -1,0 +1,21 @@
+# Sources (accessed 2026-10-16):
+# - https://fireworks.ai/blog/ember-1 — Fireworks Research's own model, built on Kimi K3, shorter reasoning traces (~40% fewer tokens).
+# - https://fireworks.ai/models/fireworks/ember-1 — released 2026-09-22, ~1M context, image input, function calling, no open weights.
+# - https://app.fireworks.ai/models/fireworks/ember-1 — usage example max_tokens 131072.
+
+name = "Ember-1"
+description = "Specialized model from Fireworks built on Kimi K3, producing shorter reasoning traces with approximately 40% fewer tokens while maintaining comparable quality"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
