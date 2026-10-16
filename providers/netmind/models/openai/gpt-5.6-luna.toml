@@ -1,0 +1,12 @@
+# NetMind model ID: openai/gpt-5.6-luna.
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+# Pricing maps input/output/cache fields and context tiers from that response.
+# Effort: reasoning_effort = <level>
+# https://www.netmind.ai/product/inference
+base_model = "openai/gpt-5.6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.2
+output = 1.2
+cache_read = 0.02
