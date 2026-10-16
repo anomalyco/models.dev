@@ -20,16 +20,14 @@
 # serve one catalog model each. Billing stays plan-based: "each request counts
 # against the budget at the model's per-token rate"
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16).
-# The amount counted is the upstream cost OpenRouter reports for the request
-# (per-model rates are not published as a separate table; the docs say budget
-# use depends on which providers serve a request:
-# https://docs.standardcompute.com/regions-and-privacy, accessed 2026-10-16).
-# Each pinned model therefore lists the current per-1M-token USD pricing
-# (cache rates and context tiers included) of the OpenRouter endpoint the
-# gateway routes it to, named in the file header
-# (GET https://openrouter.ai/api/v1/models/<id>/endpoints). Where that price
-# is a promotion, the header gives the regular price and the end date, if
-# published, so the cost can be updated when the promotion ends.
+# Standard Compute does not publish a separate per-model rate table; budget use
+# depends on which endpoints serve a request
+# (https://docs.standardcompute.com/regions-and-privacy, accessed 2026-10-16).
+# Each pinned model lists the current per-1M-token USD price (cache rates and
+# context tiers included) of the endpoint Standard Compute routes it to, as
+# charged against the budget. Where that price is a promotion, the header gives
+# the regular price and the end date, if published, so the cost can be updated
+# when the promotion ends.
 # Region-pinned variants (`:eu` / `:us` suffixes) are not listed. Like the
 # router, pinned models use the OpenRouter adapter so `reasoning_details` are
 # replayed as arrays. Limits inherit the lab entries; a pinned model overrides

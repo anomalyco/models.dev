@@ -1,7 +1,7 @@
 # Model ID xiaomi/mimo-v2.6-flash. Each request is charged against the plan's monthly compute budget
-# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
-# OpenRouter reports for that request, so the rates are OpenRouter's "Xiaomi" endpoint
-# pricing (https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.6-flash/endpoints, accessed 2026-10-16).
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
+# of the endpoint Standard Compute routes this model to, as charged against the budget
+# (price listing: https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.6-flash/endpoints, accessed 2026-10-16).
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 base_model = "xiaomi/mimo-v2.6-flash"
 reasoning_options = [{ type = "toggle" }]
