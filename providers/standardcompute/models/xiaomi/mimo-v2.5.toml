@@ -1,5 +1,7 @@
-# Model ID xiaomi/mimo-v2.5; reference rates $0.14 / $0.28 / $0.0028 per 1M tokens (input/output/cache read), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID xiaomi/mimo-v2.5. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "Xiaomi" endpoint
+# pricing (https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.5/endpoints, accessed 2026-10-16).
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 base_model = "xiaomi/mimo-v2.5"
 reasoning_options = [{ type = "toggle" }]

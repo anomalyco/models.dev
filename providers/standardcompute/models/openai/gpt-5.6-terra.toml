@@ -1,5 +1,8 @@
-# Model ID openai/gpt-5.6-terra; reference rates $2 / $12 / $0.2 per 1M tokens (input/output/cache read), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID openai/gpt-5.6-terra. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "OpenAI" endpoint
+# pricing (https://openrouter.ai/api/v1/models/openai/gpt-5.6-terra/endpoints, accessed 2026-10-16).
+# Context tiers start at 272,000 prompt tokens, as on that endpoint.
 base_model = "openai/gpt-5.6-terra"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
@@ -10,6 +13,14 @@ field = "reasoning_details"
 input = 2
 output = 12
 cache_read = 0.2
+cache_write = 2.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4
+output = 18
+cache_read = 0.4
+cache_write = 5
 
 [limit]
 input = 850_000

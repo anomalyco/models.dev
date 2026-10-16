@@ -1,5 +1,8 @@
-# Model ID deepseek/deepseek-v4-pro; reference rates $1.74 / $3.48 per 1M tokens (input/output), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID deepseek/deepseek-v4-pro. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "StreamLake" endpoint
+# pricing (https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro/endpoints, accessed 2026-10-16).
+# The current rate includes a 45.1% promotion listed by OpenRouter (regular $1.74 / $3.48).
 base_model = "deepseek/deepseek-v4-pro"
 reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 
@@ -7,8 +10,9 @@ reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 field = "reasoning_details"
 
 [cost]
-input = 1.74
-output = 3.48
+input = 0.95526
+output = 1.91052
+cache_read = 0.079605
 
 [limit]
 input = 850_000

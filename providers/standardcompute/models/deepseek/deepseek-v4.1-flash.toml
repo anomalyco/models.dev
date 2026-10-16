@@ -1,5 +1,7 @@
-# Model ID deepseek/deepseek-v4.1-flash; reference rates $0.3 / $1.2 per 1M tokens (input/output), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID deepseek/deepseek-v4.1-flash. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "Baidu" endpoint
+# pricing (https://openrouter.ai/api/v1/models/deepseek/deepseek-v4.1-flash/endpoints, accessed 2026-10-16).
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
@@ -9,6 +11,7 @@ field = "reasoning_details"
 [cost]
 input = 0.3
 output = 1.2
+cache_read = 0.006
 
 [limit]
 input = 850_000

@@ -1,5 +1,7 @@
-# Model ID qwen/qwen3.8-27b; reference rates $0.4 / $3 per 1M tokens (input/output), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID qwen/qwen3.8-27b. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "CoreWeave" endpoint
+# pricing (https://openrouter.ai/api/v1/models/qwen/qwen3.8-27b/endpoints, accessed 2026-10-16).
 base_model = "alibaba/qwen3.8-27b"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 
@@ -9,6 +11,7 @@ field = "reasoning_details"
 [cost]
 input = 0.4
 output = 3
+cache_read = 0.15
 
 [provider]
 npm = "@openrouter/ai-sdk-provider"

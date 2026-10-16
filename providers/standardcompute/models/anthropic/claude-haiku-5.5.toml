@@ -1,5 +1,8 @@
-# Model ID anthropic/claude-haiku-5.5; reference rates $0.1 / $0.5 per 1M tokens (input/output), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID anthropic/claude-haiku-5.5. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "Anthropic" endpoint
+# pricing (https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints, accessed 2026-10-16).
+# Context tiers start at 100,000 prompt tokens, as on that endpoint.
 base_model = "anthropic/claude-haiku-5-5"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
@@ -9,6 +12,15 @@ field = "reasoning_details"
 [cost]
 input = 0.1
 output = 0.5
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 100_000 }
+input = 0.5
+output = 2.5
+cache_read = 0.05
+cache_write = 0.625
 
 [limit]
 input = 850_000

@@ -1,5 +1,7 @@
-# Model ID google/gemini-3.5-flash-lite; reference rates $0.3 / $2.5 per 1M tokens (input/output), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID google/gemini-3.5-flash-lite. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "Google AI Studio" endpoint
+# pricing (https://openrouter.ai/api/v1/models/google/gemini-3.5-flash-lite/endpoints, accessed 2026-10-16).
 base_model = "google/gemini-3.5-flash-lite"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
@@ -9,6 +11,8 @@ field = "reasoning_details"
 [cost]
 input = 0.3
 output = 2.5
+cache_read = 0.03
+cache_write = 0.083333
 
 [limit]
 input = 850_000

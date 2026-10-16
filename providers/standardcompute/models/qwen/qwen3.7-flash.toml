@@ -1,8 +1,12 @@
-# Model ID qwen/qwen3.7-flash; reference rates $0.03 / $0.13 / $0.006 per 1M tokens (input/output/cache read), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID qwen/qwen3.7-flash. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "Alibaba" endpoint
+# pricing (https://openrouter.ai/api/v1/models/qwen/qwen3.7-flash/endpoints, accessed 2026-10-16).
+# Context tiers start at 32,000 and 256,000 prompt tokens, as on that endpoint.
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
+# Budget: reasoning.max_tokens (passed through as the upstream thinking budget)
 base_model = "alibaba/qwen3.7-flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
 
 [interleaved]
 field = "reasoning_details"
@@ -11,6 +15,21 @@ field = "reasoning_details"
 input = 0.03
 output = 0.13
 cache_read = 0.006
+cache_write = 0.038
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.1
+output = 0.4
+cache_read = 0.02
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.2
+output = 0.8
+cache_read = 0.04
+cache_write = 0.25
 
 [limit]
 input = 850_000

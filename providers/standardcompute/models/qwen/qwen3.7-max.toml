@@ -1,9 +1,11 @@
-# Model ID qwen/qwen3.7-max; reference rates $1.475 / $4.425 / $0.295 per 1M tokens (input/output/cache read), charged against the plan's monthly compute budget.
-# Exact Alibaba list rate (catalog rounds to $1.48 / $4.42).
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID qwen/qwen3.7-max. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "Alibaba" endpoint
+# pricing (https://openrouter.ai/api/v1/models/qwen/qwen3.7-max/endpoints, accessed 2026-10-16).
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
+# Budget: reasoning.max_tokens (passed through as the upstream thinking budget)
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [interleaved]
 field = "reasoning_details"
@@ -12,6 +14,7 @@ field = "reasoning_details"
 input = 1.475
 output = 4.425
 cache_read = 0.295
+cache_write = 1.84375
 
 [limit]
 input = 850_000

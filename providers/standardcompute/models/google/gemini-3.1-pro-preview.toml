@@ -1,5 +1,8 @@
-# Model ID google/gemini-3.1-pro-preview; reference rates $2 / $12 per 1M tokens (input/output), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID google/gemini-3.1-pro-preview. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "Google AI Studio" endpoint
+# pricing (https://openrouter.ai/api/v1/models/google/gemini-3.1-pro-preview/endpoints, accessed 2026-10-16).
+# Context tiers start at 200,000 prompt tokens, as on that endpoint.
 base_model = "google/gemini-3.1-pro-preview"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
@@ -9,6 +12,14 @@ field = "reasoning_details"
 [cost]
 input = 2
 output = 12
+cache_read = 0.2
+cache_write = 0.375
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 18
+cache_read = 0.4
 
 [limit]
 input = 850_000

@@ -1,5 +1,8 @@
-# Model ID openai/gpt-6-luna; reference rates $0.1 / $0.5 / $0.01 / $0.125 per 1M tokens (input/output/cache read/cache write), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID openai/gpt-6-luna. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "OpenAI" endpoint
+# pricing (https://openrouter.ai/api/v1/models/openai/gpt-6-luna/endpoints, accessed 2026-10-16).
+# Context tiers start at 272,000 prompt tokens, as on that endpoint.
 base_model = "openai/gpt-6-luna"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 

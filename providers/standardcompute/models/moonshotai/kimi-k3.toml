@@ -1,5 +1,7 @@
-# Model ID moonshotai/kimi-k3; reference rates $3 / $15 / $0.3 per 1M tokens (input/output/cache read), charged against the plan's monthly compute budget.
-# https://docs.standardcompute.com/budgets-and-limits (accessed 2026-10-16)
+# Model ID moonshotai/kimi-k3. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16) at the upstream cost
+# OpenRouter reports for that request, so the rates are OpenRouter's "Moonshot AI" endpoint
+# pricing (https://openrouter.ai/api/v1/models/moonshotai/kimi-k3/endpoints, accessed 2026-10-16).
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
