@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-sonnet-5"
+
+# Reasoning effort maps to the `reasoning_effort` request field on the OpenAI-compatible API.
+# The gateway has no separate on/off toggle wire field, so effort-only is declared.
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.90
+output = 3.50
+cache_read = 0.15
