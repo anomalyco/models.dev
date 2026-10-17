@@ -1,0 +1,21 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+base_model = "tencent/hy3-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.1922
+output = 0.6406
+
+[[cost.tiers]]
+tier = { type = "context", size = 16000 }
+input = 0.2562
+output = 1.0249
+
+[[cost.tiers]]
+tier = { type = "context", size = 32000 }
+input = 0.3203
+output = 1.2812

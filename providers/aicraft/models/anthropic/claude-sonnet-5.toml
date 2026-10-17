@@ -1,0 +1,16 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Toggle: thinking.type = adaptive|disabled.
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-sonnet-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2.26
+output = 11.3

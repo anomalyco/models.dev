@@ -1,0 +1,16 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+base_model = "anthropic/claude-sonnet-4-5"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 3.315
+output = 16.575
+
+[[cost.tiers]]
+tier = { type = "context", size = 200000 }
+input = 6.63
+output = 24.8625

@@ -1,0 +1,16 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Toggle: thinking.type = enabled|disabled.
+base_model = "zhipuai/glm-5.1"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.9609
+output = 3.8435
+
+[[cost.tiers]]
+tier = { type = "context", size = 32000 }
+input = 1.2812
+output = 4.4841

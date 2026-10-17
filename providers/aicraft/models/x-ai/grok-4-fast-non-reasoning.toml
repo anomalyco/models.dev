@@ -1,0 +1,12 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+base_model = "xai/grok-4-fast-non-reasoning"
+
+[cost]
+input = 0.221
+output = 0.5525
+
+[[cost.tiers]]
+tier = { type = "context", size = 128000 }
+input = 0.442
+output = 1.105

@@ -1,0 +1,16 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+base_model = "openai/gpt-5.4-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "high", "xhigh"]
+
+[cost]
+input = 33.15
+output = 198.9
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 66.3
+output = 298.35

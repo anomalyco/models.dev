@@ -1,0 +1,29 @@
+name = "AICraft"
+npm = "@ai-sdk/openai-compatible"
+
+# AICraft is an OpenAI-compatible gateway. Requests go to
+# POST https://aicraftapi.net/v1/chat/completions with a bearer token.
+# Create a key in the AICraft Console and see the quick start at
+# https://aicraftapi.net/docs.html
+#
+# Model ids are copied verbatim from GET https://aicraftapi.net/v1/models.
+# Some ids carry a vendor prefix (for example deepseek/deepseek-v4-pro) and
+# live in a subdirectory; others are bare ids (for example claude-4.5-sonnet)
+# and live directly under models/. The path minus .toml is the wire id in both
+# cases. The catalog is published at https://aicraftapi.net/models.html
+#
+# Pricing and context windows live at https://aicraftapi.net/pricing.html
+# (USD per million tokens, accessed 2026-10-16). Each file under models/ states
+# the AICraft price and, where the catalog tiers by context length, the higher
+# tiers. Everything else is inherited from the referenced base model.
+#
+# reasoning_options states the reasoning controls the underlying model
+# supports. Request parameters are forwarded to the model unchanged: sending an
+# invalid reasoning_effort to POST /v1/chat/completions is rejected by the
+# model rather than ignored (verified 2026-10-17 with deepseek/deepseek-v4-pro,
+# claude-4.6-sonnet and openai/gpt-6-astra). Where a model exposes controls
+# they are listed per file; where it exposes none the list is empty.
+
+env = ["AICRAFT_API_KEY"]
+api = "https://aicraftapi.net/v1"
+doc = "https://aicraftapi.net/docs.html"
