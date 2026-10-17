@@ -1,0 +1,37 @@
+# Router preset on the AnyRouter gateway; the served model is chosen per
+# request. Host contract (GET /api/v1/models?all=1, read 2026-09-24,
+# re-verified 2026-09-27): context_length=1000000, max_completion_tokens=65536,
+# capabilities=[chat, streaming, function-calling, coding]. The preset's own
+# supported_parameters ([max_tokens, temperature, top_p, stop, stream]) is the
+# legacy model-level projection the host documents, not a promise shared by
+# every route; the members it resolves do take tools and reasoning.
+# No [cost]: the preset bills whichever route it resolves at that route's rate,
+# so there is no single per-token price.
+# Reasoning: no caller control is published. Probed /api/v1/chat/completions
+# 2026-09-27: the routes this preset resolved served a member that refuses the
+# off sentinel — 400 "Reasoning is mandatory for this endpoint and cannot be
+# disabled." — while low, medium and high each returned 0 reasoning tokens on
+# the member it did serve (stealth/space-bunny-alpha). A value the host answers
+# with a 400 is not a control, and nothing else could be verified, so nothing is
+# published. Chat takes the flat `reasoning_effort` and has no toggle (see the
+# provider header).
+name = "AnyRouter Hermes"
+description = "Router across the top tool-calling models for autonomous agents, ranked by agentic score, with automatic fallback"
+family = "model-router"
+release_date = "2026-06-08"
+last_updated = "2026-06-08"
+attachment = false
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,25 @@
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1000000, max_completion_tokens=65536,
+# capabilities=[chat, streaming, function-calling, vision, coding],
+# price 1.5/9. Context is 1000000 and only text/image are served here.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header).
+# Unverified on this host: with a plain key every effort value returns 404 "No
+# upstream available for model google/gemini-3.5-flash" — the served routes
+# are BYOK-only — so no rung could be measured here. providers/google and the
+# OpenRouter peer publish the same ladder for this model, so that is published
+# unchanged.
+# Effort: reasoning_effort = minimal|low|medium|high
+base_model = "google/gemini-3.5-flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 1.5
+output = 9
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,40 @@
+# Router preset on the AnyRouter gateway; the served model is chosen per
+# request. Host contract (GET /api/v1/models?all=1, read 2026-09-24,
+# re-verified 2026-09-27): context_length=1000000, max_completion_tokens=131072,
+# capabilities=[chat, streaming, function-calling], price 0/0. The preset's own
+# supported_parameters ([max_tokens, temperature, top_p, stop, stream]) is the
+# legacy model-level projection the host documents, not a promise shared by
+# every route; the members it resolves do take tools and reasoning. Free plan 10
+# requests/day, paid plans 1000/day; never deducts credits.
+# Reasoning: chat takes the flat `reasoning_effort` and there is no toggle on
+# this surface (see the provider header). Probed /api/v1/chat/completions
+# 2026-09-27 with a prompt that forces multi-step work: `none` returned 0
+# reasoning tokens on 4 of 4 runs at max_tokens=700 and 3 of 3 at 2000, so it is
+# a real off position. The graded rungs do not separate — the served member
+# (dots-studio/dots-3-note-preview) uses the whole budget whatever the value —
+# so only the verified off position is published.
+# Effort: reasoning_effort = none
+name = "AnyRouter Free"
+description = "Router across free platform models and the donated free pool, with automatic fallback and no credit deduction"
+family = "model-router"
+release_date = "2026-06-08"
+last_updated = "2026-06-08"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none"] }]
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

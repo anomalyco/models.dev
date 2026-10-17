@@ -1,0 +1,27 @@
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1048576, max_completion_tokens=384000,
+# capabilities=[chat, streaming, function-calling, coding, reasoning, vision],
+# price 0.155/0.62. Only context differs from the lab entry.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface — the host
+# documents toggle/budget as Responses-only controls, and this route's upstream
+# refuses the object form outright: 400 "Validation: Unsupported parameter(s):
+# `reasoning`". See the provider header.
+# Probed /api/v1/chat/completions 2026-09-27: this route accepts none, low,
+# high, xhigh and max, and rejects minimal and medium with 400 "Invalid
+# request". Honored effect with a prompt that forces multi-step work, mean of 3
+# at max_tokens=1500: none=0, low=718, high=1182, max=1410 reasoning tokens, so
+# `none` is a real off position and depth rises with the value.
+# providers/deepseek and the OpenRouter peer both publish toggle +
+# low|high|max; the toggle has no wire on this host, so the ladder they agree
+# on is published, and `max` is kept because this route accepts and honors it.
+# Effort: reasoning_effort = none|low|high|max
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[cost]
+input = 0.155
+output = 0.62
+
+[limit]
+context = 1_048_576
