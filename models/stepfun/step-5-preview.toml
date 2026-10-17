@@ -8,7 +8,7 @@ attachment = true
 reasoning = true
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [limit]
 context = 1_000_000
@@ -18,3 +18,7 @@ output = 1_000_000
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/stepfun-ai/Step-5-Preview"
