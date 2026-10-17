@@ -1,0 +1,23 @@
+# Source: https://api.teamorouter.com/v1/models/pricing (accessed 2026-10-13)
+# Toggle: thinking.type = adaptive|disabled (disabled is accepted at effort high or below)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+# https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
+base_model = "anthropic/claude-haiku-5-5"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.029
+output = 0.145
+cache_read = 0.0029
+cache_write = 0.03625
+
+[[cost.tiers]]
+tier = { type = "context", size = 100_000 }
+input = 0.145
+output = 0.725
+cache_read = 0.0145
+cache_write = 0.18125
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.teamorouter.com/v1"

@@ -1,0 +1,16 @@
+# Source: https://api.teamorouter.com/v1/models/pricing (accessed 2026-10-13)
+# Thinking: adaptive (default) or between_tools; disabled is rejected, so no toggle.
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-sonnet-5-5"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.558
+output = 2.79
+cache_read = 0.0558
+cache_write = 0.6975
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.teamorouter.com/v1"
