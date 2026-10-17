@@ -1,0 +1,28 @@
+# DeepSeek-V4.1-Flash-1017 released 2026-10-17 as minor update to V4.1-Flash.
+# Sources: https://api-docs.deepseek.com/news/news261017/ (release 2026/10/17, live on web/app/API)
+# https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017 (MIT open weights, image-text-to-text, 1M context, intro + benchmarks)
+# https://api-docs.deepseek.com/quick_start/pricing/ (MODEL VERSION DeepSeek-V4.1-Flash-1017, 1M context, 384K max output, vision/tool/JSON, Flash pricing)
+name = "DeepSeek V4.1 Flash 1017"
+description = "Minor update to DeepSeek V4.1 Flash with stronger reasoning, coding, agentic and visual performance"
+family = "deepseek-flash"
+release_date = "2026-10-17"
+last_updated = "2026-10-17"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
