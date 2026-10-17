@@ -93,7 +93,9 @@ function readToml(relative: string): Toml | undefined {
 }
 
 // The catalog is remote data: its ids may only name files under providers/ and models/.
-const SAFE_PROVIDER = /^[a-z0-9][a-z0-9-]*$/;
+// Provider directories can contain dots (providers/wafer.ai); a leading character that isn't a
+// letter or digit rules out "." and "..".
+const SAFE_PROVIDER = /^[a-z0-9][a-z0-9._-]*$/;
 const SAFE_MODEL = /^[A-Za-z0-9][A-Za-z0-9._:@+-]*(\/[A-Za-z0-9][A-Za-z0-9._:@+-]*)*$/;
 
 export function isSafeModelPath(id: string) {

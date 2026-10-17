@@ -211,3 +211,12 @@ test("does not write a file for an unsafe catalog id", () => {
   expect(tempr.translateModel(unsafe, { existing: () => undefined, authored: () => undefined })).toBeUndefined();
   expect(tempr.missingModelID?.(unsafe)).toBeUndefined();
 });
+
+test("accepts a provider directory with a dot", () => {
+  const built = buildTemprModel(
+    catalogModel({}, { models_dev: { provider: "wafer.ai", model: "Qwen/Qwen3.7-Max" } }),
+    files({ "providers/wafer.ai/models/Qwen/Qwen3.7-Max.toml": counterpart }),
+  );
+
+  expect(built?.model).toBeDefined();
+});
