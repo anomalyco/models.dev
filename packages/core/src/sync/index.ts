@@ -45,6 +45,7 @@ import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { tinfoil } from "./providers/tinfoil.js";
+import { togetherai } from "./providers/togetherai.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -90,6 +91,8 @@ export interface SyncProvider<SourceModel> {
    * deduped GitHub issue per missing model ID.
    */
   skipCreates?: boolean;
+  /** Available as an explicit CLI target, but not in the scheduled CI matrix. */
+  schedule?: boolean;
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
@@ -186,6 +189,7 @@ export const providers: {
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
+  togetherai: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -231,6 +235,7 @@ export const providers: {
   prime,
   requesty,
   tinfoil,
+  togetherai,
   vercel,
   venice,
   wandb,
@@ -633,7 +638,7 @@ export async function syncTargets(target: string, options: SyncOptions = {}) {
 
 export function syncProviderMatrix() {
   return {
-    include: Object.values(providers).map((provider) => ({
+    include: Object.values(providers).filter((provider) => provider.schedule !== false).map((provider) => ({
       provider: provider.id,
       name: provider.name,
     })),
