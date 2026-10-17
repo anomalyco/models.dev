@@ -1,0 +1,26 @@
+# https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+# Context is the model card's default max_seq_length (input over 256 word pieces is truncated).
+name = "all-MiniLM-L6-v2"
+description = "Compact sentence embedding model for semantic search, clustering, and similarity"
+type = "embedding"
+family = "text-embedding"
+release_date = "2021-08-30"
+last_updated = "2021-08-30"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 256
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"

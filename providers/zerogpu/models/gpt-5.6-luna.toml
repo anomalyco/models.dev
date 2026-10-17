@@ -1,0 +1,15 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max; none disables reasoning.
+# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12).
+# Context: 272,000 tokens per https://docs.zerogpu.ai/api-reference/models/gpt-5-6-luna
+base_model = "openai/gpt-5.6-luna"
+base_model_omit = ["limit.input"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.20
+output = 1.20
+cache_read = 0.20
+
+[limit]
+context = 272_000

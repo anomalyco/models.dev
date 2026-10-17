@@ -1,0 +1,26 @@
+# https://huggingface.co/BAAI/bge-small-en-v1.5
+# https://github.com/FlagOpen/FlagEmbedding
+name = "BGE Small EN v1.5"
+description = "Compact English embedding model for retrieval, semantic search, and RAG"
+type = "embedding"
+family = "bge"
+release_date = "2023-09-12"
+last_updated = "2023-09-12"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 512
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/BAAI/bge-small-en-v1.5"
