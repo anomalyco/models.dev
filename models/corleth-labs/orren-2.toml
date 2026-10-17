@@ -1,0 +1,18 @@
+name = "Orren 2"
+description = "Corleth Labs' base reasoning model for text, vision, coding and tool use."
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+release_date = "2026-10"
+last_updated = "2026-10-07"
+
+[limit]
+context = 262144
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
