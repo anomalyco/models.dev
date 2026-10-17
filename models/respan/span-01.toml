@@ -1,0 +1,32 @@
+# Sources:
+# - https://www.respan.ai/docs/documentation/span-01/concept
+# - https://www.respan.ai/blog/introducing-span-1
+# The context maximum is unpublished; 0 preserves the existing catalog's unknown limit.
+# Scores are read in one forward pass, with no generated output or thinking controls.
+name = "Span-01"
+type = "decision"
+description = "Behavior classifier for agent traces that applies plain-language definitions and returns present, absent, and not-observable probabilities in one forward pass"
+release_date = "2026-09-24"
+last_updated = "2026-09-24"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[links]]
+type = "docs"
+url = "https://www.respan.ai/docs/documentation/span-01/concept"
+
+[[links]]
+type = "announcement"
+url = "https://www.respan.ai/blog/introducing-span-1"

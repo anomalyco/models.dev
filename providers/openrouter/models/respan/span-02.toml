@@ -1,23 +1,11 @@
-type = "decision"
-name = "Span-02"
-description = "Decision model for typed evaluation of shared state"
-release_date = "2026-10-16"
-last_updated = "2026-10-16"
-attachment = true
+# https://openrouter.ai/api/v1/models?output_modalities=text,decisions
+# OpenRouter advertises no reasoning parameters or generated decision output tokens.
+base_model = "respan/span-02"
 reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
-open_weights = false
 
 [cost]
 input = 0.01
 output = 0
 
 [limit]
-context = 131_072
 output = 0
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
