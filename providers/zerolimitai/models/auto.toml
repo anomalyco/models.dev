@@ -1,0 +1,29 @@
+# `auto` is a routing alias unique to this host, not a lab model, so there is no
+# base_model: each request goes to the free model that currently ranks best and
+# is answering (live ranking: https://www.zerolimitai.com/leaderboard). Limits
+# are the floor of that catalogue, so a request that fits here fits every model
+# the router may pick. Cost is 0 per token: only free models are used; access is
+# a flat plan, never per-token billing.
+name = "ZeroOptimize Auto"
+description = "Router that sends each request to the best-ranked free model that is answering, with automatic failover"
+family = "auto"
+release_date = "2026-04-30"
+last_updated = "2026-10-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
