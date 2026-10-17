@@ -405,6 +405,25 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
+## Tempr Gateway Notes
+
+Tempr Gateway is implemented in `packages/core/src/sync/providers/tempr.ts`.
+
+- Run it with `bun models:sync tempr`.
+- Source endpoint: `https://api.temprhq.io/v1/catalog`; no auth required. It uses OpenRouter's model-list shape plus a `tempr` object (provider, model, type, status, `price_source`, `reasoning_forwarded`, `provider_kind`, `models_dev`, `reasoning_options`). Docs: https://temprhq.io/docs/gateway-reference#catalog
+- **Mirroring.** Tempr serves each provider's models on the caller's own key, so every catalog model names the models.dev entry it is (`tempr.models_dev`: `providers/<provider>/models/<model>.toml`). The Tempr entry copies that entry's overrides onto the same `base_model`.
+  - When the mirrored entry is the lab's full definition, the base is the lab file of the same id, found with `resolveCanonicalBaseModel` / `resolveModelMetadataBaseModel`, and only the fields that differ from it are kept.
+  - Request-surface fields (`provider`, `experimental`, `interleaved`, `reasoning_options`) and catalogue fields (description, dates, family, knowledge) are never copied.
+- **Prices.** Cost is Tempr's only where `price_source` is `"tempr"`: Tempr's copy of a host's whole catalog confirms the model at that price. The mirrored entry's `reasoning` and audio rates are kept, since the catalog doesn't publish them. Otherwise the mirrored entry's cost stands.
+- **Reasoning.** `reasoning_options` come from `tempr.reasoning_options` (the controls Tempr's API takes), written the way the mirrored entry writes "can be off". The leading comment names the request fields that set them on `/v1/chat/completions`, `/v1/messages` and `/v1/responses`.
+  - `reasoning_forwarded: false` (hosts Tempr sends no reasoning settings to) writes `[]` with a note.
+  - A reasoning model whose controls the catalog omits, or lists with values the schema doesn't know, keeps its authored controls. A new one raises `MissingReasoningOptionsError` instead of getting `[]`.
+- **Safeguards.**
+  - Catalog ids are checked before they name a file read or written.
+  - A catalog of fewer than 100 models is treated as an outage and the sync stops.
+  - A model skipped for having no lab file is reported through `missingModelID`, so its existing entry is kept. Models absent from the catalog are retirements and are deleted.
+  - `preserveDescriptions` is `false` and headers are authoritative.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
