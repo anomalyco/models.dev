@@ -1,0 +1,20 @@
+# Coding Plan model name per the official activity page (accessed 2026-10-10)
+# and the runtime-verified alias report in anomalyco/models.dev#5857.
+# Subscription tier: no per-token price.
+# Toggle: thinking.type = enabled|disabled, matching the sibling Volcengine Ark
+# Coding Plan measurement on the same platform (providers/volcengine-coding-plan)
+# and the toggle the lab (providers/deepseek) exposes. No graded effort: the wire
+# accepts reasoning_effort, but graded levels fully overlap there; not
+# independently re-measured on this host.
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
