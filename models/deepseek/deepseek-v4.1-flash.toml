@@ -1,3 +1,8 @@
+# Context 1_048_576 per live DeepSeek API GET /models (context_window 1048576 for deepseek-flash);
+# corroborated by NVIDIA NGC maximum context length 1,048,576; DeepSeek docs describe as 1M.
+# https://catalog.ngc.nvidia.com/orgs/nim/teams/deepseek-ai/models/deepseek-v4-pro
+# https://api-docs.deepseek.com/quick_start/pricing/
+# https://api-docs.deepseek.com/news/news260424
 # Benchmarks use instruct weights, temperature=1.0, top_p=0.95; not the base-model table.
 # Source: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash#instruct-model
 # Open weights (MIT): https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash
@@ -16,7 +21,7 @@ open_weights = true
 license = "MIT"
 
 [limit]
-context = 1_000_000
+context = 1_048_576
 output = 384_000
 
 [modalities]
