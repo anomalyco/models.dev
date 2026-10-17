@@ -1,0 +1,26 @@
+# Sources (accessed 2026-09-25):
+# - https://api.wokey.ai/v1/models/pricing (public, no key; id "gpt-6-astra"; pricing_mode dynamic_discount)
+# - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
+# - https://wokey.ai/models/gpt-6-astra
+# Reasoning options copied from providers/openai/models/gpt-6-astra.toml (Wokey relays the upstream API).
+# Pricing is flat per token at every context length: Wokey has no long-context tier or premium.
+# Input modalities narrowed to the list Wokey publishes for this model.
+# Request shape: OpenAI Responses API (POST https://api.wokey.ai/v1/responses).
+base_model = "openai/gpt-6-astra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.9
+output = 4.5
+cache_read = 0.09
+cache_write = 1.125
+
+[modalities]
+input = ["text", "image"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.wokey.ai/v1"
