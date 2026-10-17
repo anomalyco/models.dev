@@ -1,7 +1,8 @@
-# Pricing, context window and max output:
-# https://docs.vivgrid.com/models/jev
+# Model ID, /systemone endpoint, 64K context and pricing:
+# https://vivgrid.com/docs/models/jev-latest (accessed 2026-02-20)
+# Input price doubled from $0.042 to $0.084 per the current docs page.
 base_model = "typesafe/jev-latest"
 
 [cost]
-input = 0.042
+input = 0.084
 output = 0
