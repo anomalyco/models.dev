@@ -1,0 +1,20 @@
+name = "GLM-5.3 Flash"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = true
+release_date = "2026-10"
+last_updated = "2026-10"
+
+[cost]
+input = 0.25
+output = 0.70
+
+[limit]
+context = 327680
+input = 327680
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
