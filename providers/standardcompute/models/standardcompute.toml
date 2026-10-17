@@ -31,12 +31,19 @@ open_weights = false
 [interleaved]
 field = "reasoning_details"
 
-# Subscription pricing (fixed monthly plans, https://standardcompute.com/pricing,
-# accessed 2026-10-13) — no per-token billing, hence cost 0 per the registry
-# convention for subscription providers.
-[cost]
-input = 0.00
-output = 0.00
+# No [cost]: there is no single per-token price for this id, and it is not
+# free. Access is a fixed monthly plan (https://standardcompute.com/pricing,
+# accessed 2026-10-16) whose USD compute budget is drawn down per request at
+# the routed model's upstream-reported cost, so the effective rate depends on
+# which catalog model serves each request. Same convention as other
+# auto-routers whose price varies by routed model (openrouter/auto,
+# pioneer/auto), so consumers show no price instead of $0.00.
+# Prompt caching is supported but cannot be expressed without a price: cached
+# input is reported in usage (prompt_tokens_details.cached_tokens; on
+# /v1/messages, cache_read_input_tokens) and bills the budget at the
+# upstream's cache-read rate. Anthropic models get gateway-injected
+# cache_control breakpoints (system prompt + latest turns); other models use
+# their upstream's automatic prefix caching where offered.
 
 [limit]
 context = 1_000_000

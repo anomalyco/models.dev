@@ -1,7 +1,8 @@
-# Flat-rate smart-routing gateway: per-token cost is $0 because pricing is
-# subscription-based (fixed monthly plans, each with a monthly compute budget;
-# https://standardcompute.com/pricing and
-# https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-13).
+# Flat-rate smart-routing gateway: pricing is subscription-based (fixed
+# monthly plans, each with a monthly USD compute budget metered at the routed
+# model's cost; https://standardcompute.com/pricing and
+# https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16),
+# so the router model declares no per-token cost.
 # The "standardcompute" model id routes each request across the models the
 # customer has enabled from a curated catalog of ~1M-context models, or serves
 # the customer's pinned selection. Exact model ids: GET /v1/models (public).
