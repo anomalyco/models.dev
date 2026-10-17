@@ -1,0 +1,13 @@
+# Pricing/context: GET https://api.together.xyz/v1/models (accessed 2026-10-16)
+# Effort: reasoning_effort = low|medium|high|xhigh|max, matching Reflection's API.
+# Reasoning is always on: reasoning.enabled = false still produces reasoning tokens, so no toggle.
+base_model = "reflection/beam-1.0-501b-a23b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.40
+output = 1.20
+cache_read = 0.04

@@ -1,0 +1,19 @@
+# Toggle: reasoning.enabled = true|false (also chat_template_kwargs.enable_thinking)
+# reasoning_effort strings are accepted but do not grade reasoning depth, so no effort option.
+# Pricing/context: GET https://api.together.xyz/v1/models (accessed 2026-10-16)
+# Image and video input plus strict json_schema output probed live on 2026-10-16.
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+structured_output = true
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.50
+cache_read = 0.02
+
+[limit]
+context = 262_144
+output = 262_144

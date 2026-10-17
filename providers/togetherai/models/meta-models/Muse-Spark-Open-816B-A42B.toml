@@ -1,0 +1,16 @@
+# Pricing/context: GET https://api.together.xyz/v1/models (accessed 2026-10-16)
+# Effort: reasoning_effort = low|medium|high|xhigh (template rejects minimal/max), matching the lab ladder.
+# Modalities: image_url and video_url probed live on 2026-10-16; audio parts are silently dropped, so audio is omitted.
+base_model = "meta/muse-spark-open"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[modalities]
+input = ["text", "image", "video"]
