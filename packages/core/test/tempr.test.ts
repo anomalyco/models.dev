@@ -220,3 +220,17 @@ test("accepts a provider directory with a dot", () => {
 
   expect(built?.model).toBeDefined();
 });
+
+test("keeps the request-field comment when it keeps the authored controls", () => {
+  const model = catalogModel({ supported_parameters: ["reasoning"] });
+  const authored = { base_model: "alibaba/qwen3.7-max", reasoning_options: [{ type: "toggle" as const }, { type: "effort" as const, values: ["high"] }] };
+
+  const translated = tempr.translateModel(model, { existing: () => undefined, authored: () => authored as never });
+
+  expect(translated?.header).toContain('# Toggle: reasoning.enabled = true|false');
+  expect(translated?.header).toContain("# Effort: reasoning.effort = none|high");
+});
+
+test("does not report an unsafe catalog id", () => {
+  expect(tempr.sourceID?.(catalogModel({ id: "deepinfra/../../etc/x" }))).toBeUndefined();
+});

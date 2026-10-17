@@ -333,7 +333,7 @@ export const tempr = {
   // A Tempr entry inherits the lab's description (see CATALOGUE_FIELDS), so an old one isn't kept.
   preserveDescriptions: false,
   sourceID(model) {
-    return model.id;
+    return isSafeModelPath(model.id) ? model.id : undefined;
   },
   // A model skipped for having no lab file is still served: keep any entry it has, rather than
   // delete it, and report it. Models gone from the catalog are retirements and are deleted.
@@ -366,8 +366,15 @@ export const tempr = {
     if (built === undefined) return undefined;
     // A reasoning model whose controls the catalog omits, or lists in values the schema doesn't
     // know, keeps the controls already authored for it; a new one isn't written until they're known.
-    if (built.controlsUnknown && context.authored(model.id)?.reasoning_options === undefined) {
-      throw new MissingReasoningOptionsError(model.id, "the Tempr catalog lists no usable reasoning controls for this reasoning model");
+    if (built.controlsUnknown) {
+      const kept = context.authored(model.id)?.reasoning_options as ReasoningOption[] | undefined;
+      if (kept === undefined) {
+        throw new MissingReasoningOptionsError(model.id, "the Tempr catalog lists no usable reasoning controls for this reasoning model");
+      }
+      // The runner keeps the authored controls; headers are authoritative, so the comment naming
+      // their request fields is written again from them rather than dropped.
+      const lines = header(kept, model.tempr.reasoning_forwarded, kept.length > 0, model.tempr.provider_kind !== "first_party");
+      return { id: model.id, model: built.model, header: lines.join("\n") + "\n" };
     }
     return { id: model.id, model: built.model, header: built.header || undefined };
   },
