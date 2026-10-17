@@ -1,0 +1,30 @@
+# Community fine-tune (not a lab release): base weights mistralai/Mistral-Small-24B-Base-2501; no models/ lab entry exists,
+# so it is authored inline like the providers/nano-gpt peer entries for community fine-tunes.
+# Pricing (USD/1M): https://api.demonroute.com/api/pricing (model_ratio x 2, x completion_ratio) and
+# https://demonroute.com/models, both checked 2026-09-29. Context: DemonRoute catalog.
+# limit.output: re-probed 2026-10-03. max_tokens=32768 is rejected for any prompt on this host: prompt + max_tokens must fit the
+# shared 32768 window (the rejection quotes the arithmetic, e.g. "Your prompt is 30 tokens plus max_tokens=32760 = 32790 total").
+# 32736 accepted and completed with a 30-token prompt.
+# Dates: Hugging Face repo createdAt / lastModified for https://huggingface.co/dphn/Dolphin3.0-Mistral-24B
+name = "Dolphin 3.0 Mistral 24B"
+description = "Dolphin 3.0 general-purpose instruct fine-tune of Mistral Small 24B Base 2501"
+family = "mistral-small"
+release_date = "2025-02-02"
+last_updated = "2025-04-25"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 2.1
+output = 3.48
+
+[limit]
+context = 32_768
+output = 32_736
+
+[modalities]
+input = ["text"]
+output = ["text"]
