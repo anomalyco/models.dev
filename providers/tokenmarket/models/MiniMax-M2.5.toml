@@ -1,0 +1,13 @@
+# Alibaba Cloud (DashScope) channel. MiniMax-M2.5 is a thinking-only model on
+# this surface and does not expose caller-selectable reasoning controls.
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.248
+output = 0.992
+cache_read = 0.024
+cache_write = 0.312
