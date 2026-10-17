@@ -21,9 +21,8 @@ const MIN_MODELS = 100;
 // the model: Tempr's surface is its own, and its reasoning comes back in its own shape.
 const PROVIDER_ONLY_FIELDS = ["reasoning_options", "interleaved", "provider", "experimental", "npm", "api", "shape"] as const;
 
-// Where a lab's own provider entry is its full definition, how it describes and dates the model
-// there can differ from the lab file without saying anything about using it; a Tempr entry keeps
-// the lab file's.
+// How a provider entry describes and dates a model says nothing about using it through Tempr; a
+// Tempr entry inherits the lab file's.
 const CATALOGUE_FIELDS = ["description", "release_date", "last_updated", "knowledge", "family"] as const;
 
 const ReasoningOption = z.object({
@@ -84,9 +83,22 @@ function readToml(relative: string): Toml | undefined {
   return Bun.TOML.parse(readFileSync(file, "utf8")) as Toml;
 }
 
-/** The models.dev entry a Tempr model mirrors: the same model under the provider Tempr reaches it on. */
+// The catalog is remote data: its ids may only name files under providers/ and models/.
+const SAFE_PROVIDER = /^[a-z0-9][a-z0-9-]*$/;
+const SAFE_MODEL = /^[A-Za-z0-9][A-Za-z0-9._:@+-]*(\/[A-Za-z0-9][A-Za-z0-9._:@+-]*)*$/;
+
+export function isSafeModelPath(id: string) {
+  return SAFE_MODEL.test(id) && !id.split("/").some((part) => part === "." || part === "..");
+}
+
+/**
+ * The models.dev entry a Tempr model mirrors: the same model under the provider Tempr reaches it
+ * on. Undefined when the catalog's ids aren't plain provider and model ids.
+ */
 export function counterpartPath(model: TemprModel) {
-  return `providers/${model.tempr.models_dev.provider}/models/${model.tempr.models_dev.model}.toml`;
+  const { provider, model: id } = model.tempr.models_dev;
+  if (!SAFE_PROVIDER.test(provider) || !isSafeModelPath(id)) return undefined;
+  return `providers/${provider}/models/${id}.toml`;
 }
 
 /** A per-token price string (OpenRouter's unit) as models.dev's price per million tokens. */
@@ -188,8 +200,7 @@ export function header(options: ReasoningOption[], forwarded: boolean, hostLists
   if (messages.length > 0) lines.push(`# /v1/messages: ${messages.join("; ")}`);
 
   if (levels.length > 0) lines.push(`# /v1/responses: reasoning.effort = ${off}${levels.join("|")}`);
-  else if (budget) lines.push(`# /v1/responses: reasoning.effort = ${off}low|medium|high (sized to a thinking budget)`);
-  else lines.push('# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on');
+  else if (canDisable) lines.push('# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on');
   return lines;
 }
 
@@ -222,8 +233,8 @@ export function overridesOf(entry: Toml, lab: Toml): Toml {
  */
 function resolveBase(model: TemprModel, counterpart: Toml, read: (relative: string) => Toml | undefined) {
   if (typeof counterpart.base_model === "string") {
-    // A Tempr entry inherits the lab's description, whatever the provider entry says.
-    const { description: _, ...overrides } = counterpart;
+    const overrides = { ...counterpart };
+    for (const field of CATALOGUE_FIELDS) delete overrides[field];
     return { base: counterpart.base_model, overrides };
   }
   const { provider, model: id, canonical_model_id } = model.tempr.models_dev;
@@ -232,6 +243,7 @@ function resolveBase(model: TemprModel, counterpart: Toml, read: (relative: stri
   const candidates = [canonical_model_id, `${provider}/${id}`, resolveCanonicalBaseModel(`${provider}/${id}`), resolveModelMetadataBaseModel(id)];
   for (const candidate of candidates) {
     if (!candidate) continue;
+    if (!isSafeModelPath(candidate)) continue;
     const lab = read(`models/${candidate}.toml`);
     if (lab === undefined) continue;
     const overrides = overridesOf(counterpart, lab);
@@ -248,7 +260,8 @@ function resolveBase(model: TemprModel, counterpart: Toml, read: (relative: stri
  */
 export function buildTemprModel(model: TemprModel, read: (relative: string) => Toml | undefined = readToml):
   { model: SyncedModel; header: string } | undefined {
-  const counterpart = read(counterpartPath(model));
+  const relative = counterpartPath(model);
+  const counterpart = relative === undefined ? undefined : read(relative);
   if (counterpart === undefined) return undefined;
   const resolved = resolveBase(model, counterpart, read);
   if (resolved === undefined) return undefined;
@@ -265,7 +278,7 @@ export function buildTemprModel(model: TemprModel, read: (relative: string) => T
     if (Array.isArray(labInput) && labInput.some((m) => m !== "text")) {
       result.attachment = false;
       result.modalities = { input: ["text"], output: ["text"] };
-      for (const extra of ["input_audio", "input_image", "input_video"]) delete (result.cost as Toml | undefined)?.[extra];
+      for (const extra of ["input_audio", "output_audio"]) delete (result.cost as Toml | undefined)?.[extra];
       lines.push(
         "# Tempr serves this model on /v1/embeddings, which takes OpenAI's embeddings shape: text",
         "# input only there, so the lab's other input modalities aren't reachable through Tempr.",
@@ -273,16 +286,26 @@ export function buildTemprModel(model: TemprModel, read: (relative: string) => T
     }
   }
 
-  const cost = temprCost(model);
-  if (cost !== undefined && !isDeepStrictEqual(cost, counterpart.cost)) result.cost = cost;
+  const temprPrice = temprCost(model);
+  if (temprPrice !== undefined) {
+    // Tempr's catalog prices input, output and the cache; what it doesn't publish (a separate
+    // reasoning rate, audio rates) stays as the mirrored entry has it.
+    const mirrored = isPlainObject(result.cost) ? result.cost : isPlainObject(counterpart.cost) ? counterpart.cost : {};
+    const cost: Toml = { ...temprPrice };
+    for (const key of ["reasoning", "input_audio", "output_audio"]) {
+      if (cost[key] === undefined && mirrored[key] !== undefined) cost[key] = mirrored[key];
+    }
+    if (!isDeepStrictEqual(cost, counterpart.cost)) result.cost = cost;
+  }
 
-  const reasons = model.supported_parameters.includes("reasoning");
-  if (reasons) {
+  const reasons = model.supported_parameters.includes("reasoning") || model.supported_parameters.includes("include_reasoning");
+  // An omitted list says nothing about the controls, so the authored ones are kept; an empty one
+  // says there are none.
+  const published = model.tempr.reasoning_forwarded ? model.tempr.reasoning_options : [];
+  if (reasons && published !== undefined) {
     const base = read(`models/${resolved.base}.toml`);
     const sourceOptions = (counterpart.reasoning_options ?? base?.reasoning_options ?? []) as ReasoningOption[];
-    const options = model.tempr.reasoning_forwarded
-      ? encodeOptions(model.tempr.reasoning_options ?? [], sourceOptions)
-      : [];
+    const options = encodeOptions(published, sourceOptions);
     result.reasoning_options = options;
     lines.push(...header(options, model.tempr.reasoning_forwarded, sourceOptions.length > 0, model.tempr.provider_kind !== "first_party"));
   }
@@ -295,7 +318,14 @@ export const tempr = {
   name: "Tempr Gateway",
   modelsDir: "providers/tempr/models",
   authoritativeHeaders: true,
+  // A Tempr entry inherits the lab's description (see CATALOGUE_FIELDS), so an old one isn't kept.
+  preserveDescriptions: false,
   sourceID(model) {
+    return model.id;
+  },
+  // A model skipped for having no lab file is still served: keep any entry it has, rather than
+  // delete it, and report it. Models gone from the catalog are retirements and are deleted.
+  missingModelID(model) {
     return model.id;
   },
   skippedNotice(ids) {

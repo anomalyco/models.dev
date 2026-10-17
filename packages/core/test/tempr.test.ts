@@ -38,9 +38,9 @@ const counterpart = {
 test("mirrors the provider entry's own overrides on the same base_model", () => {
   const built = buildTemprModel(catalogModel(), files({ "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": counterpart }));
 
+  // Its dates and description are catalogue metadata the lab file already has.
   expect(built?.model).toEqual({
     base_model: "alibaba/qwen3.7-max",
-    last_updated: "2026-09-01",
     cost: { input: 2.5, output: 7.5 },
     limit: { output: 32_768 },
   } as never);
@@ -140,4 +140,56 @@ test("converts per-token prices without float noise", () => {
 test("refuses a partial catalog", () => {
   expect(() => tempr.parseModels({ schema: 1, data: [] })).toThrow(/refusing/);
   expect(() => TemprCatalog.parse({ schema: 2, data: [] })).toThrow();
+});
+
+test("reads only plain provider and model ids from the catalog", () => {
+  const read = files({ "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": counterpart });
+  for (const models_dev of [
+    { provider: "deepinfra", model: "../../providers/other/models/x" },
+    { provider: "../providers", model: "x" },
+    { provider: "deepinfra", model: "/etc/passwd" },
+  ]) {
+    expect(buildTemprModel(catalogModel({}, { models_dev }), read)).toBeUndefined();
+  }
+});
+
+test("keeps the authored controls when the catalog omits them, and writes none only when it says none", () => {
+  const read = files({ "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": counterpart });
+
+  const omitted = buildTemprModel(catalogModel({ supported_parameters: ["reasoning"] }), read);
+  expect((omitted?.model as { reasoning_options?: unknown }).reasoning_options).toBeUndefined();
+  expect(omitted?.header).toBe("");
+
+  const none = buildTemprModel(catalogModel({ supported_parameters: ["reasoning"] }, { reasoning_options: [] }), read);
+  expect((none?.model as { reasoning_options?: unknown }).reasoning_options).toEqual([]);
+});
+
+test("treats include_reasoning as reasoning, as the OpenRouter sync does", () => {
+  const built = buildTemprModel(
+    catalogModel({ supported_parameters: ["include_reasoning"] }, { reasoning_options: [{ type: "effort", values: ["low", "high"] }] }),
+    files({ "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": counterpart }),
+  );
+
+  expect((built?.model as { reasoning_options?: unknown }).reasoning_options).toEqual([{ type: "effort", values: ["low", "high"] }]);
+});
+
+test("keeps the mirrored entry's reasoning rate when Tempr's price replaces the rest", () => {
+  const built = buildTemprModel(
+    catalogModel({ pricing: { prompt: "0.000002", completion: "0.000006" } }, { price_source: "tempr" }),
+    files({ "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": { ...counterpart, cost: { input: 2.5, output: 7.5, reasoning: 7.5 } } }),
+  );
+
+  expect((built?.model as { cost: unknown }).cost).toEqual({ input: 2, output: 6, reasoning: 7.5 });
+});
+
+test("describes only the controls it lists: a budget-only model gets no effort line", () => {
+  const lines = header([{ type: "toggle" }, { type: "budget_tokens", min: 1_024 }], true, true);
+
+  const text = lines.join("\n");
+  expect(text).not.toContain("reasoning.effort = none|low");
+  expect(text).toContain("/v1/messages: thinking.type = enabled|disabled; thinking.budget_tokens");
+});
+
+test("a skipped model keeps its entry instead of being deleted", () => {
+  expect(tempr.missingModelID?.(catalogModel())).toBe("deepinfra/Qwen/Qwen3.7-Max");
 });
