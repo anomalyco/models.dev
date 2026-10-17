@@ -159,6 +159,7 @@ test("keeps the authored controls when the catalog omits them, and writes none o
   const omitted = buildTemprModel(catalogModel({ supported_parameters: ["reasoning"] }), read);
   expect((omitted?.model as { reasoning_options?: unknown }).reasoning_options).toBeUndefined();
   expect(omitted?.header).toBe("");
+  expect(omitted?.controlsUnknown).toBe(true);
 
   const none = buildTemprModel(catalogModel({ supported_parameters: ["reasoning"] }, { reasoning_options: [] }), read);
   expect((none?.model as { reasoning_options?: unknown }).reasoning_options).toEqual([]);
@@ -192,4 +193,21 @@ test("describes only the controls it lists: a budget-only model gets no effort l
 
 test("a skipped model keeps its entry instead of being deleted", () => {
   expect(tempr.missingModelID?.(catalogModel())).toBe("deepinfra/Qwen/Qwen3.7-Max");
+});
+
+test("does not publish effort values the schema doesn't know", () => {
+  const built = buildTemprModel(
+    catalogModel({ supported_parameters: ["reasoning"] }, { reasoning_options: [{ type: "effort", values: ["low", "turbo"] }] }),
+    files({ "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": counterpart }),
+  );
+
+  expect(built?.controlsUnknown).toBe(true);
+  expect((built?.model as { reasoning_options?: unknown }).reasoning_options).toBeUndefined();
+});
+
+test("does not write a file for an unsafe catalog id", () => {
+  const unsafe = catalogModel({ id: "deepinfra/../../etc/x" });
+
+  expect(tempr.translateModel(unsafe, { existing: () => undefined, authored: () => undefined })).toBeUndefined();
+  expect(tempr.missingModelID?.(unsafe)).toBeUndefined();
 });

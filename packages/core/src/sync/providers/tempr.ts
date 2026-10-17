@@ -4,6 +4,7 @@ import { isDeepStrictEqual } from "node:util";
 import { z } from "zod";
 
 import type { SyncProvider, SyncedModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 // Tempr Gateway's public catalog: every model it serves on a caller's own provider key, in
@@ -32,6 +33,14 @@ const ReasoningOption = z.object({
   max: z.number().optional(),
 }).strict();
 type ReasoningOption = z.infer<typeof ReasoningOption>;
+
+// The effort values the schema accepts (schema.ts ReasoningEffortValue). A catalog value outside
+// them is a vocabulary change to review, not something to publish.
+const SCHEMA_EFFORT_VALUES = new Set(["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]);
+
+function hasUnknownEffort(options: ReasoningOption[]) {
+  return options.some((o) => o.type === "effort" && (o.values ?? []).some((v) => !SCHEMA_EFFORT_VALUES.has(v)));
+}
 
 const PriceTier = z.object({
   min_prompt_tokens: z.number(),
@@ -259,7 +268,7 @@ function resolveBase(model: TemprModel, counterpart: Toml, read: (relative: stri
  * controls. Undefined when there is no lab model to inherit from.
  */
 export function buildTemprModel(model: TemprModel, read: (relative: string) => Toml | undefined = readToml):
-  { model: SyncedModel; header: string } | undefined {
+  { model: SyncedModel; header: string; controlsUnknown: boolean } | undefined {
   const relative = counterpartPath(model);
   const counterpart = relative === undefined ? undefined : read(relative);
   if (counterpart === undefined) return undefined;
@@ -302,7 +311,8 @@ export function buildTemprModel(model: TemprModel, read: (relative: string) => T
   // An omitted list says nothing about the controls, so the authored ones are kept; an empty one
   // says there are none.
   const published = model.tempr.reasoning_forwarded ? model.tempr.reasoning_options : [];
-  if (reasons && published !== undefined) {
+  const controlsUnknown = reasons && (published === undefined || hasUnknownEffort(published));
+  if (reasons && !controlsUnknown && published !== undefined) {
     const base = read(`models/${resolved.base}.toml`);
     const sourceOptions = (counterpart.reasoning_options ?? base?.reasoning_options ?? []) as ReasoningOption[];
     const options = encodeOptions(published, sourceOptions);
@@ -310,7 +320,7 @@ export function buildTemprModel(model: TemprModel, read: (relative: string) => T
     lines.push(...header(options, model.tempr.reasoning_forwarded, sourceOptions.length > 0, model.tempr.provider_kind !== "first_party"));
   }
 
-  return { model: result as SyncedModel, header: lines.length > 0 ? lines.join("\n") + "\n" : "" };
+  return { model: result as SyncedModel, header: lines.length > 0 ? lines.join("\n") + "\n" : "", controlsUnknown };
 }
 
 export const tempr = {
@@ -326,7 +336,7 @@ export const tempr = {
   // A model skipped for having no lab file is still served: keep any entry it has, rather than
   // delete it, and report it. Models gone from the catalog are retirements and are deleted.
   missingModelID(model) {
-    return model.id;
+    return isSafeModelPath(model.id) ? model.id : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -347,9 +357,16 @@ export const tempr = {
     }
     return catalog.data;
   },
-  translateModel(model) {
+  translateModel(model, context) {
+    // The id names the file written, so it gets the same check as the ids that name files read.
+    if (!isSafeModelPath(model.id)) return undefined;
     const built = buildTemprModel(model);
     if (built === undefined) return undefined;
+    // A reasoning model whose controls the catalog omits, or lists in values the schema doesn't
+    // know, keeps the controls already authored for it; a new one isn't written until they're known.
+    if (built.controlsUnknown && context.authored(model.id)?.reasoning_options === undefined) {
+      throw new MissingReasoningOptionsError(model.id, "the Tempr catalog lists no usable reasoning controls for this reasoning model");
+    }
     return { id: model.id, model: built.model, header: built.header || undefined };
   },
 } satisfies SyncProvider<TemprModel>;
