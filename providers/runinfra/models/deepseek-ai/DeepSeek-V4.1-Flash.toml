@@ -1,0 +1,23 @@
+# Source: https://runinfra.ai/inference-api/deepseek-v4-1-flash
+# Pricing: https://runinfra.ai/pricing (USD per million tokens; cache_read is the cached input price)
+# Narrowed from the open-weights base to what this serve publishes on its per-model page: the
+# Capabilities list shows Tool calling, JSON mode and Streaming only, with no image input and no
+# reasoning/thinking control, so attachment and reasoning are set false here even though the base
+# checkpoint supports both. tool_call and structured_output inherit from the base. context and
+# output are what this deployment runs; output is capped at 32,768, matching the other RunInfra
+# DeepSeek serves.
+base_model = "deepseek/deepseek-v4.1-flash"
+attachment = false
+reasoning = false
+
+[cost]
+input = 0.14
+output = 0.58
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text"]
