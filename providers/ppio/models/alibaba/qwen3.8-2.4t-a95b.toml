@@ -1,0 +1,17 @@
+# CNY→USD rate: 6.718405, 2026-09-20, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://ppio.com/pricing
+# thinking.type is rejected by this model; thinking is always on.
+# Effort: reasoning_effort = low|medium|xhigh (native set, default xhigh).
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.78614
+output = 5.35841
+cache_read = 0.22327
+
+[limit]
+context = 1_000_000
