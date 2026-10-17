@@ -1,0 +1,25 @@
+# https://docs.modelstudio.console.alibabacloud.com/en/model-studio/model-qwen3-max
+# https://www.alibabacloud.com/blog/pushing-qwen3-max-thinking-beyond-its-limits_602834
+name = "Qwen3 Max 2026-01-23"
+description = "Qwen3 Max snapshot integrating thinking and non-thinking modes for complex reasoning, instruction following, multilingual tasks, retrieval, and tool use"
+family = "qwen"
+release_date = "2026-01-23"
+last_updated = "2026-01-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[links]]
+label = "Alibaba Cloud Model Studio"
+url = "https://docs.modelstudio.console.alibabacloud.com/en/model-studio/model-qwen3-max"
+type = "docs"

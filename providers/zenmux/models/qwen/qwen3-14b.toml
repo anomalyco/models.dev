@@ -1,0 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "alibaba/qwen3-14b"
+name = "Qwen3-14B"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.14
+output = 1.4
+cache_read = 0.028
+
+[limit]
+context = 32_000
+output = 32_000

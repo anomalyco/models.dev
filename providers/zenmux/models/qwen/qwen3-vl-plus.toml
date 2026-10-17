@@ -1,0 +1,38 @@
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# Host modalities: the 2026-09-19 ZenMux page reports text, image, and video input.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "alibaba/qwen3-vl-plus"
+name = "Qwen3-VL-Plus"
+attachment = true
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.2
+output = 1.6
+cache_read = 0.02
+cache_write = 0.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.3
+output = 2.4
+cache_read = 0.03
+cache_write = 0.375
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.6
+output = 4.8
+cache_read = 0.06
+cache_write = 0.75
+
+[modalities]
+input = ["text", "image", "video"]

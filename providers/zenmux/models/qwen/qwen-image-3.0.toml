@@ -1,0 +1,7 @@
+# ZenMux pricing is non-token-denominated for this route and is intentionally omitted.
+# Host prompt limit: the 2026-09-19 ZenMux page reports context_length=1024.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "alibaba/qwen-image-3.0"
+
+[limit]
+context = 1_024

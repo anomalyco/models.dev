@@ -1,0 +1,18 @@
+# https://docs.modelstudio.console.alibabacloud.com/en/model-studio/qwen3-vl-rerank
+name = "Qwen3 VL Rerank"
+description = "The Qwen3-VL-Rerank model series are the latest additions to the Qwen family, built upon the recently open-sourced and powerful Qwen3-VL foundation model. Specifically designed for multimodal information retrieval and cross-modal understanding, this suite accepts diverse inputs including text, images, screenshots, and videos, as well as inputs containing a mixture of these modalities."
+release_date = "2026-01-08"
+last_updated = "2026-01-08"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 120_000
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
