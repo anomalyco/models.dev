@@ -1,0 +1,14 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+base_model = "openai/gpt-4.1"
+
+[cost]
+input = 2
+output = 8
+
+[limit]
+context = 1000000
+output = 16384
+
+[modalities]
+input = ["text","image"]

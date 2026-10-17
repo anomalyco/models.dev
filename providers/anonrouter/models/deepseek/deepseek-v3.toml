@@ -1,0 +1,11 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+base_model = "deepseek/deepseek-v3"
+
+[cost]
+input = 0.32
+output = 0.89
+
+[limit]
+context = 163840
+output = 16384

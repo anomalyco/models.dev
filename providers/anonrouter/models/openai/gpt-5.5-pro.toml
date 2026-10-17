@@ -1,0 +1,17 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+# Controls: https://docs.anonrouter.ai/reasoning
+# Effort: reasoning_effort.
+base_model = "openai/gpt-5.5-pro"
+base_model_omit = ["limit.input"]
+reasoning_options = [{ type = "effort", values = ["medium","high","xhigh"] }]
+
+[cost]
+input = 37.5
+output = 225
+
+[limit]
+context = 1000000
+
+[modalities]
+input = ["text","image"]

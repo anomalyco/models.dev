@@ -1,0 +1,12 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+base_model = "alibaba/qwen3.8-flash"
+attachment = false
+reasoning = false
+
+[cost]
+input = 0.113
+output = 0.382
+
+[modalities]
+input = ["text"]
