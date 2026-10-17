@@ -1,7 +1,7 @@
 name = "DeepSeek V4.1 Flash 1017"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 family = "deepseek"
-release_date = "2026-10-17"
+release_date = "2026-09-08"
 last_updated = "2026-09-08"
 attachment = true
 reasoning = true
@@ -13,13 +13,13 @@ type = "effort"
 values = ["none", "low", "high", "max"]
 
 [cost]
-input = 0.14
-output = 0.42
-cache_read = 0.0042
+input = 0.15
+output = 0.6
+cache_read = 0.003
 
 [limit]
-context = 1_048_576
-output = 1_048_576
+context = 1_000_000
+output = 384_000
 
 [modalities]
 input = ["text", "image"]
