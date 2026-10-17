@@ -1,0 +1,11 @@
+# Source: https://api.orcarouter.ai/api/pricing (tencent/hy4-preview-free, is_free_tier=true, free_base_model=tencent/hy4-preview, context_length 1_048_576)
+base_model = "tencent/hy4-preview"
+name = "Hy4 preview (free)"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_048_576
