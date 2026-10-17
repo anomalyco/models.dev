@@ -1,0 +1,19 @@
+# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
+# `reasoning_effort` through to the upstream model unchanged.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|high|max
+# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
+# Pricing: https://quicksilverpro.io/models/kimi-k3/ and https://quicksilverpro.io/pricing.json
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2.55
+output = 12.75
+cache_read = 0.255

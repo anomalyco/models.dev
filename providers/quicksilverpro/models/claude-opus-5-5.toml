@@ -1,0 +1,16 @@
+# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
+# `reasoning_effort` through to the upstream model unchanged.
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
+# Pricing: https://quicksilverpro.io/models/claude-opus-5-5/ and https://quicksilverpro.io/pricing.json
+base_model = "anthropic/claude-opus-5-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 3.2
+output = 16
+cache_read = 0.16
+cache_write = 4
