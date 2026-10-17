@@ -107,3 +107,14 @@ test("skips a model with no lab entry and republishes an unpriced one unchanged"
     inference.translateModel(inferenceModel({ pricing: undefined }), context({ "glm-5.3": authored })),
   ).toEqual({ id: "glm-5.3", model: authored as SyncedModel });
 });
+
+test("drops cost fields the endpoint no longer publishes", () => {
+  const built = buildInferenceModel(
+    inferenceModel({ pricing: { prompt: "0.0000009", completion: "0.000003" } }),
+    { base_model: "zhipuai/glm-5.3", cost: { input: 1, output: 2, cache_read: 0.1, cache_write: 1.5 } } as ExistingModel,
+  );
+
+  expect(built).toMatchObject({ cost: { input: 0.9, output: 3 } });
+  expect(built).not.toHaveProperty("cost.cache_read");
+  expect(built).not.toHaveProperty("cost.cache_write");
+});

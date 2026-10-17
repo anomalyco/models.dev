@@ -158,9 +158,9 @@ export function buildInferenceModel(model: CompleteInferenceModel, existing: Exi
   const cacheRead = model.pricing.input_cache_read === undefined
     ? undefined
     : perMillion(model.pricing.input_cache_read);
-  const { cache_read: _staleCacheRead, ...authoredCost } = current.cost ?? {};
+  // Cost is exactly what the endpoint meters; nothing authored survives, so a
+  // price the host stops publishing is removed rather than left stale.
   const cost = {
-    ...authoredCost,
     input,
     output: perMillion(model.pricing.completion),
     ...(cacheRead === undefined || cacheRead >= input ? {} : { cache_read: cacheRead }),
