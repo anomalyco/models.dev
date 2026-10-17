@@ -1,4 +1,6 @@
+# Effort: reasoning_effort = "none" | "high"
 # Budget: thinking_token_budget (integer reasoning tokens)
+# https://portal.neuralwatt.com/docs/api/chat-completions
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B"
 
@@ -17,7 +19,7 @@ output = 1.15
 cache_read = 0.029
 
 [limit]
-context = 131_056
+context = 262_128
 output = 131_056
 
 [modalities]

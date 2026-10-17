@@ -35,6 +35,7 @@ import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
+import { neuralwatt } from "./providers/neuralwatt.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
@@ -93,6 +94,12 @@ export interface SyncProvider<SourceModel> {
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
+  /**
+   * Rewrite local TOMLs absent from the source as status = "deprecated"
+   * instead of deleting or retaining them, so a delisted route leaves the
+   * catalog without losing its metadata.
+   */
+  deprecateMissing?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
   preserveDescriptions?: boolean;
@@ -176,6 +183,7 @@ export const providers: {
   mistral: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   nearai: SyncProvider<any>;
+  neuralwatt: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
@@ -221,6 +229,7 @@ export const providers: {
   mistral,
   "nano-gpt": nanoGpt,
   nearai,
+  neuralwatt,
   "novita-ai": novitaAi,
   ofox,
   "ollama-cloud": ollamaCloud,
@@ -258,7 +267,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "nearai", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "nearai", "neuralwatt", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -501,6 +510,45 @@ export async function syncProvider<SourceModel>(
     }
     if (missingReasoning.has(relativePath.slice(0, -5))) {
       unchanged++;
+      continue;
+    }
+    if (provider.deprecateMissing === true) {
+      const current = existing.get(relativePath);
+      const authored = current?.authored;
+      if (authored === undefined || authored.status === "deprecated") {
+        unchanged++;
+        continue;
+      }
+      if (current?.symlink === true && provider.preserveSymlinks === true) {
+        unchanged++;
+        continue;
+      }
+      if (options.newOnly) {
+        console.log(`Skipping deprecation in new-only mode: ${relativePath}`);
+        unchanged++;
+        continue;
+      }
+      const deprecated = SyncedAuthoredModel.safeParse(stripUndefined({
+        id: relativePath.slice(0, -5),
+        ...authored,
+        status: "deprecated",
+      }));
+      if (!deprecated.success) {
+        deprecated.error.cause = { provider: provider.id, path: relativePath };
+        throw deprecated.error;
+      }
+      const filePath = await safeWritePath(provider.modelsDir, relativePath, true);
+      const today = new Date().toISOString().slice(0, 10);
+      const content = `# Deprecated: absent from ${provider.name} catalog since ${today}\n`
+        + (current?.header ?? "")
+        + formatToml(deprecated.data);
+      files.push({ status: "updated", path: filePath });
+      if (options.dryRun) {
+        console.log(`Would deprecate ${relativePath}`);
+      } else {
+        if (current?.symlink === true) await rm(filePath, { force: true });
+        await Bun.write(filePath, content);
+      }
       continue;
     }
     if (provider.deleteMissing === false) {
