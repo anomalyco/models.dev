@@ -1,0 +1,24 @@
+name = "deepseek-v4.1-flash-1017"
+description = "DeepSeek V4.1 Flash 1017 is an open-weight multimodal model optimized for efficient reasoning, coding, and agentic workflows with a 1-million-token context window."
+release_date = "2026-10-17"
+last_updated = "2026-10-17"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.511
+output = 1.534
+cache_read = 0.128
+
+[limit]
+context = 1_048_576
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
