@@ -1,0 +1,14 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# The TEE deployment does not advertise tool support.
+base_model = "mistral/mistral-nemo"
+name = "Mistral Nemo Instruct 2407 TEE"
+tool_call = false
+
+[cost]
+input = 0.023275
+output = 0.09291
+cache_read = 0.0023275
+
+[limit]
+context = 131_072

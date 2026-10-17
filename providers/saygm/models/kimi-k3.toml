@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|high|max
+# Source: https://platform.kimi.ai/docs/api/models-overview (K3 always reasons).
+base_model = "moonshotai/kimi-k3"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2.7
+output = 13.5
+cache_read = 0.27

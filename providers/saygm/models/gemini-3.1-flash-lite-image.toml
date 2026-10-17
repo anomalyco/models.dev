@@ -1,0 +1,14 @@
+base_model = "google/gemini-3.1-flash-lite-image"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "high"]
+
+[cost]
+input = 0.17375
+output = 20.85
+input_audio = 0.17375
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.saygm.com/v1beta"

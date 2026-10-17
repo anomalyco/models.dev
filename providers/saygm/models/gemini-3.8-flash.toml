@@ -1,0 +1,15 @@
+base_model = "google/gemini-3.8-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.52125
+output = 2.60625
+cache_read = 0.052125
+input_audio = 0.52125
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.saygm.com/v1beta"

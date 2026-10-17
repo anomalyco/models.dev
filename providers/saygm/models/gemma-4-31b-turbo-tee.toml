@@ -1,0 +1,21 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Reasoning output: reasoning_content
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B Turbo TEE"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.114
+output = 0.3515
+cache_read = 0.0114
+
+[limit]
+context = 131_072
+output = 65_536

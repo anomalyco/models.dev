@@ -1,0 +1,21 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Reasoning output: reasoning_content
+base_model = "alibaba/qwen3-32b"
+name = "Qwen3 32B TEE"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.0988
+output = 0.3952
+cache_read = 0.00988
+
+[limit]
+context = 40_960
+output = 40_960

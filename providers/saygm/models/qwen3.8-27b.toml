@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = low|medium|xhigh
+# Source: https://huggingface.co/Qwen/Qwen3.8-27B
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Reasoning output: reasoning_content
+base_model = "alibaba/qwen3.8-27b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.1

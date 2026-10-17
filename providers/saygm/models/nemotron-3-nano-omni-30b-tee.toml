@@ -1,0 +1,19 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# The TEE deployment serves text only and advertises neither reasoning nor tool support.
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+name = "Nemotron 3 Nano Omni 30B TEE"
+attachment = false
+reasoning = false
+tool_call = false
+
+[cost]
+input = 0.023275
+output = 0.09291
+cache_read = 0.0023275
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text"]
