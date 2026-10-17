@@ -1,0 +1,46 @@
+# Model ID "amber" as used in the request field of
+# POST https://api.2ba.ai/v1/chat/completions (https://2ba.ai/docs, accessed 2026-09-29).
+# Provenance: amber is 2BA's own fine-tune, served exclusively by 2BA on GPUs
+# 2BA controls. It has no shared lab identity and is not a relay of another
+# provider's catalog model, hence a first-party provider entry without
+# base_model.
+# 2BA describes amber as its default multimodal coding model with text and
+# vision input (https://2ba.ai/static/llms.txt, accessed 2026-09-29).
+# release_date 2026-09-02 is the earliest public amber run on record
+# (SWE-bench Verified, https://2ba.ai/quality: "Amber run: 2 September 2026");
+# no separate launch announcement exists, so this date proxies first public
+# availability.
+# Context/output: the first-party serving stack runs --max-model-len 262144
+# and enforces no separate output cap, and the API accepts client
+# max_tokens up to that window. output = 262144 is therefore the hard
+# ceiling for a single response (prompt + completion must fit the window),
+# not a typical generation length.
+# Flat-rate subscription, so no [cost] block.
+name = "amber"
+description = "2BA's default multimodal coding model for coding agents, with text and vision input."
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+release_date = "2026-09-02"
+last_updated = "2026-09-29"
+
+[limit]
+context = 262_144 # provider states 256k context window
+output = 262_144 # no provider output cap; bounded only by the context window (see header)
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+# Effort control on the wire is publicly evidenced by
+# https://2ba.ai/quality ("Amber, extra-high reasoning" run). As first-party
+# host, the accepted values are low, medium, high, xhigh (default medium;
+# quality-page "extra-high" corresponds to xhigh). Served via the
+# chat template's reasoning_effort parameter.
+values = ["low", "medium", "high", "xhigh"]
+
+[interleaved]
+field = "reasoning_content"
