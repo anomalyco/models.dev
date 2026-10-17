@@ -1,0 +1,17 @@
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: gpt-6-luna.
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.04
+output = 0.2
+cache_read = 0.004
+cache_write = 0.05
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.08
+output = 0.3
+cache_read = 0.008
+cache_write = 0.1

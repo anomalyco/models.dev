@@ -1,0 +1,12 @@
+# Toggle: thinking.type = enabled|disabled
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28.
+# reasoning_effort is not listed: "none" does not disable reasoning here and levels are not graded.
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: hy4-preview.
+base_model = "tencent/hy4-preview"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.5838
+output = 1.7507
+cache_read = 0.0294
