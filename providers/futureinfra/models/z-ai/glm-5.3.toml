@@ -1,0 +1,17 @@
+# FutureInfra bills in KRW. USD = KRW / 1355.84 (open.er-api.com, 2026-10-01).
+# KRW per 1M tokens: input 396, output 6047
+base_model = "zhipuai/glm-5.3"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.2919
+output = 4.4597
+cache_read = 0.2335
+
+[limit]
+context = 1_048_576
+output = 943_718
