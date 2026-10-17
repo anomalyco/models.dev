@@ -1,0 +1,9 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id grok-4.3), USD per million tokens, read 2026-10-14
+# Effort: reasoning_effort = none|low|medium|high
+base_model = "xai/grok-4.3"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 0.75
+output = 1.5
+cache_read = 0.12

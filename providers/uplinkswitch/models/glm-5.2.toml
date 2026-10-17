@@ -1,0 +1,10 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id glm-5.2), USD per million tokens, read 2026-10-14
+# Effort: reasoning_effort = high|max
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 0.18
+output = 0.6
+cache_read = 0.045

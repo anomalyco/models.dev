@@ -1,0 +1,10 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id claude-haiku-5-5), USD per million tokens, read 2026-10-14
+# Toggle: thinking.type = enabled|disabled
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-haiku-5-5"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.06
+output = 0.15
+cache_read = 0.0125

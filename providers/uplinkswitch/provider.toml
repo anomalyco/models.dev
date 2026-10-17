@@ -1,0 +1,12 @@
+# UplinkSwitch is a multi-model relay with an OpenAI-compatible API (chat/completions, responses, models).
+# Request bodies pass through to each model's OpenAI-compatible route unchanged, so reasoning controls are
+# the underlying model's own chat-completions fields (reasoning_effort, thinking.type, enable_thinking,
+# thinking_budget, extra_body.google.thinking_config). Options below copy the lab entry for each model and
+# the same-surface relays in this repo; they were not re-probed against this host.
+# Catalog with prices: https://api.uplinkswitch.com/v1/catalog (also https://uplinkswitch.com/llms-full.txt)
+# Model metadata inherits from models/ via base_model; prices are UplinkSwitch's own, in USD per million tokens.
+name = "UplinkSwitch"
+env = ["UPLINKSWITCH_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.uplinkswitch.com/v1"
+doc = "https://uplinkswitch.com/guides/sdks"

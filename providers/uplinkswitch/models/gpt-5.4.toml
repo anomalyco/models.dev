@@ -1,0 +1,9 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id gpt-5.4), USD per million tokens, read 2026-10-14
+# Effort: reasoning_effort = none|low|medium|high|xhigh
+base_model = "openai/gpt-5.4"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.5
+output = 9.00
+cache_read = 0.15

@@ -1,0 +1,9 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id gemini-3.8-flash), USD per million tokens, read 2026-10-14
+# Effort: reasoning_effort = low|medium|high
+base_model = "google/gemini-3.8-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.45
+output = 2.25
+cache_read = 0.045

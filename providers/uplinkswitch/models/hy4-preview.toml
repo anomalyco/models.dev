@@ -1,0 +1,8 @@
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id hy4-preview), USD per million tokens, read 2026-10-14
+# Effort: reasoning_effort = none|high (none turns reasoning off)
+base_model = "tencent/hy4-preview"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.2502
+output = 0.75
