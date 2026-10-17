@@ -1,0 +1,19 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Limits: GET https://api.munito.ai/admin/v1/models (context_length, max_output_tokens), 2026-10-11.
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.23
+cache_read = 0.05
+output = 2.5
+
+[limit]
+output = 235_929

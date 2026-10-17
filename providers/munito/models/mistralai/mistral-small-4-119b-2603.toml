@@ -1,0 +1,16 @@
+# Off is reasoning_effort=none; on is reasoning_effort=high. No toggle.
+# Limits: GET https://api.munito.ai/admin/v1/models (context_length, max_output_tokens), 2026-10-11.
+base_model = "mistral/mistral-small-2603"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.16
+cache_read = 0.016
+output = 0.63
+
+[limit]
+context = 262_144
+output = 235_929

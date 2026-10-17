@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = low|high|max (no separate on/off control on Munito)
+# Limits: GET https://api.munito.ai/admin/v1/models (context_length, max_output_tokens), 2026-10-11.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+cache_read = 0.03
+output = 0.5
+
+[limit]
+context = 1_048_576
+output = 943_718
