@@ -1,3 +1,9 @@
+# Kenari relay of openai/gpt-image-2 - authored 2026-10-02 from the provider's public API:
+#   https://kenari.id/v1/models          (capabilities, context, reasoning options)
+#   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
+# IDR prices were converted to USD per 1M tokens by dividing by that rate.
+# Billed per unit, not per token, so the per-token `cost` above is 0:
+#   USD 0.0071 per output image - output_image on the images endpoint
 base_model = "openai/gpt-image-2"
 
 [cost]
