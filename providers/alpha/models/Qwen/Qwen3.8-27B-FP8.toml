@@ -1,0 +1,23 @@
+# Effort: reasoning_effort = none|low|medium|xhigh (xhigh is the default; none turns thinking off).
+# Verified live against POST https://alpha.sh/v1/chat/completions on 2026-10-03; other values are rejected.
+# Pricing and context: GET https://alpha.sh/v1/models (2026-10-03). Served as FP8 with a 32K window.
+# Image input verified live; video input not offered on this host.
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B (FP8)"
+interleaved = { field = "reasoning_content" }
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[cost]
+input = 0.20
+output = 2.00
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

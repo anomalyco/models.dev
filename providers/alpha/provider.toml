@@ -1,0 +1,9 @@
+# Alpha.sh: open-weight models on an OpenAI-compatible API (POST https://alpha.sh/v1/chat/completions),
+# served on NVIDIA GPUs in the United States. Model ids are the Hugging Face repository ids.
+# Prices and limits: GET https://alpha.sh/v1/models (pricing.input / pricing.output in USD per 1M tokens,
+# context_length), checked 2026-10-03.
+name = "Alpha.sh"
+env = ["ALPHA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://alpha.sh"
+api = "https://alpha.sh/v1"
