@@ -1,0 +1,18 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = medium|high|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = medium|high|xhigh
+# /v1/responses: reasoning.effort = medium|high|xhigh
+base_model = "openai/gpt-5.4-pro"
+
+reasoning_options = [
+  { type = "effort", values = ["medium", "high", "xhigh"] },
+]
+
+[cost]
+input = 30
+output = 180
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 60
+output = 270
