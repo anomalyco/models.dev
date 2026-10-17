@@ -1,3 +1,4 @@
+# Rate limits: https://platform.claude.com/docs/en/api/rate-limits (checked 2026-10-03)
 base_model = "anthropic/claude-haiku-4-5"
 description = "Fast Claude lane for lightweight agents, office tasks, and responsive chat"
 structured_output = true
@@ -11,3 +12,21 @@ input = 1
 output = 5
 cache_read = 0.1
 cache_write = 1.25
+
+[[rate_limits]]
+tier = "Start"
+rpm = 1_000
+input_tpm = 2_000_000
+output_tpm = 400_000
+
+[[rate_limits]]
+tier = "Build"
+rpm = 5_000
+input_tpm = 5_000_000
+output_tpm = 1_000_000
+
+[[rate_limits]]
+tier = "Scale"
+rpm = 10_000
+input_tpm = 10_000_000
+output_tpm = 2_000_000

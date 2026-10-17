@@ -14,6 +14,8 @@ import {
   escapeHtml,
   formatNumber,
   knowledgeText,
+  rateLimitDetails,
+  rateLimitSummary,
   renderModalityIcon,
   renderModalities,
   sortDate,
@@ -1075,7 +1077,7 @@ function ProviderModelsTable(props: {
   showLab?: boolean;
 }) {
   const showLab = props.showLab ?? props.mode === "model";
-  const columns = showLab ? 10 : 9;
+  const columns = showLab ? 11 : 10;
 
   return (
     <table data-enhanced-table>
@@ -1092,6 +1094,7 @@ function ProviderModelsTable(props: {
           <SortableTh type="number">Context</SortableTh>
           <SortableTh type="number">Output</SortableTh>
           <SortableTh type="number">Price</SortableTh>
+          <SortableTh type="number">Rate Limit</SortableTh>
           <SortableTh>Reasoning</SortableTh>
           <SortableTh>Tool Call</SortableTh>
           <SortableTh>Structured</SortableTh>
@@ -1149,6 +1152,12 @@ function ProviderModelsTable(props: {
               </td>
               <td class="numeric" data-sort={sortNumber(entry.model.cost?.input)}>
                 {costSummary(entry.model.cost?.input, entry.model.cost?.output)}
+              </td>
+              <td
+                data-sort={sortNumber(entry.model.rate_limits?.[0]?.rpm)}
+                title={rateLimitDetails(entry.model.rate_limits)}
+              >
+                {rateLimitSummary(entry.model.rate_limits?.[0])}
               </td>
               <td data-sort={booleanText(entry.model.reasoning)}>
                 {booleanText(entry.model.reasoning)}
