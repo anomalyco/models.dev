@@ -1,0 +1,23 @@
+# Tencent Token Plan International, Singapore. Credits subscription has no
+# per-token USD price. This vendor-direct alias supports thinking.type and
+# reasoning_effort low, high, and max on the documented OpenAI-compatible path.
+# Sources: https://www.tencentcloud.com/document/product/1300/78934
+# https://cloud.tencent.cn/document/product/1823/132248
+# Toggle: thinking.type = enabled|disabled
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

@@ -1,0 +1,26 @@
+# Tencent Token Plan International, Singapore. Credits subscription has no
+# per-token USD price. Host reasoning_effort supports none and high, and the
+# current model specification documents structured output.
+# Sources: https://www.tencentcloud.com/document/product/1300/78934
+# https://www.tencentcloud.com/document/product/1300/80637
+base_model = "tencent/hy4-preview"
+
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+# The documented host input ceiling is 960k; context and output are inherited
+# from the lab entry.
+[limit]
+input = 960_000
