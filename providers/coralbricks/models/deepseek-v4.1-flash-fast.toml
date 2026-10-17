@@ -1,5 +1,7 @@
-# CoralBricks renamed its public model IDs on 2026-10-04: deepseek-v4.1-flash-fast is the advertised ID for the model
-# that deepseek-v4.1-flash-fast-fp4 names. Both resolve to the same model at the same rates; the older ID keeps working.
+# deepseek-v4.1-flash-fast is the one ID CoralBricks advertises for this model since it renamed its public model IDs on
+# 2026-10-04. The earlier ID, deepseek-v4.1-flash-fast-fp4, was listed here beside it until 2026-10-13. The gateway still
+# accepts it as an alias at the same rates, and https://www.coralbricks.ai/api/public/models lists it under
+# deprecatedSlugs for this model.
 # Pricing per https://www.coralbricks.ai/pricing and https://www.coralbricks.ai/api/public/models (accessed 2026-10-10):
 # input $0.01, output $1.20 per 1M tokens. A retained (cache-written) prompt token bills the input rate plus a $0.08
 # cache-write add-on once, so cache_write below is the full $0.09; cached input is free.
