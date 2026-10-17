@@ -7,6 +7,7 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 import {
   factorBaseModel,
   modelMetadata,
+  normalizeModelSlug,
   resolveModelMetadataBaseModel,
 } from "./openrouter.js";
 
@@ -14,7 +15,10 @@ import {
 // Constants
 // ========================================
 
-const API_ENDPOINT = "https://api.edenai.run/v3/models";
+// One entry per routable model name, with the providers that sell it nested
+// under `endpoints`. Requests name the model only and Eden AI picks the
+// provider: https://www.edenai.co/docs/v3/llms/provider-routing
+const API_ENDPOINT = "https://api.edenai.run/v3/models?view=models";
 const MODELS_DIR = path.join(
   import.meta.dirname,
   "..",
@@ -41,10 +45,6 @@ const ACCEPTED_EFFORTS = new Set([
 ]);
 
 const REGION_SUFFIX = /@[a-z0-9-]+$/i;
-const DOTTED_VENDOR = /^[a-z0-9-]+\./;
-const VERSION_TAIL = /-v\d+:\d+$/;
-const DATE_TAIL = /-\d{8}$/;
-const DATABRICKS_PREFIX = "databricks-";
 const TIER_KEY = /^input_cost_per_token_above_(\d+)k_tokens$/;
 
 const MODALITY_BY_EDENAI: Record<
@@ -58,56 +58,9 @@ const MODALITY_BY_EDENAI: Record<
   file: "pdf",
 };
 
-// Upstreams that are the lab's own API for models under that namespace.
-// The first entry is the unsuffixed display route when several first-party
-// hosts exist (Google AI Studio vs Vertex AI).
-const LAB_UPSTREAMS: Record<string, readonly string[]> = {
-  alibaba: ["qwen"],
-  amazon: ["amazon"],
-  anthropic: ["anthropic"],
-  cohere: ["cohere"],
-  deepseek: ["deepseek"],
-  google: ["google", "vertex"],
-  microsoft: ["microsoft"],
-  minimax: ["minimax"],
-  mistral: ["mistral"],
-  moonshotai: ["moonshot"],
-  openai: ["openai"],
-  perplexity: ["perplexityai"],
-  xai: ["xai"],
-  zhipuai: ["zai"],
-};
-
-const ROUTE_LABELS: Record<string, string> = {
-  amazon: "Amazon Bedrock",
-  azure: "Azure",
-  cerebras: "Cerebras",
-  cloudflare: "Cloudflare",
-  compactifai: "CompactifAI",
-  databricks: "Databricks",
-  deepinfra: "Deep Infra",
-  fireworks_ai: "Fireworks AI",
-  flexai: "FlexAI",
-  groq: "Groq",
-  infomaniak: "Infomaniak",
-  ionos: "IONOS",
-  lilac: "Lilac",
-  nebius: "Nebius",
-  ovhcloud: "OVHcloud",
-  qwen: "Alibaba",
-  scaleway: "Scaleway",
-  tensorx: "TensorX",
-  together_ai: "Together AI",
-  vertex: "Vertex AI",
-};
-
 type ReasoningOption = NonNullable<
   SyncedFullModel["reasoning_options"]
 >[number];
-
-const canonicalNameByID = new Map<string, string>();
-
-let firstPartyBaseModels: ReadonlySet<string> = new Set();
 
 // ========================================
 // Schemas
@@ -133,16 +86,20 @@ const EdenAICapabilities = z
   })
   .passthrough();
 
-export const EdenAIModel = z
+export const EdenAIEndpoint = z
   .object({
     id: z.string().min(1),
-    owned_by: z.string().min(1),
-    model_name: z.string().min(1),
     context_length: z.number().nullish(),
     capabilities: EdenAICapabilities,
     pricing: EdenAIPricing.nullish(),
-    list_pricing: EdenAIPricing.nullish(),
-    alias_of: z.string().nullish(),
+  })
+  .passthrough();
+
+export const EdenAIModel = z
+  .object({
+    id: z.string().min(1),
+    owned_by: z.string(),
+    endpoints: z.array(EdenAIEndpoint),
   })
   .passthrough();
 
@@ -153,7 +110,9 @@ export const EdenAIResponse = z
   })
   .passthrough();
 
+export type EdenAIEndpoint = z.infer<typeof EdenAIEndpoint>;
 export type EdenAIModel = z.infer<typeof EdenAIModel>;
+type EdenAIPricing = z.infer<typeof EdenAIPricing>;
 
 // ========================================
 // Base model resolution
@@ -163,74 +122,14 @@ function baseModelExists(modelID: string) {
   return existsSync(path.join(MODELS_DIR, `${modelID}.toml`));
 }
 
-// Ids are `<upstream>/<native id>`, so each upstream keeps its own convention.
-function baseModelCandidates(modelName: string) {
-  const candidates = [modelName];
-
-  if (DOTTED_VENDOR.test(modelName)) {
-    const dotted = modelName.replace(".", "/");
-    candidates.push(
-      dotted,
-      dotted.replace(VERSION_TAIL, "").replace(DATE_TAIL, ""),
-    );
-  }
-
-  const last = modelName.split("/").at(-1) ?? modelName;
-  candidates.push(last);
-  if (last.startsWith(DATABRICKS_PREFIX)) {
-    candidates.push(last.slice(DATABRICKS_PREFIX.length));
-  }
-  candidates.push(last.replace(VERSION_TAIL, "").replace(DATE_TAIL, ""));
-
-  return [...new Set(candidates)].filter((candidate) => candidate.length > 0);
-}
-
+// Eden AI names a model after its lab's id, so the lab tree resolves it
+// directly (`claude-sonnet-5.5` to `anthropic/claude-sonnet-5-5`).
 export function resolveEdenAIBaseModel(model: EdenAIModel) {
-  const names = [model.model_name.replace(REGION_SUFFIX, "")];
-  if (model.alias_of != null) {
-    const target = model.alias_of.split("/").slice(1).join("/");
-    if (target.length > 0) names.push(target);
-  }
-
-  for (const name of names) {
-    for (const candidate of baseModelCandidates(name)) {
-      const resolved = resolveModelMetadataBaseModel(candidate);
-      if (resolved !== undefined && baseModelExists(resolved)) return resolved;
-    }
+  for (const candidate of [`${model.owned_by}/${model.id}`, model.id]) {
+    const resolved = resolveModelMetadataBaseModel(candidate);
+    if (resolved !== undefined && baseModelExists(resolved)) return resolved;
   }
   return undefined;
-}
-
-function isFirstPartyRoute(model: EdenAIModel, baseModel: string) {
-  const lab = baseModel.split("/")[0] ?? "";
-  return (LAB_UPSTREAMS[lab] ?? []).includes(model.owned_by);
-}
-
-export function collectFirstPartyBaseModels(models: readonly EdenAIModel[]) {
-  const bases = new Set<string>();
-  for (const model of models) {
-    const baseModel = resolveEdenAIBaseModel(model);
-    if (baseModel !== undefined && isFirstPartyRoute(model, baseModel)) {
-      bases.add(baseModel);
-    }
-  }
-  return bases;
-}
-
-function canonicalModelName(baseModel: string) {
-  let cached = canonicalNameByID.get(baseModel);
-  if (cached === undefined) {
-    try {
-      const toml = Bun.TOML.parse(
-        readFileSync(path.join(MODELS_DIR, `${baseModel}.toml`), "utf8"),
-      ) as { name?: unknown };
-      cached = typeof toml.name === "string" ? toml.name : "";
-    } catch {
-      cached = "";
-    }
-    canonicalNameByID.set(baseModel, cached);
-  }
-  return cached === "" ? undefined : cached;
 }
 
 function hasOutputLimit(baseModel: string) {
@@ -242,52 +141,15 @@ function hasOutputLimit(baseModel: string) {
   );
 }
 
-function titleCaseSlug(slug: string) {
-  return slug
-    .split(/[-_]/)
-    .filter((word) => word.length > 0)
-    .map((word) =>
-      word.toLowerCase() === "gpt"
-        ? "GPT"
-        : word[0]!.toUpperCase() + word.slice(1).toLowerCase(),
-    )
-    .join(" ");
-}
-
-function isLatestAlias(model: EdenAIModel) {
-  if (model.alias_of == null) return false;
-  const id = model.id.replace(REGION_SUFFIX, "");
-  const target = model.alias_of.replace(REGION_SUFFIX, "");
-  if (id.toLowerCase() === target.toLowerCase()) return false;
-  const slug = id.split("/").at(-1) ?? id;
-  return /(?:^|-)latest$/i.test(slug);
-}
-
-function routeLabel(model: EdenAIModel, baseModel: string) {
-  const lab = baseModel.split("/")[0] ?? "";
-  const primary = LAB_UPSTREAMS[lab]?.[0];
-  if (model.owned_by === primary) return undefined;
-  return ROUTE_LABELS[model.owned_by] ?? titleCaseSlug(model.owned_by);
-}
-
+// A name that resolves onto another model's lab entry (`glm-5.3-fast` onto
+// `glm-5.3`) is a different offering, so it must not share that model's name.
 function displayName(model: EdenAIModel, baseModel: string) {
-  const region = REGION_SUFFIX.exec(model.id)?.[0].slice(1);
-  const latest = isLatestAlias(model);
-  const route = routeLabel(model, baseModel);
-  if (region === undefined && !latest && route === undefined) return undefined;
-
-  const canonical = canonicalModelName(baseModel);
-  if (canonical === undefined) return undefined;
-
-  const head = latest
-    ? titleCaseSlug(model.id.replace(REGION_SUFFIX, "").split("/").at(-1) ?? "")
-    : canonical;
-  const details = [
-    ...(latest ? [canonical] : []),
-    ...(route !== undefined ? [route] : []),
-    ...(region !== undefined ? [region.toUpperCase()] : []),
-  ];
-  return `${head} (${details.join(", ")})`;
+  const baseSlug = baseModel.split("/").at(-1) ?? baseModel;
+  if (normalizeModelSlug(model.id) === normalizeModelSlug(baseSlug)) {
+    return undefined;
+  }
+  const canonical = modelMetadata(baseModel).name;
+  return typeof canonical === "string" ? `${canonical} (${model.id})` : undefined;
 }
 
 // ========================================
@@ -394,6 +256,76 @@ export function reasoningOptionsFor(
 }
 
 // ========================================
+// Provider selection
+// ========================================
+
+type RoutableEndpoint = EdenAIEndpoint & {
+  pricing: EdenAIPricing & {
+    input_cost_per_token: number;
+    output_cost_per_token: number;
+  };
+};
+
+// What the router accepts as a provider: it drops any whose effective price
+// lacks an input or output rate. A `@region` endpoint is a regional pin that a
+// bare model name never reaches on the global endpoint.
+function isRoutable(endpoint: EdenAIEndpoint): endpoint is RoutableEndpoint {
+  return (
+    !REGION_SUFFIX.test(endpoint.id) &&
+    endpoint.pricing?.input_cost_per_token != null &&
+    endpoint.pricing?.output_cost_per_token != null
+  );
+}
+
+// Input, output and cache-read rates at the precision this catalog publishes,
+// so float noise in a converted rate never decides the order. A provider that
+// lists no cache-read rate bills cache reads as input.
+function sortRates({ pricing }: RoutableEndpoint) {
+  return [
+    pricePerMillion(pricing.input_cost_per_token),
+    pricePerMillion(pricing.output_cost_per_token),
+    pricePerMillion(
+      pricing.cache_read_input_token_cost ?? pricing.input_cost_per_token,
+    ),
+  ] as const;
+}
+
+// Cheapest input rate, then output rate, as Eden AI's default `cost` routing
+// ranks providers. Providers often tie on both, so the cache-read rate breaks
+// the tie before the id.
+function byPrice(a: RoutableEndpoint, b: RoutableEndpoint) {
+  const [aInput, aOutput, aCacheRead] = sortRates(a);
+  const [bInput, bOutput, bCacheRead] = sortRates(b);
+  return (
+    aInput - bInput ||
+    aOutput - bOutput ||
+    aCacheRead - bCacheRead ||
+    a.id.localeCompare(b.id)
+  );
+}
+
+// Routing does not filter on capability, so a model can do what any of its
+// providers can.
+function anyProvider(
+  endpoints: readonly EdenAIEndpoint[],
+  flag: "supports_function_calling" | "supports_response_schema",
+) {
+  const values = endpoints
+    .map((endpoint) => endpoint.capabilities[flag])
+    .filter((value) => value !== undefined);
+  return values.length > 0 ? values.includes(true) : undefined;
+}
+
+// Routing skips providers whose window cannot hold the request, so the
+// largest window is reachable.
+function largestContext(endpoints: readonly EdenAIEndpoint[]) {
+  return (
+    Math.max(0, ...endpoints.map((endpoint) => endpoint.context_length ?? 0)) ||
+    undefined
+  );
+}
+
+// ========================================
 // Cost
 // ========================================
 
@@ -440,22 +372,16 @@ function costTiers(pricing: Record<string, unknown>) {
   });
 }
 
+// `pricing` is what Eden AI charges, after any discount on the model; it is
+// the same for every caller.
 function buildCost(
-  model: EdenAIModel,
+  pricing: RoutableEndpoint["pricing"],
   reasoning: boolean,
 ): SyncedFullModel["cost"] {
-  // `pricing` carries account-level discounts; `list_pricing` is the public rate.
-  const pricing = model.list_pricing ?? model.pricing;
-  if (pricing == null) return undefined;
-
-  const input = pricing.input_cost_per_token;
-  const output = pricing.output_cost_per_token;
-  if (input == null || output == null) return undefined;
-
   const tiers = costTiers(pricing);
   return {
-    input: pricePerMillion(input),
-    output: pricePerMillion(output),
+    input: pricePerMillion(pricing.input_cost_per_token),
+    output: pricePerMillion(pricing.output_cost_per_token),
     reasoning: reasoning
       ? chargedPricePerMillion(pricing.output_cost_per_reasoning_token)
       : undefined,
@@ -472,12 +398,14 @@ function buildCost(
 // Model translation
 // ========================================
 
-function mapModalities(values: readonly string[] | null | undefined) {
-  if (values == null) return undefined;
-
+function mapModalities(
+  endpoints: readonly EdenAIEndpoint[],
+  key: "input_modalities" | "output_modalities",
+) {
   const mapped = [
     ...new Set(
-      values
+      endpoints
+        .flatMap((endpoint) => endpoint.capabilities[key] ?? [])
         .map((value) => MODALITY_BY_EDENAI[value.toLowerCase()])
         .filter(
           (value): value is NonNullable<typeof value> => value !== undefined,
@@ -490,23 +418,19 @@ function mapModalities(values: readonly string[] | null | undefined) {
 export function buildEdenAIModel(
   model: EdenAIModel,
   existing?: ExistingModel,
-  firstParty: ReadonlySet<string> = firstPartyBaseModels,
 ): SyncedModel | undefined {
   const baseModel = resolveEdenAIBaseModel(model);
   // Eden AI relays other labs' models only, so an entry needs its lab metadata.
   if (baseModel === undefined) return undefined;
   // The catalog reports no output limit, so the base has to resolve one.
   if (!hasOutputLimit(baseModel)) return undefined;
-  // Where Eden AI relays the lab's own API, that route is the entry. Models
-  // with no first-party route keep every route, since their prices differ and
-  // there is no canonical one to pick.
-  if (firstParty.has(baseModel) && !isFirstPartyRoute(model, baseModel)) {
-    return undefined;
-  }
 
-  const capabilities = model.capabilities;
-  const input = mapModalities(capabilities.input_modalities);
-  const output = mapModalities(capabilities.output_modalities);
+  const routable = model.endpoints.filter(isRoutable).sort(byPrice);
+  const cheapest = routable[0];
+  if (cheapest === undefined) return undefined;
+
+  const input = mapModalities(routable, "input_modalities");
+  const output = mapModalities(routable, "output_modalities");
   const modalities =
     input !== undefined && output !== undefined ? { input, output } : undefined;
 
@@ -518,10 +442,8 @@ export function buildEdenAIModel(
     : undefined;
   if (reasoning && reasoningOptions === undefined) return undefined;
 
-  const limit =
-    model.context_length != null && model.context_length > 0
-      ? { context: model.context_length }
-      : undefined;
+  const context = largestContext(routable);
+  const limit = context !== undefined ? { context } : undefined;
 
   return factorBaseModel(
     baseModel,
@@ -530,9 +452,9 @@ export function buildEdenAIModel(
       modalities,
       attachment: input?.some((value) => value !== "text"),
       reasoning_options: reasoningOptions,
-      tool_call: capabilities.supports_function_calling,
-      structured_output: capabilities.supports_response_schema,
-      cost: buildCost(model, reasoning),
+      tool_call: anyProvider(routable, "supports_function_calling"),
+      structured_output: anyProvider(routable, "supports_response_schema"),
+      cost: buildCost(cheapest.pricing, reasoning),
       limit,
     },
     limit,
@@ -559,21 +481,7 @@ export const edenai = {
     return response.json();
   },
   parseModels(raw) {
-    const unique = new Map<string, EdenAIModel>();
-    for (const model of EdenAIResponse.parse(raw).data) {
-      const key = model.id.toLowerCase();
-      const previous = unique.get(key);
-      // Eden AI publishes case-only duplicates that collide on macOS. Keep the
-      // lowercase API ID, but retain context metadata supplied by its duplicate.
-      const preferred = model.id === key ? model : previous ?? model;
-      unique.set(key, {
-        ...preferred,
-        context_length: preferred.context_length ?? previous?.context_length ?? model.context_length,
-      });
-    }
-    const models = [...unique.values()];
-    firstPartyBaseModels = collectFirstPartyBaseModels(models);
-    return models;
+    return EdenAIResponse.parse(raw).data;
   },
   translateModel(model, context) {
     const built = buildEdenAIModel(model, context.existing(model.id));

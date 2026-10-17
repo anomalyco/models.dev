@@ -154,13 +154,15 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
 ## Eden AI Notes
 
-- Source endpoint: `https://api.edenai.run/v3/models`; no authentication required.
-- Latest aliases (`alias_of` plus an ID ending in `-latest`) get a distinct display name such as `Claude Fable Latest (Claude Fable 5.1)` so they do not collide with the versioned target in UIs that key on `name`. Case-only `alias_of` duplicates are not treated as latest aliases.
-- Extra labels (current target, host, region) share one parenthetical, e.g. `Gemini Flash Latest (Gemini 3.8 Flash, Vertex AI)` and `GPT OSS 120B (Deep Infra)`. The lab's own API keeps the unsuffixed canonical name; other hosts (Vertex AI, Deep Infra, Groq, Together AI, …) are named.
+- Source endpoint: `https://api.edenai.run/v3/models?view=models`; no authentication required. Each entry is a model name Eden AI routes (`gpt-5`, `claude-sonnet-5.5`) with the providers serving it under `endpoints`. A request names the model and Eden AI picks the provider.
+- One catalog entry per model name, factored onto the lab entry the name resolves to. Names with no lab entry are skipped.
+- Cost is the cheapest routable provider's `pricing`, the rate every caller pays after model-level discounts, which is what Eden AI's default cost routing targets. Rates are compared at published precision, with the cache-read rate breaking ties. `@region` endpoints are regional pins and providers without an input and output rate are never routed, so neither is considered.
+- Context is the largest provider window. Tool calling, structured output and input modalities are the union across providers: routing skips providers whose window is too small, but does not filter on capability.
+- A name that resolves onto another model's lab entry (`glm-5.3-fast` onto `zhipuai/glm-5.3`) gets a display name such as `GLM-5.3 (glm-5.3-fast)` so it does not collide with that model in UIs that key on `name`.
 - Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels.
-- When the effort mapper cannot resolve controls, preserve the existing route's authored `reasoning_options` while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
+- When the effort mapper cannot resolve controls, preserve the existing entry's authored `reasoning_options` while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
 - New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
-- Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
+- Removal of names absent from the upstream catalog is unchanged.
 
 ## CrossModel Notes
 
