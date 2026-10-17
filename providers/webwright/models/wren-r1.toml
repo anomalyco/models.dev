@@ -1,0 +1,21 @@
+name = "Wren R1"
+description = "WebWright's Wren R1 chat model for building and running web applications, served over an OpenAI-compatible API with tool calling"
+release_date = "2026-06-22"
+last_updated = "2026-06-22"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.40
+output = 1.60
+
+[limit]
+context = 200000
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]
