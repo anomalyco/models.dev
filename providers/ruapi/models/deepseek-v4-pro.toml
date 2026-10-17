@@ -1,0 +1,22 @@
+# Pricing: https://www.ruapi.ai/pricing (standard tier, USD per 1M tokens, accessed 2026-10-16)
+# OpenAI-compatible POST https://www.ruapi.ai/v1/chat/completions; thinking and reasoning_effort are forwarded unchanged.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Reasoning tokens are billed at the output rate.
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.584
+output = 4.752
+reasoning = 4.752
+cache_read = 0.06

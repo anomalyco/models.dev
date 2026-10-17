@@ -1,0 +1,9 @@
+# RuAPI: one API key for Claude, GPT, DeepSeek and other models, available from Russia.
+# Claude models are served over the native Anthropic Messages API (see each model's [provider] block),
+# everything else over the OpenAI-compatible Chat Completions API.
+# Prices: https://www.ruapi.ai/pricing (standard tier, USD per 1M tokens, accessed 2026-10-16).
+name = "RuAPI"
+npm = "@ai-sdk/openai-compatible"
+env = ["RUAPI_API_KEY"]
+api = "https://www.ruapi.ai/v1"
+doc = "https://www.ruapi.ai/pricing?lng=en"

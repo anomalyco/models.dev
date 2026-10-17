@@ -1,0 +1,10 @@
+# Pricing: https://www.ruapi.ai/pricing (standard tier, USD per 1M tokens, accessed 2026-10-16)
+# OpenAI-compatible POST https://www.ruapi.ai/v1/chat/completions; reasoning_effort is forwarded unchanged.
+# Effort: reasoning_effort = none|low|medium|high|xhigh
+base_model = "openai/gpt-5.5"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 6.00
+output = 36.00
+cache_read = 0.60

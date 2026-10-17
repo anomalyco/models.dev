@@ -1,0 +1,15 @@
+# Pricing: https://www.ruapi.ai/pricing (standard tier, USD per 1M tokens, accessed 2026-10-16)
+# Served over the native Anthropic Messages API (POST https://www.ruapi.ai/v1/messages); cache_control is forwarded unchanged.
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-opus-5-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4.80
+output = 24.00
+cache_read = 0.24
+cache_write = 6.00
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://www.ruapi.ai/v1"
