@@ -1,0 +1,8 @@
+# Model catalog: https://api.prbycode.com/v1/models
+# PrByCode is subscription-based and does not publish per-token USD pricing.
+# Provider-model [cost] blocks are intentionally omitted rather than inventing token prices.
+name = "PrByCode"
+env = ["PRBYCODE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.prbycode.com/v1"
+doc = "https://prbycode.com"
