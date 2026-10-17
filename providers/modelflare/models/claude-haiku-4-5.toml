@@ -1,0 +1,10 @@
+# Modelflare ID "claude-haiku-4-5" from GET https://modelflare.dev/v1/models (2026-10-15).
+# Effort: $.reasoning_effort on /v1/chat/completions; on /v1/chat/completions reasoning_effort=low|medium|high changes output length live (2026-10-15); no Messages-style budget field claimed.
+# Cost: list price from https://modelflare.dev/api/pricing (2026-10-15): input_price=1.0 USD/MTok, output = input_price * completion_ratio (5.0), cache_read = input_price * cache_ratio (0.1).
+base_model = "anthropic/claude-haiku-4-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.0
+output = 5.0
+cache_read = 0.1

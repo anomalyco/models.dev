@@ -1,0 +1,10 @@
+# Modelflare ID "kimi-k3" from GET https://modelflare.dev/v1/models (2026-10-15).
+# Effort: $.reasoning_effort on /v1/chat/completions; matches first-party providers/moonshotai effort set (always thinks, no toggle); low/high/max return reasoning_tokens live.
+# Cost: list price from https://modelflare.dev/api/pricing (2026-10-15): input_price=2.85714 USD/MTok, output = input_price * completion_ratio (5.0), cache_read = input_price * cache_ratio (0.1).
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 2.85714
+output = 14.2857
+cache_read = 0.285714
