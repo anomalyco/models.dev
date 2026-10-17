@@ -1,0 +1,28 @@
+name = "DeepSeek V4.1 Flash 1017 Thinking"
+description = "The October 17, 2026 snapshot of DeepSeek V4.1 Flash supports text and image input, tool calling, and optional reasoning with low, high, and max effort. It has a shared 1,048,576-token context window and supports up to 393,216 output tokens within the remaining context. Released under the MIT license."
+family = "deepseek"
+release_date = "2026-10-17"
+last_updated = "2026-10-17"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.003
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 393_216
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
