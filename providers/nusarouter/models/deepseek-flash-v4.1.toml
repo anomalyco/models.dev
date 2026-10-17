@@ -1,0 +1,15 @@
+# Source: NusaRouter public catalog https://api.nusarouter.web.id/public/catalog (accessed 2026-09-29).
+# Rates are IDR per 1M tokens on that feed; converted to USD at the platform's stored
+# USD/IDR rate 17_984.765665 (origin automatic, 2026-09-29).
+# The relay exposes only `reasoning_effort` (no thinking on/off), matching same-surface peers.
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.000897
+output = 0.003587
+cache_read = 0.000897
+
+[limit]
+context = 1_048_576
+output = 138_000

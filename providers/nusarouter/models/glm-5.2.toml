@@ -1,0 +1,14 @@
+# Source: NusaRouter public catalog https://api.nusarouter.web.id/public/catalog (accessed 2026-09-29).
+# Rates are IDR per 1M tokens on that feed; converted to USD at the platform's stored
+# USD/IDR rate 17_984.765665 (origin automatic, 2026-09-29).
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 0.025111
+output = 0.078919
+cache_read = 0.025111
+
+[limit]
+context = 200_000
+output = 128_000
