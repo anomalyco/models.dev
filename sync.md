@@ -192,6 +192,16 @@ OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
 - Canonical OpenRouter model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
 
+## routing.run Notes
+
+- routing.run is implemented in `packages/core/src/sync/providers/routing-run.ts`.
+- Run it with `bun models:sync routing-run` or as part of the `aggregators` group.
+- Source endpoint: `https://api.routing.run/v1/models`; no authentication is required (the catalog is public).
+- Existing entries are updated with API-authoritative per-1M-token prices (converted from per-token USD strings) and served context/output limits, plus the listing's attachment and modality flags as overrides.
+- Capabilities, reasoning controls, dates, descriptions, and leading comments stay hand-authored; every route serves `reasoning_content` and exposes no request-side reasoning toggle, so `reasoning_options = []` is authored per file.
+- New priced chat models are not created automatically (`skipCreates`); each opens a deduped missing-model issue because the wire reasoning contract has to be hand-authored first.
+- Local models absent from the listing are retained (`deleteMissing: false`): a truncated response must not delete files, and retired routes also drop out of the catalog.
+
 ## Kilo Gateway Notes
 
 Kilo Gateway is implemented in `packages/core/src/sync/providers/kilo.ts`.
