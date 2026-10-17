@@ -1,0 +1,27 @@
+name = "deepseek-v4.1-flash-1017@eu"
+description = "DeepSeek V4.1 Flash 1017 is the October 2026 refresh of DeepSeek V4.1 Flash, a 552B parameter Mixture of Experts model with native vision. 1M token context window, 384K max output, thinking and non thinking modes, tool calling, structured JSON output and prompt caching. Served in the EU via Sference at $0.50 input, $0.05 cache read and $1.50 output per 1M tokens, with no data retention and no training on user data. Open weights on Hugging Face."
+family = "deepseek"
+release_date = "2026-10-17"
+last_updated = "2026-10-17"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.5
+output = 1.5
+cache_read = 0.05
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
