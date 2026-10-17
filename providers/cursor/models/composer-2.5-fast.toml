@@ -1,0 +1,28 @@
+# Faster Composer 2.5 variant, same intelligence at higher rates (sources accessed 2026-09-09):
+# - Pricing ($3.00/$15.00, cache read $0.50): https://cursor.com/docs/models-and-pricing
+# - "Faster variant with the same intelligence", fast is the default: https://cursor.com/blog/composer-2-5
+# - Capabilities (Agent, Thinking, Images; default context 200k): https://cursor.com/docs
+# - OpenCode catalog output (32k base tier): cursor-opencode-provider src/model-config.ts
+name = "Composer 2.5 Fast"
+description = "Faster variant of Cursor's Composer 2.5 with the same intelligence at higher rates"
+release_date = "2026-05-18"
+last_updated = "2026-05-18"
+attachment = true
+reasoning = true
+reasoning_options = []
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.5
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

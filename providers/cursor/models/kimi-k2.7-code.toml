@@ -1,0 +1,16 @@
+# Sources (accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Context/capabilities: https://cursor.com/docs
+# - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+base_model = "moonshotai/kimi-k2.7-code"
+
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[limit]
+context = 262_000
+output = 32_000
