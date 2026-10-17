@@ -1,0 +1,27 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: chat_template_kwargs.reasoning_effort = high|max
+# The catalog identifies deepseek-ai/DeepSeek-V4-Pro; Pro-0813 has a separate SKU.
+# Its encoder asserts: reasoning_effort in ['max', None, 'high'].
+# https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/main/encoding/encoding_dsv4.py
+# DeepSeek's current API alias serves Pro-0813, not this original checkpoint:
+# https://api-docs.deepseek.com/quick_start/pricing
+# Authenticated POST https://api.parasail.io/v1/chat/completions verified on 2026-09-23.
+# Probe user message: "Compute 17 * 23. Reply with only the integer."; temperature=0, seed=42.
+# Effort probes (max_tokens=1): usage.prompt_tokens high=17, max=96.
+# Toggle probes observed zero reasoning tokens when off and nonzero when on.
+# low/xhigh also returned 17 prompt tokens, not evidence of extra distinct effort levels.
+# Keep the original encoder's high|max set, not newer-alias low or OpenRouter's xhigh.
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 1.74
+output = 3.48
+cache_read = 0.1
+
+[limit]
+context = 1_048_576
+output = 1_048_576

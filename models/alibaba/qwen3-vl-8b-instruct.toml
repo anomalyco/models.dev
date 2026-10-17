@@ -1,0 +1,33 @@
+# https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct
+# Release: https://github.com/QwenLM/Qwen3-VL#news (2025-10-15).
+# https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct/blob/main/config.json
+# https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct/blob/main/generation_config.json
+# Native sequence context: text_config.max_position_embeddings = 262144.
+# The generation config contains sampling/EOS settings, not max_length/max_new_tokens.
+# The exact card's out_seq_length=16384 (VL) / 32768 (Text) are generation settings;
+# The repository labels its generation hyperparameters as evaluation-reproduction settings:
+# https://github.com/QwenLM/Qwen3-VL#evaluation-reproduction
+# These reviewed sources do not establish an independent native output cap; output is unspecified.
+name = "Qwen3 VL 8B Instruct"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+family = "qwen"
+release_date = "2025-10-15"
+last_updated = "2025-10-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct"

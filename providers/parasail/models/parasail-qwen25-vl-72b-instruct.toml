@@ -1,0 +1,34 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# Public table row: parasail-qwen25-vl-72b-instruct; Context window=128,000; Max output=128,000.
+# This is the host's explicit Max output cell, not a cap inferred from context.
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# File attachments: https://docs.parasail.io/parasail-docs/guides/multi-modal
+# The exact-SKU example reads a local file with open(image, "rb"), base64-encodes its bytes,
+# and sends image_url.url = "data:image/jpeg;base64,..." to parasail-qwen25-vl-72b-instruct.
+# Live check (2026-09-23): an inline PNG containing only "LIME 4827" was transcribed exactly
+# using max_tokens=32, temperature=0. This proves image-file input, not native PDF or file_id uploads.
+# The same guide documents video_url input separately from attachment support.
+# Tool calling requires tool_choice="required"; auto selection is not reliable:
+# https://docs.parasail.io/parasail-docs/guides/tool-function-calling
+# Structured-output API: https://docs.parasail.io/parasail-docs/guides/structured-output
+# Guide: "validate structured-output support with a small test request"; this exact ID is not in its table.
+# Live POST /v1/chat/completions (2026-09-23): response_format.type="json_schema", strict=true,
+# required marker:string enum ["SCHEMA_ONLY_7142"], additionalProperties=false.
+# Prompt: "Reply with the plain text BANANA and no other text."; temperature=0, max_tokens=48.
+# This exact SKU returned {"marker":"SCHEMA_ONLY_7142"}, not the requested plain text.
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
+attachment = true
+structured_output = true
+
+[cost]
+input = 0.8
+output = 1
+cache_read = 0.4
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video"]

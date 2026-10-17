@@ -1,0 +1,32 @@
+# Release: https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/
+# Model facts: https://github.com/meta-llama/llama-models/blob/main/models/llama3_2/MODEL_CARD.md
+# Tools: https://github.com/meta-llama/llama-models/blob/main/models/llama3_2/text_prompt_format.md
+# Meta's BF16 Llama 3.2 model definition sets max_seq_length = 131072:
+# https://github.com/meta-llama/llama-models/blob/main/models/sku_types.py
+# https://github.com/meta-llama/llama-models/blob/main/models/llama3/generation.py
+# The reference generator uses total_len = min(max_gen_len + max_prompt_len, params.max_seq_len).
+# These public sources establish shared sequence context, not an independent native output cap.
+# Native output is unspecified; no value is inferred from context or benchmark generation settings.
+name = "Llama 3.2 3B Instruct"
+description = "Instruction-tuned Llama text model for multilingual dialogue, summarization, and function calling"
+family = "llama"
+release_date = "2024-09-25"
+last_updated = "2024-09-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2023-12"
+open_weights = true
+license = "Llama 3.2 Community License"
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct"

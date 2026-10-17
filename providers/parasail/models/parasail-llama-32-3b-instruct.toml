@@ -1,0 +1,17 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# Public table row: parasail-llama-32-3b-instruct; Context window=131,072; Max output=131,072.
+# This serving limit does not establish an independent native output cap for the lab model.
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# The Instruct weights are distinct from Meta's pretrained base model.
+# Parasail's documented tools allowlist excludes this deployment:
+# https://docs.parasail.io/parasail-docs/guides/tool-function-calling
+base_model = "meta/llama-3.2-3b-instruct"
+tool_call = false
+
+[cost]
+input = 0.05
+output = 0.33
+
+[limit]
+output = 131_072

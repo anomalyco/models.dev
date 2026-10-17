@@ -1,0 +1,22 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Toggle: chat_template_kwargs.thinking_mode = enabled|disabled
+# Source: this SKU's modelProperties.chat_templates in the pricing API above.
+# enabled forces a thinking prefix; disabled forces the end-of-thinking prefix.
+# The template also accepts adaptive (the default): "decide on your own whether to think".
+# adaptive is an automatic-selection policy, not a graded effort level; the current
+# reasoning_options schema describes only the explicit on/off capability here.
+# Catalog template evidence, not an authenticated deployment behavior check.
+# Structured output is advertised by the catalog's parasail:or-feature:structured_outputs tag.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+structured_output = true
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+output = 524_288

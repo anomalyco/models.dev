@@ -1,0 +1,19 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Public Models table (Model | Model ID | Context window | Max output):
+# Mistral Nemo (FP8) | parasail-mistralaimistral-nemo | 131,072 | 131,072
+# The page says: "Use these IDs as the model value in your requests."
+# The public pricing API also returns "externalAlias": "parasail-mistralaimistral-nemo".
+# Preserve this request ID verbatim; the lab identity belongs in base_model, not the filename.
+# Tool support: https://docs.parasail.io/parasail-docs/guides/tool-function-calling
+base_model = "mistral/mistral-nemo"
+tool_call = false
+
+[cost]
+input = 0.03
+output = 0.03
+
+[limit]
+context = 131_072
+output = 131_072
