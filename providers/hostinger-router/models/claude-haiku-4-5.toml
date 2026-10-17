@@ -1,0 +1,14 @@
+# Hostinger Router relays chat/completions and /messages for Claude; reasoning params pass through unchanged.
+# Toggle: reasoning = {"enabled": true|false} (supported_parameters: reasoning); matches the OpenRouter peer control for this model
+# Source: https://router.hostinger.com/v1/models
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.2
+output = 6
+cache_read = 0.12
+cache_write = 1.5

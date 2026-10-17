@@ -1,0 +1,18 @@
+# Hostinger Router relays chat/completions and /messages for Claude; reasoning params pass through unchanged.
+# Toggle: reasoning = {"enabled": true|false} (supported_parameters: reasoning); matches the OpenRouter peer control for this model
+# Source: https://router.hostinger.com/v1/models
+# Limit override: served with the 1M context window (lab default is 200k)
+base_model = "anthropic/claude-sonnet-4-5"
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 3.6
+output = 18
+cache_read = 0.36
+cache_write = 4.5

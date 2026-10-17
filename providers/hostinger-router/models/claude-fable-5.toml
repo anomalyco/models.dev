@@ -1,0 +1,15 @@
+# Hostinger Router relays chat/completions and /messages for Claude; reasoning params pass through unchanged.
+# Effort: reasoning_effort = "low"|"medium"|"high"|"xhigh"|"max" (supported_parameters: reasoning_effort; matches lab and OpenRouter peer set)
+# Source: https://router.hostinger.com/v1/models
+base_model = "anthropic/claude-fable-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 12
+output = 60
+cache_read = 1.2
+cache_write = 15

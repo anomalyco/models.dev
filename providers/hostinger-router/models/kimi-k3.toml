@@ -1,0 +1,18 @@
+# Kimi K3 always thinks; the router lists `reasoning` in supported_parameters but there is no
+# documented way to disable thinking, so effort only.
+# Effort: reasoning_effort = "low"|"high"|"max" (matches lab and OpenRouter peer set)
+# Source: https://router.hostinger.com/v1/models
+# Limit override: the router catalog reports max_output_tokens = 1048576 for kimi-k3
+base_model = "moonshotai/kimi-k3"
+
+[limit]
+output = 1_048_576
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3.6
+output = 18
+cache_read = 0.36
