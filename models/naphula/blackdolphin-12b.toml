@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Naphula/BlackDolphin-12B
+name = "BlackDolphin-12B"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "phi"
+release_date = "2026-03-13"
+last_updated = "2026-03-14"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 1024000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Naphula/BlackDolphin-12B"

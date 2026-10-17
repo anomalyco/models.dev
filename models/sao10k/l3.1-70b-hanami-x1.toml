@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/Sao10K/L3.1-70B-Hanami-x1
+name = "L3.1-70B-Hanami-x1"
+description = "Niche community finetune with a cult following. Hard to find hosted anywhere else."
+release_date = "2024-09-06"
+last_updated = "2024-09-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Sao10K/L3.1-70B-Hanami-x1"

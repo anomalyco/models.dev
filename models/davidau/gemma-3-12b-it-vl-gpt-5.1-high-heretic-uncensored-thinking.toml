@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/DavidAU/gemma-3-12b-it-vl-GPT-5.1-High-Heretic-Uncensored-Thinking
+name = "gemma-3-12b-it-vl-GPT-5.1-High-Heretic-Uncensored-Thinking"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "gemma"
+release_date = "2026-02-10"
+last_updated = "2026-02-23"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/DavidAU/gemma-3-12b-it-vl-GPT-5.1-High-Heretic-Uncensored-Thinking"
