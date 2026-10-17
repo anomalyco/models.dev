@@ -1,0 +1,38 @@
+# Effort: reasoning_effort = low|high|max (no off switch on this host)
+#
+# Resale of the official Z.ai API. The Tium gateway forwards the
+# request body verbatim apart from `model`, `max_tokens` and
+# `stream_options`.
+# Tium bills a monthly allotment of weighted tokens (WT), not USD per token.
+# These are the effective USD rates at the subscription price: $2.8302/MWT (the
+# highest of the three tiers) x the published model multiplier, with the
+# per-model output and cache weights. Source: https://tium.ai/pricing
+# Prepaid credit packs bill at $3.56-$4.50/MWT.
+# Reasoning tokens are counted as output tokens and billed at the output rate.
+#
+# Verified live against api.tium.ai on 2026-09-09:
+#   reasoning_effort low|high|max accepted; none|minimal|medium|xhigh
+#     rejected with 400 (negative control fired).
+#   `none` is refused and thinking.type=disabled is refused: thinking-only.
+#   reasoning_content present in the response.
+#   Effort levels are GRADED, not merely accepted: reasoning_content
+#     medians over 3 runs on a fixed prompt were low=94, high=266, max=753
+#     chars, with non-overlapping ranges.
+#   Text only: image, PDF and video are all rejected with
+#     "messages.content.type is invalid, allowed values: ['text']". This
+#     matches the base model, so no modalities override is needed.
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.83
+output = 8.895
+reasoning = 8.895
+cache_read = 0.526
+
+[limit]
+context = 128000
+output = 32768
