@@ -1,0 +1,23 @@
+# Sources:
+# - providers/agnes/models/agnes-2.5-flash.toml (Agnes' own first-party host entry; name,
+#   description, dates, capability flags, limits, lanes and the reasoning control are its)
+# - https://agnes-ai.com/doc (provider documentation)
+
+name = "Agnes 2.5 Flash"
+description = "Upgraded model with improved coding, agent workflows, tool calling, and multimodal understanding."
+release_date = "2026-07"
+last_updated = "2026-07"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 512_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
