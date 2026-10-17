@@ -1,0 +1,11 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-09)
+# Prices are for the Standard group, the default for new accounts.
+# Toggle: $.reasoning_effort = "none" disables thinking; any other accepted value (or omitting the field) leaves it on.
+base_model = "zhipuai/glm-4.7"
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.56
+output = 2.6133
+cache_read = 0.112

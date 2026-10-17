@@ -1,0 +1,15 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-09)
+# Prices are for the Standard group, the default for new accounts.
+base_model = "google/gemini-2.5-flash"
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 24576
+[[reasoning_options]]
+type = "effort"
+values = ["low","medium","high"]
+
+[cost]
+input = 0.24
+output = 2
+cache_read = 0.024

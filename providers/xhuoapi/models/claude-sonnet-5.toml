@@ -1,0 +1,11 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-09)
+# Prices are for the Standard group, the default for new accounts.
+base_model = "anthropic/claude-sonnet-5"
+[[reasoning_options]]
+type = "effort"
+values = ["low","medium","high","xhigh","max"]
+
+[cost]
+input = 1.6
+output = 8
+cache_read = 0.16

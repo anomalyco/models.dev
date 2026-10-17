@@ -1,0 +1,17 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-09)
+# Prices are for the Standard group, the default for new accounts.
+base_model = "openai/gpt-5.4"
+[[reasoning_options]]
+type = "effort"
+values = ["none","low","medium","high","xhigh"]
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 4
+output = 18
+cache_read = 0.4
