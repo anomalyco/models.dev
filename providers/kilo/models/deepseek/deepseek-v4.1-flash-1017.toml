@@ -1,0 +1,28 @@
+name = "DeepSeek: DeepSeek V4.1 Flash 1017"
+description = "DeepSeek V4.1 Flash 1017 is the October 17, 2026 snapshot of DeepSeek V4.1 Flash, served by DeepSeek under the `deepseek-flash` API model name. V4.1 Flash is a sparse mixture-of-experts model..."
+family = "deepseek"
+release_date = "2026-10-17"
+last_updated = "2026-10-17"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.003
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
