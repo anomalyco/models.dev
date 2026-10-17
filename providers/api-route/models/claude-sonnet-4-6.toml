@@ -1,0 +1,9 @@
+# Pricing and availability: https://www.api-route.com/pricing/claude-sonnet-4-6 (accessed 2026-09-27)
+base_model = "anthropic/claude-sonnet-4-6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+
+[cost]
+input = 0.213
+output = 1.065
+cache_read = 0.0213
+cache_write = 0.26625
