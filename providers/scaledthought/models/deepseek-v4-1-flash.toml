@@ -1,0 +1,16 @@
+# Verified through https://api.us.scaledthought.com/v1 on 2026-10-13 (live calls, chat completions):
+#   reasoning_effort none: no reasoning_content; low|high|xhigh|max: reasoning_content returned (minimal and medium are
+#   accepted too); no field: no reasoning. Tool call (get_weather), response_format json_schema (strict), image_url
+#   (data: PNG) and max_tokens 384000 all returned 200 with the expected output.
+# Price (accessed 2026-10-12): GET https://api.us.scaledthought.com/v1/models/deepseek-v4-1-flash
+#   "pricing": {"input": 0.22, "cached_input": 0.007, "output": 0.66, "unit": "usd_per_1m_tokens"}
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "xhigh", "max"]
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007
