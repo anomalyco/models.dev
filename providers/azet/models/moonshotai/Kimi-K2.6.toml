@@ -1,9 +1,12 @@
-# Pricing: GET https://api.azet.io/v1/models (accessed 2026-10-13)
+# Pricing: GET https://api.azet.io/v1/models (accessed 2026-10-17)
+# The working reasoning control is chat_template_kwargs.thinking (toggle) — live
+# requests 2026-10-17: chat_template_kwargs={"thinking": false} returns no reasoning
+# and 4 completion tokens (2/2 runs), while thinking={"type":"disabled"},
+# reasoning={"enabled": false} and reasoning_effort=low still return reasoning
+# (521-4185 chars); reasoning_effort="none" is rejected upstream (502).
 base_model = "moonshotai/kimi-k2.6"
-# The gateway does not forward the thinking toggle: thinking={"type":"disabled"} still
-# returns reasoning (probe 2026-10-16), so callers have no reasoning control here.
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
-input = 0.855
-output = 3.60
+input = 0.95
+output = 4.00
