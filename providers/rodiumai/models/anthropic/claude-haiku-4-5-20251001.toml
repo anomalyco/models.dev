@@ -1,0 +1,17 @@
+# Costs converted from RODI to USD at ~639.2 RODI = 1 USD (2026-10-12).
+# Source: GET https://api.rodiumai.io/v1/models id=anthropic/claude-haiku-4-5-20251001
+# https://www.rodiumai.io/docs/models
+base_model = "anthropic/claude-haiku-4-5-20251001"
+
+[cost]
+input = 1.18
+output = 5.90
+cache_read = 0.12
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 200000
+output = 64000
