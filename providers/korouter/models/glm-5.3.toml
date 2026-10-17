@@ -1,0 +1,11 @@
+# Prices read from https://korouter.ai/models/glm-5.3 on 2026-10-07 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = low|high|max
+# Live-tested 2026-10-07: reasoning_effort is forwarded as-is to the upstream OpenAI-compatible endpoint (an invalid value returns the upstream's 400).
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.714
+output = 2.24
+cache_read = 0.1326

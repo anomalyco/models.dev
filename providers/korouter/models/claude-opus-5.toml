@@ -1,0 +1,13 @@
+# Prices read from https://korouter.ai/models/claude-opus-5 on 2026-10-07 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = low|medium|high|xhigh|max → output_config.effort; medium and above also send thinking.type = enabled with a budget; low or no reasoning_effort sends no thinking block (the value none is rejected upstream)
+# No toggle: the /v1 chat-completions parser reads only reasoning_effort; the thinking object and reasoning.enabled are dropped before the upstream call.
+# Live-tested 2026-10-07: thinking.type=enabled + budget_tokens=10 → 200 (dropped; the upstream minimum is 1024); reasoning.enabled=true + reasoning.effort=bogus → 200 (dropped); reasoning_effort=bogus → 400 "output_config.effort: Input should be 'low', 'medium', 'high', 'xhigh' or 'max'" (forwarded).
+base_model = "anthropic/claude-opus-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 3.25
+output = 16.25
+cache_read = 0.325
+cache_write = 4.06
