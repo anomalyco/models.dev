@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import type { ModelTypeValue } from "../../filter.js";
 import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
@@ -30,6 +31,19 @@ const KnownModelType = z.enum([
   "speech",
   "realtime",
   "evaluation",
+]);
+
+// Vercel's `type` names the kind of model. `language` is the catalog default
+// (chat), so it states no type; `evaluation` is a decision model.
+const MODEL_TYPES = new Map<string, ModelTypeValue>([
+  ["embedding", "embedding"],
+  ["image", "image"],
+  ["video", "video"],
+  ["reranking", "reranking"],
+  ["transcription", "transcription"],
+  ["speech", "speech"],
+  ["realtime", "realtime"],
+  ["evaluation", "decision"],
 ]);
 
 const PricingTier = z.object({
@@ -143,7 +157,7 @@ export function buildVercelModel(
   const reasoning = existing?.reasoning ?? tags.has("reasoning");
 
   const synced: SyncedFullModel = {
-    type: model.type === "evaluation" ? "decision" : existing?.type,
+    type: MODEL_TYPES.get(model.type) ?? existing?.type,
     name: existing?.name ?? model.name,
     description: model.type === "evaluation"
       ? existing?.description ?? model.description ?? "Decision model for typed evaluation of shared state"
