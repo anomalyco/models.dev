@@ -1,0 +1,11 @@
+# Effort: reasoning_effort = none|low|high
+# Cost: free tier — no credit is deducted (https://y-api.bestvirtualgoods.com/pricing).
+base_model = "tencent/hy3"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
