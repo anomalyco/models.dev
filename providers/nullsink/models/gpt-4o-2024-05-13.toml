@@ -1,0 +1,17 @@
+# Pricing (USD/MTok): https://nullsink.is/v1/models
+# API: https://nullsink.is/api/
+# Native OpenAI Responses API; Standard service tier.
+# Upstream shutdown date: 2026-10-23; still advertised in nullsink's model list.
+# https://developers.openai.com/api/docs/deprecations
+base_model = "openai/gpt-4o-2024-05-13"
+status = "deprecated"
+
+[cost]
+input = 5
+output = 15
+cache_read = 5
+cache_write = 0
+
+[provider]
+npm = "@ai-sdk/openai"
+shape = "responses"
