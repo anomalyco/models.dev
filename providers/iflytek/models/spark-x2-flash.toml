@@ -1,0 +1,26 @@
+# Sources (accessed 2026-09-14):
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+# https://www.xfyun.cn/doc/spark/推理服务-http.html
+# Spark-X2-Flash: 256K context, lightweight first-party iFlytek model.
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = high|max
+# Thinking content returned in message.reasoning_content (interleaved).
+# Tool calling NOT supported on this host (only DeepSeek V3.2 and GLM-4.7).
+# Pricing: estimated from Token Plan point ratios (100/20/200 points per 1M)
+# at 0.01 CNY/point (Token Plan doc: 200 CNY / 20000 points for standard
+# members), converted at 7.25 CNY/USD.
+
+base_model = "iflytek/spark-x2-flash"
+tool_call = false
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.03

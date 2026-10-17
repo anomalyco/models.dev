@@ -1,0 +1,23 @@
+# Sources (accessed 2026-09-14):
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+# https://www.xfyun.cn/doc/spark/推理服务-http.html
+# MiniMax-M2.5: 128K context on this host (Token Plan listing; lab 204.8K).
+# Reasoning: always-on with no caller control (matching peer baseline from
+# opencode — reasoning_options = []). reasoning_content returned interleaved.
+# Tool calling NOT supported on this host (only DeepSeek V3.2 and GLM-4.7).
+# Pricing: Token Plan points 210/42/840 per 1M, converted at 7.25 CNY/USD.
+
+base_model = "minimax/MiniMax-M2.5"
+tool_call = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.29
+output = 1.16
+cache_read = 0.06
+
+[limit]
+context = 128_000

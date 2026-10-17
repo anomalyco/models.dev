@@ -1,0 +1,14 @@
+# Sources (accessed 2026-09-14):
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+# Qwen3-Coder-Next-FP8: 256K context, code-specialized model.
+# Non-reasoning per base lab model.
+# Tool calling NOT supported on this host (only DeepSeek V3.2 and GLM-4.7).
+# Pricing: Token Plan points 250/50/1000 per 1M, converted at 7.25 CNY/USD.
+
+base_model = "alibaba/qwen3-coder-next"
+tool_call = false
+
+[cost]
+input = 0.34
+output = 1.38
+cache_read = 0.07

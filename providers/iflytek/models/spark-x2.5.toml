@@ -1,0 +1,27 @@
+# Sources (accessed 2026-09-14):
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+# https://www.xfyun.cn/doc/spark/推理服务-http.html
+# Spark-X2.5: 256K context, first-party iFlytek flagship (293B-A30B MoE).
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = high|max
+# Thinking content returned in message.reasoning_content (interleaved).
+# Pricing: list price CNY 3.2 input / 0.48 cache_read / 12 output per 1M
+# tokens → USD 0.44 / 0.07 / 1.65 at 7.25 CNY/USD. Note: a limited-time
+# 50% promotion (as of 2026-09) halves these to CNY 1.6/0.24/6; cost above
+# reflects the list price since the promotion end date is unpublished.
+# Tool calling not supported per host docs.
+
+base_model = "iflytek/spark-x2.5"
+tool_call = false
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.44
+output = 1.65
+cache_read = 0.07
