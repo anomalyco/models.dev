@@ -1,0 +1,19 @@
+# Off: reasoning_effort = "none" (omit the field for the model default, which reasons); Effort: reasoning_effort = "low"|"high"|"max" (lab set). Live-verified 2026-09-11: none returns no reasoning_content
+# https://api.pgsgrove.com/docs/reasoning (accessed 2026-09-11)
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.6
+output = 5.2
+cache_read = 0.32
+
+[limit]
+context = 1_048_576
+output = 32_768
