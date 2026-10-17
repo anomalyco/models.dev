@@ -1,0 +1,22 @@
+# Toggle: thinking.type = enabled|disabled
+# Context: 393_216 tokens on Inferway (lab metadata lists 1_048_576). Max output inherited (131_072).
+# Modalities: text and image input; no audio or video input on Inferway.
+# Pricing: Inferway launch-offer price in USD per 1M tokens (list 0.14 / 0.28 / 0.0028).
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.098
+output = 0.196
+cache_read = 0.00196
+
+[limit]
+context = 393_216
+
+[modalities]
+input = ["text", "image"]
