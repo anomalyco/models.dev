@@ -1,0 +1,14 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.3
+output = 1
+cache_read = 0.007
+
+[limit]
+context = 1_040_000
+output = 393_216
