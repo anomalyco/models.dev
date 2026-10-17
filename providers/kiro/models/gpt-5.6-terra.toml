@@ -1,0 +1,12 @@
+# Context: https://kiro.dev/blog/gpt-5-6-1m-context/
+base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["limit.input"]
+[[reasoning_options]]
+type = "effort"
+values = ["none","low","medium","high","xhigh","max"]
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]
