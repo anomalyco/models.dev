@@ -1,0 +1,24 @@
+# GPTZZZ is an OpenAI-compatible relay. Effort values verified per model against the
+# live /v1/chat/completions endpoint on 2026-09-16 and re-probed on 2026-09-29: none, low,
+# medium, high, xhigh and max all return HTTP 200; minimal returns HTTP 400.
+# Pricing source: https://gptzzz.ai/model-plaza (read from /api/v1/model-plaza on 2026-09-29).
+# GPTZZZ bills this model against its own published list price of 5.00 input / 30.00 output /
+# 0.50 cache read / 6.25 cache write per MTok (>272K context: 10.00 / 45.00 / 1.00 / 12.50),
+# which is higher than OpenAI's list for gpt-5.6-sol, multiplied by its public 0.05x group rate.
+# The host's /v1/usage "cost" field matches this 5.00 / 30.00 list exactly, so the values
+# below are what the host actually charges.
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.25
+output = 1.5
+cache_read = 0.025
+cache_write = 0.3125
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 0.5
+output = 2.25
+cache_read = 0.05
+cache_write = 0.625
