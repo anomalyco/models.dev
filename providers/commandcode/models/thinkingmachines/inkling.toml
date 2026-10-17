@@ -1,0 +1,17 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Output ceiling: capped at the host context window (prompt plus completion).
+# Live /chat/completions (2026-10-14): reasoning_effort = minimal|none -> HTTP 400 invalid option.
+base_model = "thinkingmachines/inkling"
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+
+[limit]
+output = 256000
+context = 256000
+
+[cost]
+input = 1
+output = 4.05
+cache_read = 0.17

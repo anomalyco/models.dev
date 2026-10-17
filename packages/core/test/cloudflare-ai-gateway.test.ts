@@ -226,6 +226,57 @@ test("ignores advertised reasoning controls for non-reasoning base models", () =
   expect(model.reasoning_options).toBeUndefined();
 });
 
+test("uses curated cost only when provider_details is null", () => {
+  const curated = {
+    base_model: "reflection/beam-1.0-501b-a23b",
+    reasoning_options: [{ type: "effort" as const, values: ["low" as const, "medium" as const, "high" as const, "xhigh" as const, "max" as const] }],
+    interleaved: { field: "reasoning_content" as const },
+    cost: { input: 0, output: 0, cache_read: 0 },
+  };
+  const catalog = {
+    model_id: "reflection-ai/beam-1.0-501b-a23b",
+    task: "Text Generation" as const,
+    context_length: 262_144,
+    provider_details: null,
+    pricing: { "Input tokens (per 1M)": 999, "Output tokens (per 1M)": 999 },
+  };
+
+  expect(buildCloudflareAiGatewayModel(catalog, undefined, curated)).toEqual({
+    base_model: "reflection/beam-1.0-501b-a23b",
+    interleaved: { field: "reasoning_content" },
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    cost: { input: 0, output: 0, cache_read: 0 },
+    limit: { context: 262_144 },
+  });
+  expect(() => buildCloudflareAiGatewayModel(catalog, undefined, { ...curated, cost: undefined }))
+    .toThrow("no provider_details pricing; add a curated cost");
+  expect(() => buildCloudflareAiGatewayModel({
+    ...catalog,
+    provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+  }, undefined, curated)).toThrow("remove the curated cost");
+});
+
+test("names the catalog model when an entry fails validation", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalToken = process.env.CLOUDFLARE_API_TOKEN;
+  const originalAccount = process.env.CLOUDFLARE_ACCOUNT_ID;
+  process.env.CLOUDFLARE_API_TOKEN = "test";
+  process.env.CLOUDFLARE_ACCOUNT_ID = "test";
+  globalThis.fetch = async () => new Response(JSON.stringify(catalogPage([{
+    model_id: "openai/gpt-4.1",
+    task: "Text Generation",
+    provider_details: [],
+  }])));
+
+  try {
+    await expect(cloudflareAiGateway.fetchModels()).rejects.toThrow("openai/gpt-4.1: invalid catalog entry");
+  } finally {
+    globalThis.fetch = originalFetch;
+    restoreEnv("CLOUDFLARE_API_TOKEN", originalToken);
+    restoreEnv("CLOUDFLARE_ACCOUNT_ID", originalAccount);
+  }
+});
+
 test("fails closed on unknown pricing fields", () => {
   expect(() => buildCloudflareAiGatewayModel({
     model_id: "openai/gpt-4.1",

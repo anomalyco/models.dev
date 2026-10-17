@@ -1,13 +1,8 @@
 # Included in subscription
+base_model = "thedrummer/skyfall-36b-v2"
 name = "TheDrummer Skyfall 36B V2"
-description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2025-03-10"
-last_updated = "2025-03-10"
 attachment = true
-reasoning = false
-tool_call = false
 structured_output = false
-open_weights = true
 
 [cost]
 input = 0.55
@@ -15,10 +10,7 @@ output = 0.8
 cache_read = 0.25
 
 [limit]
-context = 32_768
 input = 32_768
-output = 29_491
 
 [modalities]
 input = ["text", "pdf"]
-output = ["text"]

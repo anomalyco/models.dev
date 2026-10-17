@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
-import { ReasoningOption } from "../../schema.js";
+import { AuthoredModelShape, ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 
@@ -42,10 +42,12 @@ const CatalogEntry = z.object({
   context_length: z.number().int().positive().nullish(),
   provider_details: z.array(ProviderDetail).nullish(),
 }).passthrough();
+// Some proxied rows (e.g. reflection-ai/beam-1.0-501b-a23b at launch) ship with
+// provider_details = null. Those need a curated cost; see catalogCost.
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  provider_details: z.array(ProviderDetail).length(1),
+  provider_details: z.array(ProviderDetail).length(1).nullish(),
 });
 
 const FlatPricing = z.object({
@@ -105,6 +107,8 @@ const SourceModel = z.object({
 const CuratedModel = z.object({
   base_model: z.string().refine(isSafeModelID, "base_model must be a safe relative provider/model path").optional(),
   structured_output: z.boolean().optional(),
+  // Only for rows without structured provider_details; see catalogCost.
+  cost: AuthoredModelShape.shape.cost,
   reasoning_options: z.array(ReasoningOption).optional(),
   limit: z.object({
     context: z.number().optional(),
@@ -150,7 +154,11 @@ export const cloudflareAiGateway = {
 
     const emittedModels = textModels.filter(
       (model) => !model.model_id.startsWith("@cf/") && !skippedModels.has(model.model_id),
-    ).map((model) => CatalogModel.parse(model));
+    ).map((model) => {
+      const parsed = CatalogModel.safeParse(model);
+      if (!parsed.success) throw new Error(`${model.model_id}: invalid catalog entry: ${parsed.error.message}`);
+      return parsed.data;
+    });
     if (emittedModels.length === 0) {
       throw new Error("Cloudflare AI Gateway catalog returned no eligible proxied models");
     }
@@ -193,7 +201,7 @@ export function buildCloudflareAiGatewayModel(
 ): SyncedBaseModel {
   const id = catalog.model_id;
   // Pricing failures must not be hidden by missing reasoning controls.
-  const cost = proxiedCost(catalog.provider_details[0]!.pricing, id);
+  const cost = catalogCost(catalog, curated);
   const baseModel = curated.base_model ?? resolveBaseModel(id);
   if (baseModel === undefined) {
     throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
@@ -479,6 +487,23 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
     }
   }));
   return results;
+}
+
+// Structured provider_details is the source of truth. A curated cost is only allowed
+// (and then required) when Cloudflare omits it, so a stale override can't outlive it.
+function catalogCost(catalog: CatalogModel, curated: CuratedModel): NonNullable<SyncedBaseModel["cost"]> {
+  const id = catalog.model_id;
+  const detail = catalog.provider_details?.[0];
+  if (detail !== undefined) {
+    if (curated.cost !== undefined) {
+      throw new Error(`${id}: catalog now has provider_details pricing; remove the curated cost`);
+    }
+    return proxiedCost(detail.pricing, id);
+  }
+  if (curated.cost === undefined) {
+    throw new Error(`${id}: catalog has no provider_details pricing; add a curated cost`);
+  }
+  return curated.cost;
 }
 
 function proxiedCost(pricing: Record<string, number>, id: string): NonNullable<SyncedBaseModel["cost"]> {

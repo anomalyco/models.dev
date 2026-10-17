@@ -335,6 +335,14 @@ function perMillion(value: number | undefined) {
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
+// The catalog advertises these inputs, but the standard serverless endpoint
+// rejects them. Remove an entry once DigitalOcean serves the modality.
+const UNSUPPORTED_INPUT_MODALITIES: Record<string, Set<Modality>> = {
+  // 400 "unsupported multimodal content: image_url" / "video_url" (verified 2026-10-16).
+  // DigitalOcean confirmed the standard endpoint lacks multimodal support and a fix is in progress.
+  "glm-5.3-flash": new Set(["image", "video"]),
+};
+
 function normalizeModalities(values: string[], fallback: Modality[]): Modality[] {
   const allowed = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
   const normalized = values
@@ -460,7 +468,9 @@ export function buildDigitalOceanModel(
 ): SyncedModel {
   const remoteInput = normalizeModalities(model.modalities?.input ?? [], []);
   const remoteOutput = normalizeModalities(model.modalities?.output ?? [], []);
-  const input = remoteInput.length > 0 ? remoteInput : existing?.modalities?.input ?? ["text"];
+  const unsupportedInput = UNSUPPORTED_INPUT_MODALITIES[model.id];
+  const input = (remoteInput.length > 0 ? remoteInput : existing?.modalities?.input ?? ["text"])
+    .filter((value) => !unsupportedInput?.has(value as Modality));
   const output = remoteOutput.length > 0 ? remoteOutput : existing?.modalities?.output ?? ["text"];
   const context = number(model.context_window) ?? existing?.limit?.context ?? 0;
   const maxTokens = number(model.max_output_tokens ?? undefined);

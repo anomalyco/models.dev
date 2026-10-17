@@ -1,0 +1,235 @@
+# Reflection Beam 1.0 (API model ID Beam-1.0-501B-A23B).
+# Model card: https://huggingface.co/reflection/Beam-1.0-501B-A23B
+#   Sparse MoE, 501.3B total / 23.4B active parameters; text in, text out; 1M context;
+#   knowledge cutoff June 30, 2026; Apache 2.0 weights in BF16, FP8, and NVFP4.
+#   Benchmarks are the card's final BF16 results (temperature 0.7, top_p 0.99).
+# API limits: 1_048_576 context (prompt + output), 131_072 max output (includes reasoning):
+#   https://developers.reflection.ai/models (created 2026-10-05)
+# Text-only input; temperature, tools, and json_object/json_schema structured outputs:
+#   https://developers.reflection.ai/openai-compatibility
+# Announcements: https://reflection.ai/blog/introducing-beam, https://reflection.ai/blog/beam-is-available
+name = "Beam 1.0 501B A23B"
+description = "Sparse mixture-of-experts reasoning model with 23B active parameters for coding and agentic workflows"
+family = "beam"
+release_date = "2026-10-05"
+last_updated = "2026-10-16"
+knowledge = "2026-06-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+
+[[weights]]
+label = "Hugging Face (FP8)"
+url = "https://huggingface.co/reflection/Beam-1.0-501B-A23B-FP8"
+quantization = "fp8"
+
+[[weights]]
+label = "Hugging Face (NVFP4)"
+url = "https://huggingface.co/reflection/Beam-1.0-501B-A23B-NVFP4"
+quantization = "nvfp4"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+type = "model_card"
+
+[[links]]
+label = "Launch announcement"
+url = "https://reflection.ai/blog/beam-is-available"
+type = "announcement"
+
+[[links]]
+label = "Introducing Beam"
+url = "https://reflection.ai/blog/introducing-beam"
+type = "blog"
+
+[[links]]
+label = "API docs"
+url = "https://developers.reflection.ai/models"
+type = "docs"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 43.3
+variant = "BF16"
+version = "1.1"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 76.5
+variant = "BF16"
+dataset = "hard"
+version = "2"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 66.1
+variant = "BF16"
+version = "1"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 80.1
+variant = "BF16"
+version = "2.1"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 31.8
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 78.3
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 81.6
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "AIME 2026"
+score = 97.7
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 36.0
+variant = "BF16; no tools"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 51.1
+variant = "BF16; with tools"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "SciCode"
+score = 49.2
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "CritPt"
+score = 16.3
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 90.6
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "LiveCodeBench"
+score = 88.3
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 39.3
+variant = "BF16"
+dataset = "public"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 80.8
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "τ3 Banking"
+score = 36.1
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 76.8
+variant = "BF16; with context management"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "DeepSearchQA"
+score = 80.5
+variant = "BF16; with context management"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "AA-LCR"
+score = 78.2
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "LongBench"
+score = 67.5
+variant = "BF16"
+version = "2"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "IFBench"
+score = 79.6
+variant = "BF16"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"
+
+[[benchmarks]]
+name = "AA-Omniscience"
+score = 10.8
+metric = "index"
+variant = "BF16"
+dataset = "public split"
+source = "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+date = "2026-10-16"

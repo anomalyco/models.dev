@@ -1,0 +1,14 @@
+base_model = "meta/muse-spark-open"
+name = "Muse Spark Open (Fireworks AI)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[modalities]
+input = ["text", "image", "video", "pdf", "audio"]

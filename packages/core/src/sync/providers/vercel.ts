@@ -88,7 +88,8 @@ export const vercel = {
     return response.json();
   },
   parseModels(raw) {
-    return VercelResponse.parse(raw).data;
+    // Temporarily skip batch routes (`*-batch`) — they are not catalog targets.
+    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch"));
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);

@@ -19,10 +19,10 @@ values = ["low", "medium", "high"]
 
 [cost]
 input = 2
-output = 12
-reasoning = 12
-cache_read = 0.2
-cache_write = 0.375
+output = 10
+reasoning = 10
+cache_read = 0.1
+cache_write = 0.1875
 
 [[cost.tiers]]
 tier = { type = "context", size = 200_000 }

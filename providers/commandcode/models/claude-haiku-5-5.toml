@@ -1,0 +1,25 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Relay reasoning baseline: providers/anthropic/models/claude-haiku-5-5.toml; providers/cloudflare-ai-gateway/models/claude-sonnet-5.toml
+# Toggle: thinking.type = adaptive|disabled
+# Effort: output_config.effort; disabled thinking requires high effort or below.
+base_model = "anthropic/claude-haiku-5-5"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 100000 }
+input = 0.5
+output = 2.5
+cache_read = 0.05
+cache_write = 0.625
+
+[provider]
+npm = "@ai-sdk/anthropic"

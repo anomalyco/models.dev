@@ -5,16 +5,13 @@ description = "Kimi multimodal agent model for visual understanding, coding, and
 temperature = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]
 
 [cost]
-input = 0.73
-output = 13.5
-cache_read = 0.55
+input = 0.304
+output = 11.936
+cache_read = 0.21
 
 [limit]
 output = 943_718

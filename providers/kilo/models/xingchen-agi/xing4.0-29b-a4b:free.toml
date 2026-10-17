@@ -1,0 +1,27 @@
+name = "XingChen: Xing4.0 29B A4B (free)"
+description = "Xing4.0-29B-A4B is an open-weight mixture-of-experts language model from China Telecom's AI team (TeleAI) and the successor to the TeleChat series. It has 29B total parameters with 4B active per token..."
+family = "agi"
+release_date = "2026-10-16"
+last_updated = "2026-10-16"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 235_929
+
+[modalities]
+input = ["text"]
+output = ["text"]

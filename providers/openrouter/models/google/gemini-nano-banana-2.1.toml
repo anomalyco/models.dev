@@ -7,11 +7,8 @@ tool_call = true
 structured_output = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["minimal", "high"]
+values = ["none", "minimal", "high"]
 
 [cost]
 input = 1.5

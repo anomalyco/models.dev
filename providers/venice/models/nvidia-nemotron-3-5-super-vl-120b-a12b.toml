@@ -1,0 +1,19 @@
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "NVIDIA Nemotron 3.5 Super VL 120B"
+description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
+release_date = "2026-10-16"
+last_updated = "2026-10-16"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.25
+output = 1.25
+cache_read = 0.125
+
+[limit]
+context = 262_144
+output = 32_768

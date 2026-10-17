@@ -1,0 +1,23 @@
+# Sources: Poe API model entry + Google docs, accessed 2026-10-12
+#   — https://poe.com/gemini-omni-1.1-flash
+# - cost: pricing.prompt 0.0000015152 / completion 0.0000090909, USD per token (no FX) x1e6
+#   -> 1.5152 / 9.0909 USD/MTok. Poe lists that identical rate for gemini-3.5-flash too,
+#   but only 3.5-flash carries pricing.input_cache_read — this entry has none, so no
+#   cache_read here. Values were read off this bot's entry, not copied from 3.5-flash.
+# - limit.context: Poe reports context_length 131_072 for this bot, below the model's
+#   1_048_576 window (https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash),
+#   so it is a real host-side override.
+# - reasoning_options = []: the model reasons (Google's response schema has a
+#   "thought" step) but Poe's bot exposes no thinking_level / effort control — its
+#   /v1/models entry lists only task, resolution and aspect_ratio parameters.
+#   [] = reasons with no caller control, not "unchecked".
+base_model = "google/gemini-omni-1.1-flash"
+name = "Gemini-Omni-1.1-Flash"
+reasoning_options = []
+
+[limit]
+context = 131_072
+
+[cost]
+input = 1.5152
+output = 9.0909

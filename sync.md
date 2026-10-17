@@ -171,6 +171,15 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 - `structured_output` comes from `capabilities.json`; when that field is absent, the sync preserves an existing authored override.
 - Other intrinsic model facts remain inherited from the canonical `base_model` metadata.
 
+## Prime Inference Notes
+
+- Run with `bun models:sync prime` or `bun prime:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.
+- Source: the public `https://api.pinference.ai/api/v1/models` endpoint. Pricing is already USD per million tokens. Context/output limits, supported parameters, modalities and published effort levels are API-authoritative.
+- Public tool-capable text models use existing lab metadata through `base_model`; lab facts and release dates are inherited. Published route names override the base name when different, so variants remain distinguishable. Generated TOMLs remain the inputs to the published catalog. They can be rebuilt from the API without an existing Prime model list.
+- Sparse metadata, unresolved lab identities and missing or unknown reasoning controls are reported for manual follow-up. Existing files for those still-listed IDs are retained; no placeholder controls or lab facts are invented, and the sync does not automatically open issues for sparse upstream rows.
+- Models absent from the API or explicitly lacking tool/text support are removed. Empty, malformed and duplicate-ID inventories fail before writes. Internal/frontier namespaces, deployment-qualified IDs and uppercase namespaces are excluded; exact wire IDs are preserved on case-insensitive filesystems.
+- Cache prices are omitted when unavailable, including removal of stale cache rates. Unpublished input-token limits are omitted; generic `file` input does not imply PDF support. Reasoning options use the published per-model `reasoning_effort` values, including `none` when advertised.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
@@ -405,6 +414,22 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - Models missing from the API response are removed from the Venice catalog.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
+
+## engy Notes
+
+engy is implemented in `packages/core/src/sync/providers/engy.ts`.
+
+- Run it with `bun models:sync engy` or `bun engy:sync`.
+- Source endpoint: `https://api.engy.ai/v1/models`; no auth required.
+- The endpoint owns `cost.input`, `cost.output` and `cost.cache_read` while quoted, `limit.context` when positive, and `modalities` when it sends a recognised list (`file` maps to `pdf`).
+- Every other authored field is preserved, including `limit.input`/`limit.output`, `reasoning_options`, `interleaved` and the other cost keys; no public endpoint reports them.
+- `context_length` is `max_input + max_output`. When it no longer matches the authored split, the file is left alone and the model gets a `[missing-model]` issue to re-read the split from the authenticated `https://engy.ai/api/v1/models`.
+- A price that is not a non-negative number fails the run; a row with an empty `id` is ignored.
+- `skipCreates` and `trackMissingModels` are set: a created file would ship `limit.output = 0`. Unseen IDs open deduped `[missing-model]` issues.
+- `deleteMissing` is `false`: the list is unauthenticated and `{"data":[]}` passes the schema, so a truncated 200 must not delete hand-measured files; they are retained and reported.
+- An authored `base_model` wins over the resolver, so a miss never de-factors a committed file.
+- Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
+- Modalities are sorted into catalogue order; wire order is arbitrary.
 
 ## Standalone Generators
 

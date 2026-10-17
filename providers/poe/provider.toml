@@ -1,12 +1,25 @@
+# Sources (accessed 2026-10-12):
+# - https://creator.poe.com/docs/external-applications/openai-compatible-api
+#   Request-field table: `temperature` "Between 0 and 2 (inclusive)", `top_p`
+#   "Fully supported", `extra_body` "Fully supported" for custom bot parameters,
+#   and `reasoning_effort` "Ignored (use extra_body instead)".
+# - Live probes 2026-10-12 via packages/core/script/poe-reasoning-audit.py:
+#   `temperature` is type- and range-validated exactly as documented (99 -> 400
+#   "Expected a value <= 2.0", -1 -> 400 ">= 0.0", "banana" -> 400 type error,
+#   2.0 -> 200), so it is a real supported field and the Gemini chat entries do
+#   not override the models' temperature = true. Responses POST `/v1/responses`
+#   accepts `reasoning.effort` and `reasoning.summary`.
+# - Docs claim top-level `reasoning_effort` is ignored, but it is forwarded and
+#   validated per bot: `minimal` -> 200 on gemini-3.6-flash, -> 400 on
+#   gemini-3.7-flash (differential behaviour proves the field reaches upstream).
+# - Bot-specific parameters (Gemini `thinking_level`, Sora-2 `aspect`, ...) travel
+#   via `extra_body` under their own names; `extra_body.reasoning_effort` itself
+#   is rejected with "This bot does not support these request fields:
+#   reasoning_effort". Unknown top-level fields hit the same per-bot gate.
+# - Forwarding is best-effort and varies by bot, so acceptance alone does not
+#   prove an effective control.
 name = "Poe"
 env = ["POE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Raw HTTP reasoning controls (source accessed 2026-06-25): Responses POST
-# `/v1/responses` accepts `reasoning.effort` and `reasoning.summary`. On Chat
-# POST `/v1/chat/completions`, top-level `reasoning_effort` is ignored; pass bot
-# controls such as `reasoning_effort` or `thinking_budget` through `extra_body`.
-# Forwarding is best-effort, varies by bot, and unsupported fields are generally
-# silently ignored, so acceptance alone does not prove an effective control.
-# https://creator.poe.com/docs/external-applications/openai-compatible-api
 api = "https://api.poe.com/v1"
 doc= "https://creator.poe.com/docs/external-applications/openai-compatible-api"

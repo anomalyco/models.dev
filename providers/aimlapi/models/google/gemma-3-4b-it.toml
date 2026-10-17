@@ -1,0 +1,11 @@
+base_model = "google/gemma-3-4b-it"
+name = "Gemma 3 4B"
+
+[cost]
+input = 0.06877
+output = 0.13754
+cache_read = 0.055016
+
+[limit]
+context = 131_000
+output = 32_768

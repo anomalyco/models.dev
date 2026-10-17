@@ -1,0 +1,14 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+base_model = "moonshotai/kimi-k3"
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[limit]
+context = 1000000
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

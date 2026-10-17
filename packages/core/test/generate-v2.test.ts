@@ -133,7 +133,7 @@ describe("v2 catalog generation", () => {
     expect(providersV2["google-vertex-anthropic"]).toBeUndefined();
     expect(providersV2.opencode?.models["jev-1.13"]?.api).toEqual({
       systemone: {
-        base_url: "https://opencode.ai/zen/v1",
+        base_url: "https://opencode.ai/inference/systemone/v1",
         sdk: {
           opencodeai: "@opencode/ai/providers/typesafe-ai",
         },
