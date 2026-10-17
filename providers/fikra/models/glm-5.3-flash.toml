@@ -1,20 +1,11 @@
-name = "GLM-5.3 Flash"
-attachment = true
-reasoning = false
-tool_call = true
-open_weights = true
-release_date = "2026-10"
-last_updated = "2026-10"
+# Effort: reasoning_effort = low|high|max
+# Pricing: https://api.fikraapi.co.ke/v1/models (USD per 1M tokens, accessed 2026-10-17)
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.25
 output = 0.70
-
-[limit]
-context = 327680
-input = 327680
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

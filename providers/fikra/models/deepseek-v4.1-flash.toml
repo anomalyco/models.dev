@@ -1,20 +1,15 @@
-name = "DeepSeek V4.1 Flash"
-attachment = true
-reasoning = false
-tool_call = true
-open_weights = true
-release_date = "2026-10"
-last_updated = "2026-10"
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Pricing: https://api.fikraapi.co.ke/v1/models (USD per 1M tokens, accessed 2026-10-17)
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.25
 output = 0.80
-
-[limit]
-context = 1048576
-input = 1048576
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

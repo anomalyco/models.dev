@@ -1,20 +1,11 @@
-name = "Step 5 Preview"
-attachment = true
-reasoning = false
-tool_call = true
-open_weights = false
-release_date = "2026-10"
-last_updated = "2026-10"
+# Effort: reasoning_effort = low|medium|high
+# Pricing: https://api.fikraapi.co.ke/v1/models (USD per 1M tokens, accessed 2026-10-17)
+base_model = "stepfun/step-5-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1.25
 output = 3.40
-
-[limit]
-context = 1048576
-input = 1048576
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
