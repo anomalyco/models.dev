@@ -1,0 +1,21 @@
+# Effort: reasoning_effort, or reasoning.effort
+# Pricing, limits and reasoning controls: https://genmagic.co/api/v1/models/openai/gpt-6.1-sol (accessed 2026-10-04)
+# Request body is forwarded unchanged: https://genmagic.co/developers#reasoning
+base_model = "openai/gpt-6.1-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.1
+cache_write = 2.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4
+output = 15
+cache_read = 0.2
+cache_write = 5

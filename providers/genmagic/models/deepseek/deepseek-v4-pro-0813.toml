@@ -1,0 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort, or reasoning.effort
+# Pricing, limits and reasoning controls: https://genmagic.co/api/v1/models/deepseek/deepseek-v4-pro-0813 (accessed 2026-10-04)
+# Request body is forwarded unchanged: https://genmagic.co/developers#reasoning
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.22
+output = 4.2
+cache_read = 0.17
+
+[limit]
+context = 1_048_576
+output = 943_718

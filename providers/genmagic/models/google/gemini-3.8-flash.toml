@@ -1,0 +1,15 @@
+# Effort: reasoning_effort, or reasoning.effort
+# Pricing, limits and reasoning controls: https://genmagic.co/api/v1/models/google/gemini-3.8-flash (accessed 2026-10-04)
+# Request body is forwarded unchanged: https://genmagic.co/developers#reasoning
+base_model = "google/gemini-3.8-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.75
+output = 3.75
+reasoning = 3.75
+cache_read = 0.075
+cache_write = 0.041667

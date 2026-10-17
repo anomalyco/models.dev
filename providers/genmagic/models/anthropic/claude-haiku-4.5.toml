@@ -1,0 +1,14 @@
+# Toggle: reasoning.enabled = true|false
+# Pricing, limits and reasoning controls: https://genmagic.co/api/v1/models/anthropic/claude-haiku-4.5 (accessed 2026-10-04)
+# Request body is forwarded unchanged: https://genmagic.co/developers#reasoning
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
