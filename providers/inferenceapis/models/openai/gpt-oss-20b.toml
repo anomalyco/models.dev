@@ -1,0 +1,11 @@
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-09-30)
+# Thinking cannot be disabled on this model; reasoning_effort = "low" is the minimum.
+base_model = "openai/gpt-oss-20b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.04
+output = 0.19
+
+[limit]
+context = 131_072

@@ -1,0 +1,15 @@
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-09-30)
+# Thinking off: reasoning_effort = "none", reasoning.enabled = false or thinking.type = "disabled" (the gateway maps all three to this model's own switch).
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.02
+
+[limit]
+context = 1_000_000
