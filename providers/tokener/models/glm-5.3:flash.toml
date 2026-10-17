@@ -1,0 +1,21 @@
+# Source: https://www.tokener.ca/models/glm-5.3-flash (verified 2026-10-11)
+# Price list: https://www.tokener.ca/pricing (USD per 1M tokens, regular price)
+# The model page states: context 1,048,576; max output 1,048,576; input text and image;
+# output text; adjustable reasoning effort (thinking cannot be turned off); tool calling;
+# FP8 weights.
+# Effort: reasoning_effort = low|high|max. https://www.tokener.ca/docs#reasoning-controls
+base_model = "zhipuai/glm-5.3-flash"
+interleaved = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.15
+output = 0.70
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]
