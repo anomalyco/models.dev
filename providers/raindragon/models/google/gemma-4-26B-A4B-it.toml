@@ -1,0 +1,19 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default off);
+# a reasoning_effort value also turns thinking on, with no graded levels.
+# Source: https://inference.raindragon.ai/api-documentation
+base_model = "google/gemma-4-26b-a4b-it"
+attachment = false
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.075
+output = 0.35
+cache_read = 0.03
+
+[limit]
+context = 204_800
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
