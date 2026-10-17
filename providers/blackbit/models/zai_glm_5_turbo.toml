@@ -1,0 +1,17 @@
+# Pricing and limits from GET https://void.blackbit.sh/v1/models (accessed 2026-09-22).
+# https://docs.blackbit.sh/docs/void/models/language
+# limit.context = max_input_tokens; limit.output = max_output_tokens. max_input_tokens=202800 max_output_tokens=131100 (GET /v1/models 2026-09-22).
+# Toggle: thinking.type = enabled|disabled
+# https://docs.z.ai/api-reference/llm/chat-completion (accessed 2026-09-22)
+base_model = "zhipuai/glm-5-turbo"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.20
+output = 4.00
+
+[limit]
+context = 202_800
+output = 131_100

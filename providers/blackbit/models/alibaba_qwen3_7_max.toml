@@ -1,0 +1,21 @@
+# Pricing and limits from GET https://void.blackbit.sh/v1/models (accessed 2026-09-22).
+# https://docs.blackbit.sh/docs/void/models/language
+# limit.context = max_input_tokens; limit.output = max_output_tokens. max_input_tokens=991000 max_output_tokens=64000 (GET /v1/models 2026-09-22).
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking (accessed 2026-09-22)
+base_model = "alibaba/qwen3.7-max"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.50
+output = 7.50
+
+[limit]
+context = 991_000
+output = 64_000

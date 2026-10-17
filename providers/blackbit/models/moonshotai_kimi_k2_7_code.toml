@@ -1,0 +1,18 @@
+# Pricing, limits, and modalities from GET https://void.blackbit.sh/v1/models (accessed 2026-09-22).
+# https://docs.blackbit.sh/docs/void/models/language
+# limit.context = max_input_tokens; limit.output = max_output_tokens. max_input_tokens=256000 max_output_tokens=32768 (GET /v1/models 2026-09-22).
+# Live catalog accepts text and image. Lab entry also lists video.
+# Moonshot authors reasoning_options = [] for Kimi K2.7 Code. No caller control.
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4.00
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
