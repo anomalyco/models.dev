@@ -1,0 +1,34 @@
+# Pricing: GET https://api.tokenify.dev/v1/models and https://www.tokenify.dev/pricing/
+# (accessed 2026-10-02), USD per 1M tokens. Reasoning tokens are billed at the
+# output rate.
+# Thinking cannot be reliably disabled, as on the lab API, so no toggle is declared.
+# Measured 2026-10-02, /v1/chat/completions:
+#   off controls (reasoning.enabled=false / thinking disabled / reasoning_effort=none, 18 runs over three sessions):
+#     reasoning tokens [0, 0, 0, 27, 27, 27, 28, 31, 32, 32, 33, 35, 35, 35, 38, 42, 42, 50]
+#   effort low (4 runs): [0, 28, 33, 35] — the same distribution, including the occasional 0.
+#   So the off controls act as the lowest effort: shorter reasoning, sometimes none, but not off.
+# Effort: reasoning_effort is forwarded to the model as sent. Host docs, verbatim
+# (https://www.tokenify.dev/llms-full.txt, section "Thinking costs output tokens"):
+# ""low", "medium", "high" or "max" means on at that depth — the word you send is passed
+# to the model, not just translated into on/off." Values listed match the lab/peers: low, high, max.
+#   effort, short prompt (median of 4, measured after the host began forwarding it): low 30.5 medium 50.5 high 47.5 max 129.5
+#   default (no control sent): [137, 161]
+# Input modalities: GET https://api.tokenify.dev/v1/models, entry z-ai/glm-5.3-flash,
+# architecture.input_modalities = ["text", "image", "video"] (no pdf).
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.50
+reasoning = 0.50
+cache_read = 0.03
+
+[modalities]
+input = ["text", "image", "video"]

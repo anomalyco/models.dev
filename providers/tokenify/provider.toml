@@ -1,0 +1,12 @@
+# OpenAI-compatible API (POST /v1/chat/completions, GET /v1/models) serving
+# DeepSeek and GLM models; the same key also serves the Anthropic Messages
+# format at https://api.tokenify.dev/v1/messages.
+# Reasoning: every model reasons by default and is switched off per request with
+# `reasoning: {"enabled": false}`, `thinking: {"type": "disabled"}` or
+# `reasoning_effort: "none"`; reasoning is returned in `reasoning_content`.
+# https://www.tokenify.dev/llms-full.txt (accessed 2026-10-02)
+name = "Tokenify"
+npm = "@ai-sdk/openai-compatible"
+env = ["TOKENIFY_API_KEY"]
+api = "https://api.tokenify.dev/v1"
+doc = "https://www.tokenify.dev/docs/"

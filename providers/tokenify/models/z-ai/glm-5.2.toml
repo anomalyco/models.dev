@@ -1,0 +1,24 @@
+# Pricing: GET https://api.tokenify.dev/v1/models and https://www.tokenify.dev/pricing/
+# (accessed 2026-10-02), USD per 1M tokens. Reasoning tokens are billed at the
+# output rate.
+# Toggle: thinking.type = enabled|disabled; also reasoning.enabled = true|false and
+# reasoning_effort = none (off). Measured on this host 2026-10-02, /v1/chat/completions:
+#   off (reasoning.enabled=false / thinking disabled / reasoning_effort=none): 18/18 runs at 0 reasoning tokens over three sessions
+# Effort: reasoning_effort is forwarded to the model as sent. Host docs, verbatim
+# (https://www.tokenify.dev/llms-full.txt, section "Thinking costs output tokens"):
+# ""low", "medium", "high" or "max" means on at that depth — the word you send is passed
+# to the model, not just translated into on/off." Values listed match same-surface peers: high, max.
+#   effort, short prompt (median of 4, measured after the host began forwarding it): low 381 medium 365.5 high 407.5 max 640.5
+# Reasoning is returned in message.reasoning_content when on, absent when off.
+base_model = "zhipuai/glm-5.2"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.70
+output = 2.20
+reasoning = 2.20
+cache_read = 0.26
