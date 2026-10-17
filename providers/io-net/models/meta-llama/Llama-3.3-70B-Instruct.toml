@@ -1,25 +1,8 @@
-name = "Llama 3.3 70B Instruct"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-release_date = "2024-12-06"
-last_updated = "2024-12-06"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2023-12"
-open_weights = true
+# io.net IO Intelligence listing of meta-llama/Llama-3.3-70B-Instruct.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+base_model = "meta/llama-3.3-70b-instruct"
 
 [cost]
-input = 0.13
-output = 0.38
-cache_read = 0.065
-cache_write = 0.26
-
-[limit]
-context = 128000
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 0.5466
+output = 1.0226

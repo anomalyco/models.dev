@@ -1,0 +1,21 @@
+# io.net IO Intelligence listing of zai-org/GLM-5.3-Flash.
+# Effort: reasoning.effort = low|high|max
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400; reasoning_tokens low 103-143, high 112-232, max 120-642.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.1395
+output = 0.745
+cache_read = 0.06975
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]

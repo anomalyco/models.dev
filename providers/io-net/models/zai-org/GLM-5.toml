@@ -1,0 +1,18 @@
+# io.net IO Intelligence listing of zai-org/GLM-5.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also switches thinking off)
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: effort low and medium switch thinking OFF on this deployment (0 reasoning tokens), high/max/xhigh think 1376-3953 tokens with no ordering, so only the on/off control is listed.
+base_model = "zhipuai/glm-5"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.86
+output = 2.752
+cache_read = 0.43
+
+[limit]
+context = 202_752

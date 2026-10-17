@@ -1,25 +1,9 @@
-name = "Qwen 3 Next 80B Instruct"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2025-01-10"
-last_updated = "2025-01-10"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
+# io.net IO Intelligence listing of Qwen/Qwen3-Next-80B-A3B-Instruct.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# /models advertises a 262,144-token window but the endpoint rejects requests above 131,072 tokens, so the smaller value is used.
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 
 [cost]
-input = 0.1
-output = 0.8
-cache_read = 0.05
-cache_write = 0.2
-
-[limit]
-context = 262144
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 0.113333
+output = 1.133333

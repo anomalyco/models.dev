@@ -1,0 +1,18 @@
+# io.net IO Intelligence listing of MiniMaxAI/MiniMax-M2.5.
+# Always reasons: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400 (no caller control).
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: effort levels are accepted but the trace length is the same at every level (reasoning_tokens 537-1090).
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.354
+output = 1.416
+cache_read = 0.177
+
+[limit]
+context = 196_600

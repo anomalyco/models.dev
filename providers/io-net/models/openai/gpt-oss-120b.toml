@@ -1,25 +1,15 @@
-name = "GPT-OSS 120B"
-description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2024-12-01"
-last_updated = "2024-12-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = true
+# io.net IO Intelligence listing of openai/gpt-oss-120b.
+# Effort: reasoning.effort = low|medium|high
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400; reasoning_tokens low 142-182, medium 219-240, high 355-877.
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.04
-output = 0.4
-cache_read = 0.02
-cache_write = 0.08
-
-[limit]
-context = 131072
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 0.168
+output = 0.66
+cache_read = 0.084

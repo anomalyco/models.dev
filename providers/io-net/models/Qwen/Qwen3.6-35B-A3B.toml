@@ -1,0 +1,18 @@
+# io.net IO Intelligence listing of Qwen/Qwen3.6-35B-A3B.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also switches thinking off)
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: effort levels are accepted but do not order the trace (reasoning_tokens low 2153-3506, medium 2633-13412, high 3355-3685 at a 20000-token cap, three samples each; an earlier 8000-cap run was truncated the same way at every level), so only the on/off control is listed, as on OpenRouter. No reasoning-budget field exists on this path (reasoning.max_tokens is accepted but does not cap the trace).
+base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.1472
+output = 1.06275
+cache_read = 0.0736
+
+[modalities]
+input = ["text", "image", "video"]
