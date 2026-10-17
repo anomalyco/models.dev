@@ -6,10 +6,18 @@ import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
-// The bare endpoint lists text-output models only; decision models (output
-// modality `decisions`) are returned only when requested explicitly.
+// The bare endpoint lists text-output models only; decision, embedding and
+// reranking models are returned only when requested explicitly.
 // https://openrouter.ai/docs/guides/community/jev
-const API_ENDPOINT = "https://openrouter.ai/api/v1/models?output_modalities=text,decisions";
+const API_ENDPOINT = "https://openrouter.ai/api/v1/models?output_modalities=text,decisions,embeddings,rerank";
+
+// Output modalities that name the model type. Models of these types take no
+// sampling or tool parameters and generate no completion tokens.
+const OUTPUT_TYPES = new Map<string, "decision" | "embedding" | "reranking">([
+  ["decisions", "decision"],
+  ["embeddings", "embedding"],
+  ["rerank", "reranking"],
+]);
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
@@ -27,6 +35,14 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
 } as const;
 
 const DECISION_DESCRIPTION = "Decision model for typed evaluation of shared state";
+
+// A typed model's name often does not say what it does (`bge-m3`), so the
+// generic name-based description would call it a chat model.
+const TYPE_DESCRIPTIONS = {
+  decision: DECISION_DESCRIPTION,
+  embedding: "Embedding model for semantic search, retrieval, clustering, and ranking pipelines",
+  reranking: "Reranking model for improving retrieval quality in search and recommendation systems",
+} as const;
 
 const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "minimax/minimax-01": 40_000,
@@ -184,15 +200,17 @@ export const openrouter = {
 
 function isUnavailable(model: OpenRouterModel) {
   return (
-    // Decision models take no sampling or tool parameters, so an empty list is normal for them.
-    (model.supported_parameters.length === 0 && !isDecisionModel(model)) ||
+    // Typed models take no sampling or tool parameters, so an empty list is normal for them.
+    (model.supported_parameters.length === 0 && outputType(model) === undefined) ||
     Number(model.pricing.prompt) < 0 ||
     Number(model.pricing.completion) < 0
   );
 }
 
-function isDecisionModel(model: OpenRouterModel) {
-  return model.architecture.output_modalities.includes("decisions");
+function outputType(model: OpenRouterModel) {
+  return model.architecture.output_modalities
+    .map((modality) => OUTPUT_TYPES.get(modality))
+    .find((type) => type !== undefined);
 }
 
 function dateFromTimestamp(timestamp: number) {
@@ -259,8 +277,8 @@ export function buildOpenRouterModel(
 ): SyncedModel {
   const params = new Set(model.supported_parameters);
   const name = model.name.replace(/^[^:]+:\s+/, "");
-  const decision = isDecisionModel(model);
-  const type = decision ? "decision" : existing?.type;
+  const typed = outputType(model);
+  const type = typed ?? existing?.type;
   const input = modalities(model.architecture.input_modalities, ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
   const prompt = price(model.pricing.prompt);
@@ -296,8 +314,8 @@ export function buildOpenRouterModel(
   const limit = {
     context,
     input: existing?.limit?.input,
-    // Decision models evaluate state without generating completion tokens.
-    output: decision ? 0 : (OUTPUT_LIMIT_OVERRIDES[model.id]
+    // Decision, embedding and reranking models generate no completion tokens.
+    output: typed !== undefined ? 0 : (OUTPUT_LIMIT_OVERRIDES[model.id]
       ?? model.top_provider.max_completion_tokens
       ?? existing?.limit?.output
       ?? context),
@@ -313,8 +331,8 @@ export function buildOpenRouterModel(
         name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
-        // The lab describes a decision model; don't override it with a generic chat description.
-        description: decision ? existing?.description : existing?.description ?? describeModel({
+        // The lab describes a typed model; don't override it with a generic chat description.
+        description: typed !== undefined ? existing?.description : existing?.description ?? describeModel({
           id: model.id,
           name,
           family: familyValue,
@@ -328,10 +346,10 @@ export function buildOpenRouterModel(
         attachment,
         reasoning,
         reasoning_options,
-        // Decision models list no parameters; inherit these from the lab instead of reporting false.
-        temperature: decision ? undefined : params.has("temperature"),
+        // Typed models list no parameters; inherit these from the lab instead of reporting false.
+        temperature: typed !== undefined ? undefined : params.has("temperature"),
         tool_call: toolCall,
-        structured_output: decision ? undefined : structuredOutput,
+        structured_output: typed !== undefined ? undefined : structuredOutput,
         status: existing?.status,
         interleaved: existing?.interleaved,
         limit,
@@ -346,7 +364,7 @@ export function buildOpenRouterModel(
   return {
     type,
     name,
-    description: existing?.description ?? (decision ? DECISION_DESCRIPTION : describeModel({
+    description: existing?.description ?? (typed !== undefined ? TYPE_DESCRIPTIONS[typed] : describeModel({
       id: model.id,
       name,
       family: familyValue,
