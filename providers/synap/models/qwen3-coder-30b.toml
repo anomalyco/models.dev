@@ -1,0 +1,20 @@
+# Sources (accessed 2026-10-12):
+# - Model id, USD pricing and limits: https://pool.linkrra.com/v1/models?format=openrouter
+#   (cost_usd is per token: 0.0000000675 prompt / 0.00000027 completion).
+# - limit: live probe - a ~26k-token prompt is accepted and a larger one is rejected;
+#   max_tokens above the 32,768 window is rejected.
+# - tool_call = false: live probe - requests carrying `tools` with tool_choice
+#   auto, required or a named function return HTTP 400 on this endpoint.
+# - structured_output = true: live probe - response_format json_schema returns
+#   schema-conforming JSON.
+base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
+tool_call = false
+structured_output = true
+
+[cost]
+input = 0.0675
+output = 0.27
+
+[limit]
+context = 32_768
+output = 32_768

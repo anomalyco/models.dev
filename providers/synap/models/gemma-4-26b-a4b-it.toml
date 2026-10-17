@@ -1,0 +1,34 @@
+# Sources (accessed 2026-10-15, re-probed after review):
+# - Model id, USD pricing and limits: https://pool.linkrra.com/v1/models?format=openrouter
+#   (cost_usd is per token: 0.00000004 prompt / 0.00000021 completion).
+# - limit.context 131,072: the deployment's --max-model-len as declared by the live
+#   feed (below the lab model's 262k). limit.output is NOT overridden: a request
+#   with max_tokens=131000 is accepted, but an actual 131k-token generation has
+#   not been demonstrated, so the lab value (32,768) is inherited rather than
+#   claiming an unverified 4x ceiling.
+# - [modalities] input = ["text"] + attachment = false: live probe - a chat
+#   request with an image_url content part returns an upstream error, while the
+#   same request with text only succeeds. The deployment rejects image input.
+# - reasoning = false: live probes - a prompt inviting deliberation returns no
+#   reasoning / reasoning_content field (both null), and no thinking channel
+#   appears in any response from this deployment. `reasoning_effort` is accepted
+#   with HTTP 200 but produces no reasoning output, i.e. it is tolerated, not
+#   served. Affirmative output-side evidence, not an inference from the
+#   supported_parameters list.
+# - tool_call = true: live probe - a request carrying `tools` with tool_choice
+#   auto returns finish_reason "tool_calls" with a well-formed function call.
+# - structured_output = true: live probe - response_format json_schema returns
+#   schema-conforming JSON.
+base_model = "google/gemma-4-26b-a4b-it"
+attachment = false
+reasoning = false
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 0.04
+output = 0.21
+
+[limit]
+context = 131_072
