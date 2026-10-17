@@ -4,9 +4,11 @@
 import { generateCatalog } from "@models.dev/core";
 import type { Model, ModelMetadata, Provider } from "@models.dev/core";
 import { Fragment } from "hono/jsx";
+import { raw } from "hono/html";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync, readFileSync, readdirSync } from "fs";
 import path from "path";
+import { LabLogoSprite, ProviderLogoSprite, type LogoSprite } from "./logos.js";
 import {
   booleanText,
   capabilitySummary,
@@ -28,8 +30,6 @@ export const Models = Catalog.models;
 export const Providers = Catalog.providers;
 
 const LabMetadata = loadLabMetadata(root);
-const ProviderLogoSvgs = new Map<string, string>();
-const LabLogoSvgs = new Map<string, string>();
 
 type CatalogModel = ModelMetadata;
 type CatalogProvider = Provider;
@@ -805,7 +805,7 @@ function ModelPage(props: { model: ModelEntry }) {
       />
       <Facts
         items={[
-          ["Lab", <LabLink labId={model.labId} labName={model.labName} />],
+          ["Lab", <LabLink labId={model.labId} labName={model.labName} inline />],
           ["Family", metadata.family ?? "-"],
           ["Providers", model.providers.length],
           ["Context", formatNumber(metadata.limit?.context)],
@@ -1112,7 +1112,11 @@ function ProviderModelsTable(props: {
             >
               {props.mode === "model" ? (
                 <th scope="row" data-sort={entry.provider.name}>
-                  <ProviderLink providerId={entry.providerId} provider={entry.provider} />
+                  <ProviderLink
+                    providerId={entry.providerId}
+                    provider={entry.provider}
+                    inline
+                  />
                 </th>
               ) : (
                 <th scope="row" data-sort={displayName}>
@@ -1132,7 +1136,7 @@ function ProviderModelsTable(props: {
               )}
               {showLab && (
                 <td data-sort={lab?.name ?? ""}>
-                  {lab ? <LabLink labId={lab.id} labName={lab.name} /> : "-"}
+                  {lab ? <LabLink labId={lab.id} labName={lab.name} inline /> : "-"}
                 </td>
               )}
               <td class="mono" data-sort={entry.modelId}>
@@ -1260,27 +1264,48 @@ function EmptyRow(props: { columns: number }) {
 function ProviderLink(props: {
   providerId: string;
   provider: Pick<CatalogProvider, "name">;
+  inline?: boolean;
 }) {
   return (
     <a class="provider-link" href={providerHref(props.providerId)}>
-      <span
+      <Logo
         class="provider-logo"
-        dangerouslySetInnerHTML={{ __html: providerLogoSvg(props.providerId) }}
+        sprite={ProviderLogoSprite}
+        id={props.providerId}
+        inline={props.inline}
       />
       <span>{props.provider.name}</span>
     </a>
   );
 }
 
-function LabLink(props: { labId: string; labName: string }) {
+function LabLink(props: { labId: string; labName: string; inline?: boolean }) {
   return (
     <a class="lab-link" href={labHref(props.labId)}>
-      <span
+      <Logo
         class="lab-logo"
-        dangerouslySetInnerHTML={{ __html: labLogoSvg(props.labId) }}
+        sprite={LabLogoSprite}
+        id={props.labId}
+        inline={props.inline}
       />
       <span>{props.labName}</span>
     </a>
+  );
+}
+
+function Logo(props: {
+  class: string;
+  sprite: LogoSprite;
+  id: string;
+  inline?: boolean;
+}) {
+  if (props.inline) {
+    return raw(props.sprite.inline(props.id, props.class));
+  }
+  return (
+    <svg class={props.class} width="16" height="16" aria-hidden="true" focusable="false">
+      <use href={props.sprite.href(props.id)} />
+    </svg>
   );
 }
 
@@ -1663,46 +1688,3 @@ function labLogoHref(labId: string) {
   return `/logos/labs/${encodeURIComponent(labId)}.svg`;
 }
 
-function providerLogoSvg(providerId: string) {
-  const cached = ProviderLogoSvgs.get(providerId);
-  if (cached) return cached;
-
-  const logoPath = path.join(root, "providers", providerId, "logo.svg");
-  const defaultLogoPath = path.join(root, "providers", "logo.svg");
-  const rawSvg = readFileSync(
-    existsSync(logoPath) ? logoPath : defaultLogoPath,
-    "utf8",
-  );
-  const svg = rawSvg
-    .replace(/<svg\b([^>]*)>/i, (_, attributes: string) => {
-      const cleaned = attributes.replace(/\s(width|height)="[^"]*"/gi, "");
-      return `<svg${cleaned} aria-hidden="true" focusable="false">`;
-    })
-    .replace(/\sfill="(?!none|currentColor)[^"]*"/gi, ' fill="currentColor"')
-    .replace(/\sstroke="(?!none|currentColor)[^"]*"/gi, ' stroke="currentColor"');
-
-  ProviderLogoSvgs.set(providerId, svg);
-  return svg;
-}
-
-function labLogoSvg(labId: string) {
-  const cached = LabLogoSvgs.get(labId);
-  if (cached) return cached;
-
-  const logoPath = path.join(root, "labs", labId, "logo.svg");
-  const defaultLogoPath = path.join(root, "providers", "logo.svg");
-  const rawSvg = readFileSync(
-    existsSync(logoPath) ? logoPath : defaultLogoPath,
-    "utf8",
-  );
-  const svg = rawSvg
-    .replace(/<svg\b([^>]*)>/i, (_, attributes: string) => {
-      const cleaned = attributes.replace(/\s(width|height)="[^"]*"/gi, "");
-      return `<svg${cleaned} aria-hidden="true" focusable="false">`;
-    })
-    .replace(/\sfill="(?!none)[^"]*"/gi, ' fill="currentColor"')
-    .replace(/\sstroke="(?!none)[^"]*"/gi, ' stroke="currentColor"');
-
-  LabLogoSvgs.set(labId, svg);
-  return svg;
-}
