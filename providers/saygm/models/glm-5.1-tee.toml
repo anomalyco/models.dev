@@ -1,0 +1,11 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+# Confidential tier: served inside a TEE (Intel TDX), prompt decrypted only in the enclave.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Tested on api.saygm.com/v1/chat/completions 2026-10-14.
+base_model = "zhipuai/glm-5.1"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.33
+output = 4.18
+cache_read = 0.247

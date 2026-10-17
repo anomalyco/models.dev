@@ -1,0 +1,8 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+base_model = "openai/o3"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.476
+output = 5.904
+cache_read = 0.369

@@ -1,0 +1,13 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+base_model = "anthropic/claude-fable-5-1"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 8.3
+output = 41.5
+cache_read = 0.2075
+cache_write = 10.375
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.saygm.com/v1"

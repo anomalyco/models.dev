@@ -1,0 +1,11 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+# Confidential tier: served inside a TEE (Intel TDX), prompt decrypted only in the enclave.
+# Toggle: thinking.type = enabled|disabled (same model as mimo-v2.6-pro-ultraspeed)
+# Tested on api.saygm.com/v1/chat/completions 2026-10-14.
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 3.915
+output = 7.83
+cache_read = 0.0324

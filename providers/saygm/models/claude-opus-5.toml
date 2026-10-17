@@ -1,0 +1,13 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+base_model = "anthropic/claude-opus-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4.15
+output = 20.75
+cache_read = 0.415
+cache_write = 5.1875
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.saygm.com/v1"

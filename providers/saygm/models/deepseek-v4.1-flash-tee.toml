@@ -1,0 +1,11 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+# Confidential tier: served inside a TEE (Intel TDX), prompt decrypted only in the enclave.
+# Effort: reasoning_effort (same model as deepseek-v4.1-flash)
+# Tested on api.saygm.com/v1/chat/completions 2026-10-14.
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.27
+output = 1.08
+cache_read = 0.0054

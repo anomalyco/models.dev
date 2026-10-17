@@ -1,0 +1,12 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+# Confidential tier: served inside a TEE (Intel TDX), prompt decrypted only in the enclave.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Tested on api.saygm.com/v1/chat/completions 2026-10-14.
+# thinking_budget is not forwarded on this host, so no budget_tokens.
+base_model = "alibaba/qwen3-32b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.0988
+output = 0.3952
+cache_read = 0.0099

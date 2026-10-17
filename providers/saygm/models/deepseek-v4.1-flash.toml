@@ -1,0 +1,10 @@
+# Source: https://api.saygm.com/v1/models (accessed 2026-10-14); price = cheapest eligible offer, market-set.
+# Effort: reasoning_effort (thinking is off unless reasoning_effort is set; thinking.type alone has no effect)
+# Tested on api.saygm.com/v1/chat/completions 2026-10-14.
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.134
+output = 0.5359
+cache_read = 0.0027
