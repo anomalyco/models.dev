@@ -1,0 +1,24 @@
+# Agent Plan model name from https://www.volcengine.com/docs/82379/2366394
+# (accessed 2026-09-21). Subscription tier: no per-token price.
+# Effort on this endpoint was not probed; mirrors the kimi-k3 lab surface:
+# thinking.type toggle + reasoning_effort = low|high|max.
+# Output cap measured via max_tokens rejection: 131072.
+base_model = "moonshotai/kimi-k2.8-preview"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+output = 131_072
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

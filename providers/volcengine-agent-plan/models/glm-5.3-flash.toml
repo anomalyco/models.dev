@@ -1,0 +1,21 @@
+# Agent Plan model name from https://www.volcengine.com/docs/82379/2366394
+# (accessed 2026-09-21). Subscription tier: no per-token price.
+# Effort on this endpoint was not probed; mirrors the lab (providers/zhipuai)
+# and the coding-plan peer: reasoning_effort = low|high|max, no toggle.
+# Output cap measured via max_tokens rejection: 131072.
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+# limits inherit from the lab entry unchanged (context 1000000 / output 131072 match), so no [limit] override is authored.
+
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
