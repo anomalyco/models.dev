@@ -1,0 +1,18 @@
+# Public catalog: https://platform.acedata.cloud/models/deepseek-v4.1-flash
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/f416edc1-a771-4a31-90e7-b14ca3a3d674
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# Toggle: thinking.type = enabled|disabled; effort: reasoning_effort = low|high|max (native baseline)
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.1618904
+output = 0.485671375
+cache_read = 0.005151125
+
+[provider]
+api = "https://api.acedata.cloud/deepseek"

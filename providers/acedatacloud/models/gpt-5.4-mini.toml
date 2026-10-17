@@ -1,0 +1,12 @@
+# Public catalog: https://platform.acedata.cloud/models/gpt-5.4-mini
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/c9969b66-effb-4753-b504-a82c4d16f83f
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort (Chat Completions), or reasoning.effort (Responses)
+base_model = "openai/gpt-5.4-mini"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.275949625
+output = 1.655697925
+cache_read = 0.02759505

@@ -1,0 +1,24 @@
+# Public catalog: https://platform.acedata.cloud/models/gemini-2.5-flash
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/94b49b55-2ea8-4d46-a93c-eb308e1a52d5
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort on the OpenAI-compatible endpoint (not native generationConfig)
+# Host API evidence: definition.paths[/gemini/chat/completions].post.requestBody
+# .content[application/json].schema.properties.reasoning_effort enumerates minimal/low/medium/high.
+# The endpoint schema does not expose native thinking_budget or generationConfig fields.
+# Live 2026-10-06: reasoning_effort=low returned HTTP 200 with a completed answer.
+# Live minimal probe returned HTTP 400 explicitly listing low/medium/high.
+# Same-prompt low/high probes returned the correct answer; reported reasoning tokens: 341/670.
+base_model = "google/gemini-2.5-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 0.11037985
+output = 0.9198322
+cache_read = 0.01103795
+
+[provider]
+api = "https://api.acedata.cloud/gemini"

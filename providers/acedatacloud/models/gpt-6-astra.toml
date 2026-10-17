@@ -1,0 +1,24 @@
+# Public catalog: https://platform.acedata.cloud/models/gpt-6-astra
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/c9969b66-effb-4753-b504-a82c4d16f83f
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort (Chat Completions), or reasoning.effort (Responses)
+# cache_write is the default 5-minute cache TTL.
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 3.679328625
+output = 18.396643125
+cache_read = 0.367932775
+cache_write = 4.599160825
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 7.35865725
+output = 27.5949646
+cache_read = 0.735865725
+cache_write = 9.198321475
