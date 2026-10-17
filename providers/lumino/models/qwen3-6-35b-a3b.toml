@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B-A3B"
+description = "Newer Qwen MoE model with strong coding and general assistant performance at efficient pricing."
+release_date = "2026-04-17"
+last_updated = "2026-04-17"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.2105
+output = 1.4737
+
+[limit]
+context = 131072
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+base_model = "xiaomi/mimo-v2.5-pro"
+name = "MiMo V2.5 Pro"
+description = "Xiaomi's trillion-parameter MoE flagship for long-context reasoning, tool use, structured output, and agentic workflows."
+release_date = "2026-04-22"
+last_updated = "2026-04-22"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 1.5789
+output = 4.7368
+cache_read = 0.3158
+
+[limit]
+context = 1048576
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

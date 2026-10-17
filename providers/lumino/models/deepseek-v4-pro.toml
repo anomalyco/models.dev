@@ -1,0 +1,23 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro"
+description = "DeepSeek's premium V4 model for complex coding, reasoning, and long-form technical work."
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 2.1053
+output = 4.1053
+cache_read = 0.2105
+
+[limit]
+context = 256000
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

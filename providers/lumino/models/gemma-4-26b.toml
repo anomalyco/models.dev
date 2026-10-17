@@ -1,0 +1,21 @@
+base_model = "google/gemma-4-26b-a4b-it"
+name = "Gemma 4 26B"
+description = "Google's latest MoE model. Fast and efficient for everyday chat, summarization, and Q&A."
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.1053
+output = 0.5263
+
+[limit]
+context = 256000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

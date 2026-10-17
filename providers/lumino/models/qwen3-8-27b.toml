@@ -1,0 +1,22 @@
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B"
+description = "Qwen3.8 dense 27B model for coding and professional workflows at 25%-off launch pricing."
+release_date = "2026-08-14"
+last_updated = "2026-08-14"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.3158
+output = 3.0526
+cache_read = 0.1053
+
+[limit]
+context = 256000
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]
