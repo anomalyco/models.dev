@@ -1,0 +1,62 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (turns thinking on/off)
+# Effort: top-level reasoning_effort = minimal|low|medium|high|xhigh; the
+# gateway translates the level onto the current backend's thinking control.
+# Thinking is disabled either by the toggle or by reasoning_effort = none|off;
+# the effort list excludes none/off because they disable thinking rather than
+# select a level.
+# Host-owned auto-router alias, defined inline (no base_model): the server-side
+# target is configurable and rotates behind the stable id (the pricing page
+# sells `yolo` as "an optional route with a configurable server-side target",
+# https://yolo-auto.com/pricing), so no lab-specific facts are asserted. Same
+# pattern as openrouter/models/openrouter/auto.toml and
+# providers/llmgateway/models/auto.toml.
+# Verified against the live host on 2026-09-22:
+# - GET https://yolo-auto.com/v1/models: context_length 262144;
+#   thinking = [minimal, low, medium, high, xhigh] (authoritative accepted set).
+# - reasoning_effort has a distinct effect: 9 live samples on an identical
+#   prompt; high used more reasoning tokens (203-298) than low (122-232).
+# - tool_call and json-mode response_format verified live.
+# - image input verified live: a red|green|blue color-strip image was read back
+#   in correct left-to-right order (Red LEFT / Green MIDDLE / Blue RIGHT).
+# Limits: the host publishes no separate output cap: the request path clamps
+# max_tokens to (served window - prompt), so output is bounded by the model
+# window itself, and output = context follows the convention of the catalog's
+# lab entries (e.g. models/nvidia/nemotron-3.5-lightning.toml sets
+# output = context = 262144). The window itself is plan-tiered account policy,
+# documented here per the public pricing page (https://yolo-auto.com/pricing,
+# accessed 2026-09-22): Free and Builder keys are capped at a 128K served
+# window, Pro keys at 256K; the 262144 limits below are the full model window
+# and require a Pro subscription to be fully realized, exactly as the
+# catalog's lab entries state the model window rather than any per-account cap.
+# temperature is false: this alias runs proxy-owned thinking-mode sampling, so a
+# caller temperature is not honoured (live: temperature=0 stayed
+# non-deterministic).
+# open_weights is false: a rotating router makes no per-backend weight
+# guarantee.
+name = "Yolo Auto"
+description = "Auto-router: server-side model selection behind one flat subscription"
+family = "auto"
+release_date = "2026-08-27"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] },
+]
+tool_call = true
+structured_output = true
+temperature = false
+open_weights = false
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.0
+output = 0.0

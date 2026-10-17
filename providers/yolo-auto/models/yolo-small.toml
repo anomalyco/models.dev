@@ -1,0 +1,27 @@
+# Pinned lab model behind a stable host id, not an auto-router: this id was
+# introduced on 2026-09-18 to serve our NVIDIA Nemotron 3.5 Lightning 30B A3B
+# (NVFP4) fleet and that single backend has served it ever since, so it uses
+# base_model per AGENTS.md (a nameable lab model gets the lab facts; this file
+# carries only host deltas) and inherits the nemotron family, limits
+# (262144/262144), modalities, temperature, tool_call and structured_output.
+# Host-side plan tiers cap the served window (128K on Free/Builder, 256K on
+# Pro, https://yolo-auto.com/pricing); that is account policy, not a model
+# fact, so no limit delta is authored.
+# Verified against the live host on 2026-09-22:
+# - Toggle: chat_template_kwargs.enable_thinking = true|false works on this
+#   host (default replies carry a ~1,000-char reasoning chain;
+#   enable_thinking = false yields none).
+# - reasoning_effort changes nothing here (minimal/low/xhigh all still think)
+#   and GET /v1/models omits the thinking field for this id only, so no effort
+#   set is offered. This matches the lab provider entry
+#   providers/nvidia/models/nvidia/nemotron-3.5-lightning-30b-a3b.toml, which
+#   is reasoning_options = [{ type = "toggle" }].
+# - tool_call verified live.
+# Cost delta: flat-rate subscription; per-token API cost is 0
+# (https://yolo-auto.com/docs; no per-token overage fees).
+base_model = "nvidia/nemotron-3.5-lightning"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.0
+output = 0.0

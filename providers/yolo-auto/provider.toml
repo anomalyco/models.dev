@@ -1,0 +1,15 @@
+# Yolo-Auto is a flat-rate OpenAI-compatible gateway (https://yolo-auto.com).
+# Per-token cost is published as 0.0 for every model (same convention as
+# providers/opencode): https://yolo-auto.com/docs states "Paid plans have fixed
+# monthly prices with no per-token overage fees" and
+# https://yolo-auto.com/pricing shows flat $0/$19/$39 monthly plans with no
+# token credits or overages.
+# Reasoning controls (live host, verified 2026-09-22): both aliases accept the
+# chat_template_kwargs.enable_thinking = true|false toggle. Only `yolo` also
+# accepts top-level reasoning_effort; the authoritative per-key accepted level
+# list is the "thinking" field served by GET /v1/models.
+name = "Yolo-Auto"
+npm = "@ai-sdk/openai-compatible"
+env = ["YOLO_AUTO_API_KEY"]
+api = "https://yolo-auto.com/v1"
+doc = "https://yolo-auto.com/docs"
