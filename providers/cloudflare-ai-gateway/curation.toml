@@ -198,6 +198,19 @@ note = [
 ]
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
+# Muse Spark Open always reasons; native ladder is low|medium|high|xhigh (default xhigh).
+# Reasoning cannot be disabled: none|max rejected. Cloudflare serves this route via
+# Fireworks and preserves reasoning_effort on POST /ai/v1/chat/completions.
+# https://dev.meta.ai/docs/muse-spark-open/prompting
+# https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
+# https://developers.cloudflare.com/ai/models/meta/muse-spark-open/
+[models."meta/muse-spark-open"]
+note = [
+  "Effort: reasoning_effort = low|medium|high|xhigh (default xhigh; reasoning cannot be disabled, none|max rejected; POST /ai/v1/chat/completions).",
+  "Sources: https://dev.meta.ai/docs/muse-spark-open/prompting ; https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B ; https://developers.cloudflare.com/ai/models/meta/muse-spark-open/",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
 # Alibaba is a first-party lab; the catalog's OpenAI-compat schema exposes a generic
 # `reasoning_effort` enum, but Alibaba's real API (see providers/alibaba/models/qwen3.7-plus.toml)
 # is toggle + budget_tokens, not graded effort. Match the lab shape per AGENTS.md.
