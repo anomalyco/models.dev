@@ -327,9 +327,11 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 
 - Inference is implemented in `packages/core/src/sync/providers/inference.ts`.
 - Source endpoint: `https://api.inference.net/v1/models`. No authentication is required.
-- Price (`pricing.*`, USD per token, scaled to per million), `context_length`, `max_completion_tokens`, and `reasoning_efforts` are authoritative for this host. Capabilities and modalities are inherited from the lab entry.
-- `reasoning_efforts` is the exact set `reasoning_effort` accepts on this host, and `none` turns reasoning off, so it maps to one `effort` option and never a toggle.
-- `limit.output` is capped at `limit.context`, because some routes report a completion cap above their context window.
+- Price (`pricing.*`, USD per token, scaled to per million), `context_length`, `input_modalities`, and `reasoning_efforts` are authoritative for this host. Other capabilities are inherited from the lab entry.
+- `max_completion_tokens` is advisory: several routes report the whole context window. `limit.output` is the lowest of it, the context window, and the lab figure.
+- `reasoning_efforts` is the exact set `reasoning_effort` accepts on this host, and `none` turns reasoning off, so it maps to one `effort` option. Routes without `none` are not known to expose a separate off switch, so no toggle is published. Levels the schema cannot describe are dropped.
+- A cache-read price no lower than the input price is not published.
+- A live model with no price or limits keeps its existing file unchanged.
 - New models are created as `base_model` overlays. Most IDs carry no namespace, so the lab is read from the family prefix (`claude-` → `anthropic`, `glm-` → `zhipuai`, …). A model with no lab entry opens a missing-model issue.
 - A reasoning model without `reasoning_efforts` keeps hand-authored `reasoning_options`, or fails for manual review.
 - The fetch refuses a response with fewer than twenty models, so a truncated list is not read as a mass retirement.

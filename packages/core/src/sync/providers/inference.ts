@@ -35,6 +35,13 @@ const LAB_BY_PREFIX: [prefix: string, lab: string][] = [
   ["nemotron-", "nvidia"],
 ];
 
+// Levels the catalog schema can describe; others are dropped so one new level
+// cannot fail the whole sync.
+const ReasoningEffort = z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]);
+
+// Modalities the catalog schema can describe; others are dropped.
+const Modality = z.enum(["text", "audio", "image", "video", "pdf"]);
+
 const InferencePricing = z.object({
   prompt: z.string(),
   completion: z.string(),
@@ -44,10 +51,12 @@ const InferencePricing = z.object({
 export const InferenceModel = z.object({
   id: z.string().min(1),
   object: z.literal("model"),
-  context_length: z.number().int().positive(),
-  max_completion_tokens: z.number().int().positive(),
-  reasoning_efforts: z.array(z.string()).nonempty().optional(),
-  pricing: InferencePricing,
+  // The endpoint omits limits and pricing it does not know.
+  context_length: z.number().int().positive().optional(),
+  max_completion_tokens: z.number().int().positive().optional(),
+  reasoning_efforts: z.array(z.string()).optional(),
+  input_modalities: z.array(z.string()).optional(),
+  pricing: InferencePricing.optional(),
 }).passthrough();
 
 export const InferenceResponse = z.object({
@@ -80,12 +89,28 @@ export const inference = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
+    // A live model the endpoint cannot price or bound is republished unchanged
+    // rather than dropped, because dropping it would delete a served route.
+    if (!isComplete(model)) {
+      const authored = context.authored(model.id);
+      return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+    }
     if (existing !== undefined) return { id: model.id, model: buildInferenceModel(model, existing) };
     const baseModel = labModelID(model.id);
     if (!existsSync(path.join(MODELS_DIR, `${baseModel}.toml`))) return undefined;
     return { id: model.id, model: buildInferenceModel(model, { base_model: baseModel } as ExistingModel) };
   },
 } satisfies SyncProvider<InferenceModel>;
+
+type CompleteInferenceModel = InferenceModel & Required<
+  Pick<InferenceModel, "context_length" | "max_completion_tokens" | "pricing">
+>;
+
+function isComplete(model: InferenceModel): model is CompleteInferenceModel {
+  return model.context_length !== undefined
+    && model.max_completion_tokens !== undefined
+    && model.pricing !== undefined;
+}
 
 export async function fetchInferenceModels(fetcher: typeof fetch = fetch) {
   const response = await fetcher(API_ENDPOINT);
@@ -118,34 +143,50 @@ function perMillion(value: string): number {
   return Number((Number(value) * TOKENS_PER_PRICING_UNIT).toFixed(6));
 }
 
-// The endpoint is authoritative for price, serving limits, and reasoning
-// controls: `reasoning_efforts` is the exact set `reasoning_effort` accepts on
-// this host, with `none` turning reasoning off, so it maps to a single effort
-// option and never a toggle. Capabilities and modalities stay inherited.
-export function buildInferenceModel(model: InferenceModel, existing: ExistingModel): SyncedModel {
+// The endpoint is authoritative for price, context window, input modalities,
+// and reasoning controls on this host. `reasoning_efforts` is the exact set
+// `reasoning_effort` accepts, with `none` turning reasoning off; routes without
+// `none` are not known to expose a separate off switch, so no toggle is
+// published. `max_completion_tokens` is advisory (several routes report the
+// whole context window), so output only ever tightens the lab figure.
+export function buildInferenceModel(model: CompleteInferenceModel, existing: ExistingModel): SyncedModel {
   const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;
   const inherited = baseModel === undefined ? {} : modelMetadata(baseModel);
 
+  const input = perMillion(model.pricing.prompt);
+  // A cache price no lower than input is no discount, so it is not published.
+  const cacheRead = model.pricing.input_cache_read === undefined
+    ? undefined
+    : perMillion(model.pricing.input_cache_read);
+  const { cache_read: _staleCacheRead, ...authoredCost } = current.cost ?? {};
   const cost = {
-    ...current.cost,
-    input: perMillion(model.pricing.prompt),
+    ...authoredCost,
+    input,
     output: perMillion(model.pricing.completion),
-    ...(model.pricing.input_cache_read === undefined
-      ? {}
-      : { cache_read: perMillion(model.pricing.input_cache_read) }),
+    ...(cacheRead === undefined || cacheRead >= input ? {} : { cache_read: cacheRead }),
   };
 
-  // Some routes report a completion cap above their context window.
+  const labOutput = (inherited.limit as { output?: number } | undefined)?.output ?? Number.POSITIVE_INFINITY;
   const limit = {
     ...current.limit,
     context: model.context_length,
-    output: Math.min(model.max_completion_tokens, model.context_length),
+    output: Math.min(model.max_completion_tokens, model.context_length, labOutput),
   };
 
+  const inputModalities = (model.input_modalities ?? []).filter(
+    (modality): modality is z.infer<typeof Modality> => Modality.safeParse(modality).success,
+  );
+  const modalities = inputModalities.length === 0
+    ? current.modalities
+    : { ...current.modalities, input: inputModalities } as SyncedFullModel["modalities"];
+
   const reasons = (current.reasoning ?? inherited.reasoning) === true;
+  const efforts = (model.reasoning_efforts ?? []).filter(
+    (effort): effort is z.infer<typeof ReasoningEffort> => ReasoningEffort.safeParse(effort).success,
+  );
   let reasoning: Pick<SyncedFullModel, "reasoning" | "reasoning_options">;
-  if (model.reasoning_efforts !== undefined) {
-    reasoning = { reasoning: true, reasoning_options: [{ type: "effort", values: model.reasoning_efforts }] };
+  if (efforts.some((effort) => effort !== "none")) {
+    reasoning = { reasoning: true, reasoning_options: [{ type: "effort", values: efforts }] };
   } else if (!reasons) {
     reasoning = { reasoning: false, reasoning_options: undefined };
   } else if (current.reasoning_options !== undefined) {
@@ -158,7 +199,7 @@ export function buildInferenceModel(model: InferenceModel, existing: ExistingMod
     );
   }
 
-  const values = { ...current, cost, limit, ...reasoning } as SyncedFullModel;
+  const values = { ...current, cost, limit, modalities, ...reasoning } as SyncedFullModel;
 
   return baseModel === undefined
     ? values
