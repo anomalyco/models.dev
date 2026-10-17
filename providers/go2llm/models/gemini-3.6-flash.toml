@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/google/models/gemini-3.6-flash.toml.
+
+base_model = "google/gemini-3.6-flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 0.128
+output = 0.638
+cache_read = 0.01275
+cache_write = 0.16
+
+[modalities]
+input = ["text"]
+output = ["text"]

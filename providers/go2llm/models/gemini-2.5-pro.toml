@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/google/models/gemini-2.5-pro.toml.
+
+base_model = "google/gemini-2.5-pro"
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32768 }]
+
+[cost]
+input = 0.212
+output = 1.7
+cache_read = 0.02125
+cache_write = 0.265
+
+[modalities]
+input = ["text"]
+output = ["text"]

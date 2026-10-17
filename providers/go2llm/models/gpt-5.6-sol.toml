@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/openai/models/gpt-5.6-sol.toml.
+
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.402
+output = 2.01
+cache_read = 0.0402
+cache_write = 0.503
+
+[modalities]
+input = ["text"]
+output = ["text"]

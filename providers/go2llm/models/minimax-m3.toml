@@ -1,0 +1,17 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/minimax/models/MiniMax-M3.toml.
+# Toggle: Anthropic Messages `/v1/messages` `thinking.type` = enabled|disabled (copied from the first-party model control; Go2LLM was not live-tested).
+
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.03958
+output = 0.158
+cache_read = 0.00792
+cache_write = 0.04948
+
+[modalities]
+input = ["text"]
+output = ["text"]

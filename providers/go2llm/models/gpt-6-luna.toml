@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/openai/models/gpt-6-luna.toml.
+
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.02794
+output = 0.14
+cache_read = 0.00279
+cache_write = 0.03492
+
+[modalities]
+input = ["text"]
+output = ["text"]
