@@ -1,0 +1,22 @@
+# Sources: https://1nfer.net/v1/models and https://1nfer.net/llms.txt (2026-10-09)
+# USD/MTok for a new account, before earned launch tiers; no separate cache rebate.
+# Text-only Chat Completions, buffered SSE; no reasoning controls or structured output.
+# Capacity is supplier-declared, not a full-window load-test result.
+base_model = "anthropic/claude-opus-5-5"
+attachment = false
+reasoning = false
+structured_output = false
+tool_call = false
+
+[cost]
+input = 4.0
+output = 20.0
+
+[limit]
+context = 200000
+input = 200000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]
