@@ -1,0 +1,17 @@
+name = "ERNIE 5.0"
+description = "Baidu's natively omni-modal Wenxin 5.0 model for multimodal understanding, agent planning, and tool use"
+family = "ernie"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
