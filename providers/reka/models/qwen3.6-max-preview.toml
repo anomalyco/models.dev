@@ -1,0 +1,19 @@
+# Named/required tool_choice requires enable_thinking=false (live verified).
+# Direct API catalog and USD pricing (2026-09-22):
+# https://inference.api.reka.ai/v1/site/models?capability=chat
+# Toggle: enable_thinking = true|false; reasoning budget: thinking_budget.
+# These parameters pass through to the Alibaba chat-completions API.
+base_model = "alibaba/qwen3.6-max-preview"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.3
+output = 7.8
+
+[[cost.tiers]]
+tier = { type = "context", size = 131072 }
+input = 2.0
+output = 12.0

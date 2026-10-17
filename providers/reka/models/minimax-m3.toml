@@ -1,0 +1,22 @@
+# Public catalog token_bands[0].max_tokens=524288, context_window=1048576; see ../README.md.
+# Upstream thinking defaults are not caller-controllable on this route.
+# The response adapter omits thinking blocks; no reasoning_content is returned.
+# Synthetic adapter transformation and evidence boundary: ../README.md
+# The adapter builds an allowlisted Messages payload; thinking/reasoning/effort are omitted.
+# Direct API catalog and USD pricing (2026-09-22):
+# https://inference.api.reka.ai/v1/site/models?capability=chat
+# The OpenAI-to-Messages adapter does not forward caller reasoning controls.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 524288 }
+input = 0.6
+output = 2.4
+
+[modalities]
+input = ["text", "image"]
