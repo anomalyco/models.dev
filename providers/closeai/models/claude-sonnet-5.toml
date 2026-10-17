@@ -1,0 +1,15 @@
+# Toggle: thinking.type = adaptive|disabled
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-sonnet-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.openai-proxy.org/anthropic/v1"
