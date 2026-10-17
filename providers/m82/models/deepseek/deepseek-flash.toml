@@ -1,0 +1,32 @@
+# Served by M82 Router (https://m82router.com), an OpenAI-compatible gateway with one key for every model.
+# Source: https://m82router.com/api/documentation (read 2026-10-08). Costs are USD per million tokens.
+
+# Catalog record for this model (same URL, models[].id == "deepseek/deepseek-flash"): context_window=1048576, max_output_tokens=4096, supports_tools=true, supports_streaming=true, supports_json=false, supports_vision=false, supports_reasoning=true.
+# limit.output = max_output_tokens (max_tokens above it returns HTTP 400 invalid_max_tokens).
+# attachment/modalities = supports_vision; structured_output = supports_json.
+# Request bodies are decoded strictly: unknown fields such as `thinking` or a `reasoning` object return HTTP 400.
+# `reasoning_effort` is accepted only for values in reasoning_efforts; any other value, or any value when the
+# field is absent, returns HTTP 400 unsupported_parameter (see the errors table on the doc page).
+# Verified against the live API on 2026-10-08: an unlisted reasoning_effort returns HTTP 400 unsupported_parameter and a
+# `thinking` object returns HTTP 400 invalid_json (redacted transcript in the models.dev PR that added this provider).
+# Reasoning text is returned as `reasoning_content` (supports_reasoning=true), with no toggle and no effort
+# control (no reasoning_efforts field; `thinking` is an unknown field), hence reasoning_options = [].
+base_model = "deepseek/deepseek-v4.1-flash"
+attachment = false
+structured_output = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
+
+[limit]
+context = 1_048_576
+output = 4_096
+
+[modalities]
+input = ["text"]
