@@ -1,0 +1,14 @@
+# Metadata is inherited from the upstream Alibaba entry.
+# Price: the default route. APIMaster routes to the lowest-cost stable channel first
+# (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/qwen-api?model=qwen3.8-max
+# (read 2026-09-28). The other 2 channel(s), up to 2 / 6, serve only when it is unavailable and bill at their own price.
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# No budget_tokens: with enable_thinking=true, thinking_budget 100 vs 8000 gave median 972 vs 1059
+# reasoning chars (4 each, 2026-09-29), so the budget is not honoured.
+base_model = "alibaba/qwen3.8-max"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.988
+output = 2.964

@@ -1,0 +1,12 @@
+# Metadata is inherited from the upstream OpenAI entry.
+# Price: the default route. APIMaster routes to the lowest-cost stable channel first
+# (https://apimaster.ai/docs/en/faq); this is that channel's price in the model selector on https://apimaster.ai/
+# (data: https://apimaster.ai/api/marketplace-data?model=gpt-6-luna, read 2026-09-29). The other 5 channel(s), up to 0.0148954 / 0.074477, serve only when it is unavailable and bill at their own price.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max
+# effort=none returned no reasoning in 4 of 4 requests (2026-09-29).
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.00857485
+output = 0.0428743
