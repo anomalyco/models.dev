@@ -1,0 +1,19 @@
+# Effort: reasoning_effort = none|low|high|max on POST /v1/chat/completions.
+# none is sent upstream as thinking.type = disabled; no reasoning comes back (tested 2026-10-14).
+# Modalities: this host reads images for this model as image_url parts (tested 2026-10-14: it read
+# a picture's headline back). attachment follows. https://zurelay.com/docs/chat
+base_model = "deepseek/deepseek-v4-flash"
+attachment = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.03
+output = 0.12
+cache_read = 0.00074

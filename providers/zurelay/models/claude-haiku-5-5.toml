@@ -1,0 +1,21 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max on POST /v1/chat/completions.
+# none runs at low (the x-zurelay-reasoning-effort response header says low), so
+# reasoning_effort can't switch thinking off for this model here.
+base_model = "anthropic/claude-haiku-5-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.04
+output = 0.2
+cache_read = 0.004
+cache_write = 0.05
+
+[[cost.tiers]]
+tier = { type = "context", size = 100_000 }
+input = 0.2
+output = 1
+cache_read = 0.02
+cache_write = 0.25

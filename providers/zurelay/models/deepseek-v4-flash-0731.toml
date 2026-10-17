@@ -1,0 +1,12 @@
+# Effort: reasoning_effort = none|low|high|max on POST /v1/chat/completions.
+# none is sent upstream as thinking.type = disabled; no reasoning comes back (tested 2026-10-14).
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.029
+output = 0.087
+cache_read = 0.00044
