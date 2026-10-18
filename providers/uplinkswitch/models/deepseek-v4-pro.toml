@@ -1,4 +1,4 @@
-# Pricing: https://api.uplinkswitch.com/v1/catalog (id deepseek-v4-pro), USD per million tokens, read 2026-10-14
+# Pricing: https://api.uplinkswitch.com/v1/catalog (id deepseek-v4-pro), USD per million tokens, read 2026-10-18
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
 base_model = "deepseek/deepseek-v4-pro"
@@ -6,6 +6,6 @@ name = "DeepSeek V4 Pro 0423"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
-input = 0.96
+input = 0.792
 output = 1.92
-cache_read = 0.081
+cache_read = 0.03375
