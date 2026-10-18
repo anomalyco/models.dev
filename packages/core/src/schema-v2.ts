@@ -337,22 +337,11 @@ export const KnownMaxTokensFieldV2 = z.enum(MaxTokensFieldV2Values);
 export const MaxTokensFieldV2 = openEnum(MaxTokensFieldV2Values);
 export type MaxTokensFieldV2 = z.infer<typeof MaxTokensFieldV2>;
 
-export const ToolSchemaV2Values = [
-  "standard",
-  "gemini",
-  "moonshot",
-] as const;
-
-export const KnownToolSchemaV2 = z.enum(ToolSchemaV2Values);
-export const ToolSchemaV2 = openEnum(ToolSchemaV2Values);
-export type ToolSchemaV2 = z.infer<typeof ToolSchemaV2>;
-
 export const CompatibilityV2 = z
   .object({
     reasoning_field: ReasoningFieldV2.optional(),
     replay_reasoning: z.boolean().optional(),
     max_tokens_field: MaxTokensFieldV2.optional(),
-    tool_schema: ToolSchemaV2.optional(),
   })
   .strict();
 
