@@ -1,3 +1,11 @@
+# First-party host: AskCyph is the lab and serves its own models at https://api.askcyph.ai/v1.
+# Reasoning is always on with no caller control: /v1/chat/completions accepts only
+# temperature, top_p, frequency/presence_penalty, max_tokens, tools and response_format.
+# It does not read reasoning_effort, thinking or a budget field. Reasoning comes back in
+# choices[].delta.reasoning_content / choices[].message.reasoning_content.
+# No [cost]: AskCyph bills prepaid credits and publishes no USD per-token price.
+# ":premium" is a real wire suffix: the API strips it and serves the premium tier
+# (premium_context_length / premium_max_tokens) of the same model.
 base_model = "askcyph/askcyph-think"
 name = "AskCyph™ Think (Premium)"
 reasoning_options = []
