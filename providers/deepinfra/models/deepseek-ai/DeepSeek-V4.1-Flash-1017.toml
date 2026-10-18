@@ -1,7 +1,13 @@
+# Effort: reasoning_effort = none|low|high|max; none disables reasoning.
+# Graded levels match native DeepSeek Flash 1017; reasoning.enabled = false is equivalent to none.
+# https://docs.deepinfra.com/chat/reasoning
+# https://api.deepinfra.com/models/deepseek-ai/DeepSeek-V4.1-Flash-1017/schema/openai-chat-completions
+# https://api-docs.deepseek.com/guides/thinking_mode
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 0.2
