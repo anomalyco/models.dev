@@ -1,0 +1,12 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "google/gemini-3.1-flash-lite-preview"
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high"] },
+]
+
+[cost]
+input = 0.25
+output = 1.5
+cache_read = 0.025
+cache_write = 0.333333

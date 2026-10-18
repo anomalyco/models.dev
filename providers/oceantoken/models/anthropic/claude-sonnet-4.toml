@@ -1,0 +1,21 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Claude models use the Anthropic Messages API: POST https://api.oceantoken.ai/v1/messages
+# Budget: thinking.budget_tokens
+base_model = "anthropic/claude-sonnet-4-20250514"
+reasoning_options = [
+  { type = "budget_tokens", min = 1024, max = 32_000 },
+]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.oceantoken.ai/v1"
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

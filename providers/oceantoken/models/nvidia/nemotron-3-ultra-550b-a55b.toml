@@ -1,0 +1,14 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+reasoning_options = [
+  { type = "effort", values = ["none", "medium", "high"] },
+]
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.12
+
+[limit]
+context = 262_144

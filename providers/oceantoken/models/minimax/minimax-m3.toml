@@ -1,0 +1,20 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Toggle: reasoning_effort = "none" turns thinking off on POST /v1/chat/completions; omit it for the model default
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[[cost.tiers]]
+tier = { size = 512_000 }
+input = 0.6
+output = 2.4
+cache_read = 0.12
+
+[limit]
+context = 524_288

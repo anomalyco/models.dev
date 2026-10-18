@@ -1,0 +1,9 @@
+# OpenAI-compatible API (chat completions, responses) at https://api.oceantoken.ai/v1.
+# Claude models are also served on the Anthropic Messages API at POST https://api.oceantoken.ai/v1/messages.
+# Model catalog with prices and limits: https://api.oceantoken.ai/public/model_hub
+# API reference: https://docs.oceantoken.ai/api
+name = "OceanToken"
+npm = "@ai-sdk/openai-compatible"
+env = ["OCEANTOKEN_API_KEY"]
+api = "https://api.oceantoken.ai/v1"
+doc = "https://docs.oceantoken.ai/models"

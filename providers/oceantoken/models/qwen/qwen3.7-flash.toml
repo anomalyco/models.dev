@@ -1,0 +1,34 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Toggle: reasoning_effort = "none" turns thinking off on POST /v1/chat/completions; omit it for the model default
+base_model = "alibaba/qwen3.7-flash"
+base_model_omit = ["limit.input"]
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+cache_write = 0.038
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.1
+output = 0.4
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.2
+output = 0.8
+cache_read = 0.02
+cache_write = 0.25
+
+[limit]
+context = 983_616
+output = 65_536

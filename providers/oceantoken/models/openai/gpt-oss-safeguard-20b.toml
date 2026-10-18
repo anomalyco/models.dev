@@ -1,0 +1,14 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "openai/gpt-oss-safeguard-20b"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[cost]
+input = 0.075
+output = 0.3
+cache_read = 0.0375
+
+[limit]
+output = 65_536
