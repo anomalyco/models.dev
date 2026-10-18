@@ -1,0 +1,15 @@
+# reasoning stays the lab capability (true); no caller control is authored on the
+# declared chat surface: Munito documents no reasoning parameters on
+# POST /chat/completions (2026-10-19) and the only documented control,
+# thinking.type, is on the Anthropic Messages surface, so reasoning_options = []
+# records the documented absence of a caller control (peer precedent:
+# providers/302ai/models/MiniMax-M2.1.toml). No relay peer proves this host
+# disables reasoning, so `false` was not asserted.
+# Host media-value note: org-scoped admin model list reports text + audio only
+# for this id, but chat-surface audio is documented only in the generic
+# input_audio spec (https://docs.munito.ai/api/createChatCompletion), so no
+# [modalities] override is authored and the lab baseline stands; established
+# relays keep lab image (providers/nano-gpt/models/gemma-4-12b-it.toml) or
+# override text-only (providers/siliconflow/models/google/gemma-4-12B-it.toml).
+base_model = "google/gemma-4-12b-it"
+reasoning_options = []

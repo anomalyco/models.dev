@@ -1,0 +1,14 @@
+# Open-model inference host for Europe (docs accessed 2026-10-18, https://docs.munito.ai).
+# Catalog: public GET https://api.munito.ai/inference/v1/models; context/output limits come
+# from the authenticated per-model Munito model list (GET /models).
+# Prices are published nowhere: the docs state "The console shows the prices of each model"
+# (https://docs.munito.ai/speech-to-text, accessed 2026-10-18), so no cost is authored.
+# Document OCR lives on POST /ocr (page by page, billed per page) and is not part of this
+# chat catalog; see https://docs.munito.ai/api/createOcr.
+# Relay reasoning controls copy the lab + same-model peer baseline; Munito documents only
+# thinking.type = enabled|disabled on the Anthropic Messages surface (2026-10-18).
+name = "Munito"
+env = ["MUNITO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.munito.ai/inference/v1"
+doc = "https://docs.munito.ai"

@@ -1,0 +1,12 @@
+# reasoning = true is the lab capability; reasoning_options = [] records the
+# affirmative absence of a caller control on the declared surface: the Munito
+# /chat/completions documentation enumerates its accepted request fields and
+# includes none for reasoning (https://docs.munito.ai/llms-full.txt, accessed
+# 2026-10-19). thinking.type on POST /messages
+# (https://docs.munito.ai/api/createMessage) is a different surface than the
+# declared OpenAI-compatible chat api and is not interchangeable with it.
+# (DeepSeek lab-native baseline: toggle + low|high|max in providers/deepseek/models/
+# deepseek-v4-flash.toml; OpenRouter peer: none|high|xhigh - neither is asserted on the
+# declared surface.)
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = []

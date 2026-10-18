@@ -1,21 +1,13 @@
-type = "decision"
+# Factored to the canonical lab (models/perplexity/pplx-decider-flash-v1.2.toml)
+# from the HF artifact's public weights (Apache-2.0, verified 2026-10-19). This
+# host's public row (https://ai-gateway.vercel.sh/v1/models, no auth, checked
+# 2026-10-19: released 2026-10-16, context_window 262,144, max_tokens 0,
+# modalities text+image -> text, description "returning typed answers with
+# probabilities") independently matches the inherited lab facts; [cost] stays
+# host-authored from the same row (0.00000001/token = $0.01/MTok).
+base_model = "perplexity/pplx-decider-flash-v1.2"
 name = "Decider Flash V1.2 4B"
-description = "Perplexity Decider Flash V1.2 is a 4B multimodal decision model for high-volume classification, routing, labeling, and filtering. It evaluates text, structured JSON, and images against yes/no questions, custom choices, and ordered rubrics, returning typed answers with probabilities. It supports a 256K context window."
-release_date = "2026-10-16"
-last_updated = "2026-10-16"
-attachment = true
-reasoning = false
-tool_call = false
-open_weights = false
 
 [cost]
 input = 0.01
 output = 0
-
-[limit]
-context = 262_144
-output = 0
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

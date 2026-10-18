@@ -1,0 +1,50 @@
+# Sources (accessed 2026-10-19):
+# - https://huggingface.co/perplexity-ai/pplx-decider-v1.2 model card (createdAt
+#   2026-10-15, lastModified 2026-10-19): Apache-2.0 fine-tune of Qwen/Qwen3.8-27B
+#   (multimodal, text-classification); reads the state plus every question of a
+#   request in one sequence, answering at marker tokens with calibrated
+#   probabilities. "## Limits": max_length defaults to 262,144 tokens per sequence
+#   (the backbone's position limit); answer codes are single tokens (255-option
+#   readout head); images up to 1.6 MP (~1,600 sequence positions).
+# - https://docs.perplexity.ai/api-reference/decisions-post (input under 256K
+#   tokens, up to 8 images per question, usage counts) and
+#   https://docs.perplexity.ai/docs/resources/changelog (v1.2 replaces
+#   pplx-decider-v1.1-27b as the 27B decision model; output tokens stay free).
+# - announcement: https://x.com/perplexitydevs/status/2105725598882832414
+#   (first-party release 2026-10-01).
+# Weights published: the HF repo ships 11 safetensors shards (~53 GB) plus
+# readout.safetensors and an Apache-2.0 LICENSE/NOTICE (tree verified 2026-10-19).
+# Note: upstream openrouter/vercel still carry inline copies of this id dated
+# 2026-10-16 with `open_weights = false`; factoring them to this lab as
+# `base_model` is a recommended follow-up outside this provider PR.
+# Images are sent inline as OpenAI-style `image_url` base64 data-URL parts inside
+# `state` (up to 8 per question, scaled to at most 1.6 MP), similar to the
+# image-capable chat labs in this catalog, so `attachment = true`.
+# Munito hosts this id on its Decisions surface: POST /systemone (TypeSafe
+# format) and POST /decisions (OpenAI format),
+# https://docs.munito.ai/api/createDecision (accessed 2026-10-19); the Munito
+# provider tree covers the chat surface only.
+name = "pplx-decider v1.2"
+description = "27B decision model fine-tuned from Qwen3.8-27B that reads a state plus joint questions in one sequence and returns calibrated probabilities instead of text"
+release_date = "2026-10-15"
+last_updated = "2026-10-19"
+type = "decision"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/perplexity-ai/pplx-decider-v1.2"

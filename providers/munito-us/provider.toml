@@ -1,0 +1,15 @@
+# Regional US host of the Munito provider; catalog from public
+# GET https://api.us.munito.ai/inference/v1/models (accessed 2026-10-18): the
+# US host serves only qwen/qwen3.8-27b and the OCR pair of the global catalog.
+# Limits and reasoning controls match the global host file; read it from
+# providers/munito/models/qwen/qwen3.8-27b.toml.
+# Prices are published nowhere: "The console shows the prices of each model"
+# (https://docs.munito.ai/speech-to-text, accessed 2026-10-18).
+# Requests that keep data (store: true, OCR jobs) must use the host matching
+# the account's data region; the other regional host answers 421.
+# https://docs.munito.ai/reference/regions
+name = "Munito (US)"
+env = ["MUNITO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.us.munito.ai/inference/v1"
+doc = "https://docs.munito.ai"

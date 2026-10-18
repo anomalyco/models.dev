@@ -1,0 +1,40 @@
+# Sources (accessed 2026-10-19):
+# - https://github.com/blockbrain-ai/cygnet-recipe (created 2026-09-24, pushed
+#   2026-10-04, MIT): "Typed decisions from frozen Gemma-4-12B-it: one-token
+#   option-letter readout over stock vLLM 0.30.0 (JevBench package)" - a small shim
+#   presents a question's options as letters and reads the frozen
+#   google/gemma-4-12B-it probability for each letter at a single answer position,
+#   with one calibration temperature; "Cost is input tokens only, with one output
+#   token per decision" (no separate weights of its own are trained).
+# - JevBench v1.5.4: No. 1 overall of 106 ranked systems (score 73.70), the only
+#   open, non-fine-tuned recipe in the joint leadership with Winnow-12B Q8
+#   (measured on the official evaluators, retrieved 2026-09-30).
+# open_weights = false: the served "Cygnet" has no own trained-weights artifact -
+# the MIT recipe runs entirely on the independently-published frozen base
+# google/gemma-4-12B-it, so there are no Cygnet weights of its own to publish.
+# Munito hosts this id on its Decisions surface: POST /systemone (TypeSafe
+# format) and POST /decisions (OpenAI format), text only,
+# https://docs.munito.ai/api/createDecision (accessed 2026-10-19); the Munito
+# provider tree covers the chat surface only.
+name = "Cygnet"
+description = "Open one-token option-letter readout recipe over frozen Gemma-4-12B-it that answers typed `choice`, `noul` and `score` questions with calibrated probabilities"
+release_date = "2026-09-24"
+last_updated = "2026-10-04"
+type = "decision"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+license = "MIT"
+
+# Stock vLLM serving over the frozen base keeps the Gemma-4-12B-it position limit;
+# a decision pass reads one answer token (recipe README).
+[limit]
+context = 262_144
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["text"]

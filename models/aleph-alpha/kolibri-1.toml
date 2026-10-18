@@ -1,0 +1,27 @@
+# Sources (accessed 2026-10-18 and 2026-10-19):
+# - https://huggingface.co/Aleph-Alpha/Kolibri-1 model card (createdAt 2026-10-02,
+#   lastModified 2026-10-16): bilingual (German/English) MoE reasoning model with tool
+#   calling; native context 262,144 tokens (config max_position_embeddings). The card
+#   validates extended (sliding-window) serving contexts to 1,048,576 tokens - hosts
+#   serving the extended window declare it as a provider [limit] override. No
+#   lab-published output cap exists.
+name = "Kolibri 1"
+description = "German MoE reasoning model from Aleph Alpha with 384 experts and German/English long-context chat"
+release_date = "2026-10-02"
+last_updated = "2026-10-16"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Aleph-Alpha/Kolibri-1"

@@ -1,0 +1,14 @@
+# Decision-surface entry, following the established upstream decision-model file
+# convention (providers/openrouter/models/~perplexity/pplx-decider-latest.toml,
+# providers/vercel/models/perplexity/pplx-decider-v1.2.toml): Munito serves this
+# id on its Decisions endpoints - POST /systemone (TypeSafe format) and
+# POST /decisions (OpenAI format, https://docs.munito.ai/api/createDecision) -
+# and lists it in GET /v1/models; it accepts up to 8 images as base64 data URLs
+# per request. Host limits (Admin/per-model Munito model list, accessed
+# 2026-10-19): context 32,768 tokens. Privately-sourced pending public
+# evidence.
+# Values privately-sourced (org-scoped admin model list), pending public evidence.
+base_model = "perplexity/pplx-decider-v1.2"
+
+[limit]
+context = 32_768

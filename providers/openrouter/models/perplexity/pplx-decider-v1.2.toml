@@ -1,23 +1,12 @@
-type = "decision"
+# Factored to the canonical lab (models/perplexity/pplx-decider-v1.2.toml) from
+# the HF artifact's public weights (Apache-2.0, verified 2026-10-19); this
+# host's pricing stays host-authored. Note: the id does not appear in this
+# host's live GET https://openrouter.ai/api/v1/models catalog (469 rows,
+# checked 2026-10-19), so the inherited lab facts are the only current model
+# source; the row is kept pending upstream reconciliation.
+base_model = "perplexity/pplx-decider-v1.2"
 name = "Decider V1.2"
-description = "Decision model for typed evaluation of shared state"
-release_date = "2026-10-16"
-last_updated = "2026-10-16"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
-open_weights = false
 
 [cost]
 input = 0.02
 output = 0
-
-[limit]
-context = 262_144
-output = 0
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

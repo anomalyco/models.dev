@@ -1,0 +1,11 @@
+# reasoning = true is the lab capability; reasoning_options = [] records the
+# affirmative absence of a caller control on the declared surface: the Munito
+# /chat/completions documentation enumerates its accepted request fields and
+# includes none for reasoning (https://docs.munito.ai/llms-full.txt, accessed
+# 2026-10-19). thinking.type on POST /messages
+# (https://docs.munito.ai/api/createMessage) is a different surface than the
+# declared OpenAI-compatible chat api and is not interchangeable with it. The
+# lab-native control (providers/alibaba/models/qwen3.8-27b.toml) and the
+# OpenRouter peer set are not asserted on this host's chat surface.
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = []
