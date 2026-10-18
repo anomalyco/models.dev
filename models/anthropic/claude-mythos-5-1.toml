@@ -1,0 +1,24 @@
+# Sources:
+# https://platform.claude.com/docs/en/models/mythos-5-1/overview
+# https://www.anthropic.com/claude-fable-and-mythos-5-1
+# Same specifications as Claude Fable 5.1; access requires Anthropic verification.
+name = "Claude Mythos 5.1"
+description = "Restricted Claude model for verified organizations, with the same specifications as Claude Fable 5.1"
+family = "claude-mythos"
+release_date = "2026-09-01"
+last_updated = "2026-09-01"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-06"
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
