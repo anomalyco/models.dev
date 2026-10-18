@@ -1,0 +1,14 @@
+# Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
+# published as https://www.boostrail.com/models.json. USD per 1M tokens;
+# cache writes are billed at the input price.
+# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
+# reasoning_effort none|low|high gave 2|221|156 completion tokens for a
+# one-number answer (low is served as high).
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 1.045
+output = 3.284286
+cache_read = 0.1045
+cache_write = 1.045

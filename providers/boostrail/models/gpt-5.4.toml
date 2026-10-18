@@ -1,0 +1,18 @@
+# Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
+# published as https://www.boostrail.com/models.json. USD per 1M tokens;
+# cache writes are billed at the input price.
+# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
+# reasoning_effort none|low|high gave 5|21|55 completion tokens for a
+# one-number answer; xhigh is accepted but served as high. Image input
+# answered; content parts are text and image_url only (no PDF).
+base_model = "openai/gpt-5.4"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 2.375
+output = 14.25
+cache_read = 0.2375
+cache_write = 2.375
