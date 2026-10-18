@@ -3,6 +3,8 @@ import path from "node:path";
 
 import {
   CacheSupportV2,
+  CapabilitiesV2,
+  CompatibilityV2,
   DurationStringV2,
   generateV2,
   ProviderV2,
@@ -191,5 +193,40 @@ describe("v2 catalog generation", () => {
         explicit: false,
       }).success,
     ).toBe(true);
+  });
+
+  test("splits request support from per-API compatibility", () => {
+    expect(
+      CapabilitiesV2.safeParse({
+        tools: { supported: true },
+        reasoning: { supported: false },
+        store: false,
+        stream_usage: true,
+        prompt_cache_key: true,
+      }).success,
+    ).toBe(true);
+
+    expect(
+      CompatibilityV2.safeParse({
+        reasoning_field: "reasoning_content",
+        replay_reasoning: true,
+        max_tokens_field: "max_tokens",
+        tool_schema: "gemini",
+      }).success,
+    ).toBe(true);
+
+    for (const field of [
+      "sanitizer",
+      "require_reasoning",
+      "require_finish_reason",
+      "require_assistant_after_tool",
+      "require_signature",
+      "supports_store",
+      "supports_streaming_usage",
+      "supports_prompt_cache_key",
+      "zai_tool_stream",
+    ]) {
+      expect(CompatibilityV2.safeParse({ [field]: true }).success).toBe(false);
+    }
   });
 });

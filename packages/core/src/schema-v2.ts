@@ -264,6 +264,9 @@ export const CapabilitiesV2 = z
     top_k: z.boolean().optional(),
     system_updates: z.boolean().optional(),
     effort_updates: z.boolean().optional(),
+    store: z.boolean().optional(),
+    stream_usage: z.boolean().optional(),
+    prompt_cache_key: z.boolean().optional(),
   })
   .strict();
 
@@ -334,29 +337,22 @@ export const KnownMaxTokensFieldV2 = z.enum(MaxTokensFieldV2Values);
 export const MaxTokensFieldV2 = openEnum(MaxTokensFieldV2Values);
 export type MaxTokensFieldV2 = z.infer<typeof MaxTokensFieldV2>;
 
-export const SanitizerV2Values = [
+export const ToolSchemaV2Values = [
+  "standard",
   "gemini",
   "moonshot",
-  "none",
 ] as const;
 
-export const KnownSanitizerV2 = z.enum(SanitizerV2Values);
-export const SanitizerV2 = openEnum(SanitizerV2Values);
-export type SanitizerV2 = z.infer<typeof SanitizerV2>;
+export const KnownToolSchemaV2 = z.enum(ToolSchemaV2Values);
+export const ToolSchemaV2 = openEnum(ToolSchemaV2Values);
+export type ToolSchemaV2 = z.infer<typeof ToolSchemaV2>;
 
 export const CompatibilityV2 = z
   .object({
-    sanitizer: SanitizerV2.optional(),
     reasoning_field: ReasoningFieldV2.optional(),
-    require_reasoning: z.boolean().optional(),
+    replay_reasoning: z.boolean().optional(),
     max_tokens_field: MaxTokensFieldV2.optional(),
-    require_finish_reason: z.boolean().optional(),
-    require_assistant_after_tool: z.boolean().optional(),
-    supports_store: z.boolean().optional(),
-    supports_streaming_usage: z.boolean().optional(),
-    supports_prompt_cache_key: z.boolean().optional(),
-    zai_tool_stream: z.boolean().optional(),
-    require_signature: z.boolean().optional(),
+    tool_schema: ToolSchemaV2.optional(),
   })
   .strict();
 
