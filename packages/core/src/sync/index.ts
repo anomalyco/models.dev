@@ -11,6 +11,7 @@ import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
+import { boostrail } from "./providers/boostrail.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareAiGateway } from "./providers/cloudflare-ai-gateway.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
@@ -151,6 +152,7 @@ export const providers: {
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
+  boostrail: SyncProvider<any>;
   chutes: SyncProvider<any>;
   "cloudflare-ai-gateway": SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
@@ -196,6 +198,7 @@ export const providers: {
   ambient,
   anthropic,
   baseten,
+  boostrail,
   chutes,
   "cloudflare-ai-gateway": cloudflareAiGateway,
   "cloudflare-workers-ai": cloudflareWorkersAi,
@@ -240,6 +243,7 @@ export const providers: {
 export const groups = {
   aggregators: [
     "aimlapi",
+    "boostrail",
     "crossmodel",
     "edenai",
     "empiriolabs",
