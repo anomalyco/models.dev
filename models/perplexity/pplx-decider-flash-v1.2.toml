@@ -1,0 +1,34 @@
+# Sources (accessed 2026-10-19):
+# - https://huggingface.co/perplexity-ai/pplx-decider-flash-v1.2 model card
+#   (createdAt 2026-10-15, lastModified 2026-10-19): the small version of
+#   pplx-decider-v1.2 - same joint request format, same API, same text and image
+#   support - built on Qwen3.5-4B, distilled from the 27B decision models on
+#   their full probability distributions. "## Limits": max_length defaults to
+#   262,144 tokens per sequence (backbone position limit); single-token answer
+#   codes (1-255 options per question).
+# - https://docs.perplexity.ai/docs/resources/changelog: pplx-decider-flash-v1.2
+#   is the 4B decision model; "Output tokens stay free".
+name = "pplx-decider flash v1.2"
+description = "4B decision model distilled from the 27B deciders on Qwen3.5-4B: joint state plus questions, calibrated probabilities instead of text"
+release_date = "2026-10-15"
+last_updated = "2026-10-19"
+type = "decision"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/perplexity-ai/pplx-decider-flash-v1.2"

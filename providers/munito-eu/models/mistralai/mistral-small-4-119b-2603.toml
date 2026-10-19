@@ -1,0 +1,18 @@
+# reasoning = true is the lab capability; reasoning_options = [] records the
+# affirmative absence of a caller control on the declared surface: the Munito
+# /chat/completions documentation enumerates its accepted request fields and
+# includes none for reasoning (https://docs.munito.ai/llms-full.txt, accessed
+# 2026-10-19). thinking.type on POST /messages
+# (https://docs.munito.ai/api/createMessage) is a different surface than the
+# declared OpenAI-compatible chat api and is not interchangeable with it.
+# Host modality values are privately-sourced (org-scoped admin model list),
+# pending public evidence: the host serves text only for this id, so the
+# override drops the lab's image input and sets attachment = false; the API
+# answers 400 to media a model does not support
+# (https://docs.munito.ai/api/createChatCompletion).
+base_model = "mistral/mistral-small-2603"
+attachment = false
+reasoning_options = []
+
+[modalities]
+input = ["text"]

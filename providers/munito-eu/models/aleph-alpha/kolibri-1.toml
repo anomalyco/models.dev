@@ -1,0 +1,22 @@
+# No caller control authored on the declared chat surface: Munito documents no
+# reasoning parameters on POST /chat/completions (https://docs.munito.ai/llms-full.txt,
+# accessed 2026-10-19), the only documented control is thinking.type on the
+# Anthropic Messages surface (a different surface than the declared
+# OpenAI-compatible chat api), and Aleph Alpha publishes no native chat control
+# for this id (https://huggingface.co/Aleph-Alpha/Kolibri-1). reasoning_options = []
+# records the documented absence of a caller control rather than uncertainty.
+# Host limits: context 1,048,576 is the card's public extended sliding-window
+# serving context (https://huggingface.co/Aleph-Alpha/Kolibri-1, "contexts
+# validated to 1,048,576 tokens"); max_output_tokens = 943,718 is host-reported -
+# the docs establish that every model has a per-model output maximum exposed as
+# max_output_length ("max_output_tokens is capped at the output maximum of the
+# model, which GET /models gives as max_output_length",
+# https://docs.munito.ai/llms-full.txt, accessed 2026-10-19), but the number is
+# privately-sourced (org-scoped admin model list), pending public evidence.
+# The lab [limit] keeps the native 262,144 default.
+base_model = "aleph-alpha/kolibri-1"
+reasoning_options = []
+
+[limit]
+context = 1_048_576
+output = 943_718

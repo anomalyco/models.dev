@@ -1,0 +1,13 @@
+# Decision-surface entry, following the established upstream decision-model file
+# convention (providers/openrouter/models/~perplexity/pplx-decider-latest.toml,
+# providers/vercel/models/perplexity/pplx-decider-v1.2.toml): Munito serves this
+# id on its Decisions endpoints - POST /systemone (TypeSafe format) and
+# POST /decisions (OpenAI format, https://docs.munito.ai/api/createDecision) -
+# and lists it in GET /v1/models. Host limits (Admin/per-model Munito model
+# list, accessed 2026-10-19): context 16,384 tokens; one answer token per
+# question (recipe README). Privately-sourced pending public evidence.
+# Values privately-sourced (org-scoped admin model list), pending public evidence.
+base_model = "blockbrain/cygnet"
+
+[limit]
+context = 16_384

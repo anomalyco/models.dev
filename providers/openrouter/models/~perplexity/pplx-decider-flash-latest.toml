@@ -1,23 +1,12 @@
-type = "decision"
+# Factored to the canonical flash lab; "~perplexity" is this host's publish
+# alias for the current Decider generation (Perplexity changelog: aliases can
+# move to a newer model over time). This host's pricing stays host-authored.
+# Note: the id does not appear in this host's live
+# GET https://openrouter.ai/api/v1/models catalog (469 rows, checked
+# 2026-10-19); the row is kept pending upstream reconciliation.
+base_model = "perplexity/pplx-decider-flash-v1.2"
 name = "Decider Flash Latest"
-description = "Decision model for typed evaluation of shared state"
-release_date = "2026-10-16"
-last_updated = "2026-10-16"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
-open_weights = false
 
 [cost]
 input = 0.01
 output = 0
-
-[limit]
-context = 262_144
-output = 0
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
