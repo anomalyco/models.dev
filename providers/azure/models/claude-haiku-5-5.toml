@@ -2,23 +2,33 @@
 # Foundry availability: https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry
 # Toggle: thinking.type = adaptive|disabled (disabled only at low, medium, or high effort)
 # Effort: output_config.effort = low|medium|high|xhigh|max
+# system_updates: Foundry lists "Mid-conversation role: system" (Beta) for this model; per-turn effort and tool_addition/tool_removal are not documented on Foundry, so effort_updates and tools.updates are unset.
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#available-claude-models
+schema = 2
 base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+system_updates = true
 
-[cost]
-input = 0.10
-output = 0.50
-cache_read = 0.01
-cache_write = 0.125
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[[cost.tiers]]
-tier = { type = "context", size = 100_000 }
-input = 0.50
-output = 2.50
-cache_read = 0.05
-cache_write = 0.625
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

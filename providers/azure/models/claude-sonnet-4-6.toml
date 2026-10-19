@@ -1,13 +1,18 @@
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

@@ -1,9 +1,20 @@
+schema = 2
 base_model = "openai/o3-mini"
-status = "deprecated"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 base_model_omit = ["structured_output"]
+status = "deprecated"
 
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.55
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1

@@ -1,8 +1,19 @@
+schema = 2
 base_model = "openai/gpt-4.1-nano"
-status = "deprecated"
 base_model_omit = ["structured_output"]
+status = "deprecated"
 
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.025
+[capabilities]
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.4
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1

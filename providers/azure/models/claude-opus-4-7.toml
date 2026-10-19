@@ -4,16 +4,22 @@
 # premium), so no [[cost.tiers]] here — the tiers on azure's claude-opus-4-6/4-8
 # entries predate that policy. Model availability:
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models?tabs=pay-go#available-claude-models
+# Effort values described at https://platform.claude.com/docs/en/build-with-claude/effort#effort-levels
+schema = 2
 base_model = "anthropic/claude-opus-4-7"
-# Possible values described at https://platform.claude.com/docs/en/build-with-claude/effort#effort-levels
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
+structured_output = true
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25

@@ -1,32 +1,45 @@
 # Fast mode is Azure priority processing (Global Standard): https://azure.microsoft.com/en-us/pricing/details/azure-openai/ and https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/priority-processing
+schema = 2
 name = "GPT-5.1"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "gpt"
-release_date = "2025-11-14"
-last_updated = "2025-11-14"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
-temperature = false
-knowledge = "2024-09-30"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2024-09-30"
+release_date = "2025-11-14"
 
-[cost]
-input = 1.25
-output = 10.00
-cache_read = 0.125
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text", "image", "audio"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+temperature = false
+store = true
+cache = { supported = true, implicit = { ttl = ["24h"], min_tokens = 1_024 }, explicit = false }
+service_tier = ["priority"]
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text", "image", "audio"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1
 
 [experimental.modes.fast]
-cost = { input = 2.50, output = 20.00, cache_read = 0.25 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }

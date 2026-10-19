@@ -1,11 +1,23 @@
+schema = 2
 base_model = "openai/gpt-4o-mini"
-status = "deprecated"
 base_model_omit = ["structured_output"]
-
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.075
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.6
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1

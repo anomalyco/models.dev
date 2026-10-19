@@ -1,16 +1,20 @@
 # Azure catalog: https://ai.azure.com/catalog/models/claude-mythos-5
 # Effort: output_config.effort = low|medium|high|xhigh|max; thinking is always on.
+schema = 2
 base_model = "anthropic/claude-mythos-5"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 status = "beta"
 
-[cost]
-input = 10.00
-output = 50.00
-cache_read = 1.00
-cache_write = 12.50
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[cost.text.output]
+price = 50

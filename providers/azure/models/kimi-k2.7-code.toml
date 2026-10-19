@@ -1,20 +1,22 @@
 # Pricing source: https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/kimi/ (accessed 2026-08-05)
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-
-reasoning_options = []
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.95
-output = 4.0
-cache_read = 0.19
+[api.chat-completions]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-shape = "completions"
-npm = "@ai-sdk/openai-compatible"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

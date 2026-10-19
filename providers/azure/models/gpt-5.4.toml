@@ -1,19 +1,38 @@
 # Fast mode is Azure priority processing (Global Standard): https://azure.microsoft.com/en-us/pricing/details/azure-openai/ and https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/priority-processing
+schema = 2
 base_model = "openai/gpt-5.4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+store = true
+cache = { supported = true, implicit = { ttl = ["24h"], min_tokens = 1_024 }, explicit = false }
+service_tier = ["priority"]
 
-[cost]
-input = 2.5
-output = 15
-cache_read = 0.25
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 5
-output = 22.5
-cache_read = 0.5
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 22.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1
 
 [experimental.modes.fast]
-cost = { input = 5.00, output = 30.00, cache_read = 0.50 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }

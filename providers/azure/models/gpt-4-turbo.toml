@@ -1,7 +1,13 @@
+schema = 2
 base_model = "openai/gpt-4-turbo"
-status = "deprecated"
 base_model_omit = ["structured_output"]
+status = "deprecated"
 
-[cost]
-input = 10
-output = 30
+[capabilities]
+cache = { supported = false }
+
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 30

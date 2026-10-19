@@ -1,25 +1,33 @@
+# Effort values described at https://platform.claude.com/docs/en/build-with-claude/effort#effort-levels
+# Context window described at https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison
+schema = 2
 base_model = "anthropic/claude-opus-4-8"
 knowledge = "2025-12-31"
-# Possible values described at https://platform.claude.com/docs/en/build-with-claude/effort#effort-levels
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
-
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 10.00
-output = 37.50
-cache_read = 1.00
-cache_write = 12.50
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+structured_output = true
 
 [limit]
-# Model info described at https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison
 context = 1_000_000
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[cost.text.output]
+price = 25
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 37.5

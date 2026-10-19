@@ -1,18 +1,36 @@
 # Availability: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability
 # Rates: https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
+schema = 2
 base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex"]
 
-[cost]
-input = 0.10
-output = 0.50
-cache_read = 0.01
-cache_write = 0.125
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.20
-output = 0.75
-cache_read = 0.02
-cache_write = 0.25
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1

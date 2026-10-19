@@ -1,27 +1,35 @@
+schema = 2
 name = "GPT-5.1 Codex"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
+description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
 family = "gpt-codex"
-release_date = "2025-11-14"
-last_updated = "2025-11-14"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-knowledge = "2024-09-30"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2024-09-30"
+release_date = "2025-11-14"
 
-[cost]
-input = 1.25
-output = 10.00
-cache_read = 0.125
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = false
+store = true
+cache = { supported = true, implicit = { ttl = ["24h"], min_tokens = 1_024 }, explicit = false }
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text", "image", "audio"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 10
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1

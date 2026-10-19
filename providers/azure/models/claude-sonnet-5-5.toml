@@ -1,16 +1,24 @@
 # Model ID and pricing: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
 # Foundry catalog: https://ai.azure.com/catalog/models/claude-sonnet-5-5
 # between_tools is not a full thinking-off toggle; disabled is rejected.
+# system_updates: Foundry lists "Mid-conversation role: system" (Beta) for this model; per-turn effort and tool_addition/tool_removal are not documented on Foundry, so effort_updates and tools.updates are unset.
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#available-claude-models
+schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+system_updates = true
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10

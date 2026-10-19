@@ -1,13 +1,22 @@
+# system_updates / effort_updates: Foundry lists "Mid-conversation role: system" and "Per-turn effort controls" (Beta) for this model; tool_addition/tool_removal is not documented on Foundry, so tools.updates is unset.
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#available-claude-models
+schema = 2
 base_model = "anthropic/claude-opus-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+system_updates = true
+effort_updates = true
 
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25
