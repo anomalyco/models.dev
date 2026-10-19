@@ -6,7 +6,8 @@ import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js"
 
 const API_ENDPOINT = "https://api.cortecs.ai/v1/models";
 // The default listing returns Instruct models only; Decision-tag models are
-// returned only when requested explicitly. Only these decision models are synced.
+// returned only when requested explicitly. Only these decision models are synced;
+// other Decision-tag ids are left untouched (neither created nor deleted).
 const DECISION_ENDPOINT = `${API_ENDPOINT}?tag=Decision`;
 const DECISION_MODELS = new Set(["clef", "clef-flash"]);
 const CANONICAL_BASE_MODEL_EXCEPTIONS = {
@@ -44,6 +45,7 @@ export const CortecsModel = z.object({
   input_modalities: z.array(z.string()).transform(modalities).default(["text"]),
   output_modalities: z.array(z.string()).transform(modalities).default(["text"]),
   supported_features: z.array(z.string()).default([]),
+  tags: z.array(z.string()).optional(),
 }).passthrough();
 
 export const CortecsResponse = z.object({
@@ -62,6 +64,9 @@ export const cortecs = {
   name: "Cortecs",
   modelsDir: "providers/cortecs/models",
   deleteMissing: true,
+  // Decision-tag ids outside DECISION_MODELS are out of scope, not missing
+  // lab metadata: retain any existing file without opening an issue.
+  trackMissingModels: false,
   async fetchModels() {
     const listing = await fetchListing(API_ENDPOINT);
     // Throws like the default listing: a partial list would let deleteMissing remove the decision models.
@@ -71,20 +76,28 @@ export const cortecs = {
       ...listing,
       data: [
         ...listing.data,
-        ...decisions.data.filter((model) => DECISION_MODELS.has(model.id) && !ids.has(model.id)),
+        ...decisions.data.filter((model) => !ids.has(model.id)),
       ],
     };
   },
   parseModels(raw) {
     return CortecsResponse.parse(raw).data;
   },
+  missingModelID(model) {
+    return unsyncedDecision(model) ? model.id : undefined;
+  },
   translateModel(model, context) {
+    if (unsyncedDecision(model)) return undefined;
     return {
       id: model.id,
       model: buildCortecsModel(model, context.existing(model.id), context.authored(model.id)),
     };
   },
 } satisfies SyncProvider<CortecsModel>;
+
+function unsyncedDecision(model: CortecsModel) {
+  return model.tags?.includes("Decision") === true && !DECISION_MODELS.has(model.id);
+}
 
 async function fetchListing(url: string) {
   const response = await fetch(url);

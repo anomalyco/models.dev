@@ -3264,11 +3264,12 @@ function cortecsListing(models: Array<{ id: string; input_token: number; context
       input_modalities: ["text"],
       output_modalities: ["decision"],
       supported_features: [],
+      tags: ["Decision"],
     })),
   };
 }
 
-test("merges allowlisted Cortecs decision models into the default listing", async () => {
+test("syncs allowlisted Cortecs decision models and retains other decision ids", async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (input) => new Response(JSON.stringify(String(input).includes("tag=Decision")
     ? cortecsListing([
@@ -3280,7 +3281,14 @@ test("merges allowlisted Cortecs decision models into the default listing", asyn
 
   try {
     const models = cortecs.parseModels(await cortecs.fetchModels());
-    expect(models.map((model) => model.id)).toEqual(["clef", "clef-flash"]);
+    expect(models.map((model) => model.id)).toEqual(["clef", "clef-flash", "laya"]);
+    const context = { existing: () => undefined, authored: () => undefined };
+    const [clef, flash, laya] = models;
+    expect(cortecs.translateModel(clef!, context)?.id).toBe("clef");
+    expect(cortecs.translateModel(flash!, context)?.id).toBe("clef-flash");
+    expect(cortecs.missingModelID(clef!)).toBeUndefined();
+    expect(cortecs.translateModel(laya!, context)).toBeUndefined();
+    expect(cortecs.missingModelID(laya!)).toBe("laya");
   } finally {
     globalThis.fetch = originalFetch;
   }
