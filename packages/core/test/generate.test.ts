@@ -180,6 +180,43 @@ input = ["text"]
     });
   });
 
+  test("v1_alias providers serve the target's models with renamed env vars", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/target/provider.toml", providerToml("Target"));
+      await write(
+        root,
+        "providers/target/models/model.toml",
+        `${providerFieldsToml()}
+[cost]
+input = 1
+output = 2
+
+[provider]
+api = "https://\${TARGET_RESOURCE}.example.com/v1"
+`,
+      );
+      await write(
+        root,
+        "providers/legacy/provider.toml",
+        `${providerToml("Legacy")}
+[v1_alias]
+provider = "target"
+env = { TARGET_RESOURCE = "LEGACY_RESOURCE" }
+`,
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(Object.keys(providers.legacy!)).not.toContain("v1_alias");
+      expect(providers.legacy?.name).toBe("Legacy");
+      expect(providers.legacy?.models.model?.provider?.api).toBe(
+        "https://${LEGACY_RESOURCE}.example.com/v1",
+      );
+      expect(providers.target?.models.model?.provider?.api).toBe(
+        "https://${TARGET_RESOURCE}.example.com/v1",
+      );
+    });
+  });
+
   test("repository provider TOMLs do not use legacy extends tables", async () => {
     const root = path.join(import.meta.dirname, "..", "..", "..");
     const matches: string[] = [];
