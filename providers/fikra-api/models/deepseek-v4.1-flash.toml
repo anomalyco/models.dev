@@ -1,0 +1,21 @@
+name = "DeepSeek V4.1 Flash"
+description = "DeepSeek V4.1 Flash with the self-feedback reasoning update, served on a 1M context at a discount to most inference clouds"
+release_date = "2026-09-10"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.045
+output = 0.09
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

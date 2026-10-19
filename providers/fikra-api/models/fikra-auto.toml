@@ -1,0 +1,21 @@
+name = "Fikra Auto"
+description = "Auto-routed default: picks the cheapest fitting Fikra lane for the request"
+release_date = "2026-09"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.045
+output = 0.35
+[limit]
+context = 262144
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

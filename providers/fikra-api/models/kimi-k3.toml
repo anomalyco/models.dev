@@ -1,0 +1,21 @@
+name = "Kimi K3"
+description = "Moonshot Kimi K3 for long-context agentic and coding workloads"
+release_date = "2026-07-16"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 2.1
+output = 10.5
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

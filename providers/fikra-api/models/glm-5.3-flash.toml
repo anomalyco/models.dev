@@ -1,0 +1,21 @@
+name = "GLM 5.3 Flash"
+description = "Zhipu GLM-5.3 Flash for high-volume chat and tool use, at a discount to most inference clouds"
+release_date = "2026-08-26"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.155
+output = 0.49
+[limit]
+context = 327680
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

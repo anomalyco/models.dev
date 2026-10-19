@@ -1,0 +1,21 @@
+name = "GLM 5.2"
+description = "Zhipu GLM-5.2 on a 1M context: coding and reasoning work at a lower price than GLM 5.3"
+release_date = "2026-06-13"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.75
+output = 1.65
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Fikra Pro 20B"
+description = "Fikra house model for high-volume draft and classification workloads on a 131K context"
+release_date = "2026-09"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.2
+[limit]
+context = 131072
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

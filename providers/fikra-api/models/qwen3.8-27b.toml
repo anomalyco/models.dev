@@ -1,0 +1,22 @@
+name = "Qwen 3.8 27B"
+description = "Fast 27B-class multimodal model with automatic prompt caching billed at USD 0.10 per 1M cached tokens"
+release_date = "2026-08"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.045
+output = 0.35
+cache_read = 0.1
+[limit]
+context = 1001536
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

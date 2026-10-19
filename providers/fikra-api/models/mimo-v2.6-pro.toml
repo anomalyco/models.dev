@@ -1,0 +1,21 @@
+name = "MiMo V2.6 Pro"
+description = "Xiaomi MiMo-V2.6-Pro for vision and reasoning tasks on a 1M context"
+release_date = "2026-09-22"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.6
+output = 1.2
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]
