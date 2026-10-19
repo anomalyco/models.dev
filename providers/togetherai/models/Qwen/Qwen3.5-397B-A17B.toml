@@ -16,6 +16,7 @@ reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 open_weights = true
+# Verified 2026-10-20: calls fail with 400 "Unable to access non-serverless model"; needs a newly created dedicated endpoint.
 status = "deprecated"
 
 [cost]

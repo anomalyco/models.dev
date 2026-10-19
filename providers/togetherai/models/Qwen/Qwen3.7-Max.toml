@@ -16,7 +16,10 @@ cache_read = 0.125
 
 [limit]
 context = 1_000_000
-output = 500_000
+# Verified 2026-10-20: max_tokens > 131072 rejected with
+# "Range of max_tokens should be [1, 131072]" (Alibaba Model Studio backend).
+# Matches https://www.alibabacloud.com/help/en/model-studio/qwen3-7-max
+output = 131_072
 
 [modalities]
 input = ["text"]

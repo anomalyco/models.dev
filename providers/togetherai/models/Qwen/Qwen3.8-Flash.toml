@@ -1,0 +1,31 @@
+# Reasoning HTTP format (accessed 2026-10-20):
+# POST https://api.together.xyz/v1/chat/completions (stream: true required).
+# Thinking tokens are streamed in a `reasoning` delta field; toggled per request.
+# Sources:
+# GET https://api.together.xyz/v1/models (context length, pricing, release date)
+# Verified 2026-10-20: max_tokens 500001 rejected with
+# "<400> InternalError.Algo.InvalidParameter: Range of max_tokens should be [1, 131072]"
+# (Alibaba Model Studio backend, same cap pattern as the other hosted-Qwen Plus/Max models).
+name = "Qwen3.8 Flash"
+description = "Fast Qwen model for responsive chat, reasoning, and agentic workflows"
+family = "qwen"
+release_date = "2026-09-21"
+last_updated = "2026-09-21"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.47
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

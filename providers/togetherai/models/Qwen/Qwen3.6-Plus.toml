@@ -12,7 +12,8 @@ reasoning = true
 reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
-open_weights = true
+# Proprietary hosted model (Alibaba Model Studio / Together serverless); open_weights was incorrectly set to true.
+open_weights = false
 
 [cost]
 input = 0.50
@@ -20,7 +21,10 @@ output = 3.00
 
 [limit]
 context = 1_000_000
-output = 500_000
+# Verified 2026-10-20: max_tokens > 65536 rejected with
+# "Range of max_tokens should be [1, 65536]" (Alibaba Model Studio backend).
+# Matches https://www.alibabacloud.com/help/en/model-studio/qwen3-6-plus
+output = 65_536
 
 [modalities]
 input = ["text"]
