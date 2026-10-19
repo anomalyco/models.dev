@@ -3,23 +3,23 @@
 # https://research.meta.ai/static/muse-wonder-model-card (PDF; scores on the capabilities scorecard)
 # The model card states a 1M-token context; Meta documents its 1M Muse context as 1,048,576 tokens.
 # Meta has not yet published an output limit, knowledge cutoff, or API reference for this model.
-
+schema = 2
 name = "Muse Wonder Full"
 description = "Muse Wonder Full is the most capable model in Meta's Muse Wonder series, built for long-running professional agents and ultra-long-horizon software engineering. It shares Muse Wonder's Active Memory and Active Focus capabilities and generally scores higher on Meta's agentic and coding evaluations."
 family = "muse"
-release_date = "2026-10-12"
-last_updated = "2026-10-12"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
-
-[limit]
-context = 1_048_576
+release_date = "2026-10-12"
 
 [modalities]
 input = ["text", "image", "video", "audio"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
 
 [[links]]
 label = "Announcement"

@@ -10,26 +10,29 @@
 # Benchmarks: Muse Spark Open (xhigh) column of the Hugging Face model card benchmark table
 # (xhigh reasoning effort, temperature 1.0, top_p 1.0, top_k disabled). Safety rows omitted.
 # Methodology: https://research.meta.ai/static/muse-spark-open-evaluation-methodology
+schema = 2
 name = "Muse Spark Open"
 description = "Muse Spark Open is an 816B total / 42B active open-weight multimodal reasoning model from Meta for coding and long-horizon agentic work, with 1M-token context."
 family = "muse"
-release_date = "2026-10-15"
-last_updated = "2026-10-15"
-attachment = true
-reasoning = true
-tool_call = true
-temperature = true
-knowledge = "2026-01-04"
 open_weights = true
+knowledge = "2026-01-04"
+release_date = "2026-10-15"
 license = "Muse Model License"
-
-[limit]
-context = 1_048_576
-output = 131_072
 
 [modalities]
 input = ["text", "image", "video", "audio"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
 
 [[weights]]
 label = "Hugging Face (BF16)"

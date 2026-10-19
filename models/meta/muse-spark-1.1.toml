@@ -1,21 +1,27 @@
+# Sampling (temperature, top_p; no top_k): https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/protocols/messages
+# Image MIME types: https://dev.meta.ai/docs/image-understanding
+schema = 2
 name = "Muse Spark 1.1"
 description = "Muse Spark is a natively multimodal reasoning model with support for tool-use, visual chain of thought, and multi-agent orchestration."
 family = "muse"
+open_weights = false
 release_date = "2026-04-08"
 last_updated = "2026-07-09"
-attachment = true
-reasoning = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 temperature = true
-tool_call = true
-open_weights = false
+top_p = true
+top_k = false
 
 [limit]
 context = 1_048_576
 output = 131_072
-
-[modalities]
-input = ["text", "image", "pdf", "video"]
-output = ["text"]
 
 [[benchmarks]]
 name = "SWE-Bench Pro"
