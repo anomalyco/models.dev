@@ -1,10 +1,10 @@
-# Sources (accessed 2026-10-08):
+# Sources (accessed 2026-10-19):
 # - Model id, 262,144 context, prices: https://unrestricted.sh/models/qwen3.8-27b-uncensored
 # - Base URL, endpoints, reasoning levels, reasoning in reasoning_content: https://unrestricted.sh/reference
 # - Output limit (32,768 in the provider config): https://unrestricted.sh/guides/opencode
 # - release_date: the day the current model went live on this API
-# Standalone entry, not base_model: this is an uncensored fine-tune of Qwen3.8 27B
-# (different weights), served text-only, like the other uncensored fine-tunes here.
+# Standalone entry, not base_model: the model is uncensored and served text-only,
+# like the other uncensored entries here.
 # Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off, so no separate
 # toggle); high and max are accepted as aliases of xhigh, minimal of low. Same set as the
 # Qwen3.8 27B peers (e.g. providers/nebius/models/Qwen/Qwen3.8-27B.toml).
@@ -13,7 +13,7 @@
 # reasoning_content replayed on an assistant tool-call turn is read back,
 # and effort none returns no reasoning.
 name = "Qwen3.8 27B Uncensored"
-description = "Uncensored fine-tune of Qwen3.8 27B for coding and chat"
+description = "Uncensored model for exploit development, malware analysis and coding"
 family = "qwen"
 release_date = "2026-09-15"
 last_updated = "2026-09-15"
@@ -29,9 +29,9 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
-input = 2.00
-output = 5.00
-cache_read = 0.50
+input = 1.00
+output = 3.00
+cache_read = 0.10
 
 [limit]
 context = 262_144
