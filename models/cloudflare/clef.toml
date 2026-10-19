@@ -1,0 +1,30 @@
+# Sources (accessed 2026-10-19):
+# https://developers.cloudflare.com/workers-ai/models/clef/
+# https://blog.cloudflare.com/clef-decision-models/
+# https://blog.cloudflare.com/clef-faster-cheaper-multimodal/
+# https://huggingface.co/Cloudflare/clef
+# Context: 65,536 tokens (64k) per the Workers AI model page and the launch post.
+# Inputs: text, JSON, images or video frames per the model page and model card.
+# No output limit is published: the model returns per-option probabilities, not generated text.
+type = "decision"
+name = "Clef"
+description = "27B multimodal decision model that returns calibrated probabilities for typed questions over text, structured state, images, and video"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Cloudflare/clef"

@@ -1,0 +1,31 @@
+# Sources (accessed 2026-10-19):
+# https://developers.cloudflare.com/workers-ai/models/clef-flash/
+# https://blog.cloudflare.com/clef-decision-models/
+# https://blog.cloudflare.com/clef-faster-cheaper-multimodal/
+# https://huggingface.co/Cloudflare/clef-flash
+# Context: the weights support 256k (262,144, text_config.max_position_embeddings);
+# Workers AI hosts it with a 24,576-token window.
+# Inputs: text, JSON, images or video frames per the model page and model card.
+# No output limit is published: the model returns per-option probabilities, not generated text.
+type = "decision"
+name = "Clef Flash"
+description = "Fast 9B multimodal decision model that returns calibrated probabilities for typed questions over text, structured state, images, and video"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Cloudflare/clef-flash"

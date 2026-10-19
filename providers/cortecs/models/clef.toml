@@ -1,0 +1,17 @@
+# Sources (accessed 2026-10-19):
+# https://api.cortecs.ai/v1/models?tag=Decision&extended=true&currency=USD
+# Cortecs serves text input only and lists no supported features (no JSON mode).
+# Output limit: https://api.cortecs.ai/v1/models (max_output_tokens, not context_size).
+base_model = "cloudflare/clef"
+attachment = false
+structured_output = false
+
+[cost]
+input = 0.248
+output = 0
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text"]
