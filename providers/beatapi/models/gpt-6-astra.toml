@@ -1,0 +1,15 @@
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: gpt-6-astra.
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.4
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 8
+output = 30
+cache_read = 0.8

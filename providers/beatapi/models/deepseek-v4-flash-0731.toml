@@ -1,0 +1,12 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high. BeatAPI's primary route for this ID rejects
+# reasoning_effort=max and =minimal with HTTP 400 (measured 2026-09-28), so they are not listed.
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: deepseek-v4-flash-0731.
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high"] }]
+
+[cost]
+input = 0.11
+output = 0.33
+cache_read = 0.0035
