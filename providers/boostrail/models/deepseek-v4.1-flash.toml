@@ -1,9 +1,10 @@
 # Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
-# reasoning_effort none|low|high gave 2|62|80 completion tokens for a
-# one-number answer; image input answered.
+# Live requests 2026-10-19 (3 trials each unless noted), one-number prompts:
+# reasoning_effort none 2 completion tokens (no thinking; wrong answers),
+# low 62 (1 trial), high 70-107, xhigh 80-100, max 82-94. xhigh and max are
+# accepted and served as high. An image_url part was answered.
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
 

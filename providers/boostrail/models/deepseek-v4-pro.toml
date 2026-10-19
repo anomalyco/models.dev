@@ -1,11 +1,13 @@
 # Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
-# reasoning_effort none|high|max gave 1|70|187 completion tokens for a
-# one-number answer.
+# Live requests 2026-10-19, 3 trials each. Easy one-number prompt:
+# reasoning_effort none and thinking {type: disabled} both turned thinking off
+# (the working was written into the answer, 170-226 completion tokens), while
+# low, high, xhigh and max answered with the number only (133-277). Harder
+# one-number prompt: low 280-601, max 374-1468.
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [cost]
 input = 0.627

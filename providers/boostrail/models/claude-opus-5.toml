@@ -1,12 +1,14 @@
 # Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
-# reasoning_effort none|low|high gave 42|27|58 completion tokens for a
-# one-number answer (no effective caller control); image input answered;
-# content parts are text and image_url only (no PDF).
+# Live requests 2026-10-19, 3 trials each. Easy one-number prompt:
+# reasoning_effort low 53, medium 65-78, high 78-82, xhigh 79-85, max 83
+# completion tokens. Harder one-number prompt: low 155-192, max 305-346.
+# thinking budget_tokens and thinking disabled made no difference (55-70).
+# A PDF sent as a file content part was not seen by the model (48 prompt
+# tokens), so input is text and image; an image_url part was answered.
 base_model = "anthropic/claude-opus-5"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [modalities]
 input = ["text", "image"]
