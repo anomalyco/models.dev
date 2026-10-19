@@ -2,24 +2,25 @@
 # 2026-10-04. The earlier ID, deepseek-v4.1-flash-fast-fp4, was listed here beside it until 2026-10-13. The gateway still
 # accepts it as an alias at the same rates, and https://www.coralbricks.ai/api/public/models lists it under
 # deprecatedSlugs for this model.
-# Pricing per https://www.coralbricks.ai/pricing and https://www.coralbricks.ai/api/public/models (accessed 2026-10-10):
-# input $0.01, output $1.20 per 1M tokens. A retained (cache-written) prompt token bills the input rate plus a $0.08
-# cache-write add-on once, so cache_write below is the full $0.09; cached input is free.
+# Name, pricing and limits per GET https://inference.coralbricks.ai/v1/models and
+# https://www.coralbricks.ai/api/public/models (accessed 2026-10-19): "DeepSeek V4.1 Flash Fast"; input $0.25, cached
+# input $0.005, output $1.20 per 1M tokens, no cache-write charge; context 1,048,576, max output 393,216.
 # Effort: reasoning_effort = none|low|high|max. Reasoning is opt-in: with no reasoning_effort, or none, the model
 # answers without reasoning. thinking.type is ignored by this endpoint.
 # Verified live against POST https://inference.coralbricks.ai/v1/chat/completions (2026-10-04) on this ID: low, high and
 # max return HTTP 200 with reasoning_content; none and no field return 0 reasoning tokens. An image_url part in a user
 # message is answered from the image, so attachment and the image modality come from the base model.
 base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash Fast"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 interleaved = true
 
 [limit]
 context = 1_048_576
-output = 131_072
+output = 393_216
 
 [cost]
-input = 0.01
+input = 0.25
 output = 1.2
-cache_read = 0
-cache_write = 0.09
+cache_read = 0.005
+cache_write = 0
