@@ -6,7 +6,7 @@
 # Context: the weights support 256k (262,144, text_config.max_position_embeddings);
 # Workers AI hosts it with a 24,576-token window.
 # Inputs: text, JSON, images or video frames per the model page and model card.
-# No output limit is published: the model returns per-option probabilities, not generated text.
+# Output limit 0: decision models generate no text, as with the peer decision labs.
 type = "decision"
 name = "Clef Flash"
 description = "Fast 9B multimodal decision model that returns calibrated probabilities for typed questions over text, structured state, images, and video"
@@ -21,6 +21,7 @@ license = "Apache-2.0"
 
 [limit]
 context = 262_144
+output = 0
 
 [modalities]
 input = ["text", "image", "video"]

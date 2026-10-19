@@ -5,7 +5,7 @@
 # https://huggingface.co/Cloudflare/clef
 # Context: 65,536 tokens (64k) per the Workers AI model page and the launch post.
 # Inputs: text, JSON, images or video frames per the model page and model card.
-# No output limit is published: the model returns per-option probabilities, not generated text.
+# Output limit 0: decision models generate no text, as with the peer decision labs.
 type = "decision"
 name = "Clef"
 description = "27B multimodal decision model that returns calibrated probabilities for typed questions over text, structured state, images, and video"
@@ -20,6 +20,7 @@ license = "Apache-2.0"
 
 [limit]
 context = 65_536
+output = 0
 
 [modalities]
 input = ["text", "image", "video"]

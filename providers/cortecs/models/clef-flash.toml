@@ -1,10 +1,10 @@
 # Sources (accessed 2026-10-19):
 # https://api.cortecs.ai/v1/models?tag=Decision&extended=true&currency=USD
-# Cortecs serves text input only and lists no supported features (no JSON mode).
-# Output limit: https://api.cortecs.ai/v1/models (max_output_tokens, not context_size).
+# Cortecs serves text input only.
+# Context: Cortecs serves a 66,000-token window (context_size), smaller than the
+# 262,144 the weights support; Workers AI serves 24,576.
 base_model = "cloudflare/clef-flash"
 attachment = false
-structured_output = false
 
 [cost]
 input = 0.047
@@ -12,7 +12,6 @@ output = 0
 
 [limit]
 context = 66_000
-output = 66_000
 
 [modalities]
 input = ["text"]
