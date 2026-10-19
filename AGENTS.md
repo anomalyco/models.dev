@@ -108,7 +108,7 @@ If the provider has a rich catalog API that can populate model data or authorita
 
 ## v2 migration (`schema = 2`)
 
-Labs and providers are moving to the v2 format one at a time. A file that starts with `schema = 2` is v2. Any other file is v1. Readers translate v2 files back to v1, so v1 and v2 files can `base_model` each other. Migrated so far: labs and providers `anthropic`, `openai`, and `meta`.
+Labs and providers are moving to the v2 format one at a time. A file that starts with `schema = 2` is v2. Any other file is v1. Readers translate v2 files back to v1, so v1 and v2 files can `base_model` each other. To see whether a lab or provider is migrated, check its files for `schema = 2`.
 
 v2 lab file (`models/<lab>/*.toml`). It only holds facts that are true on every host:
 
