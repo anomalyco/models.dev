@@ -1,0 +1,14 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# Toggle: chat_template_kwargs.enable_thinking = true|false (thinking is on by default);
+# reasoning_effort is ignored.
+# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12).
+base_model = "alibaba/qwen3-30b-a3b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.10
+output = 0.45
+cache_read = 0.05
+
+[limit]
+context = 32_768

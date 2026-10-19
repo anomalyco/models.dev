@@ -1,0 +1,10 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# POST /v1/embeddings returns 384-dimensional vectors; billed on input tokens only.
+# Input over 256 tokens is truncated (usage.prompt_tokens caps at 256 and longer
+# inputs return the same vector), matching the lab limit.
+# Verified against https://api.zerogpu.ai/v1/embeddings (2026-10-12).
+base_model = "sentence-transformers/all-minilm-l6-v2"
+
+[cost]
+input = 0.004
+output = 0
