@@ -1,0 +1,20 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-streaming-preview
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - Introductory rates through 2026-12-31 double from 2027-01-01.
+schema = 2
+base_model = "google/gemini-robotics-er-2-streaming-preview"
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+cache = { supported = false }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 5
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = 2

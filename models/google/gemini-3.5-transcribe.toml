@@ -1,0 +1,27 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-transcribe
+# - https://ai.google.dev/gemini-api/docs/transcribe
+# - https://ai.google.dev/gemini-api/docs/changelog (GA 2026-08-26)
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+schema = 2
+type = "transcription"
+name = "Gemini 3.5 Transcribe"
+description = "Speech-to-text model with language detection, speaker diarization, word timestamps, and custom vocabulary"
+family = "gemini"
+open_weights = false
+release_date = "2026-08-26"
+
+[modalities]
+input = ["audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 98_304
+output = 32_768

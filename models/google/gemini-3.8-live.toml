@@ -1,0 +1,27 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live
+# - https://ai.google.dev/gemini-api/docs/live-api/capabilities
+# - https://ai.google.dev/gemini-api/docs/changelog (GA 2026-09-15)
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+schema = 2
+type = "realtime"
+name = "Gemini 3.8 Live"
+description = "Low-latency Live API model for real-time voice agents with interleaved reasoning and async tools"
+family = "gemini-flash"
+open_weights = false
+release_date = "2026-09-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video", "audio/pcm"]
+output = ["text", "audio/pcm"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 65_536

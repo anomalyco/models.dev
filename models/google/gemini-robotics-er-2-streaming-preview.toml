@@ -1,0 +1,27 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-streaming-preview
+# - https://ai.google.dev/gemini-api/docs/robotics-streaming
+# - https://ai.google.dev/gemini-api/docs/changelog (preview 2026-07-30)
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+schema = 2
+type = "realtime"
+name = "Gemini Robotics-ER 2 Streaming Preview"
+description = "Live API robotics model for low-latency robot agents over continuous audio and video"
+family = "gemini"
+open_weights = false
+release_date = "2026-07-30"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video", "audio/pcm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 65_536

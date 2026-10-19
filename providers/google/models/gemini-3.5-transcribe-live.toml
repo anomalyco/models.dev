@@ -1,0 +1,23 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-transcribe
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+# - Pricing lists only audio input ($3.50) and text output ($21.00); text input repeats the audio rate.
+schema = 2
+base_model = "google/gemini-3.5-transcribe-live"
+[capabilities]
+temperature = true
+cache = { supported = false }
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 3.5
+
+[cost.text.output]
+price = 21
+
+[cost.audio.input]
+price = 3.5
