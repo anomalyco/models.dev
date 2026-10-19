@@ -1,0 +1,13 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "zhipuai/glm-4.7-flash"
+name = "GLM 4.7 Flash (Morpheus Web)"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 198_000
+output = 4_096

@@ -1,0 +1,9 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (Morpheus Web)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
+
+[limit]
+output = 128_000

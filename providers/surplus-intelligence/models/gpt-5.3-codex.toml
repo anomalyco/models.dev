@@ -1,0 +1,10 @@
+base_model = "openai/gpt-5.3-codex"
+attachment = false
+temperature = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[modalities]
+input = ["text"]

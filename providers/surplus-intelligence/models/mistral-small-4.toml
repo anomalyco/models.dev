@@ -1,0 +1,9 @@
+base_model = "mistral/mistral-small-2603"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[limit]
+output = 32_768

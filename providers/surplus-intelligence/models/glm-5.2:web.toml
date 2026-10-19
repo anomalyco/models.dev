@@ -1,0 +1,9 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 (Morpheus Web)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
+
+[limit]
+context = 1_048_576

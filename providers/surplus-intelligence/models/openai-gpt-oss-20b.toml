@@ -1,0 +1,10 @@
+base_model = "openai/gpt-oss-20b"
+name = "gpt-oss-20b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 128_000
+output = 16_000

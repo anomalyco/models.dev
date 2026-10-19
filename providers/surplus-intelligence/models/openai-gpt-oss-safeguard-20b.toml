@@ -1,0 +1,9 @@
+base_model = "openai/gpt-oss-safeguard-20b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 128_000
+output = 16_000

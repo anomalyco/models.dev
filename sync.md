@@ -26,6 +26,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync surplus-intelligence` syncs only Surplus Intelligence.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -430,6 +431,21 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
 - An authored `base_model` wins over the resolver, so a miss never de-factors a committed file.
 - Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
 - Modalities are sorted into catalogue order; wire order is arbitrary.
+
+## Surplus Intelligence Notes
+
+Surplus Intelligence is implemented in `packages/core/src/sync/providers/surplus-intelligence.ts`.
+
+- Source endpoint: `https://api.surplusintelligence.ai/v1/models`; no auth required (the catalog is public and OpenRouter-shaped).
+- Model IDs map directly to TOML paths under `providers/surplus-intelligence/models`, including `:web` route variants and `e2ee-…-p` encrypted wrappers.
+- **No `[cost]` is written.** Surplus is a marketplace: each request routes to the cheapest seller, so realized prices float continuously at or below a per-model reference price and depend on per-key routing preferences (trusted-domain sellers by default; untrusted sellers opt-in). The API's pricing fields are reference prices, not what buyers pay, so costs are intentionally omitted rather than cataloged wrong.
+- Canonical IDs resolve to `base_model` metadata by synthesizing OpenRouter-shaped IDs from the API's lab `provider` field plus candidate transforms (`e2ee-`/`-p` unwrap, `:web` strip, `-it`/`-instruct` variants, Qwen dotted point releases); irregular IDs use an explicit override map. A leading OpenRouter-style lab prefix in the catalog name (`Meta: Muse Spark 1.1`) is stripped. Marketplace-only routes (uncensored/"heretic" finetunes, Venice house models, beta aliases) are written inline via the `INLINE_ROUTES` allowlist — inline is a decision, not a fallback, so an allowlisted ID is never resolved even when a lab entry later matches it (`mistral-large` is Venice Medium). A new ID that resolves to nothing and is not allowlisted is skipped with a sync-report notice (hand-authored local files are preserved) so catalog drift is reviewable instead of silent.
+- `reasoning` is lab-authoritative for factored models (the canonical `models/` entry alone — Surplus's catalog flags are unreliable in both directions); allowlisted inline routes use the route's own feature/param signals. `tool_call` comes from `supported_features`; `structured_output` from `supported_parameters.includes("structured_outputs")`; `temperature` from `supported_parameters`.
+- `reasoning_options` mirror lab + same-surface peers (Surplus forwards request parameters to the seller unchanged): a vetted authored map for alias/orphan IDs, then the same canonical model's OpenRouter entry (exact key, then dated IDs registered under their undated canonical), then the lab's own first-party provider file (handles NVIDIA's nested per-org layout and lab-prefixed filenames). A peer's authored `[]` is affirmative "no caller control" and wins — live probes confirmed routes advertising reasoning params can still ignore the control, so advertised params are not evidence of a working control. Inline finetune routes (`-uncensored`/`-heretic`) mirror their parent canonical. Where live probes showed a route's sellers ignoring every documented control, the tested result is pinned per route ID (factored or inline) and wins over peers, with a dated evidence header (serving seller, request IDs, observed reasoning tokens) on the affected file. Mirrored options are recomputed on every sync, so a peer's later correction propagates instead of a stale copy sticking; deliberate exceptions belong in the module's maps. A non-empty local value survives only when no source resolves, and an empty one never shadows later-found controls. A reasoner with no source anywhere fails closed with `MissingReasoningOptionsError` (the runner keeps any local file and opens a missing-model issue); `[]` is never a default. Toggle-bearing files get a wire-path header emitted by the sync. Regression coverage lives in `packages/core/test/surplus-intelligence.test.ts`.
+- Image/video/music/TTS/STT marketplace services are excluded: they are priced per request or media unit and cannot be represented by the token-cost schema.
+- Inline routes take `release_date`/`last_updated` from their `INLINE_ROUTES` entry, which must carry a sourced date: Surplus's `created` is a 2025-01-01 placeholder on every one of them, so a route without a source stays off the allowlist. `knowledge`, `status`, `interleaved`, `limit.input`, and inline `open_weights` corrections are preserved when present.
+- `limit.output` is the host's `top_provider.max_completion_tokens`; when that is absent, factored routes take the lab's output limit (capped at the route context), then the existing value; the context window is the last resort.
+- Fewer than 100 chat models after filtering fails the run: the catalog lists 200+, and a truncated or empty 200 would otherwise delete the missing routes.
 
 ## Standalone Generators
 

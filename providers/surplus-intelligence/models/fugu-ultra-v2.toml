@@ -1,0 +1,12 @@
+base_model = "sakana/fugu-ultra"
+name = "Fugu Ultra v2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh", "max"]
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]

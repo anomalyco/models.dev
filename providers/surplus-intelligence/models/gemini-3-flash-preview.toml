@@ -1,0 +1,12 @@
+base_model = "google/gemini-3-flash-preview"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text"]

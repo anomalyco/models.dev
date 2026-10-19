@@ -1,0 +1,11 @@
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

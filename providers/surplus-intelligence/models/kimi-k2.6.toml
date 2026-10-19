@@ -1,0 +1,14 @@
+# Live probes 2026-09-23 (seller: fireworks): reasoning.enabled=false
+# still returned 1,106 and 4,000 reasoning tokens (req
+# 01M386R5PSDNQ7YN997P1S6TP9, 01M386R5Q86H1VNHPF3RWKQ1NV) vs 1,976 and
+# 1,569 with it enabled, so the peer's toggle is not honored here. The
+# :web route (seller: morpheus) does honor it.
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

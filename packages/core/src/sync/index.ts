@@ -44,6 +44,7 @@ import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
+import { surplusIntelligence } from "./providers/surplus-intelligence.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -185,6 +186,7 @@ export const providers: {
   pioneer: SyncProvider<any>;
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
+  "surplus-intelligence": SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -230,6 +232,7 @@ export const providers: {
   pioneer,
   prime,
   requesty,
+  "surplus-intelligence": surplusIntelligence,
   tinfoil,
   vercel,
   venice,
@@ -255,6 +258,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "surplus-intelligence",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
