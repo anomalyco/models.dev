@@ -1,0 +1,16 @@
+base_model = "minimax/MiniMax-M3.1-Flash"
+name = "MiniMax M3.1 Flash"
+temperature = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1125
+output = 0.45
+cache_read = 0.01125
+
+[limit]
+output = 524_288
