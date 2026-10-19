@@ -428,6 +428,9 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
 - `skipCreates` and `trackMissingModels` are set: a created file would ship `limit.output = 0`. Unseen IDs open deduped `[missing-model]` issues.
 - `deleteMissing` is `false`: the list is unauthenticated and `{"data":[]}` passes the schema, so a truncated 200 must not delete hand-measured files; they are retained and reported.
 - An authored `base_model` wins over the resolver, so a miss never de-factors a committed file.
+- Authoring a model from a `[missing-model]` issue:
+  - Take `limit.input` and `limit.output` from `max_input_tokens` and `max_output_tokens` in the authenticated list. If the id is absent there, do not copy a sibling's split without saying so in the header; engy accepts an over-cap `max_tokens` (65,537 passes where the listed cap is 65,536), so a request cannot confirm the cap.
+  - Point `base_model` at the lab entry for the exact id, adding it under `models/` if it is missing. Pointing at a sibling is not a substitute: because an authored `base_model` wins, the sync never corrects it later.
 - Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
 - Modalities are sorted into catalogue order; wire order is arbitrary.
 
