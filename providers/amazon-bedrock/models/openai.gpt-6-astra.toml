@@ -4,29 +4,37 @@
 # Ultrafast via service_tier=ultrafast at 6x Standard: https://developers.openai.com/api/docs/guides/ultrafast-mode
 # Effort levels match OpenAI-native Astra (Low..Max, no "none"): https://developers.openai.com/api/docs/models/gpt-6-astra
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
+schema = 2
 base_model = "openai/gpt-6-astra"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 
-[cost]
-input = 11.00
-output = 55.00
-cache_read = 1.10
-cache_write = 13.75
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 22.00
-output = 82.50
-cache_read = 2.20
-cache_write = 27.50
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[cost.text.input]
+price = 11
+cache = { read = 1.1, write = 13.75 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 22
+cache = { read = 2.2, write = 27.5 }
+
+[cost.text.output]
+price = 55
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 82.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" } }
+factor = 6
 
 [experimental.modes.ultrafast]
-cost = { input = 66.00, output = 330.00, cache_read = 6.60, cache_write = 82.50 }
-provider = { body = { service_tier = "ultrafast" } }
+body = { service_tier = "ultrafast" }

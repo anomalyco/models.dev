@@ -1,13 +1,16 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-vl-235b-a22b.html
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Live Converse 2026-09-11: outputConfig.textFormat enforced a JSON schema.
+schema = 2
 base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 last_updated = "2025-11-25"
-
-[cost]
-input = 0.53
-output = 2.66
 
 [limit]
 context = 262_144
 output = 262_000
+
+[cost.text.input]
+price = 0.53
+
+[cost.text.output]
+price = 2.66

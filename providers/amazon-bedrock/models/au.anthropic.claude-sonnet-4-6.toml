@@ -4,16 +4,20 @@
 # Live ap-southeast-2 Converse, 2026-09-09: maxTokens=128000 succeeds; 128001 is rejected with model limit 128000.
 # Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
 # Manual thinking.type = enabled still accepts thinking.budget_tokens; effort is output_config.effort, both inside additionalModelRequestFields on Converse.
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 name = "AU Anthropic Claude Sonnet 4.6"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
-structured_output = true
 
-[cost]
-input = 3.30
-output = 16.50
-cache_read = 0.33
-cache_write = 4.125
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 3.3
+cache = { read = 0.33, write = 4.125 }
+
+[cost.text.output]
+price = 16.5

@@ -3,18 +3,23 @@
 # AWS recommends high to keep thinking in the reasoning channel.
 # Live 2026-09-09: high returns reasoning; strict JSON schema and max_output_tokens=8192 accepted.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+schema = 2
 base_model = "google/gemma-4-E2B-it"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
-
-[cost]
-input = 0.04
-output = 0.08
 
 [modalities]
 input = ["text", "image", "audio", "video"]
+output = ["text"]
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.08

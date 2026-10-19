@@ -1,9 +1,12 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-next.html
 # https://huggingface.co/Qwen/Qwen3-Coder-Next (explicitly non-thinking)
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
 last_updated = "2026-02-06"
 
-[cost]
-input = 0.50
-output = 1.20
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.2

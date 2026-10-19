@@ -4,13 +4,17 @@
 # ap-south-1 standard regional USD/MTok; cache_write is the 5-minute rate.
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
+schema = 2
 base_model = "anthropic/claude-haiku-4-5-20251001"
 name = "Claude Haiku 4.5 (India)"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 structured_output = false
 
-[cost]
-input = 1.10
-output = 5.50
-cache_read = 0.11
-cache_write = 1.375
+[cost.text.input]
+price = 1.1
+cache = { read = 0.11, write = 1.375 }
+
+[cost.text.output]
+price = 5.5

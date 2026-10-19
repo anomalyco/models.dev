@@ -3,13 +3,17 @@
 # https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Effort/budget: additionalModelRequestFields.output_config.effort / thinking.budget_tokens (Converse); output_config.effort / thinking.budget_tokens (InvokeModel).
+schema = 2
 base_model = "anthropic/claude-opus-4-5-20251101"
 name = "Claude Opus 4.5 (Global)"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024 }]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
 structured_output = true
 
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25

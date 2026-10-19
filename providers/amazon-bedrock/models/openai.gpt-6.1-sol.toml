@@ -6,28 +6,36 @@
 # Ultrafast availability: https://aws.amazon.com/about-aws/whats-new/2026/10/openai-gpt-sol-ultrafast-amazon/
 # Ultrafast is 6x Standard per Bedrock Astra card and OpenAI ultrafast table: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html and https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
+schema = 2
 base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 2.20
-output = 11.00
-cache_read = 0.11
-cache_write = 2.75
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 4.40
-output = 16.50
-cache_read = 0.22
-cache_write = 5.50
+[cost.text.input]
+price = 2.2
+cache = { read = 0.11, write = 2.75 }
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.4
+cache = { read = 0.22, write = 5.5 }
+
+[cost.text.output]
+price = 11
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" } }
+factor = 6
 
 [experimental.modes.ultrafast]
-cost = { input = 13.20, output = 66.00, cache_read = 0.66, cache_write = 16.50 }
-provider = { body = { service_tier = "ultrafast" } }
+body = { service_tier = "ultrafast" }

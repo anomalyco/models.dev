@@ -5,16 +5,20 @@
 # JP source ap-northeast-1: regional on-demand USD/MTok; cache_write is the 5-minute rate.
 # Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
 # Manual thinking.type = enabled still accepts thinking.budget_tokens; effort is output_config.effort, both inside additionalModelRequestFields on Converse.
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
 name = "Claude Sonnet 4.6 (JP)"
-structured_output = true
 
-[cost]
-input = 3.30
-output = 16.50
-cache_read = 0.33
-cache_write = 4.125
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 3.3
+cache = { read = 0.33, write = 4.125 }
+
+[cost.text.output]
+price = 16.5

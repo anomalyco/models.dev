@@ -3,15 +3,22 @@
 # Toggle: additionalModelRequestFields.reasoning_config = "high"; omit for default non-thinking mode.
 # Live 2026-09-09: high/omitted returns/omits reasoningContent; maxTokens=81920 accepted.
 # Runtime Converse; US Standard pricing.
+schema = 2
 base_model = "deepseek/deepseek-v3.2"
 last_updated = "2026-02-06"
-reasoning_options = [{ type = "toggle" }]
-interleaved = true
 
-[cost]
-input = 0.62
-output = 1.85
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 163_840
 output = 81_920
+
+[api.converse]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.62
+
+[cost.text.output]
+price = 1.85

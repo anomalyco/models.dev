@@ -1,11 +1,16 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-voxtral-mini-3b-2507.html
 # https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+schema = 2
 base_model = "mistral/voxtral-mini-3b-2507"
-structured_output = true
 
-[cost]
-input = 0.04
-output = 0.04
+[capabilities]
+structured_output = true
 
 [limit]
 output = 4_096
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.04

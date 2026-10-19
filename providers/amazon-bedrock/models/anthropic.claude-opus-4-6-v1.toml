@@ -5,12 +5,16 @@
 # Runtime in-region availability: eu-west-2; regional on-demand USD/MTok, 5-minute cache writes.
 # Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
 # Manual thinking.type = enabled still accepts thinking.budget_tokens; effort is output_config.effort, both inside additionalModelRequestFields on Converse.
+schema = 2
 base_model = "anthropic/claude-opus-4-6"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
 
-[cost]
-input = 5.50
-output = 27.50
-cache_read = 0.55
-cache_write = 6.875
+[cost.text.input]
+price = 5.5
+cache = { read = 0.55, write = 6.875 }
+
+[cost.text.output]
+price = 27.5

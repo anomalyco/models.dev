@@ -6,19 +6,27 @@
 # Runtime Converse; US Standard pricing.
 # Live Converse 2026-09-23: maxTokens at the Bedrock ceiling returned
 # "maximum context length is 262144 tokens" from the serving backend.
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
 release_date = "2026-01-27"
 last_updated = "2026-02-06"
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-interleaved = true
 
-[cost]
-input = 0.6
-output = 3
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+temperature = true
 
 [limit]
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
+[api.converse]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3

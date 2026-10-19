@@ -4,13 +4,17 @@
 # JP source ap-northeast-1: regional on-demand USD/MTok; cache_write is the 5-minute rate.
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
+schema = 2
 base_model = "anthropic/claude-sonnet-4-5-20250929"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 name = "Claude Sonnet 4.5 (JP)"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 structured_output = true
 
-[cost]
-input = 3.30
-output = 16.50
-cache_read = 0.33
-cache_write = 4.125
+[cost.text.input]
+price = 3.3
+cache = { read = 0.33, write = 4.125 }
+
+[cost.text.output]
+price = 16.5

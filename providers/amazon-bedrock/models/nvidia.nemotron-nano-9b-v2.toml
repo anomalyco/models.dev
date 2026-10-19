@@ -1,14 +1,19 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-nvidia-nvidia-nemotron-nano-9b-v2.html
 # Live 2026-09-09: maxTokens=8192 accepted; tested JSON thinking controls had no visible effect.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
-name = "NVIDIA Nemotron Nano 9B v2"
+schema = 2
 base_model = "nvidia/nemotron-nano-9b-v2"
-reasoning = false
-structured_output = true
+name = "NVIDIA Nemotron Nano 9B v2"
 
-[cost]
-input = 0.06
-output = 0.23
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 output = 8_192
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.23

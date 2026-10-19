@@ -8,13 +8,17 @@
 # Live US-family probe, 2026-09-09: Legacy access denied (404) without active use in the last 30 days.
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
+schema = 2
 base_model = "anthropic/claude-sonnet-4-20250514"
 name = "Claude Sonnet 4 (Global)"
 status = "deprecated"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

@@ -9,19 +9,26 @@
 # Bedrock supports text and image input, but not the base model's video input.
 # Live Converse 2026-09-23: maxTokens=128000 accepted; 128001 rejected with
 # "exceeds the model limit of 128000".
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 (Global)"
-reasoning_options = []
-interleaved = true
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
-cache_write = 3.75
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
+[api.converse]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

@@ -1,23 +1,28 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-3.html
 # Mantle Responses only for this catalog route; US Standard pricing.
 # Effort: reasoning.effort = none|low|medium|high.
+schema = 2
 base_model = "xai/grok-4.3"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 last_updated = "2026-06-28"
 
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.20
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
 
 [limit]
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.5

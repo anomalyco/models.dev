@@ -8,15 +8,19 @@
 # High effort requires omitting temperature, topP, topK, and maxTokens.
 # Bedrock output cap: US Converse boundary check (2026-09-09) accepts 65,535 and rejects 65,536.
 # Lab specs: https://docs.aws.amazon.com/nova/latest/nova2-userguide/what-is-nova-2.html
+schema = 2
 base_model = "amazon/nova-2-lite"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 name = "Nova 2 Lite (EU)"
 
-[cost]
-input = 0.374
-output = 3.157
-cache_read = 0.0935
-cache_write = 0.374
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 
 [limit]
 output = 65_535
+
+[cost.text.input]
+price = 0.374
+cache = { read = 0.0935, write = 0.374 }
+
+[cost.text.output]
+price = 3.157

@@ -2,15 +2,22 @@
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # MiniMax M2 has always-on thinking, matching the first-party API.
 # Live Converse 2026-09-11: reasoningContent returned and outputConfig.textFormat enforced a JSON schema.
+schema = 2
 base_model = "minimax/MiniMax-M2"
-reasoning_options = []
-interleaved = true
-structured_output = true
 
-[cost]
-input = 0.30
-output = 1.20
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 204_608
 output = 128_000
+
+[api.converse]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

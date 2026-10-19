@@ -3,11 +3,13 @@
 # Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/eu-west-1/index.json
 # Standard eu-west-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
 # Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
+schema = 2
 base_model = "amazon/nova-lite"
 name = "Nova Lite (EU)"
 
-[cost]
-input = 0.069
-output = 0.276
-cache_read = 0.01725
-cache_write = 0.069
+[cost.text.input]
+price = 0.069
+cache = { read = 0.01725, write = 0.069 }
+
+[cost.text.output]
+price = 0.276

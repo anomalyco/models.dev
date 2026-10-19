@@ -1,14 +1,19 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-nvidia-nemotron-super-3-120b.html
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Live 2026-09-09: maxTokens=131072 accepted; chat_template_kwargs.enable_thinking had no visible effect.
-name = "NVIDIA Nemotron 3 Super 120B A12B"
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = []
-structured_output = true
+name = "NVIDIA Nemotron 3 Super 120B A12B"
 
-[cost]
-input = 0.15
-output = 0.65
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.65

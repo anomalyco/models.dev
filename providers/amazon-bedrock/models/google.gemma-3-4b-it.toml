@@ -2,12 +2,17 @@
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Live Converse (us-east-1, 2026-09-09): forced toolUse works, but native toolResult continuation fails with a role-alternation error.
 # Tool calling remains disabled because a complete native tool-use round trip is unavailable.
+schema = 2
 base_model = "google/gemma-3-4b-it"
-tool_call = false
 
-[cost]
-input = 0.04
-output = 0.08
+[capabilities]
+tools = { supported = false }
 
 [limit]
 output = 4_096
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.08

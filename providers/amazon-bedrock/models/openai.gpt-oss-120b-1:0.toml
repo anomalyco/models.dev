@@ -5,14 +5,19 @@
 # AWS documents 16K max output, but live Converse (2026-09-23) generated 60000 output tokens
 # (stopReason max_tokens), accepts maxTokens=128000 and rejects larger values, and processed a
 # 129575-token prompt; the backend reports "maximum context length (131072)".
+schema = 2
 base_model = "openai/gpt-oss-120b"
-structured_output = true
 name = "gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.15
-output = 0.60
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

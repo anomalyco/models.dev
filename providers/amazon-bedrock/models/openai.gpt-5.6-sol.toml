@@ -3,25 +3,30 @@
 # Bedrock context window: https://developers.openai.com/api/docs/guides/amazon-bedrock
 # In-region Standard pricing for US commercial Regions.
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
+schema = 2
 base_model = "openai/gpt-5.6-sol"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 
-[cost]
-input = 4.40
-output = 22.00
-cache_read = 0.44
-cache_write = 5.50
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 8.80
-output = 33.00
-cache_read = 0.88
-cache_write = 11.00
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[cost.text.input]
+price = 4.4
+cache = { read = 0.44, write = 5.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 8.8
+cache = { read = 0.88, write = 11 }
+
+[cost.text.output]
+price = 22
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 33

@@ -3,18 +3,23 @@
 # Effort: reasoning.effort = none|high on Mantle Responses, matching the Gemma 4 31B surface.
 # Live 2026-09-09: high returns reasoning; strict JSON schema and max_output_tokens=32768 accepted.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
-
-[cost]
-input = 0.13
-output = 0.40
 
 [modalities]
 input = ["text", "image", "video"]
+output = ["text"]
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
+
+[cost.text.input]
+price = 0.13
+
+[cost.text.output]
+price = 0.4

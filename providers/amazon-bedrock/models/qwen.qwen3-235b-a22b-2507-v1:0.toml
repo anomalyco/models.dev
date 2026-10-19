@@ -1,13 +1,18 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-235b-a22b-2507.html
 # https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507 (non-thinking Instruct variant)
 # Runtime ID; US Standard pricing.
+schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 last_updated = "2025-09-18"
-structured_output = true
 
-[cost]
-input = 0.22
-output = 0.88
+[capabilities]
+structured_output = true
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.22
+
+[cost.text.output]
+price = 0.88

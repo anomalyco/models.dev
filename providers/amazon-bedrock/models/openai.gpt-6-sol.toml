@@ -3,24 +3,29 @@
 # In-region pricing = OpenAI API list rates + AWS's 10% fee (as stated on the GPT-6 Astra card): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
 # Effort: none|low|medium|high|xhigh|max (Mantle's own validation error lists these).
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
+schema = 2
 base_model = "openai/gpt-6-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 2.20
-output = 11.00
-cache_read = 0.22
-cache_write = 2.75
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 4.40
-output = 16.50
-cache_read = 0.44
-cache_write = 5.50
+[cost.text.input]
+price = 2.2
+cache = { read = 0.22, write = 2.75 }
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.4
+cache = { read = 0.44, write = 5.5 }
+
+[cost.text.output]
+price = 11
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16.5

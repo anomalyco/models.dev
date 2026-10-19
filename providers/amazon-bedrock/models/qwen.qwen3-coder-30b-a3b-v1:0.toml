@@ -1,13 +1,18 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-30b-a3b-instruct.html
 # Runtime ID; US Standard pricing.
+schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 release_date = "2025-07-31"
 last_updated = "2025-09-18"
-structured_output = true
 
-[cost]
-input = 0.15
-output = 0.6
+[capabilities]
+structured_output = true
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

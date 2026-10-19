@@ -6,19 +6,23 @@
 # output tokens and reject 131073 with "exceeds model maximum (131072)".
 # A high-effort response generated 100000 output tokens (hit max_output_tokens).
 # A 130975-token prompt completed; 131175 failed with "max_model_len 131072".
+schema = 2
 base_model = "openai/gpt-oss-120b"
-structured_output = true
 name = "gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.15
-output = 0.60
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 output = 131_072
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"
-shape = "responses"
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

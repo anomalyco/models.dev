@@ -4,14 +4,19 @@
 # Effort: additionalModelRequestFields.reasoning_effort = low|medium|high, following the GPT-OSS Converse request mapping.
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-openai.html
 # Live Converse check 2026-09-09 (us-east-1): reasoning_effort=low returns reasoningContent.
+schema = 2
 base_model = "openai/gpt-oss-safeguard-20b"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.07
-output = 0.20
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 128_000
 output = 16_384
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.2
