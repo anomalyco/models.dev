@@ -185,6 +185,22 @@ export interface ModelMetadata {
   benchmarks?: BenchmarkResult[]
 }
 
+/** A published rate limit for a provider model, for one usage tier. */
+export interface RateLimit {
+  /** Usage tier the limits apply to, e.g. "Free" or "Tier 1". */
+  tier?: string
+  /** Requests per minute. */
+  rpm?: number
+  /** Requests per day. */
+  rpd?: number
+  /** Tokens per minute (input and output combined). */
+  tpm?: number
+  /** Input tokens per minute. */
+  input_tpm?: number
+  /** Output tokens per minute. */
+  output_tpm?: number
+}
+
 /** Per-mode overrides for experimental model modes. */
 export interface ExperimentalMode {
   cost?: Cost
@@ -250,6 +266,8 @@ export interface Model {
   modalities: Modalities
   open_weights: boolean
   limit: Limit
+  /** Published rate limits on this host, one entry per usage tier; absent when undisclosed. */
+  rate_limits?: RateLimit[]
   /** Lifecycle status; absent means generally available. */
   status?: "alpha" | "beta" | "deprecated"
   experimental?: ModelExperimental
