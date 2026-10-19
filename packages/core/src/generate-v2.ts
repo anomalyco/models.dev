@@ -497,7 +497,7 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
   return { [protocol]: entry } as ApiV2;
 }
 
-function resolveProtocol(
+export function resolveProtocol(
   model: Model,
   provider: Provider,
   npm: string,

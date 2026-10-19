@@ -2,6 +2,7 @@
 # https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
 # Pricing is by prompt length: prompts over 100,000 tokens use the higher tier.
 # https://platform.claude.com/docs/en/models/haiku-5-5/overview
+# Tool updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
@@ -10,6 +11,7 @@ reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"
 structured_output = true
 system_updates = true
 effort_updates = true
+tool_updates = true
 cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]

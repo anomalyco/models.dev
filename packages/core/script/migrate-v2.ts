@@ -13,8 +13,9 @@ import {
   providerModelToV2,
   sameV1Model,
 } from "../src/model-file-v2.js";
-import { ModelMetadata } from "../src/schema.js";
-import { isSchemaV2, labModelV2ToV1, modelV2ToV1 } from "../src/translate.js";
+import { resolveProtocol } from "../src/generate-v2.js";
+import { ModelMetadata, type Model, type Provider } from "../src/schema.js";
+import { isSchemaV2, labModelV2ToV1, modelV2ToV1, readLabModel } from "../src/translate.js";
 
 const root = path.join(import.meta.dirname, "..", "..", "..");
 const RAW_TABLES = /^\[\[(benchmarks|links|weights)\]\]\s*$/;
@@ -27,6 +28,15 @@ if ((kind !== "lab" && kind !== "provider") || id === undefined) {
 
 const dir =
   kind === "lab" ? path.join(root, "models", id) : path.join(root, "providers", id, "models");
+const providerToml =
+  kind === "provider"
+    ? ({
+        ...(Bun.TOML.parse(
+          await Bun.file(path.join(root, "providers", id, "provider.toml")).text(),
+        ) as Record<string, unknown>),
+        id,
+      } as unknown as Provider)
+    : undefined;
 let migrated = 0;
 for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: dir, absolute: true })) {
   const text = await Bun.file(file).text();
@@ -59,7 +69,23 @@ function migrateProvider(text: string, toml: Record<string, unknown>, modelID: s
   if (body.some((line) => line.trim().startsWith("#")) || tail.length > 0) {
     throw new Error(`${modelID}: comments or raw tables outside the header would be lost`);
   }
-  const next = [...header, formatModelV2(providerModelToV2(toml))].join("\n");
+  // v2 modalities replace the base's as a whole, so a v1 file that overrides only
+  // `input` or `output` takes the other side from its base model.
+  const modalities = toml.modalities as Record<string, unknown> | undefined;
+  if (modalities !== undefined && (modalities.input === undefined || modalities.output === undefined)) {
+    const base = readLabModel(path.join(root, "models", `${toml.base_model}.toml`), String(toml.base_model));
+    toml.modalities = { ...(base.modalities as object), ...modalities };
+    // Same as the base: inherit it, which keeps the lab's MIME types in v2.
+    if (isDeepStrictEqual(toml.modalities, base.modalities)) delete toml.modalities;
+  }
+  const provider = toml.provider as { npm?: string; shape?: "responses" | "completions" } | undefined;
+  const protocol = resolveProtocol(
+    { ...toml, id: modelID } as unknown as Model,
+    providerToml!,
+    provider?.npm ?? providerToml!.npm,
+    provider?.shape,
+  );
+  const next = [...header, formatModelV2(providerModelToV2(toml, protocol))].join("\n");
   const after = modelV2ToV1({ ...(Bun.TOML.parse(next) as Record<string, unknown>), id: modelID });
   if (!sameV1Model(toml, after)) {
     console.error(JSON.stringify({ before: toml, after }, null, 2));

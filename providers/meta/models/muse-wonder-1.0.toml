@@ -13,6 +13,8 @@ base_model = "meta/muse-wonder-1.0"
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
+effort_updates = false
+tool_updates = false
 store = true
 stream_usage = true
 prompt_cache_key = true

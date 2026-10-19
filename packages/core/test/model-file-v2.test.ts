@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 
-import { patchModelV2 } from "../src/model-file-v2.js";
+import { formatModelV2, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
+import { modelV2ToV1 } from "../src/translate.js";
 
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
   const doc = {
@@ -26,4 +27,25 @@ test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the
     text: { input: { price: 2 }, output: { price: 6 } },
     multipliers: [{ when: { region: { equals: "us" } }, factor: 1.1 }],
   });
+});
+
+test("a model's own API round-trips through v2 as an [api.<protocol>] table", () => {
+  const v1 = {
+    base_model: "openai/gpt-oss-120b",
+    provider: { npm: "@ai-sdk/amazon-bedrock/mantle", api: "https://bedrock-mantle.us-east-1.api.aws/v1", shape: "responses" },
+    interleaved: { field: "reasoning_content" },
+    cost: { input: 1, output: 2 },
+  };
+  const doc = providerModelToV2(v1, "chat-completions");
+
+  expect(doc.api).toEqual({
+    responses: {
+      base_url: "https://bedrock-mantle.us-east-1.api.aws/v1",
+      sdk: { aisdk: "@ai-sdk/amazon-bedrock/mantle" },
+      compatibility: { reasoning_field: "reasoning_content" },
+    },
+  });
+  const back = modelV2ToV1({ ...(Bun.TOML.parse(formatModelV2(doc)) as Record<string, unknown>), id: "m" });
+  expect(back.provider).toEqual(v1.provider);
+  expect(back.interleaved).toEqual(v1.interleaved);
 });

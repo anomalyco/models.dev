@@ -1,3 +1,5 @@
+# Mid-conversation system messages: the docs list Sonnet 5 as unsupported, but the API accepts
+# them in place (cache kept) and Anthropic's own client enables them for this model (2026-10-19).
 schema = 2
 name = "Claude Sonnet 5"
 description = "Everyday Claude agent model for coding, planning, browsing, and general work"
@@ -16,8 +18,9 @@ tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = false
-system_updates = false
+system_updates = true
 effort_updates = false
+tool_updates = false
 cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [limit]

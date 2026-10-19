@@ -10,6 +10,8 @@ base_model = "meta/muse-spark-1.2"
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
 system_updates = true
+effort_updates = false
+tool_updates = false
 store = true
 stream_usage = true
 prompt_cache_key = true
