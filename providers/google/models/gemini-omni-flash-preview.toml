@@ -1,11 +1,16 @@
+schema = 2
 base_model = "google/gemini-omni-flash-preview"
-reasoning_options = []
-temperature = true
 
-[cost]
-input = 1.5
-output = 17.5
+[capabilities]
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 131_072
 output = 65_536
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 17.5

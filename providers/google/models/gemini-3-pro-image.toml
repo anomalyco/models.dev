@@ -3,12 +3,14 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://firebase.google.com/docs/ai-logic/thinking
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image
+schema = 2
 base_model = "google/gemini-3-pro-image"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
 
-[cost]
-input = 2
-output = 120
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 120

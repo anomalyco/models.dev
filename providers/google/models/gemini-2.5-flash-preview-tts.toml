@@ -1,23 +1,26 @@
+schema = 2
 name = "Gemini 2.5 Flash Preview TTS"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "gemini-flash"
-release_date = "2025-05-01"
-last_updated = "2025-05-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2025-05-01"
 
-[cost]
-input = 0.5
-output = 10
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 8_192
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["audio"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 10

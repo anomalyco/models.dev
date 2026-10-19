@@ -3,12 +3,15 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://ai.google.dev/gemini-api/docs/thinking
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
+schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
+structured_output = false
 
-[cost]
-input = 0.25
-output = 30
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 30

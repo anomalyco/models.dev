@@ -1,10 +1,15 @@
+schema = 2
 base_model = "google/gemini-3-pro-image-preview"
 name = "Nano Banana Pro"
-reasoning_options = []
 
-[cost]
-input = 2
-output = 120
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 120

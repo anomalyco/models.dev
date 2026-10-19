@@ -1,31 +1,32 @@
+schema = 2
 name = "Gemini 3.1 Flash Lite Preview"
 description = "Legacy model retained for compatibility with older integrations"
 family = "gemini-flash-lite"
-release_date = "2026-03-03"
-last_updated = "2026-03-03"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-03-03"
 status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image", "video", "audio", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.25
-output = 1.50
-cache_read = 0.025
-input_audio = 0.50
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
-context = 1048576
-output = 65536
+context = 1_048_576
+output = 65_536
 
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 1.5
+
+[cost.audio.input]
+price = 0.5

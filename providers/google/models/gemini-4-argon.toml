@@ -4,18 +4,23 @@
 # Introductory Standard pricing (50% off) applies through 2026-11-30. From
 # 2026-12-01 the published rates are $4.00 input, $20.00 output, and $0.20
 # cache read. Only implicit caching is supported (explicit caching is not).
+schema = 2
 base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 temperature = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 2
-output = 10
-cache_read = 0.1
-input_audio = 2
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 2

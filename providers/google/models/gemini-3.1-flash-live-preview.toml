@@ -3,14 +3,21 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://ai.google.dev/gemini-api/docs/live-api/capabilities
 # - https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-3-1-flash-live/
+schema = 2
 base_model = "google/gemini-3.1-flash-live-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = false
 
-[cost]
-input = 0.75
-output = 4.50
-input_audio = 3.00
-output_audio = 12.00
+[cost.text.input]
+price = 0.75
+
+[cost.text.output]
+price = 4.5
+
+[cost.audio.input]
+price = 3
+
+[cost.audio.output]
+price = 12

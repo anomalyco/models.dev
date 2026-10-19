@@ -1,32 +1,33 @@
 # Alias for the current Gemini Flash release (gemini-3.7-flash).
 # Keep reasoning_options and cost in sync with gemini-3.7-flash.
+schema = 2
 name = "Gemini Flash Latest"
 description = "High-efficiency Gemini model for agentic workflows, coding, and multimodal reasoning"
 family = "gemini-flash"
-release_date = "2026-08-13"
-last_updated = "2026-08-13"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2026-03"
 open_weights = false
+knowledge = "2026-03"
+release_date = "2026-08-13"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image", "video", "audio", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
-input_audio = 0.75
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75
+
+[cost.audio.input]
+price = 0.75
