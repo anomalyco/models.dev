@@ -4,14 +4,24 @@
 # https://dev.meta.ai/docs/pricing-rate-limits
 # https://openrouter.ai/meta/muse-spark-1.3-contributor (OpenRouter Meta-hosted catalog snapshot, 2026-09-02)
 # Contributor tier prompts and completions may be used to improve Meta's products.
-
+# v2 capabilities: https://dev.meta.ai/docs/structured-output, https://dev.meta.ai/docs/prompt-caching,
+# https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/api-reference/chat-completions/schemas
+schema = 2
 base_model = "meta/muse-spark-1.3"
-structured_output = true
 name = "Muse Spark 1.3 Contributor"
 
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+system_updates = true
+store = true
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
 
-[cost]
-input = 0.10
-output = 0.20
-cache_read = 0.002
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

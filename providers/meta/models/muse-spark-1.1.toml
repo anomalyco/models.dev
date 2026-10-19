@@ -2,17 +2,23 @@
 # https://dev.meta.ai/docs/models/
 # https://ai.developer.meta.com/docs/getting-started/pricing-rate-limits/
 # https://developer.meta.com/ai/resources/blog/build-with-muse-spark/
+# v2 capabilities: https://dev.meta.ai/docs/structured-output, https://dev.meta.ai/docs/prompt-caching,
+# https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/api-reference/chat-completions/schemas
+schema = 2
 base_model = "meta/muse-spark-1.1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
+system_updates = true
+store = true
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
 
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
-
-[limit]
-context = 1_048_576
+[cost.text.output]
+price = 4.25
