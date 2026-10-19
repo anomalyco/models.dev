@@ -5,12 +5,15 @@
 # Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
 # v2 cache: cachePoint in system/messages, 5m TTL, 4 checkpoints per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; its "1K" minimum is approximate (981-token write live), so no min_tokens.
 # Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "amazon/nova-lite"
 name = "Nova Lite (APAC)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = false
+system_updates = false
 cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 
 [cost.text.input]

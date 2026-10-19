@@ -2,12 +2,15 @@
 # https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507 (non-thinking Instruct variant)
 # Runtime ID; US Standard pricing.
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 last_updated = "2025-09-18"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+system_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]

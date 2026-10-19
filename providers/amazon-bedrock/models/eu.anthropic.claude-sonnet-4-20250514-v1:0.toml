@@ -10,6 +10,7 @@
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
 # v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
+# Mid-conversation (Converse, not testable live 2026-10-19; only effort is known): role "system" messages and toolAddition/toolRemoval blocks (with anthropic_beta mid-conversation-tool-changes-2026-07-01) per https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html; Converse messages carry no per-turn outputConfig (dropped), so no effort updates.
 schema = 2
 base_model = "anthropic/claude-sonnet-4-20250514"
 name = "Claude Sonnet 4 (EU)"
@@ -17,6 +18,7 @@ status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+effort_updates = false
 cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [cost.text.input]

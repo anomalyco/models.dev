@@ -2,12 +2,15 @@
 # US cross-Region inference profile, verified via ListInferenceProfiles from us-east-1.
 # US geo pricing (Price List us-east-1 standard): input/output USD per 1M tokens.
 # Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "mistral/pixtral-large-2502"
 name = "Pixtral Large (25.02) (US)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = false
+system_updates = false
 
 [cost.text.input]
 price = 2

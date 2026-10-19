@@ -3,13 +3,17 @@
 # Live 2026-09-09: high returns reasoningContent, low omits it; maxTokens=16384 accepted.
 # Runtime ID; US Standard pricing. No verified Bedrock reasoning-token budget.
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "alibaba/qwen3-32b"
 last_updated = "2025-09-18"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+system_updates = false
+effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]

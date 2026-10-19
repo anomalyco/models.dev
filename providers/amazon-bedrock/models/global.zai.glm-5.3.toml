@@ -10,12 +10,16 @@
 # Text input only: image content blocks are rejected. Tool calls and streamed reasoning verified.
 # v2 cache: implicit per the model card; cache reads verified live on Converse 2026-10-19 (explicit cachePoint unsupported on Converse).
 # Service tiers: serviceTier.type = priority|flex accepted live (2026-10-19); AWS publishes no GLM 5.3 tier prices, so no multipliers.
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (Global)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+system_updates = false
+effort_updates = false
 cache = { supported = true, implicit = true, explicit = false }
 service_tier = ["flex", "priority"]
 

@@ -3,13 +3,17 @@
 # Effort: reasoning.effort = low|medium|high|xhigh (always on).
 # v2 cache: implicit per the model card (Mantle).
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted.
 schema = 2
 base_model = "xai/grok-4.6"
 last_updated = "2026-08-18"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+system_updates = true
+effort_updates = false
 cache = { supported = true, implicit = true, explicit = false }
 service_tier = ["flex", "priority"]
 

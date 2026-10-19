@@ -3,12 +3,16 @@
 # MiniMax M2 has always-on thinking, matching the first-party API.
 # Live Converse 2026-09-11: reasoningContent returned and outputConfig.textFormat enforced a JSON schema.
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "minimax/MiniMax-M2"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
+system_updates = false
+effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]

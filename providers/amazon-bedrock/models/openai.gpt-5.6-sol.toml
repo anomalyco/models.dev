@@ -4,13 +4,17 @@
 # In-region Standard pricing for US commercial Regions.
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 # v2 cache: implicit + prompt_cache_breakpoint (30m TTL only, 4 writes, 1,024 min) on Mantle Responses per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; verified live 2026-10-19.
+# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted.
 schema = 2
 base_model = "openai/gpt-5.6-sol"
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+system_updates = true
+effort_updates = false
 prompt_cache_key = true
 cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 

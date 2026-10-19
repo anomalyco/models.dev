@@ -4,6 +4,7 @@
 # Live 2026-09-09: high returns reasoning, none omits it; strict JSON schema and max_output_tokens=32768 accepted.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted.
 schema = 2
 base_model = "google/gemma-4-31b-it"
 
@@ -12,8 +13,11 @@ input = ["text", "image", "video"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
+system_updates = true
+effort_updates = false
 service_tier = ["flex", "priority"]
 
 [api.responses]

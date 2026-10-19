@@ -6,13 +6,17 @@
 # Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max; reasoning_effort is rejected.
 # Live check 2026-09-09 (ap-south-1): nested reasoning.effort=none returns 200.
 # v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "openai/gpt-5.6-terra"
 name = "GPT-5.6 Terra (India)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
+system_updates = false
+effort_updates = false
 cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [cost.text.input]

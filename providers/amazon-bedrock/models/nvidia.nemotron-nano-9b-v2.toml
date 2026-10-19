@@ -2,13 +2,16 @@
 # Live 2026-09-09: maxTokens=8192 accepted; tested JSON thinking controls had no visible effect.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "nvidia/nemotron-nano-9b-v2"
 name = "NVIDIA Nemotron Nano 9B v2"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = true
+system_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]

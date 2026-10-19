@@ -2,13 +2,17 @@
 # Standard us-gov-west-1 pricing (USD/1K multiplied by 1,000): https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-gov-west-1/index.json
 # Geo inference uses source-region pricing with no routing surcharge: https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html
 # Effort: additionalModelRequestFields.reasoning_effort = low|medium|high; https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-openai.html
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b (GovCloud)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 128_000

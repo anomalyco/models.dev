@@ -4,6 +4,7 @@
 # Live Converse (us-east-1, 2026-09-09): toolConfig rejected with HTTP 400,
 # "This model doesn't support tool use." with AUTO or omitted toolChoice.
 # Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "deepseek/deepseek-r1"
 name = "DeepSeek-R1 (US)"
@@ -12,6 +13,8 @@ name = "DeepSeek-R1 (US)"
 tools = { supported = false }
 reasoning = { supported = true }
 structured_output = false
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 1.35

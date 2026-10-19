@@ -2,14 +2,18 @@
 # Runtime Converse profile; Global CRIS Standard pricing. Structured outputs are Mantle-only.
 # Effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh, matching the US profile.
 # v2 cache: implicit per the model card; cache reads verified live on Converse 2026-10-19 (explicit cachePoint unsupported on Converse).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
 schema = 2
 base_model = "xai/grok-4.6"
 name = "Grok 4.6 (Global)"
 last_updated = "2026-08-18"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = false
+system_updates = false
+effort_updates = false
 cache = { supported = true, implicit = true, explicit = false }
 
 [cost.text.input]

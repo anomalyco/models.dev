@@ -2,12 +2,16 @@
 # https://platform.claude.com/docs/en/about-claude/pricing
 # Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel).
 # v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
+# Mid-conversation (Converse, live 2026-10-19): role "system" messages and toolAddition/toolRemoval blocks (with anthropic_beta mid-conversation-tool-changes-2026-07-01) per https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html; Converse messages carry no per-turn outputConfig (dropped), so no effort updates.
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 name = "Claude Opus 5.5 (Global)"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+system_updates = true
+effort_updates = false
 cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]
