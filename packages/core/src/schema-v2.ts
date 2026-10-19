@@ -422,6 +422,53 @@ export const KnownCostUnitV2 = z.enum(CostUnitV2Values);
 export const CostUnitV2 = openEnum(CostUnitV2Values);
 export type CostUnitV2 = z.infer<typeof CostUnitV2>;
 
+export const HolidayV2Values = ["CN", "US", "CA"] as const;
+
+export const KnownHolidayV2 = z.enum(HolidayV2Values);
+export const HolidayV2 = openEnum(HolidayV2Values);
+export type HolidayV2 = z.infer<typeof HolidayV2>;
+
+export const UtcDayV2Values = [
+  "mon",
+  "tue",
+  "wed",
+  "thu",
+  "fri",
+  "sat",
+  "sun",
+] as const;
+
+export const KnownUtcDayV2 = z.enum(UtcDayV2Values);
+export const UtcDayV2 = openEnum(UtcDayV2Values);
+export type UtcDayV2 = z.infer<typeof UtcDayV2>;
+
+const PriceV2 = z.number().min(0, "Price cannot be negative");
+
+const CostConditionValueV2 = z.union([z.string(), z.number(), z.boolean()]);
+
+// Strings compare lexicographically, so ISO dates (`date`) and "HH:MM" times work.
+const CostComparableV2 = z.union([z.number(), z.string()]);
+
+// Exactly one operator per condition.
+export const CostConditionV2 = z.union([
+  z.object({ equals: CostConditionValueV2 }).strict(),
+  z.object({ in: z.array(CostConditionValueV2) }).strict(),
+  z.object({ gt: CostComparableV2 }).strict(),
+  z.object({ gte: CostComparableV2 }).strict(),
+  z.object({ lt: CostComparableV2 }).strict(),
+  z.object({ lte: CostComparableV2 }).strict(),
+  z.object({ min_items: z.number().int().min(0) }).strict(),
+]);
+
+export type CostConditionV2 = z.infer<typeof CostConditionV2>;
+
+function choiceCondition<T extends z.ZodTypeAny>(value: T) {
+  return z.union([
+    z.object({ equals: value }).strict(),
+    z.object({ in: z.array(value) }).strict(),
+  ]);
+}
+
 export const CostConditionKeyV2Values = [
   "context",
   "duration",
@@ -448,33 +495,32 @@ export const KnownCostConditionKeyV2 = z.enum(CostConditionKeyV2Values);
 export const CostConditionKeyV2 = openEnum(CostConditionKeyV2Values);
 export type CostConditionKeyV2 = z.infer<typeof CostConditionKeyV2>;
 
-export const HolidayV2Values = ["CN", "US", "CA"] as const;
+// Known condition keys, typed for autocomplete. `when` also accepts any other key.
+const KnownCostConditionsV2 = z
+  .object({
+    context: CostConditionV2,
+    duration: CostConditionV2,
+    megapixels: CostConditionV2,
+    input_images: CostConditionV2,
+    service_tier: choiceCondition(ServiceTierV2),
+    region: CostConditionV2,
+    date: CostConditionV2,
+    utc_days: choiceCondition(UtcDayV2),
+    utc_hours: CostConditionV2,
+    holiday: choiceCondition(HolidayV2),
+    thinking: CostConditionV2,
+    resolution: CostConditionV2,
+    quality: CostConditionV2,
+    aspect_ratio: CostConditionV2,
+    generate_audio: CostConditionV2,
+    mode: CostConditionV2,
+    input_video: CostConditionV2,
+    fps: CostConditionV2,
+    steps: CostConditionV2,
+  } satisfies Record<(typeof CostConditionKeyV2Values)[number], z.ZodTypeAny>)
+  .partial();
 
-export const KnownHolidayV2 = z.enum(HolidayV2Values);
-export const HolidayV2 = openEnum(HolidayV2Values);
-export type HolidayV2 = z.infer<typeof HolidayV2>;
-
-const PriceV2 = z.number().min(0, "Price cannot be negative");
-
-const CostConditionValueV2 = z.union([z.string(), z.number(), z.boolean()]);
-
-// Strings compare lexicographically, so ISO dates (`date`) and "HH:MM" times work.
-const CostComparableV2 = z.union([z.number(), z.string()]);
-
-// Exactly one operator per condition.
-export const CostConditionV2 = z.union([
-  z.object({ equals: CostConditionValueV2 }).strict(),
-  z.object({ in: z.array(CostConditionValueV2) }).strict(),
-  z.object({ gt: CostComparableV2 }).strict(),
-  z.object({ gte: CostComparableV2 }).strict(),
-  z.object({ lt: CostComparableV2 }).strict(),
-  z.object({ lte: CostComparableV2 }).strict(),
-  z.object({ min_items: z.number().int().min(0) }).strict(),
-]);
-
-export type CostConditionV2 = z.infer<typeof CostConditionV2>;
-
-export type CostWhenV2 = {
+export type CostWhenV2 = z.infer<typeof KnownCostConditionsV2> & {
   all?: CostWhenV2[];
   any?: CostWhenV2[];
   not?: CostWhenV2;
@@ -482,13 +528,11 @@ export type CostWhenV2 = {
 };
 
 export const CostWhenV2: z.ZodType<CostWhenV2> = z.lazy(() =>
-  z
-    .object({
-      all: z.array(CostWhenV2).optional(),
-      any: z.array(CostWhenV2).optional(),
-      not: CostWhenV2.optional(),
-    })
-    .catchall(CostConditionV2),
+  KnownCostConditionsV2.extend({
+    all: z.array(CostWhenV2).optional(),
+    any: z.array(CostWhenV2).optional(),
+    not: CostWhenV2.optional(),
+  }).catchall(CostConditionV2),
 );
 
 export const CachePricesV2 = z
