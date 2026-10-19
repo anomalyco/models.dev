@@ -5,6 +5,10 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.cortecs.ai/v1/models";
+// The default listing returns Instruct models only; Decision-tag models are
+// returned only when requested explicitly. Only these decision models are synced.
+const DECISION_ENDPOINT = `${API_ENDPOINT}?tag=Decision`;
+const DECISION_MODELS = new Set(["clef", "clef-flash"]);
 const CANONICAL_BASE_MODEL_EXCEPTIONS = {
   "claude-sonnet-4": "anthropic/claude-sonnet-4-0",
 } as const;
@@ -49,17 +53,27 @@ export const CortecsResponse = z.object({
 
 export type CortecsModel = z.infer<typeof CortecsModel>;
 
+const CortecsListing = z.object({
+  data: z.array(z.object({ id: z.string() }).passthrough()),
+}).passthrough();
+
 export const cortecs = {
   id: "cortecs",
   name: "Cortecs",
   modelsDir: "providers/cortecs/models",
   deleteMissing: true,
   async fetchModels() {
-    const response = await fetch(API_ENDPOINT);
-    if (!response.ok) {
-      throw new Error(`Cortecs models request failed: ${response.status} ${response.statusText}`);
-    }
-    return response.json();
+    const listing = await fetchListing(API_ENDPOINT);
+    // Throws like the default listing: a partial list would let deleteMissing remove the decision models.
+    const decisions = await fetchListing(DECISION_ENDPOINT);
+    const ids = new Set(listing.data.map((model) => model.id));
+    return {
+      ...listing,
+      data: [
+        ...listing.data,
+        ...decisions.data.filter((model) => DECISION_MODELS.has(model.id) && !ids.has(model.id)),
+      ],
+    };
   },
   parseModels(raw) {
     return CortecsResponse.parse(raw).data;
@@ -71,6 +85,14 @@ export const cortecs = {
     };
   },
 } satisfies SyncProvider<CortecsModel>;
+
+async function fetchListing(url: string) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Cortecs models request failed: ${response.status} ${response.statusText}`);
+  }
+  return CortecsListing.parse(await response.json());
+}
 
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1_000).toISOString().slice(0, 10);
@@ -87,6 +109,7 @@ export function buildCortecsModel(
   authored: ExistingModel | undefined,
 ): SyncedModel {
   const features = new Set(model.supported_features);
+  const decision = DECISION_MODELS.has(model.id);
   const input = model.input_modalities;
   const output = model.output_modalities;
   const canonical = existing?.base_model ?? resolveCortecsBaseModel(model.id);
@@ -98,7 +121,8 @@ export function buildCortecsModel(
   const limit = {
     context: model.context_size,
     input: existing?.limit?.input,
-    output: model.max_output_tokens ?? authored?.limit?.output ?? model.context_size,
+    // Decision models evaluate state without generating completion tokens.
+    output: decision ? 0 : (model.max_output_tokens ?? authored?.limit?.output ?? model.context_size),
   };
   const cost = {
     input: usd(model.pricing.input_token),
@@ -110,13 +134,15 @@ export function buildCortecsModel(
   };
   if (canonical !== undefined) {
     return factorBaseModel(canonical, {
+      type: decision ? "decision" : undefined,
       description: existing?.description,
       attachment: input.some((value) => value !== "text"),
       reasoning,
       reasoning_options: reasoningOptions,
-      temperature: existing?.temperature,
+      // Decision models list no features; inherit these from the lab instead of reporting false.
+      temperature: decision ? undefined : existing?.temperature,
       tool_call: features.has("tools"),
-      structured_output: features.has("json_mode"),
+      structured_output: decision ? undefined : features.has("json_mode"),
       status: existing?.status,
       interleaved: existing?.interleaved,
       limit,
@@ -127,6 +153,7 @@ export function buildCortecsModel(
 
   const family = existing?.family;
   return {
+    type: decision ? "decision" : undefined,
     name: existing?.name ?? model.id,
     description: existing?.description ?? model.description ?? describeModel({
       id: model.id,

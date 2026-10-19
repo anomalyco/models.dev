@@ -1,11 +1,12 @@
 # Sources (accessed 2026-10-19):
-# https://api.cortecs.ai/v1/models?tag=Decision&extended=true&currency=USD
+# https://api.cortecs.ai/v1/models?tag=Decision
+# Synced from the Decision listing. Prices are EUR, converted at the sync's 1.114 USD rate.
 # Cortecs serves text input only.
 base_model = "cloudflare/clef"
 attachment = false
 
 [cost]
-input = 0.248
+input = 0.245
 output = 0
 
 [modalities]
