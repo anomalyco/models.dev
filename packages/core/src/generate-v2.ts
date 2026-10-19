@@ -20,9 +20,9 @@ import {
   type CostV2,
   type ExperimentalModeV2,
   type InputCostV2,
-  type OutputCostV2,
   type InputModalityV2,
   type ModelV2,
+  type OutputCostV2,
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
@@ -195,7 +195,7 @@ type CostTierV1 = NonNullable<CostV1["tiers"]>[number];
 
 // v1 context tiers become `context > size` overrides on each price they set.
 function toCostV2(cost: CostV1): CostV2 {
-  const tiers = cost.tiers ?? [];
+  const tiers = [...(cost.tiers ?? [])].sort((a, b) => a.tier.size - b.tier.size);
   const when = (tier: CostTierV1) => ({ context: { gt: tier.tier.size } });
   const cache = (prices: { cache_read?: number; cache_write?: number }) =>
     prices.cache_read === undefined && prices.cache_write === undefined

@@ -458,17 +458,19 @@ const PriceV2 = z.number().min(0, "Price cannot be negative");
 
 const CostConditionValueV2 = z.union([z.string(), z.number(), z.boolean()]);
 
-export const CostConditionV2 = z
-  .object({
-    equals: CostConditionValueV2.optional(),
-    in: z.array(CostConditionValueV2).optional(),
-    gt: z.number().optional(),
-    gte: z.number().optional(),
-    lt: z.number().optional(),
-    lte: z.number().optional(),
-    min_items: z.number().int().min(0).optional(),
-  })
-  .strict();
+// Strings compare lexicographically, so ISO dates (`date`) and "HH:MM" times work.
+const CostComparableV2 = z.union([z.number(), z.string()]);
+
+// Exactly one operator per condition.
+export const CostConditionV2 = z.union([
+  z.object({ equals: CostConditionValueV2 }).strict(),
+  z.object({ in: z.array(CostConditionValueV2) }).strict(),
+  z.object({ gt: CostComparableV2 }).strict(),
+  z.object({ gte: CostComparableV2 }).strict(),
+  z.object({ lt: CostComparableV2 }).strict(),
+  z.object({ lte: CostComparableV2 }).strict(),
+  z.object({ min_items: z.number().int().min(0) }).strict(),
+]);
 
 export type CostConditionV2 = z.infer<typeof CostConditionV2>;
 
@@ -580,6 +582,8 @@ export const CostMultiplierV2 = z
 
 export type CostMultiplierV2 = z.infer<typeof CostMultiplierV2>;
 
+// Matching overrides merge field by field (nested objects included) in order, then
+// every matching multiplier applies. Rules with unknown condition keys are skipped.
 export const CostV2 = z
   .object({
     text: ModalityCostV2.optional(),
