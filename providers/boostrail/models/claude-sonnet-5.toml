@@ -1,10 +1,13 @@
 # Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
-# reasoning_effort none|low|high all gave 71-75 completion tokens for a
-# one-number answer (thinks by default, no caller control); image input
-# answered; content parts are text and image_url only (no PDF).
+# Live requests 2026-10-19, 3 trials each. Easy one-number prompt: default,
+# reasoning_effort none, low, medium, high, xhigh and max, thinking
+# {type: enabled, budget_tokens: 2048} and thinking disabled all gave 32-83
+# completion tokens with no pattern. Harder one-number prompt: low 246-308,
+# max 209-633. No caller control was observed on this API.
+# A PDF sent as a file content part was not seen by the model (27 prompt
+# tokens), so input is text and image; an image_url part was answered.
 base_model = "anthropic/claude-sonnet-5"
 reasoning_options = []
 

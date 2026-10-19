@@ -1,12 +1,16 @@
 # Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
-# reasoning_effort none|low|high all gave 5 completion tokens for a
-# one-number answer (no thinking on this API); image input answered;
-# content parts are text and image_url only (no PDF).
+# Budget: thinking.budget_tokens (passed through on /v1/chat/completions).
+# Live requests 2026-10-19, 3 trials each, one-number arithmetic prompt:
+# without a thinking budget (default, reasoning_effort=high,
+# reasoning.enabled=true) answers took 5-238 completion tokens, either direct
+# or with the working written into the answer; thinking {type: enabled,
+# budget_tokens: 2048} gave 362-376 with a correct number-only answer.
+# A PDF sent as a file content part was not seen by the model (22 prompt
+# tokens), so input is text and image; an image_url part was answered.
 base_model = "anthropic/claude-haiku-4-5"
-reasoning = false
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
 
 [modalities]
 input = ["text", "image"]

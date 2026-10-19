@@ -9,6 +9,7 @@ const Pricing = z
     input: z.number(),
     output: z.number(),
     cache_read: z.number().optional(),
+    cache_write: z.number().optional(),
   })
   .passthrough();
 
@@ -35,8 +36,9 @@ export type BoostRailModel = z.infer<typeof BoostRailModel>;
  * the same data as https://www.boostrail.com/models/ (USD per 1M tokens).
  * The file carries prices only, so this sync updates existing TOMLs
  * (`skipCreates`) and treats it as authoritative for `cost` alone. Everything
- * else — `base_model` inheritance and `reasoning_options` — stays
- * hand-authored. Cache writes are billed at the input price.
+ * else — `base_model` inheritance, `reasoning_options` and modalities — stays
+ * hand-authored. Listed models without a local file are reported in the sync
+ * notices rather than opened as issues, since the list has no metadata.
  */
 export const boostrail = {
   id: "boostrail",
@@ -45,6 +47,15 @@ export const boostrail = {
   skipCreates: true,
   trackMissingModels: false,
   deleteMissing: false,
+  sourceID(model) {
+    return model.id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} BoostRail price list models have no local catalog file: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+    ];
+  },
   missingNotice(paths) {
     return paths.map(
       (file) => `BoostRail price list no longer lists ${file}; review for manual deprecation or removal.`,
@@ -72,7 +83,7 @@ export const boostrail = {
 
 export function buildBoostRailModel(model: BoostRailModel, authored: ExistingModel): SyncedModel {
   const { id: _authoredID, ...preserved } = authored;
-  const { input, output, cache_read } = model.pricing;
+  const { input, output, cache_read, cache_write } = model.pricing;
   return {
     ...preserved,
     cost: {
@@ -80,7 +91,7 @@ export function buildBoostRailModel(model: BoostRailModel, authored: ExistingMod
       input,
       output,
       cache_read,
-      cache_write: input,
+      cache_write,
     },
   } as SyncedModel;
 }
