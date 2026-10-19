@@ -123,7 +123,7 @@ release_date = "2026-09-22"
 # last_updated: only when it differs from release_date
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
@@ -137,7 +137,7 @@ output = 128_000
 ```
 
 - v2 has no `attachment`. The v1 output derives it from whether `modalities.input` includes anything besides text.
-- Write `pdf` as `application/pdf`.
+- Use MIME types where the lab documents them (`image/png`, `application/pdf`). The v1 output collapses them to `image` and `pdf`, and hosts that inherit the lab's modalities get them in the v2 output.
 - `tool_call` becomes `capabilities.tools`, and `reasoning` becomes `capabilities.reasoning`.
 - `benchmarks`, `links`, `weights`, and `license` are unchanged.
 - To migrate a lab, run `bun packages/core/script/migrate-v2.ts lab <lab>`. The script fails if any file would change in the v1 output.

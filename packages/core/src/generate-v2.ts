@@ -12,6 +12,7 @@ import {
   type Model,
 } from "./schema.js";
 import {
+  LabModelV2,
   ProviderV2,
   type ApiEntryV2,
   type ApiProtocolV2,
@@ -26,6 +27,7 @@ import {
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
+import { isSchemaV2 } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -42,13 +44,14 @@ export async function generateV2(
 ): Promise<Record<string, ProviderV2>> {
   const modelsDir = path.join(path.dirname(providersDir), "models");
   const baseModels = await generateModels(modelsDir);
+  const labsV2 = await loadLabsV2(modelsDir);
 
   const providers: Record<string, ProviderV2> = {};
   const nameToProviderID = new Map<string, string>();
   for await (const providerPath of scanTomls(providersDir, "*/provider.toml")) {
     const providerID = path.basename(path.dirname(providerPath));
     if (IGNORED_PROVIDERS.has(providerID)) continue;
-    const provider = await loadProviderV2(providerPath, baseModels);
+    const provider = await loadProviderV2(providerPath, baseModels, labsV2);
     const nameKey = provider.name.toLowerCase();
     const existingID = nameToProviderID.get(nameKey);
     if (existingID !== undefined) {
@@ -67,6 +70,7 @@ export async function generateV2(
 async function loadProviderV2(
   providerPath: string,
   baseModels: Record<string, ModelMetadata>,
+  labsV2: Record<string, LabModelV2>,
 ): Promise<ProviderV2> {
   const providerDir = path.dirname(providerPath);
   const providerID = path.basename(providerDir);
@@ -92,7 +96,11 @@ async function loadProviderV2(
       .slice(0, -5);
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
     const resolved = resolveV1Model(rawModel, baseModels, modelPath);
-    models[modelID] = toModelV2(resolved, v1Provider);
+    models[modelID] = withLabV2Fields(
+      toModelV2(resolved, v1Provider),
+      rawModel,
+      labsV2,
+    );
   }
 
   if (Object.keys(models).length === 0) {
@@ -112,6 +120,34 @@ async function loadProviderV2(
     },
     { providerPath, toml: rawProvider },
   );
+}
+
+async function loadLabsV2(modelsDir: string) {
+  const labs: Record<string, LabModelV2> = {};
+  if (!existsSync(modelsDir)) return labs;
+  for await (const modelPath of scanTomls(modelsDir, "**/*.toml")) {
+    const raw = await readToml(modelPath);
+    if (!isSchemaV2(raw)) continue;
+    const id = path.relative(modelsDir, modelPath).split(path.sep).join("/").slice(0, -5);
+    const { schema: _schema, ...lab } = raw;
+    labs[id] = parseWithCause(LabModelV2, { ...lab, id }, { modelPath, toml: raw });
+  }
+  return labs;
+}
+
+// v1 can't carry some v2 lab data (e.g. MIME-level modalities), so models that
+// inherit it from a v2 lab take it straight from the lab file.
+function withLabV2Fields(
+  model: ModelV2,
+  rawModel: Record<string, unknown>,
+  labsV2: Record<string, LabModelV2>,
+): ModelV2 {
+  const lab =
+    typeof rawModel.base_model === "string" ? labsV2[rawModel.base_model] : undefined;
+  if (lab === undefined || rawModel.modalities !== undefined) return model;
+  const omit = Array.isArray(rawModel.base_model_omit) ? rawModel.base_model_omit : [];
+  if (omit.some((item) => String(item).startsWith("modalities"))) return model;
+  return { ...model, modalities: lab.modalities };
 }
 
 // ---------------------------------------------------------------------------
