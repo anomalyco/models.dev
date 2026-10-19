@@ -129,15 +129,14 @@ export function modelV2ToV1(
 }
 
 // v1 models have one API: `provider` holds its SDK, base URL and shape, and
-// `interleaved` its reasoning requirement. The protocol only becomes a v1 `shape`
-// where it isn't the SDK's default (OpenAI and Azure default to Responses).
+// `interleaved` its reasoning requirement. With several `[api.<protocol>]`
+// tables, the first one in the file is the default and becomes the v1 API.
+// The protocol only becomes a v1 `shape` where it isn't the SDK's default
+// (OpenAI and Azure default to Responses).
 function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined) {
-  const entries = Object.entries(api ?? {});
-  if (entries.length === 0) return {};
-  if (entries.length > 1) {
-    throw new Error(`v1 models have one API, got ${entries.map(([protocol]) => protocol).join(", ")}`);
-  }
-  const [protocol, { base_url, sdk, compatibility }] = entries[0]!;
+  const first = Object.entries(api ?? {})[0];
+  if (first === undefined) return {};
+  const [protocol, { base_url, sdk, compatibility }] = first;
   const npm = sdk?.aisdk;
   const responsesByDefault = npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure";
   const shape =

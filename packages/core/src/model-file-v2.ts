@@ -107,11 +107,11 @@ function apiEntry(model: Record<string, any>, fallback: string | undefined) {
 // capabilities, multipliers); changed prices are updated in place.
 export function patchModelV2(doc: Doc, before: Record<string, any>, after: Record<string, any>): Doc {
   const next = providerModelToV2(after, Object.keys(doc.api ?? {})[0]);
-  // `reasoning` may be inherited from the lab on one side, as in sameV1Model.
+  // `reasoning` and `tool_call` may be inherited from the lab on one side, as in sameV1Model.
   const same = (...keys: string[]) =>
     keys.every(
       (key) =>
-        (key === "reasoning" && (before[key] === undefined || after[key] === undefined)) ||
+        ((key === "reasoning" || key === "tool_call") && (before[key] === undefined || after[key] === undefined)) ||
         stable(before[key]) === stable(after[key]),
     );
 
@@ -250,11 +250,12 @@ function isContextTier(when: unknown) {
 }
 
 // Compares two v1 models the way v2 files can express them: v2 always states
-// `reasoning` and derives `attachment`, while v1 files may inherit or omit them.
+// `reasoning` and `tool_call` when it sets them and derives `attachment`, while v1
+// files may inherit or omit them.
 export function sameV1Model(a: Record<string, any>, b: Record<string, any>) {
   const left = normalizeV1(a);
   const right = normalizeV1(b);
-  for (const key of ["reasoning", "attachment"]) {
+  for (const key of ["reasoning", "attachment", "tool_call"]) {
     if (left[key] === undefined || right[key] === undefined) {
       delete left[key];
       delete right[key];

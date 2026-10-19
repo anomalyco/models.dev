@@ -11,13 +11,12 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 structured_output = false
 temperature = false
 system_updates = true
 effort_updates = false
-tool_updates = true
 store = true
 cache = { supported = false }
 

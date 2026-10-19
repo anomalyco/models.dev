@@ -281,7 +281,6 @@ export const CapabilitiesV2 = z
     top_k: z.boolean().optional(),
     system_updates: z.boolean().optional(),
     effort_updates: z.boolean().optional(),
-    tool_updates: z.boolean().optional(),
     store: z.boolean().optional(),
     stream_usage: z.boolean().optional(),
     prompt_cache_key: z.boolean().optional(),

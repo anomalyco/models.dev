@@ -9,11 +9,11 @@ base_model = "meta/muse-spark-1.2"
 name = "Muse Spark 1.2 Contributor"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
 system_updates = true
 effort_updates = false
-tool_updates = false
 store = true
 stream_usage = true
 prompt_cache_key = true

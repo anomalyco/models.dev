@@ -2,11 +2,11 @@ schema = 2
 base_model = "openai/gpt-5"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 system_updates = true
 effort_updates = false
-tool_updates = true
 store = true
 cache = { supported = true, implicit = { ttl = ["24h"], min_tokens = 1_024 }, explicit = false }
 prompt_cache_key = true

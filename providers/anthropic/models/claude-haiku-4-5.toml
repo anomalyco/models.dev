@@ -3,11 +3,11 @@ base_model = "anthropic/claude-haiku-4-5"
 description = "Fast Claude lane for lightweight agents, office tasks, and responsive chat"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
 system_updates = false
 effort_updates = false
-tool_updates = false
 cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [cost.text.input]

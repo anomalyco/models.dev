@@ -1,4 +1,4 @@
-# Tool updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
+# tools.updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
 schema = 2
 name = "Claude Fable 5"
 description = "Claude model for creative writing, analysis, and controlled agent workflows"
@@ -12,13 +12,12 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = false
 system_updates = true
 effort_updates = false
-tool_updates = true
 cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [limit]

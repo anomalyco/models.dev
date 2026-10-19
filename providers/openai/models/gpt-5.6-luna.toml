@@ -3,11 +3,11 @@ schema = 2
 base_model = "openai/gpt-5.6-luna"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
 effort_updates = false
-tool_updates = true
 store = true
 cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
