@@ -1,7 +1,6 @@
 # Effort: reasoning_effort = low|medium|high|xhigh (default xhigh; reasoning cannot be disabled, none|max rejected; POST /ai/v1/chat/completions).
 # Sources: https://dev.meta.ai/docs/muse-spark-open/prompting ; https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B ; https://developers.cloudflare.com/ai/models/meta/muse-spark-open/
 base_model = "meta/muse-spark-open"
-structured_output = true
 
 [[reasoning_options]]
 type = "effort"
