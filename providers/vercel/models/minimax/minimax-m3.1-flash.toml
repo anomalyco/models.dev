@@ -1,0 +1,16 @@
+base_model = "minimax/MiniMax-M3.1-Flash"
+description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+output = 524_288
+
+[modalities]
+input = ["text", "image"]
