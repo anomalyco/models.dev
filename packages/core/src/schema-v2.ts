@@ -691,6 +691,20 @@ export const ModelV2 = z
 
 export type ModelV2 = z.infer<typeof ModelV2>;
 
+// Lab files only hold what is true of the model on every host. Everything else
+// (reasoning controls, structured output, cache, service tiers…) is per provider.
+export const LabCapabilitiesV2 = z
+  .object({
+    tools: ToolsSupportV2,
+    reasoning: z.object({ supported: z.boolean() }).strict(),
+    temperature: z.boolean().optional(),
+    top_p: z.boolean().optional(),
+    top_k: z.boolean().optional(),
+  })
+  .strict();
+
+export type LabCapabilitiesV2 = z.infer<typeof LabCapabilitiesV2>;
+
 // Authored lab model file (`models/<lab>/<model>.toml`): provider-agnostic facts
 // that hosts inherit through `base_model`.
 export const LabModelV2 = z
@@ -705,7 +719,7 @@ export const LabModelV2 = z
     release_date: DateString,
     last_updated: DateString.optional(),
     modalities: ModalitiesV2,
-    capabilities: CapabilitiesV2,
+    capabilities: LabCapabilitiesV2,
     limit: LimitV2,
     license: z.string().min(1, "License cannot be empty").optional(),
     links: z.array(ModelLink).optional(),
@@ -716,6 +730,34 @@ export const LabModelV2 = z
   .strict();
 
 export type LabModelV2 = z.infer<typeof LabModelV2>;
+
+// Authored provider model file (`providers/<provider>/models/<model>.toml`). With
+// `base_model`, it holds only what differs from the lab file. Without it, it is a
+// full definition.
+export const AuthoredModelV2 = z
+  .object({
+    id: z.string(),
+    base_model: z.string().min(1, "Base model cannot be empty").optional(),
+    base_model_omit: z.array(z.string()).optional(),
+    type: ModelTypeV2.optional(),
+    name: z.string().min(1, "Model name cannot be empty").optional(),
+    description: z.string().min(1, "Model description cannot be empty").optional(),
+    family: ModelFamilyV2.optional(),
+    open_weights: z.boolean().optional(),
+    knowledge: DateString.optional(),
+    release_date: DateString.optional(),
+    last_updated: DateString.optional(),
+    status: z.enum(["alpha", "beta", "deprecated"]).optional(),
+    modalities: ModalitiesV2.optional(),
+    capabilities: CapabilitiesOverrideV2.optional(),
+    limit: LimitV2.optional(),
+    cost: CostV2.optional(),
+    experimental: ExperimentalV2.optional(),
+    metadata: z.record(JsonValue).optional(),
+  })
+  .strict();
+
+export type AuthoredModelV2 = z.infer<typeof AuthoredModelV2>;
 
 export const ProviderV2 = z
   .object({

@@ -12,6 +12,7 @@ import {
   type Model,
 } from "./schema.js";
 import {
+  AuthoredModelV2,
   LabModelV2,
   ProviderV2,
   type ApiEntryV2,
@@ -27,7 +28,7 @@ import {
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
-import { isSchemaV2 } from "./translate.js";
+import { isSchemaV2, modelV2ToV1 } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -95,11 +96,13 @@ async function loadProviderV2(
       .join("/")
       .slice(0, -5);
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
-    const resolved = resolveV1Model(rawModel, baseModels, modelPath);
-    models[modelID] = withLabV2Fields(
+    const v1Model = isSchemaV2(rawModel) ? modelV2ToV1(rawModel, { modelPath }) : rawModel;
+    const resolved = resolveV1Model(v1Model, baseModels, modelPath);
+    models[modelID] = withV2Fields(
       toModelV2(resolved, v1Provider),
       rawModel,
       labsV2,
+      modelPath,
     );
   }
 
@@ -129,25 +132,48 @@ async function loadLabsV2(modelsDir: string) {
     const raw = await readToml(modelPath);
     if (!isSchemaV2(raw)) continue;
     const id = path.relative(modelsDir, modelPath).split(path.sep).join("/").slice(0, -5);
-    const { schema: _schema, ...lab } = raw;
-    labs[id] = parseWithCause(LabModelV2, { ...lab, id }, { modelPath, toml: raw });
+    labs[id] = parseWithCause(LabModelV2, { ...withoutSchema(raw), id }, { modelPath, toml: raw });
   }
   return labs;
 }
 
-// v1 can't carry some v2 lab data (e.g. MIME-level modalities), so models that
-// inherit it from a v2 lab take it straight from the lab file.
-function withLabV2Fields(
+// v1 can't carry some v2 data (MIME modalities, cache TTLs, service tiers…), so it
+// is read straight from the v2 lab and provider files.
+function withV2Fields(
   model: ModelV2,
   rawModel: Record<string, unknown>,
   labsV2: Record<string, LabModelV2>,
+  modelPath: string,
 ): ModelV2 {
   const lab =
     typeof rawModel.base_model === "string" ? labsV2[rawModel.base_model] : undefined;
-  if (lab === undefined || rawModel.modalities !== undefined) return model;
+  const authored = isSchemaV2(rawModel)
+    ? parseWithCause(AuthoredModelV2, withoutSchema(rawModel), { modelPath, toml: rawModel })
+    : undefined;
   const omit = Array.isArray(rawModel.base_model_omit) ? rawModel.base_model_omit : [];
-  if (omit.some((item) => String(item).startsWith("modalities"))) return model;
-  return { ...model, modalities: lab.modalities };
+  const inheritsModalities =
+    rawModel.modalities === undefined &&
+    !omit.some((item) => String(item).startsWith("modalities"));
+
+  const result: ModelV2 = {
+    ...model,
+    modalities:
+      authored?.modalities ??
+      (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities),
+    capabilities: mergeDeep(
+      mergeDeep(lab?.capabilities ?? {}, model.capabilities),
+      authored?.capabilities ?? {},
+    ) as ModelV2["capabilities"],
+  };
+  if (authored?.cost !== undefined) result.cost = authored.cost;
+  if (authored?.experimental !== undefined) result.experimental = authored.experimental;
+  if (authored?.metadata !== undefined) result.metadata = authored.metadata;
+  return result;
+}
+
+function withoutSchema(raw: Record<string, unknown>) {
+  const { schema: _schema, ...rest } = raw;
+  return rest;
 }
 
 // ---------------------------------------------------------------------------
@@ -230,7 +256,7 @@ type CostV1 = NonNullable<Model["cost"]>;
 type CostTierV1 = NonNullable<CostV1["tiers"]>[number];
 
 // v1 context tiers become `context > size` overrides on each price they set.
-function toCostV2(cost: CostV1): CostV2 {
+export function toCostV2(cost: CostV1): CostV2 {
   const tiers = [...(cost.tiers ?? [])].sort((a, b) => a.tier.size - b.tier.size);
   const when = (tier: CostTierV1) => ({ context: { gt: tier.tier.size } });
   const cache = (prices: { cache_read?: number; cache_write?: number }) =>

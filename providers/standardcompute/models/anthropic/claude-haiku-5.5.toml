@@ -4,6 +4,7 @@
 # (price listing: https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints, accessed 2026-10-16).
 # Context tiers start at 100,000 prompt tokens.
 base_model = "anthropic/claude-haiku-5-5"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [interleaved]

@@ -1,30 +1,36 @@
+schema = 2
 name = "Claude Opus 4.7"
 description = "Stronger Opus tier for advanced software work and high-stakes reasoning"
 family = "claude-opus"
+open_weights = false
+knowledge = "2026-01-31"
 release_date = "2026-04-14"
 last_updated = "2026-04-16"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-knowledge = "2026-01-31"
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+temperature = false
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
+
+[cost.text.output]
+price = 25
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = 1.1

@@ -2,24 +2,32 @@
 # https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
 # Pricing is by prompt length: prompts over 100,000 tokens use the higher tier.
 # https://platform.claude.com/docs/en/models/haiku-5-5/overview
+schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
 
-[[cost.tiers]]
-tier = { type = "context", size = 100_000 }
-input = 0.5
-output = 2.5
-cache_read = 0.05
-cache_write = 0.625
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = 1.1
