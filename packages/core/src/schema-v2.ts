@@ -631,6 +631,7 @@ export const ModelV2 = z
     cost: CostV2.optional(),
     api: ApiV2,
     experimental: ExperimentalV2.optional(),
+    metadata: z.record(JsonValue).optional(),
   })
   .strict();
 
