@@ -2,6 +2,8 @@
 # - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
 # - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 schema = 2
 name = "Gemini 3.5 Flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
@@ -15,7 +17,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 temperature = true
@@ -23,6 +25,8 @@ top_p = true
 top_k = true
 cache = { supported = true, implicit = true, explicit = true }
 service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_048_576

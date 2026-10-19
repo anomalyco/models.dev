@@ -12,14 +12,19 @@
 #   (built on Gemini 3.1 Pro; Max = maximum comprehensiveness)
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/caching (Interactions API: implicit caching only)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 schema = 2
 base_model = "google/deep-research-max-preview-04-2026"
 name = "Deep Research Max Preview (Apr-21-2026)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 temperature = true
 cache = { supported = true, implicit = true, explicit = false }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 131_072

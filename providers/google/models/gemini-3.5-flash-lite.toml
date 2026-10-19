@@ -9,14 +9,19 @@
 # - https://ai.google.dev/gemini-api/docs/thinking
 # Priority cache reads are $0.05 and Flex cache reads $0.02 (vs $0.03 Standard),
 # so those multipliers scale cache.read by 5/3 and 2/3. Cache storage is not scaled.
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 cache = { supported = true, implicit = true, explicit = true }
 service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 0.3

@@ -5,6 +5,7 @@
 # - Output: $7.50 text and thinking, $30.00 images. v1 output carries the image rate, like other image models.
 schema = 2
 base_model = "google/gemini-nano-banana-2.1"
+
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "medium", "high"] }
 structured_output = false

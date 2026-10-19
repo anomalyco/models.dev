@@ -3,13 +3,18 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://ai.google.dev/gemini-api/docs/live-api/capabilities
 # - https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-3-1-flash-live/
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 schema = 2
 base_model = "google/gemini-3.1-flash-live-preview"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = false
 cache = { supported = false }
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 0.75

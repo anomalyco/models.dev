@@ -4,12 +4,17 @@
 # - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-computer-use-preview-10-2025
 # - https://ai.google.dev/gemini-api/docs/computer-use
 #   (model id gemini-2.5-computer-use-preview-10-2025; thinking-level controls documented for Gemini 3.x only)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 schema = 2
 base_model = "google/gemini-2.5-computer-use-preview-10-2025"
 name = "Gemini 2.5 Computer Use Preview 10-2025"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 1.25

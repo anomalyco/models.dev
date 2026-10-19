@@ -10,15 +10,20 @@
 # - https://ai.google.dev/gemini-api/docs/priority-inference
 # - https://ai.google.dev/gemini-api/docs/thinking
 # Flex is 0.5x and Priority 1.8x Standard. Rates double from 2026-12-01.
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 schema = 2
 base_model = "google/gemini-4-argon"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
 cache = { supported = true, implicit = { min_tokens = 4_096 }, explicit = false }
 service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 32_768
