@@ -1,3 +1,5 @@
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/pricing
 schema = 2
 base_model = "google/gemini-2.5-flash-image"
 
@@ -9,4 +11,7 @@ price = 0.3
 cache = { read = 0.075 }
 
 [cost.text.output]
+price = 30
+
+[cost.image.output]
 price = 30

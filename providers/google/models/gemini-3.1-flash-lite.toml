@@ -1,3 +1,11 @@
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-lite
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 schema = 2
 name = "Gemini 3.1 Flash Lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
@@ -7,7 +15,37 @@ knowledge = "2025-01"
 release_date = "2026-05-07"
 
 [modalities]
-input = ["text", "image", "video", "audio", "application/pdf"]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+  "audio/wav",
+  "audio/mp3",
+  "audio/aiff",
+  "audio/aac",
+  "audio/ogg",
+  "audio/flac",
+  "audio/mpeg",
+  "audio/m4a",
+  "audio/l16",
+  "audio/opus",
+  "audio/alaw",
+  "audio/mulaw",
+  "audio/webm",
+  "application/pdf",
+]
 output = ["text"]
 
 [capabilities]
@@ -15,6 +53,10 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 temperature = true
+top_p = true
+top_k = true
+cache = { supported = true, implicit = true, explicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_048_576
@@ -22,10 +64,19 @@ output = 65_536
 
 [cost.text.input]
 price = 0.25
-cache = { read = 0.025 }
+cache = { read = 0.025, storage = 1 }
 
 [cost.text.output]
 price = 1.5
 
 [cost.audio.input]
 price = 0.5
+cache = { read = 0.05, storage = 1 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

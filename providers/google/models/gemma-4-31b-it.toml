@@ -1,3 +1,5 @@
+# v2 capabilities and prices:
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 schema = 2
 name = "Gemma 4 31B IT"
 description = "Largest Gemma 4 instruction model for open, self-hosted chat and reasoning"
@@ -14,6 +16,8 @@ tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 262_144

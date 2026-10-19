@@ -1,3 +1,5 @@
+# v2 capabilities and prices:
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 schema = 2
 name = "Gemini Embedding 001"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
@@ -14,6 +16,8 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 2_048

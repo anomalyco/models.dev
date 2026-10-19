@@ -7,8 +7,9 @@ schema = 2
 base_model = "google/gemini-3.1-flash-live-preview"
 
 [capabilities]
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = false
+cache = { supported = false }
 
 [cost.text.input]
 price = 0.75
@@ -21,3 +22,9 @@ price = 3
 
 [cost.audio.output]
 price = 12
+
+[cost.image.input]
+price = 1
+
+[cost.video.input]
+price = 1

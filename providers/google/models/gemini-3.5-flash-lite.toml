@@ -1,16 +1,34 @@
 # Sources:
 # - https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
 # - https://ai.google.dev/gemini-api/docs/pricing
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# - https://ai.google.dev/gemini-api/docs/thinking
+# Priority cache reads are $0.05 and Flex cache reads $0.02 (vs $0.03 Standard),
+# so those multipliers scale cache.read by 5/3 and 2/3. Cache storage is not scaled.
 schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 
 [capabilities]
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true, explicit = true }
+service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.03 }
+cache = { read = 0.03, storage = 1 }
 
 [cost.text.output]
 price = 2.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.6666666666666667 } }, output = 1.8 } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.6666666666666666 } }, output = 0.5 } }

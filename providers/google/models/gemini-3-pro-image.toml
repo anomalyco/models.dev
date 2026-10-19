@@ -8,9 +8,13 @@ base_model = "google/gemini-3-pro-image"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high"] }
+cache = { supported = false }
 
 [cost.text.input]
 price = 2
 
 [cost.text.output]
+price = 120
+
+[cost.image.output]
 price = 120

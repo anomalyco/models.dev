@@ -9,6 +9,7 @@ base_model = "google/gemini-3.5-live-translate-preview"
 
 [capabilities]
 temperature = true
+cache = { supported = false }
 
 [limit]
 context = 16_384

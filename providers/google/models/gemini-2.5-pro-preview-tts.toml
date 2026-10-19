@@ -1,3 +1,7 @@
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro-preview-tts
+# - https://ai.google.dev/gemini-api/docs/speech-generation (audio/l16 default output)
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 schema = 2
 name = "Gemini 2.5 Pro Preview TTS"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
@@ -8,12 +12,15 @@ release_date = "2025-05-01"
 
 [modalities]
 input = ["text"]
-output = ["audio"]
+output = ["audio/l16"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
+top_p = true
+top_k = true
+cache = { supported = false }
 
 [limit]
 context = 8_192

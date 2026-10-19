@@ -1,19 +1,41 @@
 # Sources:
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://ai.google.dev/gemini-api/docs/latest-model
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# - https://ai.google.dev/gemini-api/docs/thinking
+# Flex and Priority do not scale cache storage. Rates double from 2027-01-01.
 schema = 2
 base_model = "google/gemini-3.8-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 4_096 }, explicit = true }
+service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 0.75
-cache = { read = 0.075 }
+cache = { read = 0.075, storage = 0.5 }
 
 [cost.text.output]
 price = 3.75
 
 [cost.audio.input]
 price = 0.75
+cache = { read = 0.075, storage = 0.5 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.8 } }, output = 1.8 }, audio = { input = { price = 1.8, cache = { read = 1.8 } } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.5 } }, output = 0.5 }, audio = { input = { price = 0.5, cache = { read = 0.5 } } } }
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = 2

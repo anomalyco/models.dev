@@ -1,3 +1,6 @@
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 schema = 2
 name = "Nano Banana 2"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -7,13 +10,23 @@ knowledge = "2025-01"
 release_date = "2026-02-26"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "application/pdf",
+]
 output = ["text", "image"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["minimal", "high"] }
 temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 65_536
