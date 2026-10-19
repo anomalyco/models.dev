@@ -1,24 +1,25 @@
 # Specs: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
 # Evaluations: https://www.anthropic.com/claude-sonnet-5-5
+schema = 2
 name = "Claude Sonnet 5.5"
 description = "Fast Claude model for everyday coding, agents, and knowledge work"
 family = "claude-sonnet"
-release_date = "2026-09-28"
-last_updated = "2026-09-28"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
 open_weights = false
 knowledge = "2026-06"
+release_date = "2026-09-28"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
 
 [limit]
 context = 1_000_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "Terminal-Bench"

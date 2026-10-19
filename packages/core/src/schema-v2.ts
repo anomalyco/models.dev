@@ -1,7 +1,13 @@
 import { z } from "zod";
 
 import { ModelFamily, ModelFamilyValues } from "./family.js";
-import { DateString, JsonValue } from "./schema.js";
+import {
+  BenchmarkResult,
+  DateString,
+  JsonValue,
+  ModelLink,
+  ModelWeights,
+} from "./schema.js";
 
 /**
  * Creates an open-ended string union for public API / OpenAPI schemas.
@@ -684,6 +690,32 @@ export const ModelV2 = z
   .strict();
 
 export type ModelV2 = z.infer<typeof ModelV2>;
+
+// Authored lab model file (`models/<lab>/<model>.toml`): provider-agnostic facts
+// that hosts inherit through `base_model`.
+export const LabModelV2 = z
+  .object({
+    id: z.string(),
+    type: ModelTypeV2.optional(),
+    name: z.string().min(1, "Model name cannot be empty"),
+    description: z.string().min(1, "Model description cannot be empty"),
+    family: ModelFamilyV2.optional(),
+    open_weights: z.boolean(),
+    knowledge: DateString.optional(),
+    release_date: DateString,
+    last_updated: DateString.optional(),
+    modalities: ModalitiesV2,
+    capabilities: CapabilitiesV2,
+    limit: LimitV2,
+    license: z.string().min(1, "License cannot be empty").optional(),
+    links: z.array(ModelLink).optional(),
+    weights: z.array(ModelWeights).optional(),
+    benchmarks: z.array(BenchmarkResult).optional(),
+    metadata: z.record(JsonValue).optional(),
+  })
+  .strict();
+
+export type LabModelV2 = z.infer<typeof LabModelV2>;
 
 export const ProviderV2 = z
   .object({

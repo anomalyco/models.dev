@@ -4,6 +4,7 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { isSchemaV2, labModelV2ToV1 } from "../translate.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
@@ -729,7 +730,9 @@ async function readModelMetadata(modelsDir: string) {
     const toml = Bun.TOML.parse(
       await Bun.file(modelPath).text(),
     ) as Record<string, unknown>;
-    result[modelID] = inheritableModelMetadata(toml);
+    result[modelID] = inheritableModelMetadata(
+      isSchemaV2(toml) ? labModelV2ToV1({ ...toml, id: modelID }, { modelPath }) : toml,
+    );
   }
 
   return result;

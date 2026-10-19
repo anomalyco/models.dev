@@ -106,6 +106,42 @@ doc = "https://example.com/docs"
 
 If the provider has a rich catalog API that can populate model data or authoritatively remove models it no longer serves, add a sync module (see `sync.md`). Thin endpoints stay hand-authored.
 
+## v2 migration (`schema = 2`)
+
+Labs are moving to the v2 format one at a time. A file that starts with `schema = 2` is v2. Any other file is v1. Readers translate v2 files back to v1, so v1 providers can still `base_model` a v2 lab.
+
+v2 lab files (`models/<lab>/*.toml`, migrated so far: `anthropic`):
+
+```toml
+schema = 2
+name = "Claude Opus 5.5"
+description = "…"
+family = "claude-opus"
+open_weights = false
+knowledge = "2026-06"
+release_date = "2026-09-22"
+# last_updated: only when it differs from release_date
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+```
+
+- v2 has no `attachment`. The v1 output derives it from whether `modalities.input` includes anything besides text.
+- Write `pdf` as `application/pdf`.
+- `tool_call` becomes `capabilities.tools`, and `reasoning` becomes `capabilities.reasoning`.
+- `benchmarks`, `links`, `weights`, and `license` are unchanged.
+- To migrate a lab, run `bun packages/core/script/migrate-v2.ts lab <lab>`. The script fails if any file would change in the v1 output.
+
 ## Model fields
 
 ### Required on lab metadata (`models/`)

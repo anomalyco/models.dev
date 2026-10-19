@@ -3,6 +3,7 @@ import path from "node:path";
 import { z } from "zod";
 
 import { AuthoredModelShape, ReasoningOption } from "../../schema.js";
+import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 
@@ -613,7 +614,7 @@ function labFileExists(id: string) {
 function baseReasoning(id: string) {
   const file = path.join(MODELS_ROOT, `${id}.toml`);
   return existsSync(file) && z.object({ reasoning: z.boolean().optional() }).passthrough()
-    .parse(Bun.TOML.parse(readFileSync(file, "utf8"))).reasoning === true;
+    .parse(readLabModel(file, id)).reasoning === true;
 }
 
 function noteHeader(note: string[] | undefined) {

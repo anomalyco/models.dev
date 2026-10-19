@@ -1,24 +1,25 @@
 # Launch evaluations enable production safeguards: cyber tasks may fall back to Opus 4.8, biology tasks to Opus 5.
 # OSWorld uses the August 2026 task release and scores safeguard interventions as zero, without fallback.
+schema = 2
 name = "Claude Fable 5.1"
 description = "Claude model for demanding reasoning and long-horizon agentic work"
 family = "claude-fable"
-release_date = "2026-09-01"
-last_updated = "2026-09-01"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
 open_weights = false
 knowledge = "2026-06"
+release_date = "2026-09-01"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
 
 [limit]
 context = 1_000_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "Terminal-Bench-Science"

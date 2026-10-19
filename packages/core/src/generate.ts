@@ -10,6 +10,7 @@ import {
   AuthoredModelShape,
   ModelMetadata,
 } from "./schema.js";
+import { isSchemaV2, labModelV2ToV1 } from "./translate.js";
 
 const BaseModel = AuthoredModelShape
   .deepPartial()
@@ -47,7 +48,9 @@ export async function generateModels(directory: string) {
     }).then((mod) => mod.default);
     toml.id = modelID;
 
-    const model = ModelMetadata.safeParse(toml);
+    const model = ModelMetadata.safeParse(
+      isSchemaV2(toml) ? labModelV2ToV1(toml, { modelPath }) : toml,
+    );
     if (!model.success) {
       model.error.cause = { modelPath, toml };
       throw model.error;
