@@ -17,7 +17,10 @@ import {
   type ApiProtocolV2,
   type ApiV2,
   type CompatibilityV2,
+  type CostV2,
   type ExperimentalModeV2,
+  type InputCostV2,
+  type OutputCostV2,
   type InputModalityV2,
   type ModelV2,
   type OutputModalityV2,
@@ -125,11 +128,6 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
     }
     return model.modalities.output.map(normalizeModality) as OutputModalityV2[];
   })();
-  const stripLegacyCost = ({
-    context_over_200k: _legacy,
-    ...cost
-  }: NonNullable<Model["cost"]>) => cost;
-
   return {
     id: model.id,
     ...(model.canonical_model_id !== undefined
@@ -165,7 +163,7 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
         ? {}
         : { output: model.limit.output }),
     },
-    ...(model.cost !== undefined ? { cost: stripLegacyCost(model.cost) } : {}),
+    ...(model.cost !== undefined ? { cost: toCostV2(model.cost) } : {}),
     api: toApiV2(model, provider),
     ...(model.experimental?.modes
       ? {
@@ -174,7 +172,7 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
               Object.entries(model.experimental.modes).map(([name, mode]) => {
                 const entry: ExperimentalModeV2 = {
                   ...(mode.cost !== undefined
-                    ? { cost: stripLegacyCost(mode.cost) }
+                    ? { cost: toCostV2(mode.cost) }
                     : {}),
                   ...(mode.provider?.body !== undefined
                     ? { body: mode.provider.body }
@@ -186,6 +184,85 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
                 return [name, entry];
               }),
             ),
+          },
+        }
+      : {}),
+  };
+}
+
+type CostV1 = NonNullable<Model["cost"]>;
+type CostTierV1 = NonNullable<CostV1["tiers"]>[number];
+
+// v1 context tiers become `context > size` overrides on each price they set.
+function toCostV2(cost: CostV1): CostV2 {
+  const tiers = cost.tiers ?? [];
+  const when = (tier: CostTierV1) => ({ context: { gt: tier.tier.size } });
+  const cache = (prices: { cache_read?: number; cache_write?: number }) =>
+    prices.cache_read === undefined && prices.cache_write === undefined
+      ? {}
+      : {
+          cache: {
+            ...(prices.cache_read !== undefined ? { read: prices.cache_read } : {}),
+            ...(prices.cache_write !== undefined
+              ? { write: prices.cache_write }
+              : {}),
+          },
+        };
+  const withOverrides = <T extends { when: unknown }>(overrides: T[]) =>
+    overrides.length > 0 ? { overrides } : {};
+
+  const textInput: InputCostV2 = {
+    price: cost.input,
+    ...cache(cost),
+    ...withOverrides(
+      tiers.map((tier) => ({ when: when(tier), price: tier.input, ...cache(tier) })),
+    ),
+  };
+  const textOutput: OutputCostV2 = {
+    price: cost.output,
+    ...(cost.reasoning !== undefined ? { reasoning: cost.reasoning } : {}),
+    ...withOverrides(
+      tiers.map((tier) => ({
+        when: when(tier),
+        price: tier.output,
+        ...(tier.reasoning !== undefined ? { reasoning: tier.reasoning } : {}),
+      })),
+    ),
+  };
+  const audioInput: InputCostV2 | undefined =
+    cost.input_audio === undefined
+      ? undefined
+      : {
+          price: cost.input_audio,
+          ...withOverrides(
+            tiers.flatMap((tier) =>
+              tier.input_audio === undefined
+                ? []
+                : [{ when: when(tier), price: tier.input_audio }],
+            ),
+          ),
+        };
+  const audioOutput: OutputCostV2 | undefined =
+    cost.output_audio === undefined
+      ? undefined
+      : {
+          price: cost.output_audio,
+          ...withOverrides(
+            tiers.flatMap((tier) =>
+              tier.output_audio === undefined
+                ? []
+                : [{ when: when(tier), price: tier.output_audio }],
+            ),
+          ),
+        };
+
+  return {
+    text: { input: textInput, output: textOutput },
+    ...(audioInput !== undefined || audioOutput !== undefined
+      ? {
+          audio: {
+            ...(audioInput !== undefined ? { input: audioInput } : {}),
+            ...(audioOutput !== undefined ? { output: audioOutput } : {}),
           },
         }
       : {}),

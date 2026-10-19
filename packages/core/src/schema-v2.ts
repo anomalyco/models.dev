@@ -408,49 +408,187 @@ export type ApiProtocolV2 = z.infer<typeof ApiProtocolV2>;
 export const ApiV2 = z.record(ApiProtocolV2, ApiEntryV2);
 export type ApiV2 = z.infer<typeof ApiV2>;
 
-// TODO(v2): Revisit pricing design to support:
-// - service tiers (fast, priority, flex, ultrafast, batch)
-// - more pricing capabilities (e.g. 5m vs 1h cache TTLs, non-token media pricing)
-export const BaseCostV2 = z
+// Prices are USD per 1M for `token` and `character`, and per 1 unit otherwise.
+export const CostUnitV2Values = [
+  "token",
+  "character",
+  "image",
+  "megapixel",
+  "second",
+  "minute",
+] as const;
+
+export const KnownCostUnitV2 = z.enum(CostUnitV2Values);
+export const CostUnitV2 = openEnum(CostUnitV2Values);
+export type CostUnitV2 = z.infer<typeof CostUnitV2>;
+
+export const CostConditionKeyV2Values = [
+  "context",
+  "duration",
+  "megapixels",
+  "input_images",
+  "service_tier",
+  "region",
+  "date",
+  "utc_days",
+  "utc_hours",
+  "holiday",
+  "thinking",
+  "resolution",
+  "quality",
+  "aspect_ratio",
+  "generate_audio",
+  "mode",
+  "input_video",
+  "fps",
+  "steps",
+] as const;
+
+export const KnownCostConditionKeyV2 = z.enum(CostConditionKeyV2Values);
+export const CostConditionKeyV2 = openEnum(CostConditionKeyV2Values);
+export type CostConditionKeyV2 = z.infer<typeof CostConditionKeyV2>;
+
+export const HolidayV2Values = ["CN", "US", "CA"] as const;
+
+export const KnownHolidayV2 = z.enum(HolidayV2Values);
+export const HolidayV2 = openEnum(HolidayV2Values);
+export type HolidayV2 = z.infer<typeof HolidayV2>;
+
+const PriceV2 = z.number().min(0, "Price cannot be negative");
+
+const CostConditionValueV2 = z.union([z.string(), z.number(), z.boolean()]);
+
+export const CostConditionV2 = z
   .object({
-    input: z.number().min(0, "Input price cannot be negative"),
-    output: z.number().min(0, "Output price cannot be negative"),
-    reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
-    cache_read: z
-      .number()
-      .min(0, "Cache read price cannot be negative")
-      .optional(),
-    cache_write: z
-      .number()
-      .min(0, "Cache write price cannot be negative")
-      .optional(),
-    input_audio: z
-      .number()
-      .min(0, "Audio input price cannot be negative")
-      .optional(),
-    output_audio: z
-      .number()
-      .min(0, "Audio output price cannot be negative")
+    equals: CostConditionValueV2.optional(),
+    in: z.array(CostConditionValueV2).optional(),
+    gt: z.number().optional(),
+    gte: z.number().optional(),
+    lt: z.number().optional(),
+    lte: z.number().optional(),
+    min_items: z.number().int().min(0).optional(),
+  })
+  .strict();
+
+export type CostConditionV2 = z.infer<typeof CostConditionV2>;
+
+export type CostWhenV2 = {
+  all?: CostWhenV2[];
+  any?: CostWhenV2[];
+  not?: CostWhenV2;
+  [key: string]: CostConditionV2 | CostWhenV2[] | CostWhenV2 | undefined;
+};
+
+export const CostWhenV2: z.ZodType<CostWhenV2> = z.lazy(() =>
+  z
+    .object({
+      all: z.array(CostWhenV2).optional(),
+      any: z.array(CostWhenV2).optional(),
+      not: CostWhenV2.optional(),
+    })
+    .catchall(CostConditionV2),
+);
+
+export const CachePricesV2 = z
+  .object({
+    read: PriceV2.optional(),
+    write: z.union([PriceV2, z.record(DurationStringV2, PriceV2)]).optional(),
+    storage: PriceV2.optional(),
+  })
+  .strict();
+
+export type CachePricesV2 = z.infer<typeof CachePricesV2>;
+
+export const CacheCostV2 = CachePricesV2.extend({
+  explicit: CachePricesV2.optional(),
+}).strict();
+
+export type CacheCostV2 = z.infer<typeof CacheCostV2>;
+
+const InputPricesV2 = z
+  .object({
+    price: PriceV2,
+    cache: CacheCostV2.optional(),
+  })
+  .strict();
+
+export const InputCostV2 = z
+  .object({ unit: CostUnitV2.optional() })
+  .extend(InputPricesV2.shape)
+  .extend({
+    overrides: z
+      .array(
+        z
+          .object({ when: CostWhenV2 })
+          .extend(InputPricesV2.partial().shape)
+          .strict(),
+      )
       .optional(),
   })
   .strict();
 
-export type BaseCostV2 = z.infer<typeof BaseCostV2>;
+export type InputCostV2 = z.infer<typeof InputCostV2>;
 
-export const CostTierV2 = BaseCostV2.extend({
-  tier: z
-    .object({
-      type: z.literal("context").default("context"),
-      size: z.number().int().min(0, "Context tier size cannot be negative"),
-    })
-    .strict(),
-}).strict();
+const OutputPricesV2 = z
+  .object({
+    price: PriceV2,
+    reasoning: PriceV2.optional(),
+  })
+  .strict();
 
-export type CostTierV2 = z.infer<typeof CostTierV2>;
+export const OutputCostV2 = z
+  .object({ unit: CostUnitV2.optional() })
+  .extend(OutputPricesV2.shape)
+  .extend({
+    overrides: z
+      .array(
+        z
+          .object({ when: CostWhenV2 })
+          .extend(OutputPricesV2.partial().shape)
+          .strict(),
+      )
+      .optional(),
+  })
+  .strict();
 
-export const CostV2 = BaseCostV2.extend({
-  tiers: z.array(CostTierV2).optional(),
-}).strict();
+export type OutputCostV2 = z.infer<typeof OutputCostV2>;
+
+export const ModalityCostV2 = z
+  .object({
+    input: InputCostV2.optional(),
+    output: OutputCostV2.optional(),
+  })
+  .strict();
+
+export type ModalityCostV2 = z.infer<typeof ModalityCostV2>;
+
+export type CostFactorV2 = number | { [key: string]: CostFactorV2 };
+
+export const CostFactorV2: z.ZodType<CostFactorV2> = z.lazy(() =>
+  z.union([
+    z.number().min(0, "Factor cannot be negative"),
+    z.record(CostFactorV2),
+  ]),
+);
+
+export const CostMultiplierV2 = z
+  .object({
+    when: CostWhenV2,
+    factor: CostFactorV2,
+  })
+  .strict();
+
+export type CostMultiplierV2 = z.infer<typeof CostMultiplierV2>;
+
+export const CostV2 = z
+  .object({
+    text: ModalityCostV2.optional(),
+    image: ModalityCostV2.optional(),
+    audio: ModalityCostV2.optional(),
+    video: ModalityCostV2.optional(),
+    multipliers: z.array(CostMultiplierV2).optional(),
+  })
+  .strict();
 
 export type CostV2 = z.infer<typeof CostV2>;
 
