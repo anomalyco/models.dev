@@ -2,6 +2,8 @@
 # Context: config.json text_config.max_position_embeddings = 262144 (card: "up to 256K tokens").
 # Output limit is an estimate: neither the card nor the repo config publishes an output cap,
 # so it mirrors models/google/gemma-4-26b-a4b-it.toml, the architecture this model is built on.
+# Sampling: the card's recommended sampler uses a temperature schedule (0.8 -> 0.4) and entropy-bound
+# token selection (generation_config.json sampler_config), not nucleus or top-k sampling.
 schema = 2
 name = "DiffusionGemma 26B A4B IT"
 description = "Gemma 4 based discrete text diffusion model for fast chat, reasoning, and tool use"
@@ -20,6 +22,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
+top_p = false
+top_k = false
 
 [limit]
 context = 262_144

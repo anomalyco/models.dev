@@ -1,3 +1,6 @@
+# Sampling: https://ai.google.dev/gemini-api/docs/omni (Limitations: "System instructions,
+# temperature, top_p, stop sequences, and negative prompts are not supported"). top_k isn't
+# documented for Omni; it's set false with the other sampling parameters it disables.
 schema = 2
 type = "video"
 name = "Gemini Omni Flash Preview"
@@ -13,7 +16,9 @@ output = ["video"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
+temperature = false
 top_p = false
+top_k = false
 
 [limit]
 context = 1_048_576
