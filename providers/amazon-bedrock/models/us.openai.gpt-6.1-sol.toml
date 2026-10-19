@@ -1,10 +1,11 @@
-# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [api] override.
 # Model IDs, routes and Geo CRIS pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html
 # Effort levels match OpenAI-native 6.1 Sol (low|medium|high|xhigh|max, no none): https://developers.openai.com/api/docs/models/gpt-6.1-sol
 # Converse Ultrafast: additionalModelRequestFields.service_tier=ultrafast at 6x Standard: https://developers.openai.com/api/docs/guides/ultrafast-mode
 # Ultrafast availability: https://aws.amazon.com/about-aws/whats-new/2026/10/openai-gpt-sol-ultrafast-amazon/
 # Ultrafast is 6x Standard per Bedrock Astra card and OpenAI ultrafast table: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html and https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast
 # Converse input is text+image per AWS card and OpenAI model docs; overrides lab pdf.
+# v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 name = "GPT-6.1 Sol (US)"
@@ -16,15 +17,16 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [cost.text.input]
 price = 2.2
-cache = { read = 0.11, write = 2.75 }
+cache = { read = 0.11, write = { "30m" = 2.75 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 4.4
-cache = { read = 0.22, write = 5.5 }
+cache = { read = 0.22, write = { "30m" = 5.5 } }
 
 [cost.text.output]
 price = 11

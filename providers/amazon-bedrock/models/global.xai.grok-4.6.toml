@@ -1,6 +1,7 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-6.html
 # Runtime Converse profile; Global CRIS Standard pricing. Structured outputs are Mantle-only.
 # Effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh, matching the US profile.
+# v2 cache: implicit per the model card; cache reads verified live on Converse 2026-10-19 (explicit cachePoint unsupported on Converse).
 schema = 2
 base_model = "xai/grok-4.6"
 name = "Grok 4.6 (Global)"
@@ -9,6 +10,7 @@ last_updated = "2026-08-18"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [cost.text.input]
 price = 2

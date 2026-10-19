@@ -1,6 +1,7 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-next-80b-a3b.html
 # https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct (non-thinking Instruct variant)
 # https://aws.amazon.com/bedrock/pricing/ (US Standard: 0.15/1.20; Mantle has separate SKUs)
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 release_date = "2025-09-11"
@@ -8,6 +9,7 @@ last_updated = "2025-11-25"
 
 [capabilities]
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 262_144
@@ -16,5 +18,21 @@ output = 262_000
 [cost.text.input]
 price = 0.15
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 0.26
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.07
+
 [cost.text.output]
 price = 1.2
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 2.1
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.6

@@ -1,5 +1,6 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html
 # AWS Price List: USW2-Qwen3Coder-480B-A35B-{input,output}-tokens (Standard).
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 release_date = "2025-07-23"
@@ -7,6 +8,7 @@ last_updated = "2025-09-18"
 
 [capabilities]
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 131_072
@@ -16,3 +18,11 @@ price = 0.45
 
 [cost.text.output]
 price = 1.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

@@ -4,6 +4,7 @@
 # https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 schema = 2
 base_model = "anthropic/claude-opus-4-1-20250805"
 name = "Claude Opus 4.1 (US)"
@@ -11,6 +12,7 @@ status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 15

@@ -2,6 +2,7 @@
 # AWS documents a 256K Bedrock context window; inherit the matching 262,144-token lab context.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Live 2026-09-09: maxTokens=8192 accepted; chat_template_kwargs.enable_thinking had no visible effect.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 name = "NVIDIA Nemotron Nano 3 30B"
@@ -10,6 +11,7 @@ last_updated = "2025-12-23"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 8_192
@@ -17,5 +19,17 @@ output = 8_192
 [cost.text.input]
 price = 0.06
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 0.11
+
 [cost.text.output]
 price = 0.24
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 0.42
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

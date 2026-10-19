@@ -3,12 +3,15 @@
 # In-region pricing = OpenAI API list rates + AWS's 10% fee (as stated on the GPT-6 Astra card): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
 # Effort: none|low|medium|high|xhigh|max (Mantle's own validation error lists these).
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
+# v2 cache: implicit + prompt_cache_breakpoint (30m TTL only, 4 writes, 1,024 min) on Mantle Responses per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; verified live 2026-10-19.
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
@@ -16,12 +19,12 @@ sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
 [cost.text.input]
 price = 0.11
-cache = { read = 0.011, write = 0.1375 }
+cache = { read = 0.011, write = { "30m" = 0.1375 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 0.22
-cache = { read = 0.022, write = 0.275 }
+cache = { read = 0.022, write = { "30m" = 0.275 } }
 
 [cost.text.output]
 price = 0.55

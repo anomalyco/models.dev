@@ -2,12 +2,14 @@
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # MiniMax M2 has always-on thinking, matching the first-party API.
 # Live Converse 2026-09-11: reasoningContent returned and outputConfig.textFormat enforced a JSON schema.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "minimax/MiniMax-M2"
 
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 204_608
@@ -19,5 +21,17 @@ compatibility = { replay_reasoning = true }
 [cost.text.input]
 price = 0.3
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 0.52
+
 [cost.text.output]
 price = 1.2
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 2.1
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

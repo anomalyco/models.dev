@@ -4,6 +4,7 @@
 # Ultrafast via service_tier=ultrafast at 6x Standard: https://developers.openai.com/api/docs/guides/ultrafast-mode
 # Effort levels match OpenAI-native Astra (Low..Max, no "none"): https://developers.openai.com/api/docs/models/gpt-6-astra
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
+# v2 cache: implicit + prompt_cache_breakpoint (30m TTL only, 4 writes, 1,024 min) on Mantle Responses per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; verified live 2026-10-19.
 schema = 2
 base_model = "openai/gpt-6-astra"
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
@@ -11,6 +12,8 @@ base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
@@ -18,12 +21,12 @@ sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
 [cost.text.input]
 price = 11
-cache = { read = 1.1, write = 13.75 }
+cache = { read = 1.1, write = { "30m" = 13.75 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 22
-cache = { read = 2.2, write = 27.5 }
+cache = { read = 2.2, write = { "30m" = 27.5 } }
 
 [cost.text.output]
 price = 55

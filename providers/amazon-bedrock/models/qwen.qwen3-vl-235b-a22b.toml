@@ -1,9 +1,13 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-vl-235b-a22b.html
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Live Converse 2026-09-11: outputConfig.textFormat enforced a JSON schema.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 last_updated = "2025-11-25"
+
+[capabilities]
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 262_144
@@ -12,5 +16,21 @@ output = 262_000
 [cost.text.input]
 price = 0.53
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 0.93
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.26
+
 [cost.text.output]
 price = 2.66
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 4.66
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 1.33

@@ -9,6 +9,7 @@
 # Live US-family probe, 2026-09-09: Legacy access denied (404) without active use in the last 30 days.
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-20250514"
 name = "Claude Sonnet 4 (APAC)"
@@ -16,6 +17,7 @@ status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 3

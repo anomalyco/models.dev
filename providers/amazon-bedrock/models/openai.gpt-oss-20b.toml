@@ -6,6 +6,7 @@
 # output tokens and reject 131073 with "exceeds model maximum (131072)".
 # A high-effort response generated 100000 output tokens (hit max_output_tokens);
 # a 129575-token prompt completed, above the old 128000 context.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b"
@@ -13,6 +14,7 @@ name = "gpt-oss-20b"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 131_072
@@ -26,3 +28,11 @@ price = 0.07
 
 [cost.text.output]
 price = 0.3
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

@@ -3,6 +3,7 @@
 # https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
 # Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
 # Manual thinking.type = enabled still accepts thinking.budget_tokens; effort is output_config.effort, both inside additionalModelRequestFields on Converse.
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 name = "Claude Sonnet 4.6 (Global)"
@@ -10,13 +11,14 @@ name = "Claude Sonnet 4.6 (Global)"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
+cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 output = 128_000
 
 [cost.text.input]
 price = 3
-cache = { read = 0.3, write = 3.75 }
+cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
 
 [cost.text.output]
 price = 15

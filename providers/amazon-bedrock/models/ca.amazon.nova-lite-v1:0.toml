@@ -3,9 +3,15 @@
 # Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/ca-central-1/index.json
 # Standard ca-central-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
 # Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
+# v2 cache: cachePoint in system/messages, 5m TTL, 4 checkpoints per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; its "1K" minimum is approximate (981-token write live), so no min_tokens.
+# Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
 schema = 2
 base_model = "amazon/nova-lite"
 name = "Nova Lite (CA)"
+
+[capabilities]
+structured_output = false
+cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 
 [cost.text.input]
 price = 0.064

@@ -1,8 +1,9 @@
-# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [api] override.
 # Profile ID verified via ListInferenceProfiles (ACTIVE) on 2026-09-22; AWS has not published a GPT-6 Luna model card yet.
 # Geo CRIS pricing = OpenAI API list rates + AWS's 10% fee (as stated on the GPT-6 Astra card): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
 # Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max (Bedrock's own validation error lists these).
 # Live Converse check 2026-09-22 (eu-west-1, global profile): tool call + tool-result round trip; effort low/xhigh/max accepted.
+# v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
 schema = 2
 base_model = "openai/gpt-6-luna"
 name = "GPT-6 Luna (US)"
@@ -14,15 +15,16 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [cost.text.input]
 price = 0.11
-cache = { read = 0.011, write = 0.1375 }
+cache = { read = 0.011, write = { "30m" = 0.1375 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 0.22
-cache = { read = 0.022, write = 0.275 }
+cache = { read = 0.022, write = { "30m" = 0.275 } }
 
 [cost.text.output]
 price = 0.55

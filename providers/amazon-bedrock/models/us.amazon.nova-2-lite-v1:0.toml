@@ -8,12 +8,18 @@
 # High effort requires omitting temperature, topP, topK, and maxTokens.
 # Bedrock output cap: US Converse boundary check (2026-09-09) accepts 65,535 and rejects 65,536.
 # Lab specs: https://docs.aws.amazon.com/nova/latest/nova2-userguide/what-is-nova-2.html
+# v2 cache: cachePoint in system/messages, 5m TTL, 4 checkpoints per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; its "1K" minimum is approximate (981-token write live), so no min_tokens.
+# Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "amazon/nova-2-lite"
 name = "Nova 2 Lite (US)"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = false
+cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 65_535
@@ -24,3 +30,11 @@ cache = { read = 0.0825, write = 0.33 }
 
 [cost.text.output]
 price = 2.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

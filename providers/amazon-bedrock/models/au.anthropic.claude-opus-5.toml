@@ -4,16 +4,18 @@
 # AU source ap-southeast-2: standard regional USD/MTok; cache_write is the 5-minute rate.
 # Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
 # Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel). Disabled thinking requires low/medium/high.
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 schema = 2
 base_model = "anthropic/claude-opus-5"
 name = "Claude Opus 5 (AU)"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]
 price = 5.5
-cache = { read = 0.55, write = 6.875 }
+cache = { read = 0.55, write = { "5m" = 6.875, "1h" = 11 } }
 
 [cost.text.output]
 price = 27.5

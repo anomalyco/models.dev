@@ -3,6 +3,7 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-r1.html
 # Live Converse (us-east-1, 2026-09-09): toolConfig rejected with HTTP 400,
 # "This model doesn't support tool use." with AUTO or omitted toolChoice.
+# Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
 schema = 2
 base_model = "deepseek/deepseek-r1"
 name = "DeepSeek-R1 (US)"
@@ -10,6 +11,7 @@ name = "DeepSeek-R1 (US)"
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
+structured_output = false
 
 [cost.text.input]
 price = 1.35

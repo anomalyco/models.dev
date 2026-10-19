@@ -2,6 +2,7 @@
 # The 272K input-token boundary is a pricing tier, not the context cap.
 # Bedrock capabilities: https://developers.openai.com/api/docs/guides/amazon-bedrock
 # Effort: reasoning.effort = none|low|medium|high|xhigh; https://developers.openai.com/api/docs/models/gpt-5.5
+# v2 cache: implicit only, 1,024-token minimum, no write fee per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html.
 schema = 2
 base_model = "openai/gpt-5.5"
 base_model_omit = ["cost.tiers", "cost.context_over_200k", "experimental.modes.fast", "limit.input"]
@@ -10,6 +11,7 @@ last_updated = "2026-06-01"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [limit]
 context = 1_000_000

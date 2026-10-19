@@ -1,12 +1,14 @@
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]
 price = 10
-cache = { read = 0.25, write = 12.5 }
+cache = { read = 0.25, write = { "5m" = 12.5, "1h" = 20 } }
 
 [cost.text.output]
 price = 50

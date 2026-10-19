@@ -2,6 +2,7 @@
 # Toggle: additionalModelRequestFields.reasoning_config = low|high (off|on).
 # Live 2026-09-09: high returns reasoningContent, low omits it; maxTokens=16384 accepted.
 # Runtime ID; US Standard pricing. No verified Bedrock reasoning-token budget.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "alibaba/qwen3-32b"
 last_updated = "2025-09-18"
@@ -9,6 +10,7 @@ last_updated = "2025-09-18"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 32_768
@@ -21,3 +23,11 @@ price = 0.15
 
 [cost.text.output]
 price = 0.6
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

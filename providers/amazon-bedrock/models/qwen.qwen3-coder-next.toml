@@ -1,12 +1,24 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-next.html
 # https://huggingface.co/Qwen/Qwen3-Coder-Next (explicitly non-thinking)
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "alibaba/qwen3-coder-next"
 last_updated = "2026-02-06"
+
+[capabilities]
+service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 0.5
 
 [cost.text.output]
 price = 1.2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

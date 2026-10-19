@@ -3,6 +3,7 @@
 # Bedrock context window: https://developers.openai.com/api/docs/guides/amazon-bedrock
 # In-region Standard pricing for US commercial Regions; GovCloud rates differ.
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
+# v2 cache: implicit + prompt_cache_breakpoint (30m TTL only, 4 writes, 1,024 min) on Mantle Responses per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; verified live 2026-10-19.
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
@@ -10,6 +11,8 @@ base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
@@ -17,12 +20,12 @@ sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
 [cost.text.input]
 price = 0.22
-cache = { read = 0.022, write = 0.275 }
+cache = { read = 0.022, write = { "30m" = 0.275 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 0.44
-cache = { read = 0.044, write = 0.55 }
+cache = { read = 0.044, write = { "30m" = 0.55 } }
 
 [cost.text.output]
 price = 1.32

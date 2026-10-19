@@ -2,12 +2,14 @@
 # https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
 # Live Converse 2026-09-23: maxTokens at the Bedrock ceiling returned
 # "maximum context length is 262144 tokens" from the serving backend.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "mistral/devstral-2512"
 name = "Devstral 2 123B"
 
 [capabilities]
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 8_192
@@ -17,3 +19,11 @@ price = 0.4
 
 [cost.text.output]
 price = 2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

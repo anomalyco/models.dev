@@ -3,6 +3,7 @@
 # Runtime ID; Mantle uses moonshotai.kimi-k2-thinking. US Standard pricing.
 # Live Converse 2026-09-23: maxTokens at the Bedrock ceiling returned
 # "maximum context length is 262144 tokens" from the serving backend.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
 last_updated = "2025-12-02"
@@ -10,6 +11,7 @@ last_updated = "2025-12-02"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 16_000
@@ -20,5 +22,17 @@ compatibility = { replay_reasoning = true }
 [cost.text.input]
 price = 0.6
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 1.05
+
 [cost.text.output]
 price = 2.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 4.38
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

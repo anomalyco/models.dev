@@ -1,8 +1,12 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-1-8b-instruct.html
 # https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+# Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
 schema = 2
 base_model = "meta/llama-3.1-8b-instruct"
 name = "Llama 3.1 8B Instruct"
+
+[capabilities]
+structured_output = false
 
 [cost.text.input]
 price = 0.22

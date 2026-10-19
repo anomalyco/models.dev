@@ -9,6 +9,8 @@
 # Bedrock supports text and image input, but not the base model's video input.
 # Live Converse 2026-09-23: maxTokens=128000 accepted; 128001 rejected with
 # "exceeds the model limit of 128000".
+# v2 cache: implicit per the model card; cache reads verified live on Converse 2026-10-19 (explicit cachePoint unsupported on Converse).
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 (US)"
@@ -19,6 +21,8 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true }
+cache = { supported = true, implicit = true, explicit = false }
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 128_000
@@ -28,7 +32,15 @@ compatibility = { replay_reasoning = true }
 
 [cost.text.input]
 price = 3.3
-cache = { read = 0.33, write = 4.125 }
+cache = { read = 0.33, write = { "30m" = 4.125 } }
 
 [cost.text.output]
 price = 16.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

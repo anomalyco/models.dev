@@ -3,6 +3,7 @@
 # MiniMax M2.5 has always-on thinking, matching the first-party API.
 # Live 2026-09-09: maxTokens=98304 accepted and reasoningContent returned with no reasoning configuration.
 # Live Converse 2026-09-11: outputConfig.textFormat enforced a JSON schema.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "minimax/MiniMax-M2.5"
 last_updated = "2026-03-18"
@@ -10,6 +11,7 @@ last_updated = "2026-03-18"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 196_608
@@ -23,3 +25,11 @@ price = 0.3
 
 [cost.text.output]
 price = 1.2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

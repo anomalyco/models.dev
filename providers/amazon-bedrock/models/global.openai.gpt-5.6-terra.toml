@@ -1,8 +1,9 @@
-# Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [api] override.
 # Verified from eu-west-1: effort none|low|medium|high|xhigh|max all return 200.
 # Global pricing and Runtime capabilities: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html
 # Cache rates: AWS-published Responses pricing; the card's API coverage can lag live behavior.
 # Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max.
+# v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
 schema = 2
 base_model = "openai/gpt-5.6-terra"
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
@@ -15,15 +16,16 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [cost.text.input]
 price = 2
-cache = { read = 0.2, write = 2.5 }
+cache = { read = 0.2, write = { "30m" = 2.5 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 4
-cache = { read = 0.4, write = 5 }
+cache = { read = 0.4, write = { "30m" = 5 } }
 
 [cost.text.output]
 price = 12

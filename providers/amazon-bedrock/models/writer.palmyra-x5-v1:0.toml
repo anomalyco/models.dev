@@ -2,6 +2,7 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-writer-palmyra-x5.html
 # https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
 # Bedrock accepts text only and documents no caller-selectable reasoning control.
+# Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
 schema = 2
 base_model = "writer/palmyra-x5"
 
@@ -11,6 +12,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 1_040_000

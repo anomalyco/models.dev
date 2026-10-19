@@ -3,12 +3,14 @@
 # Toggle: additionalModelRequestFields.reasoning_config = "high"; omit for default non-thinking mode.
 # Live 2026-09-09: high/omitted returns/omits reasoningContent; maxTokens=81920 accepted.
 # Runtime Converse; US Standard pricing.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 schema = 2
 base_model = "deepseek/deepseek-v3.2"
 last_updated = "2026-02-06"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 163_840
@@ -22,3 +24,11 @@ price = 0.62
 
 [cost.text.output]
 price = 1.85
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

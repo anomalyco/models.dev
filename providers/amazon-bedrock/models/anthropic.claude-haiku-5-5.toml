@@ -5,21 +5,23 @@
 # Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel) — disabled only at high effort or below.
 # Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel) — low, medium, high, xhigh, max; default medium.
 # Structured outputs not supported on Bedrock runtime.
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
+cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.01, write = 0.125 }
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 100_000 } }
 price = 0.5
-cache = { read = 0.05, write = 0.625 }
+cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
 
 [cost.text.output]
 price = 0.5

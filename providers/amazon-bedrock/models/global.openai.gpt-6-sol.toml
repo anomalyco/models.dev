@@ -1,8 +1,9 @@
-# Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [api] override.
 # Profile ID verified via ListInferenceProfiles (ACTIVE) on 2026-09-22; AWS has not published a GPT-6 Sol model card yet.
 # Global CRIS pricing = OpenAI API list rates: https://developers.openai.com/api/docs/models/gpt-6-sol
 # Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max (Bedrock's validation error on the Luna twin lists these; matches OpenAI-native Sol).
 # Live Converse check 2026-09-22 (eu-west-1, global profile): tool call + tool-result round trip; effort low/xhigh/max accepted.
+# v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
 schema = 2
 base_model = "openai/gpt-6-sol"
 name = "GPT-6 Sol (Global)"
@@ -14,15 +15,16 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [cost.text.input]
 price = 2
-cache = { read = 0.2, write = 2.5 }
+cache = { read = 0.2, write = { "30m" = 2.5 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 4
-cache = { read = 0.4, write = 5 }
+cache = { read = 0.4, write = { "30m" = 5 } }
 
 [cost.text.output]
 price = 10

@@ -4,6 +4,7 @@
 # US source us-east-1: regional on-demand USD/MTok; cache_write is the 5-minute rate.
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5-20250929"
 name = "Claude Sonnet 4.5 (US)"
@@ -11,10 +12,11 @@ name = "Claude Sonnet 4.5 (US)"
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 structured_output = true
+cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 3.3
-cache = { read = 0.33, write = 4.125 }
+cache = { read = 0.33, write = { "5m" = 4.125, "1h" = 6.6 } }
 
 [cost.text.output]
 price = 16.5
