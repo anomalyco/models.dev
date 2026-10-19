@@ -18,6 +18,7 @@
 # /v1/models reports input_cache_read = null): cached and fresh input are billed
 # identically, so cache_read = input (same rationale as Kimi-K3 / GLM-5.3).
 base_model = "meta/muse-spark-open"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

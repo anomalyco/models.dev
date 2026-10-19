@@ -6,6 +6,7 @@
 # OpenAI POST /v1/chat/completions accepts `reasoning_effort` / `reasoning.effort` passthrough.
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
 base_model = "meta/muse-spark-open"
+structured_output = true
 
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 

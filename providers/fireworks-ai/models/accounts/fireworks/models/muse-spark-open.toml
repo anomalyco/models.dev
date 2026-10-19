@@ -4,6 +4,7 @@
 # Native reasoning: https://dev.meta.ai/docs/muse-spark-open/prompting — reasoning_effort low|medium|high|xhigh (default xhigh); reasoning cannot be turned off, none|max rejected
 # Lab context/modalities: https://dev.meta.ai/docs/muse-spark-open — 1,048,576-token context; text, image, audio, and video input with text output (Fireworks serves text+image subset)
 base_model = "meta/muse-spark-open"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
