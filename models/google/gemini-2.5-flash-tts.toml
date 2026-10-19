@@ -9,12 +9,14 @@ last_updated = "2025-12-10"
 
 [modalities]
 input = ["text"]
-output = ["audio"]
+output = ["audio/l16"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 32_768

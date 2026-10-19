@@ -7,13 +7,15 @@ knowledge = "2025-01"
 release_date = "2026-05-28"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text", "image"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
 temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 65_536

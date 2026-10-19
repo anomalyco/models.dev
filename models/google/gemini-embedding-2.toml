@@ -7,13 +7,24 @@ knowledge = "2025-11"
 release_date = "2026-04-22"
 
 [modalities]
-input = ["text", "image", "audio", "video", "application/pdf"]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "audio/mp3",
+  "audio/wav",
+  "video/mp4",
+  "video/mov",
+  "application/pdf",
+]
 output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 8_192

@@ -11,13 +11,15 @@ knowledge = "2025-01"
 release_date = "2026-03-26"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text", "audio"]
+input = ["text", "image/jpeg", "image/png", "video", "audio/pcm"]
+output = ["text", "audio/pcm"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 131_072

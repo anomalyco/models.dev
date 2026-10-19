@@ -7,13 +7,31 @@ open_weights = false
 release_date = "2026-10-06"
 
 [modalities]
-input = ["text", "image", "video"]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
 output = ["text", "image"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
 temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 131_072
