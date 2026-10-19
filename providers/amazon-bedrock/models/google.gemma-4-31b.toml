@@ -4,6 +4,7 @@
 # Live 2026-09-09: high returns reasoning, none omits it; strict JSON schema and max_output_tokens=32768 accepted.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 base_model = "google/gemma-4-31b-it"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [cost]

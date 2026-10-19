@@ -4,6 +4,7 @@
 # Reasoning: multi-model relay — copy lab effort set low/medium/high from providers/google/models/gemini-4-argon.toml and openrouter/vercel/kilo peers; Ofox page confirms same thinking levels.
 # Pricing uses the Ofox discounted (-50%) intro column, matching Ofox google peers (e.g. gemini-3.8-flash 0.75/3.75) and Google intro rates; FAQ/meta show list $4/$20.
 base_model = "google/gemini-4-argon"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

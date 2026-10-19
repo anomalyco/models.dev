@@ -1,5 +1,6 @@
 # Source: https://vivgrid.com/docs/models/gemini-3.7-flash
 base_model = "google/gemini-3.7-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

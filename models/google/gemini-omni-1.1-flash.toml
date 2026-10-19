@@ -17,22 +17,23 @@
 # - output 57_920: Google Cloud's Gemini Enterprise page for
 #   gemini-omni-1.1-flash-preview lists max output tokens 57,920; same value the
 #   sibling models/google/gemini-omni-flash-preview.toml files.
+schema = 2
+type = "video"
 name = "Gemini Omni 1.1 Flash"
 description = "Video generation and editing model for scene extension, frame interpolation, and reference-guided multimodal control"
 family = "gemini"
-type = "video"
-release_date = "2026-08-27"
-last_updated = "2026-08-27"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = false
 open_weights = false
-
-[limit]
-context = 1_048_576
-output = 57_920
+release_date = "2026-08-27"
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["video"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+
+[limit]
+context = 1_048_576
+output = 57_920

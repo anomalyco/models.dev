@@ -5,22 +5,22 @@
 #   (release 2026-03-31; text-to-video and image-to-video; 720p/1080p; 4s/6s/8s)
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   (Veo 3.1 Lite paid-tier per-second video pricing; not token-based — cost omitted)
-
+schema = 2
 name = "Veo 3.1 Lite Preview"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "veo"
-release_date = "2026-03-31"
-last_updated = "2026-03-31"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = false
-
-[limit]
-context = 1_024
-output = 0
+release_date = "2026-03-31"
 
 [modalities]
 input = ["text", "image"]
 output = ["video"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 1_024
+output = 0

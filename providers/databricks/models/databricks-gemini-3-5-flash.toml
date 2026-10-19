@@ -11,6 +11,7 @@
 # https://www.databricks.com/product/pricing/proprietary-foundation-model-serving
 # https://www.databricks.com/en-pricing-assets/data/pricing/cards.json
 base_model = "google/gemini-3.5-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [cost]

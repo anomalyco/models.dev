@@ -1,6 +1,7 @@
 # Vertex Gemini 3.x adapter: $.generationConfig.thinkingConfig.thinkingLevel accepts "minimal", "low", "medium", or "high"; mutually exclusive with the legacy $.generationConfig.thinkingConfig.thinkingBudget. https://cloud.google.com/vertex-ai/generative-ai/docs/thinking (accessed 2026-07-09)
 
 base_model = "google/gemini-3.1-flash-lite"
+structured_output = true
 
 name = "gemini-3.1-flash-lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"

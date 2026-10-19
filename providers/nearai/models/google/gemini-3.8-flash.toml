@@ -9,6 +9,7 @@
 # 2026-09-11 a two-colour test image was read correctly while the same prompt without
 # it guessed wrong, and a type: "file" part fails schema deserialisation on every route.
 base_model = "google/gemini-3.8-flash"
+structured_output = true
 reasoning_options = []
 
 [cost]

@@ -12,6 +12,7 @@
 # distinct level, so it is not filed as an extra effort value (see provider.toml:
 # forwarding is best-effort; acceptance alone is not an effective control).
 base_model = "google/gemini-3.5-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "high"] }]
 name = "Gemini-3.5-Flash"
 

@@ -3,6 +3,7 @@
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking (thinking_level MINIMAL, HIGH)
 # - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (text output $1.50; image output $30)
 base_model = "google/gemini-3.1-flash-lite-image"
+structured_output = false
 reasoning_options = [{ type = "effort", values = ["minimal", "high"] }]
 
 [cost]

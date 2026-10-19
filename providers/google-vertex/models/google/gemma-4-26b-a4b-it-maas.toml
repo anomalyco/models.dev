@@ -5,6 +5,7 @@
 # a system message. Live test 2026-10-08: enable_thinking=true streamed reasoning_content for user-only requests,
 # but none once a system message was present, with or without tools.
 base_model = "google/gemma-4-26b-a4b-it"
+structured_output = true
 reasoning_options = []
 status = "alpha"
 

@@ -7,23 +7,23 @@
 # request returns at most 65,536 output tokens; longer outputs (up to 1M) need
 # long decode via background execution or client-side continuation hops.
 # Temperature, top_p, and top_k are ignored by this model.
+schema = 2
 name = "Gemini 4 Argon"
 description = "Google's flagship reasoning model for complex software engineering, deep math and science, and long-horizon autonomous agents"
 family = "gemini"
-release_date = "2026-10-13"
-last_updated = "2026-10-13"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-03"
 open_weights = false
+knowledge = "2026-03"
+release_date = "2026-10-13"
+
+[modalities]
+input = ["text", "image", "video", "audio", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
 
 [limit]
 context = 1_048_576
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]

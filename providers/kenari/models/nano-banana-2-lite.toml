@@ -7,6 +7,7 @@
 # kenari publishes no reasoning options for this id; the baseline is the model's
 # own lab entry (providers/google/models/gemini-3.1-flash-lite-image.toml), per AGENTS.md.
 base_model = "google/gemini-3.1-flash-lite-image"
+structured_output = false
 
 [[reasoning_options]]
 type = "effort"

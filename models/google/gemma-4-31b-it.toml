@@ -1,22 +1,22 @@
+schema = 2
 name = "Gemma 4 31B IT"
 description = "Largest Gemma 4 instruction model for open, self-hosted chat and reasoning"
 family = "gemma"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
-
-[limit]
-context = 262_144
-output = 32_768
+release_date = "2026-04-02"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 262_144
+output = 32_768
 
 [[weights]]
 label = "Hugging Face"

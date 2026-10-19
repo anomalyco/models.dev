@@ -4,6 +4,7 @@
 # Reasoning: multi-model relay — copy lab/peer effort set (minimal/low/medium/high)
 # from providers/google/models/gemini-3.5-flash.toml and openrouter/vercel peers.
 base_model = "google/gemini-3.5-flash"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

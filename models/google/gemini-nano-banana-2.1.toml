@@ -1,20 +1,20 @@
 # Source: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/nano-banana-2-1
+schema = 2
 name = "Nano Banana 2.1"
 description = "Image model for prompt-driven generation, multi-turn editing, and visual design workflows"
 family = "gemini-flash"
-release_date = "2026-10-06"
-last_updated = "2026-10-06"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = false
-structured_output = false
 open_weights = false
-
-[limit]
-context = 131_072
-output = 32_768
+release_date = "2026-10-06"
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["text", "image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+
+[limit]
+context = 131_072
+output = 32_768

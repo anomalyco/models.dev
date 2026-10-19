@@ -1,4 +1,5 @@
 base_model = "google/gemini-3.6-flash"
+structured_output = true
 # Google's own API takes temperature; the Neon gateway does not, and answers
 # `BAD_REQUEST: Model gemini-3.6-flash does not support the temperature
 # parameter`. Measured 2026-08-07. Inheriting the base value would advertise a

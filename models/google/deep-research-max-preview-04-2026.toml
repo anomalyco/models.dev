@@ -2,23 +2,23 @@
 # - https://ai.google.dev/gemini-api/docs/models/deep-research-max-preview-04-2026
 # - https://ai.google.dev/gemini-api/docs/deep-research
 # - https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/
-
+schema = 2
 name = "Deep Research Max Preview"
 description = "Maximum-comprehensiveness agentic researcher for multi-step investigation, synthesis, and cited reports"
 family = "gemini-pro"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-04-21"
+
+[modalities]
+input = ["text", "image", "video", "audio", "application/pdf"]
+output = ["text", "image"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
 
 [limit]
 context = 1_048_576
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text", "image"]

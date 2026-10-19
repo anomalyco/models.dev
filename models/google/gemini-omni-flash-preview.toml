@@ -1,20 +1,21 @@
+schema = 2
 name = "Gemini Omni Flash Preview"
 description = "Video generation and editing model for fast, conversational text- and image-to-video workflows"
 family = "gemini"
-release_date = "2026-06-30"
-last_updated = "2026-06-30"
-attachment = true
-reasoning = true
-tool_call = false
 open_weights = false
-
-[limit]
-context = 1_048_576
-output = 57_920
+release_date = "2026-06-30"
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["video"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
+output = 57_920
 
 [[benchmarks]]
 name = "LMArena Text-to-Video Arena"

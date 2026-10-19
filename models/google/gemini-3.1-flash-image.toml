@@ -1,19 +1,20 @@
+schema = 2
 name = "Nano Banana 2"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "gemini-flash"
-release_date = "2026-05-28"
-last_updated = "2026-05-28"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-05-28"
+
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text", "image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 131_072
 output = 32_768
-
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text", "image"]

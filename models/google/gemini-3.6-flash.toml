@@ -1,23 +1,23 @@
+schema = 2
 name = "Gemini 3.6 Flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 family = "gemini-flash"
-release_date = "2026-07-21"
-last_updated = "2026-07-21"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2026-03"
 open_weights = false
+knowledge = "2026-03"
+release_date = "2026-07-21"
+
+[modalities]
+input = ["text", "image", "video", "audio", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "SWE-Bench Pro"

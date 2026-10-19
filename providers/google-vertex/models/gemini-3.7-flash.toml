@@ -3,6 +3,7 @@
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-7-flash
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking
 base_model = "google/gemini-3.7-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

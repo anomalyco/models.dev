@@ -5,6 +5,7 @@
 # Limits/pricing: GET https://api.sambanova.ai/v1/models (gemma-4-31B-it context_length 131072, max_completion_tokens 131072; USD 0.38/1.15 per MTok).
 # Modalities Text/Image/Video per supported-models table + note: https://docs.sambanova.ai/docs/en/models/sambacloud-models
 base_model = "google/gemma-4-31b-it"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"

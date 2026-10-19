@@ -4,23 +4,22 @@
 # - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/lyria/lyria-3 — release_date 2026-03-25; preview; text+image input; audio output; max ~184s
 # - https://blog.google/innovation-and-ai/technology/developers-tools/lyria-3-developers/ — public preview announcement (2026-03-25)
 # Output token limit not published on the first-party model card; 8_192 retained from LiteLLM cost map pending Models API sync overwrite.
-
+schema = 2
 name = "Lyria 3 Pro Preview"
 description = "Music generation model for full-length songs from text or images with vocals and structure"
 family = "lyria"
-release_date = "2026-03-25"
-last_updated = "2026-03-25"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
-
-[limit]
-context = 131_072
-output = 8_192
+release_date = "2026-03-25"
 
 [modalities]
 input = ["text", "image"]
 output = ["text", "audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 131_072
+output = 8_192

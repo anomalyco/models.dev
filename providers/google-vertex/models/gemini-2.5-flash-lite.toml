@@ -2,6 +2,7 @@
 # Retires 2026-10-20: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions
 # https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-lite
 base_model = "google/gemini-2.5-flash-lite"
+structured_output = true
 status = "deprecated"
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24_576 }]
 

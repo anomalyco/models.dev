@@ -5,6 +5,7 @@
 # Includes a 50% promotion until 2026-12-31; regular $1.50 / $7.50, cache read
 # $0.15 from 2027-01-01 (https://ai.google.dev/gemini-api/docs/pricing, accessed 2026-10-16).
 base_model = "google/gemini-3.8-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]

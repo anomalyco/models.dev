@@ -5,23 +5,23 @@
 #   (legacy computer-use model; tool/function actions; still listed as available)
 # - https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-computer-use-model/
 #   (public preview 2025-10-07; built on Gemini 2.5 Pro visual + reasoning)
-
+schema = 2
 name = "Gemini 2.5 Computer Use Preview"
 description = "Specialized Gemini 2.5 model for browser-control agents that automate UI tasks"
 family = "gemini-pro"
-release_date = "2025-10-07"
-last_updated = "2025-10-07"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-01"
 open_weights = false
-
-[limit]
-context = 128_000
-output = 64_000
+knowledge = "2025-01"
+release_date = "2025-10-07"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 128_000
+output = 64_000

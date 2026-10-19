@@ -4,6 +4,7 @@
 # temperature validated 0..2 on this host; base already has temperature = true.
 # Lab id is the -preview entry (same pattern as Pioneer/Neon/Snowflake hosts).
 base_model = "google/gemini-3-flash-preview"
+structured_output = true
 name = "Gemini-3-Flash"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "high"] }]
 

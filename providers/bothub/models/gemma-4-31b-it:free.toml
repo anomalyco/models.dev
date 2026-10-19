@@ -2,6 +2,7 @@
 # Toggle: POST /v1/chat/completions request field reasoning_effort = "low" (on) | "none" (off);
 # live-verified 2026-08-29: any non-none value enables thinking, "none" disables it (no graded effect between on-values).
 base_model = "google/gemma-4-31b-it"
+structured_output = true
 name = "Gemma 4 31B IT (free)"
 
 interleaved = true

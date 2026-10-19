@@ -1,5 +1,6 @@
 # Alias for the current Gemini Flash-Lite release (gemini-3.1-flash-lite).
 base_model = "google/gemini-flash-lite-latest"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [cost]

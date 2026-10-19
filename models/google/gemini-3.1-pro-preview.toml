@@ -1,23 +1,23 @@
+schema = 2
 name = "Gemini 3.1 Pro Preview"
 description = "Reasoning-first Gemini preview for agentic coding and complex problem solving"
 family = "gemini-pro"
-release_date = "2026-02-19"
-last_updated = "2026-02-19"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-02-19"
+
+[modalities]
+input = ["text", "image", "video", "audio", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "SWE-Bench Pro"

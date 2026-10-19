@@ -4,6 +4,7 @@
 # (price listing: https://openrouter.ai/api/v1/models/google/gemini-2.5-pro/endpoints, accessed 2026-10-16).
 # Context tiers start at 200,000 prompt tokens.
 base_model = "google/gemini-2.5-pro"
+structured_output = true
 reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 
 [interleaved]
