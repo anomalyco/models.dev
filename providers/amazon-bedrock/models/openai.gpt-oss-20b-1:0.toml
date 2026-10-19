@@ -6,7 +6,7 @@
 # (stopReason max_tokens), accepts maxTokens=128000 and rejects larger values, and processed a
 # 129575-token prompt; the backend reports "maximum context length (131072)".
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
-# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b"

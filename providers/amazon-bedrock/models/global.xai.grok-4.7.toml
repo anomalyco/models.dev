@@ -2,7 +2,7 @@
 # Runtime Converse profile; Global CRIS Standard pricing ($2.00/$6.00, cache read $0.50). In-region and bedrock-mantle are not supported for 4.7.
 # Effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh, matching the US profile. Structured outputs are supported on bedrock-runtime for 4.7 (inherited true).
 # v2 cache: implicit per the model card; cache reads verified live on Converse 2026-10-19 (explicit cachePoint unsupported on Converse).
-# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
 schema = 2
 base_model = "xai/grok-4.7"
 name = "Grok 4.7 (Global)"

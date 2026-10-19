@@ -5,6 +5,7 @@
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 # v2 cache: implicit + prompt_cache_breakpoint (30m TTL only, 4 writes, 1,024 min) on Mantle Responses per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; verified live 2026-10-19.
 # Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted.
+# effort_updates: OpenAI documents configuration_update for GPT-6 models, but Bedrock Mantle rejects it ("not supported with this model", live 2026-10-19).
 schema = 2
 base_model = "openai/gpt-6-luna"
 

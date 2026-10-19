@@ -5,7 +5,8 @@
 # Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max.
 # Effort levels incl. "none" verified on the Global twin: global.openai.gpt-5.6-terra.toml
 # v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
-# Mid-conversation (Converse, live 2026-10-19): role "system" messages are rejected ("This model doesn't support system messages"), so no tool updates either; Converse has no per-turn effort.
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Structured outputs: Converse json_schema via outputConfig.textFormat plus additionalModelRequestFields.text.format.strict (model card "JSON Schema output on bedrock-runtime"); enforced live 2026-10-19.
 schema = 2
 base_model = "openai/gpt-5.6-terra"
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
@@ -18,7 +19,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
-structured_output = false
+structured_output = true
 system_updates = false
 effort_updates = false
 cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
