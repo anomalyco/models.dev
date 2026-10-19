@@ -1,0 +1,23 @@
+name = "Mercury 3"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "mercury"
+release_date = "2026-10-19"
+last_updated = "2026-10-19"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.35
+cache_read = 0.01
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
