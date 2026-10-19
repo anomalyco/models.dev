@@ -253,6 +253,17 @@ export const CacheSupportV2 = z.discriminatedUnion("supported", [
 
 export type CacheSupportV2 = z.infer<typeof CacheSupportV2>;
 
+export const ServiceTierV2Values = [
+  "flex",
+  "priority",
+  "fast",
+  "ultrafast",
+] as const;
+
+export const KnownServiceTierV2 = z.enum(ServiceTierV2Values);
+export const ServiceTierV2 = openEnum(ServiceTierV2Values);
+export type ServiceTierV2 = z.infer<typeof ServiceTierV2>;
+
 export const CapabilitiesV2 = z
   .object({
     tools: ToolsSupportV2,
@@ -267,6 +278,7 @@ export const CapabilitiesV2 = z
     store: z.boolean().optional(),
     stream_usage: z.boolean().optional(),
     prompt_cache_key: z.boolean().optional(),
+    service_tier: z.array(ServiceTierV2).optional(),
   })
   .strict();
 
