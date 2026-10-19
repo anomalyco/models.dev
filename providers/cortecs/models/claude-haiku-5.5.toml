@@ -2,6 +2,7 @@
 # Matches the other Cortecs Claude 5.5 entries; Haiku 5.5 has adaptive thinking only,
 # so no manual budget_tokens control.
 base_model = "anthropic/claude-haiku-5-5"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

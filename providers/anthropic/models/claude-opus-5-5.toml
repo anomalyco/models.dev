@@ -1,13 +1,29 @@
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+service_tier = ["fast"]
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
+
+[cost.text.output]
+price = 20
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = 1.1
 
 [experimental.modes.fast]
-cost = { input = 8, output = 40, cache_read = 0.4, cache_write = 10 }
-provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }
+body = { speed = "fast" }
+headers = { anthropic-beta = "fast-mode-2026-02-01" }

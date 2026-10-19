@@ -1,0 +1,18 @@
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "Nemotron 3.5 Super VL"
+description = "Nemotron 3.5 Super VL is a multimodal MoE model built for visual understanding, reasoning, and agentic workflows."
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.02
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]

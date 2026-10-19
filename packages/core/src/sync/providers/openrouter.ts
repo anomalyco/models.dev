@@ -1,9 +1,10 @@
 import { z } from "zod";
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import path from "node:path";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
 // The bare endpoint lists text-output models only; decision models (output
@@ -615,7 +616,7 @@ export function modelMetadata(modelID: string) {
   let metadata = modelMetadataByID.get(modelID);
   if (metadata === undefined) {
     const filePath = path.join(MODELS_DIR, `${modelID}.toml`);
-    metadata = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+    metadata = readLabModel(filePath, modelID);
     modelMetadataByID.set(modelID, metadata);
   }
   return metadata;

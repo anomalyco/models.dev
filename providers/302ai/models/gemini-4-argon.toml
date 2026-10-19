@@ -1,0 +1,9 @@
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high
+base_model = "google/gemini-4-argon"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 4.0
+output = 10.0
+cache_read = 0.2
+cache_write = 0.375

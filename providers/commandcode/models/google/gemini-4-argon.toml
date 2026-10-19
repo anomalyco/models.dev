@@ -1,0 +1,14 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+base_model = "google/gemini-4-argon"
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[limit]
+context = 1000000
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.1

@@ -6,12 +6,12 @@
 # Reasoning side channel: message.reasoning_content
 base_model = "deepseek/deepseek-v4-flash"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["none", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 0.15

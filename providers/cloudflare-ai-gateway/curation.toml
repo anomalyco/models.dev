@@ -9,6 +9,9 @@
 #     incomplete or route-specific reasoning shapes are curated here.
 #   - interleaved: whether a wire returns reasoning content as a separate field. Never
 #     inheritable from base_model (this deployment's wire format can differ from the lab's).
+#   - cost: only for proxied rows whose catalog entry has provider_details = null (no
+#     structured pricing). Sync fails if such a row has no curated cost, and fails if a
+#     curated cost remains after Cloudflare adds provider_details.
 #   - limit.output: the catalog's max_output_tokens is not a reliable ceiling (verified wrong
 #     against lab/first-party for several models), so output is hand-curated; only
 #     limit.context is auto-derived.
@@ -17,11 +20,14 @@
 #   - skip: catalog ids with no lab file, or not reachable via unified billing (BYOK-only).
 # Consumed by: bun run cloudflare-ai-gateway:generate
 
-# Proxied Text-Generation catalog ids with no lab file under models/ (cannot publish yet).
+# Proxied Text-Generation catalog ids with no lab file under models/, or not reachable via
+# unified billing (BYOK-only).
 skip = [
   "google/gemini-3-flash",
   "google/gemini-3.1-pro",
   "xai/grok-4.20-multi-agent-0309",
+  # Inkling has a lab file, but both ids are BYOK-only: unified billing returns code 2047
+  # on /ai/v1/chat/completions and /ai/v1/messages (verified live 2026-10-16).
   "thinkingmachines/inkling-256k",
   "minimax/m2.7",
   "minimax/m3",
@@ -192,6 +198,19 @@ note = [
 ]
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
+# Muse Spark Open always reasons; native ladder is low|medium|high|xhigh (default xhigh).
+# Reasoning cannot be disabled: none|max rejected. Cloudflare serves this route via
+# Fireworks and preserves reasoning_effort on POST /ai/v1/chat/completions.
+# https://dev.meta.ai/docs/muse-spark-open/prompting
+# https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
+# https://developers.cloudflare.com/ai/models/meta/muse-spark-open/
+[models."meta/muse-spark-open"]
+note = [
+  "Effort: reasoning_effort = low|medium|high|xhigh (default xhigh; reasoning cannot be disabled, none|max rejected; POST /ai/v1/chat/completions).",
+  "Sources: https://dev.meta.ai/docs/muse-spark-open/prompting ; https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B ; https://developers.cloudflare.com/ai/models/meta/muse-spark-open/",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
 # Alibaba is a first-party lab; the catalog's OpenAI-compat schema exposes a generic
 # `reasoning_effort` enum, but Alibaba's real API (see providers/alibaba/models/qwen3.7-plus.toml)
 # is toggle + budget_tokens, not graded effort. Match the lab shape per AGENTS.md.
@@ -240,6 +259,36 @@ note = [
 ]
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
+# Ember-1 is Fireworks' Kimi K3 derivative, served on the Fireworks route. The catalog
+# schema advertises a generic none|low|medium|high|xhigh|max enum, but Fireworks' K3 tiers
+# promote medium -> high and xhigh -> max, so the distinct levels are none|low|high|max
+# (same as providers/kilo/models/fireworks/ember-1.toml and the deepseek-v4-pro route above).
+# Live CF chat-completions accepts all six and returns reasoning_content (2026-10-16).
+[models."fireworks/ember-1"]
+note = [
+  "Off: reasoning_effort = none; effort: low|high|max (Fireworks route; medium -> high, xhigh -> max).",
+  "Sources: https://docs.fireworks.ai/api-reference/post-chatcompletions ; https://docs.fireworks.ai/guides/reasoning",
+]
+interleaved = { field = "reasoning_content" }
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+# Reflection's catalog id (reflection-ai/...) differs from the lab dir (reflection/...).
+# Live CF chat-completions (2026-10-16, unified billing): reasoning_effort accepts
+# low|medium|high|xhigh|max and rejects none|minimal (code 7003); reasoning is always on and
+# returned in reasoning_content, and omitting it from a prior assistant turn is rejected.
+# The catalog row has provider_details = null, so cost is curated: free, matching the
+# catalog's display pricing (input/cached input/output $0 per 1M) on 2026-10-16.
+[models."reflection-ai/beam-1.0-501b-a23b"]
+base_model = "reflection/beam-1.0-501b-a23b"
+note = [
+  "Always reasons; effort: reasoning_effort = low|medium|high|xhigh|max (none/minimal rejected).",
+  "Interleaved: reasoning_content must be sent back on every prior assistant message.",
+  "Source: https://developers.reflection.ai/reasoning",
+]
+interleaved = { field = "reasoning_content" }
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+cost = { input = 0, output = 0, cache_read = 0 }
+
 [models."thinkingmachines/inkling"]
 note = [
   "Tinker's Anthropic-compatible route: thinking.type = adaptive|disabled toggles reasoning;",
@@ -247,3 +296,17 @@ note = [
 ]
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 limit = { output = 65_536 }
+
+# Gemini 4 Argon: Google native thinkingLevel only (low|medium|high, default medium).
+# Thinking cannot be disabled and thinking_budget is deprecated (400 on Gemini 4).
+# Wire is preserved via the Google AI Studio native route through AI Gateway.
+# https://ai.google.dev/gemini-api/docs/thinking
+# https://ai.google.dev/gemini-api/docs/generate-content/thinking
+# https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
+# https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/
+[models."google/gemini-4-argon"]
+note = [
+  "Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (Google AI Studio native route preserved via AI Gateway; default medium, thinking cannot be disabled).",
+  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-argon ; https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

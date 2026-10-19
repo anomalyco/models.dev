@@ -8,6 +8,7 @@
 # Toggle: $.thinking.type = "enabled"|"disabled" on /v1/messages.
 # Effort: $.output_config.effort = low|medium|high|xhigh|max on /v1/messages.
 base_model = "anthropic/claude-haiku-5-5"
+structured_output = true
 interleaved = true
 [[reasoning_options]]
 type = "toggle"

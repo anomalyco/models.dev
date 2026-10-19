@@ -11,6 +11,7 @@ tool_call = true
 structured_output = true
 temperature = true
 open_weights = false
+status = "deprecated"
 
 [interleaved]
 field = "reasoning_content"
@@ -21,9 +22,12 @@ output = 0
 cache_read = 0
 
 [limit]
-context = 262_144
+context = 1_048_576
 output = 131_072
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[provider]
+api = "https://opencode.ai/inference/go/openai/v1"

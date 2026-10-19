@@ -1,0 +1,104 @@
+# Model card and benchmark results: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Release date, API capabilities, and limits: https://api-docs.deepseek.com/updates/
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-10-17)
+# Benchmark harnesses are recorded only where the release explicitly specifies them.
+name = "DeepSeek V4.1 Flash 1017"
+description = "October 17 update of DeepSeek V4.1 Flash with improved reasoning, coding, agentic tasks, and visual understanding"
+family = "deepseek-flash"
+release_date = "2026-10-17"
+last_updated = "2026-10-17"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 42.6
+variant = "without tools"
+dataset = "full set"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 44.0
+variant = "without tools"
+dataset = "text-only subset"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 42.3
+version = "4.0"
+harness = "Claude Code"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 77.0
+version = "1.1"
+harness = "Mini-SWE-V2"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "ProgramBench"
+score = 29.1
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 68.2
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 60.5
+version = "1.0.6"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 35.4
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "Apex Bench"
+score = 72.1
+version = "1.1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "Chartography"
+score = 83.0
+variant = "with tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "BabyVision"
+score = 92.5
+variant = "with tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+
+[[benchmarks]]
+name = "ZeroBench"
+score = 51.0
+metric = "pass@5"
+variant = "with tools"
+dataset = "main"
+source = "https://api-docs.deepseek.com/updates/"

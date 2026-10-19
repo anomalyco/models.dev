@@ -1,6 +1,5 @@
 # Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
 # https://api.venice.ai/api/v1/models?type=text
-
 base_model = "anthropic/claude-sonnet-4-5"
 name = "Claude Sonnet 4.5"
 release_date = "2025-01-15"
@@ -9,10 +8,10 @@ structured_output = true
 reasoning_options = []
 
 [cost]
-input = 3.75
-output = 18.75
-cache_read = 0.375
-cache_write = 4.69
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
 
 [limit]
 context = 198_000

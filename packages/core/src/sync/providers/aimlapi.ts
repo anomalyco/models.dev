@@ -1,7 +1,8 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { readProviderModel } from "../../translate.js";
 import type { SyncProvider } from "../index.js";
 import {
   factorBaseModel,
@@ -846,7 +847,7 @@ function readLadder(providerDir: string, modelPaths: readonly string[], source: 
   for (const candidate of modelPaths) {
     const file = path.join(PROVIDERS_DIR, providerDir, "models", `${candidate}.toml`);
     try {
-      parsed = Bun.TOML.parse(readFileSync(file, "utf8")) as Record<string, unknown>;
+      parsed = readProviderModel(file);
       break;
     } catch {
       /* try the next candidate */

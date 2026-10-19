@@ -1,0 +1,21 @@
+# https://api.novita.ai/openai/v1/models (deepseek/deepseek-v4.1-flash-1017: $0.3/M input, $1.2/M output, $0.006/M cache read, context 1048576)
+# Pricing parity with predecessor: https://novita.ai/models/model-detail/deepseek-deepseek-v4.1-flash
+# Lab identity, Oct 17 minor update to V4.1 Flash: https://api-docs.deepseek.com/news/news261017/
+# https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max; native DeepSeek set: https://api-docs.deepseek.com/guides/thinking_mode/
+# Chat API max_tokens 393216: https://api-docs.deepseek.com/api/create-chat-completion/
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
+
+[limit]
+context = 1_048_576
+output = 393_216

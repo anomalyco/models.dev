@@ -1,0 +1,22 @@
+# Model ID xiaomi/mimo-v2.6-pro. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
+# of the endpoint Standard Compute routes this model to, as charged against the budget
+# (price listing: https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.6-pro/endpoints, accessed 2026-10-16).
+# Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
+base_model = "xiaomi/mimo-v2.6-pro"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.43
+output = 0.87
+cache_read = 0.0036
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

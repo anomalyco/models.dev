@@ -2,7 +2,8 @@ base_model = "nvidia/nemotron-nano-12b-v2-vl"
 name = "Nvidia Nemotron Nano 12B V2 VL"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.2

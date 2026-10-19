@@ -1,0 +1,14 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# xhigh follows the native/peer baseline; live xhigh hit HTTP 403 MODEL_NOT_IN_PLAN.
+# Live /chat/completions (2026-10-14): reasoning_effort = none -> HTTP 400 invalid option.
+base_model = "openai/gpt-5.4-mini"
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.75
+output = 4.5
+cache_read = 0.075
+cache_write = 0

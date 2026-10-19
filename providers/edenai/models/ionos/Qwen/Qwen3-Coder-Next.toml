@@ -1,8 +1,9 @@
 base_model = "alibaba/qwen3-coder-next"
 name = "Qwen3 Coder Next (IONOS)"
-tool_call = false
-structured_output = false
 
 [cost]
-input = 0.16782
-output = 0.89504
+input = 0.168795
+output = 0.90024
+
+[limit]
+context = 128_000

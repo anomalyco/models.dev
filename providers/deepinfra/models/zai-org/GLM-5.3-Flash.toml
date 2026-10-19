@@ -2,7 +2,10 @@
 # https://docs.z.ai/guides/llm/glm-5.3-flash
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.15

@@ -1,0 +1,25 @@
+name = "Glimpse"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+release_date = "2026-10-16"
+last_updated = "2026-10-16"
+attachment = true
+reasoning = true
+tool_call = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.6
+output = 3
+cache_read = 0.06
+
+[limit]
+context = 220_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

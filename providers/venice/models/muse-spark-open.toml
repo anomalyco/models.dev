@@ -1,0 +1,14 @@
+base_model = "meta/muse-spark-open"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.5625
+output = 5.3125
+cache_read = 0.1875
+
+[modalities]
+input = ["text", "image"]

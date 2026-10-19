@@ -106,6 +106,74 @@ doc = "https://example.com/docs"
 
 If the provider has a rich catalog API that can populate model data or authoritatively remove models it no longer serves, add a sync module (see `sync.md`). Thin endpoints stay hand-authored.
 
+## v2 migration (`schema = 2`)
+
+Labs and providers are moving to the v2 format one at a time. A file that starts with `schema = 2` is v2. Any other file is v1. Readers translate v2 files back to v1, so v1 and v2 files can `base_model` each other. Migrated so far: lab `anthropic` and provider `anthropic`.
+
+v2 lab file (`models/<lab>/*.toml`). It only holds facts that are true on every host:
+
+```toml
+schema = 2
+name = "Claude Opus 5.5"
+description = "…"
+family = "claude-opus"
+open_weights = false
+knowledge = "2026-06"
+release_date = "2026-09-22"
+# last_updated: only when it differs from release_date
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+```
+
+v2 provider model file (`providers/<p>/models/*.toml`). It covers everything about the host: reasoning controls, `structured_output`, `cache`, `service_tier`, `system_updates`, `effort_updates`, and cost:
+
+```toml
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+service_tier = ["fast"]
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
+
+[cost.text.output]
+price = 20
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 2
+
+[experimental.modes.fast]
+body = { speed = "fast" }
+```
+
+- v2 has no `attachment`. The v1 output derives it from whether `modalities.input` includes anything besides text.
+- Use MIME types where the lab documents them (`image/png`, `application/pdf`). The v1 output collapses them to `image` and `pdf`.
+- `tool_call` becomes `capabilities.tools`, `reasoning` plus `reasoning_options` become `capabilities.reasoning`, and context tiers become `context > size` overrides.
+- The v1 output only gets the first cache-write TTL listed and the context tiers. A mode without a cost takes the base prices times the `service_tier` multiplier of the same name.
+- Sync writes v1 files, so it leaves v2 files alone. Update migrated providers by hand.
+- To migrate, run `bun packages/core/script/migrate-v2.ts <lab|provider> <id>`. The script fails if any file would change in the v1 output.
+
 ## Model fields
 
 ### Required on lab metadata (`models/`)

@@ -1,0 +1,38 @@
+# Sources (accessed 2026-10-12):
+# - https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash — model code
+#   gemini-omni-1.1-flash (Stable; the Preview version is gemini-omni-flash-preview),
+#   context window 1,048,576 tokens, input Text/Image/Video (<=10s for editing and
+#   extension), output Video 3s-10s (360p/720p/1080p/4K, 24 FPS), latest update
+#   August 2026, page last updated 2026-08-27. Hence limit.context = 1_048_576 and
+#   the modalities below.
+# - release_date/last_updated 2026-08-27: the Gemini API changelog ("Gemini Omni
+#   Flash generally available (GA): Released gemini-omni-1.1-flash"), the Google
+#   blog post dated 2026-08-27, and DeepMind's model card published 27 August 2026.
+# - reasoning = true: https://ai.google.dev/gemini-api/docs/omni documents the
+#   gemini-omni-1.1-flash REST response schema with a step {"type": "thought"};
+#   Google Cloud's model page also lists "Thinking: Supported" for the 1.1 preview.
+# - temperature = false: https://ai.google.dev/gemini-api/docs/omni Limitations —
+#   "System instructions, temperature, top_p, stop sequences, and negative prompts
+#   are not supported".
+# - output 57_920: Google Cloud's Gemini Enterprise page for
+#   gemini-omni-1.1-flash-preview lists max output tokens 57,920; same value the
+#   sibling models/google/gemini-omni-flash-preview.toml files.
+name = "Gemini Omni 1.1 Flash"
+description = "Video generation and editing model for scene extension, frame interpolation, and reference-guided multimodal control"
+family = "gemini"
+type = "video"
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 57_920
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

@@ -101,22 +101,22 @@ describe("v2 catalog generation", () => {
       temperature: true,
     });
     expect(translated.cost).toEqual({
-      input: 4,
-      output: 20,
-      cache_read: 0.4,
-      cache_write: 5,
-      tiers: [
-        {
-          tier: { type: "context", size: 272000 },
-          input: 8,
-          output: 30,
+      text: {
+        input: {
+          price: 4,
+          cache: { read: 0.4, write: 5 },
+          overrides: [{ when: { context: { gt: 272000 } }, price: 8 }],
         },
-      ],
+        output: {
+          price: 20,
+          overrides: [{ when: { context: { gt: 272000 } }, price: 30 }],
+        },
+      },
     });
     expect(translated.experimental).toEqual({
       modes: {
         fast: {
-          cost: { input: 8, output: 40 },
+          cost: { text: { input: { price: 8 }, output: { price: 40 } } },
           body: { service_tier: "priority" },
           headers: { "x-tier": "fast" },
         },
@@ -133,7 +133,7 @@ describe("v2 catalog generation", () => {
     expect(providersV2["google-vertex-anthropic"]).toBeUndefined();
     expect(providersV2.opencode?.models["jev-1.13"]?.api).toEqual({
       systemone: {
-        base_url: "https://opencode.ai/inference/v1",
+        base_url: "https://opencode.ai/inference/systemone/v1",
         sdk: {
           opencodeai: "@opencode/ai/providers/typesafe-ai",
         },

@@ -1,0 +1,23 @@
+# Databricks lists databricks-gemini-3-5-flash with text, image, video, and audio inputs;
+# its limits match the Google model. Accessed 2026-10-16.
+# https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models
+# Databricks lists reasoning_effort = minimal|low|medium|high for this endpoint. Accessed 2026-10-16.
+# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Pricing: standard Gemini3.5Flash is 26.786/160.714/2.679 DBU per 1M input/output/cache
+# tokens, and the pricing asset lists Google at USD 0.070/DBU. Global standard conversion is
+# DBU per 1M tokens * USD 0.070/DBU * 80% promotional factor. Applying the current 20%
+# promotion through 2027-01-31 yields USD 1.50/9.00/0.15 per MTok; audio uses the input
+# rate. The 10% regional uplift is excluded. The promotion expiry can change these rates.
+# https://www.databricks.com/product/pricing/proprietary-foundation-model-serving
+# https://www.databricks.com/en-pricing-assets/data/pricing/cards.json
+base_model = "google/gemini-3.5-flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 1.50
+output = 9.00
+cache_read = 0.15
+input_audio = 1.50
+
+[modalities]
+input = ["text", "image", "video", "audio"]

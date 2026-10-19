@@ -1,0 +1,18 @@
+# Cost from https://ollama.com/pricing (accessed 2026-10-15): muse-spark-open $1.25 input / $0.15 cached / $4.25 output per MTok.
+# Library: https://ollama.com/library/muse-spark-open (1M context, Text+Image input, vision/tools/thinking/cloud tags, 822B params).
+# Effort: reasoning_effort = low|medium|high|xhigh (default xhigh; reasoning cannot be disabled, so no toggle).
+# Lab native set per https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B and https://huggingface.co/blog/meta-muse-spark-open.
+# Host is a multi-model relay; options copy the lab set per AGENTS.md. Ollama native `think` accepts model-defined levels;
+# OpenAI POST /v1/chat/completions accepts `reasoning_effort` / `reasoning.effort` passthrough.
+# Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
+base_model = "meta/muse-spark-open"
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15

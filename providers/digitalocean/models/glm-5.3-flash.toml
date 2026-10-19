@@ -1,5 +1,14 @@
+# Text-only on DigitalOcean for now. The DigitalOcean catalog and docs list image
+# and video input, but the standard serverless endpoint rejects them with 400
+# "unsupported multimodal content: image_url" / "video_url" (verified 2026-10-16
+# on Chat Completions and Messages). DigitalOcean confirmed the standard endpoint
+# lacks multimodal support and is working on a fix. Restore the original line
+# below and remove the UNSUPPORTED_INPUT_MODALITIES entry in
+# packages/core/src/sync/providers/digitalocean.ts once it is served.
+# input = ["text", "image", "video"]
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM5.3 Flash"
+attachment = false
 
 [[reasoning_options]]
 type = "effort"
@@ -14,4 +23,4 @@ cache_read = 0.03
 context = 1_048_576
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text"]

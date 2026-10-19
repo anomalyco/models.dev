@@ -12,17 +12,23 @@ import {
   type Model,
 } from "./schema.js";
 import {
+  AuthoredModelV2,
+  LabModelV2,
   ProviderV2,
   type ApiEntryV2,
   type ApiProtocolV2,
   type ApiV2,
   type CompatibilityV2,
+  type CostV2,
   type ExperimentalModeV2,
+  type InputCostV2,
   type InputModalityV2,
   type ModelV2,
+  type OutputCostV2,
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
+import { isSchemaV2, modelV2ToV1 } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -39,13 +45,14 @@ export async function generateV2(
 ): Promise<Record<string, ProviderV2>> {
   const modelsDir = path.join(path.dirname(providersDir), "models");
   const baseModels = await generateModels(modelsDir);
+  const labsV2 = await loadLabsV2(modelsDir);
 
   const providers: Record<string, ProviderV2> = {};
   const nameToProviderID = new Map<string, string>();
   for await (const providerPath of scanTomls(providersDir, "*/provider.toml")) {
     const providerID = path.basename(path.dirname(providerPath));
     if (IGNORED_PROVIDERS.has(providerID)) continue;
-    const provider = await loadProviderV2(providerPath, baseModels);
+    const provider = await loadProviderV2(providerPath, baseModels, labsV2);
     const nameKey = provider.name.toLowerCase();
     const existingID = nameToProviderID.get(nameKey);
     if (existingID !== undefined) {
@@ -64,6 +71,7 @@ export async function generateV2(
 async function loadProviderV2(
   providerPath: string,
   baseModels: Record<string, ModelMetadata>,
+  labsV2: Record<string, LabModelV2>,
 ): Promise<ProviderV2> {
   const providerDir = path.dirname(providerPath);
   const providerID = path.basename(providerDir);
@@ -88,8 +96,14 @@ async function loadProviderV2(
       .join("/")
       .slice(0, -5);
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
-    const resolved = resolveV1Model(rawModel, baseModels, modelPath);
-    models[modelID] = toModelV2(resolved, v1Provider);
+    const v1Model = isSchemaV2(rawModel) ? modelV2ToV1(rawModel, { modelPath }) : rawModel;
+    const resolved = resolveV1Model(v1Model, baseModels, modelPath);
+    models[modelID] = withV2Fields(
+      toModelV2(resolved, v1Provider),
+      rawModel,
+      labsV2,
+      modelPath,
+    );
   }
 
   if (Object.keys(models).length === 0) {
@@ -111,6 +125,57 @@ async function loadProviderV2(
   );
 }
 
+async function loadLabsV2(modelsDir: string) {
+  const labs: Record<string, LabModelV2> = {};
+  if (!existsSync(modelsDir)) return labs;
+  for await (const modelPath of scanTomls(modelsDir, "**/*.toml")) {
+    const raw = await readToml(modelPath);
+    if (!isSchemaV2(raw)) continue;
+    const id = path.relative(modelsDir, modelPath).split(path.sep).join("/").slice(0, -5);
+    labs[id] = parseWithCause(LabModelV2, { ...withoutSchema(raw), id }, { modelPath, toml: raw });
+  }
+  return labs;
+}
+
+// v1 can't carry some v2 data (MIME modalities, cache TTLs, service tiers…), so it
+// is read straight from the v2 lab and provider files.
+function withV2Fields(
+  model: ModelV2,
+  rawModel: Record<string, unknown>,
+  labsV2: Record<string, LabModelV2>,
+  modelPath: string,
+): ModelV2 {
+  const lab =
+    typeof rawModel.base_model === "string" ? labsV2[rawModel.base_model] : undefined;
+  const authored = isSchemaV2(rawModel)
+    ? parseWithCause(AuthoredModelV2, withoutSchema(rawModel), { modelPath, toml: rawModel })
+    : undefined;
+  const omit = Array.isArray(rawModel.base_model_omit) ? rawModel.base_model_omit : [];
+  const inheritsModalities =
+    rawModel.modalities === undefined &&
+    !omit.some((item) => String(item).startsWith("modalities"));
+
+  const result: ModelV2 = {
+    ...model,
+    modalities:
+      authored?.modalities ??
+      (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities),
+    capabilities: mergeDeep(
+      mergeDeep(lab?.capabilities ?? {}, model.capabilities),
+      authored?.capabilities ?? {},
+    ) as ModelV2["capabilities"],
+  };
+  if (authored?.cost !== undefined) result.cost = authored.cost;
+  if (authored?.experimental !== undefined) result.experimental = authored.experimental;
+  if (authored?.metadata !== undefined) result.metadata = authored.metadata;
+  return result;
+}
+
+function withoutSchema(raw: Record<string, unknown>) {
+  const { schema: _schema, ...rest } = raw;
+  return rest;
+}
+
 // ---------------------------------------------------------------------------
 // V1 -> V2 model transformation
 // ---------------------------------------------------------------------------
@@ -125,11 +190,6 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
     }
     return model.modalities.output.map(normalizeModality) as OutputModalityV2[];
   })();
-  const stripLegacyCost = ({
-    context_over_200k: _legacy,
-    ...cost
-  }: NonNullable<Model["cost"]>) => cost;
-
   return {
     id: model.id,
     ...(model.canonical_model_id !== undefined
@@ -165,7 +225,7 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
         ? {}
         : { output: model.limit.output }),
     },
-    ...(model.cost !== undefined ? { cost: stripLegacyCost(model.cost) } : {}),
+    ...(model.cost !== undefined ? { cost: toCostV2(model.cost) } : {}),
     api: toApiV2(model, provider),
     ...(model.experimental?.modes
       ? {
@@ -174,7 +234,7 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
               Object.entries(model.experimental.modes).map(([name, mode]) => {
                 const entry: ExperimentalModeV2 = {
                   ...(mode.cost !== undefined
-                    ? { cost: stripLegacyCost(mode.cost) }
+                    ? { cost: toCostV2(mode.cost) }
                     : {}),
                   ...(mode.provider?.body !== undefined
                     ? { body: mode.provider.body }
@@ -186,6 +246,85 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
                 return [name, entry];
               }),
             ),
+          },
+        }
+      : {}),
+  };
+}
+
+type CostV1 = NonNullable<Model["cost"]>;
+type CostTierV1 = NonNullable<CostV1["tiers"]>[number];
+
+// v1 context tiers become `context > size` overrides on each price they set.
+export function toCostV2(cost: CostV1): CostV2 {
+  const tiers = [...(cost.tiers ?? [])].sort((a, b) => a.tier.size - b.tier.size);
+  const when = (tier: CostTierV1) => ({ context: { gt: tier.tier.size } });
+  const cache = (prices: { cache_read?: number; cache_write?: number }) =>
+    prices.cache_read === undefined && prices.cache_write === undefined
+      ? {}
+      : {
+          cache: {
+            ...(prices.cache_read !== undefined ? { read: prices.cache_read } : {}),
+            ...(prices.cache_write !== undefined
+              ? { write: prices.cache_write }
+              : {}),
+          },
+        };
+  const withOverrides = <T extends { when: unknown }>(overrides: T[]) =>
+    overrides.length > 0 ? { overrides } : {};
+
+  const textInput: InputCostV2 = {
+    price: cost.input,
+    ...cache(cost),
+    ...withOverrides(
+      tiers.map((tier) => ({ when: when(tier), price: tier.input, ...cache(tier) })),
+    ),
+  };
+  const textOutput: OutputCostV2 = {
+    price: cost.output,
+    ...(cost.reasoning !== undefined ? { reasoning: cost.reasoning } : {}),
+    ...withOverrides(
+      tiers.map((tier) => ({
+        when: when(tier),
+        price: tier.output,
+        ...(tier.reasoning !== undefined ? { reasoning: tier.reasoning } : {}),
+      })),
+    ),
+  };
+  const audioInput: InputCostV2 | undefined =
+    cost.input_audio === undefined
+      ? undefined
+      : {
+          price: cost.input_audio,
+          ...withOverrides(
+            tiers.flatMap((tier) =>
+              tier.input_audio === undefined
+                ? []
+                : [{ when: when(tier), price: tier.input_audio }],
+            ),
+          ),
+        };
+  const audioOutput: OutputCostV2 | undefined =
+    cost.output_audio === undefined
+      ? undefined
+      : {
+          price: cost.output_audio,
+          ...withOverrides(
+            tiers.flatMap((tier) =>
+              tier.output_audio === undefined
+                ? []
+                : [{ when: when(tier), price: tier.output_audio }],
+            ),
+          ),
+        };
+
+  return {
+    text: { input: textInput, output: textOutput },
+    ...(audioInput !== undefined || audioOutput !== undefined
+      ? {
+          audio: {
+            ...(audioInput !== undefined ? { input: audioInput } : {}),
+            ...(audioOutput !== undefined ? { output: audioOutput } : {}),
           },
         }
       : {}),

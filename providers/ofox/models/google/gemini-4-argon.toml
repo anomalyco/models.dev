@@ -1,0 +1,20 @@
+# Sources (accessed 2026-10-14):
+# - https://ofox.ai/models/google/gemini-4-argon (Providers table: Input $2/$4, Output $10/$20, Cache Read $0.1/$0.2, Audio Input $2/$4; Thinking levels low/medium/high; protocols openai+gemini; Gemini code example uses https://api.ofox.ai/gemini)
+# - https://ai.google.dev/gemini-api/docs/pricing#gemini-4-argon (intro $2 input / $10 output through 2026-11-30, then $4/$20; implicit caching only)
+# Reasoning: multi-model relay — copy lab effort set low/medium/high from providers/google/models/gemini-4-argon.toml and openrouter/vercel/kilo peers; Ofox page confirms same thinking levels.
+# Pricing uses the Ofox discounted (-50%) intro column, matching Ofox google peers (e.g. gemini-3.8-flash 0.75/3.75) and Google intro rates; FAQ/meta show list $4/$20.
+base_model = "google/gemini-4-argon"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.1
+input_audio = 2
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.ofox.ai/gemini/v1beta"

@@ -1,6 +1,13 @@
 base_model = "typesafe/jev-latest"
 name = "Jev Latest"
+attachment = true
 
 [cost]
 input = 0.042
 output = 0
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]

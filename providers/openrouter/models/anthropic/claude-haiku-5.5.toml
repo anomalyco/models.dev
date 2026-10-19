@@ -1,13 +1,11 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "anthropic/claude-haiku-5-5"
-
-[[reasoning_options]]
-type = "toggle"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.1

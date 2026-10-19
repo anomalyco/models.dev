@@ -1,0 +1,23 @@
+# Sources: Poe API model entry + live chat-completions probes, accessed 2026-10-12
+#   (verified live with packages/core/script/poe-reasoning-audit.py)
+#   — https://poe.com/gemini-3.7-flash
+# - effort: parameters[].thinking_level = low|medium|high (Poe's per-bot enum for this
+#   bot; minimal is absent here, unlike gemini-3.5-flash-lite/-3.6-flash). The same
+#   extraction reproduces the values already filed for Poe's gemini-3-flash,
+#   gemini-3.1-flash-lite, gemini-3.1-pro and gemini-3.5-flash. Bot parameters travel
+#   via extra_body (see provider.toml); live probes 2026-10-12: thinking_level="minimal"
+#   -> 400 (confirms minimal absent), while the same value is accepted on 3.6-flash.
+# - cost: pricing.prompt x1e6 -> 0.7576, completion -> 3.7879, input_cache_read -> 0.0758
+#   USD/MTok (source is USD per token, no FX conversion)
+# - modalities: architecture.input_modalities lists no pdf -> pdf dropped from input
+base_model = "google/gemini-3.7-flash"
+name = "Gemini-3.7-Flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.7576
+output = 3.7879
+cache_read = 0.0758
+
+[modalities]
+input = ["text", "image", "video", "audio"]

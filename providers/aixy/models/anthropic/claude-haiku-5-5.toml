@@ -1,0 +1,29 @@
+# Anthropic standard API prices in USD per million tokens; checked 2026-10-13.
+# https://platform.claude.com/docs/en/about-claude/pricing
+# https://platform.claude.com/docs/en/models/haiku-5-5/overview
+# Cache writes use the 5-minute rate; higher rates apply above 100K input tokens, including cached tokens.
+# Toggle: thinking.type = adaptive|disabled; disabled requires low, medium, or high effort.
+# Effort: output_config.effort; https://platform.claude.com/docs/en/build-with-claude/effort
+base_model = "anthropic/claude-haiku-5-5"
+structured_output = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 0.10
+output = 0.50
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 100_000 }
+input = 0.50
+output = 2.50
+cache_read = 0.05
+cache_write = 0.625
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.aixy-gateway.com/v1"

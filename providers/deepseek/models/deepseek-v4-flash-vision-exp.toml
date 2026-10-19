@@ -1,12 +1,13 @@
+# October 17 upgrade: https://api-docs.deepseek.com/updates/
 # Legacy alias. DeepSeek-V4-Flash-Vision-Exp is retired; requests to
 # `deepseek-v4-flash-vision-exp` are still accepted but served by
-# DeepSeek-V4.1-Flash and billed at the Flash price.
+# DeepSeek-V4.1-Flash-1017 and billed at the Flash price.
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
-# https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-10)
+# https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-10-17)
 # Served by deepseek-flash; Chat API max_tokens <= 393216:
 # https://api-docs.deepseek.com/api/create-chat-completion/
-base_model = "deepseek/deepseek-v4.1-flash"
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4 Flash Vision Exp"
 status = "deprecated"
 [[reasoning_options]]

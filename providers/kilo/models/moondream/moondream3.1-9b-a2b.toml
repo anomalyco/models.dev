@@ -1,0 +1,26 @@
+name = "Moondream: Moondream 3.1"
+description = "Moondream 3.1 is a vision-language model from Moondream, the successor to Moondream 3 Preview, with 9B total parameters and 2B active (mixture-of-experts). It handles visual question answering, captioning, OCR, and..."
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.3
+output = 2.5
+
+[limit]
+context = 32_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

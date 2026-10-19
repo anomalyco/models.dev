@@ -1,3 +1,5 @@
+# Cached input: https://docs.z.ai/guides/overview/pricing (accessed 2026-10-17).
+# GLM-4.5V cached input is $0.11 per 1M tokens.
 name = "GLM-4.5V"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 family = "glm"
@@ -16,6 +18,7 @@ type = "toggle"
 [cost]
 input = 0.6
 output = 1.8
+cache_read = 0.11
 
 [limit]
 context = 64_000

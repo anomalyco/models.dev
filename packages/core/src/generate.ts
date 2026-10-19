@@ -10,6 +10,7 @@ import {
   AuthoredModelShape,
   ModelMetadata,
 } from "./schema.js";
+import { isSchemaV2, labModelV2ToV1, modelV2ToV1 } from "./translate.js";
 
 const BaseModel = AuthoredModelShape
   .deepPartial()
@@ -47,7 +48,9 @@ export async function generateModels(directory: string) {
     }).then((mod) => mod.default);
     toml.id = modelID;
 
-    const model = ModelMetadata.safeParse(toml);
+    const model = ModelMetadata.safeParse(
+      isSchemaV2(toml) ? labModelV2ToV1(toml, { modelPath }) : toml,
+    );
     if (!model.success) {
       model.error.cause = { modelPath, toml };
       throw model.error;
@@ -100,12 +103,13 @@ async function generateProviders(
       followSymlinks: true,
     })) {
       const modelID = path.relative(modelsPath, modelPath).split(path.sep).join("/").slice(0, -5);
-      const toml = await import(modelPath, {
+      const raw = await import(modelPath, {
         with: {
           type: "toml",
         },
       }).then((mod) => mod.default);
-      toml.id = modelID;
+      raw.id = modelID;
+      const toml = isSchemaV2(raw) ? modelV2ToV1(raw, { modelPath }) : raw;
       if (toml.base_model !== undefined) {
         const baseModel = BaseModel.safeParse(toml);
         if (!baseModel.success) {

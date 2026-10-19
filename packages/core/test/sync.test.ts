@@ -86,7 +86,7 @@ import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/pr
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
-import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
+import { buildWandbModel, mergeReasoningOptions, type WandbModel } from "../src/sync/providers/wandb.js";
 import { buildXAIModel, xai } from "../src/sync/providers/xai.js";
 
 function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel {
@@ -1959,6 +1959,31 @@ test("existing DigitalOcean base models use explicit text-only catalog modalitie
   });
 });
 
+test("drops DigitalOcean catalog modalities the serverless endpoint rejects", () => {
+  const model = buildDigitalOceanModel(
+    digitalOceanModel({
+      id: "glm-5.3-flash",
+      name: "GLM5.3 Flash",
+      modalities: { input: ["text", "image", "video"], output: ["text"] },
+      context_window: 1_048_576,
+      max_output_tokens: 131_072,
+      pricing: { input: 0.15, output: 0.5, cacheRead: 0.03 },
+    }),
+    {
+      base_model: "zhipuai/glm-5.3-flash",
+      name: "GLM5.3 Flash",
+      attachment: false,
+      modalities: { input: ["text"], output: ["text"] },
+    },
+  );
+
+  expect(model).toMatchObject({
+    base_model: "zhipuai/glm-5.3-flash",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+});
+
 test("resolves DigitalOcean IDs to canonical model metadata", () => {
   expect(resolveDigitalOceanBaseModel("openai-gpt-5.5")).toBe("openai/gpt-5.5");
   expect(resolveDigitalOceanBaseModel("deepseek-v4-pro")).toBe("deepseek/deepseek-v4-pro");
@@ -3097,6 +3122,37 @@ test("W&B preserves curated model dates", () => {
     release_date: "2024-07-23",
     last_updated: "2024-07-23",
   });
+});
+
+test("W&B keeps hand-authored reasoning effort through a sync", () => {
+  const model: WandbModel = {
+    id: "zai-org/GLM-5.3",
+    name: "GLM 5.3",
+    attachment: false,
+    reasoning: true,
+    reasoning_options: [],
+    tool_call: true,
+    release_date: "2026-10-16",
+    last_updated: "2026-10-16",
+    open_weights: true,
+  };
+
+  expect(buildWandbModel(model, {
+    reasoning_options: [{ type: "effort", values: ["low", "high", "max"] }],
+  }, undefined)).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "high", "max"] }],
+  });
+});
+
+test("W&B takes on/off from the endpoint and effort from the authored file", () => {
+  const effort = { type: "effort" as const, values: ["high" as const, "max" as const] };
+  expect(mergeReasoningOptions([{ type: "toggle" }], [effort])).toEqual([{ type: "toggle" }, effort]);
+  expect(mergeReasoningOptions([], [{ type: "toggle" }, effort])).toEqual([effort]);
+  expect(mergeReasoningOptions([{ type: "toggle" }], [{ type: "effort", values: ["none", "high"] }]))
+    .toEqual([{ type: "effort", values: ["none", "high"] }]);
+  expect(mergeReasoningOptions([{ type: "toggle" }], [{ type: "toggle" }])).toEqual([{ type: "toggle" }]);
+  expect(mergeReasoningOptions([], [{ type: "budget_tokens" }])).toEqual([]);
+  expect(mergeReasoningOptions([], undefined)).toEqual([]);
 });
 
 test("formats reasoning efforts from lowest to highest", () => {

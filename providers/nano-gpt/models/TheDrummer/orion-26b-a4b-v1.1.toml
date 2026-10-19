@@ -1,0 +1,27 @@
+name = "Orion 26B A4B v1.1"
+description = "TheDrummer's Gemma 4 26B A4B fine-tune for creative writing, roleplay, and expressive dialogue. Supports optional thinking with a 65,536-token context window and up to 8,192 output tokens. Text input only."
+release_date = "2026-10-16"
+last_updated = "2026-10-16"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.1
+output = 0.45
+cache_read = 0.05
+
+[limit]
+context = 65_536
+input = 65_536
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

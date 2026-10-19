@@ -1,9 +1,10 @@
 name = "OpenCode Go"
 env = ["OPENCODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Shared Go inference base (accessed 2026-10-12): `/inference/go/v1` serves the
-# same chat completions, responses, messages, and Gemini paths as
-# `/inference/v1`, billed against the Go subscription. Requests require
-# `x-opencode-session`. https://opencode.ai/v2/docs/console/go/
-api = "https://opencode.ai/inference/go/v1"
+# Every model sets its own `provider.api` for its protocol (accessed 2026-10-15):
+# the `/inference/go/...` equivalents of the standard paths, billed against the Go
+# subscription. `api` here is required by the schema for
+# `@ai-sdk/openai-compatible`. Requests require `x-opencode-session`.
+# https://opencode.ai/v2/docs/console/go/
+api = "https://opencode.ai/inference/go/openai/v1"
 doc = "https://opencode.ai/v2/docs/console/go/"

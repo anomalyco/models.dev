@@ -1,0 +1,21 @@
+type = "decision"
+name = "Jev 1.14.0"
+description = "Jev 1.14.0 is TypeSafe AI’s System One evaluation model for fast, structured decisions in software. It evaluates shared state against typed questions and returns choices, scores, and boolean probabilities, supporting classification, routing, rubric-based assessment, and automated verification. Multiple questions can be evaluated in parallel within a single request."
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.042
+output = 0
+
+[limit]
+context = 32_000
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

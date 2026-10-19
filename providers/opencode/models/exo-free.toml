@@ -10,6 +10,7 @@ reasoning_options = [
 tool_call = true
 temperature = false
 open_weights = false
+status = "deprecated"
 
 [cost]
 input = 0
@@ -22,3 +23,6 @@ output = 131_072
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

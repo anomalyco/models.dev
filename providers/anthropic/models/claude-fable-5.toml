@@ -1,29 +1,35 @@
+schema = 2
 name = "Claude Fable 5"
 description = "Claude model for creative writing, analysis, and controlled agent workflows"
 family = "claude-fable"
+open_weights = false
 release_date = "2026-06-07"
 last_updated = "2026-06-09"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+temperature = false
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = { "5m" = 12.5, "1h" = 20 } }
+
+[cost.text.output]
+price = 50
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = 1.1
