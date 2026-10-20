@@ -1,28 +1,27 @@
+schema = 2
 name = "Beam 1.0 501B A23B"
 description = "Reflection's Apache 2.0 open-weight text model with 501.3B total and 23.4B active parameters, built for coding, reasoning and tool use. It supports a shared 1,048,576-token context window, up to 131,072 output tokens, JSON mode and structured output. Reasoning is always enabled with low, medium, high, xhigh and max effort; NanoGPT defaults to max. Knowledge cutoff: June 30, 2026."
 family = "beam"
-release_date = "2026-10-16"
-last_updated = "2026-10-16"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-10-16"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.5
-output = 1.5
-cache_read = 0.05
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 input = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.5

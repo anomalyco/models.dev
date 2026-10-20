@@ -1,23 +1,26 @@
+schema = 2
 name = "Qwen3 VL 235B A22B Instruct Original"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-09-25"
-last_updated = "2025-09-25"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-09-25"
 
-[cost]
-input = 0.3
-output = 1.9
-cache_read = 0.15
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 32_768
 input = 32_768
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 1.9

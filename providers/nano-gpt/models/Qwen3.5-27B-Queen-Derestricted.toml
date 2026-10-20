@@ -1,29 +1,28 @@
 # Included in subscription
+schema = 2
 name = "Qwen3.5 27B Queen Derestricted"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "qwen3.5"
-release_date = "2026-04-30"
-last_updated = "2026-04-30"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-04-30"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.306
-output = 0.306
-cache_read = 0.153
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.306
+cache = { read = 0.153 }
+
+[cost.text.output]
+price = 0.306

@@ -1,22 +1,25 @@
+schema = 2
 name = "LightOnOCR 2"
 description = "LightOnOCR 2 hosted by IONOS in Berlin, Germany. Zero data retention."
-release_date = "2026-09-10"
-last_updated = "2026-09-10"
-attachment = true
-reasoning = false
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-09-10"
 
-[cost]
-input = 0.1785
-output = 0.3465
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 32_768
 input = 32_768
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1785
+
+[cost.text.output]
+price = 0.3465

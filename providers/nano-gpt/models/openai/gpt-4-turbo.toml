@@ -1,10 +1,15 @@
+schema = 2
 base_model = "openai/gpt-4-turbo"
-structured_output = false
-tool_call = false
 
-[cost]
-input = 10
-output = 30
+[capabilities]
+tools = { supported = false }
+structured_output = false
 
 [limit]
 input = 128_000
+
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 30

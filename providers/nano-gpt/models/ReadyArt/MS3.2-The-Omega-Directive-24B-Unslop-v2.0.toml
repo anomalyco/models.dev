@@ -1,24 +1,27 @@
+schema = 2
 name = "Omega Directive 24B Unslop v2.0"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
-release_date = "2025-12-08"
-last_updated = "2025-12-08"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-12-08"
 
-[cost]
-input = 0.5
-output = 0.5
-cache_read = 0.25
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 32_768
 input = 32_768
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 0.5

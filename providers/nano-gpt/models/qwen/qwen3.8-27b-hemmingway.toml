@@ -1,25 +1,27 @@
+schema = 2
 name = "Qwen 3.8 27B Hemingway"
 description = "Qwen 3.8 27B Hemingway is an open-weight NVFP4 multimodal creative finetune for long-form prose, character dialogue, storytelling, and roleplay."
 family = "qwen"
-release_date = "2026-09-21"
-last_updated = "2026-09-21"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = false
 open_weights = true
-reasoning_options = []
+release_date = "2026-09-21"
 
-[cost]
-input = 0.25
-output = 1.5
-cache_read = 0.125
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 1.5

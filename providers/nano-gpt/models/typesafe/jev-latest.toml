@@ -1,12 +1,17 @@
+schema = 2
 base_model = "typesafe/jev-latest"
 name = "Jev Latest"
-structured_output = false
 
-[cost]
-input = 0.042
-output = 0
-cache_read = 0.021
+[capabilities]
+structured_output = false
 
 [limit]
 context = 32_000
 input = 32_000
+
+[cost.text.input]
+price = 0.042
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 0

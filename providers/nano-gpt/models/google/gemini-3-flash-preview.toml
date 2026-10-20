@@ -1,18 +1,21 @@
+schema = 2
 base_model = "google/gemini-3-flash-preview"
-structured_output = true
 name = "Gemini 3 Flash (Preview)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
 
 [limit]
 input = 1_048_576
 
-[modalities]
-input = ["text", "image", "video", "audio"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3

@@ -1,23 +1,26 @@
+schema = 2
 name = "NanoGPT Help"
 description = "Text-only NanoGPT support assistant. Questions are processed by the Help inference provider; do not paste secrets or account credentials. Covers the website, models, API, pricing, memory, media generation, and support."
 family = "gpt"
-release_date = "2026-06-06"
-last_updated = "2026-06-06"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2026-06-06"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 6_000
 input = 6_000
 output = 512
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,12 +1,17 @@
 # Not included in subscription
+schema = 2
 base_model = "inception/mercury-2"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.25
-output = 0.75
-cache_read = 0.025
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 input = 128_000
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.75

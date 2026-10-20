@@ -1,24 +1,28 @@
+schema = 2
 name = "Gemma 3 12B IT"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 family = "unsloth"
+open_weights = true
 release_date = "2024-01-01"
 last_updated = "2025-03-10"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.272
-output = 0.272
-cache_read = 0.136
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 131_072
 input = 131_072
 output = 16_384
 
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.272
+cache = { read = 0.136 }
+
+[cost.text.output]
+price = 0.272

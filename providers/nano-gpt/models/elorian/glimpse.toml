@@ -1,24 +1,26 @@
+schema = 2
 name = "Elorian Glimpse"
 description = "Glimpse is Elorian's visual reasoning model for understanding images and video and answering in text. It can analyze charts, count objects, follow events over time, and reason about spatial relationships and physical cause and effect. It supports tool calling and structured output across a shared 262,144-token context window, with up to 256,000 output tokens within the remaining context."
-release_date = "2026-10-17"
-last_updated = "2026-10-17"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
-reasoning_options = []
+release_date = "2026-10-17"
 
-[cost]
-input = 0.63
-output = 3.15
-cache_read = 0.063
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 262_144
 input = 262_144
 output = 256_000
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.63
+cache = { read = 0.063 }
+
+[cost.text.output]
+price = 3.15

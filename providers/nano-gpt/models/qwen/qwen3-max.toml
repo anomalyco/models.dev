@@ -1,14 +1,19 @@
 # Included in subscription
+schema = 2
 base_model = "alibaba/qwen3-max"
-tool_call = false
-structured_output = false
 
-[cost]
-input = 1.2002
-output = 6.001
-cache_read = 0.6001
+[capabilities]
+tools = { supported = false }
+structured_output = false
 
 [limit]
 context = 256_000
 input = 256_000
 output = 32_768
+
+[cost.text.input]
+price = 1.2002
+cache = { read = 0.6001 }
+
+[cost.text.output]
+price = 6.001

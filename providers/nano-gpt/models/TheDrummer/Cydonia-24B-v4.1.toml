@@ -1,13 +1,18 @@
 # Included in subscription
+schema = 2
 base_model = "thedrummer/cydonia-24b-v4.1"
 name = "The Drummer Cydonia 24B v4.1"
-tool_call = true
-structured_output = false
 
-[cost]
-input = 0.3
-output = 0.5
-cache_read = 0.15
+[capabilities]
+tools = { supported = true }
+structured_output = false
 
 [limit]
 input = 131_072
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 0.5

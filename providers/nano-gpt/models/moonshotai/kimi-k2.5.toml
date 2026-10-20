@@ -1,15 +1,21 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
-reasoning = false
-structured_output = false
 
-[cost]
-input = 0.375
-output = 2
-cache_read = 0.07
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 input = 262_144
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.375
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2

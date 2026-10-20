@@ -1,28 +1,28 @@
+schema = 2
 name = "OpenAI o3-mini (Low)"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 family = "o-mini"
+open_weights = false
 release_date = "2026-01-31"
 last_updated = "2025-01-31"
-attachment = false
-reasoning = true
-tool_call = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.55
 
 [limit]
 context = 200_000
 input = 200_000
 output = 100_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4

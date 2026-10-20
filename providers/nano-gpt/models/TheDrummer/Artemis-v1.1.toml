@@ -1,24 +1,26 @@
+schema = 2
 name = "TheDrummer/Artemis v1.1"
 description = "TheDrummer's Artemis v1.1 is a Gemma 4 31B fine-tune for creative writing, expressive dialogue, and roleplay, with optional thinking and a 262K context window."
-release_date = "2026-09-06"
-last_updated = "2026-09-06"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = false
 open_weights = true
-reasoning_options = []
+release_date = "2026-09-06"
 
-[cost]
-input = 0.1
-output = 0.45
-cache_read = 0.05
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.45

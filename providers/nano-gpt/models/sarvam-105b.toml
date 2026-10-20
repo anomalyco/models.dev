@@ -1,16 +1,18 @@
 # Not included in subscription
+schema = 2
 base_model = "sarvam/sarvam-105b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.054
-output = 0.2124
-cache_read = 0.0336
 
 [limit]
 input = 131_072
 output = 4_096
+
+[cost.text.input]
+price = 0.054
+cache = { read = 0.0336 }
+
+[cost.text.output]
+price = 0.2124

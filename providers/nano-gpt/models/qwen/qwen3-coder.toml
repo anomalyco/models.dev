@@ -1,25 +1,28 @@
 # Included in subscription
+schema = 2
 name = "Qwen 3 Coder 480B"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 family = "qwen"
-release_date = "2026-03-17"
-last_updated = "2026-03-17"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-03-17"
 
-[cost]
-input = 0.13
-output = 0.5
-cache_read = 0.065
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 262_000
 input = 262_000
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.13
+cache = { read = 0.065 }
+
+[cost.text.output]
+price = 0.5

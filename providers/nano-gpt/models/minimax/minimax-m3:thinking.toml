@@ -1,18 +1,24 @@
 # Included in subscription
+schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3 Thinking"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.23
-output = 0.96
-cache_read = 0.05
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 512_000
 input = 512_000
 output = 80_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.23
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.96

@@ -1,15 +1,21 @@
+schema = 2
 base_model = "mistral/mistral-medium-3"
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.4
-output = 2
-cache_read = 0.2
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
 
 [limit]
 input = 131_072
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2

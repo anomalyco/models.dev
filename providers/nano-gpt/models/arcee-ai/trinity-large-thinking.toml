@@ -1,14 +1,19 @@
 # Not included in subscription
+schema = 2
 base_model = "arcee-ai/trinity-large-thinking"
-structured_output = false
-reasoning_options = []
 
-[cost]
-input = 0.25
-output = 0.9
-cache_read = 0.125
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 80_000
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 0.9

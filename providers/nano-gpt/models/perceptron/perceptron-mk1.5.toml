@@ -1,26 +1,25 @@
+schema = 2
 name = "Perceptron Mk1.5"
 description = "Perceptron Mk1.5 is a multimodal reasoning model for visual analysis and physical agents. It accepts text, images, video, and audio, supports tool calling and structured output, and can return spatial annotations such as points, boxes, polygons, and tracks."
-release_date = "2026-09-25"
-last_updated = "2026-09-25"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-25"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 1.5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 36_864
 input = 36_864
 output = 8_192
 
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.5

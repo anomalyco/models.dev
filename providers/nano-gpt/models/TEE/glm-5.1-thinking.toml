@@ -1,18 +1,20 @@
 # Not included in subscription
+schema = 2
 base_model = "zhipuai/glm-5.1"
-structured_output = true
 name = "GLM 5.1 Thinking TEE"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.7
-output = 2.5
-cache_read = 0.18
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 context = 202_752
 input = 202_752
 output = 65_535
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 2.5

@@ -1,19 +1,24 @@
+schema = 2
 base_model = "bytedance-seed/seed-2.0-code"
 name = "Doubao Seed 2.0 Code Preview"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.782
-output = 3.893
-cache_read = 0.391
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 256_000
 input = 256_000
 output = 128_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.782
+cache = { read = 0.391 }
+
+[cost.text.output]
+price = 3.893

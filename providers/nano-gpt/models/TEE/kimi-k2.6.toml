@@ -1,17 +1,23 @@
 # Not included in subscription
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 TEE"
-reasoning = false
-structured_output = false
 
-[cost]
-input = 1.5
-output = 5.25
-cache_read = 0.375
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 input = 262_144
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.5
+cache = { read = 0.375 }
+
+[cost.text.output]
+price = 5.25

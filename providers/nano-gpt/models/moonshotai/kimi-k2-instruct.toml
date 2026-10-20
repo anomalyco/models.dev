@@ -1,12 +1,17 @@
+schema = 2
 base_model = "moonshotai/kimi-k2-instruct"
-structured_output = true
 
-[cost]
-input = 0.4
-output = 1.8
-cache_read = 0.2
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
 input = 256_000
 output = 8_192
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.8

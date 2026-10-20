@@ -1,28 +1,27 @@
+schema = 2
 name = "Gemini 2.5 Pro Preview 0506"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gemini"
-release_date = "2025-05-06"
-last_updated = "2025-05-06"
-attachment = true
-reasoning = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-05-06"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
 
-[cost]
-input = 2.5
-output = 10
-cache_read = 0.25
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
 
 [limit]
 context = 1_048_576
 input = 1_048_576
 output = 65_536
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 10

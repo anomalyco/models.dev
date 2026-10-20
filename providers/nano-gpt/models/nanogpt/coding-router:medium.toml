@@ -1,25 +1,27 @@
 # Not included in subscription
+schema = 2
 name = "Coding Router Medium"
 description = "Automatic model router for matching prompts to suitable backends and budgets"
-release_date = "2026-05-12"
-last_updated = "2026-05-12"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
-structured_output = true
 open_weights = false
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.028
-
-[limit]
-context = 1000000
-input = 1000000
-output = 128000
+release_date = "2026-05-12"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 128_000
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 0.28

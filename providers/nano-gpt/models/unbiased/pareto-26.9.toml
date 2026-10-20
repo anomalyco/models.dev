@@ -1,23 +1,26 @@
+schema = 2
 name = "Pareto 26.9"
 description = "Pareto 26.9 is an experimental multimodal composite model from Unbiased AI for research, coding, agentic workflows, and general-purpose tasks. It runs several frontier and open models for each request and returns a single selected or synthesized answer. This experimental release supports text and image input, tool calling, a 262K-token context window, and up to 131K output tokens. Its underlying model mix and behavior may change as it is evaluated. Request content may be retained for abuse prevention and security monitoring for up to 30 days, and is not used for model training without explicit consent."
-release_date = "2026-09-18"
-last_updated = "2026-09-18"
-attachment = true
-reasoning = false
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-09-18"
 
-[cost]
-input = 2.5
-output = 7.5
-cache_read = 0.25
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 7.5

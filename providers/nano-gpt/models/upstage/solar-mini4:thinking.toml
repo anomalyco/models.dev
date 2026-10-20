@@ -1,15 +1,17 @@
+schema = 2
 base_model = "upstage/solar-mini4"
 name = "Solar Mini 4 Thinking"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 0.05
-output = 0.2
-cache_read = 0.005
 
 [limit]
 input = 524_288
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.2

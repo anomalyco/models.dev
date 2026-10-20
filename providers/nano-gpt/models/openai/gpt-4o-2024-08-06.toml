@@ -1,10 +1,15 @@
+schema = 2
 base_model = "openai/gpt-4o-2024-08-06"
-structured_output = false
 
-[cost]
-input = 2.5
-output = 10
-cache_read = 1.25
+[capabilities]
+structured_output = false
 
 [limit]
 input = 128_000
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

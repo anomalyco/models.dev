@@ -1,14 +1,19 @@
 # Not included in subscription
+schema = 2
 base_model = "zhipuai/glm-5-turbo"
-structured_output = true
 name = "GLM 5 Turbo"
-reasoning = false
 
-[cost]
-input = 1.2
-output = 4
-cache_read = 0.24
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 202_800
 input = 202_800
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 4

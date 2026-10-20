@@ -1,15 +1,20 @@
 # Included in subscription
+schema = 2
 base_model = "alibaba/qwen3-30b-a3b"
-reasoning = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.05
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 41_000
 input = 41_000
 output = 32_768
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.3

@@ -1,25 +1,28 @@
 # Included in subscription
+schema = 2
 name = "Mistral Code Agent Latest"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "mistral"
-release_date = "2026-06-02"
-last_updated = "2026-06-02"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-06-02"
 
-[cost]
-input = 0.4
-output = 2
-cache_read = 0.2
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2

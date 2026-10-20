@@ -1,20 +1,22 @@
+schema = 2
 base_model = "openai/o3"
 name = "OpenAI o3"
-attachment = false
-tool_call = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 2
-output = 8
-cache_read = 1
 
 [limit]
 input = 200_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 2
+cache = { read = 1 }
+
+[cost.text.output]
+price = 8

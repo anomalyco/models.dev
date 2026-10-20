@@ -1,12 +1,16 @@
+schema = 2
 base_model = "anthropic/claude-sonnet-5"
-reasoning = false
-structured_output = true
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 input = 1_000_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10

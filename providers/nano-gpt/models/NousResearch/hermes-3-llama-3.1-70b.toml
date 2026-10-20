@@ -1,15 +1,20 @@
 # Included in subscription
+schema = 2
 base_model = "nousresearch/hermes-3-llama-3.1-70b"
 name = "Hermes 3 70B"
-tool_call = true
-structured_output = false
 
-[cost]
-input = 0.408
-output = 0.408
-cache_read = 0.204
+[capabilities]
+tools = { supported = true }
+structured_output = false
 
 [limit]
 context = 65_536
 input = 65_536
 output = 8_192
+
+[cost.text.input]
+price = 0.408
+cache = { read = 0.204 }
+
+[cost.text.output]
+price = 0.408

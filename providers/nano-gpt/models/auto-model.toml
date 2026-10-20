@@ -1,23 +1,27 @@
+schema = 2
 name = "Auto model"
 description = "Automatic model router for matching prompts to suitable backends and budgets"
 family = "auto"
+open_weights = false
 release_date = "2025-04-16"
 last_updated = "2024-06-01"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = false
-open_weights = false
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 1_000_000
 input = 1_000_000
 output = 1_000_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

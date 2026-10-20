@@ -1,12 +1,17 @@
 # Not included in subscription
+schema = 2
 base_model = "perceptron/perceptron-mk1"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.15
-output = 1.5
-cache_read = 0.075
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 input = 32_768
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.5

@@ -1,24 +1,27 @@
+schema = 2
 name = "GLM 4.1V Thinking FlashX"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "glm-flash"
-release_date = "2025-07-09"
-last_updated = "2025-07-09"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-07-09"
 
-[cost]
-input = 0.3
-output = 0.3
-cache_read = 0.15
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 64_000
 input = 64_000
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 0.3

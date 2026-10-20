@@ -1,29 +1,28 @@
 # Not included in subscription
+schema = 2
 name = "Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2026-03-31"
-last_updated = "2026-03-31"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-03-31"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
 
 [limit]
 context = 2_000_000
 input = 2_000_000
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.5

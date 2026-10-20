@@ -1,27 +1,26 @@
+schema = 2
 name = "Abliterated Model Large V2"
 description = "Abliteration.ai's default large text reasoning model is derived from GLM-5.3 for harder reasoning and evaluation workloads, with automatic prompt caching and a one-million-token context window."
-release_date = "2026-08-31"
-last_updated = "2026-08-31"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-31"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 3
-output = 5
-cache_read = 0.3
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_000_000
 input = 1_000_000
 output = 999_990
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 5

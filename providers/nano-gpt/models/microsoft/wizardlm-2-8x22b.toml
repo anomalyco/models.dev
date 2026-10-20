@@ -1,16 +1,21 @@
+schema = 2
 base_model = "microsoft/wizardlm-2-8x22b"
 name = "WizardLM-2 8x22B"
-attachment = true
-structured_output = false
 
-[cost]
-input = 0.493
-output = 0.493
-cache_read = 0.2465
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
 
 [limit]
 input = 65_536
 output = 8_192
 
-[modalities]
-input = ["text", "pdf"]
+[cost.text.input]
+price = 0.493
+cache = { read = 0.2465 }
+
+[cost.text.output]
+price = 0.493

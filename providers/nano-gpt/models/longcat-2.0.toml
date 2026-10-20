@@ -1,12 +1,17 @@
+schema = 2
 base_model = "meituan/longcat-2.0"
 name = "LongCat 2.0"
-reasoning = false
-structured_output = false
 
-[cost]
-input = 0.75
-output = 3
-cache_read = 0.015
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 input = 1_000_000
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 3

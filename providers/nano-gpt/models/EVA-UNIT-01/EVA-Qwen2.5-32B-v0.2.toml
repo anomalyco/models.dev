@@ -1,24 +1,27 @@
+schema = 2
 name = "EVA-Qwen2.5-32B-v0.2"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-07-26"
-last_updated = "2025-07-26"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-07-26"
 
-[cost]
-input = 0.799
-output = 0.799
-cache_read = 0.3995
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 16_384
 input = 16_384
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.799
+cache = { read = 0.3995 }
+
+[cost.text.output]
+price = 0.799

@@ -1,27 +1,26 @@
+schema = 2
 name = "DiffusionGemma"
 description = "DiffusionGemma is a high-speed diffusion-based version of Gemma 4 26B A4B. It supports optional reasoning and a 262,144-token context window."
-release_date = "2026-09-19"
-last_updated = "2026-09-19"
-attachment = false
-reasoning = true
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2026-09-19"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "xhigh"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.05
-output = 0.15
-cache_read = 0.025
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "xhigh"] }
+structured_output = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.05
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.15

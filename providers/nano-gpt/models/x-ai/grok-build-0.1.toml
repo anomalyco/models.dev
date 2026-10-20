@@ -1,19 +1,22 @@
 # Not included in subscription
+schema = 2
 base_model = "xai/grok-build-0.1"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
 
 [limit]
 input = 256_000
 output = 230_400
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2

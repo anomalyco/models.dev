@@ -1,19 +1,21 @@
+schema = 2
 base_model = "openai/o4-mini"
-structured_output = true
 name = "OpenAI o4-mini"
-attachment = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.55
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 input = 200_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4

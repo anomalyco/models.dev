@@ -1,15 +1,20 @@
+schema = 2
 base_model = "deepseek/deepseek-v3.2"
 name = "DeepSeek V3.2 TEE"
-reasoning = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.5
-output = 1
-cache_read = 0.25
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 164_000
 input = 164_000
 output = 65_536
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 1

@@ -1,12 +1,17 @@
+schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 name = "Qwen3 Coder 30B A3B Instruct"
-structured_output = true
 
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.05
+[capabilities]
+structured_output = true
 
 [limit]
 context = 128_000
 input = 128_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.4

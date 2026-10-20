@@ -1,17 +1,18 @@
+schema = 2
 base_model = "alibaba/qwen3.7-max"
 name = "Qwen3.7 Max Thinking"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 1.475
-output = 4.425
-cache_read = 0.295
-cache_write = 1.84375
 
 [limit]
 input = 1_000_000
 output = 65_536
+
+[cost.text.input]
+price = 1.475
+cache = { read = 0.295, write = 1.84375 }
+
+[cost.text.output]
+price = 4.425

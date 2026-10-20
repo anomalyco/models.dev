@@ -1,17 +1,22 @@
+schema = 2
 base_model = "amazon/nova-pro-v1"
 name = "Amazon Nova Pro 1.0"
-attachment = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.799
-output = 3.196
-cache_read = 0.3995
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
 
 [limit]
 input = 300_000
 output = 32_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.799
+cache = { read = 0.3995 }
+
+[cost.text.output]
+price = 3.196

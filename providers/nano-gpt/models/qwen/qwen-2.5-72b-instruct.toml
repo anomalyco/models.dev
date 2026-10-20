@@ -1,25 +1,28 @@
 # Included in subscription
+schema = 2
 name = "Qwen2.5 72B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-07-03"
-last_updated = "2025-07-03"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2025-07-03"
 
-[cost]
-input = 0.36
-output = 0.4
-cache_read = 0.1785
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 131_072
 input = 131_072
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.36
+cache = { read = 0.1785 }
+
+[cost.text.output]
+price = 0.4

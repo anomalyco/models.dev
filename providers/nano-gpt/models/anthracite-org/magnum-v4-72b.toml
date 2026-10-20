@@ -1,16 +1,21 @@
+schema = 2
 base_model = "anthracite-org/magnum-v4-72b"
-attachment = true
-structured_output = false
 
-[cost]
-input = 2.006
-output = 2.992
-cache_read = 1.003
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
 
 [limit]
 context = 16_384
 input = 16_384
 output = 8_192
 
-[modalities]
-input = ["text", "pdf"]
+[cost.text.input]
+price = 2.006
+cache = { read = 1.003 }
+
+[cost.text.output]
+price = 2.992

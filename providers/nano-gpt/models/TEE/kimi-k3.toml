@@ -1,19 +1,22 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 TEE"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 3
-output = 15
-cache_read = 1.5
 
 [limit]
 input = 1_048_576
 output = 65_535
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 3
+cache = { read = 1.5 }
+
+[cost.text.output]
+price = 15

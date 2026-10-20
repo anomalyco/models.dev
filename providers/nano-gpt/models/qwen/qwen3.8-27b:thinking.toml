@@ -1,13 +1,18 @@
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B Thinking"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.15
-output = 0.7
-cache_read = 0.04
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_001_536
 input = 1_001_536
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.7

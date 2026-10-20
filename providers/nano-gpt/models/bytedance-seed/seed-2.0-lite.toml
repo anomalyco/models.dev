@@ -1,16 +1,21 @@
 # Not included in subscription
+schema = 2
 base_model = "bytedance-seed/seed-2.0-lite"
 name = "ByteDance Seed 2.0 Lite"
-reasoning = false
-tool_call = false
-structured_output = true
 
-[cost]
-input = 0.25
-output = 2
-cache_read = 0.125
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 262_144
 input = 262_144
 output = 131_072
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 2

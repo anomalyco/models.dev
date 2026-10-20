@@ -1,29 +1,27 @@
+schema = 2
 name = "Doubao Seed Character"
 description = "ByteDance's character-focused Doubao Seed model for roleplay, persona consistency, dialogue, and creative character interactions. It supports text and image input with a 128k context window. Requests route through ZenMux to ByteDance; ZenMux does not publish a model-API zero-retention or training guarantee, so avoid sensitive data."
 family = "seed"
-release_date = "2026-07-18"
-last_updated = "2026-07-18"
-attachment = true
-reasoning = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2026-07-18"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.37
-cache_read = 0.03
-cache_write = 0.003
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
 
 [limit]
 context = 128_000
 input = 128_000
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03, write = 0.003 }
+
+[cost.text.output]
+price = 0.37

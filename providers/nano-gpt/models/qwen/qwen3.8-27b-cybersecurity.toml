@@ -1,25 +1,27 @@
+schema = 2
 name = "Qwen 3.8 27B Cybersecurity"
 description = "Qwen 3.8 27B Cybersecurity is a cybersecurity-focused variant based on the uncensored model, with provider moderation for illegal activities. It supports optional reasoning, image understanding, tool calling, and a 262,144-token context window."
 family = "qwen"
-release_date = "2026-09-19"
-last_updated = "2026-09-19"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = false
 open_weights = true
-reasoning_options = []
+release_date = "2026-09-19"
 
-[cost]
-input = 0.1
-output = 0.6
-cache_read = 0.05
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.6

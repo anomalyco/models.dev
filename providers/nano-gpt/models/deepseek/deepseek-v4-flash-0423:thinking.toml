@@ -1,16 +1,18 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0423"
-structured_output = true
 name = "DeepSeek V4 Flash 0423 (Thinking)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.028
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 input = 1_048_576
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 0.28

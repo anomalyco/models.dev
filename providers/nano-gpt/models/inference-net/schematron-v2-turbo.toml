@@ -1,10 +1,15 @@
+schema = 2
 base_model = "inference-net/schematron-v2-turbo"
-structured_output = true
 
-[cost]
-input = 0.03
-output = 0.15
-cache_read = 0.015
+[capabilities]
+structured_output = true
 
 [limit]
 input = 128_000
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.15

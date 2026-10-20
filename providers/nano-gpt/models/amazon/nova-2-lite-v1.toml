@@ -1,17 +1,22 @@
+schema = 2
 base_model = "amazon/nova-2-lite-v1"
 name = "Amazon Nova 2 Lite"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.51
-output = 4.25
-cache_read = 0.255
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 input = 1_000_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.51
+cache = { read = 0.255 }
+
+[cost.text.output]
+price = 4.25

@@ -1,13 +1,18 @@
 # Not included in subscription
+schema = 2
 base_model = "aion-labs/aion-2.0"
 name = "AionLabs: Aion-2.0"
-reasoning = false
-structured_output = false
 
-[cost]
-input = 0.8
-output = 1.6
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 input = 131_072
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.6

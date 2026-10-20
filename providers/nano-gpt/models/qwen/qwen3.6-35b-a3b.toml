@@ -1,13 +1,18 @@
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B A3B"
-reasoning = false
-structured_output = false
 
-[cost]
-input = 0.112
-output = 0.8
-cache_read = 0.056
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 input = 262_144
 output = 16_384
+
+[cost.text.input]
+price = 0.112
+cache = { read = 0.056 }
+
+[cost.text.output]
+price = 0.8

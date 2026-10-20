@@ -1,18 +1,19 @@
 # Not included in subscription
 # Tracks Gemini 3.1 Flash Lite (current flash-lite-latest target).
+schema = 2
 base_model = "google/gemini-flash-lite-latest"
-structured_output = true
 name = "Gemini Flash Lite Latest"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
-
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.03
-cache_write = 0.08333
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
 
 [limit]
 input = 1_048_576
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.08333 }
+
+[cost.text.output]
+price = 2.5

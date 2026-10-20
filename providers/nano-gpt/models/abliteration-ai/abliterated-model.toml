@@ -1,27 +1,26 @@
+schema = 2
 name = "Abliterated Model"
 description = "Abliteration.ai's multimodal reasoning model supports text and image input, structured output, automatic prompt caching, and a 262K-token context window."
-release_date = "2026-08-27"
-last_updated = "2026-08-27"
-attachment = true
-reasoning = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2026-08-27"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 1
-output = 3
-cache_read = 0.1
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 262_144
 input = 262_144
 output = 262_134
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3

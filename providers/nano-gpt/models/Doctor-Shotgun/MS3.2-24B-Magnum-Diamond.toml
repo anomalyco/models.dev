@@ -1,24 +1,27 @@
+schema = 2
 name = "MS3.2 24B Magnum Diamond"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral"
-release_date = "2025-11-24"
-last_updated = "2025-11-24"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-11-24"
 
-[cost]
-input = 0.493
-output = 0.493
-cache_read = 0.2465
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 32_768
 input = 32_768
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.493
+cache = { read = 0.2465 }
+
+[cost.text.output]
+price = 0.493

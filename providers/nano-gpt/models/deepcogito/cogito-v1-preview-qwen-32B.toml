@@ -1,24 +1,27 @@
+schema = 2
 name = "Cogito v1 Preview Qwen 32B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-05-10"
-last_updated = "2025-05-10"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-05-10"
 
-[cost]
-input = 1.8
-output = 1.8
-cache_read = 0.9
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 128_000
 input = 128_000
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.8
+cache = { read = 0.9 }
+
+[cost.text.output]
+price = 1.8

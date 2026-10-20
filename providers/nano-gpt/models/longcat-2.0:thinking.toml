@@ -1,12 +1,17 @@
+schema = 2
 base_model = "meituan/longcat-2.0"
 name = "LongCat 2.0 Thinking"
-structured_output = false
-reasoning_options = []
 
-[cost]
-input = 0.75
-output = 3
-cache_read = 0.015
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 input = 1_000_000
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 3

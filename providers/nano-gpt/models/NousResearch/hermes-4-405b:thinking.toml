@@ -1,15 +1,20 @@
 # Included in subscription
+schema = 2
 base_model = "nousresearch/hermes-4-405b"
 name = "Hermes 4 Large (Thinking)"
-reasoning = false
-structured_output = true
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 128_000
 input = 128_000
 output = 8_192
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 1.2

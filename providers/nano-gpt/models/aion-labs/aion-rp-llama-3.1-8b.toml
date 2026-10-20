@@ -1,13 +1,18 @@
+schema = 2
 base_model = "aion-labs/aion-rp-llama-3.1-8b"
 name = "Llama 3.1 8b (uncensored)"
-tool_call = true
-structured_output = false
 
-[cost]
-input = 0.8
-output = 1.6
-cache_read = 0.4
+[capabilities]
+tools = { supported = true }
+structured_output = false
 
 [limit]
 input = 32_768
 output = 16_384
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 1.6

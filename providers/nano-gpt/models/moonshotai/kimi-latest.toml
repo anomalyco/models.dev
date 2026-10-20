@@ -1,29 +1,28 @@
 # Included in subscription
+schema = 2
 name = "Kimi Latest"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi"
-release_date = "2026-05-03"
-last_updated = "2026-05-03"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-05-03"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
-[cost]
-input = 1.2
-output = 5.5
-cache_read = 0.2
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 input = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 1.2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 5.5
