@@ -1,0 +1,39 @@
+# Sources (pricing and API pages accessed 2026-10-20; GET /v1/models read 2026-10-17):
+# https://superbot.gg/pricing  list prices, API and MCP lane, USD per 1M tokens; reasoning tokens bill as output; fast mode bills 2x every rate
+# https://superbot.gg/api  the house models and their context windows
+# GET https://api.superbot.gg/v1/models (needs a caller key)  context_length 500000, reasoning_efforts, default_reasoning_effort, service_tiers
+# Effort: reasoning_effort = none|low (default low). On /v1/responses the field is reasoning.effort.
+# Fast mode: service_tier = "priority" (or "fast"), 2x every rate.
+# Formerly superbot-flash; that id is still accepted.
+# A model served only at this host, not a lab release, so this is a full definition and not a base_model file.
+name = "superbot-fast"
+description = "The quick superbot model, for small jobs. Low reasoning effort or none, a 500k-token window, tool calls, same rates as superbot."
+release_date = "2026-09"
+last_updated = "2026-10"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low"]
+
+[cost]
+input = 1.00
+output = 5.00
+reasoning = 5.00
+cache_read = 0.05
+cache_write = 1.25
+
+[limit]
+context = 500_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[experimental.modes.fast]
+cost = { input = 2.00, output = 10.00, reasoning = 10.00, cache_read = 0.10, cache_write = 2.50 }
+provider = { body = { service_tier = "priority" } }
