@@ -4,6 +4,9 @@
 # Blog: https://mistral.ai/news/leanstral-1-5/ (free Apache-2.0, 119B total)
 # Fallback for 1.5.1 revision identity (same 119B/6.5B 256K recipe as 1.5): https://opper.ai/mistral/labs-leanstral-1-5-1
 # Mistral /v1/models exposes labs-leanstral-1-5-1 (this issue); docs list the same Leanstral 1.5 line as labs-leanstral-1-5.
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF).
+# Not probed live: Labs models need an organization opt-in (403 on 2026-10-19), so mid-conversation flags are unset.
+# Sampling: the chat API takes temperature and top_p but has no top_k (https://docs.mistral.ai/api/endpoint/chat).
 schema = 2
 name = "Leanstral 1.5"
 description = "An updated Lean 4 formal proof engineering model optimised for automated theorem proving and autoformalization. 119B total parameters, 6.5B active."
@@ -13,7 +16,7 @@ release_date = "2026-06-30"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
@@ -21,6 +24,8 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 262_144

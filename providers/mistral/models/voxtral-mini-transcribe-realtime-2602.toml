@@ -1,0 +1,12 @@
+# Sources:
+#   GET https://api.mistral.ai/v1/models (voxtral-mini-transcribe-realtime-2602, aliases voxtral-mini-realtime-2602 and
+#     voxtral-mini-realtime-latest; capability audio_transcription_realtime)
+#   https://docs.mistral.ai/models/voxtral-mini-transcribe-realtime-26-02 and https://docs.mistral.ai/inference/pricing
+#     ($0.006 per minute of audio)
+schema = 2
+v2_only = true
+base_model = "mistral/voxtral-mini-transcribe-realtime-2602"
+
+[cost.audio.input]
+unit = "minute"
+price = 0.006

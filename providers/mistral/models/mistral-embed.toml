@@ -1,4 +1,7 @@
+# Model: https://docs.mistral.ai/models/mistral-embed-23-12 (embedding model on POST /v1/embeddings; API IDs
+# mistral-embed-2312, mistral-embed; $0.1 per MTok input).
 schema = 2
+type = "embedding"
 name = "Mistral Embed"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "mistral-embed"
@@ -13,6 +16,8 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 8_000

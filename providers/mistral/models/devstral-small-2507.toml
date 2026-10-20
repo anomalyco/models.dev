@@ -1,3 +1,4 @@
+# Sampling: the chat API takes temperature and top_p but has no top_k (https://docs.mistral.ai/api/endpoint/chat).
 schema = 2
 name = "Devstral Small"
 description = "Legacy model retained for compatibility with older integrations"
@@ -15,6 +16,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 128_000

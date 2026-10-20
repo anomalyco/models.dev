@@ -1,3 +1,4 @@
+# Sampling: the chat API takes temperature and top_p but has no top_k (https://docs.mistral.ai/api/endpoint/chat).
 schema = 2
 base_model = "mistral/mistral-large-2411"
 status = "deprecated"
@@ -5,6 +6,9 @@ status = "deprecated"
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+top_k = false
 
 [limit]
 context = 131_072
