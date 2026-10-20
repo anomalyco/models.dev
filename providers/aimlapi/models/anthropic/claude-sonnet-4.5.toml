@@ -16,7 +16,7 @@ cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 4.1262
-cache = { read = 0.41262 }
+cache = { read = 0.41262, write = { "5m" = 5.15775, "1h" = 8.2524 } }
 
 [cost.text.output]
 price = 20.631

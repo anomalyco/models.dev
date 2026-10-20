@@ -9,6 +9,8 @@
 #   ones whose upstream has no explicit caching, so on its own it isn't evidence. Explicit
 #   5m/1h caching is set only where the chat-completions catalog row (/v1/models?include=pricing)
 #   also prices cache writes at both TTLs (cache_write, cache_write_1h): the Claude models.
+# - Cache write prices come from the catalog: one per TTL in cost.text.input.cache.write
+#   on those Claude files, and a single write price elsewhere (cache_write).
 name = "AI/ML API"
 env = ["AIMLAPI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
