@@ -1,4 +1,6 @@
 # Lab identity: https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct
+# Context 262,144: deepinfra context_length on https://router.huggingface.co/v1/models (2026-10-20); "262,144 natively" on the model card.
+# Output inherits the lab's 32,768: the router reports no output limit.
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3-Next-80B-A3B-Instruct"
@@ -9,7 +11,6 @@ effort_updates = false
 
 [limit]
 context = 262_144
-output = 66_536
 
 [cost.text.input]
 price = 0.25
