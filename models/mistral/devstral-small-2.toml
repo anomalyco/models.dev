@@ -1,6 +1,7 @@
 # Sources:
 # https://mistral.ai/news/devstral-2-vibe-cli/
 # https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 schema = 2
 name = "Devstral Small 2"
 description = "Compact multimodal coding model for repository exploration, file editing, and software agents"
@@ -11,7 +12,7 @@ release_date = "2025-12-09"
 license = "Apache-2.0"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

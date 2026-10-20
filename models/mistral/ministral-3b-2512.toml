@@ -1,5 +1,6 @@
 # Lab metadata carried over from providers/openrouter/models/mistralai/ministral-3b-2512.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 schema = 2
 name = "Ministral 3 3B 2512"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
@@ -8,7 +9,7 @@ open_weights = true
 release_date = "2025-12-02"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

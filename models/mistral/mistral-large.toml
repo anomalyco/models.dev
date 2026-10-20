@@ -1,5 +1,6 @@
 # Lab metadata carried over from providers/openrouter/models/mistralai/mistral-large.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
 schema = 2
 name = "Mistral Large"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
@@ -17,7 +18,7 @@ tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 128_000

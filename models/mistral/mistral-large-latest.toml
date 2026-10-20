@@ -1,3 +1,4 @@
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 schema = 2
 name = "Mistral Large (latest)"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
@@ -8,7 +9,7 @@ release_date = "2024-11-01"
 last_updated = "2025-12-02"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

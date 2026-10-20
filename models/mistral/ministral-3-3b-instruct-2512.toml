@@ -3,6 +3,7 @@
 # https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512/blob/main/generation_config.json
 # Native examples request max_tokens = 262144; generation_config.max_length is also 262144.
 # This is a shared prompt/generation ceiling, not a host-specific independent output cap.
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 schema = 2
 name = "Ministral 3 3B"
 description = "Compact open vision-language model for edge deployment, instruction following, and tool use"
@@ -12,7 +13,7 @@ release_date = "2025-12-02"
 license = "Apache 2.0"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

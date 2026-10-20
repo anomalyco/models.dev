@@ -1,5 +1,6 @@
 # Lab metadata carried over from providers/openrouter/models/mistralai/mistral-small-3.2-24b-instruct.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 schema = 2
 name = "Mistral Small 3.2 24B"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
@@ -9,7 +10,7 @@ knowledge = "2023-10-31"
 release_date = "2025-06-20"
 
 [modalities]
-input = ["image", "text"]
+input = ["image/png", "image/jpeg", "image/webp", "image/gif", "text"]
 output = ["text"]
 
 [capabilities]

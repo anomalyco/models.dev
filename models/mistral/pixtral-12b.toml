@@ -1,13 +1,15 @@
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
+# Release date: https://docs.mistral.ai/models/pixtral-12b-24-09 (2024-09-11)
 schema = 2
 name = "Pixtral 12B"
 description = "Mistral vision-language model for image understanding and multimodal chat"
 family = "pixtral"
 open_weights = true
 knowledge = "2024-09"
-release_date = "2024-09-01"
+release_date = "2024-09-11"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

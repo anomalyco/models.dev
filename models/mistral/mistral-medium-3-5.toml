@@ -1,5 +1,7 @@
 # Lab metadata carried over from providers/openrouter/models/mistralai/mistral-medium-3-5.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
+# Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
 schema = 2
 name = "Mistral Medium 3.5"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
@@ -8,7 +10,7 @@ open_weights = false
 release_date = "2026-04-30"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]
@@ -16,7 +18,7 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 262_144

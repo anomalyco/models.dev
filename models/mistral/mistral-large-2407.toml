@@ -1,12 +1,14 @@
 # Lab metadata carried over from providers/openrouter/models/mistralai/mistral-large-2407.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
+# Release date: https://docs.mistral.ai/models/mistral-large-2-0-24-07 (2024-07-24) and https://mistral.ai/news/mistral-large-2407 (July 24, 2024)
 schema = 2
 name = "Mistral Large 2407"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
 family = "mistral-large"
 open_weights = false
 knowledge = "2024-03-31"
-release_date = "2024-11-19"
+release_date = "2024-07-24"
 
 [modalities]
 input = ["text", "application/pdf"]
@@ -17,7 +19,7 @@ tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 131_072

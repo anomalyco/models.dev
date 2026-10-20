@@ -1,3 +1,4 @@
+# Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
 schema = 2
 name = "Magistral Medium (latest)"
 description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
@@ -16,7 +17,7 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 128_000
