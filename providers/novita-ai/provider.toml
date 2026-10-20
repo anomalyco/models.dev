@@ -9,6 +9,8 @@
 # system_updates: live probe 2026-10-20. Warm a ~8k-token prefix, confirm a plain follow-up hits
 # the cache, then send [assistant, system, user]. A hit right after the system message means it
 # stayed in place (true). Misses in two trials while control turns hit, or a 400, mean false.
+# The probe reads usage.prompt_tokens_details.cached_tokens, which some routes without a
+# cache-read price also report; those keep no `cache` capability (billing is undocumented).
 # Unset where trials disagreed, the route reports no cached tokens, or it was overloaded.
 name = "Novita AI"
 env = ["NOVITA_API_KEY"]

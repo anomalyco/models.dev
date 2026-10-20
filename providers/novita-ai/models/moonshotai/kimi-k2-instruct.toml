@@ -1,5 +1,5 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k2-instruct
-# system_updates = false: the turn after a mid-conversation system message missed the cache in two trials while control turns hit (live 2026-10-20).
+# system_updates = false: the turn after a mid-conversation system message missed the cache in two trials while control turns hit (live 2026-10-20: control 7,552 then mid 0 cached; control 6,144 then mid 0; usage.prompt_tokens_details.cached_tokens, reported here although no cache-read price is listed).
 schema = 2
 base_model = "moonshotai/kimi-k2-instruct"
 
