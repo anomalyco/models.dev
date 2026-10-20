@@ -1,0 +1,25 @@
+# Released 2026-09-29 (speech_model=universal-3-6-pro): https://www.assemblyai.com/changelog
+# Input formats: the common list in OpenRouter's speech-to-text docs (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/stt
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Universal-3.6 Pro"
+description = "Speech-to-text model trained on voice-agent and telephony audio, successor to Universal-3.5 Pro"
+open_weights = false
+release_date = "2026-09-29"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

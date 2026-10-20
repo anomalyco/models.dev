@@ -1,0 +1,30 @@
+# https://huggingface.co/BAAI/bge-large-en-v1.5 (MIT, 512-token input)
+# Released 2023-09-12 ("New models: bge-*-v1.5"): https://github.com/FlagOpen/FlagEmbedding#news
+schema = 2
+v2_only = true
+type = "embedding"
+name = "BGE Large EN v1.5"
+description = "English text embedding model for retrieval and semantic search"
+family = "bge"
+open_weights = true
+release_date = "2023-09-12"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 512
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/BAAI/bge-large-en-v1.5"
