@@ -1,5 +1,6 @@
 # Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, USD.
-# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# Limits source: https://api.aicodewith.ai/models (accessed 2026-10-12); its input_modalities = ["text"] is inaccurate.
+# Modalities live-tested on api.aicodewith.ai 2026-10-20: image, PDF, video and audio (as image_url data URIs) all read correctly; inherits lab modalities.
 # Reasoning controls mirror providers/google/models/gemini-3.8-flash.toml (relay forwards the upstream request body).
 base_model = "google/gemini-3.8-flash"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
@@ -12,7 +13,3 @@ cache_read = 0.075
 [limit]
 context = 200_000
 output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

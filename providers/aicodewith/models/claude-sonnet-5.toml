@@ -1,6 +1,7 @@
-# Toggle: thinking.type = enabled|disabled
+# Toggle: thinking.type = adaptive|disabled (live-tested on api.aicodewith.ai 2026-10-20: adaptive returns thinking blocks, disabled returns none)
 # Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, USD.
-# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# Limits source: https://api.aicodewith.ai/models (accessed 2026-10-12); its input_modalities = ["text"] is inaccurate.
+# Modalities live-tested on api.aicodewith.ai 2026-10-20: image and PDF (/v1/messages) both read correctly; inherits lab text/image/pdf.
 # Reasoning controls mirror providers/anthropic/models/claude-sonnet-5.toml (relay forwards the upstream request body).
 base_model = "anthropic/claude-sonnet-5"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
@@ -18,7 +19,3 @@ cache_write = 2.5
 [limit]
 context = 200_000
 output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

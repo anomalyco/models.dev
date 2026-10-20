@@ -2,7 +2,8 @@
 # Wire source: https://platform.kimi.ai/docs/api/models-overview and https://platform.kimi.ai/docs/guide/use-thinking-models (accessed 2026-10-13).
 # Live check on api.aicodewith.ai 2026-10-13 returned 503 "model unavailable" for every variant, so the toggle follows the lab wire; not re-verified on this relay.
 # Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, CNY.
-# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# Limits source: https://api.aicodewith.ai/models (accessed 2026-10-12); its input_modalities = ["text"] is inaccurate.
+# Modalities live-tested on api.aicodewith.ai 2026-10-20: image read correctly; video_url is stripped (model reports no video), so video is dropped.
 # CNY→USD rate: 6.700304, 2026-10-12, source: https://open.er-api.com/v6/latest/USD
 # Reasoning controls mirror providers/moonshotai/models/kimi-k2.6.toml (relay forwards the upstream request body).
 base_model = "moonshotai/kimi-k2.6"
@@ -18,5 +19,5 @@ context = 200_000
 output = 65_536
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

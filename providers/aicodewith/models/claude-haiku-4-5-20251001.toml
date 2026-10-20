@@ -1,5 +1,6 @@
 # Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, USD.
-# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# Limits source: https://api.aicodewith.ai/models (accessed 2026-10-12); its input_modalities = ["text"] is inaccurate.
+# Modalities live-tested on api.aicodewith.ai 2026-10-20: image and PDF (/v1/messages) both read correctly; inherits lab text/image/pdf.
 # Reasoning controls mirror providers/anthropic/models/claude-haiku-4-5-20251001.toml (relay forwards the upstream request body).
 base_model = "anthropic/claude-haiku-4-5-20251001"
 reasoning_options = [{ type = "budget_tokens", min = 1024 }]
@@ -17,7 +18,3 @@ cache_write = 1.25
 [limit]
 context = 200_000
 output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
