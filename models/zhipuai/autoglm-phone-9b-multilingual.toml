@@ -1,4 +1,7 @@
 # https://huggingface.co/zai-org/AutoGLM-Phone-9B-Multilingual
+# Input formats (accessed 2026-10-20): screenshots via image_url, jpg, jpeg, png (≤5 MB, ≤6000×6000 px).
+# - https://docs.bigmodel.cn/api-reference/模型-api/对话补全 (autoglm-phone is in the vision model list)
+# - https://docs.z.ai/api-reference/llm/chat-completion, https://docs.z.ai/guides/vlm/autoglm-phone-multilingual
 schema = 2
 name = "AutoGLM Phone 9B Multilingual"
 description = "Multilingual visual model for operating smartphone interfaces and mobile agents"
@@ -8,7 +11,7 @@ release_date = "2025-12-10"
 license = "MIT"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

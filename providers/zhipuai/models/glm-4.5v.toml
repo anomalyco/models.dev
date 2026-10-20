@@ -12,10 +12,6 @@
 schema = 2
 base_model = "zhipuai/glm-4.5v"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime", "video/x-matroska"]
-output = ["text"]
-
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }

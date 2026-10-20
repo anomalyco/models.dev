@@ -3,6 +3,9 @@
 # - https://docs.z.ai/api-reference/video/generate-video (prompt up to 512 characters; images png, jpeg, jpg up to 5 MB; 5 or 10 s clips)
 # - https://docs.bigmodel.cn/cn/update/new-releases (launched 2025-07-15)
 # limit.context is the 512-character prompt cap.
+# Output video/mp4: the docs give no output format field; the async result's video_result.url is an .mp4
+# served as Content-Type video/mp4 with an ISO BMFF (ftyp isom) body (live 2026-10-20), and every sample
+# video on the model page is .mp4.
 schema = 2
 v2_only = true
 type = "video"
@@ -13,7 +16,7 @@ release_date = "2025-07-15"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

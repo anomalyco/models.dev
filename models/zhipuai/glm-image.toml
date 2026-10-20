@@ -2,6 +2,11 @@
 # - https://docs.z.ai/guides/image/glm-image
 # - https://docs.z.ai/release-notes/new-released (launched 2026-01-14)
 # - https://docs.bigmodel.cn/cn/update/new-releases (2026-01-14)
+# Modalities stay generic:
+# - input "image": image-to-image comes from the open-weights release (Hugging Face card); no Z.AI/Zhipu
+#   source lists input formats, and the Z.AI image API takes only a text prompt.
+# - output "image": the image API returns a URL with no documented format. Live (2026-10-20, both hosts)
+#   the URL ends in .png and is served as Content-Type image/png, but the bytes are JPEG (FF D8 FF E0 JFIF).
 schema = 2
 type = "image"
 name = "GLM-Image"

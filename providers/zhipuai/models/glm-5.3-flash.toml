@@ -14,10 +14,6 @@
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime", "video/x-matroska", "application/pdf"]
-output = ["text"]
-
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }

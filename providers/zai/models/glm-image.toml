@@ -2,9 +2,15 @@
 # - Pricing: https://docs.z.ai/guides/overview/pricing ($0.015 per image)
 # - Model: https://docs.z.ai/guides/image/glm-image
 # - API: https://docs.z.ai/api-reference/image/generate-image
+# Input is text only: the image API (https://docs.z.ai/api-reference/image/generate-image) takes a prompt and no image.
+# Output stays generic (format undocumented; live URLs say .png / image/png but carry JPEG bytes).
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-image"
+
+[modalities]
+input = ["text"]
+output = ["image"]
 
 [cost.image.output]
 unit = "image"
