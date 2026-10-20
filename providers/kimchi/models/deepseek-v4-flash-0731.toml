@@ -1,12 +1,29 @@
 # Pricing per 1M tokens (USD), source:
 # https://docs.kimchi.dev/docs/model-apis-pricing (accessed 2026-10-20).
-# Same model lineage as deepseek-v4-flash with a 0731-cut snapshot.
+# Implicit prompt cache, no write price.
+# Same reasoning wire shape as deepseek-v4-flash (0731 snapshot of the same
+# relay deployment). Reasoning wire field: reasoning_content.
+# Toggle: reasoning_content present when in thinking mode (Kimchi relay
+# forwards DeepSeek's wire unchanged; effort is upstream-controlled).
+# Effort levels exposed by the relay: low/high/max.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [cost.text.input]
 price = 0.14
-cache = { read = 0.07, write = 0 }
+cache = { read = 0.07 }
 
 [cost.text.output]
 price = 0.28
