@@ -2686,8 +2686,8 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
     }
     const glmPath = path.join(modelsDir, "zai/glm-5.toml");
     const authored = (await readFile(glmPath, "utf8")).replace(
-      "reasoning_options = []",
-      'reasoning_options = [{ type = "toggle" }]',
+      "reasoning = { supported = true }",
+      "reasoning = { supported = true, toggle = true }",
     );
     const header = "# Toggle: extra_body.thinking.type = enabled|disabled\n";
     await Bun.write(glmPath, header + authored);
@@ -2720,7 +2720,7 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
     expect(content).toStartWith(header);
     expect(Bun.TOML.parse(content)).toMatchObject({
       base_model: "zhipuai/glm-5",
-      reasoning_options: [{ type: "toggle" }],
+      capabilities: { reasoning: { supported: true, toggle: true } },
     });
     expect(await Bun.file(path.join(modelsDir, "zai/glm-5@us.toml")).exists()).toBe(false);
     expect(await Bun.file(path.join(modelsDir, "openai/gpt-4o-mini@us.toml")).exists()).toBe(true);
