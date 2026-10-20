@@ -4,6 +4,8 @@
 # Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
 # Thinking is always enabled; no toggle or reasoning-token budget.
 # Output limit: https://api.cortecs.ai/v1/models (max_output_tokens, not context_size).
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -12,8 +14,10 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

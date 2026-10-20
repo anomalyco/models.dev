@@ -1,3 +1,6 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (amazon_ireland, amazon_paris). https://docs.cortecs.ai/routing/prompt-caching
+# Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
 schema = 2
 base_model = "amazon/nova-lite-v1"
 description = "Nova Lite is a fast, low-cost multimodal foundation model capable of reasoning over text, images, and video in 200+ languages."
@@ -7,9 +10,12 @@ input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+cache = { supported = false }
 structured_output = true
 temperature = false
+effort_updates = false
 
 [limit]
 output = 10_000

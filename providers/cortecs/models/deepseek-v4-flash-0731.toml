@@ -1,13 +1,16 @@
 # Cost converted from EUR at 1 EUR = 1.1515 USD (rate 2026-08-04).
 # EUR list: input €0.224 / output €0.269 / cache_read €0.056 per MTok.
 # https://api.cortecs.ai/v1/models (accessed 2026-08-04)
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 base_model_omit = ["structured_output"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

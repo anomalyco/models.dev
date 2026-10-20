@@ -1,8 +1,13 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (scaleway, ovh, ionos). https://docs.cortecs.ai/routing/prompt-caching
 schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 
 [capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = false }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 131_000

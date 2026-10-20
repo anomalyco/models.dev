@@ -1,12 +1,17 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (ovh, scaleway, berget). https://docs.cortecs.ai/routing/prompt-caching
 schema = 2
 base_model = "mistral/mistral-small-3.2-24b-instruct"
 name = "mistral-small-3.2-24b-instruct-2506"
 description = "Mistral-Small-3.2-24B-Instruct-2506 is a 24B parameter instruction-tuned model with enhanced long-context support (128k) and state-of-the-art vision understanding."
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
+cache = { supported = false }
 structured_output = true
 temperature = false
+effort_updates = false
 
 [limit]
 context = 131_000

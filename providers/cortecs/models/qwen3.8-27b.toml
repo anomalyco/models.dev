@@ -1,6 +1,8 @@
 # Sources (accessed 2026-08-17):
 # https://huggingface.co/Qwen/Qwen3.8-27B
 # Lab reasoning_effort is low|medium|xhigh (not high). Cortecs cost/limits retained.
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
@@ -9,8 +11,10 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_000_000
