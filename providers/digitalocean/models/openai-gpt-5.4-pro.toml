@@ -2,35 +2,37 @@
 # `reasoning.effort` to medium|high|xhigh.
 # https://docs.digitalocean.com/products/inference/details/models/index.html.md (accessed 2026-06-25)
 # https://developers.openai.com/api/docs/models/gpt-5.4-pro (accessed 2026-06-25)
+schema = 2
 name = "OpenAI GPT-5.4 Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 family = "gpt-pro"
-release_date = "2026-03-05"
-last_updated = "2026-03-05"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-knowledge = "2025-08-31"
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2026-03-05"
 
-[[reasoning_options]]
-type = "effort"
-values = ["medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 30
-output = 180
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 60
-output = 270
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+temperature = false
 
 [limit]
 context = 1_050_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 30
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
+[cost.text.output]
+price = 180
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 270

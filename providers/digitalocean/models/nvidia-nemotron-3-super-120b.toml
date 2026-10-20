@@ -1,16 +1,18 @@
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "NVIDIA Nemotron 3 Super 120B  (Public Preview)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 0.3
-output = 0.65
-cache_read = 0.06
 
 [limit]
 context = 1_000_000
 output = 32_768
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.65

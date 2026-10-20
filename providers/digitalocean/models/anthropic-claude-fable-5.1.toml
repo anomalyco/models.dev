@@ -1,15 +1,17 @@
+schema = 2
 base_model = "anthropic/claude-fable-5-1"
 name = "Anthropic Claude Fable 5.1"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 10
-output = 50
-cache_read = 0.25
-cache_write = 12.5
-
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 10
+cache = { read = 0.25, write = 12.5 }
+
+[cost.text.output]
+price = 50

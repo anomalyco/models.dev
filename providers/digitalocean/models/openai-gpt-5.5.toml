@@ -2,38 +2,41 @@
 # `reasoning.effort = none|low|medium|high|xhigh`.
 # https://docs.digitalocean.com/products/inference/details/models/index.html.md (accessed 2026-06-25)
 # https://developers.openai.com/api/docs/models/gpt-5.5 (accessed 2026-06-25)
+schema = 2
 name = "OpenAI GPT-5.5"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 family = "gpt"
+open_weights = false
+knowledge = "2025-12-01"
 release_date = "2026-04-23"
 last_updated = "2026-04-30"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
-knowledge = "2025-12-01"
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 5
-output = 30
-cache_read = 0.5
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 10
-output = 45
-cache_read = 1
+temperature = false
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 10
+cache = { read = 1 }
+
+[cost.text.output]
+price = 30
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 45

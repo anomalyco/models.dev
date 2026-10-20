@@ -1,29 +1,28 @@
+schema = 2
 name = "OpenAI GPT-4o mini"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt-mini"
-release_date = "2024-07-18"
-last_updated = "2024-07-18"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2023-09"
 open_weights = false
+knowledge = "2023-09"
+release_date = "2024-07-18"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.075
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.6

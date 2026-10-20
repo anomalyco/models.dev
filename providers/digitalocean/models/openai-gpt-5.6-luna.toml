@@ -1,21 +1,27 @@
+schema = 2
 base_model = "openai/gpt-5.6-luna"
-structured_output = true
 name = "OpenAI GPT-5.6 Luna"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.2
-output = 1.2
-cache_read = 0.02
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.4
-output = 1.8
-cache_read = 0.04
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.8

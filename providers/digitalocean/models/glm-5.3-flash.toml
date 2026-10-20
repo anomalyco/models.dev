@@ -6,22 +6,24 @@
 # below and remove the UNSUPPORTED_INPUT_MODALITIES entry in
 # packages/core/src/sync/providers/digitalocean.ts once it is served.
 # input = ["text", "image", "video"]
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 name = "GLM5.3 Flash"
-attachment = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

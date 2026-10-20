@@ -1,32 +1,31 @@
+schema = 2
 name = "Deepseek V4 Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-05"
 open_weights = true
+knowledge = "2025-05"
+release_date = "2026-04-24"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.348
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 384_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.348 }
+
+[cost.text.output]
+price = 3.48

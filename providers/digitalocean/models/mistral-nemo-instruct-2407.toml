@@ -1,23 +1,26 @@
+schema = 2
 name = "Mistral Nemo Instruct"
 description = "Legacy model retained for compatibility with older integrations"
 family = "mistral"
-release_date = "2024-07-18"
-last_updated = "2024-07-18"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2024-07-18"
 status = "deprecated"
 
-[cost]
-input = 0.30
-output = 0.30
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.3

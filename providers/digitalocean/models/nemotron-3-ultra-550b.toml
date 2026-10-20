@@ -1,23 +1,27 @@
+schema = 2
 name = "Nemotron 3 Ultra"
 description = "Flagship Nemotron model for high-throughput reasoning and complex agents"
 family = "nemotron"
+open_weights = false
 release_date = "2026-06-04"
 last_updated = "2026-06-12"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
 
-[cost]
-input = 0.9
-output = 1.7
-cache_read = 0.18
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.9
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 1.7
