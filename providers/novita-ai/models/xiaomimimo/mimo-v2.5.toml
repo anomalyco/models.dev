@@ -1,15 +1,21 @@
 # https://novita.ai/models/model-detail/xiaomimimo-mimo-v2.5
 # Toggle: thinking.type = enabled|disabled
+# Modalities: Novita lists ["text","image","video"]; exact types are the lab's (xiaomi/mimo-v2.5).
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "video/mp4", "video/quicktime", "video/x-msvideo", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

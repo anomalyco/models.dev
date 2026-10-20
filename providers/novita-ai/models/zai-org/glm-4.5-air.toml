@@ -1,10 +1,15 @@
 # https://novita.ai/models/model-detail/zai-org-glm-4.5-air
 # Toggle: thinking.type = enabled|disabled
+# system_updates = false: the turn after a mid-conversation system message missed the cache in two trials while control turns hit (live 2026-10-20).
 schema = 2
 base_model = "zhipuai/glm-4.5-air"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
+system_updates = false
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

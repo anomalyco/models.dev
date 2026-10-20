@@ -1,9 +1,12 @@
 # https://novita.ai/models/model-detail/microsoft-wizardlm-2-8x22b
+# system_updates = false: the turn after a mid-conversation system message missed the cache in two trials while control turns hit (live 2026-10-20).
 schema = 2
 base_model = "microsoft/wizardlm-2-8x22b"
 
 [capabilities]
 structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 65_535

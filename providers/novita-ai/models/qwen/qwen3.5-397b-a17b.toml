@@ -5,8 +5,10 @@ schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

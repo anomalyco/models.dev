@@ -2,12 +2,17 @@
 # Toggle: thinking.type = enabled|disabled
 # Budget: thinking_budget (reasoning tokens)
 # Public pricing does not advertise a cache-write charge.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
 schema = 2
 base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {} }
+cache = { supported = true, implicit = true }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 65_536

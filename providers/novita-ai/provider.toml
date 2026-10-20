@@ -2,6 +2,14 @@
 # Inventory: https://api.novita.ai/openai/v1/models (account-scoped; absence is not retirement evidence).
 # Chat reasoning controls are model-specific; see each route's leading wire comments.
 # https://novita.ai/docs/api-reference/model-apis-llm-create-chat-completion
+# effort_updates = false, tools.updates = false on chat models: reasoning controls and `tools`
+# are per request on Chat Completions; there is no per-turn effort or tool-change message.
+# Cache: implicit prefix cache with no request changes, on models with a cache-read price.
+# https://docs.novita.ai/guides/llm-prompt-cache
+# system_updates: live probe 2026-10-20. Warm a ~8k-token prefix, confirm a plain follow-up hits
+# the cache, then send [assistant, system, user]. A hit right after the system message means it
+# stayed in place (true). Misses in two trials while control turns hit, or a 400, mean false.
+# Unset where trials disagreed, the route reports no cached tokens, or it was overloaded.
 name = "Novita AI"
 env = ["NOVITA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,9 +1,13 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k2-0905
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
 schema = 2
 base_model = "moonshotai/kimi-k2-0905"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.6

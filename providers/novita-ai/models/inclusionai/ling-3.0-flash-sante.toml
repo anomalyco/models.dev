@@ -1,10 +1,15 @@
 # https://novita.ai/models/model-detail/inclusionai-ling-3.0-flash-sante
 # Toggle: thinking.type = enabled|disabled
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
 schema = 2
 base_model = "inclusionai/ling-3.0-flash-sante"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

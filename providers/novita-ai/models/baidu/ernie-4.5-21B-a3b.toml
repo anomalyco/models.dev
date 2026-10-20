@@ -2,6 +2,10 @@
 schema = 2
 base_model = "baidu/ernie-4.5-21b-a3b"
 
+[capabilities]
+tools = { supported = true, updates = false }
+effort_updates = false
+
 [limit]
 context = 120_000
 

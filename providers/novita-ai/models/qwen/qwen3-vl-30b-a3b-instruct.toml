@@ -1,9 +1,13 @@
 # https://novita.ai/models/model-detail/qwen-qwen3-vl-30b-a3b-instruct
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
 schema = 2
 base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 131_072

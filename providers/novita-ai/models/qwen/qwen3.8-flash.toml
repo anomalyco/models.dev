@@ -6,8 +6,11 @@ schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+cache = { supported = true, implicit = true }
 structured_output = true
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

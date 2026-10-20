@@ -1,6 +1,11 @@
 # https://novita.ai/models/model-detail/google-gemma-3-12b-it
+# Tools: no function-calling in the catalog features; a tools request returns 400 "model features function calling not support" (live 2026-10-20).
 schema = 2
 base_model = "google/gemma-3-12b-it"
+
+[capabilities]
+tools = { supported = false }
+effort_updates = false
 
 [limit]
 output = 8_192

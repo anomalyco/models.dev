@@ -1,12 +1,17 @@
 # Route is absent from Novita's public catalog but still answers live requests (2026-10-09).
 # Always-on reasoning; enable_thinking, chat_template_kwargs.enable_thinking, and effort=none did not suppress it.
 # Preserve curated pricing: /models does not return this route.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
 schema = 2
 base_model = "minimax/MiniMax-M2.7-highspeed"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+cache = { supported = true, implicit = true }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

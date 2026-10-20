@@ -1,9 +1,12 @@
 # https://novita.ai/models/model-detail/nousresearch-hermes-2-pro-llama-3-8b
+# Tools: no function-calling in the catalog features; a tools request returns 400 "model features function calling not support" (live 2026-10-20).
 schema = 2
 base_model = "nousresearch/hermes-2-pro-llama-3-8b"
 
 [capabilities]
+tools = { supported = false }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.14

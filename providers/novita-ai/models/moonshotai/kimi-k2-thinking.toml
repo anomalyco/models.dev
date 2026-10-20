@@ -1,11 +1,16 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k2-thinking
 # Always-on reasoning; thinking.type=disabled is rejected.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
 schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+cache = { supported = true, implicit = true }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 98_304
