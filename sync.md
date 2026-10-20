@@ -461,6 +461,19 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
 
+## Verathos Notes
+
+Verathos is implemented in `packages/core/src/sync/providers/verathos.ts`.
+
+- Run it with `bun models:sync verathos` or `bun verathos:sync`.
+- Source endpoint: `https://api.verathos.ai/v1/models`; no auth required. Prices are already USD per 1M tokens.
+- The endpoint owns `cost.input` and `cost.output`, `limit.context` (from `max_state_tokens`, the largest state `POST /v1/systemone` accepts) when positive, and `modalities.input` when it sends a recognised list. `attachment` follows the input list.
+- Every other authored field is preserved, including `base_model`, `temperature` and `limit.output` (0: decision models generate no text).
+- The files are v2 and `v2_only`. While the list agrees with a file's modalities, the authored table stays, even where its MIME types or `decision` output read like the lab's in v1.
+- `skipCreates` and `trackMissingModels` are set: the list carries no name, description or lab facts, and each new model needs a `type = "decision"` lab entry first. Unseen IDs open deduped `[missing-model]` issues.
+- `deleteMissing` is `false`: the list is unauthenticated and `{"data":[]}` passes the schema, so retired models are retained, reported and removed by hand.
+- A price that is missing or negative fails the run; a row with an empty `id` is ignored.
+
 ## ai& Notes
 
 - Endpoint: `GET https://api.aiand.com/v1/api.json` (public, no auth). The module reads the `aiand` provider entry; `AIAND_API_URL` overrides the endpoint for staging dry runs.
