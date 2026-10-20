@@ -1,0 +1,28 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
+# https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+schema = 2
+v2_only = true
+type = "embedding"
+name = "multi-qa-mpnet-base-dot-v1"
+description = "Text embedding model"
+open_weights = true
+release_date = "2025-11-18"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 512
+output = 0
+
+[api.embeddings]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+
+[cost.text.input]
+price = 0.005
