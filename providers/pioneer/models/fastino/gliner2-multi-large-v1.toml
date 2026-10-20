@@ -1,7 +1,14 @@
+# Encoder: GET https://api.fastino.ai/v1/base-models (2026-10-20) task_type = "encoder", license Apache-2.0, tier open. GLiNER models extract and classify
+# through /v1/chat/completions with a top-level `schema` (https://docs.fastino.ai/inference/chat-completions); they don't generate text, reason or call tools.
+# Description: GET https://api.fastino.ai/v1/base-models description (replaces a generic chat-model description).
+# Cost: GET https://api.fastino.ai/v1/base-models and https://docs.fastino.ai/pricing (2026-10-20): input $0.03, output $0, cache read/write $0.03 per 1M tokens.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
+# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
 name = "GLiNER2 Multi Large"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-open_weights = false
+description = "High-accuracy multilingual NER and span extraction."
+open_weights = true
 release_date = "2025-11-30"
 
 [modalities]
@@ -9,20 +16,18 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 8_192
 output = 8_192
 
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
-
 [cost.text.input]
-price = 0.15
-cache = { read = 0.15, write = 0.15 }
+price = 0.03
+cache = { read = 0.03, write = 0.03 }
 
 [cost.text.output]
-price = 0.15
+price = 0

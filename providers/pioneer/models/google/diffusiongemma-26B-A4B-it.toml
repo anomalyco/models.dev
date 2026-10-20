@@ -1,20 +1,25 @@
+# Lab: google/diffusiongemma-26b-a4b-it (Pioneer id google/diffusiongemma-26B-A4B-it is the Hugging Face repo name).
+# Modalities: text only, as Pioneer's /v1/models listed it (capabilities.image_input = false) while it was served; the lab file also takes images.
+# Effort: reasoning.effort in Fastino's normalized `reasoning` object (https://docs.fastino.ai/openapi.json ChatCompletionRequest.reasoning), rendered to each upstream's native field.
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
+# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
+base_model = "google/diffusiongemma-26b-a4b-it"
 name = "DiffusionGemma 26B-A4B IT"
-description = "Gemini model for general assistance, reasoning, and multimodal workflows"
-open_weights = false
-release_date = "2026-05-31"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
-temperature = true
+effort_updates = false
 
 [limit]
-context = 262_144
 output = 131_072
 
 [api.chat-completions]

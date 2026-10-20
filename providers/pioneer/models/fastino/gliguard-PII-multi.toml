@@ -4,6 +4,12 @@
 # - Fastino release blog https://fastino.ai/blog/gliner2-guardrails-pii-multi-safety-moderation-privacy-filtering-small-language-model (released July 8 2026, 0.3B param, single forward pass, Apache 2.0)
 # - Fastino model page https://fastino.ai/models/gliner2-guardrails-pii-multi (300M-param multilingual safety moderation + PII detection, open weights)
 # - Hugging Face https://huggingface.co/fastino/GLiNER2-Guardrails-PII-Multi (Apache-2.0, 0.3B params, unified safety moderation + PII detection)
+# Encoder: GET https://api.fastino.ai/v1/base-models (2026-10-20) task_type = "encoder", license Apache-2.0, tier open. GLiNER models extract and classify
+# through /v1/chat/completions with a top-level `schema` (https://docs.fastino.ai/inference/chat-completions); they don't generate text, reason or call tools.
+# Cost: GET https://api.fastino.ai/v1/base-models and https://docs.fastino.ai/pricing (2026-10-20): input $0.15, output $0.15, cache read/write $0.15 per 1M tokens.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
+# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
 name = "GLiNER2-Guardrails-PII-Multi"
 description = "A 300M-parameter multilingual model that runs LLM safety moderation and PII detection in a single forward pass."
@@ -15,16 +21,14 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 8_192
 output = 8_192
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.15

@@ -5,12 +5,18 @@
 # - https://agent.pioneer.ai/llms-full.txt#reasoning--thinking-controls
 # Effort: reasoning.effort via Pioneer unified reasoning object (low|medium|high),
 # matching other Pioneer Nemotron entries; reasoning traces on reasoning_content.
+# Cost: GET https://api.fastino.ai/v1/models and /v1/base-models (2026-10-20): input $0.07, output $0.2, cache read $0.035, cache write $0.07 per 1M tokens.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
+# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 8_192
@@ -20,8 +26,8 @@ output = 4_096
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.5
-cache = { read = 0.5, write = 0.5 }
+price = 0.07
+cache = { read = 0.035, write = 0.07 }
 
 [cost.text.output]
-price = 0.5
+price = 0.2

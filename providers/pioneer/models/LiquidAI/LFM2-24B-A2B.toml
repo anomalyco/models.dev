@@ -1,3 +1,8 @@
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Effort: reasoning.effort in Fastino's normalized `reasoning` object (https://docs.fastino.ai/openapi.json ChatCompletionRequest.reasoning), rendered to each upstream's native field.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
+# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
 name = "LFM2 24B A2B"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
@@ -5,6 +10,7 @@ family = "liquid"
 open_weights = true
 release_date = "2026-01-31"
 last_updated = "2026-02-25"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -14,6 +20,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 32_768
