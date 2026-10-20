@@ -1144,6 +1144,10 @@ function wireHeader(
   if (capabilities?.["system_updates"] === false) {
     lines.push(SYSTEM_UPDATES_LINE);
   }
+  const cache = capabilities?.["cache"] as { explicit?: { ttl?: unknown } } | undefined;
+  if (JSON.stringify(cache?.explicit?.ttl) === JSON.stringify(["5m", "1h"])) {
+    lines.push(CACHE_LINE);
+  }
   return lines.length > 0 ? lines.join("\n") + "\n" : undefined;
 }
 
@@ -1158,6 +1162,9 @@ function v2Capabilities(doc: Record<string, unknown> | undefined): Record<string
     ? capabilities as Record<string, unknown>
     : undefined;
 }
+
+const CACHE_LINE =
+  `# Cache: the chat-completions catalog row prices cache writes at 5m (cache_write) and 1h (cache_write_1h), and the request schema takes cache_control { type: ephemeral, ttl: 5m | 1h }. ${API_ENDPOINT}`;
 
 const SYSTEM_UPDATES_LINE =
   "# system_updates = false: the lab's own API keeps no mid-conversation system message for this closed-weight model (system_updates = false in its first-party file here), so a relay can't keep one in place.";

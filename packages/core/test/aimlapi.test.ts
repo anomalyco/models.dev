@@ -289,6 +289,12 @@ test("v2 files keep their mid-conversation flags, and the header cites them", ()
   expect(translated.header).toContain("effort_updates = false, tools.updates = false");
   expect(translated.header).toContain("docs-json?model=openai%2Fgpt-4o&endpoint=openai%2Fchat-completions");
   expect(translated.header).toContain("# system_updates = false:");
+  expect(translated.header).not.toContain("# Cache:");
+  const cached = aimlapi.translateModel(model!, {
+    ...context,
+    v2: () => ({ ...doc, capabilities: { ...doc.capabilities, cache: { supported: true, explicit: { ttl: ["5m", "1h"] } } } }),
+  }) as { header?: string };
+  expect(cached.header).toContain("# Cache: the chat-completions catalog row prices cache writes at 5m");
   // Model facts and the lab's description stay with the lab.
   for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated", "description", "modalities"]) {
     expect(translated.model).not.toHaveProperty(fact);
