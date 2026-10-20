@@ -1,9 +1,12 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k2-instruct
+schema = 2
 base_model = "moonshotai/kimi-k2-instruct"
-
-[cost]
-input = 0.57
-output = 2.3
 
 [limit]
 output = 98_304
+
+[cost.text.input]
+price = 0.57
+
+[cost.text.output]
+price = 2.3

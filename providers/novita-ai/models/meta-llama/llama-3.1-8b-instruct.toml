@@ -1,11 +1,16 @@
 # https://novita.ai/models/model-detail/meta-llama-llama-3.1-8b-instruct
+schema = 2
 base_model = "meta/llama-3.1-8b-instruct"
-structured_output = true
 
-[cost]
-input = 0.02
-output = 0.05
+[capabilities]
+structured_output = true
 
 [limit]
 context = 16_384
 output = 16_384
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0.05

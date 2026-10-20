@@ -1,10 +1,15 @@
 # https://novita.ai/models/model-detail/microsoft-wizardlm-2-8x22b
+schema = 2
 base_model = "microsoft/wizardlm-2-8x22b"
-structured_output = true
 
-[cost]
-input = 0.62
-output = 0.62
+[capabilities]
+structured_output = true
 
 [limit]
 context = 65_535
+
+[cost.text.input]
+price = 0.62
+
+[cost.text.output]
+price = 0.62

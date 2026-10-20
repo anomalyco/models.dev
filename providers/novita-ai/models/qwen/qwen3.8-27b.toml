@@ -2,18 +2,23 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|medium|xhigh
 # Budget: thinking_budget (reasoning tokens); cannot be combined with effort.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.42
-output = 3
-cache_read = 0.085
 
 [limit]
 context = 1_000_000
 output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.42
+cache = { read = 0.085 }
+
+[cost.text.output]
+price = 3

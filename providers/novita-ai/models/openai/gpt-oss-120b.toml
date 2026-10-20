@@ -1,13 +1,18 @@
 # https://novita.ai/models/model-detail/openai-gpt-oss-120b
 # Effort: reasoning_effort = low|medium|high (native baseline). thinking.type=disabled and effort=none do not suppress reasoning.
 # The inventory's image-input label is not supported by the underlying text-only model.
+schema = 2
 base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.05
-output = 0.25
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.25

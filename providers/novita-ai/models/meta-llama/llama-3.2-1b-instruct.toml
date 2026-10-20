@@ -1,11 +1,16 @@
 # https://novita.ai/docs/api-reference/model-apis-llm-list-models
 # Exact ID, pricing, and limits returned by /models on 2026-10-09; live inference returned 503, not MODEL_NOT_FOUND.
+schema = 2
 base_model = "meta/llama-3.2-1b-instruct"
-structured_output = true
 
-[cost]
-input = 0.02
-output = 0.02
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_000
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0.02

@@ -5,18 +5,23 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max; native DeepSeek set: https://api-docs.deepseek.com/guides/thinking_mode/
 # Chat API max_tokens 393216: https://api-docs.deepseek.com/api/create-chat-completion/
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
 
 [limit]
 context = 1_048_576
 output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

@@ -1,10 +1,15 @@
 # https://novita.ai/models/model-detail/qwen-qwen3-vl-30b-a3b-instruct
+schema = 2
 base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
-structured_output = true
 
-[cost]
-input = 0.2
-output = 0.7
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.7

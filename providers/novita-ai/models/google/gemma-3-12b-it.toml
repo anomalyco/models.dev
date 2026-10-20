@@ -1,9 +1,12 @@
 # https://novita.ai/models/model-detail/google-gemma-3-12b-it
+schema = 2
 base_model = "google/gemma-3-12b-it"
-
-[cost]
-input = 0.05
-output = 0.1
 
 [limit]
 output = 8_192
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.1

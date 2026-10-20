@@ -1,16 +1,21 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k2-thinking
 # Always-on reasoning; thinking.type=disabled is rejected.
+schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.6
-output = 2.5
-cache_read = 0.15
 
 [limit]
 output = 98_304
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2.5

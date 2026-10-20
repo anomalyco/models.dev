@@ -1,17 +1,22 @@
 # https://novita.ai/models/model-detail/minimax-minimax-m2.5
 # Novita's /models reports max_output_tokens=131100, and the linked model page's example uses max_tokens=131100 (verified 2026-10-09); this is a host delta, not a transcription of the lab's 131072 limit.
 # Always-on reasoning: thinking.type, enable_thinking, chat_template_kwargs.enable_thinking, and effort=none did not suppress it.
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
 
 [limit]
 output = 131_100
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

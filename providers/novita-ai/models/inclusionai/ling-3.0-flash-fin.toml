@@ -1,12 +1,17 @@
 # https://novita.ai/models/model-detail/inclusionai-ling-3.0-flash-fin
 # Toggle: thinking.type = enabled|disabled
+schema = 2
 base_model = "inclusionai/ling-3.0-flash-fin"
-reasoning_options = [{ type = "toggle" }]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0.075
-output = 0.22
-cache_read = 0.015
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.22

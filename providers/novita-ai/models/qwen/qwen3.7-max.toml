@@ -2,22 +2,22 @@
 # Toggle: thinking.type = enabled|disabled
 # Budget: thinking_budget (reasoning tokens)
 # Public pricing does not advertise a cache-write charge.
+schema = 2
 base_model = "alibaba/qwen3.7-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 1.25
-output = 3.75
-cache_read = 0.25
 
 [limit]
 output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 3.75

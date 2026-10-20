@@ -1,16 +1,21 @@
 # https://novita.ai/models/model-detail/tencent-hy4-preview
 # Effort: reasoning_effort = none|high; none suppresses reasoning. Native effort baseline retained; accepted aliases are not additional distinct levels.
+schema = 2
 base_model = "tencent/hy4-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
 
 [limit]
 context = 1_000_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501
