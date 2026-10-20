@@ -1,8 +1,11 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=upstage%2Fsolar-pro-3&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "upstage/solar-pro3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 context = 128_000

@@ -1,8 +1,11 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=alibaba%2Fqwen3.8-max&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium"] }
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

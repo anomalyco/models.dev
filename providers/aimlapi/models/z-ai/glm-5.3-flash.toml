@@ -1,3 +1,4 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=z-ai%2Fglm-5.3-flash&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
@@ -5,6 +6,8 @@ name = "GLM 5.3 Flash"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 context = 1_048_576

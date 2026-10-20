@@ -1,8 +1,10 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=undi95%2Fremm-slerp-l2-13b&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "undi95/remm-slerp-l2-13b"
 
 [capabilities]
 structured_output = true
+effort_updates = false
 
 [limit]
 output = 4_096

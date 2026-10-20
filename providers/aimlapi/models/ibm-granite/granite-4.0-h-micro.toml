@@ -1,9 +1,12 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=ibm-granite%2Fgranite-4.0-h-micro&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "ibm/granite-4-h-micro"
 name = "Granite 4.0 Micro"
 
 [capabilities]
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 context = 131_000

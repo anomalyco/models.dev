@@ -1,3 +1,13 @@
+# Every model is served on POST /v1/chat/completions (@ai-sdk/openai-compatible).
+# Per-model request schema: https://api.aimlapi.com/docs-json?model=<id>&endpoint=openai/chat-completions
+# - effort_updates = false and tools.updates = false: the schema has a per-request
+#   reasoning_effort and tools array, and no configuration_update or tool-change message.
+# - system_updates = false only for closed-weight models whose lab API keeps no
+#   mid-conversation system message (first-party file says false); unset otherwise,
+#   because AI/ML API doesn't document where such a message ends up upstream.
+# - capabilities.cache unset: the schema lists cache_control (5m/1h) on every model,
+#   including ones whose upstream has no explicit caching, so it isn't evidence, and
+#   no AI/ML API page documents prompt caching.
 name = "AI/ML API"
 env = ["AIMLAPI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

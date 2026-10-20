@@ -1,10 +1,15 @@
 # Off: reasoning_effort = none (0 reasoning tokens); no toggle field on this surface.
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=anthropic%2Fclaude-opus-4.7&endpoint=openai%2Fchat-completions
+# system_updates = false: the lab's own API keeps no mid-conversation system message for this closed-weight model (system_updates = false in its first-party file here), so a relay can't keep one in place.
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 name = "Claude 4.7 Opus"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+system_updates = false
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 6.877

@@ -1,11 +1,16 @@
 # No caller control: reasoning_effort is validated (invalid value -> 400) but low/high
 # do not order reasoning tokens; toggle/budget fields are dropped by the gateway.
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=anthropic%2Fclaude-haiku-4.5&endpoint=openai%2Fchat-completions
+# system_updates = false: the lab's own API keeps no mid-conversation system message for this closed-weight model (system_updates = false in its first-party file here), so a relay can't keep one in place.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 name = "Claude 4.5 Haiku"
 
 [capabilities]
 reasoning = { supported = true }
+system_updates = false
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 1.3754

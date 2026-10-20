@@ -1,10 +1,15 @@
 # No caller control: reasoning_effort is not read (an invalid value returns 200),
 # and toggle/budget fields are dropped by the gateway (unknown top-level keys -> 200).
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=alibaba%2Fqwen-plus&endpoint=openai%2Fchat-completions
+# system_updates = false: the lab's own API keeps no mid-conversation system message for this closed-weight model (system_updates = false in its first-party file here), so a relay can't keep one in place.
 schema = 2
 base_model = "alibaba/qwen-plus"
 
 [capabilities]
 reasoning = { supported = true }
+system_updates = false
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 context = 131_000
