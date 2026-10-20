@@ -252,7 +252,9 @@ function workersAiReasoningOptions({ id, reasoning }: WorkersAiModel): SyncedFul
     options.push({ type: "toggle" });
   }
 
-  const values = reasoning.mandatory ? efforts?.filter((value) => value !== "none") : efforts;
+  // Search lists efforts strongest first; v2 files keep them weakest first.
+  const values = (reasoning.mandatory ? efforts?.filter((value) => value !== "none") : efforts)
+    ?.toSorted((a, b) => effortRank(a) - effortRank(b));
   // One mandatory effective effort offers no caller choice. Unlike missing or
   // empty metadata, a concrete singleton establishes this explicitly.
   const fixedEffort = reasoning.mandatory === true && values?.length === 1;
@@ -267,6 +269,12 @@ function workersAiReasoningOptions({ id, reasoning }: WorkersAiModel): SyncedFul
 
   // Empty control metadata never clears authored controls; a known fixed effort can.
   return options.length > 0 || fixedEffort ? options : undefined;
+}
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
+
+function effortRank(effort: string) {
+  return EFFORT_ORDER.indexOf(effort);
 }
 
 export function resolveCloudflareBaseModel(model: WorkersAiModel) {

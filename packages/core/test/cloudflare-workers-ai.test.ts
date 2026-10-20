@@ -110,3 +110,19 @@ test("marks Clef routes as decisions even when Workers AI search labels them tex
     authored: () => undefined,
   })?.model.type).toBeUndefined();
 });
+
+test("lists search efforts weakest first so v2 files stay unchanged", () => {
+  const [source] = cloudflareWorkersAi.parseModels({
+    result: {
+      data: [{
+        ...searchRow("@cf/test/efforts", 65_536),
+        supported_parameters: ["reasoning"],
+        reasoning: { mandatory: false, supported_efforts: ["max", "high", "low", "none"] },
+      }],
+    },
+  });
+  expect(cloudflareWorkersAi.translateModel(source!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.model.reasoning_options).toEqual([{ type: "effort", values: ["none", "low", "high", "max"] }]);
+});
