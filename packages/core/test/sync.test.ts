@@ -5271,6 +5271,34 @@ test("syncs OpenRouter decision models with no supported parameters as decision 
   })?.model.type).toBeUndefined();
 });
 
+test("syncs OpenRouter embedding and reranking models with no supported parameters as typed", () => {
+  const typed = (id: string, output: string) => openrouter.translateModel(openRouterModel({
+    id,
+    name: id,
+    hugging_face_id: null,
+    knowledge_cutoff: null,
+    context_length: 8_192,
+    architecture: { input_modalities: ["text"], output_modalities: [output] },
+    pricing: { prompt: "0.00000002", completion: "0" },
+    top_provider: { context_length: 8_192, max_completion_tokens: 7_372 },
+    supported_parameters: [],
+  }), {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.model;
+
+  expect(typed("example/embed-1", "embeddings")).toMatchObject({
+    type: "embedding",
+    modalities: { input: ["text"], output: ["text"] },
+    cost: { input: 0.02, output: 0 },
+    limit: { context: 8_192, output: 0 },
+  });
+  expect(typed("example/rerank-1", "rerank")).toMatchObject({
+    type: "reranking",
+    limit: { context: 8_192, output: 0 },
+  });
+});
+
 test("factors OpenRouter decision models onto decision lab metadata without a chat description", () => {
   const translated = openrouter.translateModel(openRouterModel({
     id: "liquid/d1",
