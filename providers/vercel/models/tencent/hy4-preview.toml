@@ -3,12 +3,16 @@
 # https://vercel.com/ai-gateway/models/hy4-preview
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 # https://cloud.tencent.com/document/product/1823/131208
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "tencent/hy4-preview"
 name = "Tencent Hy4 Preview"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "high"] }
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.834

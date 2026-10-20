@@ -1,6 +1,7 @@
 # Effort: reasoning.effort = high|xhigh|max
 # https://console.sakana.ai/models
 # Modalities: generic image kept, Sakana's API docs say image input is supported but list no formats
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "sakana/fugu-max"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
@@ -10,7 +11,10 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 1_000_000

@@ -1,5 +1,6 @@
 # GLM-5.3-FlashX uses the same model and forced-thinking effort levels as Flash.
 # https://docs.z.ai/guides/vlm/glm-5.3-flash
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 FlashX"
@@ -9,8 +10,11 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.37

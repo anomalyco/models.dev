@@ -1,4 +1,5 @@
 # Modalities: Alibaba Model Studio supported image formats (BMP, JPEG, PNG, TIFF, WEBP, HEIC), https://www.alibabacloud.com/help/en/model-studio/vision
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 name = "Qwen3 VL Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -13,9 +14,10 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 262_144

@@ -1,3 +1,4 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system/developer messages stay in place (cache prefix kept). The gateway's AI SDK request has no OpenAI configuration_update or additional_tools, so effort and tool changes are false.
 schema = 2
 base_model = "openai/o4-mini"
 name = "o4-mini (Fast)"
@@ -7,8 +8,11 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 input = 100_000

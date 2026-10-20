@@ -1,3 +1,4 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "NVIDIA Nemotron 3 Super 120B A12B"
@@ -5,6 +6,8 @@ name = "NVIDIA Nemotron 3 Super 120B A12B"
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 256_000

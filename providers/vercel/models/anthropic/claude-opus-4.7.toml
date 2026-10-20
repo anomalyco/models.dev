@@ -1,9 +1,13 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): a plain mid-conversation system message is hoisted into the leading system prompt (the next request misses the cache), so system_updates = false. Per-turn effort and tool changes reach Anthropic as providerOptions.anthropic.effort / toolChanges on a mid-conversation system message (https://ai-sdk.dev/providers/ai-sdk-providers/anthropic); true only where Anthropic accepted them and the cache was kept.
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], budget = {  } }
 temperature = true
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 5

@@ -1,3 +1,4 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system messages stay in place (cache prefix kept). No per-turn effort or tool-change mechanism is forwarded.
 schema = 2
 base_model = "xai/grok-4.1-fast"
 name = "Grok 4.1 Fast Non-Reasoning"
@@ -6,6 +7,11 @@ description = "Fast Grok model for responsive chat, reasoning, and tool-assisted
 [modalities]
 input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_000_000

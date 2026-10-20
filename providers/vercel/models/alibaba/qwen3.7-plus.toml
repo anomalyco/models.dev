@@ -7,6 +7,7 @@
 # Sources:
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/advanced
 # https://vercel.com/ai-gateway/models/qwen3.7-plus
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
 name = "Qwen 3.7 Plus"
@@ -16,7 +17,10 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"], budget = { min = 1, max = 262_144 } }
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.4

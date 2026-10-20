@@ -1,9 +1,11 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+effort_updates = false
 
 [cost.text.input]
 price = 0.05

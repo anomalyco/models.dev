@@ -1,10 +1,14 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

@@ -1,3 +1,4 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "zhipuai/glm-4.5v"
 name = "GLM 4.5V"
@@ -7,7 +8,9 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+effort_updates = false
 
 [limit]
 context = 66_000

@@ -1,3 +1,4 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "alibaba/qwen3.6-27b"
 name = "Qwen 3.6 27B"
@@ -7,8 +8,10 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = { min = 1, max = 131_072 } }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 256_000

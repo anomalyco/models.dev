@@ -1,8 +1,14 @@
 # Previously a symlink to providers/mistral/models/codestral-latest.toml. Copied from origin/dev 67bc657a5 so Vercel's data
 # stays as it was when the Mistral file moved to schema 2 with Mistral-API-specific values.
 # Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "mistral/codestral-latest"
+
+[capabilities]
+tools = { supported = true, updates = false }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 128_000

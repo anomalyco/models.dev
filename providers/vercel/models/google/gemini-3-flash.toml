@@ -1,4 +1,5 @@
 # Modalities: Gemini image formats PNG, JPEG, WEBP, HEIC, HEIF, https://ai.google.dev/gemini-api/docs/image-understanding
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): Gemini takes system text only as systemInstruction, and a mid-conversation system message is hoisted there (cache miss). No per-turn effort or tool-change mechanism is forwarded.
 schema = 2
 name = "Gemini 3 Flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
@@ -12,9 +13,11 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high"] }
 temperature = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_000_000

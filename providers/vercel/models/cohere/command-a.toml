@@ -1,9 +1,12 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "cohere/command-a"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 8_000

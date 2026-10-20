@@ -4,6 +4,7 @@
 # - https://docs.baseten.co/inference/model-apis/reasoning — Inkling reasoning_effort
 # API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
 # Modalities: generic image kept, the Inkling model cards accept "any pixel-based image input" and list no formats
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "thinkingmachines/inkling"
 
@@ -12,7 +13,10 @@ input = ["text", "image", "application/pdf"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 256_000

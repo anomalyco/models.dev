@@ -1,9 +1,12 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-thinking"
 name = "Qwen3 Next 80B A3B Thinking"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, budget = { min = 1 } }
+effort_updates = false
 
 [limit]
 context = 262_144

@@ -1,4 +1,5 @@
 # Modalities: xAI image inputs jpg/jpeg and png, https://docs.x.ai/docs/guides/image-understanding
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system messages stay in place (cache prefix kept). No per-turn effort or tool-change mechanism is forwarded.
 schema = 2
 name = "Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -11,8 +12,10 @@ input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 2_000_000

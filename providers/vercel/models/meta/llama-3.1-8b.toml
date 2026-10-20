@@ -1,7 +1,13 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "meta/llama-3.1-8b-instruct"
 name = "Llama 3.1 8B Instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+
+[capabilities]
+tools = { supported = true, updates = false }
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 8_192

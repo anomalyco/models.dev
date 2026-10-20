@@ -5,12 +5,15 @@
 # - openrouter tencent/hy3 effort none|low|high
 # API: {"chat_template_kwargs": {"reasoning_effort": "no_think"|"low"|"high"}}
 # mapped: no_think → none
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "tencent/hy3"
 base_model_omit = ["limit.input"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
+effort_updates = false
 
 [limit]
 context = 262_144

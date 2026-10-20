@@ -1,10 +1,13 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "sakana/fugu-ultra"
 description = "Quality-first multi-agent model for hard research, analysis, and competitions"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 temperature = true
+effort_updates = false
 
 [limit]
 output = 1_000_000

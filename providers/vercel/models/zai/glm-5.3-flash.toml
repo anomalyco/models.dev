@@ -1,6 +1,7 @@
 # Source: https://docs.z.ai/guides/llm/glm-5.3-flash
 # Effort: reasoning_effort = low|high|max, matching GLM-5.3 and relay peers.
 # Thinking is always enabled; no toggle or reasoning-token budget.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
@@ -10,8 +11,11 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 131_000

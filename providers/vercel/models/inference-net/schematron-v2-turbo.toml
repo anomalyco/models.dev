@@ -1,5 +1,10 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "inference-net/schematron-v2-turbo"
+
+[capabilities]
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.03
