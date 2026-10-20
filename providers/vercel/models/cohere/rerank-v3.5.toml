@@ -1,12 +1,7 @@
 schema = 2
+base_model = "cohere/rerank-v3.5"
 name = "Cohere Rerank 3.5"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
-open_weights = false
-release_date = "2024-12-02"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
@@ -14,5 +9,4 @@ reasoning = { supported = false }
 temperature = true
 
 [limit]
-context = 4_096
 output = 4_096

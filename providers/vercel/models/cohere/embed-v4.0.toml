@@ -1,9 +1,7 @@
 schema = 2
+base_model = "cohere/embed-v4.0"
 name = "Embed v4.0"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "cohere-embed"
-open_weights = false
-release_date = "2025-04-15"
 
 [modalities]
 input = ["text"]
@@ -13,7 +11,3 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
-
-[limit]
-context = 128_000
-output = 1_536

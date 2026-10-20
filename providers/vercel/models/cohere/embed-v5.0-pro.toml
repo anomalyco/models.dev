@@ -1,8 +1,6 @@
 schema = 2
-name = "Embed 5 Pro"
+base_model = "cohere/embed-v5.0-pro"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-open_weights = false
-release_date = "2026-09-30"
 
 [modalities]
 input = ["text"]
@@ -13,5 +11,4 @@ tools = { supported = false }
 reasoning = { supported = false }
 
 [limit]
-context = 128_000
 output = 0

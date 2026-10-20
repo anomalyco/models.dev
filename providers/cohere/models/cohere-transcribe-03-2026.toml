@@ -1,0 +1,8 @@
+# Audio Transcriptions API (POST https://api.cohere.com/v2/audio/transcriptions):
+#   https://docs.cohere.com/reference/create-audio-transcription (`language` required, `temperature` optional)
+# Model page: https://docs.cohere.com/docs/transcribe (maximum file size 25MB; free on the API subject to rate limits, production use through
+#   Model Vault billed per instance-hour, so no per-token cost is set).
+# Live: a WAV transcription returned 200 (2026-10-19).
+schema = 2
+v2_only = true
+base_model = "cohere/cohere-transcribe-03-2026"
