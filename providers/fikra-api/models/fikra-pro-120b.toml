@@ -1,9 +1,10 @@
 # Host lane on Fikra's OpenAI-compatible /v1 (limits and prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
-# Relay of the lab entry that the host routes this lane to (upstream mapping is internal to the host).
+# Upstream identity (live probe 2026-10-20): an image-input request is rejected by the host with the verbatim error "Model openai/gpt-oss-120b does not accept image input".
 name = "Fikra Pro 120B"
 description = "Open GPT-OSS 120B lane for general chat and summarization on a 131K context"
 base_model = "openai/gpt-oss-120b"
 reasoning_options = []
+attachment = false
 
 [cost]
 input = 0.3
@@ -11,3 +12,7 @@ output = 0.3
 
 [limit]
 output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

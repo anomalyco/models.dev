@@ -1,9 +1,17 @@
 # Host lane on Fikra's OpenAI-compatible /v1 (limits and prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
-# Relay of the lab entry that the host routes this lane to (upstream mapping is internal to the host).
+# No public host source maps this lane to a single lab checkpoint, so it stays standalone; reasoning content is not
+# exposed on the wire (live probe 2026-10-20).
+# Image input verified live (2026-10-20) with a minimum image size enforced upstream.
 name = "Fikra Auto Pro"
-description = "Auto-routed premium lane for long-context agent and coding runs on a 1M context, with request redaction"
-base_model = "alibaba/qwen3.8-max"
-reasoning_options = []
+description = "Auto-routed premium lane for long-context agent and coding runs on a 1M context"
+release_date = "2026-09"
+last_updated = "2026-10-20"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
 
 [cost]
 input = 6.0
@@ -12,3 +20,7 @@ output = 12.0
 [limit]
 context = 1048576
 output = 256000
+
+[modalities]
+input = ["text","image"]
+output = ["text"]

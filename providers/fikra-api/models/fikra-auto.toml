@@ -1,13 +1,26 @@
 # Host lane on Fikra's OpenAI-compatible /v1 (limits and prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
-# Relay of the lab entry that the host routes this lane to (upstream mapping is internal to the host).
+# No public host source maps this lane to a single lab checkpoint, so it stays standalone; reasoning content is not
+# exposed on the wire (live probe 2026-10-20).
+# Image input verified live (2026-10-20): image_url content accepted and answered.
 name = "Fikra Auto"
-description = "Auto lane: the host routes to the cheapest fitting lane, defaulting to the Qwen 3.8 27B-class path, with request redaction"
-base_model = "alibaba/qwen3.8-27b"
-reasoning_options = []
+description = "Auto lane: routes each request to the cheapest fitting lane on Fikra's OpenAI-compatible /v1"
+release_date = "2026-09"
+last_updated = "2026-10-20"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
 
 [cost]
 input = 0.045
 output = 0.35
 
 [limit]
+context = 262144
 output = 65536
+
+[modalities]
+input = ["text","image"]
+output = ["text"]
