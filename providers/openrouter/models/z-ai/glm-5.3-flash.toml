@@ -1,19 +1,19 @@
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.048
-output = 0.16
-cache_read = 0.006
+input = 0.15
+output = 0.5
+cache_read = 0.03
 
 [limit]
 context = 1_048_576
-output = 943_718
+output = 943_717
 
 [modalities]
 input = ["text", "image", "video"]
