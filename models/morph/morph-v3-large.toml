@@ -1,5 +1,7 @@
 # Lab metadata carried over from providers/openrouter/models/morph/morph-v3-large.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: Morph's docs take temperature ("Always set temperature: 0 for Apply") and document no top_p or top_k
+# (https://docs.morphllm.com/llms-full.txt).
 schema = 2
 name = "Morph V3 Large"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
@@ -15,8 +17,8 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
-top_p = true
-top_k = true
+top_p = false
+top_k = false
 
 [limit]
 context = 262_144

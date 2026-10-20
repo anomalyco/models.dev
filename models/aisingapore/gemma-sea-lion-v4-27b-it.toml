@@ -1,3 +1,8 @@
+# Sources:
+# - https://huggingface.co/aisingapore/Gemma-SEA-LION-v4-27B-IT (128K context, Gemma Terms of Use)
+# - https://huggingface.co/aisingapore/Gemma-SEA-LION-v4-27B-IT/blob/main/generation_config.json (top_k 64, top_p 0.95)
+# Sampling: open weights, so temperature, top_p and top_k all apply when self-hosted.
+# The card also lists Gemma 3 image input and function calling; hosts serve it as text only, so the lab keeps text.
 schema = 2
 name = "Gemma-SEA-LION-v4-27B-IT"
 description = "Gemma 3 27B tuned by AI Singapore for Southeast Asian languages and instruction following"

@@ -1,5 +1,6 @@
 # https://huggingface.co/BAAI/bge-m3
 # https://github.com/FlagOpen/FlagEmbedding/tree/master/research/BGE_M3
+# Embedding model: no sampling, output is embeddings.
 schema = 2
 type = "embedding"
 name = "BGE M3"
@@ -11,7 +12,7 @@ license = "MIT"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
 
 [capabilities]
 tools = { supported = false }

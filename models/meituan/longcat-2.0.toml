@@ -1,4 +1,7 @@
 # Open weights: https://huggingface.co/meituan-longcat/LongCat-2.0 (MIT, public since 2026-07-05)
+# Release: https://longcat.chat/platform/docs/change-log (2026-06-30, LongCat-2.0 release)
+# Sampling: open weights, so temperature, top_p and top_k all apply when self-hosted. LongCat's own API takes top_p and
+# top_k but fixes temperature (https://longcat.chat/platform/docs/api/model-params).
 schema = 2
 name = "LongCat-2.0"
 description = "Meituan LongCat-2.0, a reasoning model with tool calling and a 1M-token context window"

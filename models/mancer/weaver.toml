@@ -1,5 +1,7 @@
 # Lab metadata carried over from providers/openrouter/models/mancer/weaver.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# https://mancer.tech/models.html (Weaver Alpha: LLaMA 2 13B, 8000 context tokens, 6000 max output)
+# Sampling: Mancer's API takes temperature, top_p and top_k (https://mancer.tech/resources/api-docs-webui.yml).
 schema = 2
 name = "Weaver (alpha)"
 description = "General-purpose chat model for instruction following, writing, and analysis"

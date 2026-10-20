@@ -1,4 +1,5 @@
 # https://huggingface.co/BAAI/bge-reranker-v2-m3
+# Reranker: no sampling, output is relevance scores.
 schema = 2
 type = "reranking"
 name = "BGE Reranker V2 M3"
@@ -10,7 +11,7 @@ license = "Apache-2.0"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["reranking"]
 
 [capabilities]
 tools = { supported = false }

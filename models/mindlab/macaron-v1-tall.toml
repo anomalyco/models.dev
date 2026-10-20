@@ -1,6 +1,8 @@
 # https://macaron.im/mindlab/research/introducing-macaron-v1
 # https://huggingface.co/mindlab-research/Macaron-V1-Tall
 # Output limit: https://novita.ai/models/model-detail/mindai-macaron-v1-tall
+# Sampling: open weights; generation_config.json sets temperature 1.0, top_p 0.95, top_k 20
+# (https://huggingface.co/mindlab-research/Macaron-V1-Tall/blob/main/generation_config.json).
 schema = 2
 name = "Macaron V1 Tall"
 description = "Qwen3.6-based Mixture-of-LoRA model with specialists for chat, personal agents, coding, and generative UI"

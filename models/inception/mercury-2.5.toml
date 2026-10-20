@@ -1,5 +1,8 @@
-# Lab metadata carried over from providers/openrouter/models/inception/mercury-2.5.toml (curated catalogue data already in this repo),
-# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sources:
+# - https://docs.inceptionlabs.ai/get-started/models (Mercury 2.5: 260K context, 65,536 max output, text, tool calling, structured outputs)
+# - https://www.businesswire.com/news/home/20260908593295/en/ (launch, 2026-09-08)
+# Sampling: temperature 0.5-1 is the only sampling parameter on the chat completions API, no top_p or top_k
+# (https://docs.inceptionlabs.ai/api-reference/chat/create-a-chat-completion).
 schema = 2
 name = "Mercury 2.5"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
@@ -15,8 +18,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
-top_p = true
-top_k = true
+top_p = false
+top_k = false
 
 [limit]
 context = 260_000

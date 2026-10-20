@@ -1,5 +1,8 @@
-# https://longcat.chat/platform/docs/change-log
-# https://longcat.chat/platform/docs/
+# https://longcat.chat/platform/docs/change-log (2026-09-25: LongCat-2.5-Preview, new image understanding)
+# https://longcat.chat/platform/docs/ (1M context)
+# Sampling: https://longcat.chat/platform/docs/api/model-params fixes temperature (1.0 with thinking on, 0.7 off; other
+# values are overridden) and accepts top_p (0, 1] and top_k [-1, 100].
+# Modalities: image input is documented but LongCat's docs list no image formats, so input keeps the generic image.
 schema = 2
 name = "LongCat-2.5-Preview"
 description = "Meituan's multimodal reasoning model for coding and agent tasks, with image understanding and a 1M-token context window"
@@ -14,7 +17,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
+temperature = false
 top_p = true
 top_k = true
 

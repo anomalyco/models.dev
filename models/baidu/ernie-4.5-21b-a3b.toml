@@ -1,5 +1,7 @@
 # https://huggingface.co/baidu/ERNIE-4.5-21B-A3B-PT
 # https://novita.ai/models/model-detail/baidu-ernie-4.5-21B-a3b
+# Sampling: open weights; generation_config.json sets temperature 0.8 and top_p 0.8
+# (https://huggingface.co/baidu/ERNIE-4.5-21B-A3B-PT/blob/main/generation_config.json).
 schema = 2
 name = "ERNIE 4.5 21B A3B"
 description = "Open ERNIE text MoE with 21B total and 3B active parameters"

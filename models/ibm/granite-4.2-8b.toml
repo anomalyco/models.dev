@@ -1,11 +1,14 @@
 # Lab metadata carried over from providers/openrouter/models/ibm-granite/granite-4.2-8b.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Release: https://huggingface.co/ibm-granite/granite-4.2-8b (model card "Release Date: August 25, 2026"; Apache-2.0)
+# Sampling: open weights; generation_config.json sets temperature 1.0 and top_p 0.95
+# (https://huggingface.co/ibm-granite/granite-4.2-8b/blob/main/generation_config.json).
 schema = 2
 name = "Granite 4.2 8B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "granite"
 open_weights = true
-release_date = "2026-08-31"
+release_date = "2026-08-25"
 
 [modalities]
 input = ["text"]
