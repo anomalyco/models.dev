@@ -3,22 +3,32 @@
 # Sources:
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/zaiorg/glm-52
 # - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Implicit caching (4,096-token minimum): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models#context-caching
+# Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+schema = 2
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "toggle" }]
 status = "beta"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.40
-output = 4.40
-cache_read = 0.14
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 4_096 } }
 
 [limit]
 context = 1_000_000
 output = 64_000
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
-api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

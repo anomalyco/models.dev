@@ -1,38 +1,44 @@
 # Source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
-name = "GLM-4.7"
-description = "GLM model for coding, tool use, and complex reasoning"
 # POST .../endpoints/openapi/chat/completions; toggle with
 # $.chat_template_kwargs.enable_thinking = true | false.
 # https://cloud.google.com/vertex-ai/generative-ai/docs/maas/capabilities/thinking (accessed 2026-06-25)
+# Automatic caching: billed at a cache-hit price with no cache API (https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing).
+# Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+schema = 2
+name = "GLM-4.7"
+description = "GLM model for coding, tool use, and complex reasoning"
 family = "glm"
-release_date = "2026-01-06"
-last_updated = "2026-01-06"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-04"
 open_weights = true
+knowledge = "2025-04"
+release_date = "2026-01-06"
 status = "deprecated"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.60
-output = 2.20
-cache_read = 0.06
-
-[limit]
-context = 200_000
-output = 128_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
-api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true }
+
+[limit]
+context = 200_000
+output = 128_000
+
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 2.2

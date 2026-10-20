@@ -1,5 +1,8 @@
+schema = 2
 base_model = "google/gemini-embedding-001"
 
-[cost]
-input = 0.15
-output = 0
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0

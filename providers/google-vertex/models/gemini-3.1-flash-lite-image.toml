@@ -2,11 +2,46 @@
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking (thinking_level MINIMAL, HIGH)
 # - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (text output $1.50; image output $30)
+# v2 capabilities and prices:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/context-cache/context-cache-overview
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/priority-paygo
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/flex-paygo (global endpoint only)
+# text.output keeps the image output price that v1 `output` carries; cost.image.output is the real image price.
+# Mid-conversation updates: false. Vertex takes system instructions, thinking config and tools only as request-level
+# fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
+# Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
+# The documented text/plain document type is covered by `text`.
+# Video and PDF input are documented on the model page (the lab entry lists text and image only).
+schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
-structured_output = false
-reasoning_options = [{ type = "effort", values = ["minimal", "high"] }]
 
-[cost]
-input = 0.25
-output = 30
-cache_read = 0.025
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/x-flv", "video/quicktime", "video/mpeg", "video/mpegs", "video/mpg", "video/mp4", "video/webm", "video/wmv", "video/3gpp", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "high"] }
+structured_output = false
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 4_096 } }
+service_tier = ["flex", "priority"]
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 30
+
+[cost.image.output]
+price = 30
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
