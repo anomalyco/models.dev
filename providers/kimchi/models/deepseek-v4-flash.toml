@@ -1,0 +1,12 @@
+# Pricing per 1M tokens (USD), source:
+# https://docs.kimchi.dev/docs/model-apis-pricing (accessed 2026-10-20).
+# Implicit prompt cache (no write price).
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.07, write = 0 }
+
+[cost.text.output]
+price = 0.28

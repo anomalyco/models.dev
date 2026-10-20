@@ -1,0 +1,11 @@
+# Kimchi Inference: OpenAI-compatible serverless inference API.
+# https://kimchi.dev (API base https://llm.kimchi.dev/openai/v1)
+# Auth: Authorization: Bearer <KIMCHI_API_KEY> (key prefix castai_v1_)
+# Pricing: https://docs.kimchi.dev/docs/model-apis-pricing
+# Provider status: alpha during Kimchi Inference API rollout. Bump to active
+# once the maintainers confirm in the linked issue.
+name = "Kimchi Inference"
+env = ["KIMCHI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://docs.kimchi.dev/docs/model-apis-pricing"
+api = "https://llm.kimchi.dev/openai/v1"
