@@ -1,4 +1,4 @@
-# Modalities: HeyGen assets png and jpeg (https://developers.heygen.com/reference/upload-asset); heygen-video-1 returns an MP4 (https://developers.heygen.com/docs/quick-start)
+# Modalities: HeyGen assets png, jpeg, mp4, webm, mp3, wav (https://developers.heygen.com/reference/upload-asset); heygen-video-1 returns an MP4 (https://developers.heygen.com/docs/quick-start)
 # Inputs: AI Gateway's catalog video_capabilities.input_limits (kinds and supported_formats), https://ai-gateway.vercel.sh/v1/models
 schema = 2
 type = "video"
@@ -8,7 +8,7 @@ open_weights = false
 release_date = "2026-10-09"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "video/mp4", "video/webm", "audio/mpeg", "audio/wav"]
 output = ["video/mp4"]
 
 [capabilities]
