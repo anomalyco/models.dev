@@ -217,6 +217,44 @@ env = { TARGET_RESOURCE = "LEGACY_RESOURCE" }
     });
   });
 
+  test("v1_alias renames the target's provider-level api and rejects model files", async () => {
+    await withFixture(async (root) => {
+      await write(
+        root,
+        "providers/target/provider.toml",
+        `name = "Target"
+npm = "@ai-sdk/openai"
+env = ["TARGET_RESOURCE", "TARGET_KEY"]
+api = "https://\${TARGET_RESOURCE}.example.com/v1"
+doc = "https://example.com/models"
+`,
+      );
+      await write(root, "providers/target/models/plain.toml", `${providerFieldsToml()}
+[cost]
+input = 1
+output = 2
+`);
+      const alias = `name = "Legacy"
+npm = "@ai-sdk/openai"
+env = ["LEGACY_RESOURCE", "LEGACY_KEY"]
+doc = "https://example.com/models"
+
+[v1_alias]
+provider = "target"
+env = { TARGET_RESOURCE = "LEGACY_RESOURCE", TARGET_KEY = "LEGACY_KEY" }
+`;
+      await write(root, "providers/legacy/provider.toml", alias);
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.legacy?.api).toBe("https://${LEGACY_RESOURCE}.example.com/v1");
+      expect(providers.legacy?.models.plain?.provider).toBeUndefined();
+      expect(JSON.stringify(providers.legacy)).not.toContain("TARGET_");
+
+      await write(root, "providers/legacy/models/plain.toml", `${providerFieldsToml()}`);
+      expect(generate(path.join(root, "providers"))).rejects.toThrow("can't have a models directory");
+    });
+  });
+
   test("repository provider TOMLs do not use legacy extends tables", async () => {
     const root = path.join(import.meta.dirname, "..", "..", "..");
     const matches: string[] = [];

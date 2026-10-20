@@ -120,6 +120,11 @@ async function generateProviders(
         alias.error.cause = { providerPath, toml: v1_alias };
         throw alias.error;
       }
+      if (existsSync(path.join(directory, providerID, "models"))) {
+        throw new Error(`Provider "${providerID}" is a v1_alias and can't have a models directory`, {
+          cause: { providerPath },
+        });
+      }
       aliases.push({ provider: provider.data, alias: alias.data, providerPath });
       result[providerID] = provider.data;
       continue;
@@ -187,11 +192,14 @@ async function generateProviders(
         cause: { providerPath },
       });
     }
-    let models = JSON.stringify(target.models);
-    for (const [from, to] of Object.entries(alias.env)) {
-      models = models.replaceAll(`\${${from}}`, `\${${to}}`);
-    }
-    provider.models = JSON.parse(models);
+    const rename = (value: string) =>
+      Object.entries(alias.env).reduce(
+        (text, [from, to]) => text.replaceAll(`\${${from}}`, `\${${to}}`),
+        value,
+      );
+    // The target's provider-level base URL applies to its models too.
+    if (provider.api === undefined && target.api !== undefined) provider.api = rename(target.api);
+    provider.models = JSON.parse(rename(JSON.stringify(target.models)));
   }
 
   const nameToProviderID = new Map<string, string>();
