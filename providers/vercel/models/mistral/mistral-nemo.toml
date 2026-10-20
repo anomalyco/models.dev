@@ -1,20 +1,6 @@
 schema = 2
-name = "Mistral Nemo"
+base_model = "mistral/mistral-nemo"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-family = "mistral-nemo"
-open_weights = false
-knowledge = "2024-04"
-release_date = "2024-07-18"
-last_updated = "2024-07-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 131_072

@@ -1,18 +1,14 @@
 # Toggle: reasoning.enabled = true|false
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 schema = 2
-name = "Ling 3.0 Flash VL"
+base_model = "inclusionai/ling-3.0-flash-vl"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "ling"
-open_weights = false
-release_date = "2026-09-08"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 
 [limit]

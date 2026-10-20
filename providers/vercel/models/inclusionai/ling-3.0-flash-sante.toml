@@ -1,16 +1,8 @@
 schema = 2
-name = "Ling 3.0 Flash Sante"
+base_model = "inclusionai/ling-3.0-flash-sante"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "ling"
-open_weights = false
-release_date = "2026-09-04"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]

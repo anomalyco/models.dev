@@ -1,18 +1,14 @@
 # Effort: reasoning.effort = none|minimal|low|medium|high|xhigh|max
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 schema = 2
-name = "Seed 2.1 Turbo"
+base_model = "bytedance-seed/seed-2.1-turbo"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "seed"
-open_weights = false
-release_date = "2026-06-23"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]

@@ -1,17 +1,7 @@
 schema = 2
-name = "Mistral Embed"
-description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "mistral-embed"
-open_weights = false
-release_date = "2023-12-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "mistral/mistral-embed"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 temperature = true
 
 [limit]

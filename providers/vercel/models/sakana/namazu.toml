@@ -1,15 +1,8 @@
 schema = 2
-name = "Sakana Namazu"
+base_model = "sakana/sakana-namazu"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
-open_weights = false
-release_date = "2026-08-03"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]

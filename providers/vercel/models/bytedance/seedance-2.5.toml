@@ -1,18 +1,7 @@
 schema = 2
-name = "Seedance 2.5"
+base_model = "bytedance-seed/seedance-2.5"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
-family = "seed"
-open_weights = false
-release_date = "2026-08-07"
 
 [modalities]
 input = ["text"]
 output = ["video"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-
-[limit]
-context = 0
-output = 0

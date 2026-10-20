@@ -1,21 +1,10 @@
 schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
 name = "Beam 1.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "beam"
-open_weights = false
-release_date = "2026-10-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-
-[limit]
-context = 1_048_576
-output = 131_072
 
 [cost.text.input]
 price = 0

@@ -1,23 +1,15 @@
 schema = 2
-name = "Seed 1.6"
+base_model = "bytedance-seed/seed-1-6"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "seed"
-open_weights = false
-knowledge = "2024-10"
-release_date = "2025-09-01"
-last_updated = "2025-09"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
 
 [limit]
-context = 256_000
 output = 32_000
 
 [cost.text.input]

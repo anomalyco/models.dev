@@ -1,20 +1,16 @@
 schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "NVIDIA Nemotron 3.5 Super VL"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
-family = "nemotron"
-open_weights = false
-release_date = "2026-10-15"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
-context = 1_048_576
 output = 1_048_576
 
 [cost.text.input]

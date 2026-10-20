@@ -1,21 +1,14 @@
 schema = 2
-type = "decision"
+base_model = "typesafe/jev-1.14.0"
 name = "Jev 1.14.0"
 description = "Jev 1.14.0 is TypeSafe AI’s System One evaluation model for fast, structured decisions in software. It evaluates shared state against typed questions and returns choices, scores, and boolean probabilities, supporting classification, routing, rubric-based assessment, and automated verification. Multiple questions can be evaluated in parallel within a single request."
-open_weights = false
-release_date = "2026-10-15"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-
 [limit]
 context = 32_000
-output = 0
 
 [cost.text.input]
 price = 0.042

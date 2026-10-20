@@ -1,20 +1,5 @@
 schema = 2
-name = "Schematron V2 Turbo"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-open_weights = false
-release_date = "2026-04-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-
-[limit]
-context = 128_000
-output = 8_192
+base_model = "inference-net/schematron-v2-turbo"
 
 [cost.text.input]
 price = 0.03

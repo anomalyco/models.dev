@@ -1,23 +1,12 @@
 schema = 2
+base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 name = "Qwen 3 Coder 30B A3B Instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-open_weights = false
-knowledge = "2025-04"
-release_date = "2025-07-31"
-last_updated = "2025-04"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 262_144
 output = 8_192
 
 [cost.text.input]

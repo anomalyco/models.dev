@@ -1,17 +1,6 @@
 schema = 2
+base_model = "xai/grok-4.20-0309-non-reasoning"
 name = "Grok 4.20 Non-Reasoning"
-description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-open_weights = false
-release_date = "2026-03-10"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 
 [limit]
 context = 2_000_000

@@ -1,19 +1,9 @@
 schema = 2
-name = "Codestral Embed"
+base_model = "mistral/codestral-embed-2505"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "codestral-embed"
-open_weights = false
-release_date = "2025-05-28"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 temperature = true
 
 [limit]
-context = 8_192
 output = 1_536
