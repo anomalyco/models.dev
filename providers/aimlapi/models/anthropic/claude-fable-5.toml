@@ -1,4 +1,5 @@
 # Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=anthropic%2Fclaude-fable-5&endpoint=openai%2Fchat-completions
+# Cache: the chat-completions catalog row prices cache writes at 5m (cache_write) and 1h (cache_write_1h), and the request schema takes cache_control { type: ephemeral, ttl: 5m | 1h }. https://api.aimlapi.com/v1/models?include=pricing,modalities
 schema = 2
 base_model = "anthropic/claude-fable-5"
 
@@ -6,6 +7,7 @@ base_model = "anthropic/claude-fable-5"
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 effort_updates = false
 tools = { supported = true, updates = false }
+cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

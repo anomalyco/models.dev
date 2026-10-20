@@ -5,9 +5,10 @@
 # - system_updates = false only for closed-weight models whose lab API keeps no
 #   mid-conversation system message (first-party file says false); unset otherwise,
 #   because AI/ML API doesn't document where such a message ends up upstream.
-# - capabilities.cache unset: the schema lists cache_control (5m/1h) on every model,
-#   including ones whose upstream has no explicit caching, so it isn't evidence, and
-#   no AI/ML API page documents prompt caching.
+# - capabilities.cache: the schema lists cache_control (5m/1h) on every model, including
+#   ones whose upstream has no explicit caching, so on its own it isn't evidence. Explicit
+#   5m/1h caching is set only where the chat-completions catalog row (/v1/models?include=pricing)
+#   also prices cache writes at both TTLs (cache_write, cache_write_1h): the Claude models.
 name = "AI/ML API"
 env = ["AIMLAPI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
