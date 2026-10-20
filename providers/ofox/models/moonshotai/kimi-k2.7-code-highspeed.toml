@@ -2,11 +2,16 @@
 # - https://ofox.ai/en/models/moonshotai/kimi-k2.7-code-highspeed (accessed 2026-08-06)
 # - https://platform.moonshot.ai/docs (lab highspeed: always-on reasoning, no caller control)
 # Pricing: input $1.9/MTok, output $8/MTok, cache_read $0.38/MTok (USD)
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 1.9
-output = 8
-cache_read = 0.38
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.9
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 8

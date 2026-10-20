@@ -3,16 +3,15 @@
 # - https://ofox.ai/en/models (catalog listing for bailian/qwen3.6-max-preview)
 # Toggle: enable_thinking true|false (Alibaba Bailian chat path; matches lab + ofox bailian/qwen3.7-max)
 # Budget: thinking_budget
+schema = 2
 base_model = "alibaba/qwen3.6-max-preview"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 
-[[reasoning_options]]
-type = "budget_tokens"
+[cost.text.input]
+price = 2.15
+cache = { read = 0.2, write = 1.17 }
 
-[cost]
-input = 2.15
-output = 12.86
-cache_read = 0.2
-cache_write = 1.17
+[cost.text.output]
+price = 12.86

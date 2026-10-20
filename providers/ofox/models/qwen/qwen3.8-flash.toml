@@ -5,17 +5,16 @@
 # https://docs.qwencloud.com/developer-guides/text-generation/thinking
 # Toggle: enable_thinking true|false (hybrid; Qwen/DashScope surface through Ofox)
 # Budget: thinking_budget
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.11
+cache = { read = 0.011, write = 0.14 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.11
-output = 0.39
-cache_read = 0.011
-cache_write = 0.14
+[cost.text.output]
+price = 0.39

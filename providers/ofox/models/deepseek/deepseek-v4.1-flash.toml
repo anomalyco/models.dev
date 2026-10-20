@@ -3,17 +3,16 @@
 # https://api-docs.deepseek.com/guides/thinking_mode/
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max (Flash; lab maps xhigh→high)
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
+[cost.text.output]
+price = 1.2

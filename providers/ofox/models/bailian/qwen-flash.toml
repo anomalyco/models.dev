@@ -8,11 +8,15 @@
 # - https://help.aliyun.com/en/model-studio/deep-thinking (qwen-flash hybrid thinking)
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (integer reasoning tokens)
+schema = 2
 base_model = "alibaba/qwen-flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[cost]
-input = 0.022
-output = 0.22
-cache_read = 0.0043
-cache_write = 0.027
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+
+[cost.text.input]
+price = 0.022
+cache = { read = 0.0043, write = 0.027 }
+
+[cost.text.output]
+price = 0.22

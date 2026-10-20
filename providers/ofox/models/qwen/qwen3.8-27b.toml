@@ -3,21 +3,20 @@
 # https://api.ofox.ai/v1/models/qwen/qwen3.8-27b
 # Toggle: enable_thinking true|false (Qwen/DashScope chat path through Ofox)
 # Budget: thinking_budget
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.5
-output = 1.71
-cache_read = 0.043
-cache_write = 0.63
 
 [limit]
 context = 1_131_072
 output = 131_072
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.043, write = 0.63 }
+
+[cost.text.output]
+price = 1.71

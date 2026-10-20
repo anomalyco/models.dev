@@ -4,18 +4,19 @@
 # - https://docs.z.ai/guides/vlm/glm-5.3-flash (Flash/FlashX share weights; thinking.type only enabled; 1M context; model codes glm-5.3-flash/glm-5.3-flashx)
 # - https://vercel.com/changelog/glm-5-3-flashx-now-available-on-ai-gateway (FlashX high-speed serving option, ~200 tok/s, available 2026-09-18)
 # Effort: reasoning_effort = low|high|max (thinking always on)
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 name = "GLM-5.3-FlashX"
 description = "High-speed GLM-5.3-Flash serving option for coding and agent workflows"
 release_date = "2026-09-18"
-last_updated = "2026-09-18"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

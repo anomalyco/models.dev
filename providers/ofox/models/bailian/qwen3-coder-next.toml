@@ -1,8 +1,13 @@
 # https://ofox.ai/en/models/bailian/qwen3-coder-next
 # https://ofox.ai/models/bailian
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.2
-output = 1.5
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 1.5

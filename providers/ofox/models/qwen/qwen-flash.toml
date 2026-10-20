@@ -4,14 +4,18 @@
 # https://help.aliyun.com/en/model-studio/deep-thinking
 # Toggle: enable_thinking true|false (Qwen/DashScope chat path through Ofox)
 # Budget: thinking_budget
+schema = 2
 base_model = "alibaba/qwen-flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[cost]
-input = 0.022
-output = 0.22
-cache_read = 0.0043
-cache_write = 0.027
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [limit]
 output = 32_000
+
+[cost.text.input]
+price = 0.022
+cache = { read = 0.0043, write = 0.027 }
+
+[cost.text.output]
+price = 0.22

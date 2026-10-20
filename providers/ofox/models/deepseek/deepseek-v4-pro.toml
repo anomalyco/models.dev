@@ -1,14 +1,13 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
-
-[cost]
-input = 1.32
-output = 3.96
-cache_read = 0.044
+[cost.text.output]
+price = 3.96

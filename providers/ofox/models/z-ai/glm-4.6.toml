@@ -1,12 +1,15 @@
 # https://ofox.ai/models/z-ai/glm-4.6
 # https://api.ofox.ai/v1/models/z-ai/glm-4.6
 # Toggle: thinking.type = enabled|disabled (Z.ai native; Ofox lists supported_parameters: reasoning)
+schema = 2
 base_model = "zhipuai/glm-4.6"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0.6
-output = 2.2
-cache_read = 0.11
+[cost.text.input]
+price = 0.6
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 2.2

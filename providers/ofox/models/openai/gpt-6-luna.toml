@@ -3,19 +3,20 @@
 # - Ofox catalog API: https://api.ofox.ai/v2/models/catalog?include=provider_price&search=gpt-6-luna
 # - OpenAI model docs (pricing/reasoning): https://developers.openai.com/api/docs/models/gpt-6-luna
 # Ofox provider_price override is flat $0.08/$0.40 (+ cache) with no context tier in the catalog, so no [[cost.tiers]].
+schema = 2
 base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[api.responses]
+base_url = "https://api.ofox.ai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://api.ofox.ai/v1"
+[cost.text.output]
+price = 0.5

@@ -2,18 +2,22 @@
 # https://ofox.ai/docs (example model id anthropic/claude-sonnet-4.6)
 # Pricing: $3/M input, $15/M output, $0.3/M cache_read, $3.75/M cache_write (5m)
 # Context 1M / output 128K; Anthropic native + OpenAI protocols
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 
 [limit]
 output = 128_000
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://api.ofox.ai/anthropic/v1"
+[api.messages]
+base_url = "https://api.ofox.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

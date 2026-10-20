@@ -1,8 +1,13 @@
 # Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
 
-[cost]
-input = 0.6
-output = 2.4
-cache_read = 0.12
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 2.4

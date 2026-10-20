@@ -3,17 +3,16 @@
 # https://api.ofox.ai/v1/models/deepseek/deepseek-v4-flash-0423
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0423"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.19
+cache = { read = 0.028 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.19
-output = 0.51
-cache_read = 0.028
+[cost.text.output]
+price = 0.51

@@ -2,15 +2,20 @@
 # - https://ofox.ai/en/models/x-ai/grok-4.20 (Ofox pricing, context 2M, max output 128K; accessed 2026-08-06)
 # - https://docs.x.ai/developers/models/grok-4.20-reasoning (`grok-4.20` aliases grok-4.20-0309-reasoning; reasoning always-on)
 # reasoning_options = [] matches first-party xAI + relay peers (always-on, no caller control)
+schema = 2
 base_model = "xai/grok-4.20-0309-reasoning"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 4
-output = 12
-cache_read = 0.4
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 2_000_000
 output = 128_000
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12

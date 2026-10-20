@@ -4,12 +4,16 @@
 # https://docs.qwencloud.com/developer-guides/text-generation/thinking
 # Toggle: enable_thinking true|false (Bailian/DashScope chat path via Ofox; same surface as ofox bailian/qwen3.5-flash, qwen3.6-flash)
 # Budget: thinking_budget
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
-cache_write = 0.2
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016, write = 0.2 }
+
+[cost.text.output]
+price = 0.47

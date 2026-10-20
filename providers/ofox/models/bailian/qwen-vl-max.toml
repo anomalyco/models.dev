@@ -4,9 +4,12 @@
 # Pricing from Ofox catalog API (USD per token × 1e6 → USD/MTok):
 #   input 0.00000023 → 0.23, output 0.00000058 → 0.58,
 #   input_cache_read 0.000000046 → 0.046
+schema = 2
 base_model = "alibaba/qwen-vl-max"
 
-[cost]
-input = 0.23
-output = 0.58
-cache_read = 0.046
+[cost.text.input]
+price = 0.23
+cache = { read = 0.046 }
+
+[cost.text.output]
+price = 0.58

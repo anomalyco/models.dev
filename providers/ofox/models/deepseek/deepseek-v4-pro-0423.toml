@@ -2,17 +2,16 @@
 # https://api-docs.deepseek.com/quick_start/pricing/
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = high|max (Pro; lab maps low/medium→high)
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0423"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1.32
+cache = { read = 0.15 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
-
-[cost]
-input = 1.32
-output = 3.96
-cache_read = 0.15
+[cost.text.output]
+price = 3.96

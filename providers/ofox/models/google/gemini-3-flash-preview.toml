@@ -1,15 +1,16 @@
 # https://ofox.ai/models/google/gemini-3-flash-preview — Ofox pricing (input/output/cache)
 # https://ai.google.dev/gemini-api/docs/thinking — gemini-3-flash-preview thinking_level: minimal|low|medium|high
 # https://ai.google.dev/gemini-api/docs/pricing — Google first-party list price (matches Ofox)
+schema = 2
 base_model = "google/gemini-3-flash-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05, write = 1 }
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
-cache_write = 1
+[cost.text.output]
+price = 3
