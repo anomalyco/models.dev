@@ -1,20 +1,23 @@
+schema = 2
 name = "Fugu"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
 family = "fugu"
-release_date = "2026-06-15"
-last_updated = "2026-06-15"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
 open_weights = false
-
-[limit]
-context = 1_000_000
+release_date = "2026-06-15"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
 
 [[links]]
 label = "Official model catalog"

@@ -1,21 +1,24 @@
 # Lab metadata carried over from providers/openrouter/models/nousresearch/hermes-4-405b.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "Hermes 4 405B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "hermes"
-release_date = "2025-08-26"
-last_updated = "2025-08-26"
-knowledge = "2024-08-31"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
 open_weights = true
-
-[limit]
-context = 131072
-output = 117964
+knowledge = "2024-08-31"
+release_date = "2025-08-26"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 117_964

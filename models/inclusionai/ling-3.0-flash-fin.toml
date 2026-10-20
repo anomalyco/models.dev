@@ -3,25 +3,29 @@
 # https://openrouter.ai/api/v1/models/inclusionai/ling-3.0-flash-fin:free/endpoints
 # https://vercel.com/changelog/ling-3-0-flash-fin-now-available-on-ai-gateway-for-free
 # MIT weights published: https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin (2026-09-03)
+schema = 2
 name = "Ling 3.0 Flash Fin"
 description = "Finance-enhanced model for financial research, multi-step investment workflows, and long-horizon planning and execution"
 family = "ling"
+open_weights = true
 release_date = "2026-08-27"
 last_updated = "2026-09-03"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
 license = "MIT"
-
-[limit]
-context = 262_144
-output = 32_768
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
 
 [[weights]]
 label = "Hugging Face"

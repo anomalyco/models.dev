@@ -3,24 +3,27 @@
 # and context window are provisional, assumed consistent with the rest of the
 # family pending the public release.
 # https://deep-reinforce.com/ornith_1_0.html
+schema = 2
 name = "Ornith 1.0 31B"
 description = "Open coding-reasoning model for repository tasks and self-improving agents"
 family = "ornith"
-release_date = "2026-06-25"
-last_updated = "2026-06-25"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-06-25"
 license = "MIT"
-
-[limit]
-context = 262_144
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
 
 [[links]]
 label = "Announcement"

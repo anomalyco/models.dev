@@ -1,21 +1,24 @@
 # Lab metadata carried over from providers/openrouter/models/sakana/fugu-ultra-v2.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "Fugu Ultra v2"
 description = "Quality-first multi-agent model for hard research, analysis, and competitions"
 family = "fugu"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-knowledge = "2026-08-28"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
 open_weights = false
-
-[limit]
-context = 1000000
-output = 128000
+knowledge = "2026-08-28"
+release_date = "2026-09-11"
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 128_000
