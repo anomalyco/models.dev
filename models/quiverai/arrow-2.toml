@@ -1,6 +1,8 @@
 # Sources (accessed 2026-09-19):
 # https://docs.quiver.ai/developers/models
 # https://docs.quiver.ai/developers/models/arrow-2
+# Sampling: https://docs.quiver.ai/api-reference/create-svgs/generate-svg (Arrow 2 accepts
+#   temperature and top_p on native SVG endpoints; there is no top_k field).
 name = "Arrow 2"
 description = "Fast SVG generation model for creation, vectorization, editing, and animation"
 release_date = "2026-09-16"
@@ -8,6 +10,7 @@ last_updated = "2026-09-16"
 attachment = true
 reasoning = true
 tool_call = true
+temperature = true
 open_weights = false
 
 [limit]
