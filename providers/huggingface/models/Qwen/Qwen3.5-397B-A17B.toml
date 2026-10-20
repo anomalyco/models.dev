@@ -9,7 +9,9 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+effort_updates = false
 
 [limit]
 output = 32_768

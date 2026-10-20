@@ -1,11 +1,15 @@
 # Lab identity: https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking
+# Deprecated: every inference provider mapping is in error (https://huggingface.co/api/models/Qwen/Qwen3-Next-80B-A3B-Thinking?expand[]=inferenceProviderMapping, 2026-10-20).
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-thinking"
 name = "Qwen3-Next-80B-A3B-Thinking"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
+status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 context = 262_144

@@ -2,7 +2,9 @@ schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.07

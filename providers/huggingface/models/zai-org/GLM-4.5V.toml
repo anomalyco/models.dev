@@ -1,12 +1,15 @@
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (zhipuai/glm-4.5v).
 schema = 2
 base_model = "zhipuai/glm-4.5v"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 context = 65_536

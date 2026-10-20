@@ -4,6 +4,10 @@ base_model = "moonshotai/kimi-k2-instruct"
 name = "Kimi-K2-Instruct"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
 
+[capabilities]
+tools = { supported = true, updates = false }
+effort_updates = false
+
 [limit]
 output = 16_384
 

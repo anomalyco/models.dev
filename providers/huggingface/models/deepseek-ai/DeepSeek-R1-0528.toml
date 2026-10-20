@@ -5,7 +5,9 @@ name = "DeepSeek-R1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 output = 163_840

@@ -3,11 +3,12 @@
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-open_weights = true
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 1.32

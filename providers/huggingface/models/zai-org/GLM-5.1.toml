@@ -4,7 +4,9 @@ base_model = "zhipuai/glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 context = 202_752

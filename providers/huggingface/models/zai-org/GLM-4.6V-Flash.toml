@@ -1,13 +1,16 @@
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (zhipuai/glm-4.6v-flash).
 schema = 2
 base_model = "zhipuai/glm-4.6v-flash"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+effort_updates = false
 
 [limit]
 context = 131_072

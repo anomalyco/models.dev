@@ -14,8 +14,10 @@ schema = 2
 base_model = "xiaomi/mimo-v2.5-pro"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 1

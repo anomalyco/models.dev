@@ -1,8 +1,12 @@
+# Deprecated: every inference provider mapping is in error (https://huggingface.co/api/models/zai-org/GLM-4.5?expand[]=inferenceProviderMapping, 2026-10-20).
 schema = 2
 base_model = "zhipuai/glm-4.5"
+status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+effort_updates = false
 
 [cost.text.input]
 price = 0.6

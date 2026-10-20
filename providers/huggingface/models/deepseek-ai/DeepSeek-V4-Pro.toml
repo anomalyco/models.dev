@@ -2,8 +2,10 @@ schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

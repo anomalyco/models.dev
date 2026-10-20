@@ -1,13 +1,16 @@
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (alibaba/qwen3.6-35b-a3b).
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.15

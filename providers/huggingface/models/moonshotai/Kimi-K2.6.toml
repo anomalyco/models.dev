@@ -5,7 +5,9 @@ name = "Kimi-K2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

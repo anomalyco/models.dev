@@ -4,6 +4,10 @@ base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3-Coder-480B-A35B-Instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 
+[capabilities]
+tools = { supported = true, updates = false }
+effort_updates = false
+
 [limit]
 output = 66_536
 

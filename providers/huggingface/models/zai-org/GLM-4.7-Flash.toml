@@ -4,7 +4,9 @@ base_model = "zhipuai/glm-4.7-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 output = 128_000
