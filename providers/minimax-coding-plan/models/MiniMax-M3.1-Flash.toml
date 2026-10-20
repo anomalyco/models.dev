@@ -2,14 +2,15 @@
 # reasoning_effort = low|medium|high|xhigh|max, default max.
 # https://platform.minimax.io/docs/api-reference/text-anthropic-api
 # https://platform.minimax.io/docs/api-reference/text-openai-api
+schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
