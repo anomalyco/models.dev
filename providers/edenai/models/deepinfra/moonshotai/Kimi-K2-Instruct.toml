@@ -3,7 +3,9 @@ base_model = "moonshotai/kimi-k2-instruct"
 name = "Kimi K2 Instruct (Deep Infra)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = false
+effort_updates = false
 
 [cost.text.input]
 price = 0.5

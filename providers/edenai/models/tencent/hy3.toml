@@ -3,8 +3,10 @@ base_model = "tencent/hy3"
 name = "Hy3 (Tencent)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.132

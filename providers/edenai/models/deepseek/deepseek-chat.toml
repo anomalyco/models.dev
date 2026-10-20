@@ -1,8 +1,12 @@
+# Cache: DeepSeek caches automatically, no marker required (https://www.edenai.co/docs/v3/llms/prompt-caching).
 schema = 2
 base_model = "deepseek/deepseek-chat"
 
 [capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 131_072

@@ -1,9 +1,11 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
 schema = 2
 base_model = "google/gemini-3.1-flash-image"
 
 [modalities]
-input = ["image", "text"]
-output = ["text", "image"]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text"]
+output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "high"] }

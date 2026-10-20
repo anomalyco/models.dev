@@ -1,15 +1,19 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
 schema = 2
 base_model = "openai/gpt-5.1-codex"
 base_model_omit = ["limit.input"]
 name = "GPT-5.1 Codex (Azure)"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 272_000

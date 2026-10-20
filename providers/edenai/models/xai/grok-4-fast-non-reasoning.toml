@@ -6,7 +6,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = false
+effort_updates = false
 
 [cost.text.input]
 price = 0.2

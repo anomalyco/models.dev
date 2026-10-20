@@ -3,8 +3,10 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro 0813 (Databricks)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = false
+effort_updates = false
 
 [cost.text.input]
 price = 1.32

@@ -2,7 +2,9 @@ schema = 2
 base_model = "cohere/command-a-03-2025"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 288_000

@@ -3,7 +3,9 @@ base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama-3.3-70B-Instruct (Scaleway)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = false
+effort_updates = false
 
 [cost.text.input]
 price = 1.00935

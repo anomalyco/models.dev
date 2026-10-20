@@ -2,7 +2,9 @@ schema = 2
 base_model = "mistral/voxtral-small-latest"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 32_768

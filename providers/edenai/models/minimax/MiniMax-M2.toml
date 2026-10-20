@@ -2,8 +2,10 @@ schema = 2
 base_model = "minimax/MiniMax-M2"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = false
+effort_updates = false
 
 [cost.text.input]
 price = 0.3

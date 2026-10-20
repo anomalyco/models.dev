@@ -4,8 +4,10 @@ base_model_omit = ["limit.input"]
 name = "Hy3 (Deep Infra)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 262_144

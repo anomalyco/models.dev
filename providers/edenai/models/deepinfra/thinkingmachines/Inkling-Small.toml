@@ -3,8 +3,10 @@ base_model = "thinkingmachines/inkling-small"
 name = "Inkling Small (Deep Infra)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 524_288

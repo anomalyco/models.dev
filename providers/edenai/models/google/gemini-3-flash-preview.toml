@@ -1,9 +1,14 @@
+# Cache: Gemini accepts cache_control on a Chat Completions content block
+# (https://www.edenai.co/docs/v3/llms/prompt-caching).
 schema = 2
 base_model = "google/gemini-3-flash-preview"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+cache = { supported = true, explicit = true }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.5

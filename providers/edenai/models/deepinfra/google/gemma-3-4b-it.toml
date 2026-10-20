@@ -3,7 +3,9 @@ base_model = "google/gemma-3-4b-it"
 name = "Gemma 3 4B IT (Deep Infra)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.05

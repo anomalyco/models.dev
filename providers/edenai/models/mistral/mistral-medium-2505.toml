@@ -2,7 +2,9 @@ schema = 2
 base_model = "mistral/mistral-medium-2505"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.4

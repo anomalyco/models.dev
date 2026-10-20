@@ -2,7 +2,9 @@ schema = 2
 base_model = "cohere/command-r-08-2024"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.15

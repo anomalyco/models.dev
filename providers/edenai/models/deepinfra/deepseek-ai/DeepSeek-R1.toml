@@ -3,8 +3,10 @@ base_model = "deepseek/deepseek-r1"
 name = "DeepSeek-R1 (Deep Infra)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 163_840
