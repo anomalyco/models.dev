@@ -1,3 +1,5 @@
+# Effort: reasoning_effort = none|low|high|max (DeepSeek V4's levels; DigitalOcean accepts none..max, provider.toml).
+# Live 2026-10-20: omitted or none returns no reasoning_content; any other level reasons. Off is effort none, so no toggle.
 # Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
 # and tools are per-request fields (effort_updates = false, tools.updates = false).
 # system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
@@ -9,7 +11,7 @@ description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { supported = true, implicit = true }
 structured_output = true
 system_updates = true
