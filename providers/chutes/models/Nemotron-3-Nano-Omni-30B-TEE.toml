@@ -1,3 +1,4 @@
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
 schema = 2
 name = "Nemotron 3 Nano Omni 30B TEE"
 description = "Omni-modal model for text, vision, audio, and multimodal agent tasks"
@@ -13,6 +14,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 131_072

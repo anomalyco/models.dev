@@ -1,3 +1,5 @@
+# Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/
+# Input MIME types: the image list of models/mistral/mistral-small-3.2-24b-instruct.toml (same model; kept standalone because linking reorders the v1 modalities); OVHcloud's catalog reports image input without formats (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
 schema = 2
 name = "Mistral-Small-3.2-24B-Instruct-2506"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
@@ -5,14 +7,15 @@ open_weights = true
 release_date = "2025-07-16"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
+effort_updates = false
 
 [limit]
 context = 131_072

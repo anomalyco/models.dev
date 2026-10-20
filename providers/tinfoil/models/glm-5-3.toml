@@ -3,12 +3,17 @@
 # - https://docs.tinfoil.sh/models/chat.md (GLM-5.3; 1M context; weights Inferact/GLM-5.3-NVFP4)
 # - https://docs.tinfoil.sh/guides/reasoning.md (glm-5-3 effort low|high|max; reasoning always on)
 # Effort: reasoning_effort = low|high|max on Tinfoil; reasoning is always on (no none; enable_thinking not honoured).
+# Mid-conversation: Tinfoil serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.tinfoil.sh/models/chat
+# Cache: the inference router reuses matching prompt prefixes automatically, scoped by API identity and user_cache_secret (https://docs.tinfoil.sh/sdk/prompt-caching).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { supported = true, implicit = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

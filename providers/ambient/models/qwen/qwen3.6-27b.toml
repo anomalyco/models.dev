@@ -1,6 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # Ambient request schema: https://api.ambient.xyz/openapi.json
 # Model controls: https://openrouter.ai/api/v1/models (qwen/qwen3.6-27b)
+# Mid-conversation: Ambient serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://api.ambient.xyz/openapi.json
 schema = 2
 base_model = "alibaba/qwen3.6-27b"
 
@@ -9,8 +10,10 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 32_768

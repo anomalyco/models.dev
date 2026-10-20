@@ -6,12 +6,17 @@
 # models/motif-technologies/motif-3.toml. structured_output stays false: live
 # probe 2026-09-14 — response_format json_schema is ignored (prose reply).
 # Reasoning side channel: message.reasoning_content
+# Mid-conversation: ai& serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.aiand.com/api/chat-completions/
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers (https://docs.aiand.com/models/pricing/#prompt-caching).
 schema = 2
 base_model = "motif-technologies/motif-3"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "high"] }
+cache = { supported = true, implicit = true }
 structured_output = false
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

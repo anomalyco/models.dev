@@ -3,6 +3,7 @@
 # engy serves this deployment text-only, so modalities and attachment are narrowed.
 # Live probe 2026-08-31, n=36/level at 8,192 (the cap): reasoning_effort inert, every pair p>=0.39
 # (MWU); toggle and none suppress reasoning 36/36. No effort control is offered.
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 
@@ -11,8 +12,10 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 208_192

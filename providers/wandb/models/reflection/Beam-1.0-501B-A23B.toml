@@ -1,13 +1,15 @@
 # W&B lists always-on reasoning with minimal/low/medium/high/xhigh/max effort; no on/off toggle.
 # https://trace.wandb.ai/inference/catalog/models
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 description = "Beam is a 501B-parameter MoE model with 23B active parameters built for coding, reasoning, and agentic workflows."
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 output = 1_048_576

@@ -1,9 +1,12 @@
+# Mid-conversation: Inceptron serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.inceptron.io
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["high", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

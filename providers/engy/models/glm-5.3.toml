@@ -3,12 +3,15 @@
 # Live probe 2026-08-30 at 8k, n=40 for low/medium/high, 20 for xhigh/max: low = medium (p=0.49)
 # < high (p=3.4e-06) < xhigh = max (MWU). Nothing switches it off: none, minimal and
 # enable_thinking=false measure as low; 0 of 320 empty.
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 327_680

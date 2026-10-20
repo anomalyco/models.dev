@@ -1,13 +1,16 @@
 # Toggle: chat_template_kwargs.enable_thinking = true|false
 # Source: https://huggingface.co/Qwen/Qwen3-32B (chat template exposes enable_thinking)
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
 schema = 2
 base_model = "alibaba/qwen3-32b"
 name = "Qwen3 32B TEE"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 40_960

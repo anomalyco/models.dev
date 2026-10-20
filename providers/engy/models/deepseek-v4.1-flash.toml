@@ -6,12 +6,15 @@
 # engy maps effort per template (engy.ai/docs, 2026-09-19): low/medium -> low, high -> high, xhigh/max -> max.
 # Probe 2026-09-12, n=40/level at 32k: low, medium and high did not separate (paired p>=0.04);
 # high vs max paired p=1e-04.
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

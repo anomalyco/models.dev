@@ -1,12 +1,16 @@
+# Mid-conversation: Hyper serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://hyper.charm.land/v1/models
+# Input MIME types: the lab's image list; Hyper's catalog reports vision without formats (https://hyper.charm.land/v1/models).
 schema = 2
 base_model = "alibaba/qwen3.8-max-preview"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+effort_updates = false
 
 [limit]
 output = 65_536

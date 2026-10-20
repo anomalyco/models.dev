@@ -1,15 +1,19 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
+# Input MIME types: the lab's image list; CoreWeave's catalog reports image input without formats (https://trace.wandb.ai/inference/modelsdev/models).
 schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
 description = "MiniMax M3 is a multimodal MoE model with 23B active parameters optimized for coding and agentic workflows."
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 262_144

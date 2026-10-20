@@ -1,3 +1,4 @@
+# Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/
 schema = 2
 name = "Qwen3Guard-Gen-8B"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
@@ -12,6 +13,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 32_768

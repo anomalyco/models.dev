@@ -1,12 +1,17 @@
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning.effort = high|max
+# Mid-conversation: Ambient serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://api.ambient.xyz/openapi.json
+# Status: deprecated; no longer listed by GET https://api.ambient.xyz/v1/models (checked 2026-10-20).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

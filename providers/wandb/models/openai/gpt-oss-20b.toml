@@ -1,11 +1,14 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b"
 description = "Lower latency Mixture-of-Experts model trained on OpenAI's Harmony response format with reasoning capabilities."
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 output = 131_072

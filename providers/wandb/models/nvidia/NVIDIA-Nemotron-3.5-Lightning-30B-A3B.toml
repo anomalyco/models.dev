@@ -1,11 +1,14 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
 schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning"
 description = "Nemotron 3.5 Lightning is an MoE model built for fast, reliable agentic tasks across use cases such as financial services, cybersecurity, telecom, and retail."
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.07

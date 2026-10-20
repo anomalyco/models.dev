@@ -1,9 +1,11 @@
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
 schema = 2
 base_model = "mistral/mistral-nemo"
 name = "Mistral Nemo Instruct 2407 TEE"
 
 [capabilities]
 tools = { supported = false }
+effort_updates = false
 
 [limit]
 context = 131_072

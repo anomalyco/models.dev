@@ -5,17 +5,23 @@
 # Modalities: text + image + PDF; video rejected on this host.
 # temperature = true: the host accepts the parameter (live probe 2026-09-14: 200 at 0.0 and 1.8); the lab file records Moonshot's own API as false.
 # Reasoning side channel: message.reasoning_content
+# Mid-conversation: ai& serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.aiand.com/api/chat-completions/
+# Input MIME types: vision image/png|jpeg|webp|gif, video video/mp4|webm|quicktime, document application/pdf (https://docs.aiand.com/api/file-purposes/).
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers (https://docs.aiand.com/models/pricing/#prompt-caching).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { supported = true, implicit = true }
 structured_output = true
 temperature = true
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -290,9 +290,15 @@ const EFFORT_DOC_URL =
 const BUDGET_DOC_URL =
   "https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0";
 
+// Sources for the v2-only fields (mid-conversation flags, image MIME types)
+// authored in the files. They aren't in the catalog, so sync keeps them as is.
+const MID_CONVERSATION_LINE =
+  "# Mid-conversation: Friendli serves this model on POST /serverless/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://friendli.ai/docs/openapi/model-apis/chat-completions";
+const IMAGE_MIME_LINE =
+  "# Input MIME types: images JPEG, PNG and AVIF (https://friendli.ai/docs/guides/multi-modality); video per the lab.";
+
 function reasoningHeader(model: SyncedModel): string | undefined {
-  const options = model.reasoning_options;
-  if (options === undefined || options.length === 0) return undefined;
+  const options = model.reasoning_options ?? [];
   const lines: string[] = [];
   for (const option of options) {
     if (option.type === "toggle") {
@@ -315,7 +321,9 @@ function reasoningHeader(model: SyncedModel): string | undefined {
       lines.push(`# ${BUDGET_DOC_URL}`);
     }
   }
-  return lines.length > 0 ? `${lines.join("\n")}\n` : undefined;
+  lines.push(MID_CONVERSATION_LINE);
+  if (model.modalities?.input?.includes("image")) lines.push(IMAGE_MIME_LINE);
+  return `${lines.join("\n")}\n`;
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";

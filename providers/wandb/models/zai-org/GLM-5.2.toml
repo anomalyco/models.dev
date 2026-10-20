@@ -1,11 +1,14 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 description = "GLM-5.2 is a Mixture-of-Experts language model featuring 40 billion activated parameters and a total of 744 billion parameters."
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

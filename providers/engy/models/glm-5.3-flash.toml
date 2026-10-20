@@ -5,16 +5,20 @@
 # "(Ox Alpha)" is the codename it was served under before the name went public; status unset.
 # Live probe 2026-08-30 at 8k, n=40 for low/medium/high, 20 for xhigh/max: low = medium (p=0.41)
 # < high (p=1.8e-05) < xhigh = max; none/minimal/enable_thinking=false measure as low; 0/320 empty.
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
+# Input MIME types: the lab's image list; engy's catalog reports image input without formats (https://api.engy.ai/v1/models).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 327_680

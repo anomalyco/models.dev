@@ -4,12 +4,17 @@
 # Live probe 2026-09-14: none|high|max → 200; minimal|low|medium|xhigh → 400.
 # context_window = 1048576 on this host overrides the lab's 1_000_000.
 # Reasoning side channel: message.reasoning_content
+# Mid-conversation: ai& serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.aiand.com/api/chat-completions/
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers (https://docs.aiand.com/models/pricing/#prompt-caching).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "high", "max"] }
+cache = { supported = true, implicit = true }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
