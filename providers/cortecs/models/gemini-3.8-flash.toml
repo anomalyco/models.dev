@@ -1,5 +1,5 @@
-# Effort: reasoning_effort = low|medium|high
-# Source: https://docs.cortecs.ai/examples/reasoning
+# Effort: Cortecs "accepts: 'reasoning_effort': 'low' | 'medium' | 'high'" (https://docs.cortecs.ai/routing/reasoning, "Controlling Reasoning").
+# Mapping: Gemini 2.5 and later, "Provided efforts are converted into a reasoning budget similar to Anthropic" (the Anthropic table: low 1024 | medium 2048 | high 4096), same page.
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: automatic prefix caching on every routed provider (google, google_priority). https://docs.cortecs.ai/routing/prompt-caching
 # Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
