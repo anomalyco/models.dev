@@ -1,0 +1,31 @@
+# Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, Singapore, accessed 2026-10-19).
+# Capabilities: Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions; structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (tool definitions count as part of the system message, so changing tools changes the prefix).
+# Toggle: enable_thinking true|false (default on); Effort: reasoning_effort = low|high|max (default high) per the Chat API reference. top_k: the DeepSeek series does not support it.
+# Peak/off-peak pricing: busy hours 08:00-22:00 UTC+8, idle 22:00-08:00 UTC+8 (14:00-24:00 UTC) at half price. Base = busy price, idle multiplier 0.5.
+# Cache: implicit (context-cache model lists), hits at 10% of the same period's input price.
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache; enable_thinking and reasoning_effort changes missed it.
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+top_k = false
+system_updates = true
+effort_updates = false
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.multipliers]]
+when = { utc_hours = { gte = "14:00" } }
+factor = 0.5

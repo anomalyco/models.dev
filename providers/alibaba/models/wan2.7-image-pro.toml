@@ -1,0 +1,28 @@
+# Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, Singapore, accessed 2026-10-19). Billed per output image.
+# Image generation and editing: https://www.alibabacloud.com/help/en/model-studio/image-model
+schema = 2
+v2_only = true
+type = "image"
+name = "Wan2.7 Image Pro"
+description = "Higher-quality Wan image model for generation and editing"
+open_weights = false
+release_date = "2026-05-29"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[cost.image.output]
+unit = "image"
+price = 0.075

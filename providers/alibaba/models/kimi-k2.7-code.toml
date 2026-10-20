@@ -1,0 +1,26 @@
+# Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, Singapore, accessed 2026-10-19).
+# Capabilities: Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions; structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (tool definitions count as part of the system message, so changing tools changes the prefix).
+# Thinking only (deep-thinking doc; enable_thinking=false is ignored live); Budget: thinking_budget. preserve_thinking defaults to true on this model. top_k: the Kimi series does not support it.
+# Cache: implicit (and explicit in China (Beijing)) per the context-cache model lists; implicit hits at 20% of input.
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the cache; thinking_budget changes kept it; adding tools missed it.
+schema = 2
+v2_only = true
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true, budget = {  } }
+top_k = false
+system_updates = true
+effort_updates = true
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4
