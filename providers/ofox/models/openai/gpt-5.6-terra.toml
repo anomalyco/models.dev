@@ -13,5 +13,14 @@ sdk = { aisdk = "@ai-sdk/openai" }
 price = 2
 cache = { read = 0.2, write = 2.5 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.4, write = 5 }
+
 [cost.text.output]
 price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 18

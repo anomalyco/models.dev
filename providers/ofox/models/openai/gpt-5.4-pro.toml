@@ -14,5 +14,13 @@ sdk = { aisdk = "@ai-sdk/openai" }
 [cost.text.input]
 price = 30
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
 [cost.text.output]
 price = 180
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 270

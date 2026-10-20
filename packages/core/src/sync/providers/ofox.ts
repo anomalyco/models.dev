@@ -4,14 +4,29 @@ import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500";
 
+const Price = z.union([z.string(), z.number()]);
+
+const ContextPriceTier = z
+  .object({
+    threshold_tokens: z.number().int().positive(),
+    input: Price.optional(),
+    output: Price.optional(),
+    cache_read: Price.optional(),
+    cache_write: Price.optional(),
+    cache_write_5m: Price.optional(),
+  })
+  .passthrough();
+
 const Pricing = z
   .object({
     input: z.string().optional(),
     output: z.string().optional(),
+    audio: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
     input_cache_write_5m: z.string().optional(),
     input_cache_write_1h: z.string().optional(),
+    context_price_tiers: z.array(ContextPriceTier).optional(),
   })
   .passthrough();
 
@@ -86,8 +101,8 @@ export const ofox = {
   },
 } satisfies SyncProvider<OfoxModel>;
 
-/** Ofox prices are $/token decimal strings; catalog omits zero-value fields. */
-function price(value: string | undefined) {
+/** Ofox prices are $/token (decimal strings, or numbers in tiers); catalog omits zero-value fields. */
+function price(value: string | number | undefined) {
   if (value === undefined) return undefined;
   const number = Number(value);
   if (!Number.isFinite(number) || number <= 0) return undefined;
@@ -107,6 +122,14 @@ export function buildOfoxModel(model: OfoxModel, authored: ExistingModel): Synce
   const output = price(pricing?.output);
   const cacheRead = price(pricing?.input_cache_read);
   const cacheWrite = price(pricing?.input_cache_write) ?? price(pricing?.input_cache_write_5m);
+  // Prompts over `threshold_tokens` bill every token at the tier's prices.
+  const tiers = pricing?.context_price_tiers?.map((tier) => ({
+    tier: { type: "context" as const, size: tier.threshold_tokens },
+    input: price(tier.input) ?? 0,
+    output: price(tier.output) ?? 0,
+    cache_read: price(tier.cache_read),
+    cache_write: price(tier.cache_write) ?? price(tier.cache_write_5m),
+  }));
   const cost =
     input !== undefined || output !== undefined
       ? {
@@ -115,6 +138,8 @@ export function buildOfoxModel(model: OfoxModel, authored: ExistingModel): Synce
           output: output ?? 0,
           cache_read: cacheRead,
           cache_write: cacheWrite,
+          input_audio: price(pricing?.audio),
+          tiers: tiers?.length ? tiers : undefined,
         }
       : authored.cost;
 

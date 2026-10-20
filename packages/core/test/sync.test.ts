@@ -83,7 +83,7 @@ import {
   type NanoGptModel,
 } from "../src/sync/providers/nano-gpt.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
-import { ofox } from "../src/sync/providers/ofox.js";
+import { buildOfoxModel, ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
@@ -6437,4 +6437,52 @@ test("Kilo sync keeps the catalog display name on linked files", () => {
   // A linked file that inherits the lab's name keeps inheriting it.
   const unnamed = { base_model } as ExistingModel;
   expect(buildKiloModel(model!, unnamed, undefined, unnamed)).not.toHaveProperty("name");
+});
+
+test("Ofox sync takes context tiers and audio prices from the catalog and keeps v2-only data", () => {
+  const [model] = ofox.parseModels({
+    data: [{
+      id: "openai/gpt-5.5",
+      mode: "chat",
+      pricing: {
+        input: "0.000005",
+        output: "0.00003",
+        audio: "0.000002",
+        input_cache_read: "0.0000005",
+        input_cache_write_5m: "0.00000625",
+        context_price_tiers: [{ threshold_tokens: 272_000, input: 0.00001, output: 0.000045, cache_read: 0.000001 }],
+      },
+    }],
+  });
+  const doc = {
+    schema: 2,
+    base_model: "openai/gpt-5.5",
+    capabilities: {
+      tools: { supported: true, updates: false },
+      structured_output: true,
+      effort_updates: false,
+      cache: { supported: true, implicit: true },
+    },
+    api: { responses: { base_url: "https://api.ofox.ai/v1", sdk: { aisdk: "@ai-sdk/openai" } } },
+    cost: { text: { input: { price: 4, cache: { read: 0.4, write: { "5m": 5, "1h": 8 } } }, output: { price: 20 } } },
+  };
+  const { id: _id, ...existing } = modelV2ToV1({ ...doc, id: "openai/gpt-5.5" });
+
+  const synced = buildOfoxModel(model!, existing as ExistingModel) as Record<string, any>;
+  expect(synced.base_model).toBe("openai/gpt-5.5");
+  expect(synced.cost).toEqual({
+    input: 5,
+    output: 30,
+    cache_read: 0.5,
+    cache_write: 6.25,
+    input_audio: 2,
+    tiers: [{ tier: { type: "context", size: 272_000 }, input: 10, output: 45, cache_read: 1, cache_write: undefined }],
+  });
+
+  const next = patchModelV2(doc, existing, synced) as Record<string, any>;
+  expect(next.capabilities).toEqual(doc.capabilities);
+  expect(next.api).toEqual(doc.api);
+  expect(next.cost.text.input).toMatchObject({ price: 5, cache: { read: 0.5, write: { "5m": 6.25, "1h": 10 } } });
+  expect(next.cost.text.input.overrides).toEqual([{ when: { context: { gt: 272_000 } }, price: 10, cache: { read: 1 } }]);
+  expect(next.cost.audio.input.price).toBe(2);
 });
