@@ -1,15 +1,15 @@
 # Included in subscription
 base_model = "google/gemma-4-26b-a4b-it"
-structured_output = true
 name = "Gemma 4 26B A4B"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"
 
 [cost]
-input = 0.0765
-output = 0.255
-cache_read = 0.0425
+input = 0.09
+output = 0.3
+cache_read = 0.05
 
 [limit]
 input = 262_144
