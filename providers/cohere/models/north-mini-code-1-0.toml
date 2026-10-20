@@ -3,20 +3,20 @@
 # are explicitly unsupported. Token-budget control is not documented.
 # Sources:
 # https://docs.cohere.com/docs/compatibility-api
+schema = 2
 base_model = "cohere/north-mini-code-1-0"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.00
-output = 0.00
+[cost.text.input]
+price = 0
 
-[interleaved]
-field = "reasoning_content"
-
-[provider]
-npm = "@ai-sdk/openai-compatible"
-api = "https://api.cohere.ai/compatibility/v1"
+[cost.text.output]
+price = 0

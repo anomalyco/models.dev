@@ -6,15 +6,14 @@
 # https://docs.cohere.com/docs/command-a-reasoning
 # https://docs.cohere.com/docs/reasoning
 # https://docs.cohere.com/docs/compatibility-api
+schema = 2
 base_model = "cohere/command-a-reasoning-08-2025"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1 } }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
+[cost.text.input]
+price = 2.5
 
-[cost]
-input = 2.50
-output = 10.00
+[cost.text.output]
+price = 10
