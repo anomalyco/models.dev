@@ -1,9 +1,10 @@
 # Verified 2026-09-18 against https://api.kimi.ai/coding/v1/chat/completions
 # with kimi-code OAuth credentials; reasoning returned via reasoning_content.
 # Kimi Code docs (accessed 2026-10-19): https://www.kimi.com/code/docs/en/kimi-code/models.html
-# Effort: reasoning_effort = "low" | "high" | "max" (default "high"); unknown values return 400.
-# Toggle: effort "none" maps to thinking.type = "disabled"; with thinking off, K3 and K2.8 Preview requests are
-# served by K2.8 Preview without thinking.
+# Effort: reasoning_effort = "none" | "low" | "high" | "max" (default "high"); unknown values return 400.
+# Off is effort "none" (the docs map it to thinking.type = "disabled"; with thinking off, K3 and K2.8 Preview requests are
+# served by K2.8 Preview without thinking). The OpenAI-compatible endpoint documents only reasoning_effort, so no
+# separate toggle is authored.
 # Switching reasoning effort invalidates the context cache (same page); prompt_cache_key is required for good cache
 # hit rates on Kimi Code Plan (https://platform.kimi.ai/docs/api/chat). Cost is zeroed per this provider's
 # subscription convention.
@@ -11,7 +12,7 @@ schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
 structured_output = true
 effort_updates = false
 prompt_cache_key = true

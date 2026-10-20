@@ -1,7 +1,11 @@
 # Sources:
 # - Release (2026-04-20): https://www.kimi.ai/blog/kimi-k2-6, https://huggingface.co/moonshotai/Kimi-K2.6
 # - Context: https://platform.kimi.ai/docs/guide/kimi-k2-6-quickstart
-# - Input formats: https://platform.kimi.ai/docs/guide/use-kimi-vision-model (image/video MIME lists)
+# - Input formats: https://platform.kimi.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats lists them
+#   literally as MIME types ("Images support the following formats (MIME types): image/jpeg, image/png, image/gif,
+#   image/webp, image/bmp, image/heic, image/heif"; "Videos support the following formats (MIME types): video/mp4,
+#   video/mpeg, video/mov, video/avi, video/x-flv, video/mpg, video/webm, video/wmv, video/3gpp"), so the strings are kept
+#   as written, the same as the Gemini lab files.
 # Open weights: sampling is a runtime feature, so the lab keeps temperature/top_p/top_k on;
 # Moonshot's own API fixes them (see providers/moonshotai).
 schema = 2

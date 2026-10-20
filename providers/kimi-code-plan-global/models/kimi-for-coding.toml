@@ -3,10 +3,10 @@
 # Kimi Code docs (accessed 2026-10-19): https://www.kimi.com/code/docs/en/kimi-code/models.html
 # https://www.kimi.com/code/docs/en/kimi-code/whats-new.html#k2-8-preview-september-11-2026
 # kimi-for-coding is served by K2.8 Preview. The output limit is kept; the docs only specify context.
-# Structured output: K2.8 Preview honored a strict json_schema response_format on api.moonshot.ai (live 2026-10-19).
-# Effort: reasoning_effort = "low" | "high" | "max" (default "max"); unknown values return 400.
-# Toggle: effort "none" maps to thinking.type = "disabled"; with thinking off, K3 and K2.8 Preview requests are
-# served by K2.8 Preview without thinking.
+# Effort: reasoning_effort = "none" | "low" | "high" | "max" (default "max"); unknown values return 400.
+# Off is effort "none" (the docs map it to thinking.type = "disabled"; with thinking off, K3 and K2.8 Preview requests are
+# served by K2.8 Preview without thinking). The OpenAI-compatible endpoint documents only reasoning_effort, so no
+# separate toggle is authored.
 # Switching reasoning effort invalidates the context cache (same page); prompt_cache_key is required for good cache
 # hit rates on Kimi Code Plan (https://platform.kimi.ai/docs/api/chat). Cost is zeroed per this provider's
 # subscription convention.
@@ -15,8 +15,7 @@ base_model = "moonshotai/kimi-k2.8-preview"
 name = "kimi-for-coding"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
-structured_output = true
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "low", "high", "max"] }
 effort_updates = false
 prompt_cache_key = true
 cache = { supported = true, implicit = true, explicit = false }

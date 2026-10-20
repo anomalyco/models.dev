@@ -1,6 +1,8 @@
 # China platform (api.moonshot.cn). Prices are published in CNY at https://platform.kimi.com/docs/pricing/chat
 # (accessed 2026-10-19): input ¥6.50, cache hit ¥1.10, output ¥27.00.
 # CNY→USD rate: 6.693661, 2026-10-20, source: https://open.er-api.com/v6/latest/USD
+# Toggle: thinking.type = "enabled" (default) | "disabled"; reasoning returned in reasoning_content. Verified on
+# api.moonshot.ai (the CN key returns 401 on api.moonshot.cn); the CN docs list the same parameter.
 # Capabilities match the global platform (same docs at https://platform.kimi.com/docs); see
 # providers/moonshotai/models/kimi-k2.6.toml for the live checks.
 schema = 2
