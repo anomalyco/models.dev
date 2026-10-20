@@ -1,10 +1,22 @@
+# Sources (accessed 2026-10-19):
+# - Plan and supported models: https://docs.z.ai/devpack/overview, https://docs.z.ai/devpack/latest-model
+# - Thinking (Coding Plan effort mapping): https://docs.z.ai/guides/capabilities/thinking
+# Subscription plan billed in credits, so no per-token cost.
+# Deprecated: the plan now serves only GLM-5.3 and GLM-5.3-Flash; requests for this model are routed to GLM-5.3.
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Effort: reasoning_effort = high|max (default max); none|minimal skip thinking, low|medium map to
+# high, xhigh maps to max
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM-5.2 Highspeed"
+status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, effort = ["high", "max"] }
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
 structured_output = true
+top_k = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

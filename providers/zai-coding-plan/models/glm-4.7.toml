@@ -1,23 +1,18 @@
+# Sources (accessed 2026-10-19):
+# - Plan and supported models: https://docs.z.ai/devpack/overview, https://docs.z.ai/devpack/latest-model
+# - Thinking (Coding Plan effort mapping): https://docs.z.ai/guides/capabilities/thinking
+# Subscription plan billed in credits, so no per-token cost.
+# Deprecated: the plan now serves only GLM-5.3 and GLM-5.3-Flash; requests for this model are routed to GLM-5.3-Flash.
+# Toggle: thinking.type = enabled|disabled (default enabled)
 schema = 2
-name = "GLM-4.7"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-open_weights = true
-knowledge = "2025-04"
-release_date = "2025-12-22"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "zhipuai/glm-4.7"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, toggle = true }
-temperature = true
-
-[limit]
-context = 204_800
-output = 131_072
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+top_k = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,11 @@
+# Sources (accessed 2026-10-19):
+# - Pricing: https://docs.z.ai/guides/overview/pricing ($0.015 per image)
+# - Model: https://docs.z.ai/guides/image/glm-image
+# - API: https://docs.z.ai/api-reference/image/generate-image
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-image"
+
+[cost.image.output]
+unit = "image"
+price = 0.015

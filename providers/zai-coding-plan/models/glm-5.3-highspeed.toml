@@ -1,12 +1,20 @@
-# Effort levels mirror the base GLM-5.3 (low, high, max).
-# https://docs.bigmodel.cn/cn/coding-plan/latest-model
+# Sources (accessed 2026-10-19):
+# - Plan and supported models: https://docs.z.ai/devpack/overview, https://docs.z.ai/devpack/latest-model
+# - Thinking (Coding Plan effort mapping): https://docs.z.ai/guides/capabilities/thinking
+# Subscription plan billed in credits, so no per-token cost.
+# GLM-5.3 Highspeed is not listed in the current plan docs; earlier it was tier-gated on the coding
+# endpoint (403 "not available on plan" on lower tiers). Kept as-is pending confirmation.
+# Effort: none|minimal|low map to low, medium|high to high, xhigh|max to max; disabling thinking maps to low.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 Highspeed"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
+top_k = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

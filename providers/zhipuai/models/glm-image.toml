@@ -1,0 +1,11 @@
+# Sources (accessed 2026-10-19):
+# - Pricing (CNY): https://docs.bigmodel.cn/cn/guide/start/pricing (CNY 0.1 per image)
+# - Model: https://docs.bigmodel.cn/cn/guide/models/image-generation/glm-image
+# CNY→USD rate: 6.693661, 2026-10-19, source: https://open.er-api.com/v6/latest/USD
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-image"
+
+[cost.image.output]
+unit = "image"
+price = 0.01494

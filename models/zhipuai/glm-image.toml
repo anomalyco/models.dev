@@ -1,8 +1,13 @@
+# Sources (accessed 2026-10-19):
+# - https://docs.z.ai/guides/image/glm-image
+# - https://docs.z.ai/release-notes/new-released (launched 2026-01-14)
+# - https://docs.bigmodel.cn/cn/update/new-releases (2026-01-14)
 schema = 2
+type = "image"
 name = "GLM-Image"
 description = "GLM-Image is an image generation model adopts a hybrid autoregressive + diffusion decoder architecture. In general image generation quality, GLM‑Image aligns with mainstream latent diffusion approaches, but it shows significant advantages in text-rendering and knowledge‑intensive generation scenarios. It performs especially well in tasks requiring precise semantic understanding and complex information expression, while maintaining strong capabilities in high‑fidelity and fine‑grained detail generation. In addition to text‑to‑image generation, GLM‑Image also supports a rich set of image‑to‑image tasks including image editing, style transfer, identity‑preserving generation, and multi‑subject consistency."
 open_weights = true
-release_date = "2026-01-19"
+release_date = "2026-01-14"
 license = "MIT"
 
 [modalities]

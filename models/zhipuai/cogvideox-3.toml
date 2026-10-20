@@ -1,0 +1,27 @@
+# Sources (accessed 2026-10-19):
+# - https://docs.z.ai/guides/video/cogvideox-3 (text / image / first-and-last-frame input, video output)
+# - https://docs.z.ai/api-reference/video/generate-video (prompt up to 512 characters; images png, jpeg, jpg up to 5 MB; 5 or 10 s clips)
+# - https://docs.bigmodel.cn/cn/update/new-releases (launched 2025-07-15)
+# limit.context is the 512-character prompt cap.
+schema = 2
+v2_only = true
+type = "video"
+name = "CogVideoX-3"
+description = "Video generation model for text-to-video, image-to-video, and first/last-frame clips with optional sound effects"
+open_weights = false
+release_date = "2025-07-15"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["video"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 512
+output = 0

@@ -1,1 +1,25 @@
-../../zai/models/glm-4.6v.toml
+# Sources (accessed 2026-10-19):
+# - Plan and supported models: https://docs.bigmodel.cn/cn/coding-plan/overview, https://docs.bigmodel.cn/cn/coding-plan/latest-model
+# - Thinking (Coding Plan effort mapping): https://docs.bigmodel.cn/cn/guide/capabilities/thinking
+# Subscription plan billed in credits, so no per-token cost.
+# Deprecated: the plan now serves only GLM-5.3 and GLM-5.3-Flash (vision MCP included with GLM-5.3-Flash).
+# Toggle: thinking.type = enabled|disabled (default enabled)
+schema = 2
+base_model = "zhipuai/glm-4.6v"
+status = "deprecated"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+top_k = false
+cache = { supported = true, implicit = true, explicit = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
