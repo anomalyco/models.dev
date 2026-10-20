@@ -5,12 +5,13 @@
 # Live Converse check 2026-09-22 (eu-west-1, global profile): tool call + tool-result round trip; effort low/xhigh/max accepted.
 # v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card says Converse rejects document blocks, so no application/pdf here.
 schema = 2
 base_model = "openai/gpt-6-luna"
 name = "GPT-6 Luna (US)"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

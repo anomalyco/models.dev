@@ -3,8 +3,14 @@
 # Standard us-east-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
 # Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Modalities: Converse images png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); video MP4, MOV, MKV, WebM, FLV, MPEG/MPG, WMV, 3GP (https://docs.aws.amazon.com/nova/latest/userguide/modalities-video.html);
+# documents PDF, CSV, TXT, HTML, Markdown (https://docs.aws.amazon.com/nova/latest/userguide/modalities-document.html). DOC/DOCX/XLS/XLSX are also supported but have no v1 modality, so they are left out.
 schema = 2
 base_model = "amazon/nova-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska", "video/webm", "video/x-flv", "video/mpeg", "video/x-ms-wmv", "video/3gpp", "application/pdf", "text/csv", "text/plain", "text/html", "text/markdown"]
+output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }

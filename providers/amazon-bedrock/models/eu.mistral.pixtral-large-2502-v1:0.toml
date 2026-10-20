@@ -4,9 +4,14 @@
 # Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
 # Service tiers: the model card lists priority/flex, but Converse rejects both live ("The provided service tier is not supported for this model", 2026-10-19), so none are set.
+# Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card lists image input.
 schema = 2
 base_model = "mistral/pixtral-large-2502"
 name = "Pixtral Large (25.02) (EU)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
