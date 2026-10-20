@@ -3,6 +3,7 @@
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 base_model = "openai/gpt-5.2-chat-latest"
+name = "OpenAI: GPT-5.2 Chat"
 
 [modalities]
 input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]

@@ -5741,3 +5741,27 @@ test("Kilo sync keeps v2-only data and leaves model facts to the lab in v2 files
     expect(next).not.toHaveProperty(fact);
   }
 });
+
+test("Kilo sync keeps the catalog display name on linked files", () => {
+  const [model] = kilo.parseModels({
+    data: [{
+      id: "cognitivecomputations/dolphin-mistral-24b-venice-edition",
+      name: "Venice: Uncensored",
+      created: 1_750_000_000,
+      context_length: 32_768,
+      architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+      pricing: { prompt: "0.0000002", completion: "0.0000009" },
+      top_provider: { context_length: 32_768, max_completion_tokens: 8_192 },
+      supported_parameters: ["temperature", "tools"],
+    }],
+  });
+  const base_model = "cognitivecomputations/dolphin-mistral-24b-venice-edition";
+  const named = { base_model, name: "Venice: Uncensored" } as ExistingModel;
+
+  // A linked file with its own display name keeps Kilo's name, and so does a new file.
+  expect(buildKiloModel(model!, named, undefined, named)).toMatchObject({ name: "Venice: Uncensored" });
+  expect(buildKiloModel(model!, undefined)).toMatchObject({ name: "Venice: Uncensored" });
+  // A linked file that inherits the lab's name keeps inheriting it.
+  const unnamed = { base_model } as ExistingModel;
+  expect(buildKiloModel(model!, unnamed, undefined, unnamed)).not.toHaveProperty("name");
+});

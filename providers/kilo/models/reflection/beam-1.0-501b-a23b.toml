@@ -3,6 +3,7 @@
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
+name = "Reflection: Beam 1.0 501B A23B"
 description = "Beam 1.0 is Reflection's open-weight reasoning model for coding and long-horizon agentic workflows. It uses a sparse mixture-of-experts architecture with 501B total and 23B active parameters per token, and a..."
 
 [capabilities]
