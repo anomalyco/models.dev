@@ -1,18 +1,21 @@
+schema = 2
 name = "Llama 3.1 Nemotron Safety Guard 8B v3"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "nemotron"
-release_date = "2025-10-28"
-last_updated = "2025-10-28"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = true
-
-[limit]
-context = 128_000
-output = 4_096
+release_date = "2025-10-28"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 4_096

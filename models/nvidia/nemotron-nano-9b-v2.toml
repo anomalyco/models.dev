@@ -1,18 +1,21 @@
+schema = 2
 name = "Nemotron Nano 9B v2"
 description = "Compact Nemotron model for efficient reasoning and deployable AI agents"
 family = "nemotron"
-release_date = "2025-08-18"
-last_updated = "2025-08-18"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 131_072
-output = 131_072
+release_date = "2025-08-18"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072

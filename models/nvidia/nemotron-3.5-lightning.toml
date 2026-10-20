@@ -1,23 +1,26 @@
 # NVIDIA BF16 reasoning evaluation, not the NVFP4 checkpoint. Benchmark-specific recipes:
 # https://github.com/NVIDIA-NeMo/Gym/tree/main/nemotron_recipes/lightning-3.5/reproducibility.md
+schema = 2
 name = "Nemotron 3.5 Lightning 30B A3B"
 description = "Fast NVIDIA Nemotron MoE for reliable agentic tasks across enterprise workloads"
 family = "nemotron"
-release_date = "2026-08-11"
-last_updated = "2026-08-11"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 262_144
-output = 262_144
+release_date = "2026-08-11"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 262_144
 
 [[benchmarks]]
 name = "MMLU-Pro"

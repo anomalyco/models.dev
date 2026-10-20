@@ -1,23 +1,26 @@
 # Benchmarks sourced from MiMo-V2.6-Flash-RL use its "MiMo-V2.5 Pro" comparison column.
+schema = 2
 name = "MiMo-V2.5-Pro"
 description = "Stronger MiMo Pro tier for multimodal reasoning and coding-agent execution"
 family = "mimo"
-release_date = "2026-04-22"
-last_updated = "2026-04-22"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-12"
 open_weights = true
-
-[limit]
-context = 1_048_576
-output = 131_072
+knowledge = "2024-12"
+release_date = "2026-04-22"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

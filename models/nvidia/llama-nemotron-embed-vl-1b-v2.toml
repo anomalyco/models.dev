@@ -1,18 +1,21 @@
+schema = 2
 name = "Llama Nemotron Embed VL 1B v2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "nemotron"
-release_date = "2026-02-10"
-last_updated = "2026-02-10"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = true
-
-[limit]
-context = 32_768
-output = 2_048
+release_date = "2026-02-10"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 2_048

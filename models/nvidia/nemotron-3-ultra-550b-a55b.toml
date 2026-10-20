@@ -1,21 +1,24 @@
+schema = 2
 name = "Nemotron 3 Ultra 550B A55B"
 description = "Largest Nemotron 3 model for maximum open-weight reasoning and agent accuracy"
 family = "nemotron"
-release_date = "2026-06-04"
-last_updated = "2026-06-04"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 1_000_000
-output = 128_000
+release_date = "2026-06-04"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 128_000
 
 [[benchmarks]]
 name = "SWE-Bench Verified"

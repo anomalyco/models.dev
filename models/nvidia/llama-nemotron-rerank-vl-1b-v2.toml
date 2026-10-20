@@ -1,18 +1,21 @@
+schema = 2
 name = "Llama Nemotron Rerank VL 1B v2"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
 family = "nemotron"
-release_date = "2026-03-31"
-last_updated = "2026-03-31"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = true
-
-[limit]
-context = 128_000
-output = 4_096
+release_date = "2026-03-31"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 4_096

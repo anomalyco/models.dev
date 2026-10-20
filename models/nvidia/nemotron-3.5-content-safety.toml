@@ -1,18 +1,21 @@
+schema = 2
 name = "Nemotron 3.5 Content Safety"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "nemotron"
-release_date = "2026-06-04"
-last_updated = "2026-06-04"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
 open_weights = true
-
-[limit]
-context = 128_000
-output = 8_192
+release_date = "2026-06-04"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 8_192
