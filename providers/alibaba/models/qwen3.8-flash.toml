@@ -7,6 +7,7 @@
 # the Qwen3.8-Flash-Next release blog)
 # Budget: thinking_budget (Max Reasoning 262K)
 base_model = "alibaba/qwen3.8-flash"
+structured_output = true
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["low", "medium", "xhigh"] },

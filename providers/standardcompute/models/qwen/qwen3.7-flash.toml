@@ -6,6 +6,7 @@
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 # Budget: reasoning.max_tokens (passed through as the upstream thinking budget)
 base_model = "alibaba/qwen3.7-flash"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
 
 [interleaved]

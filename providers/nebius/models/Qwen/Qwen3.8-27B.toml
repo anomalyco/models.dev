@@ -22,6 +22,7 @@
 base_model = "alibaba/qwen3.8-27b"
 description = "Dense 27B reasoning model for coding, research, and long-horizon agent tasks"
 attachment = false
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 
 [interleaved]

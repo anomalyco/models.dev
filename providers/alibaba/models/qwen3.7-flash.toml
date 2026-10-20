@@ -6,6 +6,7 @@
 # Budget: thinking_budget (integer reasoning tokens, maximum 262144)
 # Explicit cache: read 10%, creation 125% of the input price in each tier.
 base_model = "alibaba/qwen3.7-flash"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
 
 [interleaved]

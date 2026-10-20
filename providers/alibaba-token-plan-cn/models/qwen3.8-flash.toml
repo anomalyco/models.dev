@@ -11,6 +11,7 @@
 # Reasoning streams in reasoning_content.
 # Cost is Credits-subscription (no public USD per-token rate on Token Plan).
 base_model = "alibaba/qwen3.8-flash"
+structured_output = true
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["low", "medium", "xhigh"] },

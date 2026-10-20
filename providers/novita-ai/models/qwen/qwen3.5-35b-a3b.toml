@@ -2,6 +2,7 @@
 # Toggle: thinking.type = enabled|disabled
 # Budget: thinking_budget (reasoning tokens)
 base_model = "alibaba/qwen3.5-35b-a3b"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [interleaved]

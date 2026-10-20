@@ -15,6 +15,7 @@
 # All three tiers remain $0/token; recharge unlocks allowances/context, not token-price bands.
 # This entry publishes the default Free context, so no paid [[cost.tiers]] apply.
 base_model = "alibaba/qwen3.8-27b"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
 
 [cost]

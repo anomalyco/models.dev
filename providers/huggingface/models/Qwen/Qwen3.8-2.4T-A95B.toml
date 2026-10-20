@@ -1,5 +1,6 @@
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 
 [cost]

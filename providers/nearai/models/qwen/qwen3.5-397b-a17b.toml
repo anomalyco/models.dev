@@ -4,6 +4,7 @@
 # Accepts images, although /v1/models lists text only: on 2026-09-10 a two-colour test
 # image was read correctly, while the same prompt without it guessed wrong.
 base_model = "alibaba/qwen3.5-397b-a17b"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

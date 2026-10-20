@@ -2,6 +2,7 @@
 # Effort: reasoning_effort = low|medium|xhigh; thinking.type=disabled is rejected.
 # Budget: thinking_budget (reasoning tokens); cannot be combined with effort.
 base_model = "alibaba/qwen3.8-2.4t-a95b"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]
 
 [interleaved]

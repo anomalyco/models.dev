@@ -3,6 +3,7 @@
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B A17B TEE"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

@@ -5,6 +5,7 @@
 # Live probe 2026-08-30, n=60/level at 32k: xhigh separates from low and medium (paired p<0.01), high
 # and max behave as xhigh (p>=0.87), medium vs low unsettled (p=0.44); toggle and none suppress 20/20.
 base_model = "alibaba/qwen3.8-27b"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

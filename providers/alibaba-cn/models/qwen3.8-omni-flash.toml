@@ -5,6 +5,7 @@
 # Effort: reasoning_effort = low|medium|xhigh; none disables thinking.
 # This model uses implicit cache, not explicit cache creation.
 base_model = "alibaba/qwen3.8-omni-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 
 [interleaved]

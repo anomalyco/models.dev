@@ -4,6 +4,7 @@
 # Text and image, as /v1/models reports for this route. The lab entry adds video,
 # which was never probed here.
 base_model = "alibaba/qwen3.8-27b"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

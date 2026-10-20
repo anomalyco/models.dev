@@ -6,6 +6,7 @@
 # Pricing: $0.80/M input, $4.00/M output. Context 131_042, max output 16_384.
 # Modalities on Groq: text + images in, text out (no video). Preview model.
 base_model = "alibaba/qwen3.8-27b"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "default", "low", "medium", "high"] }]
 
 [cost]

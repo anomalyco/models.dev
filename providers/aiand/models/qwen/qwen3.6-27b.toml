@@ -5,6 +5,7 @@
 # Modalities: image, video, and PDF accepted on this host (catalog vision|video|document).
 # Reasoning side channel: message.reasoning_content
 base_model = "alibaba/qwen3.6-27b"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

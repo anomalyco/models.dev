@@ -5,6 +5,7 @@
 # Effort: reasoning_effort = low|medium|xhigh on /v1/chat/completions.
 # https://docs.aihubmix.com/cn/api/unified-inference
 base_model = "alibaba/qwen3.8-omni-flash"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

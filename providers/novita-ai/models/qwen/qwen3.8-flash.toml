@@ -3,6 +3,7 @@
 # Effort: reasoning_effort = low|medium|xhigh
 # Budget: thinking_budget (reasoning tokens); cannot be combined with effort.
 base_model = "alibaba/qwen3.8-flash"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]
 
 [interleaved]

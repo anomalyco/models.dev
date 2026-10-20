@@ -2,6 +2,7 @@
 # Budget: thinking_budget = integer reasoning tokens
 base_model = "alibaba/qwen3.7-flash"
 attachment = false
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
 
 [interleaved]
