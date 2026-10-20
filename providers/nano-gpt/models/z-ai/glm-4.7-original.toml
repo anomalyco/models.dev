@@ -1,16 +1,9 @@
 schema = 2
+base_model = "zhipuai/glm-4.7"
 name = "GLM 4.7 Original"
 description = "GLM-4.7 is a next-gen GLM series text model with stronger reasoning, long-context chat, and reliable tool use. Routed directly via Z-AI (Zhipu)."
-family = "glm"
-open_weights = true
-release_date = "2025-12-22"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 

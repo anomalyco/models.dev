@@ -1,18 +1,9 @@
 schema = 2
+base_model = "moonshotai/kimi-k2-instruct"
 name = "Kimi K2 0711"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-open_weights = true
-release_date = "2024-01-01"
-last_updated = "2025-07-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]

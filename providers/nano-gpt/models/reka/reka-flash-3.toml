@@ -1,21 +1,12 @@
 schema = 2
-name = "Reka Flash 3"
+base_model = "rekaai/reka-flash-3"
 description = "Reka's 21B reasoning model for chat and coding, served directly by Reka."
-family = "reka"
-open_weights = true
-release_date = "2026-10-15"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true }
 structured_output = true
 
 [limit]
-context = 65_536
 input = 65_536
 output = 65_536
 

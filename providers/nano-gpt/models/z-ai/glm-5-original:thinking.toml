@@ -1,16 +1,9 @@
 schema = 2
+base_model = "zhipuai/glm-5"
 name = "GLM 5 Original Thinking"
 description = "GLM-5 original with extended thinking capabilities for complex reasoning."
-family = "glm"
-open_weights = true
-release_date = "2026-02-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 

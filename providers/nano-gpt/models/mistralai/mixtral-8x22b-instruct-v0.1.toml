@@ -1,9 +1,6 @@
 schema = 2
+base_model = "mistral/mixtral-8x22b-instruct"
 name = "Mixtral 8x22B"
-description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-family = "mixtral"
-open_weights = true
-release_date = "2025-12-11"
 
 [modalities]
 input = ["text"]
@@ -11,13 +8,10 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 65_536
 input = 65_536
-output = 52_428
 
 [cost.text.input]
 price = 2

@@ -1,9 +1,7 @@
 schema = 2
+base_model = "zhipuai/glm-4.6v"
 name = "GLM 4.6V Original"
 description = "GLM-4.6V scales its context window to 128k tokens in training, and achieves SoTA performance in visual understanding among models of similar parameter scales. Integrates native Function Calling capabilities, bridging 'visual perception' and 'executable action' for multimodal agents. Direct via Z-AI (Zhipu)."
-family = "glm"
-open_weights = true
-release_date = "2025-12-08"
 
 [modalities]
 input = ["text", "image"]
@@ -15,7 +13,6 @@ reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 128_000
 input = 128_000
 output = 24_000
 

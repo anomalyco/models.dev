@@ -1,14 +1,6 @@
 schema = 2
-name = "MiniMax M1 80K"
+base_model = "minimax/minimax-m1-80k"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-open_weights = false
-release_date = "2025-01-08"
-last_updated = "2025-06-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
@@ -16,7 +8,6 @@ reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 1_000_000
 input = 1_000_000
 output = 131_072
 

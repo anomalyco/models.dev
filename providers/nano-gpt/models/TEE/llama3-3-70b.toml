@@ -1,21 +1,13 @@
 schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-open_weights = true
-release_date = "2025-07-03"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 128_000
 input = 128_000
 output = 16_384
 

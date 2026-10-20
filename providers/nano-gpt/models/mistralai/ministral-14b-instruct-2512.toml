@@ -1,21 +1,12 @@
 schema = 2
-name = "Ministral 3 14B"
+base_model = "mistral/ministral-3-14b-instruct-2512"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "ministral"
-open_weights = true
-release_date = "2025-12-02"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 262_144
 input = 262_144
 output = 32_768
 

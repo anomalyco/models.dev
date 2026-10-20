@@ -1,24 +1,14 @@
 schema = 2
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 name = "Qwen2.5 VL 72B TEE"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = true
-release_date = "2024-01-01"
-last_updated = "2025-02-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]
 context = 65_536
 input = 65_536
-output = 8_192
 
 [cost.text.input]
 price = 0.7

@@ -1,23 +1,13 @@
 schema = 2
-name = "Granite 4.2 8B"
+base_model = "ibm/granite-4.2-8b"
 description = "IBM Granite 4.2 8B is an Apache 2.0-licensed dense model with native step-by-step reasoning and specialized training for agentic work. It can plan before acting, sequence tools, navigate codebases, work in terminals, and verify results across coding, search, mathematics, science, and complex instruction-following tasks."
-family = "granite"
-open_weights = true
-release_date = "2026-08-31"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
 
 [limit]
-context = 131_072
 input = 131_072
-output = 117_964
 
 [cost.text.input]
 price = 0.1

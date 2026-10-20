@@ -1,21 +1,16 @@
 schema = 2
+base_model = "rekaai/reka-edge"
 name = "Reka Edge 2603"
 description = "Reka's compact multimodal model for visual understanding and tool use, served directly by Reka."
-family = "reka"
-open_weights = false
-release_date = "2026-10-15"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
 
 [limit]
-context = 16_384
 input = 16_384
 output = 16_384
 

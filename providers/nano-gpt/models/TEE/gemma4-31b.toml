@@ -1,22 +1,14 @@
 # Not included in subscription
 schema = 2
+base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-open_weights = true
-release_date = "2026-04-04"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 
 [limit]
-context = 262_144
 input = 262_144
 output = 131_072
 

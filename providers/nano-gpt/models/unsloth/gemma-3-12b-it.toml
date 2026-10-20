@@ -1,10 +1,6 @@
 schema = 2
-name = "Gemma 3 12B IT"
+base_model = "google/gemma-3-12b-it"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "unsloth"
-open_weights = true
-release_date = "2024-01-01"
-last_updated = "2025-03-10"
 
 [modalities]
 input = ["text", "application/pdf"]
@@ -12,11 +8,9 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 131_072
 input = 131_072
 output = 16_384
 

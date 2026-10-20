@@ -1,16 +1,13 @@
 schema = 2
+base_model = "deepseek/deepseek-v3.1"
 name = "DeepSeek V3.1"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-open_weights = true
-release_date = "2025-07-26"
 
 [modalities]
 input = ["text", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
 

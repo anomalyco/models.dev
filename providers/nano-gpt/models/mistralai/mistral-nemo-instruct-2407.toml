@@ -1,17 +1,9 @@
 schema = 2
-name = "Mistral Nemo"
+base_model = "mistral/mistral-nemo"
 description = "12B parameter model with multilingual support."
-family = "mistral-nemo"
-open_weights = true
-release_date = "2024-01-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]

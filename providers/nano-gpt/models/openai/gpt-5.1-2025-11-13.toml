@@ -1,24 +1,18 @@
 schema = 2
+base_model = "openai/gpt-5.1"
 name = "GPT-5.1 (2025-11-13)"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-open_weights = false
-release_date = "2024-01-01"
-last_updated = "2025-11-13"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [limit]
-context = 400_000
 input = 400_000
-output = 128_000
 
 [cost.text.input]
 price = 1.25

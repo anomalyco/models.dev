@@ -1,9 +1,7 @@
 schema = 2
+base_model = "bytedance-seed/seed-2.0-pro"
 name = "Doubao Seed 2.0 Pro"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "seed"
-open_weights = false
-release_date = "2026-02-14"
 
 [modalities]
 input = ["text"]
@@ -15,9 +13,7 @@ reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 256_000
 input = 256_000
-output = 128_000
 
 [cost.text.input]
 price = 0.782

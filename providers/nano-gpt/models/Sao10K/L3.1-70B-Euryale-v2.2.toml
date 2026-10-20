@@ -1,24 +1,14 @@
 schema = 2
+base_model = "sao10k/l3.1-euryale-70b"
 name = "Llama 3.1 70B Euryale"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-open_weights = true
-release_date = "2024-01-01"
-last_updated = "2024-07-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]
 context = 20_480
 input = 20_480
-output = 16_384
 
 [cost.text.input]
 price = 0.306

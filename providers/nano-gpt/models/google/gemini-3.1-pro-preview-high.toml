@@ -1,24 +1,19 @@
 # Not included in subscription
 schema = 2
+base_model = "google/gemini-3.1-pro-preview"
 name = "Gemini 3.1 Pro (Preview High)"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-family = "gemini"
-open_weights = false
-release_date = "2026-02-21"
 
 [modalities]
 input = ["text", "image", "video", "audio"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 
 [limit]
-context = 1_048_576
 input = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 2

@@ -1,21 +1,13 @@
 schema = 2
+base_model = "mistral/devstral-2512"
 name = "Devstral 2 123B"
 description = "Mistral coding agent model for repository tasks and software engineering workflows"
-family = "devstral"
-open_weights = true
-release_date = "2025-12-09"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 262_144
 input = 262_144
 output = 65_536
 

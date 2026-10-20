@@ -1,23 +1,13 @@
 schema = 2
-name = "DeepSeek R1 0528"
+base_model = "deepseek/deepseek-r1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek"
-open_weights = true
-release_date = "2025-05-28"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
 
 [limit]
-context = 163_840
 input = 163_840
-output = 32_768
 
 [cost.text.input]
 price = 0.5

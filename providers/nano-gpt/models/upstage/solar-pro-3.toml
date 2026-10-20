@@ -1,14 +1,6 @@
 # Not included in subscription
 schema = 2
-name = "Solar Pro 3"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "solar-pro"
-open_weights = false
-release_date = "2026-03-03"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "upstage/solar-pro3"
 
 [capabilities]
 tools = { supported = false }
@@ -16,7 +8,6 @@ reasoning = { supported = false }
 structured_output = false
 
 [limit]
-context = 131_072
 input = 131_072
 output = 117_964
 

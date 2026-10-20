@@ -1,17 +1,10 @@
 # Included in subscription
 schema = 2
+base_model = "mistral/mistral-small-2603"
 name = "Mistral Small 4 119B Thinking"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral-small"
-open_weights = true
-release_date = "2026-03-17"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
