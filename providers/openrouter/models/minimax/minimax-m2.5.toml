@@ -1,14 +1,19 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_details"
-
-[cost]
-input = 0.27
-output = 0.95
-cache_read = 0.03
 
 [limit]
 output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.27
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.95

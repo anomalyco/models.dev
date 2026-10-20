@@ -1,22 +1,25 @@
+schema = 2
 name = "Extract"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2026-10-13"
-last_updated = "2026-10-13"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2026-10-13"
 
-[cost]
-input = 0.04
-output = 0
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 1_000_000
 output = 900_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0

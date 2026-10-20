@@ -1,28 +1,28 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 name = "Nova 2 Lite"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "nova"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-12-02"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 2.5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = false
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 65_535
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.5

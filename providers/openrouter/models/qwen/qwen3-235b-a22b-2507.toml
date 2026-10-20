@@ -1,24 +1,27 @@
+schema = 2
 name = "Qwen3 235B A22B Instruct 2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-07-21"
-last_updated = "2025-07-21"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-06-30"
 open_weights = true
+knowledge = "2025-06-30"
+release_date = "2025-07-21"
 
-[cost]
-input = 0.09
-output = 0.55
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 0.55

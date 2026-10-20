@@ -1,18 +1,22 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.0765
-output = 0.255
-cache_read = 0.0425
 
 [limit]
 output = 235_929
 
-[modalities]
-input = ["image", "text", "video"]
+[cost.text.input]
+price = 0.0765
+cache = { read = 0.0425 }
+
+[cost.text.output]
+price = 0.255

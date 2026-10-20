@@ -1,29 +1,29 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 name = "Ling 3.0 Flash VL"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "ling"
-release_date = "2026-09-10"
-last_updated = "2026-09-10"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-09-10"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
-[cost]
-input = 0.06
-output = 0.18
-cache_read = 0.012
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 131_072
 output = 32_768
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.06
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.18

@@ -1,17 +1,19 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "google/gemini-2.5-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.3
-output = 2.5
-reasoning = 2.5
-cache_read = 0.03
-cache_write = 0.083333
 
 [limit]
 output = 65_535
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.083333 }
+
+[cost.text.output]
+price = 2.5
+reasoning = 2.5

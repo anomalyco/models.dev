@@ -1,23 +1,26 @@
+schema = 2
 name = "Schematron V2 Turbo"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-release_date = "2026-09-12"
-last_updated = "2026-09-12"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = true
+release_date = "2026-09-12"
 
-[cost]
-input = 0.03
-output = 0.15
-cache_read = 0.03
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.15

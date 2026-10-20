@@ -1,22 +1,25 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "google/gemini-nano-banana-2.1"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-temperature = true
-tool_call = true
+
+[modalities]
+input = ["image", "text"]
+output = ["text", "image"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "high"]
-
-[cost]
-input = 1.5
-output = 7.5
+temperature = true
 
 [limit]
 context = 65_536
 output = 58_982
 
-[modalities]
-input = ["image", "text"]
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

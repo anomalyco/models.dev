@@ -1,11 +1,14 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.39
 
-[cost]
-input = 0.39
-output = 2.34
+[cost.text.output]
+price = 2.34

@@ -1,27 +1,27 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 name = "Dots3-Note Preview (free)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-08-14"
-last_updated = "2026-08-14"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-14"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 512_000
 output = 460_800
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

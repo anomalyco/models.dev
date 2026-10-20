@@ -1,14 +1,20 @@
+schema = 2
 base_model = "mistral/voxtral-small-24b-2507"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-structured_output = true
 
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.01
+[modalities]
+input = ["text", "audio", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
 
 [limit]
 output = 26_214
 
-[modalities]
-input = ["text", "audio", "pdf"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.3

@@ -1,7 +1,12 @@
+schema = 2
 base_model = "openai/gpt-audio"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 2.5
-output = 10
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10

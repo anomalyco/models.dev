@@ -1,7 +1,12 @@
+schema = 2
 base_model = "openai/gpt-3.5-turbo"
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
 structured_output = true
 
-[cost]
-input = 0.5
-output = 1.5
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

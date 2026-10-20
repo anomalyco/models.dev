@@ -1,15 +1,19 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "openai/o1-pro"
-structured_output = true
-tool_call = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 150
-output = 600
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 150
+
+[cost.text.output]
+price = 600

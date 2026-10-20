@@ -1,18 +1,21 @@
+schema = 2
 base_model = "meta/muse-spark-open"
-structured_output = true
 description = "Open Llama multimodal model for image understanding and text reasoning"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image", "video", "application/pdf", "audio"]
+output = ["text"]
 
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
 
 [limit]
 output = 943_718
 
-[modalities]
-input = ["text", "image", "video", "pdf", "audio"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

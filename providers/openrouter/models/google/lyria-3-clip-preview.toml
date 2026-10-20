@@ -1,10 +1,15 @@
+schema = 2
 base_model = "google/lyria-3-clip-preview"
-structured_output = false
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+structured_output = false
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

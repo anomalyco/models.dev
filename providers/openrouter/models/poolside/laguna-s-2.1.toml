@@ -1,29 +1,29 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 name = "Laguna S 2.1"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "laguna-s"
-release_date = "2026-07-21"
-last_updated = "2026-07-21"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-07-21"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.09
-output = 0.18
-cache_read = 0.009
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = false
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.09
+cache = { read = 0.009 }
+
+[cost.text.output]
+price = 0.18

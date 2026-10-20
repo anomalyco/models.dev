@@ -1,24 +1,27 @@
+schema = 2
 name = "GPT-3.5 Turbo Instruct"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
-release_date = "2023-09-28"
-last_updated = "2023-09-28"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
-knowledge = "2021-09-30"
 open_weights = false
+knowledge = "2021-09-30"
+release_date = "2023-09-28"
 
-[cost]
-input = 1.5
-output = 2
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 4_095
 output = 3_685
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 2

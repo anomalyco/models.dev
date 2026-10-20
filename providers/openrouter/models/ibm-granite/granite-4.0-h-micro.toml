@@ -1,23 +1,26 @@
+schema = 2
 name = "Granite 4.0 Micro"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "granite"
-release_date = "2025-10-20"
-last_updated = "2025-10-20"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-10-20"
 
-[cost]
-input = 0.017
-output = 0.112
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 131_000
 output = 117_900
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.017
+
+[cost.text.output]
+price = 0.112

@@ -1,15 +1,17 @@
+schema = 2
 base_model = "stepfun/step-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.2
-output = 1.15
-cache_read = 0.04
 
 [limit]
 context = 262_144
 output = 230_400
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.15

@@ -1,16 +1,20 @@
+schema = 2
 base_model = "zhipuai/glm-4.5v"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.6
-output = 1.8
-cache_read = 0.11
 
 [limit]
 context = 65_536
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.6
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 1.8

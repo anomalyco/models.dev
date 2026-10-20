@@ -1,21 +1,26 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "bytedance-seed/seed-2.0-lite"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high"]
-
-[cost]
-input = 0.25
-output = 2
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 0.5
-output = 4
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 
 [limit]
 context = 262_144
 output = 131_072
+
+[cost.text.input]
+price = 0.25
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.5
+
+[cost.text.output]
+price = 2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 4

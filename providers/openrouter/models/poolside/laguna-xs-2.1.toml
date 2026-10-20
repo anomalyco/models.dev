@@ -1,11 +1,14 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "poolside/laguna-xs-2.1"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0.06
-output = 0.12
-cache_read = 0.03
+[cost.text.input]
+price = 0.06
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.12

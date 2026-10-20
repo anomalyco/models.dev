@@ -1,23 +1,26 @@
+schema = 2
 name = "Pareto 26.10"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2026-10-15"
-last_updated = "2026-10-15"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-10-15"
 
-[cost]
-input = 0.8
-output = 3.2
-cache_read = 0.03
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.8
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 3.2

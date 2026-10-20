@@ -1,11 +1,13 @@
+schema = 2
 base_model = "mistral/mistral-medium-3-5"
-structured_output = true
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
-[cost]
-input = 1.5
-output = 7.5
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

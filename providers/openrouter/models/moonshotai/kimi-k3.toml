@@ -1,18 +1,20 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-temperature = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 0.239
-output = 11.936
-cache_read = 0.21
+temperature = true
 
 [limit]
 output = 943_718
+
+[cost.text.input]
+price = 0.239
+cache = { read = 0.21 }
+
+[cost.text.output]
+price = 11.936

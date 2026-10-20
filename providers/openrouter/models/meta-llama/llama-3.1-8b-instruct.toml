@@ -1,12 +1,17 @@
+schema = 2
 base_model = "meta/llama-3.1-8b-instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-structured_output = true
 
-[cost]
-input = 0.05
-output = 0.08
-cache_read = 0.025
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_072
 output = 117_964
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.08

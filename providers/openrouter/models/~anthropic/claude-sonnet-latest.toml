@@ -1,32 +1,30 @@
 # OpenRouter alias currently redirects to Claude Sonnet 5.
 # https://openrouter.ai/~anthropic/claude-sonnet-latest
+schema = 2
 name = "Claude Sonnet Latest"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-01-31"
 open_weights = false
+knowledge = "2026-01-31"
+release_date = "2026-04-27"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.1
-cache_write = 2.5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 10

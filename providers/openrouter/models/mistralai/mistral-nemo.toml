@@ -1,10 +1,15 @@
+schema = 2
 base_model = "mistral/mistral-nemo"
-structured_output = true
 
-[cost]
-input = 0.029
-output = 0.03
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_072
 output = 16_384
+
+[cost.text.input]
+price = 0.029
+
+[cost.text.output]
+price = 0.03

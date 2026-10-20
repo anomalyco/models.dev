@@ -1,24 +1,27 @@
+schema = 2
 name = "Uncensored"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral"
-release_date = "2025-07-09"
-last_updated = "2025-07-09"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-knowledge = "2024-04-30"
 open_weights = true
+knowledge = "2024-04-30"
+release_date = "2025-07-09"
 
-[cost]
-input = 0.2
-output = 0.9
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.9

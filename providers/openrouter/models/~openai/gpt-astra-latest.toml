@@ -1,36 +1,36 @@
+schema = 2
 name = "GPT Astra Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt-astra"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-11"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["application/pdf", "image", "text"]
+output = ["text"]
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 20
-output = 75
-cache_read = 2
-cache_write = 25
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 1_050_000
 output = 128_000
 
-[modalities]
-input = ["pdf", "image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

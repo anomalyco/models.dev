@@ -1,12 +1,15 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "openai/o3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
 
-[cost]
-input = 2
-output = 8
-cache_read = 0.5
+[cost.text.output]
+price = 8

@@ -1,28 +1,27 @@
+schema = 2
 name = "Mistral Large 4"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
 family = "mistral-large"
-release_date = "2026-10-06"
-last_updated = "2026-10-06"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-10-06"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.68
-output = 2.09
-cache_read = 0.07
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.68
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2.09

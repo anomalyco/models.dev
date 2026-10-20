@@ -1,24 +1,26 @@
+schema = 2
 name = "Aion-3.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2026-07-07"
-last_updated = "2026-07-07"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
-reasoning_options = []
+release_date = "2026-07-07"
 
-[cost]
-input = 3
-output = 6
-cache_read = 0.75
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+temperature = true
 
 [limit]
 context = 131_072
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 3
+cache = { read = 0.75 }
+
+[cost.text.output]
+price = 6

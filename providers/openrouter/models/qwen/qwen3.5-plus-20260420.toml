@@ -1,35 +1,38 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 name = "Qwen3.5 Plus 2026-04-20"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen3.5"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-04-27"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 1.8
-cache_write = 0.375
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.375
-output = 2.25
-cache_write = 0.46875
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { write = 0.375 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.375
+cache = { write = 0.46875 }
+
+[cost.text.output]
+price = 1.8
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2.25

@@ -1,17 +1,20 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[interleaved]
-field = "reasoning_details"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.0605
-output = 0.4
 
 [limit]
 output = 117_964
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.0605
+
+[cost.text.output]
+price = 0.4

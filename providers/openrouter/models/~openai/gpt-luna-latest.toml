@@ -1,37 +1,37 @@
+schema = 2
 name = "GPT Luna Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt-luna"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-02-16"
 open_weights = false
+knowledge = "2026-02-16"
+release_date = "2026-09-11"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["application/pdf", "image", "text"]
+output = ["text"]
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.2
-output = 0.75
-cache_read = 0.02
-cache_write = 0.25
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 1_050_000
 output = 128_000
 
-[modalities]
-input = ["pdf", "image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.75

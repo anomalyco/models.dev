@@ -1,29 +1,28 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 name = "Ember-1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-09-24"
-last_updated = "2026-09-24"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-24"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

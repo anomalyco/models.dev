@@ -1,11 +1,13 @@
+schema = 2
 base_model = "openai/gpt-5.1-codex-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.03 }
 
-[cost]
-input = 0.25
-output = 2
-cache_read = 0.03
+[cost.text.output]
+price = 2

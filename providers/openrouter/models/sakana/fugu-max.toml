@@ -1,11 +1,13 @@
+schema = 2
 base_model = "sakana/fugu-max"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

@@ -1,33 +1,36 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 name = "Seed 1.6 Flash"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
-release_date = "2025-12-23"
-last_updated = "2025-12-23"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2025-12-23"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]
 
-[cost]
-input = 0.075
-output = 0.3
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 0.1
-output = 0.8
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 output = 32_768
 
-[modalities]
-input = ["image", "text", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.075
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.1
+
+[cost.text.output]
+price = 0.3
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.8

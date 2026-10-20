@@ -1,10 +1,13 @@
+schema = 2
 base_model = "liquid/d1"
-attachment = true
-
-[cost]
-input = 0.02
-output = 0
-cache_read = 0.02
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.02
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0

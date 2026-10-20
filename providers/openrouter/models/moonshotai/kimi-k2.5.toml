@@ -1,22 +1,26 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
-temperature = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[interleaved]
-field = "reasoning_details"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.5
-output = 2.5
-cache_read = 0.15
+temperature = true
 
 [limit]
 output = 235_929
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2.5

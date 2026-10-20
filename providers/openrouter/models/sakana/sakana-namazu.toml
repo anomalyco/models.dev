@@ -1,12 +1,14 @@
+schema = 2
 base_model = "sakana/sakana-namazu"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 temperature = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 0.95
+cache = { read = 0.15 }
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.15
+[cost.text.output]
+price = 4

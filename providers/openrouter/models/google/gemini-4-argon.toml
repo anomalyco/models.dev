@@ -1,18 +1,19 @@
+schema = 2
 base_model = "google/gemini-4-argon"
-structured_output = true
 description = "Gemini multimodal model for text, image, audio, video, and document tasks"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 temperature = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 2
-output = 10
-reasoning = 10
-cache_read = 0.1
-cache_write = 0.1875
 
 [limit]
 output = 943_718
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 0.1875 }
+
+[cost.text.output]
+price = 10
+reasoning = 10

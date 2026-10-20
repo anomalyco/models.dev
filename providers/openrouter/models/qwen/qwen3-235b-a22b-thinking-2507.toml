@@ -1,25 +1,27 @@
+schema = 2
 name = "Qwen3 235B A22B Thinking 2507"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 family = "qwen"
-release_date = "2025-07-25"
-last_updated = "2025-07-25"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
-knowledge = "2025-06-30"
 open_weights = true
-reasoning_options = []
+knowledge = "2025-06-30"
+release_date = "2025-07-25"
 
-[cost]
-input = 0.45
-output = 3.5
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+temperature = true
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.45
+
+[cost.text.output]
+price = 3.5

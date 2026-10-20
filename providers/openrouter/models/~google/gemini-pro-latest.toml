@@ -1,39 +1,40 @@
 # OpenRouter alias currently redirects to Gemini 3.1 Pro Preview.
 # https://openrouter.ai/~google/gemini-pro-latest
+schema = 2
 name = "Gemini Pro Latest"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 family = "gemini-pro"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-04-27"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["audio", "application/pdf", "image", "text", "video"]
+output = ["text"]
 
-[cost]
-input = 2
-output = 10
-reasoning = 10
-cache_read = 0.1
-cache_write = 0.1875
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4
-output = 18
-cache_read = 0.4
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["audio", "pdf", "image", "text", "video"]
-output = ["text"]
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 0.1875 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 10
+reasoning = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18

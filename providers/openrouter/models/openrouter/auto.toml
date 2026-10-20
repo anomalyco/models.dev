@@ -1,20 +1,20 @@
-reasoning_options = []
+schema = 2
 name = "Auto Router"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "auto"
-release_date = "2023-11-08"
-last_updated = "2023-11-08"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2023-11-08"
+
+[modalities]
+input = ["text", "image", "audio", "application/pdf", "video"]
+output = ["text", "image"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 2_000_000
 output = 2_000_000
-
-[modalities]
-input = ["text", "image", "audio", "pdf", "video"]
-output = ["text", "image"]

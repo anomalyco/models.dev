@@ -1,19 +1,21 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "xhigh"]
-
-[cost]
-input = 0.95526
-output = 1.91052
-cache_read = 0.079605
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.95526
+cache = { read = 0.079605 }
+
+[cost.text.output]
+price = 1.91052

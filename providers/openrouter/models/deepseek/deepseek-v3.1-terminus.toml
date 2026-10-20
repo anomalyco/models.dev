@@ -1,29 +1,29 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
 name = "DeepSeek V3.1 Terminus"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
-release_date = "2025-09-22"
-last_updated = "2025-09-22"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-03-31"
 open_weights = true
+knowledge = "2025-03-31"
+release_date = "2025-09-22"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.27
-output = 1
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 163_840
 output = 147_456
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 1

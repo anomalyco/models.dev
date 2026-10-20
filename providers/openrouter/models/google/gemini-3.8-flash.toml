@@ -1,14 +1,15 @@
+schema = 2
 base_model = "google/gemini-3.8-flash"
-structured_output = true
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.825
-output = 4.125
+[cost.text.input]
+price = 0.825
+cache = { read = 0.0825, write = 0.041667 }
+
+[cost.text.output]
+price = 4.125
 reasoning = 4.125
-cache_read = 0.0825
-cache_write = 0.041667

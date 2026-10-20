@@ -1,23 +1,26 @@
+schema = 2
 type = "decision"
 name = "Clef Flash"
 description = "Decision model for typed evaluation of shared state"
-release_date = "2026-10-01"
-last_updated = "2026-10-01"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2026-10-01"
 
-[cost]
-input = 0.038
-output = 0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 24_576
 output = 0
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.038
+
+[cost.text.output]
+price = 0
