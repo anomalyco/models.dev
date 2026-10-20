@@ -1,10 +1,7 @@
 schema = 2
+base_model = "openai/o3"
 name = "OpenAI o3"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o"
-open_weights = false
-knowledge = "2024-05"
-release_date = "2025-04-16"
 
 [modalities]
 input = ["text", "image"]
@@ -14,11 +11,6 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = false
-
-[limit]
-context = 200_000
-output = 100_000
 
 [cost.text.input]
 price = 2

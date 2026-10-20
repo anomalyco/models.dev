@@ -1,20 +1,11 @@
 schema = 2
-name = "Qwen3 32B"
+base_model = "alibaba/qwen3-32b"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = true
-release_date = "2025-04-30"
-last_updated = "2026-04-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 32_768

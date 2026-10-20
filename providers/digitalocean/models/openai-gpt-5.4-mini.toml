@@ -3,26 +3,15 @@
 # https://docs.digitalocean.com/products/inference/details/models/index.html.md (accessed 2026-06-25)
 # https://developers.openai.com/api/docs/models/gpt-5.4-mini (accessed 2026-06-25)
 schema = 2
+base_model = "openai/gpt-5.4-mini"
 name = "OpenAI GPT-5.4 Mini"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-open_weights = false
-knowledge = "2025-08-31"
-release_date = "2026-03-17"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 temperature = false
-
-[limit]
-context = 400_000
-output = 128_000
 
 [cost.text.input]
 price = 0.75

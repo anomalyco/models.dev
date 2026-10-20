@@ -1,22 +1,14 @@
 schema = 2
+base_model = "mistral/mistral-nemo"
 name = "Mistral Nemo Instruct"
 description = "Legacy model retained for compatibility with older integrations"
-family = "mistral"
-open_weights = true
-release_date = "2024-07-18"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 128_000
 output = 16_384
 
 [cost.text.input]

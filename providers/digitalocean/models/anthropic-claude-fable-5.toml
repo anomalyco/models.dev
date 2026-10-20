@@ -1,10 +1,6 @@
 schema = 2
+base_model = "anthropic/claude-fable-5"
 name = "Anthropic Claude Fable 5"
-description = "Claude model for creative writing, analysis, and controlled agent workflows"
-family = "claude-fable"
-open_weights = false
-release_date = "2026-06-09"
-last_updated = "2026-06-12"
 
 [modalities]
 input = ["text", "image"]
@@ -13,11 +9,6 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-temperature = false
-
-[limit]
-context = 1_000_000
-output = 128_000
 
 [cost.text.input]
 price = 10

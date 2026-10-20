@@ -1,10 +1,7 @@
 schema = 2
+base_model = "anthropic/claude-opus-4-7"
 name = "Anthropic Claude Opus 4.7"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-open_weights = false
-knowledge = "2026-01-31"
-release_date = "2026-04-16"
 
 [modalities]
 input = ["text", "image"]
@@ -13,7 +10,6 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
-temperature = false
 
 [limit]
 context = 200_000

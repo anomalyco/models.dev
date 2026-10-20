@@ -1,23 +1,11 @@
 schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 Instruct (70B)"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-open_weights = true
-knowledge = "2023-12"
-release_date = "2024-12-06"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 128_000
-output = 4_096
 
 [cost.text.input]
 price = 0.65

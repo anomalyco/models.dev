@@ -3,12 +3,10 @@
 # https://docs.digitalocean.com/products/inference/details/models/index.html.md (accessed 2026-06-25)
 # https://developers.openai.com/api/docs/models/gpt-5.4 (accessed 2026-06-25)
 schema = 2
+base_model = "openai/gpt-5.4"
+base_model_omit = ["limit.input"]
 name = "OpenAI GPT-5.4"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
-family = "gpt"
-open_weights = false
-knowledge = "2025-08-31"
-release_date = "2026-03-05"
 
 [modalities]
 input = ["text", "image"]
@@ -22,7 +20,6 @@ temperature = false
 
 [limit]
 context = 400_000
-output = 128_000
 
 [cost.text.input]
 price = 2.5

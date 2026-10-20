@@ -1,10 +1,7 @@
 schema = 2
+base_model = "anthropic/claude-3-5-haiku-20241022"
 name = "Claude 3.5 Haiku"
 description = "Legacy model retained for compatibility with older integrations"
-family = "claude-haiku"
-open_weights = false
-knowledge = "2024-07"
-release_date = "2024-11-05"
 status = "deprecated"
 
 [modalities]
@@ -14,11 +11,6 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 200_000
-output = 8_192
 
 [cost.text.input]
 price = 0.8

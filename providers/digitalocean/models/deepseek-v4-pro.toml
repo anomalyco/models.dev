@@ -1,24 +1,15 @@
 schema = 2
+base_model = "deepseek/deepseek-v4-pro"
 name = "Deepseek V4 Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek-thinking"
-open_weights = true
-knowledge = "2025-05"
-release_date = "2026-04-24"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 1_048_576
-output = 384_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

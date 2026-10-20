@@ -1,23 +1,14 @@
 schema = 2
+base_model = "deepseek/deepseek-v4-flash"
 name = "Deepseek V4 Flash"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
-family = "deepseek"
-open_weights = false
-release_date = "2026-05-27"
-last_updated = "2026-05-29"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 1_048_576
-output = 384_000
 
 [cost.text.input]
 price = 0.14

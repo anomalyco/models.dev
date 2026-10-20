@@ -1,11 +1,7 @@
 schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
 name = "Anthropic Claude Sonnet 4.6"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-open_weights = false
-knowledge = "2025-08-31"
-release_date = "2026-02-17"
-last_updated = "2026-03-13"
 
 [modalities]
 input = ["text", "image"]
@@ -14,7 +10,6 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
-temperature = true
 
 [limit]
 context = 200_000

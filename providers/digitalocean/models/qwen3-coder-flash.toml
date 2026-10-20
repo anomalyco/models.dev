@@ -1,20 +1,9 @@
 schema = 2
-name = "Qwen3 Coder Flash"
-description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-open_weights = true
-knowledge = "2025-04"
-release_date = "2025-07-28"
-last_updated = "2026-04-30"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "alibaba/qwen3-coder-flash"
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 262_144
