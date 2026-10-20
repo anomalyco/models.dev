@@ -10,6 +10,7 @@
 # input are billed identically, so cache_read = input (same rationale as
 # GLM-5.3-Flash / DeepSeek-V4-Flash-0731 / Kimi-K3).
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

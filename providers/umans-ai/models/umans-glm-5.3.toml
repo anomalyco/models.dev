@@ -10,6 +10,7 @@
 # (131072), so 131071 is the largest value that serves (its advertised
 # `recommended_max_tokens`). Text only, like the base (supports_vision=false).
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 name = "GLM 5.3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 

@@ -3,6 +3,7 @@
 # Context/output capped to Cloudflare Workers AI context window (1,048,576).
 # Search reports 1,310,720, exceeding AI Gateway max_completion_tokens.
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 name = "Glm 5.3"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 

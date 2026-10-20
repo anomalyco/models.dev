@@ -2,6 +2,7 @@
 # Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
 # Effort: reasoning_effort = high|max
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 status = "beta"
 reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 

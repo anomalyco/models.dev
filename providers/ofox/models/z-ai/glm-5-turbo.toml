@@ -3,6 +3,7 @@
 # - https://docs.z.ai/guides/overview/concept-param (thinking.type for GLM-5-Turbo; reasoning_effort only GLM-5.2+)
 # Toggle: thinking.type = enabled|disabled
 base_model = "zhipuai/glm-5-turbo"
+structured_output = true
 reasoning_options = [{ type = "toggle" }]
 
 [cost]

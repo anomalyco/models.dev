@@ -9,6 +9,7 @@
 # matching other Privatemode catalog entries.
 # EUR/MTok: input 1.55 / output 5.74 / cached input 0.15
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 name = "GLM (latest)"
 status = "beta"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]

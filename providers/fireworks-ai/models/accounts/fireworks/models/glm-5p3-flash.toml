@@ -12,6 +12,7 @@
 # 131_072: Fireworks performs no pre-flight max_tokens validation (up to
 # 2_000_000 accepted), and Baseten documents 131_072 for GLM-5.3-Flash.
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 name = "GLM 5.3 Flash"
 last_updated = "2026-09-07"
 

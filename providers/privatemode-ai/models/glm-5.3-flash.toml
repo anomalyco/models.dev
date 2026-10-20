@@ -11,6 +11,7 @@
 # EUR/MTok: input 0.20 / output 0.65 / cached input 0.05
 # Host exposes text+image only (docs); lab base also lists video/pdf.
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 status = "beta"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 

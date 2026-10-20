@@ -2,4 +2,5 @@
 # AgentRouter publishes relative token ratios, not USD prices, so cost is intentionally omitted.
 # GLM-5.3 always reasons (thinking cannot be disabled); effort levels low|high|max, default max.
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]

@@ -4,6 +4,7 @@
 # Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
 # GLM-5.3 always reasons; no toggle or reasoning-token budget.
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

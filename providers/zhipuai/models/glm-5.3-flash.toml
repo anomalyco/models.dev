@@ -2,17 +2,19 @@
 # match GLM-5.3 — effort low|high|max with default max.
 # https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash
 # Pricing: https://docs.z.ai/guides/overview/pricing (accessed 2026-09-19)
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.15
-output = 0.50
-cache_read = 0.03
-cache_write = 0
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03, write = 0 }
+
+[cost.text.output]
+price = 0.5

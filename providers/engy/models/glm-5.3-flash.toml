@@ -6,6 +6,7 @@
 # Live probe 2026-08-30 at 8k, n=40 for low/medium/high, 20 for xhigh/max: low = medium (p=0.41)
 # < high (p=1.8e-05) < xhigh = max; none/minimal/enable_thinking=false measure as low; 0/320 empty.
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

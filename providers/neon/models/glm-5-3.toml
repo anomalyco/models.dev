@@ -2,6 +2,7 @@
 # Effort: chat completions reasoning_effort. Lab/peers: low|high|max, same as
 # glm-5-3-flash. thinking.type=disabled returns 200 and still emits reasoning_content.
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 reasoning_options = [
   { type = "effort", values = ["low", "high", "max"] },
 ]

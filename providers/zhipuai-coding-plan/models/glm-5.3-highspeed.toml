@@ -3,19 +3,21 @@
 # (#7331 tested a single lower tier). First-hand verified served via
 # open.bigmodel.cn/api/coding/paas/v4 on 2026-09-17.
 # https://docs.bigmodel.cn/cn/coding-plan/latest-model
+# Effort levels mirror the base GLM-5.3 (low, high, max).
+schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 Highspeed"
 
-# Effort levels mirror the base GLM-5.3 (low, high, max).
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

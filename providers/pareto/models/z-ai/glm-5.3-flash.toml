@@ -4,6 +4,7 @@
 # Context follows the 1M dashboard model entry; output is capped at 131,072.
 # PDF input is not advertised on this API.
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]

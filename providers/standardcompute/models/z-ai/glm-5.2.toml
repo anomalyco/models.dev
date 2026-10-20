@@ -4,6 +4,7 @@
 # (price listing: https://openrouter.ai/api/v1/models/z-ai/glm-5.2/endpoints, accessed 2026-10-16).
 # Includes a 25% promotion (end date not published); regular $0.75 / $2.40, cache read $0.14.
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 
 [interleaved]

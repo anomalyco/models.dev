@@ -5,6 +5,7 @@
 # another (p=0.19), the rungs apart at p<=2e-07 (MWU), xhigh and max hit the cap 6/20 and 5/20;
 # toggle, none and minimal suppress reasoning 20/20.
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

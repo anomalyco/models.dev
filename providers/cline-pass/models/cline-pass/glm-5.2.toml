@@ -3,6 +3,7 @@
 # (providers/zhipuai/models/glm-5.2.toml; https://docs.bigmodel.cn/cn/guide/capabilities/thinking)
 # Effort: reasoning_effort = none|high|max
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
 [cost]

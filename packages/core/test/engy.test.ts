@@ -350,7 +350,7 @@ test("a repricing changes the price line and nothing else", async () => {
   // Shipped kimi-k3, plus a glm-5.2 that overrides two intrinsic fields of its
   // base. An exact match proves the header, reasoning_options, the authored
   // limit split, the overrides and the modality order all survive the rewrite.
-  const glm52 = GLM52.text.replace("\n\n[interleaved]", "\ntemperature = false\ntool_call = false\n\n[interleaved]");
+  const glm52 = GLM52.text.replace("\nstructured_output = true\n", "\ntemperature = false\ntool_call = false\nstructured_output = true\n");
   await inRoot({ "glm-5.2.toml": glm52, "kimi-k3.toml": KIMI_K3.text }, async (modelsDir) => {
     let catalog = list();
     const provider = engyAt(modelsDir, () => catalog);

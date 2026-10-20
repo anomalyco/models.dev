@@ -1,6 +1,7 @@
 # https://novita.ai/models/model-detail/zai-org-glm-5.3-flash
 # Effort: reasoning_effort = low|high|max; thinking.type=disabled does not suppress reasoning on this route.
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]

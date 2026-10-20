@@ -3,6 +3,7 @@
 # /v1/messages: output_config.effort = low|high|max
 # /v1/responses: reasoning.effort = low|high|max
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 
 reasoning_options = [
   { type = "effort", values = ["low", "high", "max"] },

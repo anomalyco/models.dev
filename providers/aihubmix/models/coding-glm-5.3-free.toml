@@ -6,6 +6,7 @@
 # Reasoning: live-tested on AIHubMix 2026-10-09; thinking cannot be switched off and its text returns in reasoning_content.
 # Effort: $.reasoning_effort = low|high|max on /v1/chat/completions.
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 name = "GLM-5.3 (Coding, free)"
 [interleaved]
 field = "reasoning_content"

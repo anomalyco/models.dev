@@ -16,6 +16,7 @@
 # No toggle: both reasoning_effort=none|minimal and thinking.type=disabled are
 # rejected with 'not supported by this model'.
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

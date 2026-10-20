@@ -1,17 +1,19 @@
-base_model = "zhipuai/glm-5.3-flash"
 # Effort levels mirror the base GLM-5.3-Flash (low, high, max).
 # Included in the GLM Coding Lite plan and billed against plan credits, so no
 # per-token cost (verified against https://api.z.ai/api/coding/paas/v4 2026-08-26).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

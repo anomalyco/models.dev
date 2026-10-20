@@ -10,6 +10,7 @@
 # which was never probed here, and pdf, which fails as a type: "file" content part
 # on every route.
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"
