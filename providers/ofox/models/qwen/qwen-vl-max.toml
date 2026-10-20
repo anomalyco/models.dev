@@ -3,12 +3,14 @@
 # https://api.ofox.ai/v1/models/qwen/qwen-vl-max
 # Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
 # system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen) with a catalog cache-read price, though the catalog's prompt_caching flag is false.
 schema = 2
 base_model = "alibaba/qwen-vl-max"
 
 [capabilities]
 tools = { supported = true, updates = false }
 effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 128_000
