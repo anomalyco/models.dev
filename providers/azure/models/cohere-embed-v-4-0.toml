@@ -1,3 +1,4 @@
+# Modalities: Embed images must be image/jpeg, image/png, image/webp or image/gif: https://docs.cohere.com/reference/embed
 schema = 2
 name = "Embed v4"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
@@ -6,7 +7,7 @@ open_weights = true
 release_date = "2025-04-15"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

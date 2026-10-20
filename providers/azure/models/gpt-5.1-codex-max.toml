@@ -1,7 +1,12 @@
 # Azure lists 400,000 context with a 272,000 input and 128,000 output limit:
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-51
+# Modalities: Azure OpenAI Responses image inputs (PNG, JPEG, WebP, non-animated GIF) and PDF input for vision models: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#image-input-requirements
 schema = 2
 base_model = "openai/gpt-5.1-codex-max"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }

@@ -1,3 +1,4 @@
+# Modalities: Mistral vision accepts PNG, JPEG, WEBP, non-animated GIF: https://docs.mistral.ai/capabilities/vision/
 schema = 2
 name = "Mistral Small 3.1"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
@@ -7,7 +8,7 @@ knowledge = "2024-09"
 release_date = "2025-03-01"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

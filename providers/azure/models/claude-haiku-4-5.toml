@@ -1,3 +1,4 @@
+# Modalities: Claude image formats https://platform.claude.com/docs/en/build-with-claude/vision#supported-formats; PDF support on Foundry https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#model-capabilities
 schema = 2
 name = "Claude Haiku 4.5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
@@ -7,7 +8,7 @@ knowledge = "2025-02-28"
 release_date = "2025-11-18"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

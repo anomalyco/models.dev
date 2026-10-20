@@ -1,9 +1,10 @@
 # Pricing source: https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/kimi/ (accessed 2026-08-05)
+# Modalities: Kimi image formats https://platform.moonshot.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats (Azure documents text and image input, no video)
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

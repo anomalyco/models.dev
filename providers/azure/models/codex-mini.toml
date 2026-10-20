@@ -1,3 +1,4 @@
+# Modalities: Azure OpenAI Responses image inputs (PNG, JPEG, WebP, non-animated GIF) and PDF input for vision models: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#image-input-requirements
 schema = 2
 name = "Codex Mini"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
@@ -8,7 +9,7 @@ release_date = "2025-05-16"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

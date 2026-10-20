@@ -1,5 +1,6 @@
 # Context window: Azure Foundry serves 1M (legacy 200K cap removed).
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models?tabs=pay-go#available-claude-models
+# Modalities: Claude image formats https://platform.claude.com/docs/en/build-with-claude/vision#supported-formats; PDF support on Foundry https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#model-capabilities
 schema = 2
 name = "Claude Opus 4.6"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
@@ -10,7 +11,7 @@ release_date = "2026-02-05"
 last_updated = "2026-07-17"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

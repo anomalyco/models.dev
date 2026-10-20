@@ -1,11 +1,12 @@
 # Azure documents POST /models/chat/completions and reasoning output, but no
 # toggle, effort, or budget request field for Kimi K2.5. Catalog modes are not
 # request controls. https://learn.microsoft.com/en-us/azure/ai-foundry/foundry-models/how-to/use-chat-reasoning
+# Modalities: Kimi image formats https://platform.moonshot.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats (Azure documents text and image input, no video)
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

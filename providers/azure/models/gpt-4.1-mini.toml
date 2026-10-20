@@ -1,11 +1,8 @@
+# Modalities: Azure OpenAI Responses image inputs (PNG, JPEG, WebP, non-animated GIF) and PDF input for vision models: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#image-input-requirements
 schema = 2
 base_model = "openai/gpt-4.1-mini"
 base_model_omit = ["structured_output"]
 status = "deprecated"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 store = true

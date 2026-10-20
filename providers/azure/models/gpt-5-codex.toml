@@ -1,4 +1,5 @@
 # Cached input: Azure Retail Prices API, Global Standard meter (https://prices.azure.com/api/retail/prices, accessed 2026-10-19)
+# Modalities: Azure OpenAI Responses image inputs (PNG, JPEG, WebP, non-animated GIF) and PDF input for vision models: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#image-input-requirements
 schema = 2
 name = "GPT-5-Codex"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
@@ -8,7 +9,7 @@ knowledge = "2024-09-30"
 release_date = "2025-09-15"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
