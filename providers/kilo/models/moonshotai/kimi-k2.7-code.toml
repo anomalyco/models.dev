@@ -1,19 +1,22 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 description = "MoonshotAI: Kimi K2.7 Code is a coding-focused model in Moonshot AI's Kimi K2 family, built to complete end-to-end programming tasks reliably over long contexts. It uses a native multimodal mixture-of-experts..."
-temperature = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 0.6712
-output = 3.35
-cache_read = 0.18
+temperature = true
 
 [limit]
 output = 235_929
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.6712
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 3.35

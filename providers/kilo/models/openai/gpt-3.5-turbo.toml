@@ -1,12 +1,17 @@
+schema = 2
 base_model = "openai/gpt-3.5-turbo"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-attachment = true
-tool_call = true
-structured_output = true
-
-[cost]
-input = 0.5
-output = 1.5
 
 [modalities]
-input = ["text", "pdf"]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

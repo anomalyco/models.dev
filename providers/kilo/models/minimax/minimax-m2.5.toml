@@ -1,16 +1,18 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
 
 [limit]
 context = 198_000
 output = 32_768
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

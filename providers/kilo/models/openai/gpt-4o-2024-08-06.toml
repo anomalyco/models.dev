@@ -1,11 +1,17 @@
+schema = 2
 base_model = "openai/gpt-4o-2024-08-06"
-structured_output = true
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 
-[cost]
-input = 2.5
-output = 10
-cache_read = 1.25
-
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

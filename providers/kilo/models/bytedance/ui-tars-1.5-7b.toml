@@ -1,23 +1,26 @@
+schema = 2
 name = "ByteDance: UI-TARS 7B "
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2025-07-22"
-last_updated = "2025-07-22"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2025-07-22"
 
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.1
+[modalities]
+input = ["image", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 2_048
 
-[modalities]
-input = ["image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 0.2

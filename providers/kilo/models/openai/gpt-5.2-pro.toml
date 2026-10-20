@@ -1,14 +1,17 @@
+schema = 2
 base_model = "openai/gpt-5.2-pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["medium", "high", "xhigh"]
-
-[cost]
-input = 21
-output = 168
 
 [modalities]
-input = ["image", "text", "pdf"]
+input = ["image", "text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 21
+
+[cost.text.output]
+price = 168

@@ -1,27 +1,28 @@
+schema = 2
 name = "Auto Free"
 description = "Automatic model router for matching prompts to suitable backends and budgets"
 family = "auto"
-release_date = "1970-01-01"
-last_updated = "1970-01-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
-reasoning_options = []
+release_date = "1970-01-01"
 
-[cost]
-input = 0
-output = 0
-reasoning = 0
-cache_read = 0
-cache_write = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+temperature = true
 
 [limit]
 context = 256_000
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
+reasoning = 0

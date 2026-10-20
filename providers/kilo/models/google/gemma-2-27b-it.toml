@@ -1,7 +1,12 @@
+schema = 2
 base_model = "google/gemma-2-27b-it"
-structured_output = true
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 
-[cost]
-input = 0.65
-output = 0.65
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.65
+
+[cost.text.output]
+price = 0.65

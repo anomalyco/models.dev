@@ -1,14 +1,15 @@
+schema = 2
 base_model = "google/gemini-3.5-flash-lite"
-structured_output = true
 description = "Gemini 3.5 Flash Lite is a high-efficiency model from Google with upgraded agentic capabilities. It is suited for subagents that execute focused tasks within complex, multi-agent workflows."
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.15
-output = 1.25
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015, write = 0.041667 }
+
+[cost.text.output]
+price = 1.25
 reasoning = 1.25
-cache_read = 0.015
-cache_write = 0.041667

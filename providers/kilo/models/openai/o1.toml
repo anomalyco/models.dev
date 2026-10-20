@@ -1,12 +1,14 @@
+schema = 2
 base_model = "openai/o1"
-structured_output = true
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
 
-[cost]
-input = 15
-output = 60
-cache_read = 7.5
+[cost.text.input]
+price = 15
+cache = { read = 7.5 }
+
+[cost.text.output]
+price = 60

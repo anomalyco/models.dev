@@ -1,23 +1,25 @@
+schema = 2
 name = "OpenRouter Free Models Router"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-02-01"
-last_updated = "2026-02-01"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-reasoning_options = []
+release_date = "2026-02-01"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 200_000
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

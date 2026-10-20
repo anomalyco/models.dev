@@ -1,27 +1,26 @@
+schema = 2
 name = "ByteDance Seed: Seed 1.6 (retires Nov 11)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
-release_date = "2025-12-23"
-last_updated = "2025-12-23"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2025-12-23"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]
 
-[cost]
-input = 0.25
-output = 2
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 output = 32_768
 
-[modalities]
-input = ["image", "text", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 2

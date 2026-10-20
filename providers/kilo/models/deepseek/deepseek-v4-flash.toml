@@ -1,16 +1,18 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
-structured_output = true
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "xhigh"]
-
-[cost]
-input = 0.091
-output = 0.182
-cache_read = 0.0182
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
+structured_output = true
 
 [limit]
 context = 1_048_575
 output = 943_717
+
+[cost.text.input]
+price = 0.091
+cache = { read = 0.0182 }
+
+[cost.text.output]
+price = 0.182

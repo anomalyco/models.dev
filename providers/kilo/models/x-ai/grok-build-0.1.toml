@@ -1,15 +1,17 @@
+schema = 2
 base_model = "xai/grok-build-0.1"
-structured_output = true
 description = "Grok coding model for agentic engineering, edits, and codebase workflows"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
 
 [limit]
 output = 230_400
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2

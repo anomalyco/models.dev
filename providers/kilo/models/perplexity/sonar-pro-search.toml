@@ -1,27 +1,26 @@
+schema = 2
 name = "Perplexity: Sonar Pro Search"
 description = "Advanced Sonar search model for deeper research and cited synthesis"
 family = "sonar-pro"
-release_date = "2025-10-30"
-last_updated = "2025-10-30"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2025-10-30"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 3
-output = 15
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 200_000
 output = 8_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

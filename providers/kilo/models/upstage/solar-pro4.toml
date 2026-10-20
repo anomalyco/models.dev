@@ -1,28 +1,27 @@
+schema = 2
 name = "Upstage: Solar Pro 4"
 description = "Solar Pro 4 is a large language model from Upstage. It is suited for agentic workflows, office productivity, document-intensive work, and coding."
 family = "solar"
-release_date = "2026-08-10"
-last_updated = "2026-08-10"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-10"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 524_288
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

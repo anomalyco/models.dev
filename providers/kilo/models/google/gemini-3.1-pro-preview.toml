@@ -1,14 +1,15 @@
+schema = 2
 base_model = "google/gemini-3.1-pro-preview"
-structured_output = true
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 1
-output = 6
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 0.1875 }
+
+[cost.text.output]
+price = 6
 reasoning = 6
-cache_read = 0.1
-cache_write = 0.1875

@@ -1,26 +1,25 @@
+schema = 2
 name = "Perceptron: Perceptron Mk1.5"
 description = "Perceptron Mk1.5 is Perceptron's embodied reasoning model for physical agents. It accepts text, image, video, and audio input, and answers with text plus optional structured annotations: points, boxes, polygons, tracks,..."
-release_date = "2026-09-25"
-last_updated = "2026-09-25"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-25"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 1.5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 36_864
 output = 8_192
 
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.5

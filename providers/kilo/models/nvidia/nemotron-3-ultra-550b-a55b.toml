@@ -1,16 +1,18 @@
+schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 description = "NVIDIA Nemotron 3 Ultra is an open frontier-reasoning and orchestration model from NVIDIA, with 55B active parameters out of 550B total (MoE). Built on a hybrid Transformer-Mamba mixture-of-experts architecture, it..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "medium", "high"]
-
-[cost]
-input = 0.4
-output = 1.76
-cache_read = 0.08
 
 [limit]
 context = 202_800
 output = 182_520
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 1.76

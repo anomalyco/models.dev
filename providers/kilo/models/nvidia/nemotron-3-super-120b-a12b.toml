@@ -1,13 +1,15 @@
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium"]
-
-[cost]
-input = 0.08
-output = 0.45
 
 [limit]
 output = 235_929
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.45

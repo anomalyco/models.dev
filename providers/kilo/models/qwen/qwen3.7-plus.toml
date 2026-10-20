@@ -1,19 +1,21 @@
+schema = 2
 base_model = "alibaba/qwen3.7-plus"
 description = "Qwen3.7-Plus is a cost-effective model in Alibaba's Qwen3.7 series. It supports text and image input with text output, building on the series' text capabilities with a comprehensive upgrade to its..."
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.32
-output = 1.28
-cache_read = 0.064
-cache_write = 0.4
 
 [limit]
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.32
+cache = { read = 0.064, write = 0.4 }
+
+[cost.text.output]
+price = 1.28

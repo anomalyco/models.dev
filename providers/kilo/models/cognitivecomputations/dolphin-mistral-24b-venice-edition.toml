@@ -1,23 +1,26 @@
+schema = 2
 name = "Venice: Uncensored"
 description = "Venice Uncensored Dolphin Mistral 24B Venice Edition is a fine-tuned variant of Mistral-Small-24B-Instruct-2501, developed by dphn.ai in collaboration with Venice.ai. This model is designed as an “uncensored” instruct-tuned LLM, preserving..."
 family = "mistral"
-release_date = "2025-07-09"
-last_updated = "2025-07-09"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-07-09"
 
-[cost]
-input = 0.2
-output = 0.9
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.9

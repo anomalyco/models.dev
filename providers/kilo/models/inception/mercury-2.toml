@@ -1,28 +1,27 @@
+schema = 2
 name = "Inception: Mercury 2"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "mercury"
-release_date = "2026-03-04"
-last_updated = "2026-03-04"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-03-04"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.25
-output = 0.75
-cache_read = 0.025
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 50_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.75

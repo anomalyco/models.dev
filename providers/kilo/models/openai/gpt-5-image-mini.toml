@@ -1,12 +1,14 @@
+schema = 2
 base_model = "openai/gpt-5-image-mini"
-structured_output = true
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
 
-[cost]
-input = 2.5
-output = 2
-cache_read = 0.25
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 2

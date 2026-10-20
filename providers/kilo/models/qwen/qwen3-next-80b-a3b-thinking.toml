@@ -1,15 +1,17 @@
+schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-thinking"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 0.15
-output = 1.2
 
 [limit]
 context = 262_144
 output = 235_929
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.2

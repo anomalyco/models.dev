@@ -1,27 +1,26 @@
+schema = 2
 name = "Tencent: Hunyuan A13B Instruct"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
 family = "hunyuan"
-release_date = "2025-07-08"
-last_updated = "2025-07-08"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2025-07-08"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.14
-output = 0.57
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 131_072
 output = 117_964
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.57

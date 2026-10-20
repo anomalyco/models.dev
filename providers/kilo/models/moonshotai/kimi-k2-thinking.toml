@@ -1,15 +1,17 @@
+schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 0.6
-output = 2.5
-cache_read = 0.15
 
 [limit]
 output = 98_304
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2.5

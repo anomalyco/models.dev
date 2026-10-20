@@ -1,12 +1,14 @@
+schema = 2
 base_model = "openai/gpt-oss-20b"
-structured_output = true
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.018
-output = 0.09
-cache_read = 0.009
+[cost.text.input]
+price = 0.018
+cache = { read = 0.009 }
+
+[cost.text.output]
+price = 0.09

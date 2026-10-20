@@ -1,23 +1,26 @@
+schema = 2
 name = "Meta: Llama Guard 4 12B"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "llama"
-release_date = "2025-04-30"
-last_updated = "2025-04-30"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-04-30"
 
-[cost]
-input = 0.144
-output = 0.144
+[modalities]
+input = ["image", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 163_840
 output = 16_384
 
-[modalities]
-input = ["image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 0.144
+
+[cost.text.output]
+price = 0.144

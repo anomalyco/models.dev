@@ -1,18 +1,21 @@
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
-structured_output = true
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]
 
-[cost]
-input = 0.042
-output = 0.22
-cache_read = 0.021
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 output = 235_929
 
-[modalities]
-input = ["image", "text", "video"]
+[cost.text.input]
+price = 0.042
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 0.22

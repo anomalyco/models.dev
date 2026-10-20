@@ -1,23 +1,26 @@
+schema = 2
 name = "AionLabs: Aion-RP 1.0 (8B)"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
-release_date = "2025-02-04"
-last_updated = "2025-02-04"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-02-04"
 
-[cost]
-input = 0.8
-output = 1.6
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 32_768
 output = 29_491
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.8
+
+[cost.text.output]
+price = 1.6

@@ -1,23 +1,26 @@
+schema = 2
 name = "Morph: Morph V3 Large"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "morph"
-release_date = "2025-07-07"
-last_updated = "2025-07-07"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2025-07-07"
 
-[cost]
-input = 0.9
-output = 1.9
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.9
+
+[cost.text.output]
+price = 1.9

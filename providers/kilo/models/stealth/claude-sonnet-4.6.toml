@@ -1,30 +1,28 @@
+schema = 2
 name = "Stealth: Claude Sonnet 4.6 (20% off)"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
-release_date = "2025-08-26"
-last_updated = "2025-08-26"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-08-26"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 2.4
-output = 12
-reasoning = 0
-cache_read = 0.24
-cache_write = 3
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.4
+cache = { read = 0.24, write = 3 }
+
+[cost.text.output]
+price = 12
+reasoning = 0

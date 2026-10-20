@@ -1,12 +1,14 @@
+schema = 2
 base_model = "alibaba/qwen3.6-flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 0.1875
+cache = { write = 0.234375 }
 
-[cost]
-input = 0.1875
-output = 1.125
-cache_write = 0.234375
+[cost.text.output]
+price = 1.125

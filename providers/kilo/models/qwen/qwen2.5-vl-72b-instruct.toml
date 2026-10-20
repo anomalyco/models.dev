@@ -1,24 +1,27 @@
+schema = 2
 name = "Qwen: Qwen2.5 VL 72B Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
-release_date = "2025-02-01"
-last_updated = "2025-02-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2025-02-01"
 
-[cost]
-input = 0.8
-output = 1
-cache_read = 0.4
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 115_200
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.8
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 1

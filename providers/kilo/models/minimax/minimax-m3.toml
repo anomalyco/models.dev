@@ -1,14 +1,16 @@
+schema = 2
 base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
 
 [limit]
 context = 524_288
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

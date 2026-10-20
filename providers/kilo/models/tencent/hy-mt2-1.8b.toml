@@ -1,7 +1,12 @@
+schema = 2
 base_model = "tencent/hy-mt2-1.8b"
 description = "Hy-MT2-1.8B is a compact 1.8B-parameter translation model from Tencent. It supports 33 language pairs and five Chinese dialect and minority-language pairs, with workflows for structured, delimiter-based, contextual, glossary-based, and style-guided..."
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 0.044
-output = 0.177
+[cost.text.input]
+price = 0.044
+
+[cost.text.output]
+price = 0.177

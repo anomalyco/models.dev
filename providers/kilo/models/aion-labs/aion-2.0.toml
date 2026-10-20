@@ -1,27 +1,26 @@
+schema = 2
 name = "AionLabs: Aion-2.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2026-02-23"
-last_updated = "2026-02-23"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-02-23"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.8
-output = 1.6
-cache_read = 0.2
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = false
+temperature = true
 
 [limit]
 context = 131_072
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.8
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.6

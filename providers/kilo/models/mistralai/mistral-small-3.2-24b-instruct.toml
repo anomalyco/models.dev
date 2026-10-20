@@ -1,8 +1,13 @@
+schema = 2
 base_model = "mistral/mistral-small-3.2-24b-instruct"
-structured_output = true
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
 
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.01
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.3

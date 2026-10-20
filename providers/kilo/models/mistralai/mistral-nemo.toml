@@ -1,12 +1,17 @@
+schema = 2
 base_model = "mistral/mistral-nemo"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-structured_output = true
 
-[cost]
-input = 0.15
-output = 0.15
-cache_read = 0.015
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_072
 output = 16_384
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.15

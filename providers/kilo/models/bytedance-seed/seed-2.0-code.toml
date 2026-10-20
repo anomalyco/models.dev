@@ -1,11 +1,13 @@
+schema = 2
 base_model = "bytedance-seed/seed-2.0-code"
 description = "Seed 2.0 Code is a model from ByteDance Seed optimized for agentic coding. It is suited for frontend development, multilingual programming tasks, and coding-agent workflows in tools such as Claude..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[cost.text.input]
+price = 0.5
 
-[cost]
-input = 0.5
-output = 3
+[cost.text.output]
+price = 3

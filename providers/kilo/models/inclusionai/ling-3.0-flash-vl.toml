@@ -1,28 +1,27 @@
+schema = 2
 name = "inclusionAI: Ling 3.0 Flash VL"
 description = "Ling 3.0 Flash VL builds on Ling 3.0 Flash (124B total / 5.5B active MoE from InclusionAI), further strengthening its language capabilities while adding native visual perception and advanced visual..."
 family = "ling"
-release_date = "2026-09-10"
-last_updated = "2026-09-10"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-10"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
-[cost]
-input = 0.06
-output = 0.18
-cache_read = 0.012
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 131_072
 output = 32_768
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.06
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.18
