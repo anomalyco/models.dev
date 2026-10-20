@@ -1,6 +1,9 @@
 # https://macaron.im/mindlab/research/introducing-macaron-v1
 # https://huggingface.co/mindlab-research/Macaron-V1-Tall
 # Output limit: https://novita.ai/models/model-detail/mindai-macaron-v1-tall
+# Image input: the card's "Multimodal Behavior" section says the specialists are trained on text-only data while the
+# Qwen3.6-35B-A3B base is multimodal, reports image benchmarks (OCRBench, MMBench, MMMU, MME) for the routed MoL service,
+# and calls multimodal behavior an "inherited base capability". The card lists no image formats, so input keeps the generic image.
 # Sampling: open weights; generation_config.json sets temperature 1.0, top_p 0.95, top_k 20
 # (https://huggingface.co/mindlab-research/Macaron-V1-Tall/blob/main/generation_config.json).
 schema = 2
@@ -11,7 +14,7 @@ release_date = "2026-07-21"
 license = "MIT"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]

@@ -1,11 +1,5 @@
-# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
-# Output: decision answers with zero generated tokens, the same as the lab (https://docs.liquid.ai/lfm/models/d1 lists this host for d1).
 schema = 2
 base_model = "liquid/d1"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["decision"]
 
 [capabilities]
 structured_output = true

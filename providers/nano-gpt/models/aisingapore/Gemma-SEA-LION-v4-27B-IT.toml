@@ -1,6 +1,9 @@
+# Modalities: text only on NanoGPT; its live catalog (https://nano-gpt.com/api/v1/models?detailed=true) lists
+# aisingapore/Gemma-SEA-LION-v4-27B-IT with input_modalities ["text"] and vision false.
 base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
 name = "Gemma SEA-LION v4 27B"
 structured_output = false
+attachment = false
 
 [cost]
 input = 0.24
@@ -9,3 +12,6 @@ output = 0.48
 [limit]
 context = 131_072
 input = 131_072
+
+[modalities]
+input = ["text"]

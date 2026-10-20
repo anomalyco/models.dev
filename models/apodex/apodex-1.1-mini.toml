@@ -1,6 +1,9 @@
 # https://www.apodex.com/blog/apodex-1.1-scaling-agentic-intelligence-for-complex-work
 # https://huggingface.co/apodex/Apodex-1.1-mini
 # Output limit: https://novita.ai/models/model-detail/apodex-apodex-1.1-mini
+# Text only: Apodex's own API says core models (apodex-1.1, apodex-1.1-mini) are "Text only. Multimodal input is not
+# supported. Image, audio and file content parts are rejected" (https://platform.apodex.ai/docs/models). The checkpoint keeps
+# the Qwen3.5 vision config, but no official source says the model accepts images.
 # Sampling: open weights; the card recommends temperature 1.0 and top_p 0.95, and generation_config.json adds top_k 20
 # (https://huggingface.co/apodex/Apodex-1.1-mini/blob/main/generation_config.json).
 schema = 2

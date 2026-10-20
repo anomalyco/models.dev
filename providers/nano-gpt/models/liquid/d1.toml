@@ -1,6 +1,9 @@
+# Modalities: text only on NanoGPT; its live catalog (https://nano-gpt.com/api/v1/models?detailed=true) lists liquid/d1 with
+# input_modalities ["text"] and vision false.
 base_model = "liquid/d1"
 name = "Liquid D1"
 structured_output = false
+attachment = false
 
 [cost]
 input = 0.04
@@ -9,3 +12,6 @@ cache_read = 0.04
 
 [limit]
 input = 65_536
+
+[modalities]
+input = ["text"]

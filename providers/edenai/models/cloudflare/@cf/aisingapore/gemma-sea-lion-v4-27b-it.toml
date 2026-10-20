@@ -1,7 +1,13 @@
+# Modalities: text only on Eden AI; its catalog (https://api.edenai.run/v3/models) lists
+# cloudflare/@cf/aisingapore/gemma-sea-lion-v4-27b-it with input_modalities ["text"].
 base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
 name = "Gemma-SEA-LION-v4-27B-IT (Cloudflare)"
 structured_output = false
+attachment = false
 
 [cost]
 input = 0.351
 output = 0.555
+
+[modalities]
+input = ["text"]

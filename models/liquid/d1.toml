@@ -2,8 +2,8 @@
 # https://docs.liquid.ai/lfm/models/d1 (decision API: model, state, questions and images; answers with zero generated tokens)
 # Sampling: the decision endpoint generates no tokens and takes no temperature, top_p or top_k.
 # Output: decision answers (v1 shows them as text).
-# Modalities: Liquid documents text and image input (JPEG, PNG, WebP, GIF); the hosts that accept images set them in their
-# own files, and the lab stays text so text-only hosts keep their current input.
+# Modalities: d1 "accepts text and image inputs"; Image Requirements lists JPEG (image/jpeg), PNG (image/png),
+# WebP (image/webp) and GIF (image/gif) (https://docs.liquid.ai/lfm/models/d1).
 schema = 2
 type = "decision"
 name = "Liquid d1"
@@ -13,7 +13,7 @@ open_weights = false
 release_date = "2026-09-29"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["decision"]
 
 [capabilities]
