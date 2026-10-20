@@ -1,22 +1,11 @@
+# Lab identity: https://huggingface.co/XiaomiMiMo/MiMo-V2-Flash
 schema = 2
-name = "MiMo-V2-Flash"
-description = "MiMo flash model for fast multimodal assistance and agent workflows"
-family = "mimo"
-open_weights = true
-knowledge = "2024-12"
-release_date = "2025-12-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "xiaomi/mimo-v2-flash"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 262_144
 output = 4_096
 
 [cost.text.input]

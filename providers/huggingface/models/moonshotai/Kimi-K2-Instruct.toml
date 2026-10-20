@@ -1,22 +1,10 @@
+# Lab identity: https://huggingface.co/moonshotai/Kimi-K2-Instruct
 schema = 2
+base_model = "moonshotai/kimi-k2-instruct"
 name = "Kimi-K2-Instruct"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-open_weights = true
-knowledge = "2024-10"
-release_date = "2025-07-14"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 131_072
 output = 16_384
 
 [cost.text.input]

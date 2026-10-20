@@ -1,23 +1,8 @@
+# Lab identity: https://huggingface.co/Qwen/Qwen3-Coder-Next
 schema = 2
+base_model = "alibaba/qwen3-coder-next"
 name = "Qwen3-Coder-Next"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-open_weights = true
-knowledge = "2025-04"
-release_date = "2026-02-03"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 262_144
-output = 65_536
 
 [cost.text.input]
 price = 0.2
