@@ -3,9 +3,11 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { syncProvider } from "../src/sync/index.js";
+import { patchModelV2 } from "../src/model-file-v2.js";
+import { preserveStructuredOutput, syncProvider, type ExistingModel } from "../src/sync/index.js";
 import { aimlapi, labEffortValues, labLadder, resolveLadder } from "../src/sync/providers/aimlapi.js";
 import { providerDirForMetadataLab } from "../src/sync/providers/openrouter.js";
+import { modelV2ToV1 } from "../src/translate.js";
 
 // The lookup that silently kept the host enum for every GLM id: `base_model`
 // names the metadata lab, the ladder lives under the provider directory, and
@@ -249,4 +251,57 @@ test("a lab-backed model with no card and no statable control is reported, not i
   });
   expect(aimlapi.sourceID(model!)).toBe("alibaba/qwen3.7-max");
   expect(aimlapi.missingModelID(model!)).toBeUndefined();
+});
+
+test("v2 files keep their mid-conversation flags, and the header cites them", () => {
+  const [model] = aimlapi.parseModels({
+    data: [{
+      id: "openai/gpt-4o",
+      type: "openai/chat-completions",
+      info: { name: "GPT-4o", contextLength: 128_000, outputMax: 16_384 },
+      modalities: { input: ["text", "image"], output: ["text"] },
+      pricing: { units: [
+        { name: "token", content: "text", origin: "provided", price: 4, per: 1_000_000 },
+        { name: "token", content: "text", origin: "generated", price: 13, per: 1_000_000 },
+        { name: "token", content: "text", origin: "cached", price: 1.625, per: 1_000_000 },
+      ] },
+    }],
+  });
+  const doc = {
+    schema: 2,
+    base_model: "openai/gpt-4o",
+    capabilities: {
+      structured_output: true,
+      system_updates: false,
+      effort_updates: false,
+      tools: { supported: true, updates: false },
+    },
+    cost: { text: { input: { price: 3.25, cache: { read: 1.625 } }, output: { price: 13 } } },
+  };
+  const { id: _id, ...existing } = modelV2ToV1({ ...doc, id: "openai/gpt-4o" });
+  const context = {
+    existing: () => existing as ExistingModel,
+    authored: () => existing as ExistingModel,
+    v2: () => doc,
+  };
+
+  const translated = aimlapi.translateModel(model!, context) as { header?: string; model: Record<string, any> };
+  expect(translated.header).toContain("effort_updates = false, tools.updates = false");
+  expect(translated.header).toContain("docs-json?model=openai%2Fgpt-4o&endpoint=openai%2Fchat-completions");
+  expect(translated.header).toContain("# system_updates = false:");
+  // Model facts and the lab's description stay with the lab.
+  for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated", "description", "modalities"]) {
+    expect(translated.model).not.toHaveProperty(fact);
+  }
+
+  // A price change patches the price and keeps the v2-only flags. The engine
+  // carries structured_output over before patching, as it does here.
+  const synced = preserveStructuredOutput(translated.model as never, existing as ExistingModel);
+  const next = patchModelV2(doc, existing as ExistingModel, synced) as Record<string, any>;
+  expect(next.cost.text.input.price).toBe(4);
+  expect(next.capabilities).toMatchObject(doc.capabilities);
+
+  // No flags in the file, no source lines for them.
+  const bare = aimlapi.translateModel(model!, { ...context, v2: () => ({ schema: 2, base_model: "openai/gpt-4o" }) }) as { header?: string };
+  expect(bare.header).toBeUndefined();
 });

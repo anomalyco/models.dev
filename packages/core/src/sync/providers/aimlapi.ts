@@ -1112,7 +1112,11 @@ async function attachReasoningEffort(models: AimlapiModel[]): Promise<void> {
  * without opening this file. Only cards whose control story is not plain
  * "lab ladder ∩ host enum" get one — the ones a review has to ask about.
  */
-function wireHeader(id: string, reasoningOptions: Array<{ type: "effort"; values: EffortValue[] }> | undefined): string | undefined {
+function wireHeader(
+  id: string,
+  reasoningOptions: Array<{ type: "effort"; values: EffortValue[] }> | undefined,
+  capabilities: Record<string, unknown> | undefined,
+): string | undefined {
   const measuredId = measuredAs(id);
   const lines: string[] = [];
   if (measuredId !== id) {
@@ -1131,8 +1135,32 @@ function wireHeader(id: string, reasoningOptions: Array<{ type: "effort"; values
   if (NONE_IS_REAL_OFF.has(measuredId)) {
     lines.push("# Off: reasoning_effort = none (0 reasoning tokens); no toggle field on this surface.");
   }
+  // Sources for the v2-only mid-conversation flags a file carries. The catalog
+  // does not state them, so sync keeps the values and only writes their source,
+  // because this provider's headers are authoritative.
+  if (capabilities?.["effort_updates"] === false) {
+    lines.push(midConversationLine(id));
+  }
+  if (capabilities?.["system_updates"] === false) {
+    lines.push(SYSTEM_UPDATES_LINE);
+  }
   return lines.length > 0 ? lines.join("\n") + "\n" : undefined;
 }
+
+function midConversationLine(id: string): string {
+  const schema = `${DOCS_ENDPOINT}?model=${encodeURIComponent(id)}&endpoint=${encodeURIComponent(CHAT_COMPLETIONS_TYPE)}`;
+  return `# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). ${schema}`;
+}
+
+function v2Capabilities(doc: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
+  const capabilities = doc?.["capabilities"];
+  return capabilities !== null && typeof capabilities === "object"
+    ? capabilities as Record<string, unknown>
+    : undefined;
+}
+
+const SYSTEM_UPDATES_LINE =
+  "# system_updates = false: the lab's own API keeps no mid-conversation system message for this closed-weight model (system_updates = false in its first-party file here), so a relay can't keep one in place.";
 
 /**
  * The remote id to report for a chat candidate, or `undefined` for records
@@ -1294,7 +1322,7 @@ export const aimlapi = {
 
     return {
       id: model.id,
-      header: wireHeader(model.id, reasoningOptions),
+      header: wireHeader(model.id, reasoningOptions, v2Capabilities(context.v2?.(model.id))),
       model: factorBaseModel(
         base,
         {
