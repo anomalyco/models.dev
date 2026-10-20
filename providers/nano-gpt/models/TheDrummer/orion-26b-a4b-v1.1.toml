@@ -1,3 +1,4 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 name = "Orion 26B A4B v1.1"
 description = "TheDrummer's Gemma 4 26B A4B fine-tune for creative writing, roleplay, and expressive dialogue. Supports optional thinking with a 65,536-token context window and up to 8,192 output tokens. Text input only."
@@ -12,6 +13,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 65_536

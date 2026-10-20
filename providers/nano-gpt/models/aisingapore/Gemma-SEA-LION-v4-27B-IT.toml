@@ -1,5 +1,6 @@
 # Modalities: text only on NanoGPT; its live catalog (https://nano-gpt.com/api/v1/models?detailed=true) lists
 # aisingapore/Gemma-SEA-LION-v4-27B-IT with input_modalities ["text"] and vision false.
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
 name = "Gemma SEA-LION v4 27B"
@@ -10,6 +11,7 @@ output = ["text"]
 
 [capabilities]
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 131_072

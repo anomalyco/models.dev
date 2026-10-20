@@ -1,3 +1,6 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
 name = "Fugu Ultra v1.1"
 description = "Sakana AI's upgraded Fugu Ultra release with stronger coding, agentic task execution, and advanced reasoning through dynamic orchestration of frontier models."
@@ -6,13 +9,14 @@ open_weights = false
 release_date = "2026-07-24"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_000_000

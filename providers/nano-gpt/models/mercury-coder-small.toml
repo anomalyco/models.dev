@@ -1,3 +1,4 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 name = "Mercury Coder Small"
 description = "Model by Inception AI. A diffusion large language model that runs incredibly quickly (500+ tokens/second) while matching Claude 3.5 Haiku and GPT-4o-mini. 1st in speed on Copilot arena, and matching 2nd in quality."
@@ -13,6 +14,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 32_768

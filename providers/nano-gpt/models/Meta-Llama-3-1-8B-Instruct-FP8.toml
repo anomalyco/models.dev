@@ -1,3 +1,4 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 name = "Llama 3.1 8B (decentralized)"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
@@ -14,6 +15,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 128_000

@@ -1,3 +1,4 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 base_model = "minimax/minimax-m1-80k"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
@@ -6,6 +7,7 @@ description = "MiniMax model for chat, coding, office work, and agentic tasks"
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
+effort_updates = false
 
 [limit]
 input = 1_000_000

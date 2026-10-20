@@ -1,3 +1,6 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
 name = "Gemma 4 26B A4B MeroMero"
 description = "Gemma 4 26B A4B MeroMero is an NVFP4 multimodal mixture-of-experts fine-tune for emotive dialogue, relationship scenes, creative writing, and roleplay."
@@ -7,13 +10,14 @@ release_date = "2026-07-29"
 last_updated = "2026-08-26"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 262_144

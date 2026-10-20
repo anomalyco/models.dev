@@ -1,3 +1,5 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
 name = "GLM 4.1V Thinking FlashX"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
@@ -6,13 +8,14 @@ open_weights = false
 release_date = "2025-07-09"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 64_000

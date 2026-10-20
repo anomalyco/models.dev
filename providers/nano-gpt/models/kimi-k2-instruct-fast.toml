@@ -1,7 +1,10 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# status = deprecated: NanoGPT's catalog says "Deprecated. This model now routes to Kimi K2 0711." (https://nano-gpt.com/api/v1/models?detailed=true)
 schema = 2
 base_model = "moonshotai/kimi-k2-instruct"
 name = "Kimi K2 0711 Fast"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+status = "deprecated"
 
 [modalities]
 input = ["text", "application/pdf"]
@@ -10,6 +13,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = false }
 structured_output = false
+effort_updates = false
 
 [limit]
 input = 131_072

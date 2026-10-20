@@ -1,3 +1,4 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 name = "Qwen3 Max 2026-01-23"
 description = "Qwen3 Max is Alibaba's flagship Qwen 3 reasoning model with native tool use (web search, web extractor, code interpreter) and a 256K context window."
@@ -13,6 +14,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 256_000

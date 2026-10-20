@@ -1,3 +1,5 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
 schema = 2
 name = "Mercury 2.5 Preview"
 description = "Mercury 2.5 Preview is Inception's latest and most intelligent diffusion language model. Instead of generating tokens strictly one at a time, it produces and refines multiple tokens in parallel, reaching up to 1,107 tokens per second on standard GPUs. It delivers a 10+ point intelligence gain over Mercury 2, with tunable reasoning, parallel tool calls, schema-aligned JSON output, and a 260K context window. It is built for latency-sensitive production work such as search agents, voice pipelines, customer support, rapid coding iteration, and coding subagents."
@@ -10,9 +12,10 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 260_000

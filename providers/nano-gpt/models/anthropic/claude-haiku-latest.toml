@@ -1,4 +1,8 @@
 # Not included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Cache: explicit Claude caching (cache_control or the promptCaching helper; 5m or 1h TTL, up to 4 breakpoints across tools, system and messages); 1h writes cost 2x input (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
 name = "Claude Haiku Latest"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
@@ -7,13 +11,15 @@ open_weights = false
 release_date = "2026-03-29"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
 
 [limit]
 context = 1_000_000
@@ -22,7 +28,7 @@ output = 128_000
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.01, write = 0.125 }
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
 
 [cost.text.output]
 price = 0.5

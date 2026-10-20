@@ -1,3 +1,5 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# Cache: implicit (automatic) for OpenAI models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
 schema = 2
 base_model = "openai/o3"
 name = "OpenAI o3"
@@ -10,6 +12,8 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 input = 200_000

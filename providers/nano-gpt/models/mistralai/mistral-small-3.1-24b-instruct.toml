@@ -1,9 +1,11 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 base_model = "mistral/mistral-small-3.1-24b-instruct"
 name = "Mistral Small 3.1 24B (2503)"
 
 [capabilities]
 structured_output = false
+effort_updates = false
 
 [limit]
 input = 128_000
