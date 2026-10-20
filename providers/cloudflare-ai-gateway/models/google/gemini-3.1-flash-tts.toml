@@ -1,0 +1,22 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Output: the schema's output format enum (output_format, response_format or format), else the lab's or the note below. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+# Vertex AI serves Gemini 3.1 Flash TTS as a preview model; the route returns a data:audio/l16 URI (live 2026-10-20). https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-tts-preview
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.1-flash-tts-preview"
+name = "Gemini 3.1 Flash TTS"
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+
+[cost.text.input]
+price = 0.75
+
+[cost.text.output]
+price = 4.5
+
+[cost.audio.input]
+price = 3
+
+[cost.audio.output]
+price = 12

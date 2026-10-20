@@ -3,6 +3,7 @@ import path from "node:path";
 import { z } from "zod";
 
 import { AuthoredModelShape, ReasoningOption } from "../../schema.js";
+import type { CostV2, CostWhenV2 } from "../../schema-v2.js";
 import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
@@ -48,6 +49,33 @@ const CatalogEntry = z.object({
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
+  provider_details: z.array(ProviderDetail).length(1).nullish(),
+});
+
+export type MediaType = "speech" | "transcription";
+
+// Non-text catalog tasks synced as v2-only files, by the model type each one serves.
+const MEDIA_TASKS: Record<string, MediaType> = {
+  "Text-to-Speech": "speech",
+  "Automatic Speech Recognition": "transcription",
+};
+// Catalog tasks left out on purpose. Image and video models aren't synced yet; music
+// generation has no model type in the schema; `websocket` is a realtime voice session
+// billed per total audio minute and per text message, which no cost unit expresses.
+const UNSYNCED_TASKS = new Set([
+  "Text-to-Image",
+  "Image-to-Image",
+  "Text-to-Video",
+  "Image-to-Video",
+  "video-to-video",
+  "Image-to-Document",
+  "Music Generation",
+  "websocket",
+]);
+
+const MediaCatalogModel = CatalogEntry.extend({
+  task: z.string().refine((task) => MEDIA_TASKS[task] !== undefined, "task must be a synced media task"),
+  name: z.string().min(1).optional(),
   provider_details: z.array(ProviderDetail).length(1).nullish(),
 });
 
@@ -101,7 +129,7 @@ const CloudflareResponse = z.object({
 }).passthrough();
 
 const SourceModel = z.object({
-  catalog: CatalogModel,
+  catalog: z.union([CatalogModel, MediaCatalogModel]),
   schemaInput: z.unknown().optional(),
 });
 
@@ -122,6 +150,12 @@ const CuratedModel = z.object({
     z.literal(true),
     z.object({ field: z.enum(["reasoning_content", "reasoning_details"]) }).strict(),
   ]).optional(),
+  // Media models only: what the /ai/run route accepts and returns, when its request
+  // schema doesn't list it (e.g. a TTS model with no output format field).
+  modalities: z.object({
+    input: z.array(z.string().min(1)).min(1),
+    output: z.array(z.string().min(1)).min(1),
+  }).strict().optional(),
   note: NoteLines.optional(),
 }).strict();
 
@@ -134,6 +168,7 @@ const Curation = z.object({
 }).strict();
 
 type CatalogModel = z.infer<typeof CatalogModel>;
+type MediaCatalogModel = z.infer<typeof MediaCatalogModel>;
 type CatalogEntry = z.infer<typeof CatalogEntry>;
 type SourceModel = z.infer<typeof SourceModel>;
 type CuratedModel = z.infer<typeof CuratedModel>;
@@ -158,9 +193,8 @@ export const cloudflareAiGateway = {
       throw new Error("Cloudflare AI Gateway catalog returned no Text Generation models");
     }
 
-    const emittedModels = textModels.filter(
-      (model) => !model.model_id.startsWith("@cf/") && !skippedModels.has(model.model_id),
-    ).map((model) => {
+    const eligible = (model: CatalogEntry) => !model.model_id.startsWith("@cf/") && !skippedModels.has(model.model_id);
+    const emittedModels = textModels.filter(eligible).map((model) => {
       const parsed = CatalogModel.safeParse(model);
       if (!parsed.success) throw new Error(`${model.model_id}: invalid catalog entry: ${parsed.error.message}`);
       return parsed.data;
@@ -168,12 +202,23 @@ export const cloudflareAiGateway = {
     if (emittedModels.length === 0) {
       throw new Error("Cloudflare AI Gateway catalog returned no eligible proxied models");
     }
-    const sources = await mapLimit(emittedModels, 6, async (model) => ({
+    const mediaModels = catalog.filter((model) => MEDIA_TASKS[model.task] !== undefined);
+    const emittedMedia = mediaModels.filter(eligible).map((model) => {
+      const parsed = MediaCatalogModel.safeParse(model);
+      if (!parsed.success) throw new Error(`${model.model_id}: invalid catalog entry: ${parsed.error.message}`);
+      return parsed.data;
+    });
+    for (const task of new Set(catalog.map((model) => model.task))) {
+      if (task !== TEXT_GENERATION && MEDIA_TASKS[task] === undefined && !UNSYNCED_TASKS.has(task)) {
+        console.warn(`warning: unknown Cloudflare AI Gateway catalog task: ${task}`);
+      }
+    }
+    const sources = await mapLimit([...emittedModels, ...emittedMedia], 6, async (model) => ({
       catalog: model,
       schemaInput: await loadCatalogSchemaInput(model.model_id),
     }));
 
-    const liveIDs = new Set(textModels.map((model) => model.model_id));
+    const liveIDs = new Set([...textModels, ...mediaModels].map((model) => model.model_id));
     for (const id of Object.keys(curation.models)) {
       if (!liveIDs.has(id)) console.warn(`warning: curation id not in live feed: ${id}`);
     }
@@ -186,10 +231,25 @@ export const cloudflareAiGateway = {
   translateModel(source, context) {
     const id = source.catalog.model_id;
     const curated = curation.models[id] ?? {};
+    if (source.catalog.task !== TEXT_GENERATION) {
+      const catalog = source.catalog as MediaCatalogModel;
+      const type = MEDIA_TASKS[catalog.task]!;
+      const { doc, unpriced } = buildCloudflareAiGatewayMediaModel(catalog, source.schemaInput, curated);
+      if (unpriced !== undefined) console.warn(`warning: ${id}: no [cost], catalog pricing can't be expressed: ${unpriced.join(", ")}`);
+      return {
+        id,
+        v2: doc,
+        header: noteHeader([
+          ...MEDIA_NOTES[type],
+          ...(unpriced === undefined ? [] : [`No [cost]: catalog pricing keys ${unpriced.join(", ")} have no cost unit or condition to express them.`]),
+          ...curated.note ?? [],
+        ]),
+      };
+    }
     return {
       id,
       model: buildCloudflareAiGatewayModel(
-        source.catalog,
+        source.catalog as CatalogModel,
         source.schemaInput,
         curated,
         context.authored(id),
@@ -244,6 +304,284 @@ export function buildCloudflareAiGatewayModel(
   const npm = NATIVE_NPM[id.split("/")[0]!];
   if (npm !== undefined) model.provider = { npm };
   return model;
+}
+
+// ---------------------------------------------------------------------------
+// Speech and transcription models (v2-only files)
+// ---------------------------------------------------------------------------
+
+// Third-party media models run on the REST API's universal endpoint: POST
+// `{base_url}/run` with `{ model, input }`, where `input` follows the model's catalog
+// schema. Generated audio comes back as a URL (or a data URI), transcripts as text.
+const RUN_API = {
+  "workers-ai-run": { base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" },
+};
+
+const MEDIA_NOTES: Record<MediaType, string[]> = {
+  speech: [
+    "Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/",
+    "Output: the schema's output format enum (output_format, response_format or format), else the lab's or the note below. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).",
+  ],
+  transcription: [
+    "Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/",
+    "Input: the formats the schema's file field documents, else the lab's. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).",
+  ],
+};
+
+// Format names in the request schemas → MIME candidates. The lab's spelling wins when
+// it lists one of them (Ogg Opus is audio/ogg for some labs, audio/opus for others).
+const AUDIO_FORMATS: Record<string, string[]> = {
+  mp3: ["audio/mpeg", "audio/mp3"],
+  mpeg: ["audio/mpeg"],
+  mpga: ["audio/mpeg"],
+  opus: ["audio/opus", "audio/ogg"],
+  ogg: ["audio/ogg"],
+  wav: ["audio/wav"],
+  aac: ["audio/aac"],
+  flac: ["audio/flac"],
+  mp4: ["audio/mp4"],
+  m4a: ["audio/mp4"],
+  webm: ["audio/webm"],
+  mkv: ["audio/x-matroska"],
+  pcm: ["audio/pcm", "audio/l16"],
+  mulaw: ["audio/basic", "audio/mulaw", "audio/pcmu"],
+  ulaw: ["audio/basic", "audio/mulaw", "audio/pcmu"],
+  alaw: ["audio/alaw", "audio/pcma"],
+};
+
+type LabFile = {
+  type?: string;
+  name?: string;
+  modalities?: { input: string[]; output: string[] };
+};
+
+export function buildCloudflareAiGatewayMediaModel(
+  catalog: MediaCatalogModel,
+  schemaInput: unknown,
+  curated: CuratedModel = {},
+): { doc: Record<string, unknown>; unpriced?: string[] } {
+  const id = catalog.model_id;
+  const type = MEDIA_TASKS[catalog.task]!;
+  const base = curated.base_model ?? resolveMediaBaseModel(id);
+  if (base === undefined) {
+    throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
+  }
+  const lab = Bun.TOML.parse(readFileSync(path.join(MODELS_ROOT, `${base}.toml`), "utf8")) as LabFile;
+  if ((lab.type ?? "chat") !== type) {
+    throw new Error(`${id}: lab ${base} is a ${lab.type ?? "chat"} model, not ${type}; map it to a ${type} lab`);
+  }
+
+  const doc: Record<string, unknown> = { schema: 2, v2_only: true, base_model: base };
+  if (
+    catalog.name !== undefined
+    && catalog.name !== lab.name
+    && normalizeSlug(id.split("/").slice(1).join("/")) !== normalizeSlug(base.split("/").slice(1).join("/"))
+  ) {
+    doc.name = catalog.name;
+  }
+  const modalities = curated.modalities ?? routeModalities(type, schemaInput, lab);
+  if (modalities !== undefined && !sameModalities(modalities, lab.modalities)) doc.modalities = modalities;
+  doc.api = RUN_API;
+
+  const pricing = catalog.provider_details?.[0]?.pricing;
+  if (pricing === undefined) return { doc, unpriced: ["(no provider_details)"] };
+  const { cost, unpriced } = mediaCost(pricing);
+  if (cost !== undefined) doc.cost = cost;
+  return { doc, unpriced };
+}
+
+// What the route accepts and returns, read from the model's request schema. Undefined
+// when the schema doesn't say, so the lab's modalities apply.
+export function routeModalities(
+  type: MediaType,
+  schemaInput: unknown,
+  lab: LabFile,
+): { input: string[]; output: string[] } | undefined {
+  const properties = schemaProperties(schemaInput);
+  const labInput = lab.modalities?.input ?? [];
+  const labOutput = lab.modalities?.output ?? [];
+  if (type === "speech") {
+    const field = properties.output_format ?? properties.response_format ?? properties.format;
+    const codec = schemaProperties(field).codec;
+    const values = enumValues(codec) ?? enumValues(field);
+    if (values === undefined) return undefined;
+    const output = audioMimes(values.map((value) => value.split("_")[0]!).filter((value) => value !== "auto"), labOutput, "output format");
+    return { input: ["text"], output };
+  }
+
+  const file = (properties.file ?? properties.audio_url) as { description?: unknown } | undefined;
+  const description = typeof file?.description === "string" ? file.description : "";
+  const listed = /Supported (?:container )?formats: ([^.]+)\./i.exec(description)?.[1];
+  if (listed === undefined) return undefined;
+  const raw = /Raw formats \(([^)]+)\)/i.exec(description)?.[1];
+  const formats = [listed, raw].filter((value) => value !== undefined).flatMap((value) => value.split(","));
+  const audio = audioMimes(formats.map((value) => value.trim().toLowerCase()), labInput, "input format");
+  return {
+    input: [...(labInput.includes("text") && properties.prompt !== undefined ? ["text"] : []), ...audio],
+    output: ["text"],
+  };
+}
+
+function audioMimes(formats: string[], labMimes: string[], label: string) {
+  const mimes = formats.map((format) => {
+    const candidates = AUDIO_FORMATS[format];
+    if (candidates === undefined) throw new Error(`unknown audio ${label} "${format}"; add it to AUDIO_FORMATS`);
+    return candidates.find((mime) => labMimes.includes(mime)) ?? candidates[0]!;
+  });
+  return [...new Set(mimes)];
+}
+
+function schemaProperties(schema: unknown): Record<string, unknown> {
+  if (schema === null || typeof schema !== "object") return {};
+  const properties = (schema as { properties?: unknown }).properties;
+  return properties !== null && typeof properties === "object" ? properties as Record<string, unknown> : {};
+}
+
+function enumValues(schema: unknown) {
+  const parsed = z.object({ enum: z.array(z.string()).min(1) }).passthrough().safeParse(schema);
+  return parsed.success ? parsed.data.enum : undefined;
+}
+
+function sameModalities(a: { input: string[]; output: string[] }, b: LabFile["modalities"]) {
+  const key = (values: string[] | undefined) => JSON.stringify([...values ?? []].sort());
+  return b !== undefined && key(a.input) === key(b.input) && key(a.output) === key(b.output);
+}
+
+// Per-feature transcription surcharges, added to the base per-minute price when the
+// request sets the field. Keyed by the catalog's `input_audio_minutes_<feature>` suffix.
+const ADDITIVE_MINUTE_PRICES: Record<string, CostWhenV2> = {
+  speaker_diarization: { speaker_labels: { equals: true } },
+  keyterms: { keyterms_prompt: { min_items: 1 } },
+  medical: { domain: { equals: "medical-v1" } },
+};
+// Per-mode transcription prices that replace the base price.
+const MODE_MINUTE_PRICES: Record<string, CostWhenV2> = {
+  streaming: { websocket: { equals: true } },
+};
+
+type PriceEntry = { unit?: string; price?: number; cache?: { read?: number; write?: number }; reasoning?: number; overrides?: Array<Record<string, unknown>> };
+
+// Maps a catalog provider_details pricing object to a v2 cost. Token prices are already
+// per 1M tokens; character prices are per character. Every key must map, or no cost is
+// written and the keys are returned, so no price is dropped silently.
+export function mediaCost(pricing: Record<string, number>): { cost?: CostV2; unpriced?: string[] } {
+  const sides: Record<string, PriceEntry> = {};
+  const side = (modality: string, direction: "input" | "output") => (sides[`${modality}.${direction}`] ??= {});
+  const unpriced: string[] = [];
+  const additive: Array<[CostWhenV2, number]> = [];
+  const modes: Array<[CostWhenV2, number]> = [];
+  const set = (entry: PriceEntry, unit: string | undefined, value: number, key: string) => {
+    if (entry.price !== undefined || (entry.unit !== undefined && entry.unit !== unit)) return unpriced.push(key);
+    if (unit !== undefined) entry.unit = unit;
+    entry.price = value;
+  };
+
+  for (const [key, value] of Object.entries(pricing)) {
+    const minuteFeature = /^input_audio_minutes_(\w+)$/.exec(key)?.[1];
+    const token = /^(input|output)_(?:(cached|cache_creation)_)?(?:(text|audio|image|video|reasoning)_)?tokens$/.exec(key);
+    if (key === "input_characters") {
+      set(side("text", "input"), "character", perMillion(value), key);
+    } else if (key === "input_audio_minutes") {
+      set(side("audio", "input"), "minute", value, key);
+    } else if (minuteFeature !== undefined && ADDITIVE_MINUTE_PRICES[minuteFeature] !== undefined) {
+      additive.push([ADDITIVE_MINUTE_PRICES[minuteFeature]!, value]);
+    } else if (minuteFeature !== undefined && MODE_MINUTE_PRICES[minuteFeature] !== undefined) {
+      modes.push([MODE_MINUTE_PRICES[minuteFeature]!, value]);
+    } else if (token !== null) {
+      const [, direction, cache, rawModality] = token as unknown as [string, "input" | "output", string | undefined, string | undefined];
+      const reasoning = rawModality === "reasoning";
+      const entry = side(reasoning ? "text" : rawModality ?? "text", direction);
+      if (entry.unit !== undefined) {
+        unpriced.push(key);
+      } else if (direction === "output" && reasoning && cache === undefined) {
+        entry.reasoning = value;
+      } else if (direction === "input" && !reasoning && cache !== undefined) {
+        entry.cache = { ...entry.cache, [cache === "cached" ? "read" : "write"]: value };
+      } else if (!reasoning && cache === undefined) {
+        set(entry, undefined, value, key);
+      } else {
+        unpriced.push(key);
+      }
+    } else {
+      unpriced.push(key);
+    }
+  }
+
+  const minutes = sides["audio.input"];
+  if (additive.length > 0 || modes.length > 0) {
+    if (minutes?.unit !== "minute" || minutes.price === undefined) {
+      unpriced.push(...Object.keys(pricing).filter((key) => key.startsWith("input_audio_minutes_")));
+    } else {
+      minutes.overrides = [
+        ...modes.map(([when, price]) => ({ when, price })),
+        // Surcharges add up, so every combination of features gets its own total.
+        ...subsets(additive).map((features) => ({
+          when: features.length === 1 ? features[0]![0] : { all: features.map(([when]) => when) },
+          price: roundPrice(minutes.price! + features.reduce((sum, [, price]) => sum + price, 0)),
+        })),
+      ];
+    }
+  }
+  for (const [name, entry] of Object.entries(sides)) {
+    if (entry.price === undefined) unpriced.push(...Object.keys(pricing).filter((key) => keyTargets(key, name)));
+  }
+  if (unpriced.length > 0) return { unpriced: [...new Set(unpriced)] };
+
+  const cost: Record<string, Record<string, PriceEntry>> = {};
+  for (const modality of ["text", "image", "audio", "video"]) {
+    for (const direction of ["input", "output"] as const) {
+      const entry = sides[`${modality}.${direction}`];
+      if (entry === undefined) continue;
+      const { unit, price, cache, reasoning, overrides } = entry;
+      (cost[modality] ??= {})[direction] = {
+        ...(unit === undefined ? {} : { unit }),
+        price,
+        ...(cache === undefined ? {} : { cache }),
+        ...(reasoning === undefined ? {} : { reasoning }),
+        ...(overrides === undefined ? {} : { overrides }),
+      };
+    }
+  }
+  return { cost: cost as CostV2 };
+}
+
+function keyTargets(key: string, side: string) {
+  const [modality, direction] = side.split(".");
+  return key.startsWith(`${direction}_`) && (modality === "text" ? !/_(audio|image|video)_/.test(key) : key.includes(`_${modality}_`));
+}
+
+// Non-empty subsets, smallest first, keeping the input order within each.
+function subsets<T>(items: T[]): T[][] {
+  const result: T[][] = [];
+  for (let mask = 1; mask < 1 << items.length; mask++) {
+    result.push(items.filter((_, index) => (mask & (1 << index)) !== 0));
+  }
+  return result.sort((a, b) => a.length - b.length);
+}
+
+function perMillion(value: number) {
+  return Math.round(value * 1e12) / 1e6;
+}
+
+function roundPrice(value: number) {
+  return Math.round(value * 1e10) / 1e10;
+}
+
+function normalizeSlug(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+}
+
+// The catalog id's lab file: the same path, dots as dashes, or the one file in the
+// lab directory whose name matches without punctuation (eleven-v3 ↔ eleven_v3).
+function resolveMediaBaseModel(id: string) {
+  const direct = resolveBaseModel(id);
+  if (direct !== undefined) return direct;
+  const [lab, ...rest] = id.split("/");
+  const slug = normalizeSlug(rest.join("/"));
+  const dir = path.join(MODELS_ROOT, lab!);
+  if (!existsSync(dir)) return undefined;
+  const matches = readdirSync(dir).filter((file) => file.endsWith(".toml") && normalizeSlug(file.slice(0, -5)) === slug);
+  return matches.length === 1 ? `${lab}/${matches[0]!.slice(0, -5)}` : undefined;
 }
 
 export function deriveReasoningOptions(

@@ -2,6 +2,7 @@
 # https://www.assemblyai.com/docs/pre-recorded-audio/universal-3-5-pro
 # Input formats: the common list in OpenRouter's speech-to-text docs (the lab lists none here):
 #   https://openrouter.ai/docs/guides/overview/multimodal/stt
+# temperature "only takes effect on the Universal-3.5 Pro model": https://www.assemblyai.com/docs/api-reference/transcripts/submit
 schema = 2
 v2_only = true
 type = "transcription"
@@ -17,7 +18,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
-temperature = false
+temperature = true
 top_p = false
 top_k = false
 

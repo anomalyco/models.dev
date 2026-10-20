@@ -18,32 +18,31 @@
 #   - note: leading `#` comment lines (wire-path docs, source citations) that would otherwise
 #     be lost on every regeneration.
 #   - prefix_notes: leading comment lines shared by every model whose id starts with the key,
-#     written before the model's own note.
-#   - skip: catalog ids with no lab file, or not reachable via unified billing (BYOK-only).
+#     written before the model's own note (text models only).
+#   - modalities: speech/transcription models only, when the request schema doesn't list the
+#     formats the /ai/run route returns or accepts.
+#   - skip: catalog ids with no lab file, not reachable via unified billing (BYOK-only), or
+#     failing on every request.
+# Speech and transcription models are written as v2-only files with base_model, cost and an
+# [api.workers-ai-run] table; image, video, music and realtime tasks aren't synced.
 # Consumed by: bun run cloudflare-ai-gateway:generate
 
-# Proxied Text-Generation catalog ids with no lab file under models/, or not reachable via
-# unified billing (BYOK-only).
+# Proxied catalog ids with no lab file under models/, not reachable via unified billing
+# (BYOK-only), or failing on every request.
 skip = [
-  "google/gemini-3-flash",
-  "google/gemini-3.1-pro",
   "xai/grok-4.20-multi-agent-0309",
   # Inkling has a lab file, but both ids are BYOK-only: unified billing returns code 2047
   # on /ai/v1/chat/completions and /ai/v1/messages (verified live 2026-10-16).
   "thinkingmachines/inkling-256k",
+  "thinkingmachines/inkling",
+  # Both return 500 "Response conversion failed: Input is undefined or empty" (code 2002) on
+  # POST /ai/v1/chat/completions (live 2026-10-20).
   "minimax/m2.7",
   "minimax/m3",
-  "thinkingmachines/inkling",
-  "google/gemini-2.5-flash-lite",
-  "google/gemini-2.5-flash",
-  "google/gemini-2.5-pro",
-  "google/gemini-3.1-flash-lite",
-  "google/gemini-3.5-flash-lite",
-  "google/gemini-3.5-flash",
-  "google/gemini-3.6-flash",
-  "google/gemini-3.7-flash",
-  "google/gemini-3.8-flash",
   "stealth/union-alpha",
+  # Text-to-Speech: BYOK-only, unified billing returns code 2047 on POST /ai/run (verified live
+  # 2026-10-20). The other ElevenLabs speech models are served.
+  "elevenlabs/eleven-flash-v2-5",
 ]
 
 # Leading comment lines for every model whose id starts with the key, written before the
@@ -71,7 +70,15 @@ skip = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).",
 ]
-"google/" = [
+"google/gemini-2" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI.",
+  "Live 2026-10-20: response_format json_schema is enforced; reasoning_effort none and xhigh are rejected (code 7003). Effort tokens below: two trials, mean, on the same math prompt. Mid-conversation flags not checked.",
+]
+"google/gemini-3" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI.",
+  "Live 2026-10-20: response_format json_schema is enforced; reasoning_effort none and xhigh are rejected (code 7003). Effort tokens below: two trials, mean, on the same math prompt. Mid-conversation flags not checked.",
+]
+"google/gemini-4" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI: no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19: a mid-conversation system message misses the warm cache (hoisted into the system instruction), so system_updates = false; response_format json_schema is enforced.",
 ]
@@ -484,3 +491,95 @@ note = [
   "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-argon",
 ]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+# Gemini 2.5 and 3.x on the REST API's chat-completions route (catalog provider_details
+# google-vertex-ai). They were skipped while they had no lab file. The catalog schemas list no
+# effort enum, so the values are Google's own lists (providers/google) cut to what Cloudflare
+# accepts: none and xhigh are rejected everywhere, minimal on 3.7/3.8 Flash. Gemini 2.5 takes a
+# thinking budget natively; on this route reasoning_effort maps to it. Live 2026-10-20 through
+# gateway `opencode`. https://ai.google.dev/gemini-api/docs/openai#thinking
+[models."google/gemini-2.5-flash"]
+structured_output = true
+note = ["Effort: reasoning_effort = minimal|low|medium|high (maps to a thinking budget; 408 / 830 / 6485 / 6009 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-2.5-flash-lite"]
+structured_output = true
+note = ["Effort: reasoning_effort = minimal|low|medium|high (maps to a thinking budget; 394 / 743 / 8106 / 11060 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-2.5-pro"]
+structured_output = true
+note = ["Effort: reasoning_effort = minimal|low|medium|high (maps to a thinking budget; thinking cannot be disabled; 387 / 741 / 2850 / 5301 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-3-flash"]
+base_model = "google/gemini-3-flash-preview"
+structured_output = true
+note = ["Vertex serves it as gemini-3-flash-preview (the response's model field). Effort: reasoning_effort = minimal|low|medium|high (0 / 1913 / 9571 / 12277 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-3.1-flash-lite"]
+structured_output = true
+note = ["Effort: reasoning_effort = minimal|low|medium|high (160 / 155 / 17237 / 14035 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-3.1-pro"]
+base_model = "google/gemini-3.1-pro-preview"
+structured_output = true
+note = ["Vertex serves it as gemini-3.1-pro-preview (the response's model field). Effort: reasoning_effort = low|medium|high (1402 / 4607 / 4141 reasoning tokens; minimal is accepted but used as much as low, 1540, and isn't a Gemini 3.1 Pro level)."]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."google/gemini-3.5-flash"]
+structured_output = true
+note = ["Effort: reasoning_effort = minimal|low|medium|high (0 / 1758 / 3266 / 4281 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-3.5-flash-lite"]
+structured_output = true
+note = ["Effort: reasoning_effort = minimal|low|medium|high (1956 / 1880 / 6160 / 6357 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-3.6-flash"]
+structured_output = true
+note = ["Effort: reasoning_effort = minimal|low|medium|high (0 / 1444 / 2432 / 3176 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-3.7-flash"]
+structured_output = true
+note = ["Effort: reasoning_effort = low|medium|high (1254 / 1433 / 2390 reasoning tokens; minimal rejected, code 7003)."]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."google/gemini-3.8-flash"]
+structured_output = true
+note = ["Effort: reasoning_effort = low|medium|high (1408 / 1776 / 5520 reasoning tokens; minimal rejected, code 7003)."]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+# Speech and transcription models are synced as v2-only files on POST /ai/run (see the module's
+# MEDIA_NOTES). Ids that match their lab file without punctuation (eleven-v3 -> eleven_v3,
+# universal-3.5-pro -> universal-3-5-pro) need no entry. Each was called live through gateway
+# `opencode` with unified billing on 2026-10-20.
+[models."google/gemini-3.1-flash-tts"]
+base_model = "google/gemini-3.1-flash-tts-preview"
+note = ["Vertex AI serves Gemini 3.1 Flash TTS as a preview model; the route returns a data:audio/l16 URI (live 2026-10-20). https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-tts-preview"]
+
+[models."google/gemini-3.8-flash-tts"]
+modalities = { input = ["text"], output = ["audio/wav"] }
+note = ["Output: the schema has no format field; the route returns a data:audio/wav URI (live 2026-10-20)."]
+
+[models."google/gemini-3.8-flash-lite-tts"]
+modalities = { input = ["text"], output = ["audio/wav"] }
+note = ["Output: the schema has no format field; the route returns a data:audio/wav URI (live 2026-10-20)."]
+
+[models."xai/grok-stt"]
+base_model = "xai/grok-voice-transcribe-2.0"
+note = ["xAI's speech-to-text endpoint (POST /v1/stt, streaming wss://api.x.ai/v1/stt) serves its default model, Grok Voice Transcribe 2.0: https://docs.x.ai/developers/model-capabilities/audio/speech-to-text"]
+
+[models."inworld/tts-1.5-max"]
+base_model = "inworld/inworld-tts-1.5-max"
+
+[models."inworld/tts-1.5-mini"]
+base_model = "inworld/inworld-tts-1.5-mini"
+
+[models."inworld/tts-2"]
+base_model = "inworld/inworld-tts-2"
