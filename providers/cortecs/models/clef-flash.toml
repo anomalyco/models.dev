@@ -1,0 +1,18 @@
+# Sources (accessed 2026-10-19):
+# https://api.cortecs.ai/v1/models?tag=Decision
+# Synced from the Decision listing. Prices are EUR, converted at 1 EUR = 1.114 USD (rate as of 2026-07-30).
+# Cortecs serves text input only.
+# Context: Cortecs serves a 66,000-token window (context_size), smaller than the
+# 262,144 the weights support; Workers AI serves 24,576.
+base_model = "cloudflare/clef-flash"
+attachment = false
+
+[cost]
+input = 0.047
+output = 0
+
+[limit]
+context = 66_000
+
+[modalities]
+input = ["text"]

@@ -1,0 +1,36 @@
+# Sources (accessed 2026-10-19):
+# https://developers.cloudflare.com/workers-ai/models/clef/
+# https://blog.cloudflare.com/clef-decision-models/
+# https://blog.cloudflare.com/clef-faster-cheaper-multimodal/
+# https://huggingface.co/Cloudflare/clef
+# Context: 65,536 tokens (64k) per the Workers AI model page and the launch post.
+# Inputs: text (including JSON state) and images. The Workers AI input schema has
+# state, questions and images only:
+# https://developers.cloudflare.com/workers-ai/models/clef/schema-input.json
+# Temperature: no temperature parameter in the input schema or on the model page.
+# Output limit 0: decision models generate no text, as with the peer decision labs.
+# Release: the launch post date (blog.cloudflare.com/clef-decision-models, 2026-10-01).
+type = "decision"
+name = "Clef"
+description = "27B multimodal decision model that returns calibrated probabilities for typed questions over text, structured state, and images"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 65_536
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Cloudflare/clef"

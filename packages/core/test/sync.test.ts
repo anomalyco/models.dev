@@ -3267,6 +3267,82 @@ test("overrides canonical metadata with Cortecs reasoning support", () => {
   });
 });
 
+function cortecsListing(models: Array<{ id: string; input_token: number; context_size: number }>) {
+  return {
+    object: "list",
+    data: models.map((model) => ({
+      id: model.id,
+      created: 1_791_535_711,
+      pricing: { currency: "EUR", input_token: model.input_token, output_token: 0 },
+      context_size: model.context_size,
+      max_output_tokens: model.context_size,
+      input_modalities: ["text"],
+      output_modalities: ["decision"],
+      supported_features: [],
+      tags: ["Decision"],
+    })),
+  };
+}
+
+test("syncs allowlisted Cortecs decision models and retains other decision ids", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input) => new Response(JSON.stringify(String(input).includes("tag=Decision")
+    ? cortecsListing([
+      { id: "clef-flash", input_token: 0.042, context_size: 66_000 },
+      { id: "laya", input_token: 0.042, context_size: 66_000 },
+      { id: "clef", input_token: 0.22, context_size: 65_536 },
+    ])
+    : cortecsListing([{ id: "clef", input_token: 0.22, context_size: 65_536 }])));
+
+  try {
+    const models = cortecs.parseModels(await cortecs.fetchModels());
+    expect(models.map((model) => model.id)).toEqual(["clef", "clef-flash", "laya"]);
+    const context = { existing: () => undefined, authored: () => undefined };
+    const [clef, flash, laya] = models;
+    expect(cortecs.translateModel(clef!, context)?.id).toBe("clef");
+    expect(cortecs.translateModel(flash!, context)?.id).toBe("clef-flash");
+    expect(cortecs.missingModelID(clef!)).toBeUndefined();
+    expect(cortecs.translateModel(laya!, context)).toBeUndefined();
+    expect(cortecs.missingModelID(laya!)).toBe("laya");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("fails the Cortecs sync when the decision listing fails", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input) => String(input).includes("tag=Decision")
+    ? new Response(null, { status: 503, statusText: "Service Unavailable" })
+    : new Response(JSON.stringify(cortecsListing([])));
+
+  try {
+    await expect(cortecs.fetchModels()).rejects.toThrow("Cortecs models request failed: 503");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("factors Cortecs decision models onto the Clef lab metadata", () => {
+  const [flash, clef] = cortecs.parseModels(cortecsListing([
+    { id: "clef-flash", input_token: 0.042, context_size: 66_000 },
+    { id: "clef", input_token: 0.22, context_size: 65_536 },
+  ]));
+
+  expect(buildCortecsModel(flash!, undefined, undefined)).toEqual({
+    base_model: "cloudflare/clef-flash",
+    attachment: false,
+    cost: { input: 0.047, output: 0 },
+    limit: { context: 66_000 },
+    modalities: { input: ["text"] },
+  });
+  expect(buildCortecsModel(clef!, undefined, undefined)).toEqual({
+    base_model: "cloudflare/clef",
+    attachment: false,
+    cost: { input: 0.245, output: 0 },
+    modalities: { input: ["text"] },
+  });
+});
+
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {

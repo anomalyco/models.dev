@@ -1,0 +1,13 @@
+# Sources (accessed 2026-10-19):
+# https://api.cortecs.ai/v1/models?tag=Decision
+# Synced from the Decision listing. Prices are EUR, converted at 1 EUR = 1.114 USD (rate as of 2026-07-30).
+# Cortecs serves text input only.
+base_model = "cloudflare/clef"
+attachment = false
+
+[cost]
+input = 0.245
+output = 0
+
+[modalities]
+input = ["text"]
