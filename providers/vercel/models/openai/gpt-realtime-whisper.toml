@@ -4,6 +4,17 @@ schema = 2
 base_model = "openai/gpt-realtime-whisper"
 name = "gpt-realtime-whisper"
 
+[capabilities]
+temperature = false
+top_p = false
+
 [limit]
 context = 0
 output = 0
+
+[api.transcriptions]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.audio.input]
+unit = "second"
+price = 0.000284

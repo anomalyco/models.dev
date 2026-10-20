@@ -1,11 +1,14 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
 schema = 2
 base_model = "alibaba/qwen3-embedding-4b"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
-
 [limit]
 output = 32_768
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.02

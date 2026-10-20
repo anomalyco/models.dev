@@ -1,14 +1,22 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
 schema = 2
 base_model = "google/gemini-embedding-2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 
 [modalities]
 input = ["text"]
-output = ["text"]
-
-[capabilities]
-temperature = true
+output = ["embedding"]
 
 [limit]
 context = 0
 output = 0
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.2
+
+[cost.audio.input]
+price = 6.5

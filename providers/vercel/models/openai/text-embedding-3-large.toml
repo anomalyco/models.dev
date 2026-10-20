@@ -1,12 +1,15 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
 schema = 2
 base_model = "openai/text-embedding-3-large"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
-
 [limit]
 input = 6_656
 output = 1_536
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.13

@@ -1,5 +1,6 @@
 # Modalities: Topaz Video API output.container mp4 (default), mov, mkv, avi, webm (AVI has no registered MIME type), https://developer.topazlabs.com/video-models/proteus/proteus
 schema = 2
+type = "video"
 name = "Starlight Precise 2.6"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 open_weights = false
@@ -12,7 +13,13 @@ output = ["video/mp4", "video/quicktime", "video/matroska", "video/webm"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
+
+[api.videos]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"

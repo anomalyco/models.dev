@@ -1,5 +1,6 @@
 # Modalities: Recraft raster image_format webp (default) | png, https://www.recraft.ai/docs/api-reference/endpoints
 schema = 2
+type = "image"
 name = "Recraft V4.1 Flash"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "recraft"
@@ -13,7 +14,17 @@ output = ["image/webp", "image/png"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
+
+[api.images]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.image.output]
+unit = "image"
+price = 0.007

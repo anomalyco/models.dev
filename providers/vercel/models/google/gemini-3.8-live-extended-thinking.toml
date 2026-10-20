@@ -1,16 +1,31 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type realtime)
+# https://vercel.com/docs/ai-gateway/modalities/realtime
+schema = 2
 base_model = "google/gemini-3.8-live-extended-thinking"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-attachment = false
-reasoning = false
-tool_call = false
 
-[cost]
-input = 0.75
-output = 4.5
+[modalities]
+input = ["text", "audio/pcm"]
+output = ["text", "audio/pcm"]
+
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["text", "audio"]
+[api.realtime]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.75
+
+[cost.text.output]
+price = 4.5
+
+[cost.audio.input]
+price = 3
+
+[cost.audio.output]
+price = 12

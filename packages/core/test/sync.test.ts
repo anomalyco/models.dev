@@ -88,7 +88,7 @@ import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
-import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
+import { buildVercelMediaModel, buildVercelModel, vercel, vercelMediaCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
@@ -5177,6 +5177,230 @@ test("Vercel ignores catalog controls when the resolved model cannot reason", ()
   });
 
   expect(buildVercelModel(model!, undefined).reasoning_options).toBeUndefined();
+});
+
+function vercelMedia(fields: Record<string, unknown>) {
+  return vercel.parseModels({
+    data: [{ name: "Media", created: 1_780_963_200, context_window: 0, max_tokens: 0, ...fields }],
+  })[0]!;
+}
+
+test("Vercel sync maps every catalog type and serves media models on their own endpoint", () => {
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  const cases: Array<[string, string, string]> = [
+    ["image", "image", "images"],
+    ["video", "video", "videos"],
+    ["embedding", "embedding", "embeddings"],
+    ["reranking", "reranking", "rerank"],
+    ["speech", "speech", "speech"],
+    ["transcription", "transcription", "transcriptions"],
+    ["realtime", "realtime", "realtime"],
+  ];
+  for (const [catalogType, type, protocol] of cases) {
+    const translated = vercel.translateModel(vercelMedia({ id: `example/${catalogType}-model`, type: catalogType }), context) as any;
+    expect(translated.v2.type).toBe(type);
+    expect(translated.v2.api).toEqual({ [protocol]: { base_url: "https://ai-gateway.vercel.sh/v4/ai" } });
+    expect(translated.model).toBeUndefined();
+    // The written file reads back as a typed v1 model.
+    expect(modelV2ToV1({ ...translated.v2, id: "x" }).type).toBe(type);
+  }
+  // GPT-Live uses the Live endpoint; language and evaluation stay on the chat path.
+  const live = vercel.translateModel(vercelMedia({ id: "openai/gpt-live-1", type: "realtime" }), context) as any;
+  expect(Object.keys(live.v2.api)).toEqual(["live"]);
+  for (const catalogType of ["language", "evaluation", "something-new"]) {
+    const translated = vercel.translateModel(vercelMedia({ id: "example/chat-model", type: catalogType }), context) as any;
+    expect(translated.v2).toBeUndefined();
+    expect(translated.model).toBeDefined();
+  }
+});
+
+test("Vercel media models drop chat capabilities and take exact MIME types", () => {
+  const video = buildVercelMediaModel(vercelMedia({
+    id: "example/video-model",
+    type: "video",
+    modalities: { input: ["text"], output: ["video"] },
+    video_capabilities: {
+      input_limits: {
+        text: { max_chars: 1500 },
+        image: { supported_formats: ["jpeg", "jpg", "png"] },
+        video: { supported_formats: ["mp4", "mov"] },
+      },
+    },
+  }), "video", {
+    schema: 2,
+    name: "Video Model",
+    description: "Curated description",
+    open_weights: false,
+    release_date: "2026-01-01",
+    modalities: { input: ["text"], output: ["video/mp4"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false }, temperature: true, structured_output: true },
+    limit: { context: 0, output: 0 },
+  });
+  expect(video).toMatchObject({
+    type: "video",
+    name: "Video Model",
+    description: "Curated description",
+    modalities: { input: ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"], output: ["video/mp4"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false }, temperature: false, top_p: false, top_k: false },
+  });
+  expect(video.capabilities).not.toHaveProperty("structured_output");
+
+  // Realtime sessions take tools; the catalog states temperature.
+  const realtime = buildVercelMediaModel(vercelMedia({ id: "example/voice", type: "realtime", temperature: true }), "realtime");
+  expect(realtime.capabilities).toEqual({ tools: { supported: true }, reasoning: { supported: false }, temperature: true });
+  expect(realtime.modalities).toEqual({ input: ["text", "audio/pcm"], output: ["text", "audio/pcm"] });
+});
+
+test("Vercel media models on a lab of the same type keep only host differences", () => {
+  // A v1 file: generic modality override, stale chat capabilities.
+  const synced = buildVercelMediaModel(
+    vercelMedia({
+      id: "openai/gpt-realtime-1.5",
+      type: "realtime",
+      temperature: true,
+      pricing: { input: "0.000004", output: "0.000016", input_cache_read: "0.0000004", audio_input_token_cost: "0.000032", audio_output_token_cost: "0.000064", web_search: "10" },
+    }),
+    "realtime",
+    undefined,
+    {
+      base_model: "openai/gpt-realtime-1.5",
+      attachment: false,
+      tool_call: false,
+      temperature: true,
+      cost: { input: 4, output: 16 },
+      modalities: { input: ["text", "audio"] },
+    },
+  );
+  expect(synced.base_model).toBe("openai/gpt-realtime-1.5");
+  expect(synced).not.toHaveProperty("type");
+  // Generic "audio" becomes the lab's exact types; the lab's image input stays out.
+  expect(synced.modalities.input).toEqual(["text", "audio/pcm", "audio/pcmu", "audio/pcma"]);
+  // tools = true matches the lab, so only temperature differs.
+  expect(synced.capabilities).toEqual({ temperature: true });
+  expect(synced.cost).toEqual({
+    text: { input: { price: 4, cache: { read: 0.4 } }, output: { price: 16 } },
+    audio: { input: { price: 32 }, output: { price: 64 } },
+  });
+  const v1 = modelV2ToV1({ ...synced, id: "x" });
+  expect(v1).not.toHaveProperty("tool_call");
+  expect(v1.cost).toEqual({ input: 4, output: 16, cache_read: 0.4, input_audio: 32, output_audio: 64 });
+});
+
+test("Vercel media prices map to CostV2 units with conditional overrides", () => {
+  const cost = (type: Parameters<typeof vercelMediaCost>[1], pricing: Record<string, unknown>) =>
+    vercelMediaCost(vercelMedia({ id: "example/model", type, pricing }), type);
+
+  // Embeddings: per token, cache reads, audio tokens, regional prices only where they differ.
+  expect(cost("embedding", {
+    input: "0.00000015",
+    input_cache_read: "0.000000015",
+    audio_input_token_cost: "0.0000065",
+    regional: { us: { input: "0.00000015" }, eu: { input: "0.000000165" } },
+  })).toEqual({
+    cost: {
+      text: { input: { price: 0.15, cache: { read: 0.015 }, overrides: [{ when: { region: { equals: "eu" } }, price: 0.165 }] } },
+      audio: { input: { price: 6.5 } },
+    },
+  });
+  expect(cost("reranking", { input: "0.00000005" })).toEqual({ cost: { text: { input: { price: 0.05 } } } });
+  expect(cost("reranking", {})).toEqual({});
+
+  // Speech: per character, or text in and audio out per token.
+  expect(cost("speech", { input: "0.000015", speech_input_character_cost: "0.000015" }))
+    .toEqual({ cost: { text: { input: { unit: "character", price: 15 } } } });
+  expect(cost("speech", { input: "0.0000005", output: "0.000006", audio_output_token_cost: "0.000006" })).toEqual({
+    cost: { text: { input: { price: 0.5 }, output: { price: 6 } }, audio: { output: { price: 6 } } },
+  });
+
+  // Transcription: per second; `input` next to it is a nominal placeholder.
+  expect(cost("transcription", { input: "0.0000000002", transcription_duration_cost_per_second: "0.000284" }))
+    .toEqual({ cost: { audio: { input: { unit: "second", price: 0.000284 } } } });
+  expect(cost("transcription", { input: "0.000002", transcription_duration_cost_per_second: "0.0001" }).issue)
+    .toBe("input next to transcription_duration_cost_per_second");
+
+  // Images: per image with size, quality and combined overrides; the grounding fee isn't a model price.
+  expect(cost("image", {
+    image: "0.06",
+    image_dimension_quality_pricing: [
+      { quality: "low", cost: "0.04" },
+      { size: "2048x2048", cost: "0.08" },
+      { size: "2048x2048", quality: "low", cost: "0.06" },
+      { size: "1024x1024", cost: "0.06" },
+    ],
+  })).toEqual({
+    cost: {
+      image: {
+        output: {
+          unit: "image",
+          price: 0.06,
+          overrides: [
+            { when: { quality: { equals: "low" } }, price: 0.04 },
+            { when: { resolution: { equals: "2048x2048" } }, price: 0.08 },
+            { when: { resolution: { equals: "2048x2048" }, quality: { equals: "low" } }, price: 0.06 },
+          ],
+        },
+      },
+    },
+  });
+  // Image output tokens: `text.output` keeps the v1 pair.
+  expect(cost("image", {
+    input: "0.000005",
+    output: "0.000038",
+    image_dimension_quality_pricing: [{ operation: "web-grounding", cost: "0.014" }],
+  })).toEqual({
+    cost: { text: { input: { price: 5 }, output: { price: 38 } }, image: { output: { price: 38 } } },
+  });
+  expect(cost("image", { image: "0.04", image_dimension_quality_pricing: [{ operation: "upscale", cost: "0.1" }] }).cost)
+    .toBeUndefined();
+
+  // Video: per second by resolution, audio and mode; the most specific override applies last.
+  expect(cost("video", {
+    video_duration_pricing: [
+      { audio: false, mode: "std", cost_per_second: "0.168" },
+      { audio: true, mode: "std", cost_per_second: "0.252" },
+      { audio: true, mode: "std", voice_control: true, cost_per_second: "0.308" },
+      { audio: false, mode: "pro", cost_per_second: "0.168" },
+    ],
+  })).toEqual({
+    cost: {
+      video: {
+        output: {
+          unit: "second",
+          price: 0.168,
+          overrides: [
+            { when: { mode: { equals: "std" }, generate_audio: { equals: true } }, price: 0.252 },
+            { when: { mode: { equals: "std" }, generate_audio: { equals: true }, voice_control: { equals: true } }, price: 0.308 },
+          ],
+        },
+      },
+    },
+  });
+  // A condition-free entry is the default price.
+  expect(cost("video", {
+    video_duration_pricing: [{ resolution: "480p", cost_per_second: "0.05" }, { cost_per_second: "0.2" }],
+  }).cost?.video.output).toEqual({ unit: "second", price: 0.2, overrides: [{ when: { resolution: { equals: "480p" } }, price: 0.05 }] });
+  // Video tokens per 1M, reduced when the input contains video.
+  expect(cost("video", {
+    video_token_pricing: {
+      tiers: [
+        { resolution: "480p", no_video_input: { cost_per_million_tokens: "7" }, with_video_input: { cost_per_million_tokens: "4.3" } },
+        { resolution: "1080p", no_video_input: { cost_per_million_tokens: "7.7" }, with_video_input: { cost_per_million_tokens: "4.7" } },
+      ],
+      notes: "Token count includes both input and output video.",
+    },
+  }).cost?.video.output).toEqual({
+    price: 7,
+    overrides: [
+      { when: { resolution: { equals: "1080p" } }, price: 7.7 },
+      { when: { resolution: { equals: "480p" }, input_video: { equals: true } }, price: 4.3 },
+      { when: { resolution: { equals: "1080p" }, input_video: { equals: true } }, price: 4.7 },
+    ],
+  });
+
+  // Session and per-message prices have no CostV2 field: no cost at all, never a partial one.
+  expect(cost("realtime", { realtime_client_message_cost: "0.004", realtime_session_duration_cost_per_second: "0.000834" }))
+    .toEqual({ issue: "no CostV2 field for realtime_client_message_cost, realtime_session_duration_cost_per_second" });
+  expect(cost("realtime", { web_search: "10", realtime_session_duration_cost_per_second: "0.0008334" }).cost).toBeUndefined();
 });
 
 test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {

@@ -1,4 +1,7 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type reranking)
+# https://vercel.com/docs/ai-gateway/modalities/reranking
 schema = 2
+type = "reranking"
 name = "Voyage Rerank 3"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
 family = "voyage"
@@ -7,12 +10,21 @@ release_date = "2026-09-30"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["reranking"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 32_000
 output = 32_000
+
+[api.rerank]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.05

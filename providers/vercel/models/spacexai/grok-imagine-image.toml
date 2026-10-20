@@ -1,3 +1,5 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type image)
+# https://vercel.com/docs/ai-gateway/modalities/image-generation
 schema = 2
 base_model = "xai/grok-imagine-image"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -8,3 +10,10 @@ output = ["image/jpeg", "image/png"]
 
 [limit]
 context = 0
+
+[api.images]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.image.output]
+unit = "image"
+price = 0.02

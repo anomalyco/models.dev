@@ -1,15 +1,29 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type transcription)
+# https://vercel.com/docs/ai-gateway/modalities/speech-to-text
+schema = 2
 base_model = "openai/gpt-4o-mini-transcribe"
 name = "GPT-4o mini Transcribe"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
-attachment = false
 
-[cost]
-input = 1.25
-output = 5
+[modalities]
+input = ["audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/webm", "audio/pcm", "audio/pcmu", "audio/pcma"]
+output = ["text"]
+
+[capabilities]
+temperature = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["audio"]
+[api.transcriptions]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 5
+
+[cost.audio.input]
+price = 1.25

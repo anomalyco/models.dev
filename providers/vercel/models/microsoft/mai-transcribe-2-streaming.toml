@@ -1,17 +1,27 @@
+# Streaming-only route (websocket-transcription): raw PCM chunks, inputAudioFormat { type: "audio/pcm" },
+#   https://vercel.com/docs/ai-gateway/modalities/speech-to-text#streaming-transcription
+schema = 2
+type = "transcription"
 name = "MAI-Transcribe-2-Streaming"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "mai"
-release_date = "2026-10-01"
-last_updated = "2026-10-01"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-10-01"
+
+[modalities]
+input = ["audio/pcm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[api.transcriptions]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"

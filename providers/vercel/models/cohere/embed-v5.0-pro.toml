@@ -7,3 +7,9 @@ description = "Embedding model for semantic search, retrieval, clustering, and r
 [modalities]
 input = ["text"]
 output = ["embedding"]
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.12

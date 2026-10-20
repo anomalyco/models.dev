@@ -1,2 +1,16 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type transcription)
+# https://vercel.com/docs/ai-gateway/modalities/speech-to-text
 schema = 2
 base_model = "google/gemini-3.5-transcribe-live"
+
+[capabilities]
+temperature = false
+top_p = false
+top_k = false
+
+[api.transcriptions]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.audio.input]
+unit = "second"
+price = 0.00015

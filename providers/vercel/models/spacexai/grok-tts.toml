@@ -1,3 +1,5 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type speech)
+# https://vercel.com/docs/ai-gateway/modalities/text-to-speech
 schema = 2
 base_model = "xai/grok-tts"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
@@ -5,3 +7,10 @@ description = "Speech generation model for controllable voice, narration, and au
 [limit]
 context = 0
 output = 0
+
+[api.speech]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+unit = "character"
+price = 15

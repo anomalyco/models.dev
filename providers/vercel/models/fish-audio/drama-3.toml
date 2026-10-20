@@ -1,5 +1,6 @@
 # Modalities: AI Gateway speech outputFormat mp3 | wav (https://vercel.com/docs/ai-gateway/modalities/text-to-speech); Fish Audio formats mp3, wav, pcm, opus (https://docs.fish.audio/api-reference/endpoint/openapi-v1/text-to-speech)
 schema = 2
+type = "speech"
 name = "Drama 3"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 open_weights = false
@@ -12,7 +13,17 @@ output = ["audio/mpeg", "audio/wav"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
+
+[api.speech]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+unit = "character"
+price = 10

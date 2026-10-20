@@ -1,5 +1,7 @@
 # Modalities: AI Gateway KlingAI video results are MP4 (https://vercel.com/docs/ai-gateway/modalities/video-generation/text-to-video)
+# Inputs: AI Gateway's catalog video_capabilities.input_limits (kinds and supported_formats), https://ai-gateway.vercel.sh/v1/models
 schema = 2
+type = "video"
 name = "Kling v2.6 Motion Control"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "ling"
@@ -8,14 +10,27 @@ release_date = "2025-12-18"
 last_updated = "2025-12-21"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"]
 output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
-temperature = true
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
+
+[api.videos]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.video.output]
+unit = "second"
+price = 0.07
+
+[[cost.video.output.overrides]]
+when = { mode = { equals = "pro" } }
+price = 0.112

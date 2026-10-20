@@ -1,9 +1,15 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
 schema = 2
 base_model = "mistral/codestral-embed-2505"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 
-[capabilities]
-temperature = true
-
 [limit]
 output = 1_536
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }

@@ -1,4 +1,11 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type realtime)
+# https://vercel.com/docs/ai-gateway/modalities/realtime
+schema = 2
 base_model = "openai/gpt-live-1"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-attachment = false
-tool_call = false
+
+[capabilities]
+temperature = true
+
+[api.live]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
