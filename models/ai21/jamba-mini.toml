@@ -1,23 +1,25 @@
+schema = 2
 name = "Jamba Mini"
 description = "AI21's efficient, lightweight hybrid SSM-Transformer model for a wide range of tasks"
 family = "jamba"
-release_date = "2026-01-01"
-last_updated = "2026-01-01"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-knowledge = "2024-08-22"
 open_weights = true
-
-[limit]
-context = 256_000
-output = 4_096
+knowledge = "2024-08-22"
+release_date = "2026-01-01"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 256_000
+output = 4_096
 
 [[weights]]
 label = "Hugging Face"

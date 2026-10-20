@@ -6,6 +6,9 @@ base_model = "liquid/d1"
 input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["text"]
 
+[capabilities]
+structured_output = true
+
 [cost.text.input]
 price = 0.02
 

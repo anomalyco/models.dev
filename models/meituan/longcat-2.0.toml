@@ -1,22 +1,25 @@
 # Open weights: https://huggingface.co/meituan-longcat/LongCat-2.0 (MIT, public since 2026-07-05)
+schema = 2
 name = "LongCat-2.0"
 description = "Meituan LongCat-2.0, a reasoning model with tool calling and a 1M-token context window"
 family = "longcat"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-release_date = "2026-06-30"
-last_updated = "2026-06-30"
 open_weights = true
-
-[limit]
-context = 1_000_000
-output = 131_072
+release_date = "2026-06-30"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 131_072
 
 [[benchmarks]]
 name = "SWE-Bench Pro"

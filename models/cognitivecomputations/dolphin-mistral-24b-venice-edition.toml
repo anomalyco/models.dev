@@ -1,22 +1,24 @@
 # Lab metadata carried over from providers/openrouter/models/cognitivecomputations/dolphin-mistral-24b-venice-edition.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "Uncensored"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral"
-release_date = "2025-07-09"
-last_updated = "2025-07-09"
-knowledge = "2024-04-30"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = true
-
-[limit]
-context = 128000
-output = 8192
+knowledge = "2024-04-30"
+release_date = "2025-07-09"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 8_192

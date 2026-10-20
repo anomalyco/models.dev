@@ -1,21 +1,23 @@
 # Lab metadata carried over from providers/openrouter/models/inception/mercury-2.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "Mercury 2"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "mercury"
-release_date = "2026-03-04"
-last_updated = "2026-03-04"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[limit]
-context = 128000
-output = 50000
+release_date = "2026-03-04"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 50_000

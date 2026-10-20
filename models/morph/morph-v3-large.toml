@@ -1,21 +1,23 @@
 # Lab metadata carried over from providers/openrouter/models/morph/morph-v3-large.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "Morph V3 Large"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "morph"
-release_date = "2025-07-07"
-last_updated = "2025-07-07"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
-
-[limit]
-context = 262144
-output = 131072
+release_date = "2025-07-07"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 131_072
