@@ -225,3 +225,28 @@ test("runner preserves absent entries and headers, reports new models, and is id
   expect(Bun.TOML.parse(content)).toMatchObject({ base_model: "alibaba/qwen3.8-max", limit: { output: 64_000 }, reasoning_options: [{ type: "toggle" }] });
   expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 2 });
 });
+
+test("runner patches prices in a v2 file in place and keeps v2-only data", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "novita-sync-v2-test-"));
+  roots.push(root);
+  const modelsDir = path.join(root, "providers/novita-ai/models");
+  await mkdir(path.join(modelsDir, "qwen"), { recursive: true });
+  await mkdir(path.join(root, "models/alibaba"), { recursive: true });
+  await Bun.write(path.join(root, "models/alibaba/qwen3.8-max.toml"), await Bun.file("models/alibaba/qwen3.8-max.toml").text());
+  await Bun.write(path.join(root, "providers/novita-ai/provider.toml"), await Bun.file("providers/novita-ai/provider.toml").text());
+  const shipped = await Bun.file("providers/novita-ai/models/qwen/qwen3.8-max.toml").text();
+  const file = path.join(modelsDir, "qwen/qwen3.8-max.toml");
+  await Bun.write(file, shipped.replace("[cost.text.output]\nprice = 6", "[cost.text.output]\nprice = 7"));
+  const catalog = row({
+    context_size: 1_000_000,
+    pricing: {
+      prompt: { price_per_m_decimal: "2" },
+      completion: { price_per_m_decimal: "6" },
+      input_cache_read: { price_per_m_decimal: "0.25" },
+    },
+  });
+  const provider = { ...novitaAi, modelsDir, fetchModels: async () => ({ data: [catalog] }) };
+  expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 1, unchanged: 0 });
+  expect(await Bun.file(file).text()).toBe(shipped);
+  expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, unchanged: 1 });
+});
