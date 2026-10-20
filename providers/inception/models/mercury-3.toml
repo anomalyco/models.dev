@@ -1,0 +1,29 @@
+# Source (accessed 2026-10-20): https://docs.inceptionlabs.ai/get-started/models
+# Launch pricing is 50% off: regular input/output/cache-read rates are $0.20/$0.70/$0.02 per MTok.
+# Effort: reasoning_effort = instant|low|medium|high. The native `instant` value
+# is not representable in the current models.dev effort enum; do not map it to `none`.
+name = "Mercury 3"
+description = "Inception's diffusion reasoning model for chat, multi-step problem solving, and tool use"
+family = "mercury"
+release_date = "2026-10-16"
+last_updated = "2026-10-20"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.10
+output = 0.35
+cache_read = 0.01
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
