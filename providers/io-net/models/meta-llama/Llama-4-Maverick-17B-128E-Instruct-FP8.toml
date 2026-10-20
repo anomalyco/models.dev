@@ -1,25 +1,13 @@
-name = "Llama 4 Maverick 17B 128E Instruct"
-description = "Open multimodal Llama model for strong reasoning and fast responses"
-family = "llama"
-release_date = "2025-01-15"
-last_updated = "2025-01-15"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
+# io.net IO Intelligence listing of meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# /models advertises a 430,000-token window but the endpoint rejects requests above 131,072 tokens, so the smaller value is used.
+base_model = "meta/llama-4-maverick-17b-instruct"
+tool_call = false
 
 [cost]
-input = 0.15
-output = 0.6
-cache_read = 0.075
-cache_write = 0.3
+input = 0.269167
+output = 0.834167
 
 [limit]
-context = 430000
-output = 4096
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+context = 131_072

@@ -1,26 +1,17 @@
-name = "DeepSeek R1"
-description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek-thinking"
-release_date = "2025-01-20"
-last_updated = "2025-05-28"
-attachment = false
-reasoning = true
+# io.net IO Intelligence listing of deepseek-ai/DeepSeek-R1-0528.
+# Always reasons: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400 (no caller control).
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: effort levels are accepted but the trace length is the same at every level (reasoning_tokens 3838-5189).
+base_model = "deepseek/deepseek-r1-0528"
 reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-07"
-open_weights = true
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 2.0
-output = 8.75
-cache_read = 1.0
-cache_write = 4.0
+input = 0.56775
+output = 2.279
 
 [limit]
-context = 128000
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 128_000

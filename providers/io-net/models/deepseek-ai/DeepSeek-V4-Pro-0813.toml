@@ -1,0 +1,20 @@
+# io.net IO Intelligence listing of deepseek-ai/DeepSeek-V4-Pro-0813.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also switches thinking off)
+# Effort: reasoning.effort = low|high|max
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13, reasoning_tokens per level (three samples each): low 229-253, high 352-384, max 351-697.
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.73
+output = 4.77
+cache_read = 0.365
+
+[limit]
+context = 1_048_576
+output = 393_216

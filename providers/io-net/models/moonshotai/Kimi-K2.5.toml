@@ -1,0 +1,18 @@
+# io.net IO Intelligence listing of moonshotai/Kimi-K2.5.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also switches thinking off)
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: thinking on 1792-2742 reasoning tokens, off 0 (both reasoning.effort = "none" and reasoning.enabled = false).
+base_model = "moonshotai/kimi-k2.5"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.5384
+output = 2.835
+cache_read = 0.2692
+
+[modalities]
+input = ["text", "image"]

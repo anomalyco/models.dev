@@ -1,26 +1,15 @@
-name = "Kimi K2 Thinking"
-description = "Kimi reasoning model for long-horizon research, planning, and tool use"
-family = "kimi-thinking"
-release_date = "2024-11-01"
-last_updated = "2024-11-01"
-attachment = false
-reasoning = true
+# io.net IO Intelligence listing of moonshotai/Kimi-K2-Thinking.
+# Always reasons: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400 (no caller control).
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: effort levels are accepted but do not order the trace (reasoning_tokens low 1696-3256, high 890-1962, max 1538-1846).
+base_model = "moonshotai/kimi-k2-thinking"
 reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-08"
-open_weights = false
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.55
-output = 2.25
-cache_read = 0.275
-cache_write = 1.1
-
-[limit]
-context = 32768
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 0.6
+output = 2.5
+cache_read = 0.3

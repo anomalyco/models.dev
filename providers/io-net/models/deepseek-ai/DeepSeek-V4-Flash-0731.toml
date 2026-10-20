@@ -1,0 +1,19 @@
+# io.net IO Intelligence listing of deepseek-ai/DeepSeek-V4-Flash-0731.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also switches thinking off)
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+# Live check 2026-10-13: the lab effort levels are accepted but did not change the trace (reasoning_tokens low 365-551, high 388-479, max 313-339), so only the on/off control is listed.
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.2252
+output = 0.5956
+cache_read = 0.1126
+
+[limit]
+context = 262_100
+output = 65_536

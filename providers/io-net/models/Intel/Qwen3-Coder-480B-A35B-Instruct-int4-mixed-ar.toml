@@ -1,25 +1,12 @@
-name = "Qwen 3 Coder 480B"
-description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2025-01-15"
-last_updated = "2025-01-15"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
+# io.net IO Intelligence listing of Intel/Qwen3-Coder-480B-A35B-Instruct-int4-mixed-ar.
+# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
+# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+name = "Qwen3 Coder 480B A35B Instruct (Intel INT4 mixed)"
 
 [cost]
-input = 0.22
-output = 0.95
-cache_read = 0.11
-cache_write = 0.44
+input = 0.46125
+output = 2.29375
 
 [limit]
-context = 106000
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 106_000
