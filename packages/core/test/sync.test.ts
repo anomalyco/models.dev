@@ -87,7 +87,7 @@ import { buildOfoxModel, ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
-import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
+import { buildVeniceModel, resolveVeniceBaseModel, type VeniceModel } from "../src/sync/providers/venice.js";
 import { buildVercelMediaModel, buildVercelModel, realtimePriceNote, vercel, vercelMediaCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
@@ -3611,6 +3611,46 @@ test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
     "anthropic/claude-opus-5",
     "anthropic/claude-opus-4-8",
   ]);
+});
+
+function veniceModel(overrides: Partial<VeniceModel["model_spec"]> = {}): VeniceModel {
+  return {
+    id: "claude-opus-4-8-fast",
+    created: 1_780_000_000,
+    model_spec: {
+      name: "Claude Opus 4.8 Fast",
+      availableContextTokens: 1_000_000,
+      maxCompletionTokens: 128_000,
+      capabilities: {
+        supportsFunctionCalling: true,
+        supportsReasoning: true,
+        reasoningEffortOptions: ["max", "high", "low", "xhigh", "medium"],
+        supportsResponseSchema: true,
+        supportsVision: true,
+      },
+      pricing: { input: { usd: 30 }, output: { usd: 150 } },
+      ...overrides,
+    },
+  } as VeniceModel;
+}
+
+test("Venice base_model files carry no model facts and keep the catalog display name", () => {
+  const synced = buildVeniceModel(veniceModel(), undefined, "anthropic/claude-opus-4-8") as Record<string, unknown>;
+  expect(synced).toMatchObject({ base_model: "anthropic/claude-opus-4-8", name: "Claude Opus 4.8 Fast" });
+  for (const fact of ["family", "release_date", "last_updated", "knowledge", "open_weights", "description"]) {
+    expect(synced).not.toHaveProperty(fact);
+  }
+  // A description equal to the lab's is factored out; the file's own one is kept.
+  const lab = { description: "Top Claude Opus tier for the hardest reasoning, coding, and long-horizon agents" } as ExistingModel;
+  expect(buildVeniceModel(veniceModel(), lab, "anthropic/claude-opus-4-8")).not.toHaveProperty("description");
+  const own = { description: "Venice's own description" } as ExistingModel;
+  expect(buildVeniceModel(veniceModel(), own, "anthropic/claude-opus-4-8")).toMatchObject(own);
+});
+
+test("Venice sync sorts reasoning efforts low to high", () => {
+  expect(buildVeniceModel(veniceModel(), undefined, null)).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+  });
 });
 
 test("prefers OpenRouter API reasoning options over authored ones", () => {

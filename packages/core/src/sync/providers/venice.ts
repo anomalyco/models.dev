@@ -63,7 +63,8 @@ export const VeniceResponse = z.object({
 
 export type VeniceModel = z.infer<typeof VeniceModel>;
 
-type ReasoningEffort = "default" | "max" | "low" | "high" | "none" | "medium" | "minimal" | "xhigh";
+const ReasoningEffortOrder = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"] as const;
+type ReasoningEffort = typeof ReasoningEffortOrder[number];
 
 interface MetadataEntry {
   id: string;
@@ -134,7 +135,9 @@ export function buildVeniceModel(
     input: existing?.limit?.input,
     output: spec.maxCompletionTokens ?? Math.floor(spec.availableContextTokens / 4),
   };
-  const reasoningEfforts = capabilities.reasoningEffortOptions?.filter(isReasoningEffort);
+  // v2 compares effort lists in order, so they are kept low to high.
+  const reasoningEfforts = capabilities.reasoningEffortOptions?.filter(isReasoningEffort)
+    .sort((a, b) => ReasoningEffortOrder.indexOf(a) - ReasoningEffortOrder.indexOf(b));
   const reasoningOptions = reasoningEfforts?.length
     ? [{ type: "effort" as const, values: reasoningEfforts }]
     : [];
@@ -170,36 +173,44 @@ export function buildVeniceModel(
     limit,
     modalities: { input: [...new Set(input)], output: ["text" as const] },
   };
+  if (baseModel != null) {
+    // Model facts (family, dates, knowledge, open weights) come from the lab
+    // file. A description is kept only when the file already has its own;
+    // factorBaseModel drops it when it equals the lab's.
+    return factorBaseModel(baseModel, {
+      ...authoritative,
+      description: existing?.description,
+      status: existing?.status,
+      interleaved: existing?.interleaved,
+    }, limit, existing?.base_model_omit);
+  }
+
   const releaseDate = new Date(model.created * 1000).toISOString().slice(0, 10);
-  const values: SyncedFullModel = {
+  const family = inferFamily(model.id, spec.name) ?? existing?.family;
+  const openWeights = spec.modelSource?.toLowerCase().includes("huggingface")
+    ?? existing?.open_weights
+    ?? false;
+  return {
     ...authoritative,
     description: existing?.description ?? describeModel({
       id: model.id,
       name: spec.name,
-      family: baseModel == null ? inferFamily(model.id, spec.name) ?? existing?.family : existing?.family,
+      family,
       reasoning: capabilities.supportsReasoning === true,
       tool_call: capabilities.supportsFunctionCalling === true,
       structured_output: capabilities.supportsResponseSchema === true ? true : undefined,
-      open_weights: spec.modelSource?.toLowerCase().includes("huggingface")
-        ?? existing?.open_weights
-        ?? false,
+      open_weights: openWeights,
       limit,
       modalities: authoritative.modalities,
     }),
-    family: baseModel == null ? inferFamily(model.id, spec.name) ?? existing?.family : existing?.family,
+    family,
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? today,
     knowledge: existing?.knowledge,
-    open_weights: spec.modelSource?.toLowerCase().includes("huggingface")
-      ?? existing?.open_weights
-      ?? false,
+    open_weights: openWeights,
     status: existing?.status,
     interleaved: existing?.interleaved,
   };
-
-  return baseModel == null
-    ? values
-    : factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
 }
 
 export function resolveVeniceBaseModel(id: string, name: string) {
@@ -252,7 +263,7 @@ function normalize(value: string) {
 }
 
 function isReasoningEffort(value: string): value is ReasoningEffort {
-  return ["default", "max", "low", "high", "none", "medium", "minimal", "xhigh"].includes(value);
+  return (ReasoningEffortOrder as readonly string[]).includes(value);
 }
 
 function inferFamily(id: string, name: string) {
