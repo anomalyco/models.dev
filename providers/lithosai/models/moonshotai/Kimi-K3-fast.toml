@@ -1,0 +1,29 @@
+# LithosAI Chat Completions (https://api.lithosai.cloud/v1), model "moonshotai/Kimi-K3-fast".
+# Base, Fast and Ultra are separate model IDs serving the same weights at different speeds and prices.
+# Pricing (https://www.lithosai.com/pricing, accessed 2026-10-20): standard rates in USD per 1M tokens; the
+# early-access output discount shown on the page is not used. No cache-write or reasoning surcharge.
+# API reference: https://docs.lithosai.com/openapi.yaml (reasoning_effort; reasoning returned in reasoning_content)
+# Effort: reasoning_effort = none|low|high|max ("none" turns thinking off; there is no separate toggle)
+# Live 2026-10-20 (Base, Fast and Ultra): chat, tool calls and strict json_schema response_format work. Reasoning
+# arrives in reasoning_content; "none" removes it and reports 0 reasoning tokens. thinking.type = disabled does not
+# stop reasoning on this API, so no toggle is listed. JPEG, PNG, GIF, WebP and BMP images are read; HEIC returns 400
+# and video returns 400 ("supports image input only"). A request over 1048576 tokens returns 400 naming that context
+# limit. max_completion_tokens is bounded only by the context, so the output limit keeps the lab default.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Fast"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 22.5

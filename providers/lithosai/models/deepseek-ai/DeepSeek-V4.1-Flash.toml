@@ -1,0 +1,29 @@
+# LithosAI Chat Completions (https://api.lithosai.cloud/v1), model "deepseek-ai/DeepSeek-V4.1-Flash".
+# Base, Fast and Ultra are separate model IDs serving the same weights at different speeds and prices.
+# Weights: GET /v1/models reports created 2026-10-17 for this ID (the 2026-09-10 weights are served as
+# deepseek-ai/DeepSeek-V4.1-Flash-0910*), so the base model is the 1017 update.
+# Pricing (https://www.lithosai.com/pricing, accessed 2026-10-20): standard rates in USD per 1M tokens; the
+# early-access output discount shown on the page is not used. No cache-write or reasoning surcharge.
+# API reference: https://docs.lithosai.com/openapi.yaml (reasoning_effort; reasoning returned in reasoning_content)
+# Effort: reasoning_effort = none|low|high|max (default none: without it the model answers without thinking)
+# Live 2026-10-20 (Base, Fast and Ultra): chat, tool calls and strict json_schema response_format work. Reasoning
+# arrives in reasoning_content; with no reasoning_effort, or "none", there is none and 0 reasoning tokens.
+# thinking.type does not switch thinking cleanly on this API, so no toggle is listed. JPEG, PNG, GIF and WebP images
+# are read. Context is 1048576: a 43-token prompt with max_completion_tokens 1048533 is accepted, 1048534 returns 400
+# naming that limit. max_completion_tokens is bounded only by the context, so the output limit keeps the lab default.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 1.2
