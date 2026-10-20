@@ -1,3 +1,5 @@
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
+# Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).
 # Always reasons; effort: reasoning_effort = low|medium|high|xhigh|max (none/minimal rejected).
 # Interleaved: reasoning_content must be sent back on every prior assistant message.
 # Source: https://developers.reflection.ai/reasoning
@@ -5,7 +7,11 @@ schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_144

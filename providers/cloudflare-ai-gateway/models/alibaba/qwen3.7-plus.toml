@@ -1,10 +1,16 @@
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
+# Live 2026-10-19 (qwen3.7-plus): a mid-conversation system message keeps the cached prefix (in place).
 # Toggle: enable_thinking true|false.
 # Budget: thinking_budget (integer reasoning tokens).
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {} }
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.32

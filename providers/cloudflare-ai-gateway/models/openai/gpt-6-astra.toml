@@ -1,9 +1,16 @@
+# Route: provider-native passthrough /openai (Responses body forwarded unchanged): https://developers.cloudflare.com/ai-gateway/usage/providers/openai/
+# v2 capabilities and cache follow OpenAI's own API (providers/openai). Live via the gateway 2026-10-19: mid-conversation developer messages and additional_tools keep the cached prefix (gpt-4.1-nano, gpt-5-nano, gpt-5.4-nano), configuration_update is accepted on gpt-6-luna and gpt-5.6-luna, json_schema output is enforced.
 # Effort: reasoning.effort = low|medium|high; Cloudflare rejects xhigh|max, and OpenAI rejects none after forwarding (live verified 2026-09-17).
 schema = 2
 base_model = "openai/gpt-6-astra"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+structured_output = true
+system_updates = true
+effort_updates = true
 
 [limit]
 context = 1_050_000

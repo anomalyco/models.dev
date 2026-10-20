@@ -1,4 +1,5 @@
 import { expect, spyOn, test } from "bun:test";
+import { readFileSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -206,6 +207,26 @@ test("uses Cloudflare's curated route controls for Kimi K3 and Fireworks DeepSee
   ]);
   expect(translate("anthropic/claude-sonnet-5")).toContainEqual({ type: "toggle" });
   expect(translate("alibaba/qwen3.8-max")).toContainEqual({ type: "toggle" });
+});
+
+test("writes family prefix notes before a model's own note", () => {
+  const curation = Bun.TOML.parse(
+    readFileSync(path.join(import.meta.dirname, "../../../providers/cloudflare-ai-gateway/curation.toml"), "utf8"),
+  ) as { prefix_notes: Record<string, string[]>; models: Record<string, { note?: string[] }> };
+  const header = (model_id: string) => cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id,
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+  }, { authored: () => undefined, existing: () => undefined }).header;
+  const lines = (notes: string[]) => notes.map((line) => `# ${line}\n`).join("");
+
+  expect(header("moonshotai/kimi-k3")).toBe(
+    lines([...curation.prefix_notes["moonshotai/"]!, ...curation.models["moonshotai/kimi-k3"]!.note!]),
+  );
+  expect(header("meta/muse-spark-open")).toStartWith(lines(curation.prefix_notes["meta/muse-spark-open"]!));
+  expect(header("xai/grok-4.20-0309-non-reasoning")).toBe(lines(curation.prefix_notes["xai/"]!));
 });
 
 test("ignores advertised reasoning controls for non-reasoning base models", () => {
@@ -567,7 +588,7 @@ test("writes new native-route models as v2 files with their API protocol", async
 
     expect(result.notices ?? []).toEqual([]);
     const opus = await readFile(path.join(modelsDir, "anthropic", "claude-opus-4.7.toml"), "utf8");
-    expect(opus).toStartWith("schema = 2\n");
+    expect(opus).toContain("\nschema = 2\n");
     expect(opus).toContain('[api.messages]\nsdk = { aisdk = "@ai-sdk/anthropic" }');
     const gpt = await readFile(path.join(modelsDir, "openai", "gpt-5.5.toml"), "utf8");
     expect(gpt).toContain('[api.responses]\nsdk = { aisdk = "@ai-sdk/openai" }');

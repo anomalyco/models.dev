@@ -1,3 +1,5 @@
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
+# Live 2026-10-19 (qwen3.7-plus): a mid-conversation system message keeps the cached prefix (in place).
 # Toggle: enable_thinking true|false (hybrid).
 # Effort: reasoning_effort = low|medium|xhigh (default xhigh); high accepted as alias -> xhigh.
 # Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort.
@@ -5,7 +7,11 @@ schema = 2
 base_model = "alibaba/qwen3.8-max"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -1,10 +1,17 @@
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI: no per-turn effort or tool-change mechanism.
+# Live 2026-10-19: a mid-conversation system message misses the warm cache (hoisted into the system instruction), so system_updates = false; response_format json_schema is enforced.
 # Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (Google AI Studio native route preserved via AI Gateway; default medium, thinking cannot be disabled).
 # Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-argon ; https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/
 schema = 2
 base_model = "google/gemini-4-argon"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_048_576

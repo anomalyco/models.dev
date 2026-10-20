@@ -89,6 +89,8 @@ reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 | `reasoning_options` | derived from the per-model `schema.input`; curated for native-format providers and always-on reasoners |
 | `structured_output` | curated — a live-tested judgement (schema acceptance ≠ conformance) |
 | `[provider] npm` | derived — `@ai-sdk/anthropic` / `@ai-sdk/openai` for the native-passthrough families |
+| leading comments | curated — `prefix_notes` (per family, by model id prefix) followed by the model's `note` |
+| v2-only fields (`cache`, `system_updates`, `effort_updates`, `tools.updates`, cache-write TTL prices) | hand-authored in the model files (schema 2); sync keeps them and cites their sources through `prefix_notes` |
 
 `reasoning_options` is only written when the `base_model` declares `reasoning = true`; the
 schema forbids it otherwise. When a reasoning model has no derivable and no curated shape,

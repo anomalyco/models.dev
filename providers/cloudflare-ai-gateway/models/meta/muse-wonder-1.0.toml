@@ -1,8 +1,16 @@
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), translated to Meta's Responses API: no per-turn effort or tool-change mechanism.
+# Live 2026-10-19 (muse-spark-1.1, same route, gateway logs): distinct mid-conversation system messages miss the warm cache every time while plain turns hit it (hoisted), so system_updates = false.
+# Live 2026-10-19: response_format json_schema is dropped and the answer is prose, so structured_output = false.
 schema = 2
 base_model = "meta/muse-wonder-1.0"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = true }
+structured_output = false
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 4
