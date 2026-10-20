@@ -1,3 +1,7 @@
+# Input formats: images JPEG/PNG/GIF/WEBP, videos MP4/AVI/MOV/MKV (MediaSource schema in
+# https://platform.minimax.io/docs/api-reference/text-chat-anthropic).
+# Sampling: temperature and top_p are request parameters; top_k is ignored
+# (https://platform.minimax.io/docs/api-reference/text-anthropic-api).
 schema = 2
 name = "MiniMax-M3"
 description = "MiniMax multimodal model for long-context coding, perception, and agent planning"
@@ -6,7 +10,7 @@ open_weights = true
 release_date = "2026-06-01"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/x-msvideo", "video/quicktime", "video/x-matroska"]
 output = ["text"]
 
 [capabilities]
