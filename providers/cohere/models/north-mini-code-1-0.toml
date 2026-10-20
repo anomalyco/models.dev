@@ -1,14 +1,30 @@
-# Model-specific reasoning HTTP values (accessed 2026-06-25):
-# OpenAI compatibility reasoning_effort = "none"|"high"; "low" and "medium"
-# are explicitly unsupported. Token-budget control is not documented.
-# Sources:
-# https://docs.cohere.com/docs/compatibility-api
+# Served through the Compatibility API (POST https://api.cohere.ai/compatibility/v1/chat/completions),
+# sources accessed 2026-10-19:
+# - https://docs.cohere.com/docs/compatibility-api ("Supported parameters": temperature, top_p, response_format,
+#   tools with `strict`, reasoning_effort "none"|"high" only; top_k is not listed)
+# Effort: reasoning_effort = "none" | "high" ("low"/"medium" return 422 live); omitting it reasons (live
+#   reasoning_tokens > 0), so the default is high. Token-budget control is not documented on this surface.
+# Live probes (2026-10-19):
+# - top_k returns 422 "top_k is not supported".
+# - response_format (json_schema and json_object) returns 400 "response_format is not supported with the
+#   specified model", also on the native /v2/chat; GET /v1/models lists no json_mode/json_schema feature.
+# - tool_choice ("required" or a named function) returns 400 "tool_choice is not supported for this model";
+#   tools with strict = true return tool calls.
+# - A late system or developer message (after an assistant turn) returns 200 -> system_updates = true.
+# - No effort control besides on/off, and tools are a request-level list with no add/remove mechanism
+#   -> effort_updates = false, tools.updates = false.
+# - usage.prompt_tokens_details.cached_tokens stayed 0 across 10 identical requests, so cache is left unset.
+# - https://cohere.com/pricing lists North Mini Code as free (API key).
 schema = 2
 base_model = "cohere/north-mini-code-1-0"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high"] }
-structured_output = true
+tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "high"] }
+structured_output = false
+top_k = false
+system_updates = true
+effort_updates = false
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"

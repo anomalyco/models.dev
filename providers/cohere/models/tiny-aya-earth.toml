@@ -1,5 +1,27 @@
 # https://docs.cohere.com/docs/tiny-aya
 # Confirmed through Cohere's /v1/models and /v2/chat on October 1, 2026.
 # No public production per-token price for Tiny Aya; do not infer $0 from free trial access.
+# Native Chat API (POST https://api.cohere.com/v2/chat), sources accessed 2026-10-19:
+# - Parameters: https://docs.cohere.com/reference/chat (temperature, p, k; response_format; tool_choice
+#   REQUIRED|NONE; strict_tools; thinking; system messages anywhere in `messages`; usage.cached_tokens)
+# - Live probes (2026-10-19):
+#   * A system message after an assistant turn returns 200 and stays in place (cached_tokens covers the
+#     prefix before it) -> system_updates = true.
+#   * Prompt prefixes are cached automatically (usage.cached_tokens), with no request field to control it
+#     and no cache price; billed_units.input_tokens did not drop on cache hits.
+#   * The API has no per-turn effort control -> effort_updates = false.
+#   * Tools are a request-level list with no add/remove mechanism; adding a tool to an otherwise identical
+#     request dropped cached_tokens (e.g. 6032 -> 112 on Command A) -> tools.updates = false.
+# Structured output: live response_format returned 400 "response_format is not supported with the specified
+#   model"; GET /v1/models lists no json_mode/json_schema feature for it.
+# Tools: the API accepts `tools` (GET /v1/models lists tools and tool_choice), but live requests never produced a
+#   tool call, so choice is left unset; strict_tools returns 400 "cannot use strict_tools with the specified model".
 schema = 2
 base_model = "cohere/tiny-aya-earth"
+
+[capabilities]
+tools = { supported = true, strict = false, updates = false }
+structured_output = false
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }

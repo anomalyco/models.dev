@@ -1,17 +1,33 @@
-# Model-specific reasoning HTTP restrictions (accessed 2026-06-25):
-# Native thinking.token_budget must be positive; leave at least 1K output tokens.
-# OpenAI compatibility instead accepts reasoning_effort = "none"|"high" and
-# does not document token-budget control.
-# Sources:
-# https://docs.cohere.com/docs/command-a-plus
-# https://docs.cohere.com/docs/reasoning
-# https://docs.cohere.com/docs/compatibility-api
+# Native Chat API (POST https://api.cohere.com/v2/chat), sources accessed 2026-10-19:
+# - Parameters: https://docs.cohere.com/reference/chat (temperature, p, k; response_format; tool_choice
+#   REQUIRED|NONE; strict_tools; thinking; system messages anywhere in `messages`; usage.cached_tokens)
+# - Live probes (2026-10-19):
+#   * A system message after an assistant turn returns 200 and stays in place (cached_tokens covers the
+#     prefix before it) -> system_updates = true.
+#   * Prompt prefixes are cached automatically (usage.cached_tokens), with no request field to control it
+#     and no cache price; billed_units.input_tokens did not drop on cache hits.
+#   * The API has no per-turn effort control -> effort_updates = false.
+#   * Tools are a request-level list with no add/remove mechanism; adding a tool to an otherwise identical
+#     request dropped cached_tokens (e.g. 6032 -> 112 on Command A) -> tools.updates = false.
+# Structured output: https://docs.cohere.com/docs/structured-outputs; live response_format json_object +
+#   json_schema returned schema-valid JSON.
+# Reasoning (https://docs.cohere.com/docs/reasoning, https://docs.cohere.com/reference/chat):
+# Toggle: thinking.type = "enabled" (default) | "disabled". Budget: thinking.token_budget (positive integer;
+#   leave at least 1K tokens for the response). Live: switching thinking off between turns rewrote the
+#   cached prefix (Command A Reasoning: 6144 -> 480 cached tokens; Command A+: 0 cached in 2/2 runs).
+# Tools: tool_choice returns 400 "tool_choice is not supported for this model"; strict_tools = true is accepted.
+# Pricing: kept as authored at launch; https://cohere.com/pricing shows Command A+ as "Free" (API key / model
+#   download); see the PR description.
 schema = 2
 base_model = "cohere/command-a-plus-05-2026"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, budget = { min = 1 } }
+tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 1 } }
 structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [cost.text.input]
 price = 2.5

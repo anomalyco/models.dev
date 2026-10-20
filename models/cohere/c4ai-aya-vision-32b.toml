@@ -1,4 +1,6 @@
 # https://huggingface.co/CohereLabs/aya-vision-32b
+# Image formats: https://docs.cohere.com/docs/image-inputs ("Limitations > File types": PNG, JPEG, WEBP,
+#   non-animated GIF; listed as extensions, so the registered MIME types are used).
 schema = 2
 name = "Aya Vision 32B"
 description = "Open multilingual vision model for OCR, visual reasoning, and image question answering"
@@ -8,7 +10,7 @@ last_updated = "2025-05-14"
 license = "CC-BY-NC-4.0"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

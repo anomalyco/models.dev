@@ -1,3 +1,5 @@
+# Image formats: https://docs.cohere.com/docs/image-inputs ("Limitations > File types": PNG, JPEG, WEBP,
+#   non-animated GIF; listed as extensions, so the registered MIME types are used).
 schema = 2
 name = "Command A Plus"
 description = "Cohere's stronger command model for multilingual agents and enterprise workflows"
@@ -8,7 +10,7 @@ release_date = "2026-05-20"
 last_updated = "2026-06-09"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

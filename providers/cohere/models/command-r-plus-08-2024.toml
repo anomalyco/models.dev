@@ -1,5 +1,28 @@
+# Native Chat API (POST https://api.cohere.com/v2/chat), sources accessed 2026-10-19:
+# - Parameters: https://docs.cohere.com/reference/chat (temperature, p, k; response_format; tool_choice
+#   REQUIRED|NONE; strict_tools; thinking; system messages anywhere in `messages`; usage.cached_tokens)
+# - Live probes (2026-10-19):
+#   * A system message after an assistant turn returns 200 and stays in place (cached_tokens covers the
+#     prefix before it) -> system_updates = true.
+#   * Prompt prefixes are cached automatically (usage.cached_tokens), with no request field to control it
+#     and no cache price; billed_units.input_tokens did not drop on cache hits.
+#   * The API has no per-turn effort control -> effort_updates = false.
+#   * Tools are a request-level list with no add/remove mechanism; adding a tool to an otherwise identical
+#     request dropped cached_tokens (e.g. 6032 -> 112 on Command A) -> tools.updates = false.
+# Structured output: https://docs.cohere.com/docs/structured-outputs; live response_format json_object +
+#   json_schema returned schema-valid JSON.
+# Tools: tool_choice is documented for Command R7B and newer only; live REQUIRED/NONE were accepted but not honored.
+#   strict_tools = true is accepted.
+# Pricing: https://cohere.com/pricing FAQ (Command R+ 08-2024 $2.50/$10 per 1M).
 schema = 2
 base_model = "cohere/command-r-plus-08-2024"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [cost.text.input]
 price = 2.5
