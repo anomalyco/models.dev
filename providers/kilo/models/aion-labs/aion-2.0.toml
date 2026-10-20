@@ -1,22 +1,9 @@
 schema = 2
-name = "AionLabs: Aion-2.0"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-open_weights = false
-release_date = "2026-02-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "aion-labs/aion-2.0"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = false
-temperature = true
-
-[limit]
-context = 131_072
-output = 32_768
 
 [cost.text.input]
 price = 0.8

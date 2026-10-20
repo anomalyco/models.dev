@@ -1,23 +1,9 @@
 schema = 2
-name = "Nous: Hermes 4 405B"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "nousresearch"
-open_weights = false
-release_date = "2025-08-26"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "nousresearch/hermes-4-405b"
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 131_072
-output = 117_964
 
 [cost.text.input]
 price = 1

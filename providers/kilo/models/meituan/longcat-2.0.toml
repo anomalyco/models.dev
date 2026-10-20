@@ -1,19 +1,10 @@
 schema = 2
-name = "Meituan: LongCat 2.0"
+base_model = "meituan/longcat-2.0"
 description = "LongCat 2.0 is a sparse mixture-of-experts language model from Meituan, with 48B active parameters out of 1.6T total. It is suited for coding, repository-level changes, long-horizon problem solving, and agentic..."
-family = "longcat"
-open_weights = false
-release_date = "2026-07-20"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-temperature = true
 
 [limit]
 context = 1_048_756

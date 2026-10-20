@@ -1,19 +1,9 @@
 schema = 2
-name = "Qwen: Qwen2.5 VL 72B Instruct"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = false
-release_date = "2025-02-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 128_000

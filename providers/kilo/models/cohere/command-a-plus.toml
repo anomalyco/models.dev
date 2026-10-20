@@ -1,23 +1,13 @@
 schema = 2
-name = "Cohere: Command A+"
+base_model = "cohere/command-a-plus-05-2026"
 description = "Command A+ is Cohere's flagship model for enterprise agentic workflows. It accepts text and image inputs with a 192K context window, supports native tool calling with strict tool schemas, structured..."
-family = "command-a"
-open_weights = false
-release_date = "2026-09-22"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 192_000
-output = 64_000
 
 [cost.text.input]
 price = 0.3

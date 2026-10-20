@@ -1,22 +1,15 @@
 schema = 2
-name = "OpenAI: GPT-5.2 Chat"
-description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-family = "gpt"
-open_weights = false
-release_date = "2025-12-10"
+base_model = "openai/gpt-5.2-chat-latest"
 
 [modalities]
 input = ["application/pdf", "image", "text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-temperature = false
 
 [limit]
-context = 128_000
 output = 32_000
 
 [cost.text.input]

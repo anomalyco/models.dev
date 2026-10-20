@@ -1,23 +1,10 @@
 schema = 2
-name = "Inception: Mercury 2.5"
+base_model = "inception/mercury-2.5"
 description = "Mercury 2.5 is the fastest reasoning LLM, and the latest diffusion LLM (dLLM) from Inception. Instead of generating tokens sequentially, Mercury 2.5 produces and refines multiple tokens in parallel, achieving..."
-family = "mercury"
-open_weights = false
-release_date = "2026-09-08"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 260_000
-output = 65_536
 
 [cost.text.input]
 price = 0.2

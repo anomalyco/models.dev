@@ -1,22 +1,8 @@
 schema = 2
-name = "TheDrummer: Skyfall 36B V2"
-description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-open_weights = false
-release_date = "2025-03-10"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "thedrummer/skyfall-36b-v2"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 32_768
-output = 29_491
 
 [cost.text.input]
 price = 0.55

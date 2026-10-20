@@ -1,22 +1,9 @@
 schema = 2
-name = "Inference.net: Schematron V2 Turbo"
+base_model = "inference-net/schematron-v2-turbo"
 description = "Schematron V2 Turbo is a 3B-parameter HTML-to-JSON extraction model from Inference.net. It prioritizes throughput for high-volume extraction workloads. Extraction instructions must be supplied through a JSON schema in response_format rather..."
-open_weights = false
-release_date = "2026-09-12"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 128_000
-output = 8_192
 
 [cost.text.input]
 price = 0.03

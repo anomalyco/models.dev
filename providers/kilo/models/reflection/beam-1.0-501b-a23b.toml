@@ -1,22 +1,12 @@
 schema = 2
-name = "Reflection: Beam 1.0 501B A23B"
+base_model = "reflection/beam-1.0-501b-a23b"
 description = "Beam 1.0 is Reflection's open-weight reasoning model for coding and long-horizon agentic workflows. It uses a sparse mixture-of-experts architecture with 501B total and 23B active parameters per token, and a..."
-family = "beam"
-open_weights = false
-release_date = "2026-10-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = true
 
 [limit]
-context = 1_048_576
 output = 943_718
 
 [cost.text.input]

@@ -1,23 +1,9 @@
 schema = 2
-name = "Qwen: Qwen3 235B A22B Instruct 2507"
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = false
-release_date = "2025-07-21"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 262_144
-output = 16_384
 
 [cost.text.input]
 price = 0.09

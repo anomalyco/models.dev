@@ -1,23 +1,10 @@
 schema = 2
-name = "inclusionAI: Ling 3.0 Flash"
+base_model = "inclusionai/ling-3.0-flash"
 description = "*Ling-3.0-flash* is a *124B-parameter Mixture-of-Experts (MoE) model*, with approximately *5.1B parameters activated per token*. The model is designed with *token efficiency and production-scale agentic inference* as key priorities, enabling developers..."
-family = "ling"
-open_weights = false
-release_date = "2026-07-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-temperature = true
-
-[limit]
-context = 262_144
-output = 32_768
 
 [cost.text.input]
 price = 0.06

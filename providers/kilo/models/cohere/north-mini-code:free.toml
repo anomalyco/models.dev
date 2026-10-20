@@ -1,23 +1,11 @@
 schema = 2
+base_model = "cohere/north-mini-code-1-0"
 name = "Cohere: North Mini Code (free)"
 description = "North Mini Code is Cohere's first agentic coding model and the debut of its North family. A sparse mixture-of-experts model with 30B total parameters and 3B active, it is optimized..."
-family = "north"
-open_weights = false
-release_date = "2026-06-17"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-temperature = true
-
-[limit]
-context = 256_000
-output = 64_000
 
 [cost.text.input]
 price = 0

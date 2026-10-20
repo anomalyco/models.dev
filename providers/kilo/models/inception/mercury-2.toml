@@ -1,23 +1,9 @@
 schema = 2
-name = "Inception: Mercury 2"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "mercury"
-open_weights = false
-release_date = "2026-03-04"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "inception/mercury-2"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 128_000
-output = 50_000
 
 [cost.text.input]
 price = 0.25

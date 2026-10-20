@@ -1,19 +1,10 @@
 schema = 2
-name = "NVIDIA: Nemotron 3.5 Super VL"
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 description = "NVIDIA Nemotron 3.5 Super VL is an open multimodal mixture-of-experts model from NVIDIA, with 12B active parameters out of 120B total. It takes text, images, documents, GUI screenshots, and video..."
-family = "nemotron"
-open_weights = false
-release_date = "2026-10-15"
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 262_144

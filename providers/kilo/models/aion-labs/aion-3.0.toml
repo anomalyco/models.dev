@@ -1,22 +1,10 @@
 schema = 2
-name = "AionLabs: Aion-3.0"
+base_model = "aion-labs/aion-3.0"
 description = "Aion-3.0 is a multi-model roleplaying and storytelling system from AionLabs, built on the GLM family of models. It uses a collaborative generation process in which multiple specialized models each contribute..."
-open_weights = false
-release_date = "2026-07-07"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = false
-temperature = true
-
-[limit]
-context = 131_072
-output = 32_768
 
 [cost.text.input]
 price = 3

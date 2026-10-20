@@ -1,22 +1,8 @@
 schema = 2
-name = "TheDrummer: Cydonia 24B V4.1"
-description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-open_weights = false
-release_date = "2025-09-27"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "thedrummer/cydonia-24b-v4.1"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 131_072
-output = 117_964
 
 [cost.text.input]
 price = 0.3

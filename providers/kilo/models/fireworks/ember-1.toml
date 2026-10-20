@@ -1,21 +1,12 @@
 schema = 2
-name = "Fireworks: Ember-1"
+base_model = "fireworks/ember-1"
 description = "Ember-1 is a specialized reasoning model from Fireworks Research, built on [Kimi K3](https://openrouter.ai/moonshotai/kimi-k3). It is designed to make every token go further: it produces shorter reasoning traces, using roughly 40%..."
-open_weights = false
-release_date = "2026-09-24"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-temperature = true
 
 [limit]
-context = 1_048_576
 output = 943_718
 
 [cost.text.input]

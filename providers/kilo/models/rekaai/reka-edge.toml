@@ -1,23 +1,8 @@
 schema = 2
-name = "Reka Edge"
-description = "Multimodal model for analyzing text, images, documents, and rich media"
-family = "reka"
-open_weights = false
-release_date = "2026-03-20"
-
-[modalities]
-input = ["image", "text", "video"]
-output = ["text"]
+base_model = "rekaai/reka-edge"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 16_384
-output = 14_745
 
 [cost.text.input]
 price = 0.1

@@ -1,23 +1,8 @@
 schema = 2
-name = "Morph: Morph V3 Large"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "morph"
-open_weights = false
-release_date = "2025-07-07"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "morph/morph-v3-large"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 262_144
-output = 131_072
 
 [cost.text.input]
 price = 0.9

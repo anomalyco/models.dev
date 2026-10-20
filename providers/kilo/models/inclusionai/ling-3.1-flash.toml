@@ -1,22 +1,12 @@
 schema = 2
-name = "inclusionAI: Ling 3.1 Flash"
+base_model = "inclusionai/ling-3.1-flash"
 description = "Ling 3.1 Flash is a hybrid reasoning mixture-of-experts model from inclusionAI, with 25B active parameters out of 560B total."
-family = "ling"
-open_weights = false
-release_date = "2026-10-02"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
-context = 262_144
 output = 235_929
 
 [cost.text.input]

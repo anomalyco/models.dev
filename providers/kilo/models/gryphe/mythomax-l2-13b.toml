@@ -1,21 +1,11 @@
 schema = 2
-name = "MythoMax 13B"
+base_model = "gryphe/mythomax-l2-13b"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-open_weights = false
-release_date = "2023-07-02"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
-context = 4_096
 output = 3_686
 
 [cost.text.input]

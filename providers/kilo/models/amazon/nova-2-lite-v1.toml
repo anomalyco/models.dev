@@ -1,23 +1,9 @@
 schema = 2
-name = "Amazon: Nova 2 Lite"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "nova"
-open_weights = false
-release_date = "2025-12-02"
-
-[modalities]
-input = ["text", "image", "video", "application/pdf"]
-output = ["text"]
+base_model = "amazon/nova-2-lite-v1"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-temperature = true
-
-[limit]
-context = 1_000_000
-output = 65_535
 
 [cost.text.input]
 price = 0.3

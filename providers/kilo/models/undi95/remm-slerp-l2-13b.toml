@@ -1,22 +1,8 @@
 schema = 2
-name = "ReMM SLERP 13B"
-description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-open_weights = false
-release_date = "2023-07-22"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "undi95/remm-slerp-l2-13b"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 6_144
-output = 5_529
 
 [cost.text.input]
 price = 0.35

@@ -1,19 +1,8 @@
 schema = 2
-name = "Morph: Morph V3 Fast"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "morph"
-open_weights = false
-release_date = "2025-07-07"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "morph/morph-v3-fast"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 262_144

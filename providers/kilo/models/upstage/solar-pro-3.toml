@@ -1,22 +1,11 @@
 schema = 2
-name = "Upstage: Solar Pro 3"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "solar-pro"
-open_weights = false
-release_date = "2026-01-27"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "upstage/solar-pro3"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
-context = 131_072
 output = 117_964
 
 [cost.text.input]

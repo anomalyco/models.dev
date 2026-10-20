@@ -1,19 +1,14 @@
 schema = 2
-name = "ByteDance Seed: Seed 1.6 Flash (retires Nov 11)"
+base_model = "bytedance-seed/seed-1-6-flash"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "seed"
-open_weights = false
-release_date = "2025-12-23"
 
 [modalities]
 input = ["image", "text", "video"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 262_144

@@ -1,22 +1,15 @@
 schema = 2
-name = "Amazon: Nova Premier 1.0"
+base_model = "amazon/nova-premier"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "nova"
-open_weights = false
-release_date = "2025-10-31"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
-context = 1_000_000
 output = 32_000
 
 [cost.text.input]

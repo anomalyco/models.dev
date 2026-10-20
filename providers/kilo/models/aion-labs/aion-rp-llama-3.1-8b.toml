@@ -1,23 +1,8 @@
 schema = 2
-name = "AionLabs: Aion-RP 1.0 (8B)"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-open_weights = false
-release_date = "2025-02-04"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "aion-labs/aion-rp-llama-3.1-8b"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
-
-[limit]
-context = 32_768
-output = 29_491
 
 [cost.text.input]
 price = 0.8

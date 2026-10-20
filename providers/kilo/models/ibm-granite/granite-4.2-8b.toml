@@ -1,23 +1,10 @@
 schema = 2
-name = "IBM: Granite 4.2 8B"
+base_model = "ibm/granite-4.2-8b"
 description = "Granite 4.2 8B is a dense reasoning model from IBM. It is suited for mathematics, code generation, multilingual dialogue, and agentic workflows that need multi-step reasoning. It supports full, low-effort,..."
-family = "granite"
-open_weights = false
-release_date = "2026-08-31"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 131_072
-output = 117_964
 
 [cost.text.input]
 price = 0.06

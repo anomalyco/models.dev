@@ -1,23 +1,13 @@
 schema = 2
-name = "inclusionAI: Ling 3.0 Flash VL"
+base_model = "inclusionai/ling-3.0-flash-vl"
 description = "Ling 3.0 Flash VL builds on Ling 3.0 Flash (124B total / 5.5B active MoE from InclusionAI), further strengthening its language capabilities while adding native visual perception and advanced visual..."
-family = "ling"
-open_weights = false
-release_date = "2026-09-10"
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 131_072
-output = 32_768
 
 [cost.text.input]
 price = 0.06

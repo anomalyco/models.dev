@@ -1,23 +1,8 @@
 schema = 2
-name = "Nous: Hermes 3 405B Instruct (retires Nov 2)"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "nousresearch"
-open_weights = false
-release_date = "2024-08-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "nousresearch/hermes-3-llama-3.1-405b"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 131_072
-output = 16_384
 
 [cost.text.input]
 price = 1
