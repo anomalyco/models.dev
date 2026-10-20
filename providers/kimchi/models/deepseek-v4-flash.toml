@@ -1,25 +1,19 @@
 # Pricing per 1M tokens (USD), source:
 # https://docs.kimchi.dev/docs/model-apis-pricing (accessed 2026-10-20).
 # Implicit prompt cache, no write price.
-# Reasoning wire field: reasoning_content (OpenAI-compatible Chat Completions
-# extended delta, same shape DeepSeek first-party returns).
-# Toggle: `reasoning_content` is present in the response stream when the model
-# is in thinking mode; the Kimchi relay forwards DeepSeek's wire unchanged
-# so the toggle maps to the upstream `thinking.type` knob via a host-side
-# adaptation (Kimchi does not expose its own reasoning_effort selector at
-# this surface; effort is upstream-controlled).
-# Effort levels exposed by the relay: low/high/max (matches DeepSeek first-party).
+# Reasoning shape mirrors providers/alibaba-cn/models/deepseek-v4-flash.toml
+# (the minimal verified relay shape for the same base model). Kimchi's
+# OpenAI-compatible relay forwards DeepSeek's wire (per the Kimchi Inference
+# overview at https://docs.kimchi.dev/docs/model-apis-overview), so the
+# toggle + effort levels below match DeepSeek first-party's published
+# reasoning surface; cite a Kimchi reasoning-control doc before extending.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
-top_k = false
-system_updates = true
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
