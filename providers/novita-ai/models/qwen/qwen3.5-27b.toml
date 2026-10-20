@@ -3,14 +3,16 @@
 # Budget: thinking_budget (reasoning tokens)
 base_model = "alibaba/qwen3.5-27b"
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
 input = 0.3
 output = 2.4
-
-[modalities]
-input = ["text", "image", "video"]
