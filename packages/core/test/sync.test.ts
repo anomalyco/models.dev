@@ -1422,6 +1422,35 @@ function digitalOceanModel(overrides: Partial<DigitalOceanSourceModel> = {}): Di
   };
 }
 
+test("sorts DigitalOcean reasoning efforts low to high", () => {
+  const model = buildDigitalOceanModel(digitalOceanModel({
+    reasoning_efforts: ["max", "LOW", "x-high", "medium", "low"],
+  }), undefined, undefined);
+
+  expect(model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "xhigh", "max"] }],
+  });
+});
+
+test("DigitalOcean base_model files leave model facts to the lab and keep a differing display name", () => {
+  const existing = {
+    base_model: "anthropic/claude-sonnet-4-6",
+    family: "claude-sonnet" as const,
+    release_date: "2020-01-01",
+    last_updated: "2020-01-01",
+    knowledge: "2020-01",
+    open_weights: true,
+  };
+  const model = buildDigitalOceanModel(digitalOceanModel({ name: "Anthropic Claude Sonnet 4.6" }), existing);
+  for (const key of ["family", "knowledge", "release_date", "last_updated", "open_weights"]) {
+    expect(model).not.toHaveProperty(key);
+  }
+  expect(model).toMatchObject({ base_model: "anthropic/claude-sonnet-4-6", name: "Anthropic Claude Sonnet 4.6" });
+
+  const same = buildDigitalOceanModel(digitalOceanModel({ name: "Claude Sonnet 4.6" }), existing);
+  expect(same).not.toHaveProperty("name");
+});
+
 test("syncs DigitalOcean catalog limits and extended pricing thresholds", () => {
   const model = buildDigitalOceanModel(digitalOceanModel({
     pricing: {
@@ -1935,7 +1964,7 @@ test("new DigitalOcean base models use explicit text-only catalog modalities", (
   expect(model).toMatchObject({
     base_model: "anthropic/claude-sonnet-5",
     name: "Anthropic Claude Sonnet 5",
-    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "max", "xhigh"] }],
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
   });
   expect(model).toMatchObject({
     attachment: false,

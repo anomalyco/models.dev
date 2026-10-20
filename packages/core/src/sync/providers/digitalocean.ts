@@ -388,13 +388,18 @@ function reasoningOptionsFor(
     : existing?.reasoning_options;
 }
 
+const EFFORT_ORDER: ReasoningEffort[] = [null, "none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
+
+// Sorted low to high: v2 files compare effort lists in order, so a reordered
+// catalog list must not rewrite them.
 function reasoningEfforts(model: DigitalOceanSourceModel) {
-  return (model.reasoning_efforts ?? [])
+  return [...new Set((model.reasoning_efforts ?? [])
     .map((value) => {
       const normalized = normalizeEffortToken(value);
       return normalized === "null" ? null : normalized;
     })
-    .filter(isReasoningEffort);
+    .filter(isReasoningEffort))]
+    .sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
 }
 
 function isReasoningEffort(value: string | null): value is ReasoningEffort {
