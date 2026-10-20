@@ -1,17 +1,6 @@
-name = "Grok TTS"
+base_model = "xai/grok-tts"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "grok"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = false
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["audio"]

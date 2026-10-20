@@ -1,13 +1,10 @@
+base_model = "openai/gpt-realtime-2"
 name = "gpt-realtime-2"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "gpt"
-release_date = "2026-05-07"
-last_updated = "2026-05-07"
 attachment = false
 reasoning = false
 temperature = true
 tool_call = false
-open_weights = false
 
 [cost]
 input = 4
@@ -20,4 +17,3 @@ output = 0
 
 [modalities]
 input = ["text", "audio"]
-output = ["text", "audio"]
