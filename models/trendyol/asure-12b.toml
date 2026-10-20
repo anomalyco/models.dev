@@ -6,24 +6,28 @@
 # measured against a host serving these weights (llmtr.com, 2026-08-16):
 # a request carrying `tools` returns no tool_calls, and no reasoning output
 # is produced.
+schema = 2
 name = "Trendyol Asure 12B"
 description = "Turkish-language multimodal instruct model built on Gemma 3 12B for e-commerce text, chat, and image-text tasks"
 family = "gemma"
+open_weights = true
 release_date = "2026-02-19"
 last_updated = "2026-02-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
 license = "Gemma"
-
-[limit]
-context = 131_072
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
 
 [[weights]]
 label = "Hugging Face"

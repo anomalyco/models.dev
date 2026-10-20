@@ -1,22 +1,26 @@
-name = "Phocinae Largha 150M v1"
+schema = 2
 type = "decision"
+name = "Phocinae Largha 150M v1"
 description = "Encoder decision model that answers typed questions (noul, choice, score) over text with calibrated probabilities, on CPU and GPU"
+open_weights = true
 release_date = "2026-10-08"
 last_updated = "2026-10-09"
-attachment = false
-reasoning = false
-tool_call = false
-temperature = false
-open_weights = true
 license = "Apache-2.0"
-
-[limit]
-context = 8_192
-output = 0 # decisions return no output tokens; the decision sequence is 512 tokens by default
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
 
 [[weights]]
 label = "Hugging Face"

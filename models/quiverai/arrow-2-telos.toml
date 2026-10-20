@@ -3,20 +3,23 @@
 # https://docs.quiver.ai/developers/models/arrow-2-telos
 # Sampling: https://docs.quiver.ai/api-reference/create-svgs/generate-svg (Arrow 2 Telos rejects
 #   any temperature or top_p value with HTTP 400; there is no top_k field).
+schema = 2
 name = "Arrow 2 Telos"
 description = "High-fidelity SVG generation model for complex vector work and long-context refinement"
-release_date = "2026-09-16"
-last_updated = "2026-09-16"
-attachment = true
-reasoning = true
-tool_call = true
-temperature = false
 open_weights = false
-
-[limit]
-context = 1_050_000
-output = 65_536
+release_date = "2026-09-16"
 
 [modalities]
 input = ["text", "image"]
 output = ["text", "image"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_050_000
+output = 65_536

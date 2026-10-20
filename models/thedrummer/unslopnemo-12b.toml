@@ -1,20 +1,23 @@
 # Lab metadata carried over from providers/openrouter/models/thedrummer/unslopnemo-12b.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "UnslopNemo 12B"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-release_date = "2024-11-08"
-last_updated = "2024-11-08"
-knowledge = "2024-04-30"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
 open_weights = true
-
-[limit]
-context = 1024000
-output = 819200
+knowledge = "2024-04-30"
+release_date = "2024-11-08"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_024_000
+output = 819_200

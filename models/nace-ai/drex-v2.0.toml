@@ -4,25 +4,29 @@
 # - https://console.nace.ai/docs/drex/reference/models
 # Context is the model's maximum state-plus-one-question length, not the
 # first-party API's smaller Drex 2.0 limit before fallback to Drex 1.5.
-name = "Drex 2.0"
+schema = 2
 type = "decision"
+name = "Drex 2.0"
 description = "35B mixture-of-experts System One decision model with 3B active parameters, returning typed, calibrated probabilities over text or structured state without generating text"
+open_weights = true
 release_date = "2026-10-06"
 last_updated = "2026-10-12"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
 license = "Nace.AI Open RAIL-M"
-
-[limit]
-context = 131_072
-output = 0
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 131_072
+output = 0
 
 [[links]]
 label = "Documentation"

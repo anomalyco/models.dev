@@ -1,21 +1,24 @@
 # https://huggingface.co/nex-agi/Nex-N2-Pro
+schema = 2
 name = "Nex-N2-Pro"
 description = "Open agentic MoE model (397B total, 17B active) for coding, tool use, and research workflows"
-release_date = "2026-06-02"
-last_updated = "2026-06-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 262_144
-output = 262_144
+release_date = "2026-06-02"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 262_144
 
 [[weights]]
 label = "Hugging Face"
