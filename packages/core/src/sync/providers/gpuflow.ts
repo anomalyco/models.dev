@@ -39,6 +39,16 @@ const ModelsdevLabBlock = z.object({
   knowledge: z.string().optional(),
   weights_url: z.string().optional(),
   attachment: z.boolean().optional(),
+  // NATIVE capability identity (the model's own, per the HF card) — never
+  // the as-served host behavior. The catalog itself proves they diverge:
+  // qwen3-vl-32b-ocr serves tool_call = false while its lab
+  // alibaba/qwen3-vl-32b-instruct is tool_call = true, so copying synced
+  // host values would write false deltas as lab truth. New labs fail
+  // closed when the block does not declare them.
+  reasoning: z.boolean().optional(),
+  temperature: z.boolean().optional(),
+  tool_call: z.boolean().optional(),
+  structured_output: z.boolean().optional(),
   limit: z.object({ context: z.number(), output: z.number() }).optional(),
   modalities: z.object({
     input: z.array(z.string()),
@@ -329,11 +339,18 @@ export const gpuflow = {
     if (textInput === undefined) {
       return undefined; // audio/music/pooling endpoints are out of scope
     }
-    const limit = {
-      context:
-        textInput.supported_inputs.max_context_length?.value ?? existing?.limit?.context ?? 0,
-      output: model.output_modalities[0]?.max_length?.value ?? existing?.limit?.output ?? 0,
-    };
+    // Resolved provider limits must be real catalog (or existing-file)
+    // values — a missing limit fails closed and is reported via
+    // missingModelID for manual authoring. A fabricated 0 would pass the
+    // schema (min 0) and publish a broken limit instead.
+    const limitContext =
+      textInput.supported_inputs.max_context_length?.value ?? existing?.limit?.context;
+    const limitOutput =
+      model.output_modalities[0]?.max_length?.value ?? existing?.limit?.output;
+    if (limitContext === undefined || limitOutput === undefined) {
+      return undefined;
+    }
+    const limit = { context: limitContext, output: limitOutput };
     const reasoning = hasParameter(model, "reasoning");
     // Wire controls come from the authoritative modelsdev block (derived by
     // the gateway from the per-model mechanism), with the hand-authored
@@ -418,16 +435,18 @@ export const gpuflow = {
     // New lab declared by the gateway (modelsdev.lab): emit the lab
     // metadata file so the provider file validates — but ONLY from a
     // COMPLETE provider-declared identity (name, description, release_date,
-    // open_weights all come from the block, i.e. the HF card — never from
-    // the gateway listing time). Incomplete blocks fail closed via
-    // missingModelID: the sync never fabricates lab dates, license state
-    // or family/knowledge.
+    // open_weights and the native capabilities all come from the block,
+    // i.e. the HF card — never from the gateway listing time and never
+    // from the as-served host behavior). Incomplete blocks fail closed via
+    // missingModelID: the sync never fabricates lab dates, license state,
+    // family/knowledge or capability deltas.
     const labFileExists = metadataEntries().some((e) => e.id === baseModel);
     const lab = block?.lab;
     // Lab metadata requires the provider-declared NATIVE identity —
-    // attachment/limit/modalities from the block (the model's own), never
-    // the as-served catalog caps. Incomplete blocks fail closed via
-    // missingModelID: the sync never writes host caps as lab truth.
+    // attachment/limit/modalities AND capabilities (reasoning, temperature,
+    // tool_call, structured_output) from the block (the model's own), never
+    // the as-served catalog values. Incomplete blocks fail closed via
+    // missingModelID: the sync never writes host behavior as lab truth.
     const labComplete =
       lab !== undefined &&
       lab.name !== undefined &&
@@ -436,7 +455,11 @@ export const gpuflow = {
       lab.open_weights !== undefined &&
       lab.attachment !== undefined &&
       lab.limit !== undefined &&
-      lab.modalities !== undefined;
+      lab.modalities !== undefined &&
+      lab.reasoning !== undefined &&
+      lab.temperature !== undefined &&
+      lab.tool_call !== undefined &&
+      lab.structured_output !== undefined;
     if (!labFileExists && lab !== undefined && !labComplete) {
       return undefined; // reported via missingModelID for manual authoring
     }
@@ -473,14 +496,16 @@ export const gpuflow = {
             description: lab!.description,
             release_date: lab!.release_date,
             last_updated: lab!.last_updated ?? lab!.release_date,
-            // NATIVE facts from the declared block, never the served caps.
+            // NATIVE facts from the declared block, never the served values:
+            // capabilities come from the block's lab identity (the model's
+            // own), not from the as-served host behavior.
             attachment: lab!.attachment,
             limit: lab!.limit,
             modalities: lab!.modalities,
-            reasoning,
-            temperature: synced.temperature,
-            tool_call: synced.tool_call,
-            structured_output: synced.structured_output,
+            reasoning: lab!.reasoning,
+            temperature: lab!.temperature,
+            tool_call: lab!.tool_call,
+            structured_output: lab!.structured_output,
             open_weights: lab!.open_weights,
             family: lab!.family,
             knowledge: lab!.knowledge,
