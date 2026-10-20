@@ -5,6 +5,8 @@ name = "Gemini 2.5 Computer Use Preview (10-2025)"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 1.25

@@ -1,9 +1,13 @@
+# Cache: default route google is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 schema = 2
 base_model = "google/gemini-3.7-flash"
 
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.75

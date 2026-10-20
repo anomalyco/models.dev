@@ -1,3 +1,5 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemma-4-26b-a4b-it (accessed 2026-07-21)
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
@@ -11,6 +13,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = true, toggle = true }
 structured_output = false
+effort_updates = false
 
 [limit]
 output = 65_536

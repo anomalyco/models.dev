@@ -1,3 +1,6 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
+# Cache: default route alibaba is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 schema = 2
 base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
 name = "Qwen3-VL 235B A22B Thinking"
@@ -5,6 +8,9 @@ name = "Qwen3-VL 235B A22B Thinking"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.287

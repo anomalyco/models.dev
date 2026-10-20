@@ -2,6 +2,10 @@ schema = 2
 base_model = "mistral/devstral-medium-2507"
 status = "deprecated"
 
+[capabilities]
+effort_updates = false
+tools = { supported = true, updates = false }
+
 [cost.text.input]
 price = 0.4
 

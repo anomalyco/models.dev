@@ -1,14 +1,18 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-5.2 (accessed 2026-07-21)
+# Cache: default route openai is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 schema = 2
 base_model = "openai/gpt-5.2"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 1.75

@@ -1,9 +1,13 @@
+# Cache: default route zai is in the explicit caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true, explicit = true }
 
 [cost.text.input]
 price = 0.7

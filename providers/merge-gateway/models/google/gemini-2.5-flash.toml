@@ -1,14 +1,20 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemini-2.5-flash (accessed 2026-07-21)
+# Cache: default route google is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
 [modalities]
-input = ["text", "image", "audio", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.3

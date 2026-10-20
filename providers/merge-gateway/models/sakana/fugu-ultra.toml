@@ -5,6 +5,8 @@ base_model = "sakana/fugu-ultra"
 [capabilities]
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = false
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 output = 128_000
@@ -13,5 +15,14 @@ output = 128_000
 price = 5
 cache = { read = 0.5 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 10
+cache = { read = 1 }
+
 [cost.text.output]
 price = 30
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 45

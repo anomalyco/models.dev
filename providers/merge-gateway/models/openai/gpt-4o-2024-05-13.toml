@@ -3,11 +3,13 @@ schema = 2
 base_model = "openai/gpt-4o-2024-05-13"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 5

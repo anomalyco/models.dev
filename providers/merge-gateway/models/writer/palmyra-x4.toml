@@ -1,23 +1,15 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=writer%2Fpalmyra-x4 (accessed 2026-07-21)
+# Lab model: writer/palmyra-x4 (Merge serves it on its bedrock route, the Bedrock writer.palmyra-x4-v1:0 model).
 schema = 2
-name = "Palmyra X4"
-description = "Enterprise language model for writing, analysis, and tool-assisted workflows"
-family = "palmyra"
-open_weights = false
-release_date = "2024-10-09"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "writer/palmyra-x4"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
+effort_updates = false
 
 [limit]
-context = 128_000
 output = 32_000
 
 [cost.text.input]

@@ -8,6 +8,8 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = false
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 2

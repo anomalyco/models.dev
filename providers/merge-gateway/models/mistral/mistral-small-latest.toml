@@ -3,6 +3,8 @@ base_model = "mistral/mistral-small-latest"
 
 [capabilities]
 reasoning = { supported = true }
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 0.15

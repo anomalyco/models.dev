@@ -3,12 +3,14 @@ schema = 2
 base_model = "meta/muse-spark-1.1"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true }
 structured_output = false
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 context = 1_048_576

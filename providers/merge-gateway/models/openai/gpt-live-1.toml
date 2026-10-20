@@ -1,3 +1,8 @@
+# Merge Gateway public catalog (https://docs.merge.dev/merge-gateway/models/details/openai-gpt-live-1): pricing.unit = "per_second",
+# input_per_second = 0.00083333; the per-token fields are 0.
+# Live voice: Gateway relays the OpenAI Live protocol at wss://api-gateway.merge.dev/v1/live/sessions.
+# Price: session duration billed per second at input_per_second, recorded as audio input per second.
+# https://docs.merge.dev/merge-gateway/capabilities/multimodal/live-voice
 schema = 2
 base_model = "openai/gpt-live-1"
 
@@ -9,8 +14,9 @@ structured_output = false
 context = 128_000
 output = 4_096
 
-[cost.text.input]
-price = 0
+[api.live]
+base_url = "wss://api-gateway.merge.dev/v1"
 
-[cost.text.output]
-price = 0
+[cost.audio.input]
+unit = "second"
+price = 0.00083333

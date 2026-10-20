@@ -1,3 +1,4 @@
+# Cache: default route baseten is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 schema = 2
 base_model = "thinkingmachines/inkling"
 
@@ -8,6 +9,9 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_048_000

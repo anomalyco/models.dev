@@ -1,12 +1,16 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-fable-5 (accessed 2026-07-21)
 # The selected route advertises reasoning.effort and supports disabling reasoning;
 # exact effort values are not exposed, so only the verified toggle is listed.
+# Cache: default route anthropic is in the explicit caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 schema = 2
 base_model = "anthropic/claude-fable-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 10

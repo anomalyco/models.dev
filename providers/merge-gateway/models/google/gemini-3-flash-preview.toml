@@ -1,14 +1,18 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemini-3-flash-preview (accessed 2026-07-21)
+# Cache: default route google is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 schema = 2
 base_model = "google/gemini-3-flash-preview"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.5

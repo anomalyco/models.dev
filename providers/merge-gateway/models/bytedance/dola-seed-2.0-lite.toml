@@ -1,10 +1,7 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=bytedance%2Fdola-seed-2.0-lite (accessed 2026-07-21)
+# Lab model: bytedance-seed/seed-2.0-lite (catalog display_name "Seed 2.0 Lite", served on byteplus (ByteDance's international ModelArk)).
 schema = 2
-name = "Seed 2.0 Lite"
-description = "Efficient Seed model for general chat, analysis, and lightweight production tasks"
-family = "seed"
-open_weights = false
-release_date = "2026-02-28"
+base_model = "bytedance-seed/seed-2.0-lite"
 
 [modalities]
 input = ["text"]
@@ -14,7 +11,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
+effort_updates = false
 
 [limit]
 context = 131_072

@@ -3,6 +3,8 @@ base_model = "mistral/magistral-medium-latest"
 
 [capabilities]
 reasoning = { supported = true }
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 2

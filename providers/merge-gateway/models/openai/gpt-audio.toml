@@ -3,11 +3,13 @@ base_model = "openai/gpt-audio"
 name = "GPT Audio"
 
 [modalities]
-input = ["text", "audio"]
+input = ["text", "audio/wav", "audio/mpeg"]
 output = ["text"]
 
 [capabilities]
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 2.5

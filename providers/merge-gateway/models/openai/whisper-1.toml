@@ -1,3 +1,7 @@
+# Merge Gateway public catalog (https://docs.merge.dev/merge-gateway/models/details/openai-whisper-1): pricing.unit = "per_second",
+# input_per_second = 0.0001; the per-token fields are 0.
+# Speech to text: POST /v1/audio/transcriptions (multipart), billed per second of audio at input_per_second.
+# https://docs.merge.dev/merge-gateway/capabilities/multimodal/speech-to-text
 schema = 2
 base_model = "openai/whisper-1"
 
@@ -8,8 +12,10 @@ structured_output = false
 context = 448_000
 output = 4_096
 
-[cost.text.input]
-price = 0
+[api.transcriptions]
+base_url = "https://api-gateway.merge.dev/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
 
-[cost.text.output]
-price = 0
+[cost.audio.input]
+unit = "second"
+price = 0.0001

@@ -1,6 +1,10 @@
 schema = 2
 base_model = "mistral/mistral-large-2411"
 
+[capabilities]
+effort_updates = false
+tools = { supported = true, updates = false }
+
 [cost.text.input]
 price = 2
 

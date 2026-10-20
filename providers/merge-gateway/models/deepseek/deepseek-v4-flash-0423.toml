@@ -1,3 +1,5 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0423"
 
@@ -5,6 +7,7 @@ base_model = "deepseek/deepseek-v4-flash-0423"
 tools = { supported = false }
 reasoning = { supported = true, toggle = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 131_072

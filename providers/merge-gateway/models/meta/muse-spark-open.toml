@@ -8,6 +8,8 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = false
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 output = 262_144

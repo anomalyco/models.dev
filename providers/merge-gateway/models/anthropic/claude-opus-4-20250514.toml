@@ -1,3 +1,5 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-opus-4-20250514 (accessed 2026-07-21)
 schema = 2
 base_model = "anthropic/claude-opus-4-20250514"
@@ -6,6 +8,8 @@ name = "Claude Opus 4 (20250514)"
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 31_999 } }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [cost.text.input]
 price = 15
