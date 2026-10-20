@@ -1,5 +1,7 @@
 # Lab metadata carried over from providers/openrouter/models/cohere/command-a.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Tools: Command A supports tool use (https://docs.cohere.com/docs/command-a: "Command A excels at tool use";
+#   Cohere's GET /v1/models lists the `tools` feature for command-a-03-2025).
 schema = 2
 name = "Command A"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
@@ -13,7 +15,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
+tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
 top_p = true

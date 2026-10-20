@@ -16,8 +16,9 @@
 #   leave at least 1K tokens for the response). Live: switching thinking off between turns rewrote the
 #   cached prefix (Command A Reasoning: 6144 -> 480 cached tokens; Command A+: 0 cached in 2/2 runs).
 # Tools: tool_choice returns 400 "tool_choice is not supported for this model"; strict_tools = true is accepted.
-# Pricing: kept as authored at launch; https://cohere.com/pricing shows Command A+ as "Free" (API key / model
-#   download); see the PR description.
+# Pricing: $2.50/$10 per 1M as added on launch day (2026-06-09, models.dev commit 7b65a7c6d by Cohere's team).
+#   Open question: https://cohere.com/pricing lists Command A+ under "Free" ("API key" $0, "Model download" $0)
+#   since launch (Wayback captures 2026-06-14 through 2026-10-07); unchanged until Cohere confirms.
 schema = 2
 base_model = "cohere/command-a-plus-05-2026"
 
