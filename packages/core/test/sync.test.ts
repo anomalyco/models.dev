@@ -3644,6 +3644,25 @@ test("unions LLM Gateway reasoning efforts in canonical order", () => {
   });
 });
 
+test("keeps curated LLM Gateway toggle controls over the effort union", () => {
+  const curated = [
+    { type: "toggle" as const },
+    { type: "effort" as const, values: ["low", "high", "max"] },
+  ];
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    providers: [
+      { reasoning_efforts: ["none", "low", "high", "max"] },
+      { reasoning_efforts: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+    ],
+  }), {
+    base_model: "anthropic/claude-fable-5",
+    reasoning: true,
+    reasoning_options: curated,
+  });
+
+  expect(model).toMatchObject({ reasoning_options: curated });
+});
+
 test("keeps non-effort LLM Gateway controls when syncing efforts", () => {
   const model = buildLLMGatewayModel(llmGatewayModel({
     providers: [{ reasoning_efforts: ["none", "low", "high"] }],
@@ -3651,7 +3670,6 @@ test("keeps non-effort LLM Gateway controls when syncing efforts", () => {
     name: "Claude Fable 5",
     reasoning: true,
     reasoning_options: [
-      { type: "toggle" },
       { type: "budget_tokens", min: 1024 },
       { type: "effort", values: ["low"] },
     ],
@@ -3680,6 +3698,7 @@ test("factors aliased LLM Gateway routes against canonical metadata", () => {
 
   expect(model).toEqual({
     base_model: "zhipuai/glm-5.2",
+    name: "GLM-5.2 (260617)",
     cost: {
       input: 1.4,
       output: 4.4,
@@ -3955,6 +3974,64 @@ test("seeds context pricing tiers from the aggregated sibling on creates", () =>
   expect(model!.cost?.tiers).toEqual([
     { tier: { type: "context", size: 272_000 }, input: 10, output: 45, cache_read: 1 },
   ]);
+});
+
+test("LLM Gateway base_model files leave model facts to the lab", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel(), {
+    base_model: "anthropic/claude-fable-5",
+    family: "claude-fable",
+    knowledge: "2020-01",
+    release_date: "2020-01-01",
+    last_updated: "2020-01-01",
+    open_weights: true,
+  });
+  for (const key of ["family", "knowledge", "release_date", "last_updated", "open_weights"]) {
+    expect(model).not.toHaveProperty(key);
+  }
+});
+
+test("LLM Gateway keeps its display name on linked files", () => {
+  // A resync keeps the authored name override; a new linked file takes the
+  // catalog name where it differs from the lab.
+  const resync = buildLLMGatewayModel(llmGatewayModel({ name: "Renamed Upstream" }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable Five",
+  });
+  expect(resync).toMatchObject({ name: "Claude Fable Five" });
+
+  const created = buildLLMGatewayModel(llmGatewayModel({ name: "Claude Fable Five" }), undefined);
+  expect(created).toMatchObject({ base_model: "anthropic/claude-fable-5", name: "Claude Fable Five" });
+
+  const same = buildLLMGatewayModel(llmGatewayModel({ name: "Claude Fable 5" }), undefined);
+  expect(same).not.toHaveProperty("name");
+});
+
+test("LLM Gateway linked files drop a description equal to the lab's", () => {
+  // The sync passes the resolved existing model, so an inherited description
+  // must not be written back as an override; a real delta stays.
+  const inherited = buildLLMGatewayModel(llmGatewayModel(), {
+    base_model: "anthropic/claude-fable-5",
+    description: "Claude model for creative writing, analysis, and controlled agent workflows",
+  });
+  expect(inherited).not.toHaveProperty("description");
+
+  const delta = buildLLMGatewayModel(llmGatewayModel(), {
+    base_model: "anthropic/claude-fable-5",
+    description: "Host-specific description",
+  });
+  expect(delta).toMatchObject({ description: "Host-specific description" });
+});
+
+test("reads curation from v2 aggregated siblings", () => {
+  // providers/llmgateway/models/Qwen3.8-27B.toml is a v2 file whose effort
+  // list lives under [capabilities]; mapped deployments still inherit it.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "novita/qwen3.8-27b",
+    name: "Qwen3.8 27B (NovitaAI)",
+    family: "alibaba",
+    providers: [{ providerId: "novita", vision: false, tools: true, reasoning: true }],
+  }), undefined);
+  expect(model!.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "xhigh"] }]);
 });
 
 test("factors perplexity entries without widening the shared prefix map", () => {
