@@ -4,8 +4,12 @@
 # https://www.alibabacloud.com/help/zh/model-studio/qwen-api-via-openai-chat-completions
 # (reasoning_effort) and /help/en/model-studio/kimi-api (text+image input only,
 # no video; reasoning_content streamed in deltas)
-# Effort: reasoning_effort = low|high|max (default max). Thinking is always on:
-# enable_thinking only accepts true (passing false errors), no thinking_budget.
+# v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache; enable_thinking=false disables thinking; reasoning_effort changes missed the cache; adding tools missed the cache.
+# Toggle: enable_thinking true|false (the Chat API reference: "kimi-k3 supports passing false to disable thinking")
+# Effort: reasoning_effort = low|high|max (default max); no thinking_budget
+# top_k: the Kimi series does not support top_k (Chat API reference)
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -14,8 +18,13 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+top_k = false
+system_updates = true
+effort_updates = false
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [limit]
 output = 1_048_576

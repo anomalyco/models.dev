@@ -1,10 +1,14 @@
+# Status: retired on Model Studio international. Live 2026-10-19 the API answers 404 and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
+# Type: realtime (WebSocket) model, not served on chat completions.
 schema = 2
+type = "realtime"
 name = "Qwen3-LiveTranslate Flash Realtime"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "qwen"
 open_weights = false
 knowledge = "2024-04"
 release_date = "2025-09-22"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image", "audio", "video"]
@@ -14,6 +18,7 @@ output = ["text", "audio"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 53_248

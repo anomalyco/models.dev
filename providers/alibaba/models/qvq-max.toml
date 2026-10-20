@@ -1,3 +1,4 @@
+# Status: retired on Model Studio international. Live 2026-10-19 the API answers 404 and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
 schema = 2
 name = "QVQ Max"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -5,15 +6,17 @@ family = "qvq"
 open_weights = false
 knowledge = "2024-04"
 release_date = "2025-03-25"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 131_072

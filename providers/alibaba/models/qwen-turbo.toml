@@ -1,3 +1,4 @@
+# Status: retired on Model Studio international. Live 2026-10-19 the API answers 429 with a zero quota and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
 schema = 2
 name = "Qwen Turbo"
 description = "Efficient Qwen model for fast chat, extraction, and high-volume workloads"
@@ -6,13 +7,14 @@ open_weights = false
 knowledge = "2024-04"
 release_date = "2024-11-01"
 last_updated = "2025-04-28"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {  } }
 temperature = true
 

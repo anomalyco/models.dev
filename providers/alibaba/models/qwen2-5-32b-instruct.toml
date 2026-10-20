@@ -1,3 +1,4 @@
+# Status: retired on Model Studio international. Live 2026-10-19 the API answers 404 and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
 schema = 2
 name = "Qwen2.5 32B Instruct"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -5,15 +6,17 @@ family = "qwen"
 open_weights = true
 knowledge = "2024-04"
 release_date = "2024-09"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 131_072

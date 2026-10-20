@@ -1,19 +1,24 @@
+# Status: retired on Model Studio international. Live 2026-10-19 the API answers 404 and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
+# Type: realtime (WebSocket) model, not served on chat completions.
 schema = 2
+type = "realtime"
 name = "Qwen-Omni Turbo Realtime"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
 family = "qwen"
 open_weights = false
 knowledge = "2024-04"
 release_date = "2025-05-08"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image", "audio"]
 output = ["text", "audio"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 32_768
