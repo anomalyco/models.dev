@@ -1,0 +1,40 @@
+# Sources: https://blog.cloudflare.com/clef-decision-models/ (2026-10-01),
+# https://developers.cloudflare.com/workers-ai/models/clef/ and
+# https://huggingface.co/Cloudflare/clef (both accessed 2026-10-20).
+# Clef returns one probability per allowed option and generates no free-form text,
+# so output is 0. The hosted context window is 64K; the weights are published under
+# Apache-2.0. It takes text, images and video frame arrays and has a vision encoder.
+type = "decision"
+name = "Clef"
+description = "Cloudflare's open-weight decision model that returns probabilities for typed choice, score and yes/no questions about text, images or video"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 65_536
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[links]]
+label = "Announcement"
+url = "https://blog.cloudflare.com/clef-decision-models/"
+type = "announcement"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/Cloudflare/clef"
+type = "model_card"
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Cloudflare/clef"

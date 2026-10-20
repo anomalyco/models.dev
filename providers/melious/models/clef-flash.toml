@@ -1,0 +1,20 @@
+# Cost: Melious list price for decision models -- EUR 0.03 per 1M input tokens --
+# converted at 1.1225 USD/EUR (ECB euro reference rate, 2026-10-19). Decisions bill
+# input tokens only, so output is 0.
+# Sources: https://melious.ai/hub/models/clef-flash and
+# https://melious.ai/docs/reference/systemone (both accessed 2026-10-20)
+# Serving: POST /v1/systemone, not chat completions. Melious caps the context at
+# 16,384 tokens and rejects images with 422 invalid_request, so this entry is text
+# only. Reasoning is always off; there is no caller control.
+base_model = "cloudflare/clef-flash"
+attachment = false
+
+[cost]
+input = 0.033675
+output = 0
+
+[limit]
+context = 16_384
+
+[modalities]
+input = ["text"]
