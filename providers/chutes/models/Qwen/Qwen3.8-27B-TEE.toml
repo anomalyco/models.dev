@@ -1,18 +1,23 @@
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B TEE"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 release_date = "2026-08-16"
-last_updated = "2026-08-16"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.039
-output = 1.25
-cache_read = 0.003899999999999999
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.039
+cache = { read = 0.003899999999999999 }
+
+[cost.text.output]
+price = 1.25

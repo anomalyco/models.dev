@@ -1,18 +1,21 @@
+schema = 2
 base_model = "minimax/MiniMax-M3"
 release_date = "2026-07-30"
 last_updated = "2026-07-31"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.32664
-output = 1.30656
-cache_read = 0.064239
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 512_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.32664
+cache = { read = 0.064239 }
+
+[cost.text.output]
+price = 1.30656

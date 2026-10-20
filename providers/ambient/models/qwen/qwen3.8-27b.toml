@@ -2,26 +2,25 @@
 # Effort: reasoning.effort = low|medium|xhigh
 # Ambient request schema: https://api.ambient.xyz/openapi.json
 # Model controls: https://openrouter.ai/api/v1/models (qwen/qwen3.8-27b)
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[cost]
-input = 0.32
-output = 3.2
-cache_read = 0.16
-cache_write = 0
 
 [limit]
 context = 32_768
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.32
+cache = { read = 0.16, write = 0 }
+
+[cost.text.output]
+price = 3.2

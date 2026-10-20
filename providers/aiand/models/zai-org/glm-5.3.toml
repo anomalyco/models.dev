@@ -4,20 +4,22 @@
 # Live probe 2026-09-14: low|high|max → 200; none|minimal|medium|xhigh → 400.
 # context_window = 1048576 on this host overrides the lab's 1_000_000.
 # Reasoning side channel: message.reasoning_content
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1
-output = 4
-cache_read = 0.3
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 4

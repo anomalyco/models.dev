@@ -1,23 +1,25 @@
 # Toggle: reasoning.enabled = true|false
 # Ambient request schema: https://api.ambient.xyz/openapi.json
 # Model controls: https://huggingface.co/MiniMaxAI/MiniMax-M3 (thinking on/off; no effort or budget)
+schema = 2
 base_model = "minimax/MiniMax-M3"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
-attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.23
-output = 0.96
-cache_read = 0.05
-cache_write = 0
 
 [limit]
 context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.23
+cache = { read = 0.05, write = 0 }
+
+[cost.text.output]
+price = 0.96

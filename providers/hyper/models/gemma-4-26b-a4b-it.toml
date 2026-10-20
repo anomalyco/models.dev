@@ -1,18 +1,23 @@
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
-structured_output = true
 release_date = "2026-04-30"
 last_updated = "2026-07-22"
-attachment = false
-reasoning_options = []
 
-[cost]
-input = 0.098
-output = 0.334
-cache_read = 0.049
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 25_600
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.098
+cache = { read = 0.049 }
+
+[cost.text.output]
+price = 0.334

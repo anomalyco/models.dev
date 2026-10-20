@@ -5,25 +5,24 @@
 # engy maps effort per template (engy.ai/docs, 2026-09-19): low/medium -> low, high -> high, xhigh/max -> max.
 # Probe 2026-08-30, n=113-126/level at 64k: low, medium and high did not separate (p>=0.89);
 # high vs max p=0.0064.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.045
-output = 0.09
-cache_read = 0.009
 
 [limit]
 context = 1_048_576
 input = 920_576
 output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.045
+cache = { read = 0.009 }
+
+[cost.text.output]
+price = 0.09

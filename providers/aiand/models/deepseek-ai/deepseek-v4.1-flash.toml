@@ -3,23 +3,26 @@
 # Effort: reasoning_effort = "none" | "high" | "max"
 # Controls: reasoning_effort only (`reasoning_effort` on /v1/chat/completions, `reasoning.effort` on /v1/responses; "none" = off) — no separate toggle or token-budget field on this host.
 # Reasoning side channel: message.reasoning_content
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[cost]
-input = 0.3
-output = 0.6
-cache_read = 0.02
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text", "image", "pdf"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.6

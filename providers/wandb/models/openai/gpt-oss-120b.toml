@@ -1,13 +1,18 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
-structured_output = true
 name = "gpt-oss-120b"
 description = "Efficient Mixture-of-Experts model designed for high-reasoning, agentic and general-purpose use cases."
-reasoning_options = []
 
-[cost]
-input = 0.03
-output = 0.17
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.17

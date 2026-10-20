@@ -1,17 +1,18 @@
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
-
-[cost]
-input = 0.6
-output = 2
-cache_read = 0.15
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
 context = 202_752
 output = 202_752
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.15, write = 0 }
+
+[cost.text.output]
+price = 2

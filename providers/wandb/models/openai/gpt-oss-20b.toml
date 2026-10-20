@@ -1,13 +1,18 @@
+schema = 2
 base_model = "openai/gpt-oss-20b"
-structured_output = true
 name = "gpt-oss-20b"
 description = "Lower latency Mixture-of-Experts model trained on OpenAI's Harmony response format with reasoning capabilities."
-reasoning_options = []
 
-[cost]
-input = 0.03
-output = 0.13
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.13

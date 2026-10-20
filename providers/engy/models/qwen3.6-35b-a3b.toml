@@ -3,25 +3,28 @@
 # engy serves this deployment text-only, so modalities and attachment are narrowed.
 # Live probe 2026-08-31, n=36/level at 8,192 (the cap): reasoning_effort inert, every pair p>=0.39
 # (MWU); toggle and none suppress reasoning 36/36. No effort control is offered.
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
-attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.045
-output = 0.3
-cache_read = 0.015
 
 [limit]
 context = 208_192
 input = 200_000
 output = 8_192
 
-[modalities]
-input = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.045
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.3

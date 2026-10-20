@@ -6,17 +6,19 @@
 # models/motif-technologies/motif-3.toml. structured_output stays false: live
 # probe 2026-09-14 — response_format json_schema is ignored (prose reply).
 # Reasoning side channel: message.reasoning_content
+schema = 2
 base_model = "motif-technologies/motif-3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.2 }
 
-[cost]
-input = 0.5
-output = 2
-cache_read = 0.2
+[cost.text.output]
+price = 2

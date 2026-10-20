@@ -1,25 +1,27 @@
+schema = 2
 name = "qwen3.8-27b-4q"
 description = "Tool-capable chat model for instruction following and agentic application workflows"
 family = "unsloth"
-release_date = "2026-10-13"
-last_updated = "2026-10-13"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-10-13"
 
-[cost]
-input = 0.001
-output = 0.001
-cache_read = 0
-cache_write = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 101_072
 output = 101_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.001
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0.001

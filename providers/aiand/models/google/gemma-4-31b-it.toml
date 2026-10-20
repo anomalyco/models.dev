@@ -4,20 +4,23 @@
 # Live probe 2026-09-14: none|high → 200; minimal|low|medium|xhigh|max → 400.
 # Modalities: image, video, and PDF accepted on this host (2026-07-24 probes).
 # Reasoning side channel: message.reasoning_content
+schema = 2
 base_model = "google/gemma-4-31b-it"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.2
-output = 0.5
-cache_read = 0.05
 
 [modalities]
-input = ["text", "image", "video", "pdf"]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5

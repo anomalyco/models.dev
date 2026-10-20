@@ -1,15 +1,17 @@
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
-reasoning_options = [
-  { type = "effort", values = ["high", "max"] },
-]
 
-[cost]
-input = 1.2
-output = 4.2
-cache_read = 0.26
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
 context = 202_752
 output = 202_752
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.26, write = 0 }
+
+[cost.text.output]
+price = 4.2

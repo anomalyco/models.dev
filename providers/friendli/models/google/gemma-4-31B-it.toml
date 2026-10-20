@@ -2,18 +2,18 @@
 # https://friendli.ai/docs/guides/reasoning
 # Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
 # https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
+schema = 2
 base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.14
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.14
-output = 0.4
+[cost.text.output]
+price = 0.4

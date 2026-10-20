@@ -5,25 +5,28 @@
 # "(Ox Alpha)" is the codename it was served under before the name went public; status unset.
 # Live probe 2026-08-30 at 8k, n=40 for low/medium/high, 20 for xhigh/max: low = medium (p=0.41)
 # < high (p=1.8e-05) < xhigh = max; none/minimal/enable_thinking=false measure as low; 0/320 empty.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.135
-output = 0.45
-cache_read = 0.027
 
 [limit]
 context = 327_680
 input = 294_912
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.135
+cache = { read = 0.027 }
+
+[cost.text.output]
+price = 0.45

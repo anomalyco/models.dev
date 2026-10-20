@@ -2,17 +2,19 @@
 # - https://inference.tinfoil.sh/v1/models
 # - https://docs.tinfoil.sh/guides/reasoning.md
 # Effort: reasoning_effort = low|high|max on Tinfoil; reasoning is always on.
+schema = 2
 base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 4
-output = 20
-cache_read = 0.8
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 4
+cache = { read = 0.8 }
+
+[cost.text.output]
+price = 20

@@ -1,16 +1,18 @@
+schema = 2
 base_model = "zhipuai/glm-5.3"
-structured_output = true
 release_date = "2026-08-28"
 last_updated = "2026-08-31"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.52432
-output = 4.79072
-cache_read = 0.283088
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 1.52432
+cache = { read = 0.283088 }
+
+[cost.text.output]
+price = 4.79072

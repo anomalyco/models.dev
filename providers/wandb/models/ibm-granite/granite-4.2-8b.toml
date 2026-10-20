@@ -1,27 +1,27 @@
+schema = 2
 name = "Granite 4.2 8B"
 description = "Granite 4.2 8B is an instruct model capable of enhanced tool calling, instruction following, and chat capabilities."
 family = "granite"
-release_date = "2026-08-24"
-last_updated = "2026-08-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-08-24"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.1
-output = 0.15
-cache_read = 0.05
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.15

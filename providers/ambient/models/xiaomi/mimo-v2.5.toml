@@ -1,12 +1,14 @@
+schema = 2
 base_model = "xiaomi/mimo-v2.5"
 description = "MiMo omni model for text, image, video, audio, and agents"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.4
+cache = { read = 0.08, write = 0 }
 
-[cost]
-input = 0.4
-output = 2
-cache_read = 0.08
-cache_write = 0
+[cost.text.output]
+price = 2

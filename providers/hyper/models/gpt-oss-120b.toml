@@ -1,16 +1,18 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
-structured_output = true
 release_date = "2026-04-13"
 last_updated = "2026-07-22"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.178
-output = 0.68
-cache_read = 0.089
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 output = 13_107
+
+[cost.text.input]
+price = 0.178
+cache = { read = 0.089 }
+
+[cost.text.output]
+price = 0.68

@@ -1,17 +1,20 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 description = "DeepSeek V4-Pro-0813 is a 1.6T-parameter MoE model excelling at advanced reasoning, coding, and complex agentic workloads."
 family = "deepseek"
 last_updated = "2026-08-13"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1.31
-output = 3.96
-cache_read = 0.044
 
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[cost.text.input]
+price = 1.31
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96

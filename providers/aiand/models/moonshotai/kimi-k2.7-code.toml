@@ -5,21 +5,24 @@
 # Modalities: image + PDF accepted; video rejected (2026-07-24 probes).
 # temperature = true: the host accepts the parameter (live probe 2026-09-14: 200 at 0.0 and 1.8); the lab file records Moonshot's own API as false.
 # Reasoning side channel: message.reasoning_content
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-temperature = true
-structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 0.75
-output = 3.5
-cache_read = 0.2
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+temperature = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.5

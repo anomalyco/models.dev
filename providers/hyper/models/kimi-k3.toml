@@ -1,19 +1,22 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
 release_date = "2026-07-27"
 last_updated = "2026-07-30"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 3.2664
-output = 16.332
-cache_read = 0.32664
 
 [limit]
 output = 16_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 3.2664
+cache = { read = 0.32664 }
+
+[cost.text.output]
+price = 16.332

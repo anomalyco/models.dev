@@ -1,17 +1,23 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 release_date = "2026-07-03"
 last_updated = "2026-07-22"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 1.03436
-output = 4.3552
-cache_read = 0.206872
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 16_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.03436
+cache = { read = 0.206872 }
+
+[cost.text.output]
+price = 4.3552

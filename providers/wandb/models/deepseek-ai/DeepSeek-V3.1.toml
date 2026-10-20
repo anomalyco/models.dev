@@ -1,14 +1,19 @@
+schema = 2
 base_model = "deepseek/deepseek-v3.1"
 name = "DeepSeek V3.1"
 description = "A large hybrid model that supports both thinking and non-thinking modes via prompt templates."
-reasoning = false
-structured_output = true
 
-[cost]
-input = 0.55
-output = 1.65
-cache_read = 0.55
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 161_000
 output = 161_000
+
+[cost.text.input]
+price = 0.55
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 1.65

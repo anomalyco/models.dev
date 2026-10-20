@@ -3,17 +3,19 @@
 # Docs: https://docs.aiand.com/models/catalog/
 # Live probe 2026-09-14: low|medium|high → 200; none|minimal|xhigh|max → 400.
 # Reasoning side channel: message.reasoning_content
+schema = 2
 base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.15
+cache = { read = 0.08 }
 
-[cost]
-input = 0.15
-output = 0.60
-cache_read = 0.08
+[cost.text.output]
+price = 0.6

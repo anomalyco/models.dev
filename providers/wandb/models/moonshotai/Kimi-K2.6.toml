@@ -1,12 +1,18 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi K2.6 is a multimodal Mixture-of-Experts language model featuring 32 billion activated parameters and a total of 1 trillion parameters."
-structured_output = true
-reasoning_options = []
-
-[cost]
-input = 0.65
-output = 3.41
-cache_read = 0.15
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.65
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.41

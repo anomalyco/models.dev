@@ -1,17 +1,22 @@
 # W&B lists always-on reasoning with low/high/max effort; no on/off toggle.
 # Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
 # https://trace.wandb.ai/inference/catalog/models
+schema = 2
 base_model = "zhipuai/glm-5.3"
-structured_output = true
 name = "GLM 5.3"
 description = "GLM-5.3 is a 744B-parameter MoE model built for advanced reasoning, software engineering, and long-horizon agentic tasks."
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[cost]
-input = 1.2
-output = 4
-cache_read = 0.19
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4
