@@ -215,6 +215,10 @@ Merge Gateway is implemented in `packages/core/src/sync/providers/merge-gateway.
 - The canonical provider's available vendor route supplies pricing, limits, and capabilities. When it is unavailable, the sync matches Gateway's default resolver by selecting the active route with the lowest combined input and output price; the API's CMS-priority order breaks ties.
 - Canonical model IDs emit `base_model` references to model metadata when a matching `models/` entry exists.
 - Local models missing from the response are retained because API-key policy can affect catalog visibility.
+- `pricing.long_context` becomes a context tier; a null long-context rate keeps the base rate.
+- Routes whose `pricing.unit` isn't `per_token` (per second, image or character) report 0 per-token prices, so the sync writes no token price for them and the file's own unit price (e.g. `cost.audio.input` with `unit = "second"`) is kept by hand.
+- Effort values are written low to high. New files with a reasoning toggle get the `thinking.type` wire-path header.
+- `capabilities.cache` and the mid-conversation flags are hand-authored (see `providers/merge-gateway/provider.toml`); the catalog doesn't list a route's caching family.
 
 ## Cloudflare Workers AI Notes
 
