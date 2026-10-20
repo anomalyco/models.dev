@@ -1,9 +1,11 @@
 # Lab identity: https://huggingface.co/deepseek-ai/DeepSeek-R1-0528
 # Output: inherits the lab's 32,768. Novita, an upstream, caps max_output_tokens at 32,768 (https://api.novita.ai/openai/v1/models, 2026-10-20).
+# knowledge: kept from the earlier Hugging Face file; unsourced (no cutoff in the model card or lab docs, checked 2026-10-20).
 schema = 2
 base_model = "deepseek/deepseek-r1-0528"
 name = "DeepSeek-R1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
+knowledge = "2025-05"
 
 [capabilities]
 tools = { supported = true, updates = false }

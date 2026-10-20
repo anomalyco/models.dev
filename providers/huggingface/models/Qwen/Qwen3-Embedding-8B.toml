@@ -1,4 +1,6 @@
+# Embedding model, typed as the lab does (https://huggingface.co/Qwen/Qwen3-Embedding-8B): embedding output, no generative output limit.
 schema = 2
+type = "embedding"
 name = "Qwen 3 Embedding 8B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "qwen"
@@ -8,7 +10,7 @@ release_date = "2025-01-01"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
 
 [capabilities]
 tools = { supported = false }
@@ -17,7 +19,7 @@ temperature = false
 
 [limit]
 context = 32_000
-output = 4_096
+output = 0
 
 [cost.text.input]
 price = 0.01
