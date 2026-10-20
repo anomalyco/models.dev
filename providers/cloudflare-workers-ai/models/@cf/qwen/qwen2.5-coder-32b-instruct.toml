@@ -1,3 +1,7 @@
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted, adds a role header (+19 tokens) and is honored.
+# No prefix cache on this model, so effort and tool changes keep nothing.
 schema = 2
 base_model = "alibaba/qwen2.5-coder-32b-instruct"
 name = "Qwen2.5 Coder 32B Instruct"
@@ -5,7 +9,10 @@ description = "Qwen coding model for software agents, repository edits, and code
 
 [capabilities]
 tools = { supported = false }
+cache = { supported = false }
 structured_output = false
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 32_768

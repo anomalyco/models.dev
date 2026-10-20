@@ -1,4 +1,6 @@
 # https://developers.cloudflare.com/workers-ai/models/clef-omni/
+# Images: embedded PNG, JPEG or WebP (model page). Audio and video inputs are also documented,
+# without formats; not listed here (Search reports text and image only).
 schema = 2
 type = "decision"
 name = "Clef Omni"
@@ -7,7 +9,7 @@ open_weights = true
 release_date = "2026-10-09"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]

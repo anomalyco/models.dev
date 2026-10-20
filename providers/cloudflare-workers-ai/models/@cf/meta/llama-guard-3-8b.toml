@@ -1,10 +1,16 @@
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: the input schema only allows user and assistant roles (live: 400 on any system message).
 schema = 2
 base_model = "meta/llama-guard-3-8b"
 name = "Llama Guard 3 8B"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 
 [capabilities]
+cache = { supported = false }
 structured_output = false
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 131_072

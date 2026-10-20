@@ -1,16 +1,24 @@
 # Thinking is mandatory; high is the only effective effort, so aliases add no caller control.
 # Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
+# Cache: implicit prefix caching; cached-input price on the model page (https://developers.cloudflare.com/workers-ai/features/prompt-caching/).
+# Images: jpeg/png/gif/webp data URLs accepted live 2026-10-19; bmp, tiff and heic rejected (code 8006).
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message keeps the cached prefix and is honored;
+# no effort control; adding or removing a tool drops the cached history (tools render ahead of it).
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+cache = { supported = true, implicit = true }
 structured_output = true
 temperature = true
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.95

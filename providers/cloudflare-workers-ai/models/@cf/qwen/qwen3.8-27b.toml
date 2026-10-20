@@ -2,16 +2,25 @@
 # enable_thinking plus low|medium|xhigh effort levels.
 # https://developers.cloudflare.com/workers-ai/models/qwen3.8-27b/ (accessed 2026-08-18)
 # https://huggingface.co/Qwen/Qwen3.8-27B (accessed 2026-08-18)
+# Structured output: Search lists structured_outputs and json_mode.
+# Cache: the model page lists a cached-input price, but 9 live repeats read 0 cached tokens,
+# so cache is unset. Effort and tool changes have no observed cache to keep.
+# Images: jpeg/png/gif/webp data URLs accepted live 2026-10-19; bmp, tiff and heic rejected (code 8006).
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is rejected ("System message must be at the beginning.").
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 262_144

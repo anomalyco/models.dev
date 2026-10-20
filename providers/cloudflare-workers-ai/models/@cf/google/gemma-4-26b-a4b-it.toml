@@ -1,13 +1,22 @@
-# Effort: reasoning_effort = none|high; none disables thinking.
-# Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
-# Per-model Search config normalizes low/medium to high; these are aliases,
-# not distinct levels despite the generic sync-input.json effort enum.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default: true).
+# The model's input schema has no reasoning_effort, and Search reports only
+# { mandatory: false, default_enabled: true }. Live 2026-10-19: reasoning_effort = none
+# still returned reasoning; enable_thinking = false disabled it.
+# https://developers.cloudflare.com/workers-ai/models/gemma-4-26b-a4b-it/sync-input.json (accessed 2026-10-19)
+# Cache: implicit prefix caching (https://developers.cloudflare.com/workers-ai/features/prompt-caching/); Search reports a cached-input price and live
+# repeats read cached tokens (the model page lists no cached price).
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message keeps the cached prefix and is honored;
+# no effort control; adding or removing a tool drops the cached history (tools render ahead of it).
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high"] }
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 256_000

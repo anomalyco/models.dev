@@ -1,4 +1,5 @@
 # https://developers.cloudflare.com/workers-ai/models/clef/
+# Images: embedded PNG, JPEG or WebP (model page).
 schema = 2
 type = "decision"
 name = "Clef"
@@ -7,7 +8,7 @@ open_weights = true
 release_date = "2026-09-29"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
