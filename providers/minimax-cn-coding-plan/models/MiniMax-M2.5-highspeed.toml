@@ -1,6 +1,7 @@
-# Plan requests for M2.x are routed to MiniMax-M3.1-Flash from 2026-10-19
+# Plan requests for M2.5/M2.7 are routed to MiniMax-M3.1-Flash from 2026-10-19
 #   (https://platform.minimaxi.com/docs/faq/models, https://platform.minimaxi.com/docs/m-plan/intro).
-# Thinking is always on; thinking.type = disabled is accepted and ignored.
+# Caching: requests are served by MiniMax-M3.1-Flash, so they get its automatic prefix cache
+#   (≥512 tokens, no cache_control; https://platform.minimaxi.com/docs/api-reference/text-prompt-caching).
 schema = 2
 name = "MiniMax-M2.5-highspeed"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
@@ -19,6 +20,7 @@ reasoning = { supported = true }
 temperature = true
 top_p = true
 top_k = false
+cache = { supported = true, implicit = { min_tokens = 512 }, explicit = false }
 
 [limit]
 context = 204_800
