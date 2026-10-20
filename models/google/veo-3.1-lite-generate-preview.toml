@@ -5,6 +5,7 @@
 #   (release 2026-03-31; text-to-video and image-to-video; 720p/1080p; 4s/6s/8s)
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   (Veo 3.1 Lite paid-tier per-second video pricing; not token-based — cost omitted)
+# Video formats: https://ai.google.dev/gemini-api/docs/veo (generated and extension videos are video/mp4).
 schema = 2
 type = "video"
 name = "Veo 3.1 Lite Preview"
@@ -15,7 +16,7 @@ release_date = "2026-03-31"
 
 [modalities]
 input = ["text", "image"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

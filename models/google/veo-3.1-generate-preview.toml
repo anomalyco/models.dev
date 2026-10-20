@@ -2,6 +2,7 @@
 # - https://ai.google.dev/gemini-api/docs/models/veo-3.1-generate-preview
 # - https://ai.google.dev/gemini-api/docs/veo
 # - https://developers.googleblog.com/introducing-veo-3-1-and-new-creative-capabilities-in-the-gemini-api
+# Video formats: https://ai.google.dev/gemini-api/docs/veo (generated and extension videos are video/mp4).
 schema = 2
 type = "video"
 name = "Veo 3.1 Preview"
@@ -13,7 +14,7 @@ last_updated = "2026-01"
 
 [modalities]
 input = ["text", "image"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

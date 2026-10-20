@@ -18,6 +18,7 @@
 # - output 57_920: Google Cloud's Gemini Enterprise page for
 #   gemini-omni-1.1-flash-preview lists max output tokens 57,920; same value the
 #   sibling models/google/gemini-omni-flash-preview.toml files.
+# Video output format: https://ai.google.dev/gemini-api/docs/omni (model_output content mime_type video/mp4).
 schema = 2
 type = "video"
 name = "Gemini Omni 1.1 Flash"
@@ -28,7 +29,7 @@ release_date = "2026-08-27"
 
 [modalities]
 input = ["text", "image", "video"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

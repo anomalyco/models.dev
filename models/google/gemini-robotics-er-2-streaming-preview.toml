@@ -3,6 +3,7 @@
 # - https://ai.google.dev/gemini-api/docs/robotics-streaming
 # - https://ai.google.dev/gemini-api/docs/changelog (preview 2026-07-30)
 # - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+# Live input formats: https://ai.google.dev/gemini-api/docs/robotics-streaming (raw 16-bit PCM audio, JPEG images <= 1 FPS).
 schema = 2
 v2_only = true
 type = "realtime"
@@ -13,7 +14,7 @@ open_weights = false
 release_date = "2026-07-30"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "video", "audio/pcm"]
+input = ["text", "image/jpeg", "video", "audio/pcm"]
 output = ["text"]
 
 [capabilities]

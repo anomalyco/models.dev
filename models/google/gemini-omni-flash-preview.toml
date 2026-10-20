@@ -1,6 +1,7 @@
 # Sampling: https://ai.google.dev/gemini-api/docs/omni (Limitations: "System instructions,
 # temperature, top_p, stop sequences, and negative prompts are not supported"). top_k isn't
 # documented for Omni; it's set false with the other sampling parameters it disables.
+# Video output format: https://ai.google.dev/gemini-api/docs/omni (model_output content mime_type video/mp4).
 schema = 2
 type = "video"
 name = "Gemini Omni Flash Preview"
@@ -11,7 +12,7 @@ release_date = "2026-06-30"
 
 [modalities]
 input = ["text", "image", "video"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

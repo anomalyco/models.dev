@@ -3,6 +3,7 @@
 # https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/lyria/lyria-3
 # https://ai.google.dev/gemini-api/docs/pricing
 # https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Audio output format: https://ai.google.dev/gemini-api/docs/music-generation and the model page (MP3).
 schema = 2
 name = "Lyria 3 Clip Preview"
 description = "Music generation model for short 30-second clips, loops, and previews from text or image prompts"
@@ -12,7 +13,7 @@ release_date = "2026-03-25"
 
 [modalities]
 input = ["text", "image"]
-output = ["text", "audio"]
+output = ["text", "audio/mp3"]
 
 [capabilities]
 tools = { supported = false }

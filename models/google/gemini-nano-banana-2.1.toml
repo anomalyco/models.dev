@@ -1,4 +1,5 @@
 # Source: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/nano-banana-2-1
+# Image output formats: https://ai.google.dev/gemini-api/docs/image-generation (response_format mime_type image/png or image/jpeg).
 schema = 2
 type = "image"
 name = "Nano Banana 2.1"
@@ -25,7 +26,7 @@ input = [
   "video/wmv",
   "video/3gpp",
 ]
-output = ["text", "image"]
+output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 tools = { supported = false }
