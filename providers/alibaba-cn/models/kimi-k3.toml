@@ -16,6 +16,7 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false

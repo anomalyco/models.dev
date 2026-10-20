@@ -8,6 +8,7 @@ v2_only = true
 base_model = "zhipuai/glm-5.1"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {  } }
 structured_output = true
 system_updates = false

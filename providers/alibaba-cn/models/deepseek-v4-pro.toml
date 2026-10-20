@@ -7,6 +7,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["high", "max"] }
 structured_output = true
 top_k = false

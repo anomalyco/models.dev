@@ -11,6 +11,7 @@ schema = 2
 base_model = "alibaba/qwen3.5-flash"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 81_920 } }
 structured_output = true
 system_updates = true
