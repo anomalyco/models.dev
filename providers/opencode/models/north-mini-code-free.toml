@@ -1,7 +1,10 @@
+# structured_output = false: Cohere's API rejects response_format for north-mini-code-1-0 (live 2026-10-19:
+#   400 "response_format is not supported with the specified model" on /v2/chat and the Compatibility API; GET
+#   /v1/models lists no json_mode/json_schema feature), and a proxy cannot add schema enforcement.
 base_model = "cohere/north-mini-code-1-0"
 name = "North Mini Code Free"
 family = "north-free"
-structured_output = true
+structured_output = false
 status = "deprecated"
 
 [[reasoning_options]]

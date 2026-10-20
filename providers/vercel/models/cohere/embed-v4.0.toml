@@ -1,3 +1,5 @@
+# Modalities: Vercel's catalog (https://ai-gateway.vercel.sh/v1/models) lists input ["text"] only for this route, so the
+#   lab's image inputs are not inherited; v2 modalities replace the base as a whole, so output restates the lab's embedding.
 schema = 2
 base_model = "cohere/embed-v4.0"
 name = "Embed v4.0"
@@ -5,9 +7,4 @@ description = "Embedding model for semantic search, retrieval, clustering, and r
 
 [modalities]
 input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
+output = ["embedding"]

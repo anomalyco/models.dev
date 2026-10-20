@@ -1,17 +1,10 @@
+# limit.output mirrors max_tokens = 32000 in Vercel's catalog (https://ai-gateway.vercel.sh/v1/models), which the Vercel
+#   sync writes on every run; a reranker returns scores, not tokens (the lab says 0), but v1 keeps the catalog value.
+# context = 32_000 is the catalog's context_window for this route (the lab says 32_768 from Cohere's docs).
 schema = 2
+base_model = "cohere/rerank-v4.0-pro"
 name = "Cohere Rerank 4 Pro"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
-open_weights = false
-release_date = "2025-12-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 32_000
