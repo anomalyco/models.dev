@@ -1,0 +1,32 @@
+# Source: https://huggingface.co/decisionmodels/reax-1 (card, config.json, decision_config.json;
+# revision ca2a0cc5, created 2026-10-21; read 2026-10-23). REAX 1 by Decision Models (SN92):
+# a 26.1B fine-tune of perplexity-ai/pplx-decider-v1.2 on Qwen3.8-27B. It reads a state and several
+# questions in one pass and returns probabilities, generating no text. decision_config.json sets
+# max_pixels, so the weights read images; context is text_config max_position_embeddings.
+schema = 2
+v2_only = true
+type = "decision"
+name = "REAX 1"
+description = "Decision Models' open-weight 27B decision model, a fine-tune of Perplexity Decider v1.2, that returns probabilities for typed yes/no, choice and score questions"
+open_weights = true
+release_date = "2026-10-21"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/decisionmodels/reax-1"

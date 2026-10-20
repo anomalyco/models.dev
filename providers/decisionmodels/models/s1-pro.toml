@@ -1,0 +1,29 @@
+# Alias for the current Pro version. Since 2026-11-05 the EU tier answers with s1-pro-5 (mammoth-1), falling
+# back to s1-pro-3 (vLLM-SR d3, FP8); the global tier, the default here, stays on s1-pro-3. Up to 3 questions.
+# Prices, limit: https://api.decisionmodels.io/v1/models (2026-11-05), global tier; EU as override.
+# Launch pricing; output tokens are free.
+schema = 2
+v2_only = true
+base_model = "vllm-sr/d3"
+name = "S1 Pro"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[limit]
+context = 8_192
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.08
+
+[[cost.text.input.overrides]]
+when = { region = { equals = "eu" } }
+price = 0.084
+
+[cost.text.output]
+price = 0
