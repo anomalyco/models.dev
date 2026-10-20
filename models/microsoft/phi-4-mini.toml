@@ -1,10 +1,15 @@
+# https://huggingface.co/microsoft/Phi-4-mini-instruct: "Release date: February 2025", "cutoff date of
+#   June 2024 for publicly available data", 128K context.
+# Release day: https://azure.microsoft.com/en-us/blog/empowering-innovation-the-next-generation-of-the-phi-family/
+#   (2025-02-26). The previous 2024-12-11 / 2023-10 values belonged to Phi-4.
+# Sampling: open weights; temperature, top_p and top_k are standard sampling controls for this checkpoint.
 schema = 2
 name = "Phi-4-mini"
 description = "Compact Microsoft instruction model tuned for efficient coding assistance, reasoning, and low-latency agent tasks"
 family = "phi"
 open_weights = true
-knowledge = "2023-10"
-release_date = "2024-12-11"
+knowledge = "2024-06"
+release_date = "2025-02-26"
 
 [modalities]
 input = ["text"]

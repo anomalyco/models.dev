@@ -4,6 +4,8 @@
 # Field values mirror Perplexity's own first-party host entry in this repo
 # (providers/perplexity/models/sonar-deep-research.toml); host-scoped keys
 # (cost, reasoning_options) are intentionally left to the provider files.
+# Sampling: temperature stays off for this model as before; top_p follows it, and the Sonar reference documented
+#   no top_k (https://web.archive.org/web/20260804172333/https://docs.perplexity.ai/api-reference/sonar-post).
 schema = 2
 name = "Sonar Deep Research"
 description = "Sonar search model for autonomous research and citation-backed long-form reports"

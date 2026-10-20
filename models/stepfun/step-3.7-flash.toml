@@ -1,3 +1,8 @@
+# https://huggingface.co/stepfun-ai/Step-3.7-Flash, https://platform.stepfun.com/docs/zh/guides/models/step-3.7-flash
+# Sampling: open weights; temperature, top_p and top_k are standard sampling controls for this checkpoint.
+# Input formats: images JPG/JPEG, PNG, static GIF and WebP; video containers MP4, QuickTime and Matroska
+#   (https://platform.stepfun.com/docs/zh/guides/developer/image-chat.md,
+#   https://platform.stepfun.com/docs/zh/guides/developer/video-chat.md).
 schema = 2
 name = "Step 3.7 Flash"
 description = "Newer StepFun flash model for faster agents, coding, and multimodal prompts"
@@ -6,7 +11,7 @@ knowledge = "2026-03-01"
 release_date = "2026-05-29"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska"]
 output = ["text"]
 
 [capabilities]

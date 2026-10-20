@@ -3,6 +3,8 @@
 # https://openrouter.ai/api/v1/models/inclusionai/ling-3.0-flash-fin:free/endpoints
 # https://vercel.com/changelog/ling-3-0-flash-fin-now-available-on-ai-gateway-for-free
 # MIT weights published: https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin (2026-09-03)
+# Sampling: open weights; the model card recommends temperature, top_p and top_k (temperature=1.0, top_p=0.95, top_k=20)
+#   (https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin).
 schema = 2
 name = "Ling 3.0 Flash Fin"
 description = "Finance-enhanced model for financial research, multi-step investment workflows, and long-horizon planning and execution"

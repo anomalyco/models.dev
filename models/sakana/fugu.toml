@@ -1,3 +1,6 @@
+# Sampling: https://console.sakana.ai/models?model=fugu lists temperature and top_p as "Accepted but ignored" on
+#   Responses and Chat Completions and documents no top_k, so all three are off.
+# Input: the Sakana docs list no image formats (image input only), so input stays generic `image`.
 schema = 2
 name = "Fugu"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"

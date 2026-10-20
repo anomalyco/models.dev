@@ -1,3 +1,8 @@
+# https://huggingface.co/ornith-ai/Ornith-1.0-35B
+# Sampling: open weights; the Ornith model cards use temperature=0.6, top_p=0.95, top_k=20
+#   (https://huggingface.co/ornith-ai/Ornith-1.0-9B, https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B).
+# Input: image input comes from the Qwen3.5 vision stack (config.json image_token_id). Neither the model card nor
+#   DeepReinforce (no first-party API) lists image formats, so input stays generic `image`.
 schema = 2
 name = "Ornith 1.0 35B"
 description = "Large coding-reasoning model for agentic software tasks and RL search"

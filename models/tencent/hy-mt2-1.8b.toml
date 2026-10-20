@@ -1,11 +1,15 @@
 # Lab metadata carried over from providers/openrouter/models/tencent/hy-mt2-1.8b.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Release: weights open-sourced 2026-05-21 per the model card News section
+#   (https://huggingface.co/tencent/Hy-MT2-1.8B); the earlier date was a relay listing date.
+# Sampling: open weights; generation_config.json sets temperature 0.7, top_p 0.8, top_k 20
+#   (https://huggingface.co/tencent/Hy-MT2-1.8B/blob/main/generation_config.json).
 schema = 2
 name = "Hy-MT2-1.8B"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
 family = "Hy"
 open_weights = true
-release_date = "2026-08-20"
+release_date = "2026-05-21"
 
 [modalities]
 input = ["text"]

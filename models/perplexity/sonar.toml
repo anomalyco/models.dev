@@ -1,3 +1,5 @@
+# Sampling: the Sonar chat completions reference documented temperature (0-2) and top_p, and no top_k
+#   (https://web.archive.org/web/20260804172333/https://docs.perplexity.ai/api-reference/sonar-post).
 schema = 2
 name = "Sonar"
 description = "Fast web-grounded Sonar for current answers, citations, and lightweight retrieval"
@@ -16,7 +18,7 @@ tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 128_000
