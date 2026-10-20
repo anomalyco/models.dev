@@ -1,10 +1,15 @@
+schema = 2
 base_model = "openai/gpt-4.1"
-structured_output = true
 
-[cost]
-input = 2
-output = 8
-cache_read = 0.5
+[capabilities]
+structured_output = true
 
 [limit]
 context = 1_000_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8

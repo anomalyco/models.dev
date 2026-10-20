@@ -1,7 +1,9 @@
+schema = 2
 base_model = "alibaba/qwen3-max"
 
-[cost]
-input = 0.845
-output = 3.38
-cache_read = 0.6
-cache_write = 3.75
+[cost.text.input]
+price = 0.845
+cache = { read = 0.6, write = 3.75 }
+
+[cost.text.output]
+price = 3.38

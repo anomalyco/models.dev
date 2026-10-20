@@ -1,17 +1,19 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.076
-output = 0.153
-cache_read = 0.014
 
 [limit]
 context = 1_050_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.076
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 0.153

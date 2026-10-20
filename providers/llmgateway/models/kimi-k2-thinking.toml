@@ -1,10 +1,15 @@
+schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.6
-output = 2.5
-cache_read = 0.06
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 2.5

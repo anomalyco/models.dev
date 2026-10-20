@@ -2,14 +2,16 @@
 # https://docs.llmgateway.io/features/reasoning
 # https://dev.meta.ai/docs/reasoning.md (max is Standard-tier 1.3 only)
 # https://github.com/theopenco/llmgateway/blob/910a6632c47b83c74944bad231f25f17bd5acb7b/packages/actions/src/prepare-request-body.ts#L2231-L2241
+schema = 2
 base_model = "meta/muse-spark-1.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
 
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
+[cost.text.output]
+price = 4.25

@@ -1,13 +1,15 @@
+schema = 2
 base_model = "tencent/hy4-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 1_000_000
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

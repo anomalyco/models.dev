@@ -1,17 +1,18 @@
+schema = 2
 base_model = "zhipuai/glm-5"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.72
-output = 2.3
-cache_read = 0.144
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 203_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.72
+cache = { read = 0.144, write = 0 }
+
+[cost.text.output]
+price = 2.3

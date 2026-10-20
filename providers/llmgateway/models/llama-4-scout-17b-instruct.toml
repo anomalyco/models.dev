@@ -1,23 +1,26 @@
+schema = 2
 name = "Llama 4 Scout 17B Instruct"
 description = "Open multimodal Llama model for long-context analysis and efficient agents"
 family = "llama"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-04-05"
 
-[cost]
-input = 0.18
-output = 0.59
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 131_072
 output = 2_048
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.18
+
+[cost.text.output]
+price = 0.59

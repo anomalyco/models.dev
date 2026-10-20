@@ -1,28 +1,27 @@
+schema = 2
 name = "Muse Spark 1.2 Contributor"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "muse"
-release_date = "2026-08-06"
-last_updated = "2026-08-06"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-06"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.002
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

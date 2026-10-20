@@ -1,12 +1,13 @@
+schema = 2
 base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[cost.text.output]
+price = 0.5

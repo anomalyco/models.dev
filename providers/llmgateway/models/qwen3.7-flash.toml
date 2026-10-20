@@ -1,28 +1,26 @@
+schema = 2
 name = "Qwen3.7 Flash"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-07-27"
-last_updated = "2026-07-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-07-27"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.03
-output = 0.13
-cache_read = 0.006
-cache_write = 0.0375
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+temperature = true
 
 [limit]
 context = 983_616
 output = 1_000_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006, write = 0.0375 }
+
+[cost.text.output]
+price = 0.13

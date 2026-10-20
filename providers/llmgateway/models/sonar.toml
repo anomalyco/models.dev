@@ -1,9 +1,12 @@
+schema = 2
 base_model = "perplexity/sonar"
-
-[cost]
-input = 0.25
-output = 2.5
-cache_write = 0.25
 
 [limit]
 context = 130_000
+
+[cost.text.input]
+price = 0.25
+cache = { write = 0.25 }
+
+[cost.text.output]
+price = 2.5

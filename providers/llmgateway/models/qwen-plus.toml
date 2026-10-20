@@ -1,12 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen-plus"
-reasoning_options = []
 
-[cost]
-input = 0.4
-output = 1.2
-reasoning = 4
-cache_read = 0.08
-cache_write = 0.5
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.08, write = 0.5 }
+
+[cost.text.output]
+price = 1.2
+reasoning = 4

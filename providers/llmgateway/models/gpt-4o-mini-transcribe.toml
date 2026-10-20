@@ -1,23 +1,26 @@
+schema = 2
 name = "GPT-4o Mini Transcribe"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "gpt"
-release_date = "2025-03-20"
-last_updated = "2025-03-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-03-20"
 
-[cost]
-input = 1.25
-output = 5
+[modalities]
+input = ["text", "audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 16_000
 output = 16_000
 
-[modalities]
-input = ["text", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 5
