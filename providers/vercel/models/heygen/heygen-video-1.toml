@@ -1,3 +1,4 @@
+# Modalities: HeyGen assets png and jpeg (https://developers.heygen.com/reference/upload-asset); heygen-video-1 returns an MP4 (https://developers.heygen.com/docs/quick-start)
 schema = 2
 name = "HeyGen Video"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
@@ -5,8 +6,8 @@ open_weights = false
 release_date = "2026-10-09"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
+input = ["text", "image/png", "image/jpeg"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

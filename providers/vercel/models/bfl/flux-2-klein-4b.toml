@@ -1,3 +1,4 @@
+# Modalities: BFL output_format jpeg | png | webp (OutputFormat in https://api.bfl.ai/openapi.json)
 schema = 2
 name = "FLUX.2 [klein] 4B"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -8,7 +9,7 @@ last_updated = "2026-06-08"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/jpeg", "image/png", "image/webp"]
 
 [capabilities]
 tools = { supported = false }

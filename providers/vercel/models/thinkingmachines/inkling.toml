@@ -3,6 +3,7 @@
 # - https://vercel.com/ai-gateway/models/inkling — routes to baseten
 # - https://docs.baseten.co/inference/model-apis/reasoning — Inkling reasoning_effort
 # API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
+# Modalities: generic image kept, the Inkling model cards accept "any pixel-based image input" and list no formats
 schema = 2
 base_model = "thinkingmachines/inkling"
 

@@ -1,3 +1,4 @@
+# Modalities: Recraft raster image_format webp (default) | png, https://www.recraft.ai/docs/api-reference/endpoints
 schema = 2
 name = "Recraft V3"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -8,7 +9,7 @@ last_updated = "2024-10"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/webp", "image/png"]
 
 [capabilities]
 tools = { supported = false }

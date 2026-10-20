@@ -1,3 +1,4 @@
+# Modalities: Veo generated videos are video/mp4, https://ai.google.dev/gemini-api/docs/veo
 schema = 2
 name = "Veo 3.0"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
@@ -8,7 +9,7 @@ last_updated = "2026-06-08"
 
 [modalities]
 input = ["text"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

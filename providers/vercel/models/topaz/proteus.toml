@@ -1,3 +1,4 @@
+# Modalities: Topaz Video API output.container mp4 (default), mov, mkv, avi, webm (AVI has no registered MIME type), https://developer.topazlabs.com/video-models/proteus/proteus
 schema = 2
 name = "Proteus"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
@@ -6,7 +7,7 @@ release_date = "2026-10-06"
 
 [modalities]
 input = ["text"]
-output = ["video"]
+output = ["video/mp4", "video/quicktime", "video/matroska", "video/webm"]
 
 [capabilities]
 tools = { supported = false }

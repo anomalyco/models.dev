@@ -1,8 +1,9 @@
+# Modalities: Nova image formats PNG, JPEG, GIF, WEBP, as on Amazon Bedrock (https://docs.aws.amazon.com/nova/latest/userguide/modalities-image.html)
 schema = 2
 base_model = "amazon/nova-2-lite"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

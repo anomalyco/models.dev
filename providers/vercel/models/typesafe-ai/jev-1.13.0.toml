@@ -1,3 +1,4 @@
+# Modalities: TypeSafe images are PNG or JPEG, https://docs.typesafe.ai/images
 schema = 2
 type = "decision"
 name = "Jev 1.13.0"
@@ -6,7 +7,7 @@ open_weights = false
 release_date = "2026-09-15"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg"]
 output = ["text"]
 
 [capabilities]

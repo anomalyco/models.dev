@@ -1,3 +1,4 @@
+# Modalities: xAI image inputs jpg/jpeg and png, https://docs.x.ai/docs/guides/image-understanding
 schema = 2
 name = "Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -6,7 +7,7 @@ open_weights = false
 release_date = "2026-03-10"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]

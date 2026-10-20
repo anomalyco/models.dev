@@ -1,9 +1,10 @@
+# Modalities: MiMo image formats JPEG, PNG, GIF, WebP, BMP, https://mimo.mi.com/static/docs/quick-start/usage-guide/multimodal-understanding/image-understanding.md
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
 name = "MiMo M2.5"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
 output = ["text"]
 
 [capabilities]

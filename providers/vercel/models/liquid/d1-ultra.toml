@@ -1,3 +1,4 @@
+# Modalities: d1 image formats JPEG, PNG, WebP, GIF, https://docs.liquid.ai/lfm/models/d1
 schema = 2
 type = "decision"
 name = "Liquid d1 Ultra"
@@ -7,7 +8,7 @@ open_weights = false
 release_date = "2026-10-15"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

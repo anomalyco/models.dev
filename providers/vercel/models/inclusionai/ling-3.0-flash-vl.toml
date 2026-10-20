@@ -1,11 +1,12 @@
 # Toggle: reasoning.enabled = true|false
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# Modalities: Ling-3.0-flash-VL image formats JPEG, PNG, https://developer.ant-ling.com/en/docs/tutorials/multimodal-understanding
 schema = 2
 base_model = "inclusionai/ling-3.0-flash-vl"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

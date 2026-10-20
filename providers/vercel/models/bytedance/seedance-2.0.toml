@@ -1,10 +1,11 @@
+# Modalities: Seedance input images jpeg, png, webp, bmp, tiff, gif, heic, heif (https://ai.byteplus.com/ark/region:ap-southeast-1/docs/create-video-generation-task-api); AI Gateway: all Seedance models output MP4 (https://vercel.com/docs/ai-gateway/modalities/video-generation/text-to-video)
 schema = 2
 base_model = "bytedance-seed/seedance-2.0"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif"]
+output = ["video/mp4"]
 
 [capabilities]
 temperature = true

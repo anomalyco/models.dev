@@ -1,3 +1,4 @@
+# Modalities: Topaz Image API output_format jpeg, png, tiff, https://developer.topazlabs.com/reference/image/enhance
 schema = 2
 name = "Wonder 3.5"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -6,7 +7,7 @@ release_date = "2026-10-06"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/jpeg", "image/png", "image/tiff"]
 
 [capabilities]
 tools = { supported = false }

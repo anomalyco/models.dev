@@ -1,9 +1,10 @@
+# Modalities: Meta Model API image types png, jpeg, gif, webp (x-icon has no registered MIME type), https://dev.meta.ai/docs/file-handling
 schema = 2
 base_model = "meta/muse-spark-open"
 description = "Open Llama multimodal model for image understanding and text reasoning"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

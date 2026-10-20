@@ -1,3 +1,4 @@
+# Modalities: Seedream 5.0 output_format png | jpeg, https://ai.byteplus.com/ark/region:ap-southeast-1/docs/image-generation-api
 schema = 2
 name = "Seedream 5.0 Pro"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -7,7 +8,7 @@ release_date = "2026-07-11"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png", "image/jpeg"]
 
 [capabilities]
 tools = { supported = false }

@@ -1,5 +1,6 @@
 # Previously a symlink to providers/mistral/models/ministral-8b-latest.toml. Copied from origin/dev 67bc657a5 so Vercel's data
 # stays as it was when the Mistral file moved to schema 2 with Mistral-API-specific values.
+# Modalities: Mistral vision formats PNG, JPEG, WEBP, non-animated GIF, https://docs.mistral.ai/studio/conversations/vision
 schema = 2
 name = "Ministral 8B (latest)"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
@@ -10,7 +11,7 @@ release_date = "2024-10-16"
 last_updated = "2024-10-04"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

@@ -1,3 +1,4 @@
+# Modalities: FLUX 3 Image has no output_format; BFL's quickstart saves result.sample as PNG, https://docs.bfl.ml/flux_3/flux3_image_generate
 schema = 2
 name = "FLUX 3 Image"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -7,7 +8,7 @@ release_date = "2026-10-05"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png"]
 
 [capabilities]
 tools = { supported = false }

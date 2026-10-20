@@ -1,3 +1,4 @@
+# Modalities: MAI image generation output is always PNG, https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-mai
 schema = 2
 name = "MAI-Image-2.6-Flash"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -7,7 +8,7 @@ release_date = "2026-10-13"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png"]
 
 [capabilities]
 tools = { supported = false }

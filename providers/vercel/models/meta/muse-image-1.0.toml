@@ -1,3 +1,4 @@
+# Modalities: Meta Model API image inputs png, jpeg, gif, webp (https://dev.meta.ai/docs/file-handling); Muse Image output_format webp (default) | png | jpeg (https://dev.meta.ai/docs/image-generation)
 schema = 2
 name = "Muse Image 1.0"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -6,8 +7,8 @@ open_weights = false
 release_date = "2026-08-26"
 
 [modalities]
-input = ["text", "image"]
-output = ["image"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
+output = ["image/webp", "image/png", "image/jpeg"]
 
 [capabilities]
 tools = { supported = false }

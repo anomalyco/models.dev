@@ -1,3 +1,4 @@
+# Modalities: AI Gateway KlingAI video results are MP4 (https://vercel.com/docs/ai-gateway/modalities/video-generation/text-to-video)
 schema = 2
 name = "Kling v3.0 Motion Control"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
@@ -7,7 +8,7 @@ release_date = "2026-03-04"
 
 [modalities]
 input = ["text"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

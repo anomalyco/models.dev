@@ -1,9 +1,10 @@
+# Modalities: BytePlus ModelArk supported image formats (JPEG, PNG, GIF, WEBP, BMP, TIFF, JPEG2000, HEIC/HEIF; ICO, ICNS and SGI have no registered MIME type), https://ai.byteplus.com/ark/region:ap-southeast-1/docs/image-understanding
 schema = 2
 base_model = "bytedance-seed/seed-1-6"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/jp2", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

@@ -1,3 +1,4 @@
+# Modalities: Sonar image formats PNG, JPEG, WEBP, GIF, https://docs.perplexity.ai/docs/sonar/media
 schema = 2
 name = "Sonar"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
@@ -7,7 +8,7 @@ knowledge = "2025-02"
 release_date = "2025-02-19"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

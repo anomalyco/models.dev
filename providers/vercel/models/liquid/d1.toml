@@ -1,8 +1,9 @@
+# Modalities: d1 image formats JPEG, PNG, WebP, GIF, https://docs.liquid.ai/lfm/models/d1
 schema = 2
 base_model = "liquid/d1"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["text"]
 
 [cost.text.input]

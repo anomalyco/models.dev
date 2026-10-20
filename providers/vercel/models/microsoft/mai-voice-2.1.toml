@@ -1,3 +1,4 @@
+# Modalities: AI Gateway speech outputFormat mp3 | wav (https://vercel.com/docs/ai-gateway/modalities/text-to-speech); MAI-Voice uses Azure Speech output formats (https://learn.microsoft.com/en-us/azure/ai-services/speech-service/mai-voices)
 schema = 2
 name = "MAI-Voice-2.1"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
@@ -7,7 +8,7 @@ release_date = "2026-10-01"
 
 [modalities]
 input = ["text"]
-output = ["audio"]
+output = ["audio/mpeg", "audio/wav"]
 
 [capabilities]
 tools = { supported = false }

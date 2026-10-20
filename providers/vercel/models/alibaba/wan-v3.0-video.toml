@@ -1,3 +1,4 @@
+# Modalities: Wan input images JPEG, PNG, BMP, WEBP; output MP4 (H.264), https://www.alibabacloud.com/help/en/model-studio/image-to-video-api-reference
 schema = 2
 name = "Wan v3.0 Video"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
@@ -5,8 +6,8 @@ open_weights = false
 release_date = "2026-08-23"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }
