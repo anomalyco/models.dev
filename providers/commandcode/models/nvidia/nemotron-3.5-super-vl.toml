@@ -1,0 +1,13 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[limit]
+context = 262144
+
+[cost]
+input = 0.2
+output = 0.5
+cache_read = 0.04

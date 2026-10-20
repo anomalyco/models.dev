@@ -1,0 +1,10 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+base_model = "minimax/MiniMax-M3.1-Flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

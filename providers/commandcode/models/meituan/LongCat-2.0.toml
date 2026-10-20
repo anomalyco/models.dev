@@ -1,0 +1,13 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+base_model = "meituan/longcat-2.0"
+reasoning_options = []
+
+[limit]
+context = 1048576
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006

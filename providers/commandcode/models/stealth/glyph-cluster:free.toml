@@ -1,0 +1,29 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
+# Model catalog + pricing: https://api.commandcode.ai/provider/v1/models
+# Host-specific stealth preview: no shared lab identity exists for this model.
+# Free model: shared capacity, 100 requests/day per account.
+# Release date is the earliest catalog observation (2026-10); the host does not publish one.
+name = "Glyph Cluster"
+description = "Stealth reasoning model in early access"
+release_date = "2026-10"
+last_updated = "2026-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 256000
+output = 256000
+
+[modalities]
+input = ["text"]
+output = ["text"]

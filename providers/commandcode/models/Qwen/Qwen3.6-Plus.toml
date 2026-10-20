@@ -1,0 +1,13 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+base_model = "alibaba/qwen3.6-plus"
+reasoning_options = []
+
+[limit]
+context = 200000
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.1
