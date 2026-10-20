@@ -1,25 +1,11 @@
-# Embedding model, typed as the lab does (https://huggingface.co/Qwen/Qwen3-Embedding-8B): embedding output, no generative output limit.
+# Lab identity: https://huggingface.co/Qwen/Qwen3-Embedding-8B
+# Context inherits the lab's 32,768: the router catalog doesn't list embedding models, so there's no host limit to cite.
+# knowledge: kept from the earlier Hugging Face file; unsourced (no cutoff in the model card or lab docs, checked 2026-10-20).
 schema = 2
-type = "embedding"
+base_model = "alibaba/qwen3-embedding-8b"
 name = "Qwen 3 Embedding 8B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "qwen"
-open_weights = true
 knowledge = "2024-12"
-release_date = "2025-01-01"
-
-[modalities]
-input = ["text"]
-output = ["embedding"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-
-[limit]
-context = 32_000
-output = 0
 
 [cost.text.input]
 price = 0.01
