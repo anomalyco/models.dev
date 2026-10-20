@@ -1,3 +1,8 @@
+# Sources (accessed 2026-10-09):
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (Singapore)
+# https://www.alibabacloud.com/help/en/model-studio/context-cache
+# Implicit hit 20% of input; explicit creation 125%, explicit hit 10%; modes mutually exclusive.
+# cache_read uses implicit 20% where supported, else explicit 10%.
 name = "Qwen Turbo"
 description = "Efficient Qwen model for fast chat, extraction, and high-volume workloads"
 family = "qwen"
@@ -20,6 +25,7 @@ type = "budget_tokens"
 input = 0.05
 output = 0.2
 reasoning = 0.5
+cache_read = 0.01
 
 [limit]
 context = 1_000_000
