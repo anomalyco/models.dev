@@ -1,23 +1,26 @@
 # https://mistral.ai/news/mistral-3
+schema = 2
 name = "Mistral Large 3"
 description = "Mistral's largest general model for enterprise agents, coding, and multilingual reasoning"
 family = "mistral-large"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-11"
 open_weights = true
-
-[limit]
-context = 262_144
-output = 262_144
+knowledge = "2024-11"
+release_date = "2025-12-02"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 262_144
 
 [[weights]]
 label = "Hugging Face"

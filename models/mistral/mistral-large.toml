@@ -1,22 +1,24 @@
 # Lab metadata carried over from providers/openrouter/models/mistralai/mistral-large.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "Mistral Large"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
 family = "mistral-large"
-release_date = "2024-02-26"
-last_updated = "2024-02-26"
-knowledge = "2024-11-30"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[limit]
-context = 128000
-output = 102400
+knowledge = "2024-11-30"
+release_date = "2024-02-26"
 
 [modalities]
-input = ["text", "pdf"]
+input = ["text", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 102_400

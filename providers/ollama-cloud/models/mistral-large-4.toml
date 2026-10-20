@@ -8,6 +8,7 @@
 # https://docs.mistral.ai/models/mistral-large-4-0,
 # providers/mistral/models/mistral-large-4.toml (reasoning_effort none|high).
 base_model = "mistral/mistral-large-4"
+structured_output = true
 
 reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 

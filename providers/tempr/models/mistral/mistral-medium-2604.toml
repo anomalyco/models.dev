@@ -4,6 +4,7 @@
 # /v1/messages: thinking.type = enabled|disabled; output_config.effort = high
 # /v1/responses: reasoning.effort = none|high
 base_model = "mistral/mistral-medium-2604"
+structured_output = true
 
 reasoning_options = [
   { type = "effort", values = ["none", "high"] },
