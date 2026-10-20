@@ -439,17 +439,18 @@ note = [
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 limit = { output = 65_536 }
 
-# Gemini 4 Argon: Google native thinkingLevel only (low|medium|high, default medium).
-# Thinking cannot be disabled and thinking_budget is deprecated (400 on Gemini 4).
-# Wire is preserved via the Google AI Studio native route through AI Gateway.
+# Gemini 4 Argon is served by Vertex AI over the REST API's chat-completions route (catalog
+# provider_details = google-vertex-ai, request_formats = chat-completions), not Google AI Studio.
+# Effort is reasoning_effort, which maps to Gemini's thinking level (low|medium|high, default
+# medium); thinking cannot be disabled. Live 2026-10-19: low|medium|high accepted with rising
+# reasoning tokens (0 / 79 / 550), none rejected (code 7003).
 # https://ai.google.dev/gemini-api/docs/thinking
-# https://ai.google.dev/gemini-api/docs/generate-content/thinking
 # https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
-# https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/
+# https://developers.cloudflare.com/ai-gateway/usage/rest-api/
 [models."google/gemini-4-argon"]
 structured_output = true
 note = [
-  "Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (Google AI Studio native route preserved via AI Gateway; default medium, thinking cannot be disabled).",
-  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-argon ; https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/",
+  "Effort: reasoning_effort = low|medium|high (maps to Gemini's thinking level; default medium, thinking cannot be disabled, none rejected; live 2026-10-19).",
+  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-argon",
 ]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
