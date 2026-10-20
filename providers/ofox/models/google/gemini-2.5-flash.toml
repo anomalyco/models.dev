@@ -3,12 +3,18 @@
 # - https://api.ofox.ai/v1/models (id google/gemini-2.5-flash; prompt/completion/cache/audio pricing; supported_parameters includes reasoning)
 # Toggle: thinking budget 0 disables thinking (Google thinkingConfig.thinkingBudget / OpenAI-compat reasoning)
 # Budget: thinking_budget / thinkingConfig.thinkingBudget 0..24576 (lab + openrouter/merge-gateway peers)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: implicit (https://ofox.ai/docs/develop/models/gemini#caching); explicit cachedContents is on the Gemini native API only.
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.3

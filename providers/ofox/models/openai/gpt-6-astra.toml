@@ -3,12 +3,15 @@
 # - Ofox catalog API: https://api.ofox.ai/v2/models/catalog?include=provider_price&search=gpt-6-astra
 # - OpenAI model docs (reasoning effort): https://developers.openai.com/api/docs/models/gpt-6-astra
 # Ofox publishes flat $10/$50 (+ cache) with no >=272k context tier in the catalog, so no [[cost.tiers]].
+# Mid-conversation (Ofox Responses, https://ofox.ai/docs/api/openai/responses): system_updates, effort_updates, tools.updates unset: OpenAI supports them, but Ofox's reference doesn't document passing them through.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/gpt#caching).
 schema = 2
 base_model = "openai/gpt-6-astra"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [api.responses]
 base_url = "https://api.ofox.ai/v1"

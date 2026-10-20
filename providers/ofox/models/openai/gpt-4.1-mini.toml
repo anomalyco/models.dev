@@ -1,10 +1,14 @@
 # https://ofox.ai/models/openai/gpt-4.1-mini
 # Pricing: input $0.4/M, output $1.6/M, cache_read $0.1/M (USD per million tokens)
+# Mid-conversation (Ofox Responses, https://ofox.ai/docs/api/openai/responses): effort_updates = false because OpenAI's own API has no such mechanism for this model (providers/openai/models/gpt-4.1-mini.toml). system_updates, tools.updates unset: OpenAI supports them, but Ofox's reference doesn't document passing them through.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/gpt#caching).
 schema = 2
 base_model = "openai/gpt-4.1-mini"
 
 [capabilities]
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [api.responses]
 base_url = "https://api.ofox.ai/v1"

@@ -1,11 +1,19 @@
 # https://ofox.ai/en/models/anthropic/claude-opus-4.5 — Ofox model id, pricing, context/output
 # https://docs.anthropic.com/en/docs/about-claude/models/overview — Opus 4.5 extended thinking
 # Reasoning: Anthropic-native path; effort + budget_tokens match providers/anthropic/models/claude-opus-4-5.toml
+# Mid-conversation (Ofox Anthropic Messages, https://ofox.ai/docs/api/anthropic/messages): system_updates, effort_updates, tools.updates = false because Anthropic's own API has no such mechanism for this model (providers/anthropic/models/claude-opus-4-5.toml).
+# Cache: explicit cache_control only (neither endpoint caches automatically), 5m TTL or 1h with ttl = "1h"; minimum length per Anthropic (https://ofox.ai/docs/develop/models/claude/caching). 1h write price: catalog input_cache_write_1h.
+# Status: not in the Ofox catalog or /v1/models, and GET https://api.ofox.ai/v1/models/anthropic/claude-opus-4.5 returns 404 model not found, checked 2026-10-20.
 schema = 2
 base_model = "anthropic/claude-opus-4-5"
+status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 4_096 } }
 
 [api.messages]
 base_url = "https://api.ofox.ai/anthropic/v1"

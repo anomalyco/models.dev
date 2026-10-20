@@ -2,11 +2,15 @@
 # https://ofox.ai/models/anthropic/claude-opus-5.5
 # https://platform.claude.com/docs/en/models/opus-5-5/overview
 # https://www.anthropic.com/claude-opus-5-5
+# Mid-conversation (Ofox Anthropic Messages, https://ofox.ai/docs/api/anthropic/messages): system_updates, effort_updates, tools.updates unset: Anthropic supports them, but Ofox's reference doesn't document passing them through.
+# Cache: explicit cache_control only (neither endpoint caches automatically), 5m TTL or 1h with ttl = "1h"; minimum length per Anthropic (https://ofox.ai/docs/develop/models/claude/caching). 1h write price: catalog input_cache_write_1h.
+# Effort: output_config.effort = low|medium|high|xhigh|max (https://ofox.ai/docs/develop/models/claude/thinking)
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 512 } }
 
 [api.messages]
 base_url = "https://api.ofox.ai/anthropic/v1"
@@ -14,7 +18,7 @@ sdk = { aisdk = "@ai-sdk/anthropic" }
 
 [cost.text.input]
 price = 4
-cache = { read = 0.2, write = 5 }
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
 
 [cost.text.output]
 price = 20

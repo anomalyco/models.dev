@@ -3,12 +3,18 @@
 # - https://ofox.ai/en/models/google/gemini-3.5-flash
 # Reasoning: multi-model relay — copy lab/peer effort set (minimal/low/medium/high)
 # from providers/google/models/gemini-3.5-flash.toml and openrouter/vercel peers.
+# Mid-conversation (Ofox Gemini native API, https://ofox.ai/docs/api/gemini/generate-content): systemInstruction, thinkingConfig and tools are request-level and content roles are user/model, so system_updates, effort_updates and tools.updates are false.
+# Cache: implicit, plus explicit cachedContents on the Gemini native API (https://ofox.ai/docs/develop/models/gemini#caching, https://ofox.ai/docs/develop/advanced/gemini-explicit-cache).
 schema = 2
 base_model = "google/gemini-3.5-flash"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = true }
 
 [api.generate-content]
 base_url = "https://api.ofox.ai/gemini/v1beta"

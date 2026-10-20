@@ -4,12 +4,18 @@
 # - https://ofox.ai/models/x-ai/grok-4.7 (same pricing; max output 66K; reasoning + tools + prompt caching)
 # - https://docs.x.ai/developers/models/grok-4.7 (reasoning_effort low|medium|high|xhigh; cannot disable)
 # reasoning_options match first-party xAI + relay peers (no none)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/grok).
 schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 65_536

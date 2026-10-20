@@ -4,6 +4,9 @@
 # - https://docs.z.ai/guides/vlm/glm-5.3-flash (Flash/FlashX share weights; thinking.type only enabled; 1M context; model codes glm-5.3-flash/glm-5.3-flashx)
 # - https://vercel.com/changelog/glm-5-3-flashx-now-available-on-ai-gateway (FlashX high-speed serving option, ~200 tok/s, available 2026-09-18)
 # Effort: reasoning_effort = low|high|max (thinking always on)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/glm).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3-FlashX"
@@ -11,8 +14,11 @@ description = "High-speed GLM-5.3-Flash serving option for coding and agent work
 release_date = "2026-09-18"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.15

@@ -1,10 +1,14 @@
 # https://ofox.ai/en/models/bailian/qwen3-coder-next
 # https://ofox.ai/models/bailian
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
 schema = 2
 base_model = "alibaba/qwen3-coder-next"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.2

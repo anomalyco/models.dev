@@ -1,11 +1,16 @@
 # Ofox bills a flat 30/180 across the full advertised context window; the Ofox
 # catalog publishes no >=272k context tier, so no [[cost.tiers]] applies here.
+# Mid-conversation (Ofox Responses, https://ofox.ai/docs/api/openai/responses): effort_updates = false because OpenAI's own API has no such mechanism for this model (providers/openai/models/gpt-5.4-pro.toml). system_updates, tools.updates unset: OpenAI supports them, but Ofox's reference doesn't document passing them through.
+# Cache: none; the Ofox catalog has no prompt_caching and no cache price for this model.
+# Effort: reasoning.effort = medium|high|xhigh (https://ofox.ai/docs/develop/models/gpt/reasoning)
 schema = 2
 base_model = "openai/gpt-5.4-pro"
 
 [capabilities]
 reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 structured_output = false
+effort_updates = false
+cache = { supported = false }
 
 [api.responses]
 base_url = "https://api.ofox.ai/v1"

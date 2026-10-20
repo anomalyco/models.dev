@@ -4,12 +4,18 @@
 # - https://docs.z.ai/guides/capabilities/thinking-mode (GLM-5.3 forced thinking; cannot disable)
 # - https://docs.z.ai/devpack/latest-model (effective effort levels: low|high|max; default max)
 # Effort: reasoning_effort = low|high|max (thinking always on; disable maps to low)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/glm).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 1.4

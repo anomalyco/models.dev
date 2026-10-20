@@ -2,11 +2,17 @@
 # - https://ofox.ai/models/z-ai/glm-5v-turbo (pricing $1.2/$4 per MTok, cache_read $0.24; context 200K; output 128K)
 # - https://docs.z.ai/guides/overview/concept-param (thinking.type for GLM-5V-Turbo)
 # Toggle: thinking.type = enabled|disabled
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/glm).
 schema = 2
 base_model = "zhipuai/glm-5v-turbo"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 1.2

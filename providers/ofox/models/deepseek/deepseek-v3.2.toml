@@ -2,12 +2,18 @@
 # https://ofox.ai/models/deepseek/deepseek-v3.2
 # https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500 (id deepseek/deepseek-v3.2)
 # Toggle: thinking.type = enabled|disabled (DeepSeek thinking mode; OpenAI-compatible extra_body)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/deepseek).
 schema = 2
 base_model = "deepseek/deepseek-v3.2"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 128_000

@@ -1,9 +1,17 @@
 # Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/minimax).
+# structured_output = false: "passing a json_schema in response_format still produced plain text" (https://ofox.ai/docs/develop/models/minimax).
 schema = 2
 base_model = "minimax/MiniMax-M2"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+structured_output = false
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.3

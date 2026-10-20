@@ -2,11 +2,18 @@
 # https://ofox.ai/docs (example model id anthropic/claude-sonnet-4.6)
 # Pricing: $3/M input, $15/M output, $0.3/M cache_read, $3.75/M cache_write (5m)
 # Context 1M / output 128K; Anthropic native + OpenAI protocols
+# Mid-conversation (Ofox Anthropic Messages, https://ofox.ai/docs/api/anthropic/messages): system_updates, effort_updates, tools.updates = false because Anthropic's own API has no such mechanism for this model (providers/anthropic/models/claude-sonnet-4-6.toml).
+# Cache: explicit cache_control only (neither endpoint caches automatically), 5m TTL or 1h with ttl = "1h"; minimum length per Anthropic (https://ofox.ai/docs/develop/models/claude/caching). 1h write price: catalog input_cache_write_1h.
+# Effort: output_config.effort = low|medium|high|max (https://ofox.ai/docs/develop/models/claude/thinking)
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 
 [limit]
 output = 128_000
@@ -17,7 +24,7 @@ sdk = { aisdk = "@ai-sdk/anthropic" }
 
 [cost.text.input]
 price = 3
-cache = { read = 0.3, write = 3.75 }
+cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
 
 [cost.text.output]
 price = 15

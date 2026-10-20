@@ -1,11 +1,15 @@
 # Sources (accessed 2026-09-10):
 # https://ofox.ai/models/qwen/qwen3-coder-next
 # https://api.ofox.ai/v1/models/qwen/qwen3-coder-next
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
 schema = 2
 base_model = "alibaba/qwen3-coder-next"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 256_000

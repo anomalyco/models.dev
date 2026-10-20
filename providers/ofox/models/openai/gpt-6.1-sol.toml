@@ -3,12 +3,16 @@
 # - Ofox catalog API: https://api.ofox.ai/v2/models/catalog?include=provider_price&search=gpt-6.1-sol
 # - OpenAI model docs (pricing/reasoning): https://developers.openai.com/api/docs/models/gpt-6.1-sol
 # Ofox catalog shows flat list pricing with no provider_price override and no context tier, so no [[cost.tiers]].
+# Mid-conversation (Ofox Responses, https://ofox.ai/docs/api/openai/responses): system_updates, effort_updates, tools.updates unset: OpenAI supports them, but Ofox's reference doesn't document passing them through.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/gpt#caching).
+# Effort: reasoning.effort = low|medium|high|xhigh|max (https://ofox.ai/docs/develop/models/gpt/reasoning)
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [api.responses]
 base_url = "https://api.ofox.ai/v1"

@@ -2,11 +2,17 @@
 # Sources:
 # - https://api.ofox.ai/v1/models/x-ai/grok-4.1-fast (prompt $0.20/M, completion $0.50/M, cache_read $0.05/M; no reasoning param)
 # - https://ofox.ai/models/x-ai/grok-4.1-fast
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/grok).
 schema = 2
 base_model = "xai/grok-4.1-fast"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.2

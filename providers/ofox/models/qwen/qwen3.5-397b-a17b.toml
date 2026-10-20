@@ -3,16 +3,23 @@
 # https://api.ofox.ai/v1/models/qwen/qwen3.5-397b-a17b
 # Toggle: enable_thinking true|false (Qwen/DashScope chat path through Ofox)
 # Budget: thinking_budget
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+# Input MIME types: the lab's (models/alibaba/qwen3.5-397b-a17b.toml) for each kind Ofox serves.
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 256_000

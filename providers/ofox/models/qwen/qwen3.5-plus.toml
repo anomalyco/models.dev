@@ -3,11 +3,19 @@
 # https://api.ofox.ai/v1/models/qwen/qwen3.5-plus
 # Toggle: enable_thinking true|false (Qwen/DashScope chat path through Ofox)
 # Budget: thinking_budget
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+# structured_output: Ofox's Qwen page documents response_format json_schema (https://ofox.ai/docs/develop/models/qwen); Alibaba's own API agrees (providers/alibaba).
 schema = 2
 base_model = "alibaba/qwen3.5-plus"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 64_000

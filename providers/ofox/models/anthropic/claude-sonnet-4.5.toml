@@ -1,9 +1,18 @@
 # Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+# Mid-conversation (Ofox Anthropic Messages, https://ofox.ai/docs/api/anthropic/messages): system_updates, effort_updates, tools.updates = false because Anthropic's own API has no such mechanism for this model (providers/anthropic/models/claude-sonnet-4-5.toml).
+# Cache: explicit cache_control only (neither endpoint caches automatically), 5m TTL or 1h with ttl = "1h"; minimum length per Anthropic (https://ofox.ai/docs/develop/models/claude/caching). 1h write price: catalog input_cache_write_1h.
+# Status: not in the Ofox catalog or /v1/models, and GET https://api.ofox.ai/v1/models/anthropic/claude-sonnet-4.5 returns 404 model not found, checked 2026-10-20.
+# Budget: thinking.budget_tokens (min 1024) (https://ofox.ai/docs/develop/models/claude/thinking)
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
+status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, budget = { min = 1_024 } }
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 
 [api.messages]
 base_url = "https://api.ofox.ai/anthropic/v1"
