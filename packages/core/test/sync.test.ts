@@ -3367,6 +3367,61 @@ test("overrides canonical metadata with Cortecs reasoning support", () => {
   });
 });
 
+function cortecsModel(overrides: Partial<CortecsModel> = {}): CortecsModel {
+  return {
+    id: "voxtral-small-2507",
+    created: 1_775_088_000,
+    pricing: { currency: "EUR", input_token: 0.11, output_token: 0.33 },
+    context_size: 32_000,
+    max_output_tokens: 32_000,
+    input_modalities: ["text", "audio"],
+    output_modalities: ["text"],
+    supported_features: ["json_mode", "tools"],
+    ...overrides,
+  };
+}
+
+test("Cortecs base_model files leave model facts to the lab", () => {
+  const existing: ExistingModel = {
+    base_model: "mistral/voxtral-small-24b-2507",
+    family: "voxtral",
+    release_date: "2020-01-01",
+    last_updated: "2020-01-01",
+    knowledge: "2020-01",
+    open_weights: false,
+  };
+  const model = buildCortecsModel(cortecsModel(), existing, existing);
+  for (const key of ["family", "knowledge", "release_date", "last_updated", "open_weights"]) {
+    expect(model).not.toHaveProperty(key);
+  }
+});
+
+test("Cortecs linked files keep a display name and description that differ from the lab", async () => {
+  const renamed: ExistingModel = {
+    base_model: "mistral/voxtral-small-24b-2507",
+    name: "voxtral-small-2507",
+    description: "Host-specific description",
+  };
+  expect(buildCortecsModel(cortecsModel(), renamed, renamed)).toMatchObject({
+    name: "voxtral-small-2507",
+    description: "Host-specific description",
+  });
+
+  // The sync passes the resolved model, so values inherited from the lab
+  // must not be written back as overrides.
+  const lab = Bun.TOML.parse(
+    await readFile(path.join(import.meta.dir, "../../../models/mistral/voxtral-small-24b-2507.toml"), "utf8"),
+  ) as { name: string; description: string };
+  const inherited: ExistingModel = {
+    base_model: "mistral/voxtral-small-24b-2507",
+    name: lab.name,
+    description: lab.description,
+  };
+  const model = buildCortecsModel(cortecsModel(), inherited, inherited);
+  expect(model).not.toHaveProperty("name");
+  expect(model).not.toHaveProperty("description");
+});
+
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
