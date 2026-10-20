@@ -1,19 +1,28 @@
 # https://ai-gateway.vercel.sh/v1/models (liquid/d1, type = evaluation)
-name = "Liquid d1"
+# https://docs.liquid.ai/lfm/models/d1 (decision API: model, state, questions and images; answers with zero generated tokens)
+# Sampling: the decision endpoint generates no tokens and takes no temperature, top_p or top_k.
+# Output: decision answers (v1 shows them as text).
+# Modalities: Liquid documents text and image input (JPEG, PNG, WebP, GIF); the hosts that accept images set them in their
+# own files, and the lab stays text so text-only hosts keep their current input.
+schema = 2
 type = "decision"
+name = "Liquid d1"
 description = "System One decision model for typed classification, routing, and scoring over shared state"
 family = "liquid"
-release_date = "2026-09-29"
-last_updated = "2026-09-29"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-09-29"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 65_536
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["text"]
