@@ -1,6 +1,5 @@
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }

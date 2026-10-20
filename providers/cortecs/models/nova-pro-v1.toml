@@ -1,9 +1,8 @@
 schema = 2
 base_model = "amazon/nova-pro-v1"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

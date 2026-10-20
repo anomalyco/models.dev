@@ -1,15 +1,9 @@
 schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 name = "qwen3-vl-235b-a22b"
 description = "Qwen3 VL 235B A22B is a 235B-parameter MoE vision-language flagship model (≈22B active) designed for frontier-level multimodal understanding across text, images, documents, and long videos."
-open_weights = false
-release_date = "2026-01-13"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 temperature = false

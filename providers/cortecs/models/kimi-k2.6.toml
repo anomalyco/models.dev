@@ -3,7 +3,7 @@ base_model = "moonshotai/kimi-k2.6"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif", "application/pdf"]
 output = ["text"]
 
 [capabilities]

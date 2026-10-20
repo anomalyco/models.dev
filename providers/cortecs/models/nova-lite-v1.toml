@@ -3,7 +3,7 @@ base_model = "amazon/nova-lite-v1"
 description = "Nova Lite is a fast, low-cost multimodal foundation model capable of reasoning over text, images, and video in 200+ languages."
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
