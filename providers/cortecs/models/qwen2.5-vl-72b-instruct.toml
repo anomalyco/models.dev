@@ -1,3 +1,4 @@
+# Reasoning: inherits the lab's supported = false. The /v1/models "reasoning" feature tag is not model evidence (it is also set on gpt-4o and gpt-4.1).
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort is a per-request field with no per-turn effort mechanism (effort_updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: not supported by the routed providers (ovh). https://docs.cortecs.ai/routing/prompt-caching
 schema = 2
@@ -7,7 +8,6 @@ description = "Qwen2.5-VL is a powerful vision-language model with advanced capa
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = true }
 cache = { supported = false }
 structured_output = true
 temperature = false
