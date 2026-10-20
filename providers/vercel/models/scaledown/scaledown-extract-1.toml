@@ -1,0 +1,23 @@
+schema = 2
+name = "Extract-1"
+description = "General-purpose chat model for instruction following, writing, and analysis"
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0

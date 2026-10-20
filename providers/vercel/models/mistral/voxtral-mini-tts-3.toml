@@ -1,0 +1,18 @@
+schema = 2
+name = "Voxtral TTS 3"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "mistral"
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 0
+output = 0
