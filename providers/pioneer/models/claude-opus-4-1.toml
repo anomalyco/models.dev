@@ -1,14 +1,15 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-1"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 15
-output = 75
-cache_read = 1.5
-cache_write = 18.75
+[cost.text.input]
+price = 15
+cache = { read = 1.5, write = 18.75 }
+
+[cost.text.output]
+price = 75

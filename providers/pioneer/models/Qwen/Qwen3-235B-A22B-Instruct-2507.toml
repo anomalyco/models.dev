@@ -1,10 +1,12 @@
+schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
-
-[cost]
-input = 1.2
-output = 1.2
-cache_read = 1.2
-cache_write = 1.2
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 1.2
+cache = { read = 1.2, write = 1.2 }
+
+[cost.text.output]
+price = 1.2

@@ -1,18 +1,19 @@
+schema = 2
 base_model = "minimax/MiniMax-M3"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
-cache_write = 0.3
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 1_000_000
 output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06, write = 0.3 }
+
+[cost.text.output]
+price = 1.2

@@ -1,30 +1,28 @@
+schema = 2
 name = "Gemma 4 12B IT"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-release_date = "2026-05-31"
-last_updated = "2026-05-31"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-05-31"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.25
-output = 0.25
-cache_read = 0.25
-cache_write = 0.25
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
 
 [limit]
 context = 32_768
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.25, write = 0.25 }
+
+[cost.text.output]
+price = 0.25

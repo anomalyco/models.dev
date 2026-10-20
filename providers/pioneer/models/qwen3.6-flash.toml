@@ -1,15 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen3.6-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.1875
+cache = { read = 0.0375, write = 0.234375 }
 
-[cost]
-input = 0.1875
-output = 1.125
-cache_read = 0.0375
-cache_write = 0.234375
+[cost.text.output]
+price = 1.125

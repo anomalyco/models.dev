@@ -1,11 +1,13 @@
+schema = 2
 base_model = "mistral/mistral-large-2512"
-
-[cost]
-input = 0.5
-output = 1.5
-cache_read = 0.5
-cache_write = 0.5
 
 [limit]
 context = 256_000
 output = 131_072
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.5, write = 0.5 }
+
+[cost.text.output]
+price = 1.5

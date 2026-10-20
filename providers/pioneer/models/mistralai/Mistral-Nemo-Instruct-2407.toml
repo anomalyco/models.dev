@@ -1,7 +1,9 @@
+schema = 2
 base_model = "mistral/mistral-nemo"
 
-[cost]
-input = 0.02
-output = 0.03
-cache_read = 0.02
-cache_write = 0.02
+[cost.text.input]
+price = 0.02
+cache = { read = 0.02, write = 0.02 }
+
+[cost.text.output]
+price = 0.03

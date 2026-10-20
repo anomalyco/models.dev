@@ -1,12 +1,14 @@
 # Source: https://api.pioneer.ai/v1/models (accessed 2026-09-11)
+schema = 2
 base_model = "mistral/devstral-small-2"
-
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.1
-cache_write = 0.1
 
 [limit]
 context = 256_000
 output = 131_072
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1, write = 0.1 }
+
+[cost.text.output]
+price = 0.3
