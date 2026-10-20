@@ -9,6 +9,8 @@
 # https://platform.qianwenai.com/docs/developer-guides/clients-and-developer-tools/kilo-cli
 # https://github.com/QwenLM/qwen-code/issues/7198
 # https://github.com/QwenLM/qwen-code/pull/7199
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3.8 Max Preview"
 description = "Preview Qwen flagship for million-token multimodal reasoning and long-horizon agentic workflows"
@@ -17,7 +19,7 @@ open_weights = false
 release_date = "2026-07-19"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]

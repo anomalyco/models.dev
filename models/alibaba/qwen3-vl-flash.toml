@@ -1,5 +1,7 @@
 # Lab metadata carried over from providers/llmgateway-providers/models/alibaba/qwen3-vl-flash.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3 VL Flash (Alibaba Cloud)"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -7,7 +9,7 @@ open_weights = false
 release_date = "2025-10-15"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

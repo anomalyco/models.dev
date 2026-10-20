@@ -10,6 +10,8 @@
 # 125B total with 6B active plus 51B n-gram embedding and 4B MTP.
 # Thinking always on: reasoning_effort low|medium|xhigh (default xhigh).
 # Native context 262K, extensible up to 1M tokens.
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3.8 Flash Next"
 description = "Open-weight experimental preview of the Qwen4 architecture: hybrid-attention MoE (125B total, 6B active) with vision encoder for coding, agent tasks, and image and video understanding"
@@ -19,7 +21,7 @@ release_date = "2026-08-27"
 license = "qwen-community-1.0"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]

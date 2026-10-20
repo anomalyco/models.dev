@@ -18,6 +18,8 @@
 # (type:file / file_url|file_data). Model pages list Image/Text/Video badges
 # and separately list PDF理解 as a Completions built-in tool. Beijing-region
 # availability note on help.aliyun.com; lab capability still includes pdf.
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3.8 Max"
 description = "2.4-trillion-parameter MoE flagship for coding, professional work, multimodal understanding, and long-horizon agentic workflows"
@@ -26,7 +28,7 @@ open_weights = false
 release_date = "2026-08-03"
 
 [modalities]
-input = ["text", "image", "video", "application/pdf"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv", "application/pdf"]
 output = ["text"]
 
 [capabilities]

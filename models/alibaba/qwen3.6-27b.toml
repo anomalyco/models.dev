@@ -1,3 +1,6 @@
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# No audio input: Hugging Face lists this model as image-text-to-text, and Model Studio serves it with text, image and video input.
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3.6 27B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -6,7 +9,7 @@ open_weights = true
 release_date = "2026-04-22"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]

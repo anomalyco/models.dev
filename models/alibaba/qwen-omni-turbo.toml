@@ -1,3 +1,6 @@
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Audio input: AMR, WAV, 3GP/3GPP, AAC, MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni (registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen-Omni Turbo"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
@@ -8,7 +11,7 @@ release_date = "2025-01-19"
 last_updated = "2025-03-26"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "audio/amr", "audio/wav", "audio/3gpp", "audio/aac", "audio/mpeg", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
 output = ["text", "audio"]
 
 [capabilities]

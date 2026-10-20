@@ -7,6 +7,8 @@
 # for stronger coding, collaborative agents, and vision/document understanding.
 # PDF input: inherits Completions PDF理解 / document parsing from the Max line
 # (same as models/alibaba/qwen3.8-max.toml).
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3.8 Max 0902"
 description = "2026-09-02 upgraded snapshot of Qwen3.8 Max with stronger coding, collaborative agents, and multimodal document understanding"
@@ -15,7 +17,7 @@ open_weights = false
 release_date = "2026-09-02"
 
 [modalities]
-input = ["text", "image", "video", "application/pdf"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv", "application/pdf"]
 output = ["text"]
 
 [capabilities]

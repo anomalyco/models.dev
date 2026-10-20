@@ -1,13 +1,16 @@
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+# Release: Qwen2.5-VL blog, published 2025-01-26: https://qwenlm.github.io/blog/qwen2.5-vl/
 schema = 2
 name = "Qwen2.5-VL 72B Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
 open_weights = true
 knowledge = "2024-04"
-release_date = "2024-09"
+release_date = "2025-01-26"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

@@ -6,6 +6,7 @@
 # Open-weight twin of Qwen3.8 Max: text-only, thinking always on,
 # reasoning_effort low|medium|xhigh (default xhigh). Native context 262K,
 # extensible to ~1.01M. Distinct from closed multimodal qwen3.8-max.
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3.8 2.4T A95B"
 description = "Open-weight sparse MoE (2.4T total, 95B active), the open-weight twin of Qwen3.8 Max for coding, research, complex reasoning, and agentic workflows"
