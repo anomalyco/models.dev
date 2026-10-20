@@ -6,6 +6,7 @@
 # Effort: reasoning.effort via Pioneer unified reasoning object (low|medium|high),
 # matching other Pioneer Nemotron entries; reasoning traces on reasoning_content.
 base_model = "nvidia/nemotron-3.5-lightning"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

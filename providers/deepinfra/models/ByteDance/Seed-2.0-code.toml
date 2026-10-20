@@ -2,6 +2,7 @@
 # https://docs.deepinfra.com/chat/reasoning
 base_model = "bytedance-seed/seed-2.0-code"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+structured_output = true
 
 [cost]
 input = 0.5

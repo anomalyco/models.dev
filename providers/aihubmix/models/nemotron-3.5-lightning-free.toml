@@ -7,6 +7,7 @@
 # Budget: integer $.reasoning.max_tokens on /v1/chat/completions.
 base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning 30B A3B (free)"
+structured_output = true
 [interleaved]
 field = "reasoning_details"
 [[reasoning_options]]
