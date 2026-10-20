@@ -5,6 +5,8 @@
 #     Its FAQ lists formats by extension; these are their registered MIME types. Also accepted but not listed, because
 #     the v1 translation has no modality for other application/* types or they have no registered MIME type: Word
 #     (.docx, .doc), PowerPoint (.pptx, .ppt), Excel (.xlsx), EPUB, RTF, ODT, .bib, .fb2, .ipynb, .tex and .opml.
+#   Extracted images come back as JPEG: every OCR response example shows data:image/jpeg;base64 / img-N.jpeg, and live
+#   2026-10-19 both OCR models returned data:image/jpeg for an arXiv PDF page.
 schema = 2
 v2_only = true
 name = "Mistral OCR 4.1"
@@ -14,7 +16,7 @@ release_date = "2026-07-16"
 
 [modalities]
 input = ["image/jpeg", "image/png", "image/avif", "image/tiff", "image/gif", "image/heic", "image/heif", "image/bmp", "image/webp", "application/pdf", "text/csv", "text/plain", "text/xml", "text/troff"]
-output = ["text", "image"]
+output = ["text", "image/jpeg"]
 
 [capabilities]
 tools = { supported = false }
