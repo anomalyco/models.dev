@@ -3,12 +3,15 @@
 # disables non-OpenAI reasoning.
 # https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
 # https://api.llmgateway.io/v1/models providers[].reasoning_efforts (accessed 2026-07-23)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

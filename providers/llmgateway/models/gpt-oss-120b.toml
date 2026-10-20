@@ -1,22 +1,15 @@
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
-name = "GPT OSS 120B"
+base_model = "openai/gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-open_weights = false
-release_date = "2025-08-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
+effort_updates = false
 
 [limit]
-context = 131_072
 output = 32_766
 
 [cost.text.input]

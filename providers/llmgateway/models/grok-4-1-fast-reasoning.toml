@@ -1,26 +1,17 @@
 # This model is restricted here to $.reasoning_effort or $.reasoning.effort
 # = "low"|"medium"|"high"; no exact token budget is documented for it.
 # https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
+base_model = "xai/grok-4.1-fast-reasoning"
 name = "Grok 4.1 Fast Reasoning"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
-open_weights = false
-release_date = "2025-11-19"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 2_000_000
-output = 30_000
+effort_updates = false
 
 [cost.text.input]
 price = 0.2

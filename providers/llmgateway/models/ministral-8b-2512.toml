@@ -1,22 +1,15 @@
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
+base_model = "mistral/ministral-8b-2512"
 name = "Ministral 8B"
-description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "mistral"
-open_weights = true
-release_date = "2025-12-02"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
+effort_updates = false
 
 [limit]
-context = 262_144
 output = 8_192
 
 [cost.text.input]

@@ -1,9 +1,15 @@
+# Reasoning: no caller on/off control. DeepInfra is the only reasoning mapping, the gateway drops reasoning_effort = "none"
+#   for it (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts L1700-1727), and any other value is
+#   forwarded as-is with no documented effect on this deployment (packages/models/src/models/google.ts gemma-4-26b-a4b-it).
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.07

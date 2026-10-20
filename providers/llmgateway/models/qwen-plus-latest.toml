@@ -1,3 +1,5 @@
+# Modalities: image formats from models/alibaba/qwen3.6-plus.toml (same model)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
 name = "Qwen Plus Latest"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -6,14 +8,15 @@ open_weights = false
 release_date = "2025-01-25"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
+effort_updates = false
 
 [limit]
 context = 1_000_000

@@ -1,3 +1,6 @@
+# Modalities: image formats from models/google/gemini-3.1-pro-preview.toml (same model)
+# system_updates = true: the gateway keeps later system messages in place on google-ai-studio (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts: Claude native or <system-reminder> user turn, Gemini user turn, OpenAI/xAI forwarded)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
 name = "Gemini Pro Latest"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
@@ -6,14 +9,16 @@ open_weights = false
 release_date = "2026-02-27"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

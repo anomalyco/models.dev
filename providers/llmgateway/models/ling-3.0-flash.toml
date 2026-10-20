@@ -1,22 +1,16 @@
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
+base_model = "inclusionai/ling-3.0-flash"
 name = "InclusionAI Ling 3.0 Flash"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "ling"
-open_weights = false
-release_date = "2026-08-02"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none"] }
 structured_output = false
-temperature = true
+effort_updates = false
 
 [limit]
-context = 262_144
 output = 262_144
 
 [cost.text.input]

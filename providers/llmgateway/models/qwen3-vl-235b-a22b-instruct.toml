@@ -1,19 +1,13 @@
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
-name = "Qwen3 VL 235B A22B Instruct"
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = true
-release_date = "2025-09-15"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
+effort_updates = false
 
 [limit]
 context = 262_144

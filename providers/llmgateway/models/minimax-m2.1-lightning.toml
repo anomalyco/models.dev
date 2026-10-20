@@ -1,3 +1,4 @@
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
 name = "MiniMax M2.1 Lightning"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
@@ -14,6 +15,7 @@ tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
 temperature = true
+effort_updates = false
 
 [limit]
 context = 196_608

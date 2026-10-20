@@ -1,22 +1,22 @@
+# Modalities: audio formats from models/google/gemini-3.8-flash.toml (same model)
+# system_updates = true: the gateway keeps later system messages in place on google-ai-studio, google-vertex (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts: Claude native or <system-reminder> user turn, Gemini user turn, OpenAI/xAI forwarded)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
-name = "Gemini 3.8 Flash"
+base_model = "google/gemini-3.8-flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-family = "gemini"
-open_weights = false
-release_date = "2026-09-02"
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
-context = 1_048_576
 output = 1_048_576
 
 [cost.text.input]
