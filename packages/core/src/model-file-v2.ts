@@ -381,7 +381,7 @@ export function formatTomlValue(value: unknown): string {
     const fields = Object.entries(value)
       .filter(([, item]) => item !== undefined)
       .map(([key, item]) => `${formatKey(key)} = ${formatTomlValue(item)}`);
-    return `{ ${fields.join(", ")} }`;
+    return fields.length === 0 ? "{}" : `{ ${fields.join(", ")} }`;
   }
   throw new Error(`Cannot write ${String(value)} as TOML`);
 }

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { formatModelV2, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
+import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
 
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
@@ -48,4 +48,8 @@ test("a model's own API round-trips through v2 as an [api.<protocol>] table", ()
   const back = modelV2ToV1({ ...(Bun.TOML.parse(formatModelV2(doc)) as Record<string, unknown>), id: "m" });
   expect(back.provider).toEqual(v1.provider);
   expect(back.interleaved).toEqual(v1.interleaved);
+});
+
+test("formatTomlValue writes an empty inline table as {}", () => {
+  expect(formatTomlValue({ budget: {} })).toBe("{ budget = {} }");
 });

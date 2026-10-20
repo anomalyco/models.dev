@@ -7,7 +7,7 @@ base_model = "anthropic/claude-opus-4-6"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = {  } }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = {} }
 structured_output = true
 system_updates = false
 effort_updates = false

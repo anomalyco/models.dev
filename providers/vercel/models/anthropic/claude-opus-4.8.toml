@@ -4,7 +4,7 @@ base_model = "anthropic/claude-opus-4-8"
 
 [capabilities]
 tools = { supported = true, updates = true }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], budget = {  } }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], budget = {} }
 temperature = true
 system_updates = false
 effort_updates = false
