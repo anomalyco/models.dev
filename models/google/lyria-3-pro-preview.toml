@@ -5,6 +5,8 @@
 # - https://blog.google/innovation-and-ai/technology/developers-tools/lyria-3-developers/ — public preview announcement (2026-03-25)
 # Output token limit not published on the first-party model card; 8_192 retained from LiteLLM cost map pending Models API sync overwrite.
 # Audio output format: https://ai.google.dev/gemini-api/docs/music-generation and the model page (MP3).
+# Image MIME types: Gemini API supported formats, which Lyria takes as Interactions image inputs
+# (https://ai.google.dev/gemini-api/docs/music-generation): https://ai.google.dev/gemini-api/docs/image-understanding (Supported image formats: image/png, image/jpeg, image/webp, image/heic, image/heif)
 schema = 2
 name = "Lyria 3 Pro Preview"
 description = "Music generation model for full-length songs from text or images with vocals and structure"
@@ -13,7 +15,7 @@ open_weights = false
 release_date = "2026-03-25"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text", "audio/mp3"]
 
 [capabilities]

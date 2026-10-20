@@ -6,6 +6,8 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   (Veo 3.1 Lite paid-tier per-second video pricing; not token-based — cost omitted)
 # Video formats: https://ai.google.dev/gemini-api/docs/veo (generated and extension videos are video/mp4).
+# Image MIME types: the Veo API takes image/jpeg or image/png for image, lastFrame and referenceImages:
+# https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/veo-video-generation
 schema = 2
 type = "video"
 name = "Veo 3.1 Lite Preview"
@@ -15,7 +17,7 @@ open_weights = false
 release_date = "2026-03-31"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["video/mp4"]
 
 [capabilities]

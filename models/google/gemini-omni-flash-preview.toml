@@ -2,6 +2,10 @@
 # temperature, top_p, stop sequences, and negative prompts are not supported"). top_k isn't
 # documented for Omni; it's set false with the other sampling parameters it disables.
 # Video output format: https://ai.google.dev/gemini-api/docs/omni (model_output content mime_type video/mp4).
+# Image and video MIME types: Gemini API supported formats, which Omni takes as Interactions image and video inputs
+# (https://ai.google.dev/gemini-api/docs/omni):
+# - https://ai.google.dev/gemini-api/docs/image-understanding (Supported image formats: image/png, image/jpeg, image/webp, image/heic, image/heif)
+# - https://ai.google.dev/gemini-api/docs/video-understanding (Supported video formats: video/mp4, video/mpeg, video/mov, video/avi, video/x-flv, video/mpg, video/webm, video/wmv, video/3gpp)
 schema = 2
 type = "video"
 name = "Gemini Omni Flash Preview"
@@ -11,7 +15,23 @@ open_weights = false
 release_date = "2026-06-30"
 
 [modalities]
-input = ["text", "image", "video"]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
 output = ["video/mp4"]
 
 [capabilities]

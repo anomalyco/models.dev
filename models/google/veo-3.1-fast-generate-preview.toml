@@ -1,4 +1,6 @@
 # Video formats: https://ai.google.dev/gemini-api/docs/veo (generated and extension videos are video/mp4).
+# Image MIME types: the Veo API takes image/jpeg or image/png for image, lastFrame and referenceImages:
+# https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/veo-video-generation
 schema = 2
 type = "video"
 name = "Veo 3.1 Fast Preview"
@@ -9,7 +11,7 @@ release_date = "2025-10-15"
 last_updated = "2026-01-01"
 
 [modalities]
-input = ["text", "image", "video/mp4"]
+input = ["text", "image/jpeg", "image/png", "video/mp4"]
 output = ["video/mp4"]
 
 [capabilities]

@@ -1,5 +1,8 @@
 # Open weights (Apache-2.0): https://huggingface.co/deepseek-ai/DeepSeek-OCR-2
 # Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+# `image` stays generic: DeepSeek's API does not serve OCR 2 (GET /models lists deepseek-flash and deepseek-v4-pro,
+# 2026-10-19), its vision guide's formats cover deepseek-flash only (https://api-docs.deepseek.com/guides/vision), and
+# the model card and repo (https://github.com/deepseek-ai/DeepSeek-OCR-2) name no image formats.
 schema = 2
 name = "DeepSeek OCR 2"
 description = "High-accuracy OCR model for extracting text from documents, screenshots, receipts, and natural scenes"

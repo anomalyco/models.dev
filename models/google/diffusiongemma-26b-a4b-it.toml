@@ -4,6 +4,9 @@
 # so it mirrors models/google/gemma-4-26b-a4b-it.toml, the architecture this model is built on.
 # Sampling: the card's recommended sampler uses a temperature schedule (0.8 -> 0.4) and entropy-bound
 # token selection (generation_config.json sampler_config), not nucleus or top-k sampling.
+# Input MIME types: Google serves this model on neither the Gemini API nor Vertex MaaS. The Gemma docs name JPEG and PNG
+# for images (https://ai.google.dev/gemma/docs/capabilities/vision) and MP3 and WAV for audio
+# (https://ai.google.dev/gemma/docs/capabilities/audio); other formats depend on the inference framework.
 schema = 2
 name = "DiffusionGemma 26B A4B IT"
 description = "Gemma 4 based discrete text diffusion model for fast chat, reasoning, and tool use"
@@ -15,7 +18,7 @@ last_updated = "2026-07-15"
 license = "Apache 2.0"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

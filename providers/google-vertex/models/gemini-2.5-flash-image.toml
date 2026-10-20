@@ -6,12 +6,13 @@
 # fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-image
 # The documented text/plain document type is covered by `text`.
+# Output keeps the base model's image/png and image/jpeg (a [modalities] override needs both arrays); Vertex documents no other format.
 schema = 2
 base_model = "google/gemini-2.5-flash-image"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
-output = ["text", "image"]
+output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 reasoning = { supported = false }

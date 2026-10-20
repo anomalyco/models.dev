@@ -4,6 +4,9 @@
 # - https://ai.google.dev/gemini-api/docs/changelog (preview 2026-07-30)
 # - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
 # Live input formats: https://ai.google.dev/gemini-api/docs/robotics-streaming (raw 16-bit PCM audio, JPEG images <= 1 FPS).
+# `video` stays generic: the Live API takes video as a stream of image/jpeg or image/png frames (robotics-streaming above
+# sends image/jpeg; https://ai.google.dev/gemini-api/docs/live-api/capabilities, "Sending video"), with no container
+# format, so the video stream has no MIME type of its own. The frame type is listed as image/jpeg.
 schema = 2
 v2_only = true
 type = "realtime"

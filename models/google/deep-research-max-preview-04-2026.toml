@@ -2,6 +2,8 @@
 # - https://ai.google.dev/gemini-api/docs/models/deep-research-max-preview-04-2026
 # - https://ai.google.dev/gemini-api/docs/deep-research
 # - https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/
+# Output `image` stays generic: the agent returns generated charts as image content blocks and image deltas
+# (https://ai.google.dev/gemini-api/docs/deep-research, "Visualization") and names no format.
 schema = 2
 name = "Deep Research Max Preview"
 description = "Maximum-comprehensiveness agentic researcher for multi-step investigation, synthesis, and cited reports"

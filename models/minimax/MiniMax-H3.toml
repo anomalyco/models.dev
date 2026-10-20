@@ -8,6 +8,8 @@
 # Token limits are not applicable to this audio-video generation endpoint.
 # Zero follows existing non-token media catalog entries; it is not a measured token limit.
 # The video API has no sampling parameters. Output is MP4 with synchronized audio.
+# Output: generated videos are MP4 (task content.url in the create/query responses above). `audio` stays generic: the
+# synchronized audio is a track inside that MP4, not a separate output, and MiniMax names no output audio codec.
 schema = 2
 type = "video"
 name = "MiniMax H3"
@@ -20,7 +22,7 @@ license = "MiniMax H3 Community License Agreement"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
-output = ["video", "audio"]
+output = ["video/mp4", "audio"]
 
 [capabilities]
 tools = { supported = false }

@@ -2,8 +2,10 @@
 # - https://www.kimi.com/code/docs/en/kimi-code/models.html (K2.8 Preview: 1M context, image and video input)
 # - https://www.kimi.com/code/docs/en/kimi-code/whats-new.html#k2-8-preview-september-11-2026
 # Sampling: the model only accepts temperature 1 and top_p 0.95 (400 otherwise), checked live on
-# api.moonshot.ai 2026-10-19, where it is listed but undocumented. No input format list is published,
-# so modalities stay generic.
+# api.moonshot.ai 2026-10-19, where it is listed but undocumented.
+# Input formats (Kimi API vision guide): https://platform.kimi.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats lists them
+#   literally as MIME types (images: image/jpeg, image/png, image/gif, image/webp, image/bmp, image/heic, image/heif;
+#   videos: video/mp4, video/mpeg, video/mov, video/avi, video/x-flv, video/mpg, video/webm, video/wmv, video/3gpp).
 schema = 2
 name = "Kimi K2.8 Preview"
 description = "Kimi coding model with more efficient thinking and up to 1M context, available through Kimi Code"
@@ -12,7 +14,25 @@ open_weights = false
 release_date = "2026-09-11"
 
 [modalities]
-input = ["text", "image", "video"]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
 output = ["text"]
 
 [capabilities]

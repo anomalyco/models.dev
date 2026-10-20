@@ -1,5 +1,8 @@
 # https://ai.google.dev/gemma/docs/core/model_card_3
 # https://blog.google/technology/developers/gemma-3/
+# Image MIME types: Gemma 3 was served on the Gemini API with image input (https://ai.google.dev/gemini-api/docs/changelog, 2025-03-12;
+# https://web.archive.org/web/20251227094823/https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api).
+# Gemini API image formats: https://ai.google.dev/gemini-api/docs/image-understanding (Supported image formats: image/png, image/jpeg, image/webp, image/heic, image/heif)
 schema = 2
 name = "Gemma 3 27B IT"
 description = "Largest open Gemma 3 instruction model for multilingual text generation and visual understanding"
@@ -9,7 +12,7 @@ knowledge = "2024-08"
 release_date = "2025-03-12"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

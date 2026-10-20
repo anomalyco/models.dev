@@ -3,6 +3,7 @@
 # https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/llama/use-llama (accessed 2026-06-25)
 # Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
 # system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+# Modalities: Vertex names no image formats for Llama 4; these are Meta's (see models/meta/llama-4-maverick-17b-instruct.toml).
 schema = 2
 name = "Llama 4 Maverick 17B 128E Instruct"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
@@ -12,7 +13,7 @@ knowledge = "2024-08"
 release_date = "2025-04-29"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

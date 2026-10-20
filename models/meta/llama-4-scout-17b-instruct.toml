@@ -1,4 +1,8 @@
 # https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md
+# Image MIME types: Meta's Llama API (retired 2026-07-06) took image/jpeg, image/jpg, image/png, image/gif, image/webp and
+# image/x-icon (mime_type enum in its OpenAPI spec, https://storage.googleapis.com/stainless-sdk-openapi-specs/meta%2Fllama-api-edf0a308dd29bea2feb29f2e7f04eec4dbfb130ffe52511641783958168f60a4.yml,
+# referenced by https://github.com/meta-llama/llama-api-python/blob/main/.stats.yml). Meta Model API lists the same set
+# (https://dev.meta.ai/docs/image-understanding); this keeps the four types the Muse lab files use for it.
 schema = 2
 name = "Llama 4 Scout 17B Instruct"
 description = "Open Llama with long-context vision for efficient multimodal agents"
@@ -8,7 +12,7 @@ knowledge = "2024-08"
 release_date = "2025-04-05"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

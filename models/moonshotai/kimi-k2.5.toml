@@ -1,6 +1,10 @@
 # Sources:
 # - Release (2026-01-27): https://www.kimi.ai/blog/kimi-k2-5, https://techcrunch.com/2026/01/27/chinas-moonshot-releases-a-new-open-source-model-kimi-k2-5-and-a-coding-agent/
 # - Retired on the Kimi API 2026-08-31: https://platform.kimi.ai/docs/models
+# K2.5 took image and video input on the Kimi API until its retirement; the Kimi API vision guide covers that input.
+# Input formats: https://platform.kimi.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats lists them
+#   literally as MIME types (images: image/jpeg, image/png, image/gif, image/webp, image/bmp, image/heic, image/heif;
+#   videos: video/mp4, video/mpeg, video/mov, video/avi, video/x-flv, video/mpg, video/webm, video/wmv, video/3gpp).
 schema = 2
 name = "Kimi K2.5"
 description = "Earlier Kimi frontier model for long-context agents, coding, and multimodal work"
@@ -10,7 +14,25 @@ knowledge = "2025-01"
 release_date = "2026-01-27"
 
 [modalities]
-input = ["text", "image", "video"]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
 output = ["text"]
 
 [capabilities]

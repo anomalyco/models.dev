@@ -3,6 +3,9 @@
 # - https://ai.google.dev/gemini-api/docs/live-api/capabilities
 # - https://ai.google.dev/gemini-api/docs/changelog (released 2025-12-12)
 # - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+# `video` stays generic: the Live API takes video as a stream of image/jpeg or image/png frames
+# (https://ai.google.dev/gemini-api/docs/live-api/capabilities, "Sending video"), with no container format, so the
+# video stream has no MIME type of its own. The frame types are listed as image/jpeg and image/png.
 schema = 2
 v2_only = true
 type = "realtime"
@@ -14,7 +17,7 @@ knowledge = "2025-01"
 release_date = "2025-12-12"
 
 [modalities]
-input = ["text", "audio/pcm", "video"]
+input = ["text", "image/jpeg", "image/png", "video", "audio/pcm"]
 output = ["text", "audio/pcm"]
 
 [capabilities]
