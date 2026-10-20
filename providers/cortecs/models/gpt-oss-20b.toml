@@ -1,14 +1,16 @@
+schema = 2
 base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.045
-output = 0.167
 
 [limit]
 context = 131_000
 output = 131_000
+
+[cost.text.input]
+price = 0.045
+
+[cost.text.output]
+price = 0.167

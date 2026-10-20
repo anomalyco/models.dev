@@ -1,17 +1,14 @@
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.996
+cache = { read = 0.099, write = 1.186 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 0.996
-output = 4.982
-cache_read = 0.099
-cache_write = 1.186
+[cost.text.output]
+price = 4.982

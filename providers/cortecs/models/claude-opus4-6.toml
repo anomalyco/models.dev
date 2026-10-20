@@ -1,17 +1,14 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-6"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 5.313
+cache = { read = 0.531, write = 6.645 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 5.313
-output = 26.561
-cache_read = 0.531
-cache_write = 6.645
+[cost.text.output]
+price = 26.561

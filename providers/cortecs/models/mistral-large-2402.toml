@@ -1,23 +1,25 @@
+schema = 2
 name = "mistral-large-2402"
 description = "Mistral Large (24.02) is Mistral AI’s most advanced language model, built for complex multilingual reasoning, code generation, and deep text understanding."
-release_date = "2025-05-26"
-last_updated = "2025-05-26"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
-reasoning_options = []
+release_date = "2025-05-26"
 
-[cost]
-input = 4.284
-output = 12.952
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = false
 
 [limit]
 context = 32_000
 output = 8_192
 
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 4.284
+
+[cost.text.output]
+price = 12.952

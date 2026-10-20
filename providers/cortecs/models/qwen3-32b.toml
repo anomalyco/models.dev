@@ -1,11 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen3-32b"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.179
-output = 0.697
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 16_384
+
+[cost.text.input]
+price = 0.179
+
+[cost.text.output]
+price = 0.697

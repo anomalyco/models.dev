@@ -1,15 +1,20 @@
+schema = 2
 base_model = "amazon/nova-pro-v1"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-reasoning = true
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.918
-output = 3.671
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 10_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.918
+
+[cost.text.output]
+price = 3.671

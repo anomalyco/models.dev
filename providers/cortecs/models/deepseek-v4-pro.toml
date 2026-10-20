@@ -1,15 +1,17 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-structured_output = true
 base_model_omit = ["structured_output"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 1.7
-output = 3.4
-cache_read = 0.15
+[cost.text.input]
+price = 1.7
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.4

@@ -1,14 +1,20 @@
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.167
-output = 0.557
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 262_000
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.167
+
+[cost.text.output]
+price = 0.557

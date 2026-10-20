@@ -1,12 +1,17 @@
+schema = 2
 base_model = "mistral/devstral-2512"
 description = "Mistral coding agent model for repository tasks and software engineering workflows"
-structured_output = true
 
-[cost]
-input = 0.478
-output = 2.392
-cache_read = 0.045
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
 output = 256_000
+
+[cost.text.input]
+price = 0.478
+cache = { read = 0.045 }
+
+[cost.text.output]
+price = 2.392

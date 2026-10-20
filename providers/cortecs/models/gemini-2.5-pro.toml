@@ -1,16 +1,21 @@
+schema = 2
 base_model = "google/gemini-2.5-pro"
-structured_output = true
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-reasoning_options = []
 
-[cost]
-input = 1.495
-output = 9.964
-cache_read = 0.242
-cache_write = 0.434
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 65_535
 
-[modalities]
-input = ["text", "image", "audio"]
+[cost.text.input]
+price = 1.495
+cache = { read = 0.242, write = 0.434 }
+
+[cost.text.output]
+price = 9.964

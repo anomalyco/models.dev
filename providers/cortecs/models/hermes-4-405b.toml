@@ -1,14 +1,19 @@
+schema = 2
 base_model = "nousresearch/hermes-4-405b"
 description = "Hermes 4 405B is a frontier hybrid-mode reasoning model built on Llama 3.1, optimized for advanced logic, math, coding, and structured output generation."
-reasoning = false
-temperature = false
-tool_call = true
-structured_output = true
 
-[cost]
-input = 0.996
-output = 2.989
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
 
 [limit]
 context = 128_000
 output = 128_000
+
+[cost.text.input]
+price = 0.996
+
+[cost.text.output]
+price = 2.989

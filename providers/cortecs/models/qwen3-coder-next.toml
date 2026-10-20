@@ -1,11 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-structured_output = true
 
-[cost]
-input = 0.167
-output = 0.891
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
 output = 256_000
+
+[cost.text.input]
+price = 0.167
+
+[cost.text.output]
+price = 0.891

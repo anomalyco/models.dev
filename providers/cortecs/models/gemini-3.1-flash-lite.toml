@@ -1,15 +1,20 @@
+schema = 2
 base_model = "google/gemini-3.1-flash-lite"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.272
-output = 1.631
-cache_read = 0.025
-cache_write = 0.082
+[modalities]
+input = ["text", "image", "audio", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 65_535
 
-[modalities]
-input = ["text", "image", "audio", "pdf"]
+[cost.text.input]
+price = 0.272
+cache = { read = 0.025, write = 0.082 }
+
+[cost.text.output]
+price = 1.631

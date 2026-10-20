@@ -1,14 +1,15 @@
 # Effort: reasoning_effort = low|medium|high
 # https://docs.cortecs.ai/routing/reasoning
+schema = 2
 base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 12.272
+cache = { read = 1.228, write = 15.34 }
 
-[cost]
-input = 12.272
-output = 61.359
-cache_read = 1.228
-cache_write = 15.34
+[cost.text.output]
+price = 61.359

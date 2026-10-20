@@ -1,11 +1,16 @@
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.111
-output = 0.557
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 262_000
 output = 81_920
+
+[cost.text.input]
+price = 0.111
+
+[cost.text.output]
+price = 0.557

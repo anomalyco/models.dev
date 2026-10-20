@@ -1,12 +1,17 @@
+schema = 2
 base_model = "mistral/codestral-2508"
-structured_output = true
 description = "Mistral coding model for code completion, generation, and developer workflows"
 
-[cost]
-input = 0.368
-output = 1.103
-cache_read = 0.037
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
 output = 256_000
+
+[cost.text.input]
+price = 0.368
+cache = { read = 0.037 }
+
+[cost.text.output]
+price = 1.103

@@ -1,16 +1,13 @@
+schema = 2
 base_model = "anthropic/claude-opus-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 5.5
+cache = { read = 0.55, write = 6.874 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 5.5
-output = 27.498
-cache_read = 0.55
-cache_write = 6.874
+[cost.text.output]
+price = 27.498

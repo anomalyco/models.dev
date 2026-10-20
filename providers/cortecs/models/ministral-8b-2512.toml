@@ -1,13 +1,18 @@
+schema = 2
 base_model = "mistral/ministral-8b-2512"
-structured_output = true
 description = "Ministral 3 8B is a balanced, efficient multimodal model offering strong text and vision capabilities, optimized for edge and local deployment."
-temperature = false
 
-[cost]
-input = 0.179
-output = 0.179
-cache_read = 0.017
+[capabilities]
+structured_output = true
+temperature = false
 
 [limit]
 context = 256_000
 output = 256_000
+
+[cost.text.input]
+price = 0.179
+cache = { read = 0.017 }
+
+[cost.text.output]
+price = 0.179

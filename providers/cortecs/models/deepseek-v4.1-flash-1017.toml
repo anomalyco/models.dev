@@ -1,12 +1,17 @@
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.511
-output = 1.534
-cache_read = 0.128
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[cost.text.input]
+price = 0.511
+cache = { read = 0.128 }
+
+[cost.text.output]
+price = 1.534

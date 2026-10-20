@@ -4,21 +4,24 @@
 # Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
 # Thinking is always enabled; no toggle or reasoning-token budget.
 # Output limit: https://api.cortecs.ai/v1/models (max_output_tokens, not context_size).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.1
-output = 0.35
-cache_read = 0.018
 
 [limit]
 context = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 0.35

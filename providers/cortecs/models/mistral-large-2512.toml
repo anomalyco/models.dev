@@ -1,11 +1,16 @@
+schema = 2
 base_model = "mistral/mistral-large-2512"
-structured_output = true
 
-[cost]
-input = 0.613
-output = 1.838
-cache_read = 0.061
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
 output = 256_000
+
+[cost.text.input]
+price = 0.613
+cache = { read = 0.061 }
+
+[cost.text.output]
+price = 1.838

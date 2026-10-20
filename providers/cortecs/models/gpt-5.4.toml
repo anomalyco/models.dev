@@ -1,12 +1,14 @@
+schema = 2
 base_model = "openai/gpt-5.4"
 base_model_omit = ["limit.input"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 2.898
+cache = { read = 0.242 }
 
-[cost]
-input = 2.898
-output = 15.453
-cache_read = 0.242
+[cost.text.output]
+price = 15.453
