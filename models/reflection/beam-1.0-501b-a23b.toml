@@ -8,6 +8,8 @@
 # Text-only input; temperature, tools, and json_object/json_schema structured outputs:
 #   https://developers.reflection.ai/openai-compatibility
 # Announcements: https://reflection.ai/blog/introducing-beam, https://reflection.ai/blog/beam-is-available
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host;
+#   generation_config.json sets temperature 0.7 and top_p 0.99.
 schema = 2
 name = "Beam 1.0 501B A23B"
 description = "Sparse mixture-of-experts reasoning model with 23B active parameters for coding and agentic workflows"

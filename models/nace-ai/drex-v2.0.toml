@@ -4,6 +4,8 @@
 # - https://console.nace.ai/docs/drex/reference/models
 # Context is the model's maximum state-plus-one-question length, not the
 # first-party API's smaller Drex 2.0 limit before fallback to Drex 1.5.
+# Output: decision probabilities, not generated text. Sampling: no tokens are sampled, so the
+#   generation_config.json temperature/top_p/top_k values have no effect (https://huggingface.co/nace-ai/drex-v2.0).
 schema = 2
 type = "decision"
 name = "Drex 2.0"
@@ -15,7 +17,7 @@ license = "Nace.AI Open RAIL-M"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["decision"]
 
 [capabilities]
 tools = { supported = false }

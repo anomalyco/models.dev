@@ -1,5 +1,7 @@
 # https://writer.com/blog/actions-with-palmyra-x4/
 # https://dev.writer.com/home/models
+# Sampling: https://dev.writer.com/home/model-parameters (temperature and top_p are request parameters;
+#   "Top-k is currently not an active parameter").
 schema = 2
 name = "Palmyra X4"
 description = "Enterprise language model for workflow automation, coding, data analysis, and tool use"
@@ -17,7 +19,7 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 128_000

@@ -6,6 +6,8 @@
 # The 139,264-token context is the maximum published by the Drex catalog feed;
 # the state may be up to 131,072 tokens, and the limit applies to the state
 # plus the longest single question (questions are read one at a time).
+# Output: decision probabilities, not generated text. Sampling: no tokens are sampled, so the
+#   generation_config.json temperature/top_p/top_k values have no effect (https://huggingface.co/nace-ai/drex-v1.5).
 schema = 2
 type = "decision"
 name = "Drex 1.5"
@@ -16,7 +18,7 @@ license = "Nace.AI Open RAIL-M"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["decision"]
 
 [capabilities]
 tools = { supported = false }

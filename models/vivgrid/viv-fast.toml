@@ -1,6 +1,8 @@
 # Sources:
 # - https://docs.vivgrid.com/models/viv-fast
 # - https://docs.vivgrid.com/api/model-api
+# Image input: the model page lists "Modalities: Text, Image" and the Model API docs list no formats, so the input
+#   stays generic `image`. Sampling flags are unchanged from the earlier entry (temperature false).
 schema = 2
 name = "Viv Fast"
 description = "Fast coding model"

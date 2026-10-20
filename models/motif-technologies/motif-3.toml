@@ -6,6 +6,9 @@
 # tool_calls response (finish_reason = tool_calls).
 # temperature: the card evaluates at sampling temperature 1.0; live probe on
 # 2026-09-14 accepted 0.2 and 1.7, with 1.7 visibly changing the output.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host;
+#   generation_config.json sets temperature 1.0 and top_p 0.95
+#   (https://huggingface.co/Motif-Technologies/Motif-3/blob/main/generation_config.json).
 schema = 2
 name = "Motif 3"
 description = "Motif 3 is a large-scale, decoder-only Mixture-of-Experts (MoE) language model with 314 billion total parameters and 13.2 billion parameters activated per token."

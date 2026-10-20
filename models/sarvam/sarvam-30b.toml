@@ -1,3 +1,9 @@
+# Sources:
+# - https://www.sarvam.ai/blogs/sarvam-30b-105b (open-sourced 2026-03-06 after being unveiled at the India AI
+#   Impact Summit on 2026-02-18; Apache-2.0 weights)
+# - https://huggingface.co/sarvamai/sarvam-30b
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the model card
+#   examples use temperature 0.8, top_p 0.95.
 schema = 2
 name = "Sarvam 30B"
 description = "Efficient Indian-language reasoning model for chat, coding, and multilingual work"

@@ -1,3 +1,6 @@
+# Source: https://huggingface.co/Phocinae/Phocinae-Largha-150M-v1
+# Output: decision probabilities from an encoder, not generated text, so there is nothing to sample
+#   (temperature/top_p/top_k false).
 schema = 2
 type = "decision"
 name = "Phocinae Largha 150M v1"
@@ -9,7 +12,7 @@ license = "Apache-2.0"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["decision"]
 
 [capabilities]
 tools = { supported = false }

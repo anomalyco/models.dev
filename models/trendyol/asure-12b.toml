@@ -6,6 +6,9 @@
 # measured against a host serving these weights (llmtr.com, 2026-08-16):
 # a request carrying `tools` returns no tool_calls, and no reasoning output
 # is produced.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+# Image input: the model card lists no image formats and Trendyol publishes no API docs for it, so the input stays
+#   generic `image`.
 schema = 2
 name = "Trendyol Asure 12B"
 description = "Turkish-language multimodal instruct model built on Gemma 3 12B for e-commerce text, chat, and image-text tasks"

@@ -2,6 +2,9 @@
 # - https://thinkingmachines.ai/news/introducing-inkling/
 # - https://thinkingmachines.ai/model-card/inkling/
 # - https://huggingface.co/thinkingmachines/Inkling
+# Input formats: https://tinker-docs.thinkingmachines.ai/cookbook/inkling/images/ ("Formats: PNG and JPEG") and
+#   https://tinker-docs.thinkingmachines.ai/cookbook/inkling/audio/ (WAV); the model card lists 16kHz WAV audio.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
 schema = 2
 name = "Inkling"
 description = "Multimodal MoE reasoning model (975B total, 41B active) for text, image, and audio"
@@ -11,7 +14,7 @@ release_date = "2026-07-15"
 license = "Apache-2.0"
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "audio/wav"]
 output = ["text"]
 
 [capabilities]

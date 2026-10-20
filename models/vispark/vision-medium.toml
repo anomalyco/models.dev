@@ -6,6 +6,11 @@
 # Chat: POST https://api.lab.vispark.in/v1/chat/completions.
 # Release 2024-05-15: live endpoint returns created = 1715731200 (= 2024-05-15) per model,
 # Last updated 2026-09: current lineup as verified live 2026-09-13 (month precision).
+# Sampling: GET https://api.lab.vispark.in/v1/models lists supported_sampling_parameters temperature, top_p, top_k
+#   (2026-10-20).
+# Image/audio/video input: the same endpoint reports input_modalities text, image, audio, video, file, and the Vispark
+#   Lab app accepts any image/*, audio/*, video/* file plus application/pdf. No Vispark doc lists specific formats,
+#   so image, audio and video stay generic.
 schema = 2
 name = "Vision Medium"
 description = "Balanced multimodal model pairing a 1M-token context window with deeper reasoning for analysis, content creation, and tool use across text, image, audio, video, and PDF inputs."

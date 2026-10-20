@@ -3,6 +3,8 @@
 #   https://arxiv.org/abs/2509.14233
 # The model card states "Apertus by default supports a context length up to 65,536 tokens",
 # Apache-2.0 licensing, and tool use support. Sibling entry: models/swiss-ai/apertus-70b.toml.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the model card
+#   (https://huggingface.co/swiss-ai/Apertus-8B-Instruct-2509) recommends temperature 0.8, top_p 0.9.
 schema = 2
 name = "Apertus 8B"
 description = "Fully open 8B multilingual LLM supporting 1800+ languages with 65K context. Trained on compliant open data. Apache 2.0, EU AI Act compliant."

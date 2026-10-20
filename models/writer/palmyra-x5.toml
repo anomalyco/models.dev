@@ -1,6 +1,10 @@
 # https://writer.com/blog/long-context-palmyra-x5/
 # https://dev.writer.com/home/models
 # https://dev.writer.com/home/chat-with-images
+# Sampling: https://dev.writer.com/home/model-parameters (temperature and top_p are request parameters;
+#   "Top-k is currently not an active parameter").
+# Image formats: the chat-with-images guide builds data URLs only for jpg/jpeg, png and gif
+#   (https://dev.writer.com/home/chat-with-images), so those map to image/jpeg, image/png, image/gif.
 schema = 2
 name = "Palmyra X5"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
@@ -9,7 +13,7 @@ open_weights = false
 release_date = "2025-04-28"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif"]
 output = ["text"]
 
 [capabilities]
@@ -17,7 +21,7 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 1_000_000

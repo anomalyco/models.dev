@@ -4,6 +4,8 @@
 # Jev 1.14 (`jev-1.14.0`) is available from 2026-10-14 and is currently the `jev-preview`
 # alias; `jev-latest` still points to 1.13. Same endpoint, pricing, and limits as 1.13.
 # The 64k context limit covers the state plus all questions in one request.
+# Output: typed decision probabilities, no generated text, so there is nothing to sample (temperature/top_p/top_k
+#   false).
 schema = 2
 type = "decision"
 name = "Jev 1.14"
@@ -13,7 +15,7 @@ release_date = "2026-10-14"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["decision"]
 
 [capabilities]
 tools = { supported = false }

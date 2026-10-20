@@ -3,6 +3,8 @@
 # https://docs.quiver.ai/developers/models/arrow-2-telos
 # Sampling: https://docs.quiver.ai/api-reference/create-svgs/generate-svg (Arrow 2 Telos rejects
 #   any temperature or top_p value with HTTP 400; there is no top_k field).
+# Formats: https://docs.quiver.ai/api-reference/vectorize-svg/vectorize-svg ("Accepted direct media types:
+#   image/png, image/jpeg, image/webp, image/gif, image/svg+xml"; outputs are mime_type image/svg+xml).
 schema = 2
 name = "Arrow 2 Telos"
 description = "High-fidelity SVG generation model for complex vector work and long-context refinement"
@@ -10,8 +12,8 @@ open_weights = false
 release_date = "2026-09-16"
 
 [modalities]
-input = ["text", "image"]
-output = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"]
+output = ["text", "image/svg+xml"]
 
 [capabilities]
 tools = { supported = true }

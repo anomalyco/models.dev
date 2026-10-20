@@ -1,4 +1,8 @@
 # https://huggingface.co/nex-agi/Nex-N2-Pro
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the model card
+#   recommends temperature 0.7, top_p 0.95, top_k 40.
+# Image input: config.json ships a vision_config (Qwen3.5-MoE vision-language architecture). Neither the
+#   model card nor any Nex AGI doc lists accepted image formats, so the input stays generic `image`.
 schema = 2
 name = "Nex-N2-Pro"
 description = "Open agentic MoE model (397B total, 17B active) for coding, tool use, and research workflows"

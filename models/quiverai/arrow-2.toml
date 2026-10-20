@@ -3,6 +3,8 @@
 # https://docs.quiver.ai/developers/models/arrow-2
 # Sampling: https://docs.quiver.ai/api-reference/create-svgs/generate-svg (Arrow 2 accepts
 #   temperature and top_p on native SVG endpoints; there is no top_k field).
+# Formats: https://docs.quiver.ai/api-reference/vectorize-svg/vectorize-svg ("Accepted direct media types:
+#   image/png, image/jpeg, image/webp, image/gif, image/svg+xml"; outputs are mime_type image/svg+xml).
 schema = 2
 name = "Arrow 2"
 description = "Fast SVG generation model for creation, vectorization, editing, and animation"
@@ -10,15 +12,15 @@ open_weights = false
 release_date = "2026-09-16"
 
 [modalities]
-input = ["text", "image"]
-output = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"]
+output = ["text", "image/svg+xml"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 131_072

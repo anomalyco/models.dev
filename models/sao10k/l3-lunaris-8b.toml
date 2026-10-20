@@ -1,5 +1,8 @@
-# Lab metadata carried over from providers/openrouter/models/sao10k/l3-lunaris-8b.toml (curated catalogue data already in this repo),
+# Lab metadata carried over from providers/openrouter/models/sao10k/l3-lunaris-8b.toml (curated catalogue data
+#   already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the model card
+#   (https://huggingface.co/Sao10K/L3-8B-Lunaris-v1) recommends temperature 1.4, min_p 0.1.
 schema = 2
 name = "Llama 3 8B Lunaris"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"

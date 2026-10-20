@@ -1,5 +1,8 @@
-# Lab metadata carried over from providers/openrouter/models/relace/relace-apply-3.toml (curated catalogue data already in this repo),
+# Lab metadata carried over from providers/openrouter/models/relace/relace-apply-3.toml (curated catalogue data
+#   already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: https://docs.relace.ai/api-reference/instant-apply/apply.md takes no sampling parameters, and
+#   Relace's own endpoint advertises none (temperature/top_p/top_k false).
 schema = 2
 name = "Relace Apply 3"
 description = "General-purpose chat model for instruction following, writing, and analysis"
