@@ -5,6 +5,7 @@
 # qwen3-max currently aliases qwen3-max-2026-01-23.
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (integer reasoning tokens, max 81,920)
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
 schema = 2
 name = "Qwen3 Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
@@ -13,13 +14,14 @@ open_weights = false
 knowledge = "2025-04"
 release_date = "2026-01-23"
 last_updated = "2026-09-22"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
 structured_output = true
 temperature = true

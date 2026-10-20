@@ -2,6 +2,9 @@
 # token in a request bills at its tier's unit price. The 0.86/3.15 previously
 # published here is the 32K<Token<=166K band, not the model's entry rate.
 # https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-08-26)
+# v2 capabilities (docs for China (Beijing), accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling incl. top_k, which the DeepSeek, Kimi and MiniMax series do not support; enable_thinking defaults; stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 schema = 2
 name = "GLM-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
@@ -14,9 +17,11 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, toggle = true, budget = { max = 32_768 } }
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 32_768 } }
 temperature = true
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [limit]
 context = 202_752

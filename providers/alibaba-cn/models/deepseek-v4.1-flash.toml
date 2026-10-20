@@ -14,12 +14,20 @@
 # supported (Beijing and Singapore only). Limits and modalities are identical
 # to the deepseek lab entry (1M context, 384_000 output, text+image input),
 # so they are inherited and not restated.
+# v2 capabilities (docs for China (Beijing), accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling incl. top_k, which the DeepSeek, Kimi and MiniMax series do not support; enable_thinking defaults; stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
+# Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
+# Peak/off-peak pricing: busy hours 08:00-22:00 UTC+8 ($0.283/$1.131 on the USD list), idle 22:00-08:00 UTC+8 (14:00-24:00 UTC) at half price. Base = busy price (converted from CNY above), idle multiplier 0.5.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+top_k = false
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -30,3 +38,7 @@ cache = { read = 0.01488 }
 
 [cost.text.output]
 price = 1.19015
+
+[[cost.multipliers]]
+when = { utc_hours = { gte = "14:00" } }
+factor = 0.5

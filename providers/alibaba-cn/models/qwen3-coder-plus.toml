@@ -1,6 +1,7 @@
 # China-site (Bailuan) pricing differs from the international console,
 # so this provider entry can no longer share the alibaba symlink ($1/$5).
 # https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-09-11)
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
 schema = 2
 name = "Qwen3 Coder Plus"
 description = "Hosted Qwen coder for software agents, repo edits, and long-context code"
@@ -9,15 +10,17 @@ open_weights = true
 knowledge = "2025-04"
 release_date = "2025-07-23"
 last_updated = "2026-09-11"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

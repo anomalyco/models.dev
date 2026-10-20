@@ -1,3 +1,4 @@
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
 schema = 2
 name = "Qwen-Omni Turbo"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
@@ -6,15 +7,17 @@ open_weights = false
 knowledge = "2024-04"
 release_date = "2025-01-19"
 last_updated = "2025-03-26"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image", "audio", "video"]
 output = ["text", "audio"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 32_768

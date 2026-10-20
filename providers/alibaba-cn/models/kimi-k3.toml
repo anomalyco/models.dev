@@ -4,8 +4,10 @@
 # https://www.alibabacloud.com/help/zh/model-studio/qwen-api-via-openai-chat-completions
 # (reasoning_effort) and /help/en/model-studio/kimi-api (text+image input only,
 # no video; reasoning_content streamed in deltas)
-# Effort: reasoning_effort = low|high|max (default max). Thinking is always on:
-# enable_thinking only accepts true (passing false errors), no thinking_budget.
+# v2 capabilities (docs for China (Beijing), accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling incl. top_k, which the DeepSeek, Kimi and MiniMax series do not support; enable_thinking defaults; stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
+# Toggle: enable_thinking true|false (the Chat API reference: "kimi-k3 supports passing false to disable thinking"); Effort: reasoning_effort = low|high|max (default max).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -14,8 +16,11 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+top_k = false
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
 [limit]
 output = 1_048_576

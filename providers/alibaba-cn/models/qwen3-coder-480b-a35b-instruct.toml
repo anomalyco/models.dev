@@ -1,6 +1,7 @@
 # Chinese mainland deployment is tiered on input tokens per request; every
 # token in a request bills at its tier's unit price.
 # https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-08-26)
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
 schema = 2
 name = "Qwen3-Coder 480B-A35B Instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
@@ -8,15 +9,17 @@ family = "qwen"
 open_weights = true
 knowledge = "2025-04"
 release_date = "2025-04"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 262_144
