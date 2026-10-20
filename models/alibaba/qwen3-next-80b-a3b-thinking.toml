@@ -1,4 +1,5 @@
 # Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+# Context: "262,144 natively and extensible up to 1,010,000 tokens" (https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking)
 schema = 2
 name = "Qwen3-Next 80B-A3B (Thinking)"
 description = "Efficient Qwen thinking model for local reasoning, math, and coding agents"
@@ -19,7 +20,7 @@ top_p = true
 top_k = true
 
 [limit]
-context = 131_072
+context = 262_144
 output = 32_768
 
 [[weights]]
