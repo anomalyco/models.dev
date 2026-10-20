@@ -129,6 +129,8 @@ export interface SyncProvider<SourceModel> {
     context: {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
+      /** The existing file's TOML when it is a v2 file. */
+      v2?(id: string): Record<string, unknown> | undefined;
     },
   ): {
     id: string;
@@ -140,7 +142,18 @@ export interface SyncProvider<SourceModel> {
      * authoritativeHeaders is enabled.
      */
     header?: string;
-  } | undefined;
+  } | SyncedV2Model | undefined;
+}
+
+/**
+ * A model written straight as a v2 file, for data v1 fields can't carry (media
+ * model types, per-unit prices, API protocols). `v2` is the file body, written
+ * as is; existing header comments win over `header`, as for other models.
+ */
+export interface SyncedV2Model {
+  id: string;
+  v2: Record<string, unknown>;
+  header?: string;
 }
 
 export interface SyncResult {
@@ -298,6 +311,7 @@ export async function syncProvider<SourceModel>(
     content: string;
     header: string;
   }>();
+  const desiredV2 = new Map<string, { content: string }>();
   const caseNormalizedDesiredPaths = new Map<string, string>();
   const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
   const skippedRemote: string[] = [];
@@ -313,6 +327,9 @@ export async function syncProvider<SourceModel>(
         },
         authored(id) {
           return existing.get(`${id}.toml`)?.authored;
+        },
+        v2(id) {
+          return existing.get(`${id}.toml`)?.v2;
         },
       });
     } catch (error) {
@@ -344,6 +361,17 @@ export async function syncProvider<SourceModel>(
       );
     }
     caseNormalizedDesiredPaths.set(relativePath.toLowerCase(), relativePath);
+
+    if ("v2" in translated) {
+      // Validates the file the same way readers will translate it.
+      modelV2ToV1({ ...translated.v2, id: translated.id }, { provider: provider.id, path: relativePath });
+      const translatedHeader = translated.header === undefined ? "" : leadingComments(translated.header);
+      const header = provider.authoritativeHeaders
+        ? translatedHeader
+        : existing.get(relativePath)?.header || translatedHeader;
+      desiredV2.set(relativePath, { content: header + formatModelV2(translated.v2) });
+      continue;
+    }
 
     if (translated.metadata !== undefined) {
       const parsedMetadata = ModelMetadata.safeParse({
@@ -550,9 +578,32 @@ export async function syncProvider<SourceModel>(
     }
   }
 
+  for (const [relativePath, file] of desiredV2) {
+    const filePath = await safeWritePath(provider.modelsDir, relativePath, true);
+    const current = existing.get(relativePath);
+    if (current !== undefined) {
+      if (
+        current.text === file.content
+        || (current.symlink && provider.preserveSymlinks)
+        || options.newOnly
+      ) {
+        unchanged++;
+        continue;
+      }
+    }
+    files.push({ status: current === undefined ? "created" : "updated", path: filePath });
+    if (options.dryRun) {
+      console.log(`Would ${current === undefined ? "create" : "update"} ${relativePath}`);
+    } else {
+      await mkdir(path.dirname(filePath), { recursive: true });
+      if (await isSymlink(filePath)) await rm(filePath, { force: true });
+      await Bun.write(filePath, file.content);
+    }
+  }
+
   const missingLocal: string[] = [];
   for (const relativePath of new Set([...existing.keys(), ...brokenSymlinks])) {
-    if (desired.has(relativePath)) continue;
+    if (desired.has(relativePath) || desiredV2.has(relativePath)) continue;
     if (missingRemote.has(relativePath.slice(0, -5))) {
       unchanged++;
       continue;
@@ -788,6 +839,7 @@ async function readExisting(modelsDir: string) {
     authored: ExistingModel;
     toml: ExistingModel;
     header: string;
+    text: string;
     symlink: boolean;
     v2: Record<string, unknown> | undefined;
   }>();
@@ -825,7 +877,7 @@ async function readExisting(modelsDir: string) {
       ? authored
       : resolveBaseModel(authored, modelMetadata ?? {}, filePath);
 
-    existing.set(file, { authored, toml, header: leadingComments(text), symlink, v2 });
+    existing.set(file, { authored, toml, header: leadingComments(text), text, symlink, v2 });
   }
 
   return { models: existing, brokenSymlinks, modelMetadata };

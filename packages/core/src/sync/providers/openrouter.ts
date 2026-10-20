@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { describeModel } from "../../describe.js";
@@ -11,6 +11,11 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 // modality `decisions`) are returned only when requested explicitly.
 // https://openrouter.ai/docs/guides/community/jev
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models?output_modalities=text,decisions";
+// Speech, transcription, embedding and rerank models are listed only when
+// requested by output modality. Image and video models aren't synced yet: their
+// prices live in the per-endpoint image API and the video SKU list.
+// https://openrouter.ai/docs/api/api-reference/models/list-all-models-and-their-properties
+const MEDIA_API_ENDPOINT = "https://openrouter.ai/api/v1/models?output_modalities=speech,transcription,embeddings,rerank";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
@@ -109,6 +114,9 @@ export const OpenRouterModel = z.object({
   pricing: z.object({
     prompt: z.string(),
     completion: z.string(),
+    // Per-token image and audio input prices (multimodal embeddings).
+    image: z.string().optional(),
+    audio: z.string().optional(),
     internal_reasoning: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
@@ -152,17 +160,35 @@ export const openrouter = {
     const headers = process.env.OPENROUTER_API_KEY
       ? { Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}` }
       : undefined;
-    const response = await fetch(API_ENDPOINT, { headers });
-    if (!response.ok) {
-      throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
-    }
-    return response.json();
+    const [text, media] = await Promise.all(
+      [API_ENDPOINT, MEDIA_API_ENDPOINT].map(async (url) => {
+        const response = await fetch(url, { headers });
+        if (!response.ok) {
+          throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
+        }
+        return OpenRouterResponse.parse(await response.json());
+      }),
+    );
+    const ids = new Set(text!.data.map((model) => model.id));
+    return { data: [...text!.data, ...media!.data.filter((model) => !ids.has(model.id))] };
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
     return OpenRouterResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
   },
   translateModel(model, context) {
+    const type = mediaType(model);
+    if (type !== undefined) {
+      const current = context.v2?.(model.id);
+      if (isUnavailableMedia(model)) {
+        return current === undefined ? undefined : { id: model.id, v2: current };
+      }
+      return {
+        id: model.id,
+        v2: buildOpenRouterMediaModel(model, type, current),
+        header: MEDIA_HEADERS[type],
+      };
+    }
     // OpenRouter serves deprecated/unavailable routes as degraded stubs:
     // negative pricing (`"-1"`) and an empty `supported_parameters` array. Syncing
     // those would wrongly flip `reasoning`/`tool_call`/`structured_output` to false
@@ -194,6 +220,270 @@ function isUnavailable(model: OpenRouterModel) {
 
 function isDecisionModel(model: OpenRouterModel) {
   return model.architecture.output_modalities.includes("decisions");
+}
+
+// ---------------------------------------------------------------------------
+// Speech, transcription, embedding and rerank models (v2-only files)
+// ---------------------------------------------------------------------------
+
+type MediaType = "speech" | "transcription" | "embedding" | "reranking";
+
+const MEDIA_TYPES: Record<string, MediaType> = {
+  speech: "speech",
+  transcription: "transcription",
+  embeddings: "embedding",
+  rerank: "reranking",
+};
+
+const BASE_URL = "https://openrouter.ai/api/v1";
+
+// Each type has its own OpenRouter endpoint. Speech and transcription follow
+// OpenAI's audio API ("compatible with the OpenAI SDK"), and the OpenRouter AI
+// SDK provider implements embeddings. No AI SDK package speaks OpenRouter's
+// rerank API.
+// https://openrouter.ai/docs/api/api-reference/tts/create-speech (POST /audio/speech)
+// https://openrouter.ai/docs/api/api-reference/stt/create-transcription (POST /audio/transcriptions)
+// https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request (POST /embeddings)
+// https://openrouter.ai/docs/api/api-reference/rerank/submit-a-rerank-request (POST /rerank)
+const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk?: string }> = {
+  speech: { protocol: "speech", aisdk: "@ai-sdk/openai" },
+  transcription: { protocol: "transcriptions", aisdk: "@ai-sdk/openai" },
+  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider" },
+  reranking: { protocol: "rerank" },
+};
+
+const MEDIA_HEADERS: Record<MediaType, string> = {
+  speech: [
+    "# Synced from https://openrouter.ai/api/v1/models?output_modalities=speech",
+    "# Output: response_format mp3 (audio/mpeg) or pcm (audio/pcm). Priced per input character, or",
+    "# per second of output audio when only pricing.completion is set, or per token when both are.",
+    "# https://openrouter.ai/docs/guides/overview/multimodal/tts",
+  ].join("\n"),
+  transcription: [
+    "# Synced from https://openrouter.ai/api/v1/models?output_modalities=transcription",
+    "# Input: wav, mp3, flac, m4a, ogg, webm, aac (\"varies by provider\"). Priced per second of input",
+    "# audio, or per token when pricing.completion is set.",
+    "# https://openrouter.ai/docs/guides/overview/multimodal/stt",
+  ].join("\n"),
+  embedding: [
+    "# Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)",
+    "# https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request",
+  ].join("\n"),
+  reranking: [
+    "# Synced from https://openrouter.ai/api/v1/models?output_modalities=rerank",
+    "# No [cost]: the models API reports \"0\" for priced rerank models (the model pages show per-search",
+    "# and per-token prices), so only free routes get a price.",
+    "# https://openrouter.ai/docs/api/api-reference/rerank/submit-a-rerank-request",
+  ].join("\n"),
+};
+
+// MIME types per OpenRouter's docs.
+// https://openrouter.ai/docs/guides/overview/multimodal/tts (Output Formats)
+// https://openrouter.ai/docs/guides/overview/multimodal/stt (Supported Audio Formats)
+// https://openrouter.ai/docs/guides/overview/multimodal/image-understanding (png, jpeg, webp, gif)
+// https://openrouter.ai/docs/guides/overview/multimodal/videos (mp4, mpeg, mov, webm)
+const SPEECH_OUTPUT = ["audio/mpeg", "audio/pcm"];
+const AUDIO_INPUT = ["audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"];
+const MIME_INPUT: Record<string, string[]> = {
+  text: ["text"],
+  image: ["image/png", "image/jpeg", "image/webp", "image/gif"],
+  audio: AUDIO_INPUT,
+  video: ["video/mp4", "video/mpeg", "video/quicktime", "video/webm"],
+  file: ["application/pdf"],
+};
+
+const MEDIA_DESCRIPTIONS: Record<MediaType, string> = {
+  speech: "Text-to-speech model",
+  transcription: "Speech-to-text model",
+  embedding: "Text embedding model",
+  reranking: "Reranking model",
+};
+
+// OpenRouter IDs whose lab file has another name. Matching otherwise compares
+// slugs without punctuation inside the lab directory (eleven-flash-v2.5 ↔ eleven_flash_v2_5).
+const MEDIA_BASE_MODEL_OVERRIDES: Record<string, string> = {
+  "cohere/rerank-4-fast": "cohere/rerank-v4.0-fast",
+  "cohere/rerank-4-pro": "cohere/rerank-v4.0-pro",
+  "fish-audio/s2.1-pro-free:free": "fish-audio/s2.1-pro",
+  "mistralai/mistral-embed-2312": "mistral/mistral-embed",
+  "mistralai/voxtral-small-24b-2507-stt": "mistral/voxtral-small-24b-2507",
+  // xAI's only TTS model, and its STT slug: grok-voice-transcribe-1.0 reached end
+  // of life on 2026-10-02 and is served by 2.0 (https://docs.x.ai/developers/release-notes).
+  "x-ai/grok-voice-tts-1.0": "xai/grok-tts",
+  "x-ai/grok-stt-1.0": "xai/grok-voice-transcribe-2.0",
+};
+
+export function mediaType(model: OpenRouterModel): MediaType | undefined {
+  const [output, ...rest] = model.architecture.output_modalities;
+  return rest.length === 0 && output !== undefined ? MEDIA_TYPES[output] : undefined;
+}
+
+// Media models list no sampling parameters, so only a negative price marks an
+// unavailable route.
+function isUnavailableMedia(model: OpenRouterModel) {
+  const { prompt, completion, image, audio } = model.pricing;
+  return [prompt, completion, image, audio].some((value) => value !== undefined && Number(value) < 0);
+}
+
+export function buildOpenRouterMediaModel(
+  model: OpenRouterModel,
+  type: MediaType,
+  current?: Record<string, unknown>,
+): Record<string, unknown> {
+  const base = typeof current?.base_model === "string" ? current.base_model : resolveMediaBaseModel(model.id);
+  const lab = base === undefined ? undefined : rawLabModel(base);
+  const doc: Record<string, unknown> = { schema: 2, v2_only: true };
+  const modalities = mediaModalities(model, type);
+  const context = model.context_length;
+  const api = MEDIA_APIS[type];
+
+  if (base !== undefined && lab !== undefined) {
+    doc.base_model = base;
+    if (lab.type !== type) doc.type = type;
+    if (shouldPreserveFactoredName(model.id, base, undefined, MEDIA_BASE_MODEL_OVERRIDES[model.id])) {
+      doc.name = model.name.replace(/^[^:]+:\s+/, "");
+    }
+    if (current?.status !== undefined) doc.status = current.status;
+    // TTS output is always mp3 or pcm on OpenRouter; other types keep the lab's inputs.
+    if (type === "speech" && stableInheritedValue(lab.modalities) !== stableInheritedValue(modalities)) {
+      doc.modalities = modalities;
+    }
+    if (current?.capabilities !== undefined) doc.capabilities = current.capabilities;
+    // Only embedding and rerank inputs are token-limited; OpenRouter's context for
+    // speech and transcription models is often the chat model's it derives from.
+    const labContext = (lab.limit as { context?: number } | undefined)?.context;
+    if ((type === "embedding" || type === "reranking") && context > 0 && context !== labContext) {
+      doc.limit = { context };
+    }
+  } else {
+    doc.type = type;
+    doc.name = model.name.replace(/^[^:]+:\s+/, "");
+    doc.description = typeof current?.description === "string"
+      ? current.description
+      : type === "embedding" && modalities.input.length > 1
+        ? "Multimodal embedding model"
+        : MEDIA_DESCRIPTIONS[type];
+    for (const key of ["family", "knowledge"]) {
+      if (current?.[key] !== undefined) doc[key] = current[key];
+    }
+    doc.open_weights = Boolean(model.hugging_face_id);
+    doc.release_date = dateFromTimestamp(model.created);
+    if (current?.status !== undefined) doc.status = current.status;
+    doc.modalities = modalities;
+    doc.capabilities = {
+      tools: { supported: false },
+      reasoning: { supported: false },
+      ...(current?.capabilities as Record<string, unknown> | undefined),
+    };
+    doc.limit = {
+      context,
+      output: type === "embedding" || type === "reranking"
+        ? 0
+        : model.top_provider.max_completion_tokens ?? 0,
+    };
+  }
+
+  doc.api = {
+    [api.protocol]: {
+      base_url: BASE_URL,
+      ...(api.aisdk !== undefined ? { sdk: { aisdk: api.aisdk } } : {}),
+    },
+  };
+  const cost = mediaCost(model, type);
+  if (cost !== undefined) doc.cost = cost;
+  for (const key of ["experimental", "metadata"]) {
+    if (current?.[key] !== undefined) doc[key] = current[key];
+  }
+  return doc;
+}
+
+function mediaModalities(model: OpenRouterModel, type: MediaType) {
+  switch (type) {
+    case "speech":
+      return { input: ["text"], output: SPEECH_OUTPUT };
+    case "transcription":
+      return { input: AUDIO_INPUT, output: ["text"] };
+    case "embedding":
+    case "reranking":
+      return {
+        input: [...new Set(model.architecture.input_modalities.flatMap((value) => MIME_INPUT[value] ?? []))],
+        output: [type],
+      };
+  }
+}
+
+// Prices per CostV2 unit: per 1M tokens or characters, per second otherwise.
+export function mediaCost(model: OpenRouterModel, type: MediaType) {
+  const free = model.id.endsWith(":free");
+  const prompt = Number(model.pricing.prompt);
+  const completion = Number(model.pricing.completion);
+  const perMillion = (value: number) => price(String(value))!;
+  // A free route has real zero prices; elsewhere "0" means the API has no price.
+  if (prompt === 0 && completion === 0 && !free) return undefined;
+
+  switch (type) {
+    case "speech":
+      // Token-priced speech (Gemini TTS) bills text in and audio out per token.
+      if (prompt > 0 && completion > 0) {
+        return {
+          text: { input: { price: perMillion(prompt) } },
+          audio: { output: { price: perMillion(completion) } },
+        };
+      }
+      // "per-second models report their rate under pricing.completion"
+      if (completion > 0) return { audio: { output: { unit: "second", price: roundPrice(completion) } } };
+      return { text: { input: { unit: "character", price: perMillion(prompt) } } };
+    case "transcription": {
+      if (completion > 0) {
+        return {
+          text: { input: { price: perMillion(prompt) }, output: { price: perMillion(completion) } },
+          audio: { input: { price: perMillion(prompt) } },
+        };
+      }
+      // Duration prices are per second, except a few OpenRouter lists per hour
+      // (MAI-Transcribe: "0.36", shown as "$0.36/hour"). No transcription costs
+      // $36 an hour, so anything from $0.01 a second up is an hourly price.
+      const perSecond = prompt >= 0.01 ? prompt / 3600 : prompt;
+      return { audio: { input: { unit: "second", price: roundPrice(perSecond) } } };
+    }
+    case "embedding": {
+      const cost: Record<string, unknown> = { text: { input: { price: perMillion(prompt) } } };
+      for (const modality of ["image", "audio"] as const) {
+        const value = Number(model.pricing[modality] ?? 0);
+        if (value > 0) cost[modality] = { input: { price: perMillion(value) } };
+      }
+      return cost;
+    }
+    case "reranking":
+      return { text: { input: { price: perMillion(prompt) } } };
+  }
+}
+
+function roundPrice(value: number) {
+  return Math.round(value * 1e10) / 1e10;
+}
+
+export function resolveMediaBaseModel(openrouterID: string) {
+  const override = MEDIA_BASE_MODEL_OVERRIDES[openrouterID];
+  if (override !== undefined) return override;
+
+  const [prefix, ...modelParts] = openrouterID.split("/");
+  if (prefix === undefined || modelParts.length === 0 || prefix.startsWith("~")) return undefined;
+  const lab = CANONICAL_PROVIDER_PREFIXES[prefix.toLowerCase() as keyof typeof CANONICAL_PROVIDER_PREFIXES]
+    ?.metadata ?? prefix.toLowerCase();
+  const slug = normalizeModelSlug(modelParts.join("/").replace(/:free$/, ""));
+  const matches = [...labFiles(lab)].filter(
+    (file) => file.endsWith(".toml") && normalizeModelSlug(file.slice(0, -".toml".length)) === slug,
+  );
+  return matches.length === 1 ? `${lab}/${matches[0]!.slice(0, -".toml".length)}` : undefined;
+}
+
+function rawLabModel(modelID: string) {
+  try {
+    return Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as Record<string, unknown>;
+  } catch {
+    return undefined;
+  }
 }
 
 function dateFromTimestamp(timestamp: number) {
@@ -446,7 +736,7 @@ export function resolveModelMetadataBaseModel(modelID: string) {
   return matches.length === 1 ? matches[0] : undefined;
 }
 
-function matchingModelMetadataFile(provider: string, candidates: string[]) {
+function labFiles(provider: string) {
   let files = modelMetadataFilesByProvider.get(provider);
   if (files === undefined) {
     try {
@@ -456,7 +746,11 @@ function matchingModelMetadataFile(provider: string, candidates: string[]) {
     }
     modelMetadataFilesByProvider.set(provider, files);
   }
+  return files;
+}
 
+function matchingModelMetadataFile(provider: string, candidates: string[]) {
+  const files = labFiles(provider);
   for (const candidate of candidates) {
     const expected = `${candidate}.toml`.toLowerCase();
     const match = [...files].find((file) => file.toLowerCase() === expected);

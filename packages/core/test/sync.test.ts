@@ -52,7 +52,10 @@ import {
   type EmpiriolabsModel,
 } from "../src/sync/providers/empiriolabs.js";
 import {
+  buildOpenRouterMediaModel,
   buildOpenRouterModel,
+  mediaCost,
+  mediaType,
   openrouter,
   resolveCanonicalBaseModel,
   type OpenRouterModel,
@@ -5278,6 +5281,160 @@ test("skips an unavailable OpenRouter stub with no authored file", () => {
   expect(translated).toBeUndefined();
 });
 
+test("maps OpenRouter output modalities to media model types", () => {
+  const output = (value: string[]) =>
+    mediaType(openRouterMediaModel({ architecture: { input_modalities: ["text"], output_modalities: value } }));
+
+  expect(output(["speech"])).toBe("speech");
+  expect(output(["transcription"])).toBe("transcription");
+  expect(output(["embeddings"])).toBe("embedding");
+  expect(output(["rerank"])).toBe("reranking");
+  expect(output(["text"])).toBeUndefined();
+  expect(output(["decisions"])).toBeUndefined();
+  expect(output(["text", "audio"])).toBeUndefined();
+});
+
+test("prices OpenRouter media models in each type's cost unit", () => {
+  const cost = (type: Parameters<typeof mediaCost>[1], pricing: OpenRouterModel["pricing"], id = "lab/model") =>
+    mediaCost(openRouterMediaModel({ id, pricing }), type);
+
+  // Speech: per input character, per output second, or per token.
+  expect(cost("speech", { prompt: "0.00008", completion: "0" })).toEqual({
+    text: { input: { unit: "character", price: 80 } },
+  });
+  expect(cost("speech", { prompt: "0", completion: "0.0025" })).toEqual({
+    audio: { output: { unit: "second", price: 0.0025 } },
+  });
+  expect(cost("speech", { prompt: "0.0000005", completion: "0.000009" })).toEqual({
+    text: { input: { price: 0.5 } },
+    audio: { output: { price: 9 } },
+  });
+  // Transcription: per input second (hourly prices converted), or per token.
+  expect(cost("transcription", { prompt: "0.0001", completion: "0" })).toEqual({
+    audio: { input: { unit: "second", price: 0.0001 } },
+  });
+  expect(cost("transcription", { prompt: "0.36", completion: "0" })).toEqual({
+    audio: { input: { unit: "second", price: 0.0001 } },
+  });
+  expect(cost("transcription", { prompt: "0.0000025", completion: "0.00001" })).toEqual({
+    text: { input: { price: 2.5 }, output: { price: 10 } },
+    audio: { input: { price: 2.5 } },
+  });
+  // Embeddings: per token, with image and audio input prices when set.
+  expect(cost("embedding", { prompt: "0.0000002", completion: "0", image: "0.00000045", audio: "0" })).toEqual({
+    text: { input: { price: 0.2 } },
+    image: { input: { price: 0.45 } },
+  });
+  // Rerank: "0" is no price, except on free routes.
+  expect(cost("reranking", { prompt: "0", completion: "0" })).toBeUndefined();
+  expect(cost("reranking", { prompt: "0", completion: "0" }, "lab/model:free")).toEqual({
+    text: { input: { price: 0 } },
+  });
+});
+
+test("syncs OpenRouter media models with no supported parameters and skips negative prices", () => {
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  const speech = openRouterMediaModel({ id: "examplelab/voice-1" });
+  const translated = openrouter.translateModel(speech, context);
+
+  expect(translated).toEqual({
+    id: "examplelab/voice-1",
+    header: expect.stringContaining("output_modalities=speech"),
+    v2: {
+      schema: 2,
+      v2_only: true,
+      type: "speech",
+      name: "Voice 1",
+      description: "Text-to-speech model",
+      open_weights: false,
+      release_date: "2026-10-13",
+      modalities: { input: ["text"], output: ["audio/mpeg", "audio/pcm"] },
+      capabilities: { tools: { supported: false }, reasoning: { supported: false } },
+      limit: { context: 0, output: 0 },
+      api: { speech: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/openai" } } },
+      cost: { text: { input: { unit: "character", price: 15 } } },
+    },
+  });
+
+  const unavailable = openRouterMediaModel({ id: "examplelab/voice-1", pricing: { prompt: "-1", completion: "-1" } });
+  expect(openrouter.translateModel(unavailable, context)).toBeUndefined();
+  const current = { schema: 2, v2_only: true, base_model: "openai/whisper-1" };
+  expect(openrouter.translateModel(unavailable, { ...context, v2: () => current })).toEqual({
+    id: "examplelab/voice-1",
+    v2: current,
+  });
+  // Chat models keep the stricter check: an empty parameter list is a degraded stub.
+  expect(openrouter.translateModel(openRouterModel({ supported_parameters: [] }), context)).toBeUndefined();
+});
+
+test("factors OpenRouter media models onto lab files and authors their API protocol", () => {
+  const doc = buildOpenRouterMediaModel(openRouterMediaModel({
+    id: "openai/whisper-1",
+    name: "OpenAI: Whisper 1",
+    architecture: { input_modalities: ["audio"], output_modalities: ["transcription"] },
+    pricing: { prompt: "0.0001", completion: "0" },
+  }), "transcription");
+
+  expect(doc).toEqual({
+    schema: 2,
+    v2_only: true,
+    base_model: "openai/whisper-1",
+    api: { transcriptions: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/openai" } } },
+    cost: { audio: { input: { unit: "second", price: 0.0001 } } },
+  });
+});
+
+test("OpenRouter text models still sync through v1 fields", () => {
+  const translated = openrouter.translateModel(openRouterModel(), {
+    existing: () => undefined,
+    authored: () => undefined,
+    v2: () => undefined,
+  });
+
+  expect(translated).not.toHaveProperty("v2");
+  expect(translated).toHaveProperty("model");
+});
+
+test("writes v2 sync entries as is and leaves unchanged files alone", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-v2-entry-"));
+  const modelsDir = path.join(root, "providers", "example", "models");
+  await mkdir(modelsDir, { recursive: true });
+  let price = 15;
+  const provider: SyncProvider<string> = {
+    id: "v2-entry-test",
+    name: "v2 entry test",
+    modelsDir,
+    async fetchModels() {
+      return ["lab/voice"];
+    },
+    parseModels(raw) {
+      return raw as string[];
+    },
+    translateModel(id) {
+      return {
+        id,
+        header: "# Example header\n",
+        v2: buildOpenRouterMediaModel(openRouterMediaModel({
+          id,
+          pricing: { prompt: String(price / 1_000_000), completion: "0" },
+        }), "speech"),
+      };
+    },
+  };
+
+  try {
+    expect(await syncProvider(provider)).toMatchObject({ created: 1, updated: 0, unchanged: 0 });
+    const file = path.join(modelsDir, "lab", "voice.toml");
+    expect(await readFile(file, "utf8")).toStartWith("# Example header\nschema = 2\nv2_only = true\n");
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, unchanged: 1 });
+    price = 20;
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 1, unchanged: 0 });
+    expect(await readFile(file, "utf8")).toContain("price = 20");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("syncs OpenRouter decision models with no supported parameters as decision type", () => {
   const decision = openRouterModel({
     id: "cloudflare/clef-omni",
@@ -5565,6 +5722,22 @@ function openRouterModel(overrides: Partial<OpenRouterModel> = {}): OpenRouterMo
       max_completion_tokens: 128_000,
     },
     supported_parameters: ["include_reasoning", "reasoning", "structured_outputs", "tools"],
+    ...overrides,
+  };
+}
+
+function openRouterMediaModel(overrides: Partial<OpenRouterModel> = {}): OpenRouterModel {
+  return {
+    id: "examplelab/voice-1",
+    name: "Example Lab: Voice 1",
+    created: 1_791_929_559,
+    hugging_face_id: null,
+    knowledge_cutoff: null,
+    context_length: 0,
+    architecture: { input_modalities: ["text"], output_modalities: ["speech"] },
+    pricing: { prompt: "0.000015", completion: "0" },
+    top_provider: { context_length: 0, max_completion_tokens: 0 },
+    supported_parameters: [],
     ...overrides,
   };
 }
