@@ -4,72 +4,82 @@
 #   https://docs.kimchi.dev/docs/model-apis-pricing (accessed 2026-10-20).
 #
 # Verified 2026-10-20 against https://llm.kimchi.dev/openai/v1 with a live
-# API key. Each capability flag below maps to a curl test in this header.
+# API key. Each capability flag below maps to a curl test documented in this
+# header. Where a flag could not be verified, it is omitted so the lab value
+# is inherited (per the override-only convention in AGENTS.md).
 #
 # Models endpoint:
 #   GET /v1/models returns `deepseek-v4-flash-0731` (owned_by=castai). The
 #   alias `deepseek-v4-flash` is rejected with:
 #     Model "deepseek-v4-flash" is no longer available.
 #     Use "deepseek-v4-flash-0731" instead.
-#   so it is not added as a separate provider entry.
 #
 # Reasoning wire (single control field, no separate toggle):
 #   The relay accepts exactly one request field, `reasoning_effort`, with the
-#   enum `none | minimal | low | medium | high | xhigh | max` (obtained from a
-#   Pydantic validation error returned for `reasoning_effort = ""`). Setting
+#   enum `none | minimal | low | medium | high | xhigh | max` (obtained from
+#   a Pydantic validation error returned for `reasoning_effort = ""`).
 #   `reasoning_effort = "none"` returns no reasoning_content; any other value
 #   returns reasoning_content. Omitting the field behaves the same as "none".
-#   So: effort values are the on/off axis; there is no separate toggle field.
-#   Per-effort reasoning_content length on a fixed test prompt
-#   ("What is 12 squared? Show your reasoning briefly then give the number.",
-#   max_tokens=500):
-#     none     -> 0    chars
-#     minimal  -> 181  chars
-#     low      -> 110  chars
-#     medium   -> 210  chars
-#     high     -> 93   chars
-#     xhigh    -> 103  chars
-#     max      -> 210  chars
-#   The length varies by prompt; the enum values themselves are the verified
-#   surface, not the per-effort length (length is reported for evidence only).
+#   So the effort enum is the on/off axis: there is no separate toggle field.
+#   The catalog effort set is narrowed to the peer/lab documented values
+#   ["low", "high", "max"]. The other values ("minimal", "medium", "xhigh")
+#   are accepted by the relay but their per-level effect is not independently
+#   verified to differ from the neighboring level; consumers should treat
+#   them as accepted-but-unmapped.
 #
 # Default behavior (verified): with no `reasoning_effort` sent, the response
-# contains no reasoning_content (finish_reason="stop", content-only). So
-# the default in this file is `effort = "none"`.
+# contains no reasoning_content (finish_reason="stop", content-only).
 #
 # Streaming (verified): `stream: true` emits `chat.completion.chunk` events
 # with both `delta.reasoning_content` and `delta.content` populated as
 # separate fields.
 #
-# Tools (verified): `tools = [...]` request param returns `tool_calls` with
-# `name` + JSON `arguments` on `choices[0].message.tool_calls`. Mid-conversation
-# tool addition works (call 2 with an added tool still produced the expected
-# tool call, no 4xx), so `updates = true`.
+# Tools (verified):
+#   - tools supported: `tools = [...]` request param returns `tool_calls`
+#     with name + JSON arguments on `choices[0].message.tool_calls`.
+#   - tools.updates = true: tool addition mid-conversation accepted, and
+#     the prompt-prefix cache survives (verified by sending the same big
+#     system+user prefix, observing cached_tokens=768, then adding a
+#     second tool definition on the next turn; cached_tokens became 1024,
+#     confirming the original 768-token prefix was still cached).
 #
 # Structured output (verified): `response_format = {"type": "json_object"}`
 # returns a parseable JSON object. No schema constraints verified beyond the
 # `type` field.
 #
-# Mid-conversation updates (verified): switching `reasoning_effort` between
-# turns is accepted (`effort_updates = true`). Inserting a new `system`
-# message mid-conversation is accepted (`system_updates = true`).
+# Mid-conversation updates (cache-preservation verified per flag):
+#   - system_updates = true: inserting a new `system` message between
+#     turns is accepted, and the original 768-token prompt-prefix cache
+#     is preserved (cached_tokens stayed at 768).
+#   - effort_updates = false: switching `reasoning_effort` between turns
+#     is accepted, but cached_tokens drops from 768 to 0 (the upstream
+#     DeepSeek model invalidates the cache on effort change). This matches
+#     DeepSeek first-party's `effort_updates = false`.
 #
-# Cache (verified): the relay reports `usage.prompt_tokens_details.cached_tokens`
-# on repeated prompts, but only when the prompt crosses an internal threshold
-# (~1024 tokens observed; a 312-token prompt returned null). No explicit
-# `cache_control` block is sent by the client, so this is implicit only
-# (`cache = { implicit = true, explicit = false }`). Cache read pricing per
-# the Kimchi pricing page is $0.07 / 1M tokens (no write price published).
+# Cache (verified): the relay reports
+# `usage.prompt_tokens_details.cached_tokens` on repeated prompts above an
+# observed ~900-token threshold. Two identical back-to-back calls both
+# returned cached_tokens=768; a third call immediately after returned 0,
+# indicating a short eviction window. No explicit `cache_control` block
+# is sent by the client, so this is implicit only (`implicit = true`,
+# `explicit = false`). Cache read pricing per the Kimchi pricing page is
+# $0.07 / 1M tokens (no write price published).
+#
+# top_k: intentionally omitted from this override. The relay accepts the
+# `top_k` request parameter (no error), but acceptance alone does not
+# prove the upstream honors it. Inheriting `top_k = true` from the lab
+# file is the correct conservative call until a side-by-side test with
+# temperature=0 shows distinct deterministic outputs for different top_k
+# values.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
 tools = { supported = true, updates = true }
-reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "none" }, toggle = false, effort = ["low", "high", "max"] }
 structured_output = true
-top_k = true
 system_updates = true
-effort_updates = true
+effort_updates = false
 cache = { supported = true, implicit = true, explicit = false }
 
 [api.chat-completions]
