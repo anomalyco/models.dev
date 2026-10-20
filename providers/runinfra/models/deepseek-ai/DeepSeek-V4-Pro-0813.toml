@@ -10,6 +10,7 @@
 # 32,768 output cap refuses an over-cap request with 400.
 # cache_read is the cached input price (standing rate; no promotional window).
 base_model = "deepseek/deepseek-v4-pro-0813"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"

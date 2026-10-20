@@ -1,6 +1,9 @@
+schema = 2
 base_model = "openai/gpt-image-1"
 
-[cost]
-input = 5.00
-output = 40.00
-cache_read = 1.25
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 40

@@ -1,27 +1,42 @@
+# Modalities: Azure OpenAI Responses image inputs (PNG, JPEG, WebP, non-animated GIF) and PDF input for vision models: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#image-input-requirements
+# Capabilities: gpt-5.2-codex: "Text and image processing". https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai#gpt-52
+# Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
+# system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
+# `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
+schema = 2
 name = "GPT-5.2 Codex"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
 family = "gpt-codex"
-release_date = "2026-01-14"
-last_updated = "2026-01-14"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
-temperature = false
-knowledge = "2025-08-31"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2026-01-14"
 
-[cost]
-input = 1.75
-output = 14.00
-cache_read = 0.175
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = false
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1

@@ -1,1 +1,30 @@
-../../moonshotai/models/kimi-k3.toml
+# China platform (api.moonshot.cn). Prices are published in CNY at https://platform.kimi.com/docs/pricing/chat
+# (accessed 2026-10-19): input ¥20.00, cache hit ¥2.00, cache write ¥20.00 (5m) / ¥40.00 (1h), output ¥100.00.
+# CNY→USD rate: 6.693661, 2026-10-20, source: https://open.er-api.com/v6/latest/USD
+# Capabilities match the global platform (same docs at https://platform.kimi.com/docs); see
+# providers/moonshotai/models/kimi-k3.toml for the live checks.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required"], updates = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { ttl = ["5m", "1h"] }, explicit = false }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.9879
+cache = { read = 0.2988, write = { "5m" = 2.9879, "1h" = 5.9758 } }
+
+[cost.text.output]
+price = 14.9395

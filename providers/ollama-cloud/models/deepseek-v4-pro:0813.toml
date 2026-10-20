@@ -10,6 +10,7 @@
 # Output: Ollama has no separate output cap; deepseek4 peers on this host
 # (deepseek-v4-flash:0731, deepseek-v4-pro) serve output = 1048576.
 base_model = "deepseek/deepseek-v4-pro-0813"
+structured_output = true
 
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 

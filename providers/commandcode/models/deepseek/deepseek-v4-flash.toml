@@ -5,6 +5,7 @@
 # Toggle: reasoning_effort = off|low (verified off yields zero reasoning tokens)
 # Live /chat/completions (2026-10-14): reasoning_effort=off -> HTTP 200, zero reasoning tokens.
 base_model = "deepseek/deepseek-v4-flash"
+structured_output = true
 
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 

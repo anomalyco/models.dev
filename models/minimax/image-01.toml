@@ -3,24 +3,30 @@
 # - https://platform.minimax.io/docs/api-reference/image-generation-t2i (POST /v1/image_generation)
 # - https://platform.minimax.io/docs/guides/pricing-paygo#image ($0.0035 per image)
 # - https://platform.minimax.io/docs/guides/pricing-token-plan (covered by Token Plan; no per-image cost)
+# - https://platform.minimax.io/docs/api-reference/image-generation-i2i (reference image: JPG, JPEG, PNG)
 # Note: served on the standalone image endpoint (/v1/image_generation), not the
 # Anthropic-compatible /anthropic/v1 base — hence no provider entry under providers/minimax*.
-
+# Output format is not documented (URL or base64), so output stays generic.
+schema = 2
+type = "image"
 name = "MiniMax image-01"
 description = "MiniMax text-to-image generation model with reference-image support"
 family = "minimax"
+open_weights = false
 release_date = "2025-02-15"
 last_updated = "2026-08-25"
-attachment = true
-reasoning = false
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = false
-tool_call = false
-open_weights = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text", "image"]
-output = ["image"]

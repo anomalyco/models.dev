@@ -1,34 +1,31 @@
-# Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
-# Its published request schema documents no toggle, effort, or reasoning budget.
-# https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-06-25)
-name = "Kimi K2.5"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-release_date = "2026-02-06"
-last_updated = "2026-02-06"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-structured_output = true
-temperature = true
-tool_call = true
-knowledge = "2025-01"
-interleaved = true
-open_weights = true
-
-[cost]
-input = 0.60
-output = 3.00
-
-[limit]
-context = 262_144
-output = 262_144
+# Azure documents POST /models/chat/completions and reasoning output, but no
+# toggle, effort, or budget request field for Kimi K2.5. Catalog modes are not
+# request controls. https://learn.microsoft.com/en-us/azure/ai-foundry/foundry-models/how-to/use-chat-reasoning
+# Modalities: Kimi image formats https://platform.moonshot.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats (Azure documents text and image input, no video)
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
-[provider]
-shape = "completions"
-npm = "@ai-sdk/openai-compatible"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+system_updates = true
+effort_updates = false
+
+[api.chat-completions]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3

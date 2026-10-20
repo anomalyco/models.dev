@@ -3,6 +3,7 @@
 # No toggle: thinking.type=enabled|disabled is rejected by the live API.
 # Effort: reasoning_effort = high|max; low is rejected.
 base_model = "deepseek/deepseek-v4-pro-0813"
+structured_output = true
 status = "beta"
 reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 

@@ -1,6 +1,7 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k3
 # Effort: reasoning_effort = none|low|high|max; none suppresses reasoning on Novita, unlike the native Kimi API.
 base_model = "moonshotai/kimi-k3"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [interleaved]

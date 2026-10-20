@@ -7,6 +7,7 @@
 # Effort: reasoning_effort = low|high|max (default max). Thinking is always on:
 # enable_thinking only accepts true (passing false errors), no thinking_budget.
 base_model = "moonshotai/kimi-k3"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

@@ -1,25 +1,38 @@
+# Closed to new users 2026-10-19, retired 2026-11-18
+#   (https://platform.minimaxi.com/docs/faq/models).
+# Thinking is always on; thinking.type = disabled is accepted and ignored.
+# Caching: cache_control (explicit) and, from M2.1, an automatic prefix cache from 512 input
+#   tokens; M2 caches only with cache_control (checked live 2026-10-19).
+# CNY per 1M tokens: 2.1 in / 8.4 out / 0.21 cache read / 2.625 cache write, from the CN price list
+#   before M2.x was removed (https://web.archive.org/web/20260911060320/https://platform.minimaxi.com/docs/guides/pricing-paygo).
+#   CNY→USD rate: 6.693661, 2026-10-19, source: https://open.er-api.com/v6/latest/USD
+schema = 2
 name = "MiniMax-M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-02-12"
+status = "deprecated"
 
-[cost]
-input = 0.30
-output = 1.20
-cache_read = 0.03
-cache_write = 0.375
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+cache = { supported = true, implicit = { min_tokens = 512 }, explicit = true }
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3137
+cache = { read = 0.0314, write = 0.3922 }
+
+[cost.text.output]
+price = 1.2549

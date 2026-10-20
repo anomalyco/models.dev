@@ -11,6 +11,7 @@
 # multimodal agent model); host docs require base64 (public URLs rejected) and
 # do not document video, so input is limited to text+image.
 base_model = "moonshotai/kimi-k3"
+structured_output = true
 reasoning_options = [
   { type = "effort", values = ["low", "high", "max"] },
 ]

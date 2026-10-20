@@ -5,6 +5,7 @@
 # Source: https://docs.greenpt.ai/reasoning
 # Cache writes are not charged: https://docs.greenpt.ai/prompt-caching
 base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 
 [cost]

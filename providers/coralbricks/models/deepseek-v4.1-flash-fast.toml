@@ -9,6 +9,7 @@
 # max return HTTP 200 with reasoning_content; none and no field return 0 reasoning tokens. An image_url part in a user
 # message is answered from the image, so attachment and the image modality come from the base model.
 base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 interleaved = true
 

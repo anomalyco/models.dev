@@ -3,6 +3,7 @@
 # https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500 (id deepseek/deepseek-v3.2)
 # Toggle: thinking.type = enabled|disabled (DeepSeek thinking mode; OpenAI-compatible extra_body)
 base_model = "deepseek/deepseek-v3.2"
+structured_output = true
 reasoning_options = [{ type = "toggle" }]
 
 [cost]

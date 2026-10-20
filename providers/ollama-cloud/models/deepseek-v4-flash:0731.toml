@@ -8,6 +8,7 @@
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
 # API-verified context: https://ollama.com/api/show (deepseek4.context_length = 1048576)
 base_model = "deepseek/deepseek-v4-flash-0731"
+structured_output = true
 
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 

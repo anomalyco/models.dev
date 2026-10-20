@@ -21,6 +21,19 @@ const BaseModel = AuthoredModelShape
   })
   .strict();
 
+// `[v1_alias]` in provider.toml: a legacy v1 provider that serves another
+// provider's models under its own id, name, and env vars. It has no model files
+// and is left out of the v2 output.
+const V1Alias = z
+  .object({
+    provider: z.string().min(1),
+    // Env var renames applied to `${VAR}` templates in the models, e.g. `provider.api`.
+    env: z.record(z.string().min(1)).default({}),
+  })
+  .strict();
+
+type V1Alias = z.infer<typeof V1Alias>;
+
 export async function generateCatalog(directory: string) {
   const models = await generateModels(path.join(directory, "models"));
   const providers = await generateProviders(
@@ -82,12 +95,13 @@ async function generateProviders(
   models: Record<string, ModelMetadata>,
 ) {
   const result: Record<string, Provider> = {};
+  const aliases: Array<{ provider: Provider; alias: V1Alias; providerPath: string }> = [];
   for await (const providerPath of new Bun.Glob("*/provider.toml").scan({
     cwd: directory,
     absolute: true,
   })) {
     const providerID = path.basename(path.dirname(providerPath));
-    const toml = await import(providerPath, {
+    const { v1_alias, ...toml } = await import(providerPath, {
       with: {
         type: "toml",
       },
@@ -98,6 +112,22 @@ async function generateProviders(
     if (!provider.success) {
       provider.error.cause = { providerPath, toml };
       throw provider.error;
+    }
+
+    if (v1_alias !== undefined) {
+      const alias = V1Alias.safeParse(v1_alias);
+      if (!alias.success) {
+        alias.error.cause = { providerPath, toml: v1_alias };
+        throw alias.error;
+      }
+      if (existsSync(path.join(directory, providerID, "models"))) {
+        throw new Error(`Provider "${providerID}" is a v1_alias and can't have a models directory`, {
+          cause: { providerPath },
+        });
+      }
+      aliases.push({ provider: provider.data, alias: alias.data, providerPath });
+      result[providerID] = provider.data;
+      continue;
     }
 
     const modelsPath = path.join(directory, providerID, "models");
@@ -153,6 +183,23 @@ async function generateProviders(
       });
     }
     result[providerID] = provider.data;
+  }
+
+  for (const { provider, alias, providerPath } of aliases) {
+    const target = result[alias.provider];
+    if (target === undefined || aliases.some((item) => item.provider.id === alias.provider)) {
+      throw new Error(`Provider "${provider.id}" aliases unknown provider "${alias.provider}"`, {
+        cause: { providerPath },
+      });
+    }
+    const rename = (value: string) =>
+      Object.entries(alias.env).reduce(
+        (text, [from, to]) => text.replaceAll(`\${${from}}`, `\${${to}}`),
+        value,
+      );
+    // The target's provider-level base URL applies to its models too.
+    if (provider.api === undefined && target.api !== undefined) provider.api = rename(target.api);
+    provider.models = JSON.parse(rename(JSON.stringify(target.models)));
   }
 
   const nameToProviderID = new Map<string, string>();

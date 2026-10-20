@@ -176,6 +176,7 @@ body = { speed = "fast" }
 - Lab files must set `temperature`, `top_p` and `top_k` explicitly. Provider-level mid-conversation flags record what the API accepts (per its docs, confirmed live), not whether the model obeys: `system_updates` (system/developer messages after the conversation starts, sent in place), `effort_updates` (a per-turn effort change that keeps the cache, e.g. OpenAI `configuration_update`, Anthropic per-message `output_config`), `tools.updates` (adding/removing tools mid-conversation while keeping the cache, e.g. Anthropic `tool_addition`/`tool_removal`, OpenAI Responses `additional_tools`). Tool search is `tools.search`.
 - A model served differently from its provider's default (another SDK, base URL, protocol, or reasoning field) gets one `[api.<protocol>]` table with `base_url`, `sdk.aisdk` and `compatibility.reasoning_field`/`replay_reasoning`. It stands for v1's `provider` and `interleaved` fields. With several tables, the first one is the default and is what v1 gets.
 - To migrate, run `bun packages/core/script/migrate-v2.ts <lab|provider> <id>`. The script fails if any file would change in the v1 output.
+- A v1-only alias provider (for example `azure-cognitive-services`) has a `provider.toml` with `[v1_alias] provider = "<id>"`, plus optional `env` renames for `${VAR}` templates, and no `models/` directory. v1 serves the target's models under the alias, and the v2 output leaves it out. Edit models in the target provider.
 
 ## Model fields
 
@@ -271,7 +272,7 @@ Do **not** invent a universal `low`/`medium`/`high` for every reasoner.
 2. Author **that** effort list (and toggle/budget if those entries have them and this host exposes the same kind of control).
 3. Common cases:
    - GPT-style on relays → often `low` / `medium` / `high` (add `none` / `xhigh` only if native/peers have them)
-   - DeepSeek V4 → `toggle` + `high` / `max` (not L/M/H; lab maps low/medium→high)
+   - DeepSeek V4 → `toggle` + `low` / `high` / `max` (no `medium`; the lab maps minimal→low and medium/xhigh→high)
    - Always-on / no control → `[]`
 4. On relays: **do not** use `[]` just because you could not re-test this host. Empty means **no caller control**, not uncertainty.
 5. Never invent `budget_tokens` unless this host (or the lab API it clearly proxies) has a real **reasoning** budget field. Not `max_tokens`.
@@ -290,11 +291,11 @@ Every `toggle` needs a **leading top-of-file comment** with the exact wire path 
 
 ```toml
 # Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = high|max
+# Effort: reasoning_effort = low|high|max
 name = "DeepSeek V4 Pro"
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["high", "max"] },
+  { type = "effort", values = ["low", "high", "max"] },
 ]
 ```
 

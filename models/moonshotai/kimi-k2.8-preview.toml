@@ -1,18 +1,26 @@
-# https://www.kimi.com/code/docs/en/kimi-code/models.html
-# https://www.kimi.com/code/docs/en/kimi-code/whats-new.html#k2-8-preview-september-11-2026
+# Sources:
+# - https://www.kimi.com/code/docs/en/kimi-code/models.html (K2.8 Preview: 1M context, image and video input)
+# - https://www.kimi.com/code/docs/en/kimi-code/whats-new.html#k2-8-preview-september-11-2026
+# Sampling: the model only accepts temperature 1 and top_p 0.95 (400 otherwise), checked live on
+# api.moonshot.ai 2026-10-19, where it is listed but undocumented. No input format list is published,
+# so modalities stay generic.
+schema = 2
 name = "Kimi K2.8 Preview"
 description = "Kimi coding model with more efficient thinking and up to 1M context, available through Kimi Code"
 family = "kimi-k2"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
-
-[limit]
-context = 1_048_576
+release_date = "2026-09-11"
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_048_576

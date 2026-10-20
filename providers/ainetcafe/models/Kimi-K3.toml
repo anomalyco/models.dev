@@ -5,6 +5,7 @@
 # Max output 32K per the host guides (https://ainetcafe.com/k3/guides/kilo-code.html, cline.html, openhands.html).
 # Pricing: https://ainetcafe.com/k3/compare.html
 base_model = "moonshotai/kimi-k3"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]

@@ -5,6 +5,7 @@
 # Live 2026-10-19, n=4/arm: no trace by default or with thinking=false (0/8), a trace every time with
 # thinking=true; max reasoned longer than low (median 150 vs 46 tokens).
 base_model = "deepseek/deepseek-v4.1-flash-1017"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

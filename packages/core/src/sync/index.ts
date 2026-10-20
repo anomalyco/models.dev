@@ -391,7 +391,10 @@ export async function syncProvider<SourceModel>(
       : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...preserveType(withDescription, existing.get(relativePath)?.authored),
+      ...preserveStructuredOutput(
+        preserveType(withDescription, existing.get(relativePath)?.authored),
+        existing.get(relativePath)?.authored,
+      ),
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
@@ -696,6 +699,13 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
 export function preserveType(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
   if (model.type !== undefined || existing?.type === undefined) return model;
   return { ...model, type: existing.type } as SyncedModel;
+}
+
+// Lab files no longer carry structured_output (it is per host in v2), so a
+// curated host value is kept unless the provider reports one.
+export function preserveStructuredOutput(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
+  if (model.structured_output !== undefined || existing?.structured_output === undefined) return model;
+  return { ...model, structured_output: existing.structured_output } as SyncedModel;
 }
 
 export function preserveDescription(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {

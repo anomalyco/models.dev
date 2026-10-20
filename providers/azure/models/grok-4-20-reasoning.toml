@@ -1,25 +1,31 @@
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
+schema = 2
 name = "Grok 4.20 (Reasoning)"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2026-04-08"
-last_updated = "2026-04-08"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-knowledge = "2025-09"
-tool_call = true
 open_weights = false
+knowledge = "2025-09"
+release_date = "2026-04-08"
 status = "beta"
 
-[cost]
-input = 2.00
-output = 6.00
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+temperature = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 262_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 6

@@ -8,6 +8,7 @@
 # /v1/models data[id].reasoning: mandatory=true, supports_enable_disable=false,
 # supported_efforts=["low","high","max"]. This host exposes effort and rejects reasoning off.
 base_model = "deepseek/deepseek-v4-pro-0813"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]

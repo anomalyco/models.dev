@@ -6,6 +6,7 @@
 # Pricing: free endpoint on NVIDIA's API trial tier; no list rate is published.
 # https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash
 base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = true
 
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
