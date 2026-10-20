@@ -1,21 +1,16 @@
-name = "GLM 5.3 Flash"
-description = "Zhipu GLM-5.3 Flash for high-volume chat and tool use, at a discount to most inference clouds"
-release_date = "2026-08-26"
-last_updated = "2026-10-19"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-open_weights = true
+# Host relays lab weights with reasoning content generated on the wire; the OpenAI-compatible whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19) does not accept `thinking` or `reasoning_effort`, so control options are not offered here.
+base_model = "zhipuai/glm-5.3-flash"
+description = "Zhipu GLM 5.3 Flash for high-volume chat and tool use, at a discount to most inference clouds"
+
+# Reasoning content is emitted on the wire but no control surface is exposed (see top comment).
+reasoning = true
+reasoning_options = []
 
 [cost]
 input = 0.155
 output = 0.49
+
+# Host serving caps below lab limits. Source: https://fikraapi.co.ke/pricing (verified 2026-10-19).
 [limit]
 context = 327680
 output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,21 +1,15 @@
-name = "GLM 5.3"
-description = "Zhipu flagship GLM-5.3 for complex software engineering and long-horizon agent work, on a 1M context"
-release_date = "2026-08-14"
-last_updated = "2026-10-19"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-open_weights = false
+# Host relays lab weights with reasoning content generated on the wire; the OpenAI-compatible whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19) does not accept `thinking` or `reasoning_effort`, so control options are not offered here.
+base_model = "zhipuai/glm-5.3"
+description = "Zhipu flagship GLM 5.3 for complex software engineering and long-horizon agent work"
+
+# Reasoning content is emitted on the wire but no control surface is exposed (see top comment).
+reasoning = true
+reasoning_options = []
 
 [cost]
 input = 1.05
 output = 3.35
-[limit]
-context = 1048576
-output = 65536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+# Host serving caps below lab limits. Source: https://fikraapi.co.ke/pricing (verified 2026-10-19).
+[limit]
+output = 65536

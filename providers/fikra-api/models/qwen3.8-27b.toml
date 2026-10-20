@@ -1,22 +1,11 @@
-name = "Qwen 3.8 27B"
-description = "Fast 27B-class multimodal model with automatic prompt caching billed at USD 0.10 per 1M cached tokens"
-release_date = "2026-08"
-last_updated = "2026-10-19"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-open_weights = true
+# Host relays lab weights with reasoning content generated on the wire; the OpenAI-compatible whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19) does not accept `thinking` or `reasoning_effort`, so control options are not offered here. Limits and cache pricing inherit the lab entry pending a citable host source.
+base_model = "alibaba/qwen3.8-27b"
+description = "Fast 27B-class Qwen 3.8 model at a discount to most inference clouds"
+
+# Reasoning content is emitted on the wire but no control surface is exposed (see top comment).
+reasoning = true
+reasoning_options = []
 
 [cost]
 input = 0.045
 output = 0.35
-cache_read = 0.1
-[limit]
-context = 1001536
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]

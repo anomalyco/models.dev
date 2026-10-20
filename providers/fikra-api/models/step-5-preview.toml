@@ -1,21 +1,15 @@
-name = "Step 5 Preview"
-description = "StepFun Step 5 preview route. Upstream preview release: expect repetition loops and very high latency on long prompts, included for early evaluation"
-release_date = "2026-09-16"
-last_updated = "2026-10-19"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-open_weights = false
+# Host relays lab weights with reasoning content generated on the wire; the OpenAI-compatible whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19) does not accept `thinking` or `reasoning_effort`, so control options are not offered here. Preview route: expect repetition loops and very high latency on long prompts, included for early evaluation.
+base_model = "stepfun/step-5-preview"
+description = "StepFun Step 5 preview route for early evaluation"
+
+# Reasoning content is emitted on the wire but no control surface is exposed (see top comment).
+reasoning = true
+reasoning_options = []
 
 [cost]
 input = 1.25
 output = 3.3
-[limit]
-context = 1048576
-output = 65536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+# Host serving caps below lab limits. Source: https://fikraapi.co.ke/pricing (verified 2026-10-19).
+[limit]
+output = 65536

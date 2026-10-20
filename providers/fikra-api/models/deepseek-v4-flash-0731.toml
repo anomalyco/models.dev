@@ -1,21 +1,15 @@
-name = "DeepSeek V4 Flash 0731"
-description = "OpenAI-compatible route for DeepSeek V4 Flash (0731 build) on a 1M context, at a discount to most inference clouds"
-release_date = "2026-07-31"
-last_updated = "2026-10-19"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-open_weights = true
+# Host relays lab weights with reasoning content generated on the wire; the OpenAI-compatible whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19) does not accept `thinking` or `reasoning_effort`, so control options are not offered here.
+base_model = "deepseek/deepseek-v4-flash-0731"
+description = "DeepSeek V4 Flash 0731 build on a 1M context with a shorter output cap than lab deployments"
+
+# Reasoning content is emitted on the wire but no control surface is exposed (see top comment).
+reasoning = true
+reasoning_options = []
 
 [cost]
 input = 0.045
 output = 0.1
-[limit]
-context = 1048576
-output = 65536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+# Host serving caps below lab limits. Source: https://fikraapi.co.ke/pricing (verified 2026-10-19).
+[limit]
+output = 65536
