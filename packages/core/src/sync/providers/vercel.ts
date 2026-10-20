@@ -544,9 +544,11 @@ export function buildVercelMediaModel(
     if (existing?.base_model_omit !== undefined) doc.base_model_omit = existing.base_model_omit;
     const sameType = (lab.type ?? "chat") === type;
     if (!sameType) doc.type = type;
-    // Model facts, including the description, stay with the lab. Only Vercel's
-    // display name is kept when it differs from the lab's, as on the chat path.
-    if (model.name !== lab.name) doc.name = model.name;
+    // Model facts, including the description, stay with the lab. A display name
+    // that differs from the lab's is kept: the file's (so published names don't
+    // change on resync), or Vercel's for a new file.
+    const name = existing === undefined ? model.name : existing.name;
+    if (name !== undefined && name !== lab.name) doc.name = name;
     if (existing?.status !== undefined) doc.status = existing.status;
     // A lab of this type keeps its inputs and outputs, so only a host override
     // (with generic kinds made exact from the lab) is kept. A lab of another type

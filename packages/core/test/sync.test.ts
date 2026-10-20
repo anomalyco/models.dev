@@ -5302,14 +5302,20 @@ test("Vercel media base_model files inherit lab descriptions and limits, keeping
   );
   for (const key of ["name", "description", "limit"]) expect(embedding).not.toHaveProperty(key);
 
-  // Vercel's display name differs from the lab's ("Rerank 3.5"), and the catalog's
+  // The file's display name differs from the lab's ("Rerank 3.5"), and the catalog's
   // context differs too; the catalog's max_tokens is not a rerank output limit.
+  const rerankModel = vercelMedia({ id: "cohere/rerank-v3.5", name: "Cohere Rerank 3.5", type: "reranking", context_window: 4_000, max_tokens: 4_000 });
   const rerank = buildVercelMediaModel(
-    vercelMedia({ id: "cohere/rerank-v3.5", name: "Cohere Rerank 3.5", type: "reranking", context_window: 4_000, max_tokens: 4_000 }),
+    rerankModel,
     "reranking",
-    { schema: 2, base_model: "cohere/rerank-v3.5", description: "Reranking model", limit: { output: 4_096 } },
+    { schema: 2, base_model: "cohere/rerank-v3.5", name: "Cohere Rerank 3.5", description: "Reranking model", limit: { output: 4_096 } },
   );
   expect(rerank.name).toBe("Cohere Rerank 3.5");
+  // A file that inherits the lab's name keeps it when Vercel renames the model;
+  // a new file takes Vercel's display name.
+  const inheritsName = buildVercelMediaModel(rerankModel, "reranking", { schema: 2, base_model: "cohere/rerank-v3.5" });
+  expect(inheritsName).not.toHaveProperty("name");
+  expect(buildVercelMediaModel(rerankModel, "reranking").name).toBe("Cohere Rerank 3.5");
   expect(rerank).not.toHaveProperty("description");
   expect(rerank.limit).toEqual({ context: 4_000 });
 
@@ -5328,6 +5334,13 @@ test("Vercel media base_model files inherit lab descriptions and limits, keeping
     { schema: 2, name: "Embed", description: "Embedding model", open_weights: false, release_date: "2026-01-01", limit: { context: 32_768, output: 32_768 } },
   );
   expect(standalone.limit).toEqual({ context: 32_768, output: 0 });
+  // No catalog context: the authored (documented) context is kept, not a stale default.
+  const documented = buildVercelMediaModel(
+    vercelMedia({ id: "voyage/voyage-law-2", type: "embedding", context_window: 0, max_tokens: 0 }),
+    "embedding",
+    { schema: 2, name: "Voyage Law 2", description: "Embedding model", open_weights: false, release_date: "2024-04-15", limit: { context: 16_000, output: 0 } },
+  );
+  expect(documented.limit).toEqual({ context: 16_000, output: 0 });
 });
 
 test("Vercel media prices map to CostV2 units with conditional overrides", () => {

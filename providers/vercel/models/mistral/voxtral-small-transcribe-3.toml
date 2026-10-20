@@ -1,17 +1,32 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type transcription)
+# https://vercel.com/docs/ai-gateway/modalities/speech-to-text
+# Input formats ("Supported formats: WAV, MP3, FLAC, OGG, WEBM"): https://docs.mistral.ai/resources/known-limitations
+schema = 2
+type = "transcription"
 name = "Voxtral Small Transcribe 3"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "mistral"
-release_date = "2026-10-20"
-last_updated = "2026-10-20"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/ogg", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[api.transcriptions]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.audio.input]
+unit = "second"
+price = 0.00006667
