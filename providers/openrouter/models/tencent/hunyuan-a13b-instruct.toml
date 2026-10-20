@@ -1,5 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on SiliconFlow)
+# effort_updates = false: no per-turn effort control
 schema = 2
 name = "Hunyuan A13B Instruct"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
@@ -17,6 +19,8 @@ tools = { supported = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 131_072

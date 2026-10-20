@@ -1,3 +1,5 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Parasail (live)
+# effort_updates = false: no per-turn effort control
 schema = 2
 base_model = "google/gemma-3-4b-it"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
@@ -5,6 +7,8 @@ description = "Open Gemma instruction model for efficient chat and self-hosted d
 [capabilities]
 tools = { supported = false }
 structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 117_964

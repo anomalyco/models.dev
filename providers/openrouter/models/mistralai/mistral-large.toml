@@ -1,9 +1,15 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Mistral (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 base_model = "mistral/mistral-large"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 2

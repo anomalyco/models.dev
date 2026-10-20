@@ -1,5 +1,8 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
 schema = 2
 name = "Moondream 3 Preview"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -7,7 +10,7 @@ open_weights = true
 release_date = "2026-10-15"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
@@ -15,6 +18,7 @@ tools = { supported = false }
 reasoning = { supported = true, toggle = true }
 structured_output = false
 temperature = true
+effort_updates = false
 
 [limit]
 context = 32_000

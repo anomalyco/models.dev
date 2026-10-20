@@ -1,3 +1,6 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# Deprecated: GET /api/v1/models lists expiration_date 2026-11-02
 schema = 2
 name = "Hermes 3 70B Instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
@@ -5,6 +8,7 @@ family = "nousresearch"
 open_weights = true
 knowledge = "2023-12-31"
 release_date = "2024-08-18"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -15,6 +19,7 @@ tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
+effort_updates = false
 
 [limit]
 context = 131_072

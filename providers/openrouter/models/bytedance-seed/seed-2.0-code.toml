@@ -1,12 +1,20 @@
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning.effort = low|medium|high
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Seed)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Deprecated: GET /api/v1/models lists expiration_date 2026-11-11
 schema = 2
 base_model = "bytedance-seed/seed-2.0-code"
 description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
+status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.5

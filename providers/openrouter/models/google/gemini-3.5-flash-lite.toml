@@ -1,10 +1,18 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: Gemini has one systemInstruction, so it is hoisted (live: cache prefix lost; https://openrouter.ai/docs/guides/best-practices/prompt-caching#google-gemini)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Cache: implicit on Gemini 2.5+; cache_control uses only the last breakpoint, 5m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#google-gemini)
 schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
 [cost.text.input]
 price = 0.3

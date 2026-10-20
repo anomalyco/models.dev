@@ -1,5 +1,10 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded to Grok in place (live: cache prefix kept)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Cache: automatic (https://openrouter.ai/docs/guides/best-practices/prompt-caching#grok)
 schema = 2
 name = "Grok 4.20"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -9,14 +14,17 @@ knowledge = "2025-09-01"
 release_date = "2026-03-31"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 2_000_000

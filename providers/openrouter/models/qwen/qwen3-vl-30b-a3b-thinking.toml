@@ -1,3 +1,7 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 name = "Qwen3 VL 30B A3B Thinking"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -7,14 +11,15 @@ knowledge = "2025-03-31"
 release_date = "2025-10-06"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
 temperature = true
+effort_updates = false
 
 [limit]
 context = 262_144

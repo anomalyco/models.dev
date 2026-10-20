@@ -1,12 +1,18 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Nvidia)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 name = "Nemotron 3 Nano Omni (free)"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {  } }
 structured_output = false
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 0

@@ -1,5 +1,8 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on AtlasCloud)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 name = "LongCat 2.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
@@ -12,10 +15,12 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {  } }
 structured_output = false
 temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_756

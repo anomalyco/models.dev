@@ -1,3 +1,5 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
+# effort_updates = false: no per-turn effort control
 schema = 2
 name = "Llama 3.2 3B Instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
@@ -15,6 +17,8 @@ tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 131_072

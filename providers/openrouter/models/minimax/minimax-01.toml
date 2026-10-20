@@ -1,3 +1,6 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
 schema = 2
 name = "MiniMax-01"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
@@ -7,7 +10,7 @@ knowledge = "2024-03-31"
 release_date = "2025-01-15"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
@@ -15,6 +18,7 @@ tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
 temperature = true
+effort_updates = false
 
 [limit]
 context = 1_000_192

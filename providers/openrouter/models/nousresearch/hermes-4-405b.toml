@@ -1,5 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Nebius)
+# effort_updates = false: no per-turn effort control
 schema = 2
 name = "Hermes 4 405B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
@@ -17,6 +19,8 @@ tools = { supported = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 131_072

@@ -1,9 +1,13 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: Gemini has one systemInstruction, so it is hoisted (live: cache prefix lost; https://openrouter.ai/docs/guides/best-practices/prompt-caching#google-gemini)
+# effort_updates = false: no per-turn effort control
 schema = 2
 base_model = "google/gemini-3-pro-image-preview"
 
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 2

@@ -1,21 +1,28 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding; video: https://openrouter.ai/docs/guides/overview/multimodal/videos
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Deprecated: GET /api/v1/models lists expiration_date 2026-11-11
 schema = 2
 name = "Seed 1.6"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
 open_weights = false
 release_date = "2025-12-23"
+status = "deprecated"
 
 [modalities]
-input = ["image", "text", "video"]
+input = ["image/png", "image/jpeg", "image/webp", "image/gif", "text", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+effort_updates = false
 
 [limit]
 context = 262_144

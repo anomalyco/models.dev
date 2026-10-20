@@ -1,3 +1,7 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded to Grok in place (live: cache prefix kept)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# Cache: automatic (https://openrouter.ai/docs/guides/best-practices/prompt-caching#grok)
 schema = 2
 name = "Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -7,7 +11,7 @@ knowledge = "2025-09-01"
 release_date = "2026-03-31"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]
@@ -15,6 +19,9 @@ tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 temperature = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 2_000_000

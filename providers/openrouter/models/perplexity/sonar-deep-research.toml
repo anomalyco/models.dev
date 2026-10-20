@@ -1,5 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
 schema = 2
 name = "Sonar Deep Research"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
@@ -16,6 +18,7 @@ tools = { supported = false }
 reasoning = { supported = true, toggle = true }
 structured_output = false
 temperature = true
+effort_updates = false
 
 [limit]
 context = 128_000

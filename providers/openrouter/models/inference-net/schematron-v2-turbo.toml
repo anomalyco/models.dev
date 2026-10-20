@@ -1,3 +1,5 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on InferenceNet)
+# effort_updates = false: no per-turn effort control
 schema = 2
 name = "Schematron V2 Turbo"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
@@ -13,6 +15,8 @@ tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 128_000

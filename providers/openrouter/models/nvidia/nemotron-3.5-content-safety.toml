@@ -1,11 +1,14 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
 schema = 2
 base_model = "nvidia/nemotron-3.5-content-safety"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = false
+effort_updates = false
 
 [limit]
 context = 131_072

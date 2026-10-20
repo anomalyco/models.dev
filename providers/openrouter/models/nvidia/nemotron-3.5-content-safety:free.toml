@@ -1,5 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: rejected on upstream (live)
+# effort_updates = false: no per-turn effort control
 schema = 2
 base_model = "nvidia/nemotron-3.5-content-safety"
 name = "Nemotron 3.5 Content Safety (free)"
@@ -7,6 +9,8 @@ name = "Nemotron 3.5 Content Safety (free)"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = false
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 0
