@@ -1,7 +1,7 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
-# No caller control: reasoning_tokens stay 0 at low|medium|high|xhigh|max; reasoning_effort = off is rejected.
+# No caller control: reasoning is emitted inline in `content` with `reasoning_tokens = 0`; omitted, `low`, and `thinking.type = disabled|enabled` all returned step-by-step answers; `off` is rejected.
 base_model = "zhipuai/glm-5"
 reasoning_options = []
 

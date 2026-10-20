@@ -1,7 +1,7 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
-# No caller control: reasoning_effort accepts low|medium|high|xhigh|max but reasoning_tokens stay constant (4 at every level); reasoning_effort = off is rejected.
+# No caller control: MiMo family probe: `thinking.type = disabled` still produced 52 reasoning tokens, `thinking.type = enabled` 102, omitted/low 76, and `enable_thinking = false` / `chat_template_kwargs.enable_thinking = false` were ignored; `reasoning_effort` low|medium|high|xhigh|max does not change reasoning. `off` is rejected.
 base_model = "xiaomi/mimo-v2.6-pro"
 reasoning_options = []
 
