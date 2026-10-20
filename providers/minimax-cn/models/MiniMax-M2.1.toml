@@ -1,9 +1,15 @@
+# Listed as retired; still answers for existing keys (checked 2026-10-19)
+#   (https://platform.minimaxi.com/docs/faq/models). Prices are from before the model left the pricing page.
+# Thinking is always on; thinking.type = disabled is accepted and ignored.
+# Caching: cache_control (explicit) and, from M2.1, an automatic prefix cache from 512 input
+#   tokens; M2 caches only with cache_control (checked live 2026-10-19).
 schema = 2
 name = "MiniMax-M2.1"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
 open_weights = true
 release_date = "2025-12-23"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -13,6 +19,9 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
+top_p = true
+top_k = false
+cache = { supported = true, implicit = { min_tokens = 512 }, explicit = true }
 
 [limit]
 context = 204_800

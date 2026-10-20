@@ -1,9 +1,13 @@
+# Plan requests for M2.x are routed to MiniMax-M3.1-Flash from 2026-10-19
+#   (https://platform.minimax.io/docs/faq/models, https://platform.minimax.io/docs/m-plan/intro).
+# Thinking is always on; thinking.type = disabled is accepted and ignored.
 schema = 2
 name = "MiniMax-M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
 open_weights = true
 release_date = "2026-02-12"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -13,6 +17,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 204_800

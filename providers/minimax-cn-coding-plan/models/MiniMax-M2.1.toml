@@ -1,9 +1,13 @@
+# Listed as retired; the plans now include only MiniMax-M3.1-Flash
+#   (https://platform.minimaxi.com/docs/faq/models, https://platform.minimaxi.com/docs/m-plan/intro).
+# Thinking is always on; thinking.type = disabled is accepted and ignored.
 schema = 2
 name = "MiniMax-M2.1"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
 open_weights = true
 release_date = "2025-12-23"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -13,6 +17,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 204_800
