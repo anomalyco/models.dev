@@ -56,7 +56,7 @@ v2-only files (`schema = 2`, `v2_only = true`), so they stay out of the v1 API:
   characters, `input_audio_minutes` → per minute (feature surcharges and streaming become
   conditional overrides), `*_tokens` → per 1M tokens by modality. If any pricing key has no
   mapping, the file gets no `[cost]` and its header lists the keys.
-- `name` is written only for aliases whose catalog name differs from the lab's.
+- `name` is written only for aliases whose catalog name is more than the lab name with a vendor prefix.
 
 Image, video, music, document and realtime (`websocket`) tasks aren't synced.
 

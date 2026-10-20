@@ -372,9 +372,11 @@ export function buildCloudflareAiGatewayMediaModel(
   }
 
   const doc: Record<string, unknown> = { schema: 2, v2_only: true, base_model: base };
+  // Cloudflare's name for an alias, unless it's just the lab's name with a vendor prefix
+  // ("MiniMax Hailuo 2.3" for "Hailuo 2.3").
   if (
     catalog.name !== undefined
-    && catalog.name !== lab.name
+    && !normalizeSlug(catalog.name).endsWith(normalizeSlug(lab.name ?? ""))
     && normalizeSlug(id.split("/").slice(1).join("/")) !== normalizeSlug(base.split("/").slice(1).join("/"))
   ) {
     doc.name = catalog.name;

@@ -783,6 +783,12 @@ test("maps media catalog ids to labs of the task's type", () => {
   // A curated alias keeps Cloudflare's name, since its id doesn't match the lab's.
   expect(build("xai/grok-stt", "Automatic Speech Recognition", { base_model: "xai/grok-voice-transcribe-2.0" }).name)
     .toBe("Catalog name");
+  // ...but not when it's only the lab's name with a vendor prefix.
+  expect(buildCloudflareAiGatewayMediaModel(
+    { model_id: "inworld/tts-1.5-max", task: "Text-to-Speech", name: "Inworld TTS-1.5 Max", provider_details: providerDetails({ input_characters: 0.000035 }) },
+    undefined,
+    { base_model: "inworld/inworld-tts-1.5-max" },
+  ).doc.name).toBeUndefined();
   expect(() => build("openai/gpt-4.1", "Text-to-Speech")).toThrow("is a chat model, not speech");
   expect(() => build("example/unknown-voice", "Text-to-Speech")).toThrow("no lab file and no curated base_model");
 });
