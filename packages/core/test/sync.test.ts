@@ -2729,6 +2729,68 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
   }
 });
 
+test("Eden AI price updates keep v2-only data in migrated files", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-edenai-v2-"));
+  const modelsDir = path.join(root, "providers", "edenai", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const files = [
+    ["openai/gpt-5-search-api", "openai/gpt-5-search-api"],
+    ["anthropic/claude-opus-4-6", "anthropic/claude-opus-4-6"],
+  ] as const;
+
+  try {
+    for (const [id, base] of files) {
+      await mkdir(path.dirname(path.join(modelsDir, `${id}.toml`)), { recursive: true });
+      await mkdir(path.dirname(path.join(root, "models", `${base}.toml`)), { recursive: true });
+      await copyFile(path.join(repo, "models", `${base}.toml`), path.join(root, "models", `${base}.toml`));
+      await copyFile(path.join(repo, "providers", "edenai", "models", `${id}.toml`), path.join(modelsDir, `${id}.toml`));
+    }
+    const before = await Promise.all(files.map(([id]) => readFile(path.join(modelsDir, `${id}.toml`), "utf8")));
+    const search = edenAIModel({
+      id: "openai/gpt-5-search-api",
+      model_name: "gpt-5-search-api",
+      context_length: 272_000,
+      capabilities: {
+        input_modalities: ["text", "image", "file"],
+        output_modalities: ["text"],
+        supports_function_calling: true,
+        supports_response_schema: true,
+      },
+      list_pricing: { input_cost_per_token: 0.0000015, output_cost_per_token: 0.00001, cache_read_input_token_cost: 0.000000125 },
+    });
+    const opus = edenAIModel({
+      id: "anthropic/claude-opus-4-6",
+      owned_by: "anthropic",
+      model_name: "claude-opus-4-6",
+      context_length: null,
+      capabilities: {
+        input_modalities: ["text", "image", "file"],
+        output_modalities: ["text"],
+        supports_function_calling: true,
+        supports_response_schema: true,
+      },
+      list_pricing: {
+        input_cost_per_token: 0.000006,
+        output_cost_per_token: 0.000025,
+        cache_read_input_token_cost: 0.0000005,
+        cache_creation_input_token_cost: 0.00000625,
+      },
+    });
+    const provider = { ...edenai, modelsDir, fetchModels: async () => ({ object: "list", data: [search, opus] }) };
+
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 0, updated: 2, deleted: 0 });
+    for (const [index, [id]] of files.entries()) {
+      const after = await readFile(path.join(modelsDir, `${id}.toml`), "utf8");
+      expect(after).not.toBe(before[index]);
+      const unpriced = (text: string) => text.replace(/\[cost\.text\.input\]\nprice = [\d.]+/, "");
+      expect(unpriced(after)).toBe(unpriced(before[index]!));
+    }
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("omits Eden AI reasoning options for non-reasoning models", () => {
   const model = edenAIModel({
     id: "openai/gpt-4o-mini",
