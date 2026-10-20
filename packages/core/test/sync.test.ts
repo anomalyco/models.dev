@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -71,6 +72,7 @@ import {
   buildMergeGatewayModel,
   fetchMergeGatewayModels,
   mergeGateway,
+  mergeGatewayReasoningOptions,
   MergeGatewayResponse,
   selectMergeGatewayVendor,
   type MergeGatewayModel,
@@ -4826,6 +4828,99 @@ test("uses Merge Gateway's CMS order to break equal-cost fallback ties", () => {
 // Prevents a scoped API response from deleting catalog entries it cannot see.
 test("retains Merge Gateway models missing from an API-key-scoped response", () => {
   expect(mergeGateway.deleteMissing).toBe(false);
+});
+
+test("sorts Merge Gateway effort values from low to high", () => {
+  expect(mergeGatewayReasoningOptions({
+    disable_supported: false,
+    controls: ["reasoning_effort"],
+    effort_values: ["high", "max", "low", "none", "medium"],
+  })).toEqual([{ type: "effort", values: ["none", "low", "medium", "high", "max"] }]);
+});
+
+test("maps Merge Gateway long-context pricing to a context tier", () => {
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: {
+      openai: mergeGatewayVendor({
+        pricing: {
+          currency: "USD",
+          input_per_million: 5,
+          output_per_million: 30,
+          cache_read_per_million: 0.5,
+          cache_write_per_million: 5,
+          long_context: {
+            threshold_tokens: 272_000,
+            input_per_million: 8,
+            output_per_million: null,
+            cache_read_per_million: 0.8,
+            cache_write_per_million: null,
+          },
+        },
+      }),
+    },
+  }), undefined);
+
+  // A null long-context rate keeps the base rate.
+  expect(model.cost?.tiers).toEqual([{
+    tier: { type: "context", size: 272_000 },
+    input: 8,
+    output: 30,
+    cache_read: 0.8,
+    cache_write: 5,
+  }]);
+});
+
+test("leaves the price of Merge Gateway routes billed per second to the file", () => {
+  const vendor = mergeGatewayVendor({
+    context_window: 448_000,
+    max_output_tokens: 4_096,
+    pricing: { currency: "USD", input_per_million: 0, output_per_million: 0, unit: "per_second", input_per_second: 0.0001 },
+  });
+  vendor.capabilities = { ...vendor.capabilities, input: ["audio"], output: ["text"], supports_tool_calling: false, supports_structured_outputs: false };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "openai/whisper-1",
+    display_name: "Whisper",
+    vendors: { openai: vendor },
+  }), { base_model: "openai/whisper-1" });
+
+  expect(model).toBeDefined();
+  expect(model).not.toHaveProperty("cost");
+});
+
+test("Merge Gateway v2 base_model files keep the display name and leave model facts to the lab", () => {
+  const lab = Bun.TOML.parse(readFileSync(path.join(import.meta.dir, "../../../models/openai/gpt-5.6-sol.toml"), "utf8")) as Record<string, any>;
+  const model = buildMergeGatewayModel(mergeGatewayModel({ display_name: "GPT 5.6 Sol (Merge)" }), {
+    base_model: "openai/gpt-5.6-sol",
+    description: lab.description,
+    family: lab.family,
+    release_date: lab.release_date,
+    last_updated: "2026-07-09",
+    knowledge: lab.knowledge,
+    open_weights: lab.open_weights,
+  });
+
+  expect(model).toMatchObject({ base_model: "openai/gpt-5.6-sol", name: "GPT 5.6 Sol (Merge)" });
+  for (const fact of ["description", "family", "release_date", "last_updated", "knowledge", "open_weights"]) {
+    expect(model).not.toHaveProperty(fact);
+  }
+});
+
+test("writes the Merge Gateway toggle wire path for every toggle", () => {
+  const vendor = mergeGatewayVendor();
+  vendor.capabilities = {
+    ...vendor.capabilities,
+    supports_reasoning: true,
+    reasoning: { configurable: true, disable_supported: true, controls: ["thinking"], effort_values: [] },
+  };
+  const translated = mergeGateway.translateModel(mergeGatewayModel({
+    model: "deepseek/deepseek-v4-pro",
+    provider: "deepseek",
+    display_name: "DeepSeek V4 Pro",
+    vendors: { deepseek: vendor },
+  }), { existing: () => undefined, authored: () => undefined });
+
+  expect(translated && "model" in translated ? translated.model.reasoning_options : undefined).toEqual([{ type: "toggle" }]);
+  expect(translated?.header).toStartWith('# Toggle: thinking.type = "enabled"|"disabled"');
 });
 
 test("translates Vercel pricing tiers with an implicit zero minimum", () => {
