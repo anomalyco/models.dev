@@ -18,25 +18,27 @@
 # (type:file / file_url|file_data). Model pages list Image/Text/Video badges
 # and separately list PDF理解 as a Completions built-in tool. Beijing-region
 # availability note on help.aliyun.com; lab capability still includes pdf.
-
+schema = 2
 name = "Qwen3.8 Max"
 description = "2.4-trillion-parameter MoE flagship for coding, professional work, multimodal understanding, and long-horizon agentic workflows"
 family = "qwen"
-release_date = "2026-08-03"
-last_updated = "2026-08-03"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-08-03"
+
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_000_000
 output = 131_072
-
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "Terminal-Bench"

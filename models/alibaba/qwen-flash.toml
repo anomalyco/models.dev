@@ -1,19 +1,22 @@
+schema = 2
 name = "Qwen Flash"
 description = "Efficient Qwen model for fast chat, extraction, and high-volume workloads"
 family = "qwen"
-release_date = "2025-07-28"
-last_updated = "2025-07-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-04"
 open_weights = false
-
-[limit]
-context = 1_000_000
-output = 32_768
+knowledge = "2024-04"
+release_date = "2025-07-28"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 32_768

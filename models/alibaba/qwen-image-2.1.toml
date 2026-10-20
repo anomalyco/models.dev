@@ -7,25 +7,29 @@
 # convention on Alibaba's first-party host (8,192 prompt tokens, no token
 # output budget); the number of output images is a request parameter, not a
 # token limit.
+schema = 2
 name = "Qwen-Image-2.1"
 description = "Unified text-to-image generation and image editing model with native RGBA transparency and reference-image editing"
 family = "qwen"
+open_weights = true
 release_date = "2026-09-14"
 last_updated = "2026-09-21"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
 license = "qwen-research"
-
-[limit]
-context = 8_192
-output = 0
 
 [modalities]
 input = ["text", "image"]
 output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8_192
+output = 0
 
 [[weights]]
 label = "Hugging Face"

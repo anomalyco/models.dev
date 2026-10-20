@@ -10,26 +10,28 @@
 # 125B total with 6B active plus 51B n-gram embedding and 4B MTP.
 # Thinking always on: reasoning_effort low|medium|xhigh (default xhigh).
 # Native context 262K, extensible up to 1M tokens.
-
+schema = 2
 name = "Qwen3.8 Flash Next"
 description = "Open-weight experimental preview of the Qwen4 architecture: hybrid-attention MoE (125B total, 6B active) with vision encoder for coding, agent tasks, and image and video understanding"
 family = "qwen"
-release_date = "2026-08-27"
-last_updated = "2026-08-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-08-27"
 license = "qwen-community-1.0"
-
-[limit]
-context = 262_144
-output = 131_072
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

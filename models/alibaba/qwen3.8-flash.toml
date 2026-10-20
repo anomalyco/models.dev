@@ -1,19 +1,22 @@
 # Source: https://www.qwencloud.com/models/qwen3.8-flash
+schema = 2
 name = "Qwen3.8 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
-release_date = "2026-08-26"
-last_updated = "2026-08-26"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
-
-[limit]
-context = 1_000_000
-output = 131_072
+release_date = "2026-08-26"
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 131_072

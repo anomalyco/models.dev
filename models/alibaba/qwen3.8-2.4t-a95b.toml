@@ -6,26 +6,28 @@
 # Open-weight twin of Qwen3.8 Max: text-only, thinking always on,
 # reasoning_effort low|medium|xhigh (default xhigh). Native context 262K,
 # extensible to ~1.01M. Distinct from closed multimodal qwen3.8-max.
-
+schema = 2
 name = "Qwen3.8 2.4T A95B"
 description = "Open-weight sparse MoE (2.4T total, 95B active), the open-weight twin of Qwen3.8 Max for coding, research, complex reasoning, and agentic workflows"
 family = "qwen"
-release_date = "2026-08-12"
-last_updated = "2026-08-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-08-12"
 license = "qwen3.8-max"
-
-[limit]
-context = 262_144
-output = 131_072
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

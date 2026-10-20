@@ -7,22 +7,24 @@
 # for stronger coding, collaborative agents, and vision/document understanding.
 # PDF input: inherits Completions PDF理解 / document parsing from the Max line
 # (same as models/alibaba/qwen3.8-max.toml).
-
+schema = 2
 name = "Qwen3.8 Max 0902"
 description = "2026-09-02 upgraded snapshot of Qwen3.8 Max with stronger coding, collaborative agents, and multimodal document understanding"
 family = "qwen"
-release_date = "2026-09-02"
-last_updated = "2026-09-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-09-02"
+
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_000_000
 output = 131_072
-
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]

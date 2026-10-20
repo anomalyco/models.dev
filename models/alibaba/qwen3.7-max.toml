@@ -1,23 +1,26 @@
 # Max Output Length 131072 per Alibaba Model Studio qwen3.7-max (Context Window 1000000):
 # https://www.alibabacloud.com/help/en/model-studio/qwen3-7-max
+schema = 2
 name = "Qwen3.7 Max"
 description = "Qwen frontier model tuned for agent frameworks, coding assistants, and long tasks"
 family = "qwen"
-release_date = "2026-05-21"
-last_updated = "2026-05-21"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
-
-[limit]
-context = 1_000_000
-output = 131_072
+release_date = "2026-05-21"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 131_072
 
 [[benchmarks]]
 name = "SWE-Bench Verified"

@@ -1,21 +1,24 @@
+schema = 2
 name = "Qwen3.6 35B-A3B"
 description = "Open multimodal Qwen MoE for local agents that need vision, audio, and code"
 family = "qwen"
-release_date = "2026-04-17"
-last_updated = "2026-04-17"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 262_144
-output = 65_536
+release_date = "2026-04-17"
 
 [modalities]
 input = ["text", "image", "video", "audio"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 65_536
 
 [[weights]]
 label = "Hugging Face"
