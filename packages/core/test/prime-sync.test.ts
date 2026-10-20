@@ -119,3 +119,64 @@ test("discovery generates an empty provider, updates prices, preserves incomplet
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("v2 files keep their effort order, MIME lists and mid-conversation flags through a sync", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-prime-v2-"));
+  const modelsDir = path.join(root, "providers/prime/models");
+  await mkdir(path.join(modelsDir, "openai"), { recursive: true });
+  await mkdir(path.join(root, "models/openai"), { recursive: true });
+  await copyFile(path.join(import.meta.dirname, "../../../models/openai/gpt-5.4.toml"), path.join(root, "models/openai/gpt-5.4.toml"));
+  await copyFile(path.join(import.meta.dirname, "../../../providers/prime/provider.toml"), path.join(root, "providers/prime/provider.toml"));
+  const file = Bun.file(path.join(modelsDir, "openai/gpt-5.4.toml"));
+  await Bun.write(file, [
+    "schema = 2",
+    'base_model = "openai/gpt-5.4"',
+    'name = "GPT-5.4 Hosted"',
+    "",
+    "[modalities]",
+    'input = ["text", "image/jpeg", "image/png"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true, updates = false }",
+    'reasoning = { supported = true, effort = ["none", "low", "high"] }',
+    "structured_output = true",
+    "effort_updates = false",
+    "",
+    "[limit]",
+    "context = 128_000",
+    "output = 8_192",
+    "",
+    "[cost.text.input]",
+    "price = 0.4",
+    "cache = { read = 0 }",
+    "",
+    "[cost.text.output]",
+    "price = 0.8",
+    "",
+  ].join("\n"));
+  let data = [model({ reasoning: { supported_efforts: ["high", "none", "low"] } })];
+  const provider = { ...prime, modelsDir, fetchModels: async () => ({ object: "list", data }) };
+  try {
+    expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
+    const text = await file.text();
+    expect(text).toContain("# Effort: top-level reasoning_effort = none|low|high.");
+    expect(text).toContain("effort_updates = false");
+    expect(text).toContain("# Mid-conversation: Prime serves this model on POST /api/v1/chat/completions");
+    expect(text).toContain("# Input MIME types: the lab's entries");
+    expect((await syncProvider(provider, { openIssues: false })).unchanged).toBe(1);
+
+    data = [model({ pricing: { input_usd_per_mtok: 1, output_usd_per_mtok: 2 }, reasoning: { supported_efforts: ["low", "high", "none"] } })];
+    expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
+    const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect(updated.cost.text).toEqual({ input: { price: 1 }, output: { price: 2 } });
+    expect(updated.modalities.input).toEqual(["text", "image/jpeg", "image/png"]);
+    expect(updated.capabilities).toMatchObject({
+      tools: { supported: true, updates: false },
+      reasoning: { supported: true, effort: ["none", "low", "high"] },
+      effort_updates: false,
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
