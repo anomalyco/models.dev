@@ -78,6 +78,19 @@ function migrateProvider(text: string, toml: Record<string, unknown>, modelID: s
     // Same as the base: inherit it, which keeps the lab's MIME types in v2.
     if (isDeepStrictEqual(toml.modalities, base.modalities)) delete toml.modalities;
   }
+  // v2 derives `attachment` from modalities, so an override that disagrees with
+  // the modalities (its own or inherited) can't be kept.
+  if (toml.base_model !== undefined && (toml.attachment !== undefined || toml.modalities !== undefined)) {
+    const base = readLabModel(path.join(root, "models", `${toml.base_model}.toml`), String(toml.base_model));
+    const attachment = toml.attachment ?? base.attachment;
+    const input =
+      (toml.modalities as { input?: string[] } | undefined)?.input ??
+      (base.modalities as { input?: string[] } | undefined)?.input ??
+      [];
+    if (attachment !== undefined && attachment !== input.some((modality) => modality !== "text")) {
+      throw new Error(`${modelID}: attachment = ${attachment} disagrees with the modalities`);
+    }
+  }
   const provider = toml.provider as { npm?: string; shape?: "responses" | "completions" } | undefined;
   const protocol = resolveProtocol(
     { ...toml, id: modelID } as unknown as Model,
