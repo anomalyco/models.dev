@@ -4,22 +4,25 @@
 # No thinking toggle — K3 always returns reasoning content.
 # https://vercel.com/ai-gateway/models/kimi-k3-fast
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 4.5
-output = 22.5
-cache_read = 0.45
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 4.5
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 22.5

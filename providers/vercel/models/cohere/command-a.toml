@@ -1,10 +1,15 @@
+schema = 2
 base_model = "cohere/command-a"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
-tool_call = true
 
-[cost]
-input = 2.5
-output = 10
+[capabilities]
+tools = { supported = true }
 
 [limit]
 output = 8_000
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10

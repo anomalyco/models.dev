@@ -3,18 +3,20 @@
 # Sources:
 # - https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 # - https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-3-5-lightning-30b-a3b-infer
+schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning 30B"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 0.05
-output = 0.2
-cache_read = 0.01
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.2

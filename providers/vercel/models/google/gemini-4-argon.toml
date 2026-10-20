@@ -1,19 +1,22 @@
+schema = 2
 base_model = "google/gemini-4-argon"
-structured_output = true
 description = "Gemini multimodal model for text, image, audio, video, and document tasks"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.1
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 1_000_000
 output = 1_000_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10

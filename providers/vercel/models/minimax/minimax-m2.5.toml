@@ -1,14 +1,16 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5"
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
-cache_write = 0.375
+[capabilities]
+reasoning = { supported = true, budget = {  } }
 
 [limit]
 output = 131_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 1.2

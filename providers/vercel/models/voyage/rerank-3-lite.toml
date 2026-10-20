@@ -1,17 +1,18 @@
+schema = 2
 name = "Voyage Rerank 3 Lite"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
 family = "voyage"
-release_date = "2026-09-30"
-last_updated = "2026-09-30"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
-
-[limit]
-context = 32_000
-output = 32_000
+release_date = "2026-09-30"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 32_000
+output = 32_000

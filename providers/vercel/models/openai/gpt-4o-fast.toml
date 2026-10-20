@@ -1,11 +1,16 @@
+schema = 2
 base_model = "openai/gpt-4o"
-structured_output = true
 name = "GPT-4o (Fast)"
 
-[cost]
-input = 4.25
-output = 17
-cache_read = 2.125
+[capabilities]
+structured_output = true
 
 [limit]
 input = 111_616
+
+[cost.text.input]
+price = 4.25
+cache = { read = 2.125 }
+
+[cost.text.output]
+price = 17

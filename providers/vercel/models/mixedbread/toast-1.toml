@@ -1,6 +1,9 @@
+schema = 2
 base_model = "mixedbread/toast-1"
 
-[cost]
-input = 0.3
-output = 0.72
-cache_read = 0.036
+[cost.text.input]
+price = 0.3
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 0.72

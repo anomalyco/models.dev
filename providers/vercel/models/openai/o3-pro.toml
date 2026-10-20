@@ -1,19 +1,22 @@
+schema = 2
 base_model = "openai/o3-pro"
-structured_output = true
 name = "o3 Pro"
-temperature = true
 knowledge = "2024-10"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 20
-output = 80
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 input = 100_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 20
+
+[cost.text.output]
+price = 80

@@ -1,21 +1,20 @@
+schema = 2
 base_model = "alibaba/qwen3.6-27b"
 name = "Qwen 3.6 27B"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1, max = 131_072 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 131_072
-
-[cost]
-input = 0.6
-output = 3.6
 
 [limit]
 context = 256_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3.6

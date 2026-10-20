@@ -1,21 +1,24 @@
+schema = 2
 type = "decision"
 name = "Decider V1.2 27B"
 description = "Perplexity Decider V1.2 is a 27B multimodal decision model for classification, routing, and scoring. It evaluates text, structured JSON, and images against yes/no questions, custom choices, and ordered rubrics, returning typed answers with probabilities. It supports multiple questions over shared content and a 256K context window."
-release_date = "2026-10-16"
-last_updated = "2026-10-16"
-attachment = true
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-10-16"
 
-[cost]
-input = 0.02
-output = 0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 262_144
 output = 0
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

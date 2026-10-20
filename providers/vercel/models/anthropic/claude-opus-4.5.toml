@@ -1,17 +1,16 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-5"
 name = "Claude Opus 4.5"
 
-interleaved = true
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = {  } }
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
 
-[[reasoning_options]]
-type = "budget_tokens"
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[cost.text.output]
+price = 25

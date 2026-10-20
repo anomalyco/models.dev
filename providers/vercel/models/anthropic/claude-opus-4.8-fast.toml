@@ -1,16 +1,14 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-8"
 name = "Claude Opus 4.8 (Fast)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], budget = {  } }
 temperature = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[cost.text.output]
+price = 50

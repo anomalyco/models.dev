@@ -1,20 +1,23 @@
 # Pricing: https://ai-gateway.vercel.sh/v1/models (2026-09-04), upper band starts at 272,001 prompt tokens
+schema = 2
 base_model = "openai/gpt-6-astra-fast"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 20
+cache = { read = 2, write = 25 }
 
-[cost]
-input = 20
-output = 100
-cache_read = 2
-cache_write = 25
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_001 } }
+price = 40
+cache = { read = 4, write = 50 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_001 }
-input = 40
-output = 150
-cache_read = 4
-cache_write = 50
+[cost.text.output]
+price = 100
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_001 } }
+price = 150

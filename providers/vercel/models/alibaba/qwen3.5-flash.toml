@@ -1,25 +1,22 @@
+schema = 2
 base_model = "alibaba/qwen3.5-flash"
 name = "Qwen 3.5 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"], budget = { min = 1, max = 81_920 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 81_920
-
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.01
-cache_write = 0.125
 
 [limit]
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[cost.text.output]
+price = 0.4

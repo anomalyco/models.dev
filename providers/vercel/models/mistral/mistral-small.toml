@@ -1,24 +1,28 @@
+schema = 2
 name = "Mistral Small (latest)"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
 family = "mistral-small"
+open_weights = true
+knowledge = "2025-06"
 release_date = "2024-09-17"
 last_updated = "2026-03-16"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-06"
-open_weights = true
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.015
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 262_144
 output = 4_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

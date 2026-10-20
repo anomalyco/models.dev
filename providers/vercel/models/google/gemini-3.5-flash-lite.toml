@@ -1,19 +1,22 @@
+schema = 2
 base_model = "google/gemini-3.5-flash-lite"
-structured_output = true
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
 
 [limit]
 context = 1_000_000
 output = 65_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.5

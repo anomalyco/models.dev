@@ -1,11 +1,16 @@
+schema = 2
 base_model = "openai/gpt-4.1-mini"
-structured_output = true
 name = "GPT-4.1 mini (Fast)"
 
-[cost]
-input = 0.7
-output = 2.8
-cache_read = 0.175
+[capabilities]
+structured_output = true
 
 [limit]
 input = 1_014_808
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 2.8

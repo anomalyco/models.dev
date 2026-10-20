@@ -1,20 +1,23 @@
+schema = 2
 base_model = "openai/gpt-5.6-sol"
-structured_output = true
 name = "GPT 5.6 Sol (Fast)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[cost]
-input = 8
-output = 40
-cache_read = 0.8
-cache_write = 10
+[cost.text.input]
+price = 8
+cache = { read = 0.8, write = 10 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 16
-output = 60
-cache_read = 1.6
-cache_write = 20
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 1.6, write = 20 }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60

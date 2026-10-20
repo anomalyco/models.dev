@@ -1,15 +1,17 @@
+schema = 2
 base_model = "openai/o3"
-structured_output = true
 name = "o3 (Fast)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 3.5
-output = 14
-cache_read = 0.875
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 input = 100_000
+
+[cost.text.input]
+price = 3.5
+cache = { read = 0.875 }
+
+[cost.text.output]
+price = 14

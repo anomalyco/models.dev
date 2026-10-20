@@ -1,29 +1,29 @@
+schema = 2
 name = "DeepSeek V3.2 Thinking"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek-thinking"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-07"
 open_weights = false
+knowledge = "2024-07"
+release_date = "2025-12-01"
 
-interleaved = true
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 0.62
-output = 1.85
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+temperature = true
 
 [limit]
 context = 128_000
 output = 8_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.62
+
+[cost.text.output]
+price = 1.85

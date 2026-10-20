@@ -1,27 +1,27 @@
 # Toggle: reasoning.enabled = true|false
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+schema = 2
 name = "LongCat 2.5 Preview"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "longcat"
-release_date = "2026-09-26"
-last_updated = "2026-09-26"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2026-09-26"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

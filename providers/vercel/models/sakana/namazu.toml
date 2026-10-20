@@ -1,25 +1,24 @@
+schema = 2
 name = "Sakana Namazu"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
-release_date = "2026-08-03"
-last_updated = "2026-08-03"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2026-08-03"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.15
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.95
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4

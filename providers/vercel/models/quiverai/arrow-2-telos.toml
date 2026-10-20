@@ -1,12 +1,16 @@
 # https://docs.quiver.ai/api-reference/openresponses/createopenresponse
+schema = 2
 base_model = "quiverai/arrow-2-telos"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
-[cost]
-input = 6
-output = 30
-cache_read = 0.6
-cache_write = 7.5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 6
+cache = { read = 0.6, write = 7.5 }
+
+[cost.text.output]
+price = 30

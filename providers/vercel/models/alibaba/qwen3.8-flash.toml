@@ -4,29 +4,25 @@
 # https://vercel.com/docs/ai-gateway/models-and-providers/provider-options
 # Toggle: providerOptions.alibaba.enableThinking true|false -> enable_thinking
 # Budget: providerOptions.alibaba.thinkingBudget -> thinking_budget (reasoning tokens)
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
 name = "Qwen 3.8 Flash"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {  } }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
-cache_write = 0.2
 
 [limit]
 context = 991_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016, write = 0.2 }
+
+[cost.text.output]
+price = 0.47

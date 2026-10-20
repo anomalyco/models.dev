@@ -1,14 +1,20 @@
+schema = 2
 base_model = "openai/gpt-4.1-nano"
-structured_output = true
 name = "GPT-4.1 nano (Fast)"
 
-[cost]
-input = 0.2
-output = 0.8
-cache_read = 0.05
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
 
 [limit]
 input = 1_014_808
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.8

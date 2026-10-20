@@ -1,14 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-thinking"
 name = "Qwen3 Next 80B A3B Thinking"
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-
-[cost]
-input = 0.15
-output = 1.2
+[capabilities]
+reasoning = { supported = true, budget = { min = 1 } }
 
 [limit]
 context = 262_144
 output = 262_144
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.2

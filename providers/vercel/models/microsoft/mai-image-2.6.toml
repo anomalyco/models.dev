@@ -1,21 +1,24 @@
+schema = 2
 name = "MAI-Image-2.6"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "mai"
-release_date = "2026-10-13"
-last_updated = "2026-10-13"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-10-13"
 
-[cost]
-input = 5
-output = 38
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["text"]
-output = ["image"]
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 38

@@ -1,26 +1,25 @@
+schema = 2
 name = "Ling 3.0 Flash Sante"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "ling"
-release_date = "2026-09-04"
-last_updated = "2026-09-04"
-attachment = false
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2026-09-04"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.075
-output = 0.22
-cache_read = 0.015
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
 context = 256_000
 output = 32_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.22

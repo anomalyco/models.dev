@@ -1,25 +1,24 @@
+schema = 2
 name = "Beam 1.0 (Free)"
 description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
 family = "beam"
-release_date = "2026-10-16"
-last_updated = "2026-10-16"
-attachment = false
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2026-10-16"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

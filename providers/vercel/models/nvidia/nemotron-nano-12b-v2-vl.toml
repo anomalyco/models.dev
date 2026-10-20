@@ -1,17 +1,20 @@
+schema = 2
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
 name = "Nvidia Nemotron Nano 12B V2 VL"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.2
-output = 0.6
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
 context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6

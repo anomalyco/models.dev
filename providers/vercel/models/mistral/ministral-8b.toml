@@ -1,26 +1,30 @@
 # Previously a symlink to providers/mistral/models/ministral-8b-latest.toml. Copied from origin/dev 67bc657a5 so Vercel's data
 # stays as it was when the Mistral file moved to schema 2 with Mistral-API-specific values.
+schema = 2
 name = "Ministral 8B (latest)"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "ministral"
+open_weights = true
+knowledge = "2024-10"
 release_date = "2024-10-16"
 last_updated = "2024-10-04"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = true
 
-[cost]
-input = 0.15
-output = 0.15
-cache_read = 0.015
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 262_144
 output = 4_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.15

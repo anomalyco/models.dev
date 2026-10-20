@@ -1,11 +1,14 @@
+schema = 2
 base_model = "google/gemini-3.8-flash-lite-tts"
 name = "Gemini 3.8 Flash-Lite TTS"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 
-[cost]
-input = 0.5
-output = 6
-
 [limit]
 context = 0
 output = 0
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 6

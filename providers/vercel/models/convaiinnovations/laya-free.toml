@@ -1,21 +1,24 @@
+schema = 2
 type = "decision"
 name = "Laya (Free)"
 description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
-release_date = "2026-10-01"
-last_updated = "2026-10-01"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-10-01"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 8_192
 output = 0
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

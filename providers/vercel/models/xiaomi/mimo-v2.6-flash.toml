@@ -1,16 +1,19 @@
 # Effort: reasoning.effort = none|minimal|low|medium|high|xhigh|max
 # https://mimo.mi.com/docs/en-US/api/chat/responses
+schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 name = "MiMo V2.6 Flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high"]
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
-
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

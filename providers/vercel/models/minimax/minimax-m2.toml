@@ -1,17 +1,20 @@
+schema = 2
 base_model = "minimax/MiniMax-M2"
 name = "MiniMax M2"
 
-interleaved = true
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
-cache_write = 0.375
+[capabilities]
+reasoning = { supported = true, budget = {  } }
 
 [limit]
 context = 205_000
 output = 196_608
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 1.2

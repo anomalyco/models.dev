@@ -1,13 +1,19 @@
+schema = 2
 base_model = "google/gemma-4-31b-it"
-structured_output = true
-reasoning = false
 
-[cost]
-input = 0.14
-output = 0.4
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 output = 131_072
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.4

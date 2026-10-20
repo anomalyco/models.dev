@@ -1,16 +1,20 @@
+schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
 
-[[reasoning_options]]
-type = "budget_tokens"
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[capabilities]
+reasoning = { supported = true, budget = {  } }
 
 [limit]
 context = 512_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

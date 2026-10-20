@@ -5,18 +5,20 @@
 # - openrouter tencent/hy3 effort none|low|high
 # API: {"chat_template_kwargs": {"reasoning_effort": "no_think"|"low"|"high"}}
 # mapped: no_think → none
+schema = 2
 base_model = "tencent/hy3"
 base_model_omit = ["limit.input"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
-
-[cost]
-input = 0.14
-output = 0.58
-cache_read = 0.035
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 
 [limit]
 context = 262_144
 output = 262_144
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.035 }
+
+[cost.text.output]
+price = 0.58

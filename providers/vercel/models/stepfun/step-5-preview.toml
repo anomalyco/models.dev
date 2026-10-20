@@ -1,17 +1,23 @@
+schema = 2
 base_model = "stepfun/step-5-preview"
 base_model_omit = ["limit.input"]
 description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
-reasoning = false
-tool_call = false
 
-[cost]
-input = 1
-output = 2.7
-cache_read = 0.1
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.7

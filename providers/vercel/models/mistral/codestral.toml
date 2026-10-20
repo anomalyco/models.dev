@@ -1,27 +1,31 @@
 # Previously a symlink to providers/mistral/models/codestral-latest.toml. Copied from origin/dev 67bc657a5 so Vercel's data
 # stays as it was when the Mistral file moved to schema 2 with Mistral-API-specific values.
 # Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
+schema = 2
 name = "Codestral (latest)"
 description = "Mistral code model for completions, refactors, and developer IDE workflows"
 family = "codestral"
+open_weights = true
+knowledge = "2024-10"
 release_date = "2024-05-29"
 last_updated = "2025-01-04"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = true
 
-[cost]
-input = 0.3
-output = 0.9
-cache_read = 0.03
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 4_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.9

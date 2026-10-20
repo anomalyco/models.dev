@@ -1,17 +1,21 @@
+schema = 2
 base_model = "xiaomi/mimo-v2.5"
 name = "MiMo M2.5"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 1_050_000
 output = 131_100
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28
