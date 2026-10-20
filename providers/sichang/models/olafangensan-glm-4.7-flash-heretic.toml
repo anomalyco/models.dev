@@ -1,9 +1,11 @@
-# https://sichang.xyz/docs/models/chat/olafangensan-glm-4.7-flash-heretic (accessed 2026-10-15)
+# https://sichang.xyz/docs/models/chat/olafangensan-glm-4.7-flash-heretic (accessed 2026-10-20)
+# Reasoning is disabled on this API; request reasoning fields are ignored.
+# Image parts are replaced by a text placeholder (the upstream rejects images).
 name = "GLM 4.7 Flash Heretic"
 description = "Abliterated GLM-4.7 Flash with strong Chinese writing, for uncensored chat and agent loops"
 family = "glm-flash"
 release_date = "2026-02-04"
-last_updated = "2026-10-15"
+last_updated = "2026-10-20"
 attachment = false
 reasoning = false
 tool_call = true

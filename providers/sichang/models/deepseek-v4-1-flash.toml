@@ -1,7 +1,7 @@
-# https://sichang.xyz/docs/models/chat/deepseek-v4-1-flash (accessed 2026-10-15)
-# Served with reasoning disabled and text-only input on this API.
+# https://sichang.xyz/docs/models/chat/deepseek-v4-1-flash (accessed 2026-10-20)
+# Served with reasoning disabled (request reasoning fields are ignored) and without
+# response_format; image input is inherited from the base model.
 base_model = "deepseek/deepseek-v4.1-flash"
-attachment = false
 reasoning = false
 structured_output = false
 
@@ -11,9 +11,4 @@ output = 2.8714
 cache_read = 0.0179
 
 [limit]
-context = 1_000_000
 output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

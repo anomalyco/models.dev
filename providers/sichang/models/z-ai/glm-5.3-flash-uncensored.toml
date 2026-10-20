@@ -1,13 +1,13 @@
-# https://sichang.xyz/docs/models/chat/z-ai--glm-5.3-flash-uncensored (accessed 2026-10-15)
-# No tool calling on this API for this model.
+# https://sichang.xyz/docs/models/chat/z-ai--glm-5.3-flash-uncensored (accessed 2026-10-20)
+# Reasoning is disabled on this API; request reasoning fields are ignored.
 name = "GLM 5.3 Flash Uncensored"
 description = "Uncensored GLM-5.3 Flash for unrestricted chat, long-form fiction, and million-token context"
 family = "glm-flash"
 release_date = "2026-07-29"
-last_updated = "2026-10-15"
-attachment = false
+last_updated = "2026-10-20"
+attachment = true
 reasoning = false
-tool_call = false
+tool_call = true
 structured_output = false
 temperature = true
 open_weights = true
@@ -22,5 +22,5 @@ context = 1_000_000
 output = 16_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
