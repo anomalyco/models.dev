@@ -451,6 +451,9 @@ function sameModalities(a: { input: string[]; output: string[] }, b: LabFile["mo
 
 // Per-feature transcription surcharges, added to the base per-minute price when the
 // request sets the field. Keyed by the catalog's `input_audio_minutes_<feature>` suffix.
+// AssemblyAI sells these as add-on features on top of the model's hourly rate
+// (https://www.assemblyai.com/pricing: keyterms $0.05/hr, diarization $0.02/hr, medical
+// $0.15/hr, the catalog's per-minute values), so they stack.
 const ADDITIVE_MINUTE_PRICES: Record<string, CostWhenV2> = {
   speaker_diarization: { speaker_labels: { equals: true } },
   keyterms: { keyterms_prompt: { min_items: 1 } },

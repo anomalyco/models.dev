@@ -561,7 +561,10 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 # `opencode` with unified billing on 2026-10-20.
 [models."google/gemini-3.1-flash-tts"]
 base_model = "google/gemini-3.1-flash-tts-preview"
-note = ["Vertex AI serves Gemini 3.1 Flash TTS as a preview model; the route returns a data:audio/l16 URI (live 2026-10-20). https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-tts-preview"]
+note = [
+  "Vertex AI serves Gemini 3.1 Flash TTS as a preview model; the route returns a data:audio/l16 URI (live 2026-10-20). https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-tts-preview",
+  "Cost: provider_details lists input_text_tokens, input_audio_tokens, output_text_tokens and output_audio_tokens for this row (unlike the 3.8 TTS rows), so all four are kept.",
+]
 
 [models."google/gemini-3.8-flash-tts"]
 modalities = { input = ["text"], output = ["audio/wav"] }
