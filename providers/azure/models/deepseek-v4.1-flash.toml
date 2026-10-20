@@ -10,13 +10,18 @@
 # Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
 # Its published request schema documents no toggle, effort, or reasoning budget.
 # https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-10-08)
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek-V4.1-Flash"
 status = "beta"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 128_000

@@ -1,10 +1,16 @@
+# Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
+# system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
+# `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
 schema = 2
 base_model = "openai/gpt-4-turbo"
 base_model_omit = ["structured_output"]
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 cache = { supported = false }
+system_updates = true
+effort_updates = false
 
 [cost.text.input]
 price = 10

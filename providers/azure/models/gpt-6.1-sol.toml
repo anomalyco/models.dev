@@ -4,16 +4,22 @@
 # rates match OpenAI's direct rates; GPT-6.1 Sol-specific Azure meters are not yet published.
 # https://azure.microsoft.com/en-us/blog/gpt-6-astra-sol-and-luna-for-production-agents-in-microsoft-foundry/
 # https://developers.openai.com/api/docs/models/gpt-6.1-sol
+# Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
+# system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
+# `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 store = true
 cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex"]
+system_updates = true
+effort_updates = true
 
 [cost.text.input]
 price = 2

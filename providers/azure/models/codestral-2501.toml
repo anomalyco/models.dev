@@ -1,3 +1,5 @@
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
 schema = 2
 name = "Codestral 25.01"
 description = "Mistral coding model for code completion, generation, and developer workflows"
@@ -11,9 +13,11 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 256_000

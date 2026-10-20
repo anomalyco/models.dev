@@ -2,13 +2,19 @@
 # Effort: output_config.effort = low|medium|high|xhigh. Foundry's effort table lists max as "No" for claude-mythos-5 ("xhigh produces the same result as max"):
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#thinking-and-effort
 # Thinking is always on.
+# Mid-conversation: Foundry lists "Mid-conversation role: system" (haiku-5-5, opus-5-5, opus-5, sonnet-5-5, sonnet-5) and "Per-turn effort controls" (opus-5-5, opus-5) as Beta:
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#available-claude-models. Anthropic lists mid-conversation system messages, per-message effort and
+# the tool-change beta (tool_addition/tool_removal) for the Claude API, Bedrock and Google Cloud only, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
 schema = 2
 base_model = "anthropic/claude-mythos-5"
 status = "beta"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+system_updates = false
+effort_updates = false
 
 [api.messages]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

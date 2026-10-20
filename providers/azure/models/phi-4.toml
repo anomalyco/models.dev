@@ -1,3 +1,5 @@
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
 schema = 2
 name = "Phi-4"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
@@ -14,6 +16,8 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 128_000

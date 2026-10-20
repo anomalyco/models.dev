@@ -5,13 +5,19 @@
 # entries predate that policy. Model availability:
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models?tabs=pay-go#available-claude-models
 # Effort values described at https://platform.claude.com/docs/en/build-with-claude/effort#effort-levels
+# Mid-conversation: Foundry lists "Mid-conversation role: system" (haiku-5-5, opus-5-5, opus-5, sonnet-5-5, sonnet-5) and "Per-turn effort controls" (opus-5-5, opus-5) as Beta:
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#available-claude-models. Anthropic lists mid-conversation system messages, per-message effort and
+# the tool-change beta (tool_addition/tool_removal) for the Claude API, Bedrock and Google Cloud only, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
 structured_output = true
+system_updates = false
+effort_updates = false
 
 [api.messages]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
