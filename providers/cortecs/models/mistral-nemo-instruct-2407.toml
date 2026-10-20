@@ -1,22 +1,13 @@
 schema = 2
+base_model = "mistral/mistral-nemo"
 name = "mistral-nemo-instruct-2407"
 description = "A 12B parameter, instruct-tuned language model by Mistral AI and NVIDIA, designed for advanced instruction following, multi-turn conversations, and generating text and code across multiple languages."
-open_weights = false
-release_date = "2024-08-07"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = false
-
-[limit]
-context = 128_000
-output = 128_000
 
 [cost.text.input]
 price = 0.145

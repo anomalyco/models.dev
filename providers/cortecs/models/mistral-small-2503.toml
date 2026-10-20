@@ -1,12 +1,7 @@
 schema = 2
+base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
 name = "mistral-small-2503"
 description = "Combines advanced text and vision capabilities with 24 billion parameters, supporting multilingual tasks and long contexts up to 131k tokens, making it versatile for various applications without sacrificing performance."
-open_weights = false
-release_date = "2025-03-20"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
@@ -15,7 +10,6 @@ structured_output = true
 temperature = false
 
 [limit]
-context = 128_000
 output = 128_000
 
 [cost.text.input]

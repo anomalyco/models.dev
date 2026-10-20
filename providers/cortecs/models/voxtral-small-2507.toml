@@ -1,12 +1,7 @@
 schema = 2
+base_model = "mistral/voxtral-small-24b-2507"
 name = "voxtral-small-2507"
 description = "Voxtral Small is a multimodal model with audio input, combining advanced speech capabilities with strong text performance for transcription, translation, and audio understanding."
-open_weights = false
-release_date = "2026-02-02"
-
-[modalities]
-input = ["text", "audio"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }

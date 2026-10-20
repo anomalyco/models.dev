@@ -1,12 +1,7 @@
 schema = 2
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 name = "qwen2.5-vl-72b-instruct"
 description = "Qwen2.5-VL is a powerful vision-language model with advanced capabilities in visual understanding, long video reasoning, and structured output generation."
-open_weights = false
-release_date = "2025-01-27"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
