@@ -1,14 +1,20 @@
 # Source: https://runinfra.ai/inference-api/deepseek-v4-1-flash
 # Pricing: https://runinfra.ai/pricing (USD per million tokens; cache_read is the cached input price)
-# Narrowed from the open-weights base to what this serve publishes on its per-model page: the
-# Capabilities list shows Tool calling, JSON mode and Streaming only, with no image input and no
-# reasoning/thinking control, so attachment and reasoning are set false here even though the base
-# checkpoint supports both. tool_call and structured_output inherit from the base. context and
-# output are what this deployment runs; output is capped at 32,768, matching the other RunInfra
-# DeepSeek serves.
+# Reasoning is on by default on this serve and is controlled with reasoning_effort, measured on our
+# replica 2026-09-29 and unchanged on the deployment serving this id today: "none" turns thinking
+# off (0 reasoning tokens), and "low", "high", "xhigh" and "max" are accepted. An omitted field
+# reasons at the model's own default, which matched "high". "minimal" and "medium" are accepted and
+# folded to "high" before dispatch, so they are not published as separate levels.
+# Narrowed from the open-weights base to what this serve accepts: input is text only, so attachment
+# is false and modalities.input is text. tool_call and structured_output inherit from the base.
+# context and output are what this deployment runs; output is capped at 32,768, matching the other
+# RunInfra DeepSeek serves.
 base_model = "deepseek/deepseek-v4.1-flash"
 attachment = false
-reasoning = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "xhigh", "max"]
 
 [cost]
 input = 0.14
