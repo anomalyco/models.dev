@@ -1,5 +1,6 @@
 # Lab metadata carried over from providers/openrouter/models/openai/gpt-5-image-mini.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Image output MIME types: https://developers.openai.com/api/docs/guides/tools-image-generation (GPT Image tool output_format: png, jpeg, webp)
 schema = 2
 type = "image"
 name = "GPT-5 Image Mini"
@@ -10,7 +11,7 @@ release_date = "2025-10-16"
 
 [modalities]
 input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]
-output = ["image", "text"]
+output = ["image/png", "image/jpeg", "image/webp", "text"]
 
 [capabilities]
 tools = { supported = false }

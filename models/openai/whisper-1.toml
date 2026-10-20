@@ -1,6 +1,7 @@
 # Sources:
 # https://developers.openai.com/api/docs/models/whisper-1
 # https://openai.com/index/introducing-chatgpt-and-whisper-apis/
+# Audio MIME types: https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create (file: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm)
 schema = 2
 v2_only = true
 type = "transcription"
@@ -11,7 +12,7 @@ open_weights = false
 release_date = "2023-03-01"
 
 [modalities]
-input = ["audio"]
+input = ["audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/webm"]
 output = ["text"]
 
 [capabilities]

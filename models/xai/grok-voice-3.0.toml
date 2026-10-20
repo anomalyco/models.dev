@@ -3,6 +3,7 @@
 # - https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech (session.update: tools, reasoning.effort high|none)
 # - https://docs.x.ai/developers/release-notes (2026-10-14: grok-voice-3.0 available; grok-voice-latest points to it)
 # xAI publishes no token context or output window for Speech to Speech; zero denotes not published.
+# Audio MIME types: https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech#configuring-audio-format (audio/pcm, audio/pcmu, audio/pcma, audio/opus)
 schema = 2
 v2_only = true
 type = "realtime"
@@ -13,8 +14,8 @@ open_weights = false
 release_date = "2026-10-14"
 
 [modalities]
-input = ["text", "audio"]
-output = ["text", "audio"]
+input = ["text", "audio/pcm", "audio/pcmu", "audio/pcma", "audio/opus"]
+output = ["text", "audio/pcm", "audio/pcmu", "audio/pcma", "audio/opus"]
 
 [capabilities]
 tools = { supported = true }

@@ -1,6 +1,7 @@
 # Sources:
 # https://developers.openai.com/api/docs/models/tts-1
 # https://openai.com/index/new-models-and-developer-products-announced-at-devday/
+# Audio MIME types: https://developers.openai.com/api/reference/resources/audio/subresources/speech/methods/create (response_format: mp3, opus, aac, flac, wav, pcm)
 schema = 2
 v2_only = true
 type = "speech"
@@ -11,7 +12,7 @@ release_date = "2023-11-06"
 
 [modalities]
 input = ["text"]
-output = ["audio"]
+output = ["audio/mpeg", "audio/opus", "audio/aac", "audio/flac", "audio/wav", "audio/pcm"]
 
 [capabilities]
 tools = { supported = false }

@@ -5,6 +5,7 @@
 # - https://docs.x.ai/docs/guides/image-generation
 # Pricing: $0.05/image (1K), $0.07/image (2K); image input $0.01/image (not token-based; no [cost] authored)
 # Release: dated alias grok-imagine-image-quality-20260403; also aliased as grok-imagine-image-quality-latest, grok-imagine-image-pro
+# Image MIME types: https://docs.x.ai/developers/rest-api-reference/inference/images (inputs JPEG, PNG or WebP; outputs image/jpeg unless the requested quality produces PNG)
 schema = 2
 type = "image"
 name = "Grok Imagine Image Quality"
@@ -14,8 +15,8 @@ open_weights = false
 release_date = "2026-04-03"
 
 [modalities]
-input = ["text", "image"]
-output = ["image"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["image/jpeg", "image/png"]
 
 [capabilities]
 tools = { supported = false }

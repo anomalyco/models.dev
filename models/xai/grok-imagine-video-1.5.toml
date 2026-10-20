@@ -6,6 +6,7 @@
 # Video editing and extension use grok-imagine-video, not 1.5:
 # https://docs.x.ai/developers/model-capabilities/video/editing, https://docs.x.ai/developers/model-capabilities/video/extension
 # Voice references: https://docs.x.ai/developers/model-capabilities/video/reference-to-video
+# Image and video MIME types: https://docs.x.ai/developers/rest-api-reference/inference/videos (image inputs JPEG, PNG or WebP; video inputs and generated videos are .mp4)
 schema = 2
 type = "video"
 name = "Grok Imagine Video 1.5"
@@ -15,8 +16,8 @@ open_weights = false
 release_date = "2026-05-30"
 
 [modalities]
-input = ["text", "image", "audio"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "audio"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

@@ -1,3 +1,4 @@
+# Image output MIME types: https://developers.openai.com/api/docs/guides/image-generation#output-format (output_format: png, jpeg, webp)
 schema = 2
 type = "image"
 name = "chatgpt-image-latest"
@@ -8,7 +9,7 @@ release_date = "2025-12-16"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/webp"]
-output = ["text", "image"]
+output = ["text", "image/png", "image/jpeg", "image/webp"]
 
 [capabilities]
 tools = { supported = false }
