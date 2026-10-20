@@ -377,6 +377,8 @@ export function buildOpenRouterModel(
   } satisfies SyncedFullModel;
 }
 
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
+
 function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): SyncedFullModel["reasoning_options"] {
   if (reasoning === undefined) return undefined;
 
@@ -390,10 +392,11 @@ function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): Sy
   }
 
   if (efforts !== undefined) {
-    options.push({
-      type: "effort",
-      values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],
-    });
+    // OpenRouter lists efforts from max down; v2 files keep them low to high, and
+    // the v2 patch compares them in order.
+    const values = (reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts])
+      .sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
+    options.push({ type: "effort", values });
   }
 
   if (reasoning.supports_max_tokens === true) {
