@@ -1,30 +1,39 @@
 # Source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Implicit caching (4,096-token minimum): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models#context-caching
+# Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+schema = 2
 name = "GPT OSS 20B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-08-05"
 status = "deprecated"
-
-[cost]
-input = 0.07
-output = 0.25
-cache_read = 0.007
-
-[limit]
-context = 131_072
-output = 32_768
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
-api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 4_096 } }
+
+[limit]
+context = 131_072
+output = 32_768
+
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 0.25

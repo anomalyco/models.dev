@@ -2,6 +2,7 @@
 # Source: https://huggingface.co/zai-org/GLM-5.1 (chat template exposes thinking)
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
 base_model = "zhipuai/glm-5.1"
+structured_output = true
 name = "GLM 5.1 TEE"
 
 [interleaved]

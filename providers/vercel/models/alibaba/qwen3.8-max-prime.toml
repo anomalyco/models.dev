@@ -1,0 +1,25 @@
+# https://ai-gateway.vercel.sh/v1/models (alibaba/qwen3.8-max-prime, 2026-09-24)
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# Effort: reasoning.effort = none|low|medium|high; none turns thinking off,
+# so the catalog's separate toggle is redundant. No budget is advertised.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "alibaba/qwen3.8-max-prime"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+structured_output = true
+system_updates = true
+effort_updates = false
+
+[cost.text.input]
+price = 4
+cache = { read = 0.5, write = 5 }
+
+[cost.text.output]
+price = 12

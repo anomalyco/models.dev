@@ -1,0 +1,16 @@
+# Retired: requests using this name are served by MiniMax-M3.1-Flash
+# (https://platform.minimax.io/docs/m-plan/intro, checked 2026-10-19).
+# Effort: output_config.effort = low|medium|high|xhigh|max, default max.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash-Preview"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

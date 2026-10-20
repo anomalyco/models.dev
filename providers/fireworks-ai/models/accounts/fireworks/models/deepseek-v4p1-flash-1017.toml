@@ -1,0 +1,31 @@
+# DeepSeek V4.1 Flash 1017 on Fireworks Serverless: accounts/fireworks/models/deepseek-v4p1-flash-1017
+# Pricing Standard $0.30 / $0.006 / $1.20 and Priority $0.375 / $0.0075 / $1.50, Ready state, Created Oct 17 2026:
+# https://app.fireworks.ai/models/fireworks/deepseek-v4p1-flash-1017 (accessed 2026-10-18)
+# Serverless pricing table DeepSeek V4.1 Flash row: https://docs.fireworks.ai/serverless/pricing (accessed 2026-10-18)
+# Lab identity, minor update to V4.1 Flash: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|high|max (same surface as sibling deepseek-v4p1-flash, verified 2026-09-10)
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Native DeepSeek Flash effort set low|high|max: https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-09-10)
+# Released on Fireworks Serverless API 2026-10-17.
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
+
+[experimental.modes.priority]
+cost = { input = 0.375, output = 1.5, cache_read = 0.0075 }
+provider = { body = { service_tier = "priority" } }

@@ -5,6 +5,7 @@
 # low|medium|high produce indistinguishable reasoning volume. Aligned to the
 # lab-effective level (Z.AI GLM-5.2: high/max; max absent on this host).
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 reasoning_options = [
   { type = "effort", values = ["none", "high"] },
 ]

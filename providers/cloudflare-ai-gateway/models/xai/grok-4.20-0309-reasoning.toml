@@ -1,10 +1,23 @@
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
+# Live 2026-10-19: a mid-conversation system message keeps the cached prefix (grok-4.3, in place); response_format json_schema is enforced (grok-4.3, grok-4.20-0309-non-reasoning).
+# Always reasons; no caller control: reasoning_effort low|high is rejected by xAI on POST /ai/v1/chat/completions (live 2026-10-19).
+schema = 2
 base_model = "xai/grok-4.20-0309-reasoning"
-reasoning_options = []
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.2
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 2_000_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 6

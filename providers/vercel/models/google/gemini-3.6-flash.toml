@@ -1,17 +1,25 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): Gemini takes system text only as systemInstruction, and a mid-conversation system message is hoisted there (cache miss). No per-turn effort or tool-change mechanism is forwarded.
+schema = 2
 base_model = "google/gemini-3.6-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_000_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75

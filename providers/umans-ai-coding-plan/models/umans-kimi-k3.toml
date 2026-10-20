@@ -3,6 +3,7 @@
 # Live metadata: levels none/low/high/max, default max, and `can_disable=true`
 # (accessed 2026-07-28): https://api.code.umans.ai/v1/models/info
 base_model = "moonshotai/kimi-k3"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]

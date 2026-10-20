@@ -81,7 +81,16 @@ export interface ModelCost extends Cost {
 export type Modality = "text" | "audio" | "image" | "video" | "pdf"
 
 /** A model's specialized behavioral contract. Omitted for standard generative models. */
-export type ModelType = "decision"
+export type ModelType =
+  | "chat"
+  | "image"
+  | "video"
+  | "embedding"
+  | "reranking"
+  | "decision"
+  | "transcription"
+  | "speech"
+  | "realtime"
 
 export interface Modalities {
   input: Modality[]
@@ -212,6 +221,8 @@ export interface ModelProviderConfig {
 export interface Model {
   /** Provider-scoped model ID, e.g. "claude-opus-4-6". */
   id: string
+  /** Canonical lab/model ID when this provider offering is linked to model metadata. */
+  canonical_model_id?: string
   type?: ModelType
   name: string
   description: string

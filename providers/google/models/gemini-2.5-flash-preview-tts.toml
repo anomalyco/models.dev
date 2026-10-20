@@ -1,23 +1,34 @@
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-preview-tts
+# - https://ai.google.dev/gemini-api/docs/speech-generation (audio/l16 default output)
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
+schema = 2
+type = "speech"
 name = "Gemini 2.5 Flash Preview TTS"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "gemini-flash"
-release_date = "2025-05-01"
-last_updated = "2025-05-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2025-05-01"
 
-[cost]
-input = 0.5
-output = 10
+[modalities]
+input = ["text"]
+output = ["audio/l16"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+cache = { supported = false }
 
 [limit]
 context = 8_192
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["audio"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 10

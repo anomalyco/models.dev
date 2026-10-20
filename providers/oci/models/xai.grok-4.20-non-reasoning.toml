@@ -4,6 +4,7 @@
 # https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-20.htm (1M context).
 # Only text and base64 images were verified through this endpoint; PDF input is not declared.
 base_model = "xai/grok-4.20-0309-non-reasoning"
+structured_output = true
 
 [cost]
 input = 1.25

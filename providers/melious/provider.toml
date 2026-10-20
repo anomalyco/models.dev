@@ -8,7 +8,7 @@
 # string without a 4xx, including undocumented ones, so acceptance is not evidence.
 # Every model here was measured against this deployment on 2026-09-14 instead. Two
 # behaviours were found, and neither matches the vendor docs' low|medium|high ladder:
-# on 12 models reasoning_effort="none" is a real off state (usage.reasoning_tokens = 0
+# on 9 models reasoning_effort="none" is a real off state (usage.reasoning_tokens = 0
 # and no reasoning_content) while low, medium and high all reason with no ordered
 # difference in depth -- those are authored as effort ["none", "high"], an effort list
 # containing none rather than a toggle, because off is reachable through this field.
@@ -19,6 +19,10 @@
 # typed hybrid yet ignores it. Reasoning text is returned in
 # choices[].message.reasoning_content.
 # https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
+# Decisions: Clef and Clef Flash are served on POST /v1/systemone, not chat
+# completions. They bill input tokens only, reject image input, and run without
+# caller reasoning control.
+# https://melious.ai/docs/reference/systemone (accessed 2026-10-20)
 # Routing: a flavour is selected with a model-ID suffix (`:balanced`, `:speed`,
 # `:price`, `:eco`, `:batch`). A bare chat model ID resolves to `balanced`, which is
 # what the ids and prices here describe; only bare ids are published. A `preset`

@@ -3,11 +3,29 @@
 # Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/eu-west-1/index.json
 # Standard eu-west-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
 # Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
+# v2 cache: cachePoint in system/messages, 5m TTL, 4 checkpoints per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; its "1K" minimum is approximate (981-token write live), so no min_tokens.
+# Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Modalities: Converse images png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); video MP4, MOV, MKV, WebM, FLV, MPEG/MPG, WMV, 3GP (https://docs.aws.amazon.com/nova/latest/userguide/modalities-video.html);
+# documents PDF, CSV, TXT, HTML, Markdown (https://docs.aws.amazon.com/nova/latest/userguide/modalities-document.html). DOC/DOCX/XLS/XLSX are also supported but have no v1 modality, so they are left out.
+schema = 2
 base_model = "amazon/nova-lite"
 name = "Nova Lite (EU)"
 
-[cost]
-input = 0.069
-output = 0.276
-cache_read = 0.01725
-cache_write = 0.069
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska", "video/webm", "video/x-flv", "video/mpeg", "video/x-ms-wmv", "video/3gpp", "application/pdf", "text/csv", "text/plain", "text/html", "text/markdown"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = false
+system_updates = false
+effort_updates = false
+cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
+
+[cost.text.input]
+price = 0.069
+cache = { read = 0.01725, write = 0.069 }
+
+[cost.text.output]
+price = 0.276

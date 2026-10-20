@@ -1,0 +1,19 @@
+# Google Standard API prices in USD per million tokens; checked 2026-10-19.
+# https://ai.google.dev/gemini-api/docs/pricing#gemini-3.8-flash
+# https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
+# https://ai.google.dev/gemini-api/docs/openai
+# Introductory prices through 2026-12-31; from 2027-01-01 input/output/cache
+# read are $1.50/$7.50/$0.15. Cache storage is billed separately by Google.
+# Aixy's gemini route uses OpenAI Chat Completions; effort: reasoning_effort.
+# Input modalities are limited to the documented OpenAI-compatible surface.
+base_model = "google/gemini-3.8-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+input_audio = 0.75
+
+[modalities]
+input = ["text", "image", "audio"]

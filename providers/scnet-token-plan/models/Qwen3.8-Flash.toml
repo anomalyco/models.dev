@@ -2,6 +2,7 @@
 # Effort: reasoning_effort only applies to DeepSeek-V4 series (high|max); not documented for Qwen3 series.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html (accessed 2026-09-01)
 base_model = "alibaba/qwen3.8-flash"
+structured_output = true
 reasoning_options = [{ type = "toggle" }]
 
 [interleaved]

@@ -1,17 +1,19 @@
+# Modalities: Grok Imagine video output is MP4, https://docs.x.ai/docs/guides/video-generation
+schema = 2
 name = "Grok Imagine"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "grok"
-release_date = "2026-01-28"
-last_updated = "2026-01-28"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-01-28"
+
+[modalities]
+input = ["text"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["video"]

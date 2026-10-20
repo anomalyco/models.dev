@@ -1,6 +1,7 @@
 # Effort: reasoning_effort = low|high|max (DeepSeek flash maps low→low; xhigh→high)
 # https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-08-02)
 base_model = "deepseek/deepseek-v4-flash-0731"
+structured_output = true
 name = "DeepSeek V4 Flash Free"
 status = "deprecated"
 
@@ -19,3 +20,6 @@ cache_read = 0
 [limit]
 context = 200_000
 output = 128_000
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

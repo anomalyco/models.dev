@@ -1,14 +1,25 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "meta/muse-spark-1.2"
 description = "Open Llama multimodal model for image understanding and text reasoning"
-reasoning_options = []
 
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 1_048_576
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

@@ -1,5 +1,6 @@
 # attachment are not supported on AKI.IO for security reasons and therefore are disabled
 base_model = "openai/gpt-oss-120b"
+structured_output = true
 attachment = false
 reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

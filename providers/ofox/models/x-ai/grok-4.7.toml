@@ -5,6 +5,7 @@
 # - https://docs.x.ai/developers/models/grok-4.7 (reasoning_effort low|medium|high|xhigh; cannot disable)
 # reasoning_options match first-party xAI + relay peers (no none)
 base_model = "xai/grok-4.7"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]

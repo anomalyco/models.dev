@@ -1,24 +1,20 @@
-name = "Aion-2.0"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on AionLabs)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "aion-labs/aion-2.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2026-02-23"
-last_updated = "2026-02-23"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
 structured_output = false
-open_weights = false
-reasoning_options = []
+system_updates = true
+effort_updates = false
 
-[cost]
-input = 0.8
-output = 1.6
-cache_read = 0.2
+[cost.text.input]
+price = 0.8
+cache = { read = 0.2 }
 
-[limit]
-context = 131_072
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.6

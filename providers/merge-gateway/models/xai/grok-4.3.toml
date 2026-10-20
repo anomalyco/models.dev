@@ -2,6 +2,7 @@
 # Selected route reasoning.controls = ["reasoning.effort"], disable_supported = true; effort values not exposed.
 
 base_model = "xai/grok-4.3"
+structured_output = true
 reasoning_options = [{ type = "toggle" }]
 
 [cost]

@@ -1,18 +1,21 @@
+# Modalities: Seedance input images jpeg, png, webp, bmp, tiff, gif, heic, heif (https://ai.byteplus.com/ark/region:ap-southeast-1/docs/create-video-generation-task-api); AI Gateway: all Seedance models output MP4 (https://vercel.com/docs/ai-gateway/modalities/video-generation/text-to-video)
+schema = 2
 name = "Seedance v1.0 Pro Fast"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "seed"
+open_weights = false
 release_date = "2025-10-24"
 last_updated = "2025-10-31"
-attachment = false
-reasoning = false
+
+[modalities]
+input = ["text"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = true
-tool_call = false
-open_weights = false
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["video"]

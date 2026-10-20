@@ -20,6 +20,7 @@
 # 262_144. limit.output: max_output_tokens is null for this model, so output is capped
 # at the served context rather than inheriting the lab's larger 262_144.
 base_model = "moonshotai/kimi-k2.6"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [cost]

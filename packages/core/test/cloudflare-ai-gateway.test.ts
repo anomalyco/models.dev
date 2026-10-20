@@ -1,4 +1,5 @@
 import { expect, spyOn, test } from "bun:test";
+import { readFileSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -126,7 +127,7 @@ test("maps structured provider pricing instead of display labels", () => {
   });
 });
 
-test("derives nested Cloudflare reasoning controls", () => {
+test("derives nested Cloudflare effort values without inventing a toggle", () => {
   expect(deriveReasoningOptions({
     properties: {
       thinking: { type: "boolean" },
@@ -138,10 +139,106 @@ test("derives nested Cloudflare reasoning controls", () => {
         },
       },
     },
-  })).toEqual([
-    { type: "toggle" },
-    { type: "effort", values: ["low", "medium", "high"] },
+  })).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
+});
+
+test("does not turn Opus 5.5's adaptive-only thinking schema into an off switch", () => {
+  const schema = {
+    properties: {
+      thinking: {
+        type: "object",
+        properties: { type: { type: "string", const: "adaptive" } },
+      },
+      output_config: {
+        properties: { effort: { enum: ["low", "medium", "high", "xhigh", "max"] } },
+      },
+    },
+  };
+  expect(deriveReasoningOptions(schema)).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
   ]);
+  expect(buildCloudflareAiGatewayModel({
+    model_id: "anthropic/claude-opus-5.5",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 4, output_tokens: 20 }),
+  }, schema).reasoning_options).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+});
+
+test("requires curation rather than inferring a toggle from a thinking field", () => {
+  expect(deriveReasoningOptions({
+    properties: { thinking: { type: "object" } },
+  })).toEqual([]);
+  expect(deriveReasoningOptions({
+    properties: { thinking: { properties: { type: { enum: ["adaptive", "disabled"] } } } },
+  })).toEqual([]);
+  expect(deriveReasoningOptions({
+    properties: { enable_thinking: { type: "boolean" } },
+  })).toEqual([]);
+  expect(() => buildCloudflareAiGatewayModel({
+    model_id: "anthropic/claude-opus-5.5",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 4, output_tokens: 20 }),
+  }, { properties: { thinking: { type: "object" } } })).toThrow("no reasoning_options");
+  expect(buildCloudflareAiGatewayModel({
+    model_id: "alibaba/qwen3.7-plus",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+  }, { properties: { enable_thinking: { type: "boolean" } } }, {
+    reasoning_options: [{ type: "toggle" }],
+  }).reasoning_options).toEqual([{ type: "toggle" }]);
+});
+
+test("uses Cloudflare's curated route controls for Kimi K3 and Fireworks DeepSeek V4 Pro", () => {
+  const translate = (model_id: string) => cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id,
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+  }, { authored: () => undefined, existing: () => undefined }).model.reasoning_options;
+
+  expect(translate("moonshotai/kimi-k3")).toEqual([
+    { type: "effort", values: ["none", "low", "high", "max"] },
+  ]);
+  // The catalog schema's generic reasoning.effort enum (none..max) is not what Muse Spark 1.1
+  // accepts on this route; the curated list overrides it.
+  expect(cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id: "meta/muse-spark-1.1",
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+    schemaInput: { properties: { reasoning: { properties: { effort: { enum: ["none", "low", "medium", "high", "xhigh", "max"] } } } } },
+  }, { authored: () => undefined, existing: () => undefined }).model.reasoning_options).toEqual([
+    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh"] },
+  ]);
+  expect(translate("deepseek/deepseek-v4-pro")).toEqual([
+    { type: "effort", values: ["none", "low", "high", "max"] },
+  ]);
+  expect(translate("anthropic/claude-sonnet-5")).toContainEqual({ type: "toggle" });
+  expect(translate("alibaba/qwen3.8-max")).toContainEqual({ type: "toggle" });
+});
+
+test("writes family prefix notes before a model's own note", () => {
+  const curation = Bun.TOML.parse(
+    readFileSync(path.join(import.meta.dirname, "../../../providers/cloudflare-ai-gateway/curation.toml"), "utf8"),
+  ) as { prefix_notes: Record<string, string[]>; models: Record<string, { note?: string[] }> };
+  const header = (model_id: string) => cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id,
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+  }, { authored: () => undefined, existing: () => undefined }).header;
+  const lines = (notes: string[]) => notes.map((line) => `# ${line}\n`).join("");
+
+  expect(header("moonshotai/kimi-k3")).toBe(
+    lines([...curation.prefix_notes["moonshotai/"]!, ...curation.models["moonshotai/kimi-k3"]!.note!]),
+  );
+  expect(header("meta/muse-spark-open")).toStartWith(lines(curation.prefix_notes["meta/muse-spark-open"]!));
+  expect(header("xai/grok-4.20-0309-non-reasoning")).toBe(lines(curation.prefix_notes["xai/"]!));
 });
 
 test("ignores advertised reasoning controls for non-reasoning base models", () => {
@@ -160,6 +257,57 @@ test("ignores advertised reasoning controls for non-reasoning base models", () =
   );
 
   expect(model.reasoning_options).toBeUndefined();
+});
+
+test("uses curated cost only when provider_details is null", () => {
+  const curated = {
+    base_model: "reflection/beam-1.0-501b-a23b",
+    reasoning_options: [{ type: "effort" as const, values: ["low" as const, "medium" as const, "high" as const, "xhigh" as const, "max" as const] }],
+    interleaved: { field: "reasoning_content" as const },
+    cost: { input: 0, output: 0, cache_read: 0 },
+  };
+  const catalog = {
+    model_id: "reflection-ai/beam-1.0-501b-a23b",
+    task: "Text Generation" as const,
+    context_length: 262_144,
+    provider_details: null,
+    pricing: { "Input tokens (per 1M)": 999, "Output tokens (per 1M)": 999 },
+  };
+
+  expect(buildCloudflareAiGatewayModel(catalog, undefined, curated)).toEqual({
+    base_model: "reflection/beam-1.0-501b-a23b",
+    interleaved: { field: "reasoning_content" },
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    cost: { input: 0, output: 0, cache_read: 0 },
+    limit: { context: 262_144 },
+  });
+  expect(() => buildCloudflareAiGatewayModel(catalog, undefined, { ...curated, cost: undefined }))
+    .toThrow("no provider_details pricing; add a curated cost");
+  expect(() => buildCloudflareAiGatewayModel({
+    ...catalog,
+    provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+  }, undefined, curated)).toThrow("remove the curated cost");
+});
+
+test("names the catalog model when an entry fails validation", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalToken = process.env.CLOUDFLARE_API_TOKEN;
+  const originalAccount = process.env.CLOUDFLARE_ACCOUNT_ID;
+  process.env.CLOUDFLARE_API_TOKEN = "test";
+  process.env.CLOUDFLARE_ACCOUNT_ID = "test";
+  globalThis.fetch = async () => new Response(JSON.stringify(catalogPage([{
+    model_id: "openai/gpt-4.1",
+    task: "Text Generation",
+    provider_details: [],
+  }])));
+
+  try {
+    await expect(cloudflareAiGateway.fetchModels()).rejects.toThrow("openai/gpt-4.1: invalid catalog entry");
+  } finally {
+    globalThis.fetch = originalFetch;
+    restoreEnv("CLOUDFLARE_API_TOKEN", originalToken);
+    restoreEnv("CLOUDFLARE_ACCOUNT_ID", originalAccount);
+  }
 });
 
 test("fails closed on unknown pricing fields", () => {
@@ -419,6 +567,44 @@ test("reconciles authoritative generated headers", async () => {
     expect(result.updated).toBe(1);
     expect(await readFile(file, "utf8")).toStartWith("# New note\nbase_model");
     expect((await syncProvider(provider)).updated).toBe(0);
+  } finally {
+    await rm(providerDir, { recursive: true, force: true });
+  }
+});
+
+test("writes new native-route models as v2 files with their API protocol", async () => {
+  const providersDir = path.join(import.meta.dirname, "..", "..", "..", "providers");
+  const providerDir = await mkdtemp(path.join(providersDir, ".cloudflare-ai-gateway-v2-"));
+  const modelsDir = path.join(providerDir, "models");
+  await mkdir(path.join(modelsDir, "openai"), { recursive: true });
+  await writeFile(path.join(providerDir, "provider.toml"), 'name = "Test"\nnpm = "ai-gateway-provider"\nenv = []\n');
+  const existing = 'schema = 2\nbase_model = "openai/gpt-4.1"\n\n[capabilities]\nsystem_updates = true\n\n'
+    + '[api.responses]\nsdk = { aisdk = "@ai-sdk/openai" }\n';
+  await writeFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), existing);
+
+  try {
+    const provider = {
+      ...cloudflareAiGateway,
+      modelsDir,
+      async fetchModels() {
+        return ["openai/gpt-4.1", "anthropic/claude-opus-4.7", "openai/gpt-5.5"].map((model_id) => ({
+          catalog: {
+            model_id,
+            task: "Text Generation",
+            provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+          },
+        }));
+      },
+    };
+    const result = await syncProvider(provider);
+
+    expect(result.notices ?? []).toEqual([]);
+    const opus = await readFile(path.join(modelsDir, "anthropic", "claude-opus-4.7.toml"), "utf8");
+    expect(opus).toContain("\nschema = 2\n");
+    expect(opus).toContain('[api.messages]\nsdk = { aisdk = "@ai-sdk/anthropic" }');
+    const gpt = await readFile(path.join(modelsDir, "openai", "gpt-5.5.toml"), "utf8");
+    expect(gpt).toContain('[api.responses]\nsdk = { aisdk = "@ai-sdk/openai" }');
+    expect(await readFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), "utf8")).toContain("system_updates = true");
   } finally {
     await rm(providerDir, { recursive: true, force: true });
   }

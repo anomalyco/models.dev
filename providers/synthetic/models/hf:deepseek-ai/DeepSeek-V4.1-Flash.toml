@@ -4,6 +4,7 @@
 # Live probes: `reasoning_effort = "none"` disables reasoning; `"xhigh"` streams it.
 # Reasoning is returned in the `reasoning` message field.
 base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = true
 
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "xhigh", "max"] }]
 

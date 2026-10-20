@@ -1,17 +1,22 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes disagreed (in place on Meta; hoisted on Meta)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "meta/muse-spark-1.1"
 description = "Open Llama multimodal model for image understanding and text reasoning"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 output = 943_718
 
-[modalities]
-input = ["text", "image", "video", "pdf", "audio"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

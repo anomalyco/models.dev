@@ -26,6 +26,7 @@ const MODELS_DIR = path.join(
 );
 const TOKENS_PER_MILLION = 1_000_000;
 const PRICE_DECIMALS = 1_000_000;
+// Documented shared values; xhigh is model-specific and not in the catalog API.
 const REASONING_EFFORTS = ["none", "low", "medium", "high", "max"] as const;
 const REGION_SUFFIX = /@[a-z0-9-]+$/i;
 const ANTHROPIC_DOT_ZERO = /^claude-(?:opus|sonnet|haiku)-\d+$/;
@@ -177,10 +178,9 @@ function reasoningOptions(
         return;
     }
 
-    return [
-        { type: "effort", values: [...REASONING_EFFORTS] },
-        { type: "budget_tokens" },
-    ];
+    // The synced OpenAI-compatible route exposes reasoning_effort, not a
+    // separate budget_tokens control. Numeric efforts can be mapped to tiers.
+    return [{ type: "effort", values: [...REASONING_EFFORTS] }];
 }
 
 function buildCost(model: RequestyModel): SyncedFullModel["cost"] {

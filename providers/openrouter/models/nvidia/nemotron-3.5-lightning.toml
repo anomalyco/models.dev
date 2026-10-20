@@ -1,15 +1,25 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on CoreWeave)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.08
-output = 0.2
-cache_read = 0.04
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
-output = 131_072
+output = 235_929
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.2

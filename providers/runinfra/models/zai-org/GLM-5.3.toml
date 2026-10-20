@@ -1,0 +1,41 @@
+# Source: https://runinfra.ai/inference-api/glm-5-3
+# Pricing: USD per million tokens, standing rates with no promotional window; cache_read is the
+# cached input price. The same three prices are in our provider feed:
+# https://runinfra.ai/api/providers/openrouter/models
+# Reasoning cannot be disabled on GLM-5.3. Z.ai documents three effort levels, low, high and max,
+# with max as the default (https://docs.z.ai/guides/llm/glm-5.3), and this serve publishes exactly
+# that vocabulary: reasoning_effort low, high and max are passed through, an omitted field means
+# max, and minimal, medium and xhigh are folded to max before dispatch. reasoning_effort = "none"
+# is refused with HTTP 400 'reasoning_effort "none" is not supported: GLM 5.3 cannot disable
+# thinking. Send "low" for the smallest reasoning budget, or omit the field.' rather than being
+# served and billed as full reasoning.
+# Reasoning is returned in a separate reasoning_content field and counted in
+# usage.reasoning_tokens, with no think markers in content.
+# Verified on this serve 2026-10-19: tool calls with tool_choice auto and none, parallel calls and
+# a tool-result follow-up (a required or named tool_choice is enforced only when every tool sets
+# strict), json_object and strict json_schema responses, and text-only input (an image_url part
+# is refused with HTTP 400). tool_call, structured_output and the text-only modalities therefore
+# inherit from the lab entry unchanged.
+# Prefix caching was verified on this deployment: a repeated identical chat prompt reported 9,600
+# cached tokens on the repeat.
+# context is this deployment's window, prompt plus output, 1,048,576 tokens. output is 32,768, the
+# output length our provider feed advertises for this model, the same rule as the GLM-5.3-Flash
+# entry.
+base_model = "zhipuai/glm-5.3"
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.30
+output = 4.20
+cache_read = 0.13
+
+[limit]
+context = 1_048_576
+output = 32_768

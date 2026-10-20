@@ -1,0 +1,23 @@
+# Reflection: Beam-1.0-501B-A23B, first-party host; limits and capabilities come from the lab entry.
+# Effort: reasoning_effort = low|medium|high|xhigh|max; omitted or null uses the default effort
+#   reported by GET /models (reasoning.default_effort).
+#   Reasoning is always on: there is no toggle, and "none"/"minimal" return 400 unsupported_value.
+#   https://developers.reflection.ai/reasoning
+# Interleaved: reasoning is returned in reasoning_content, and every prior assistant message
+#   must include it (400 missing_required_parameter otherwise).
+# Cost: Beam is currently free on the Reflection API; usage reports cached prompt tokens,
+#   so cache_read is set too.
+base_model = "reflection/beam-1.0-501b-a23b"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

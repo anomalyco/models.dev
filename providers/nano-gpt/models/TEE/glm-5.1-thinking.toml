@@ -1,5 +1,6 @@
 # Not included in subscription
 base_model = "zhipuai/glm-5.1"
+structured_output = true
 name = "GLM 5.1 Thinking TEE"
 
 [[reasoning_options]]
@@ -7,9 +8,9 @@ type = "effort"
 values = ["none", "high"]
 
 [cost]
-input = 1.5
-output = 5.25
-cache_read = 0.3
+input = 0.7
+output = 2.5
+cache_read = 0.18
 
 [limit]
 context = 202_752

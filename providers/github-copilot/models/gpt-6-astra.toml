@@ -1,6 +1,7 @@
 # Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 # GPT-6 Astra rates: ≤272K $10/$1/$12.50/$50; >272K $20/$2/$25/$75 per 1M (input/cached/cache write/output)
 base_model = "openai/gpt-6-astra"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -18,3 +19,6 @@ input = 20
 output = 75
 cache_read = 2
 cache_write = 25
+
+[provider]
+npm = "@ai-sdk/openai"

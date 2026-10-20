@@ -1,23 +1,10 @@
-name = "Cohere: Command A"
+# tool_call = false: Kilo's catalog (https://api.kilo.ai/api/gateway/models) lists supported_parameters for
+#   cohere/command-a without "tools" or "tool_choice" (checked 2026-10-20), and the Kilo sync derives tool_call from those.
+base_model = "cohere/command-a"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
-family = "command-a"
-release_date = "2025-03-13"
-last_updated = "2025-03-13"
-attachment = false
-reasoning = false
-temperature = true
 tool_call = false
 structured_output = true
-open_weights = false
 
 [cost]
 input = 2.5
 output = 10
-
-[limit]
-context = 256_000
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

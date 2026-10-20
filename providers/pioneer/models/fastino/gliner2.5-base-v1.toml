@@ -1,0 +1,35 @@
+# Sources:
+# - Pioneer/Fastino live catalog GET https://api.fastino.ai/v1/base-models (id fastino/gliner2.5-base-v1: label "GLiNER 2.5 Base", description "English boundary NER and structured extraction with LoRA fine-tuning.", context_window 4096, input $0.03 / output $0.0 / cache $0.03, license Apache-2.0, release Aug 2026, is_chat_model true, supports_training true)
+# - Model card https://huggingface.co/fastino/gliner2.5-base-v1 (194M DeBERTa-v3-base English boundary checkpoint, max_len 4096, Apache-2.0)
+# - Release announcement https://fastino.ai/blog/gliner2-5-span-free-information-extraction (released Aug 24, 2026; three Apache-2.0 variants)
+# Pioneer is the first-party Fastino inference API (api https://api.fastino.ai/v1 in provider.toml; docs https://agent.pioneer.ai/llms.txt); full inline entry follows existing providers/pioneer/models/fastino/* pattern.
+name = "GLiNER 2.5 Base"
+description = "English boundary NER and structured extraction with LoRA fine-tuning."
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.03
+output = 0
+cache_read = 0.03
+cache_write = 0.03
+
+[limit]
+context = 4_096
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

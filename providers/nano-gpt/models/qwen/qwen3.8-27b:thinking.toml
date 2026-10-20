@@ -1,5 +1,6 @@
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B Thinking"
+structured_output = true
 reasoning_options = []
 
 [cost]
@@ -8,4 +9,5 @@ output = 0.7
 cache_read = 0.04
 
 [limit]
-input = 262_144
+context = 1_001_536
+input = 1_001_536

@@ -1,6 +1,19 @@
+# Token limits (input 8,192, output 16,384): https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
+# v2 capabilities and prices:
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/context-cache/context-cache-overview
+schema = 2
 base_model = "google/gemini-2.5-flash-tts"
-temperature = false
 
-[cost]
-input = 0.5
-output = 10
+[capabilities]
+temperature = false
+cache = { supported = false }
+
+[limit]
+input = 8_192
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 10

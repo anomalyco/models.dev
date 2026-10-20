@@ -4,17 +4,36 @@
 # https://www.qwencloud.com/models/deepseek-v4-flash-0731 (implicit cache price)
 # Pay-as-you-go on DashScope international, not Token Plan only.
 # Toggle: enable_thinking true|false
-# Effort: reasoning_effort = high (default) | max; low/medium map to high, xhigh maps to max
+# v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache; enable_thinking and reasoning_effort changes missed it; adding tools missed the cache; reasoning_effort=low accepted.
+# Effort: reasoning_effort = low|high|max (default high; medium/xhigh map to high) per the Chat API reference
+# top_k: the DeepSeek series does not support top_k (Chat API reference)
+# Prices (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19)
+# Peak/off-peak pricing since 2026-08-17: busy hours (08:00-22:00 UTC+8) $0.44/$1.32, idle hours (22:00-08:00 UTC+8, i.e. 14:00-24:00 UTC) $0.22/$0.66. Base = busy price, idle multiplier 0.5. Implicit cache hits bill at 20% of input (context-cache doc; 0731 is not one of the listed exceptions).
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["high", "max"] },
-]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+system_updates = true
+effort_updates = false
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
 
-[cost]
-input = 0.20
-output = 0.40
-cache_read = 0.04
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.44
+cache = { read = 0.088 }
+
+[cost.text.output]
+price = 1.32
+
+[[cost.multipliers]]
+when = { utc_hours = { gte = "14:00" } }
+factor = 0.5

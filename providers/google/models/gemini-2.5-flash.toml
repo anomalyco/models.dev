@@ -1,15 +1,40 @@
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# - https://ai.google.dev/gemini-api/docs/thinking
+# Flex halves input/output only; cache reads and storage stay at Standard rates.
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
 base_model = "google/gemini-2.5-flash"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 0, max = 24_576 } }
+structured_output = true
+cache = { supported = true, implicit = { min_tokens = 2_048 }, explicit = true }
+service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 0
-max = 24_576
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, storage = 1 }
 
-[cost]
-input = 0.30
-output = 2.50
-cache_read = 0.03
-input_audio = 1.00
+[cost.text.output]
+price = 2.5
+
+[cost.audio.input]
+price = 1
+cache = { read = 0.1, storage = 1 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5 }, output = { price = 0.5 } }, audio = { input = { price = 0.5 } } }

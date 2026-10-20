@@ -1,0 +1,14 @@
+base_model = "google/gemini-4-argon"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 4
+output = 20
+reasoning = 20
+cache_read = 0.2
+cache_write = 0.375
+input_audio = 4

@@ -1,6 +1,7 @@
 # Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 # GPT-6 Sol rates: ≤272K $2/$0.20/$2.50/$10; >272K $4/$0.40/$5.00/$15 per 1M (input/cached/cache write/output)
 base_model = "openai/gpt-6-sol"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -18,3 +19,6 @@ input = 4
 output = 15
 cache_read = 0.4
 cache_write = 5
+
+[provider]
+npm = "@ai-sdk/openai"

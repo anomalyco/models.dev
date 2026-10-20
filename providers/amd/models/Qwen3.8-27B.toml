@@ -12,6 +12,7 @@ base_model = "alibaba/qwen3.8-27b"
 # refused with 400 "does not support image input", so the multimodal base
 # entry (text + image + video) is narrowed here.
 attachment = false
+structured_output = true
 
 reasoning_options = [
   { type = "effort", values = ["low", "medium"] },

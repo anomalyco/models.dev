@@ -1,38 +1,59 @@
+# First-party API rejects max_tokens=131073 with range [1, 131072]
+# (POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions,
+# model qwen3.7-plus, checked 2026-09-23).
+# Model card: https://www.qwencloud.com/models/qwen3.7-plus
+# Singapore USD list pricing: https://www.alibabacloud.com/help/en/model-studio/model-pricing
+# Explicit cache prices: https://www.alibabacloud.com/help/en/model-studio/context-cache
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
+# v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the explicit cache (in place); enable_thinking and thinking_budget changes kept the cache; adding tools missed the cache.
+# Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
+schema = 2
 name = "Qwen3.7 Plus"
 description = "Multimodal Qwen workhorse for long-context agents, visual inputs, and coding"
 family = "qwen"
+open_weights = false
+knowledge = "2025-04"
 release_date = "2026-06-02"
 last_updated = "2026-06-04"
-attachment = false
-reasoning = true
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
+structured_output = true
 temperature = true
-knowledge = "2025-04"
-tool_call = true
-open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.50
-output = 3.00
-cache_read = 0.05
-cache_write = 0.625
-
-[[cost.tiers]]
-tier = { size = 256_000 }
-input = 2.00
-output = 6.00
-cache_read = 0.20
-cache_write = 2.50
+top_p = true
+top_k = true
+system_updates = true
+effort_updates = true
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
-output = 65_536
+output = 131_072
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04, write = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 1.2
+cache = { read = 0.12, write = 1.5 }
+
+[cost.text.output]
+price = 1.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 4.8

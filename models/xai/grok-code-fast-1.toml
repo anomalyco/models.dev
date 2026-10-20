@@ -1,0 +1,22 @@
+# Lab metadata carried over from providers/qiniu-ai/models/x-ai/grok-code-fast-1.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
+name = "x-AI/Grok-Code-Fast 1"
+description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
+open_weights = false
+release_date = "2025-09-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 256_000
+output = 10_000

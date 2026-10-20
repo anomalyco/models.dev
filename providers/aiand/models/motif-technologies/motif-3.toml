@@ -7,6 +7,7 @@
 # probe 2026-09-14 — response_format json_schema is ignored (prose reply).
 # Reasoning side channel: message.reasoning_content
 base_model = "motif-technologies/motif-3"
+structured_output = false
 
 [interleaved]
 field = "reasoning_content"

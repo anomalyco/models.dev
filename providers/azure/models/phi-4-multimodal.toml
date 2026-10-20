@@ -1,24 +1,48 @@
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
+# Modalities: audio formats are the Foundry chat completions AudioContentFormat values wav and mp3
+# (https://learn.microsoft.com/en-us/rest/api/aifoundry/model-inference/get-chat-completions/get-chat-completions?view=rest-aifoundry-model-inference-2024-05-01-preview).
+# Azure names no image formats; these are the model card's (.jpg, .jpeg, .png, .ppm, .bmp, .pgm, .tif, .tiff, .webp):
+# https://huggingface.co/microsoft/Phi-4-multimodal-instruct#input-formats
+schema = 2
 name = "Phi-4-multimodal"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
 family = "phi"
-release_date = "2024-12-11"
-last_updated = "2024-12-11"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-10"
-tool_call = false
 open_weights = true
+knowledge = "2023-10"
+release_date = "2024-12-11"
 
-[cost]
-input = 0.08
-output = 0.32
-input_audio = 4.00
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/x-portable-pixmap",
+  "image/bmp",
+  "image/x-portable-graymap",
+  "image/tiff",
+  "image/webp",
+  "audio/wav",
+  "audio/mpeg",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 4_096
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.32
+
+[cost.audio.input]
+price = 4

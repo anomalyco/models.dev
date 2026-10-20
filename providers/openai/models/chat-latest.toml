@@ -1,0 +1,30 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/chat-latest (knowledge cutoff Apr 20, 2026;
+# the alias tracks the current ChatGPT Instant snapshot, newer than the gpt-5.5-instant lab's 2025-12-01)
+# https://developers.openai.com/api/docs/pricing
+# Reasoning: no caller control. Live /v1/responses (2026-10-19) accepts only reasoning.effort
+# "medium"; none/minimal/low/high/xhigh/max return "Supported values are: 'medium'".
+schema = 2
+v2_only = true
+base_model = "openai/gpt-5.5-instant"
+name = "Chat Latest"
+knowledge = "2026-04-20"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = false
+top_p = false
+system_updates = true
+effort_updates = false
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 30

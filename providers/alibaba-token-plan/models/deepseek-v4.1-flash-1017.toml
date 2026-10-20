@@ -1,0 +1,34 @@
+# Model availability: deepseek-v4.1-flash-1017 is listed in the Global Token Plan
+# Team supported-models table and was discovered on Global Personal and Global
+# Team (2026-10-20). It replaces the retired deepseek-v3.2 and bare
+# deepseek-v4-flash IDs, which are absent from the exact-string allowlist.
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|high|max (high default; medium and xhigh map to high)
+# Reasoning streams on reasoning_content. Matches the China dated row and the
+# sibling Global deepseek-v4.1-flash row.
+# Structured output: PARTIAL on this gateway despite the lab row's
+# structured_output = true. Strict json_schema is rejected with 400 "This
+# response_format type is unavailable now" on Global Personal (reported
+# 2026-10-20), so the override is explicit.
+# Sources:
+# https://docs.qwencloud.com/token-plan/team/token-plan-team-overview
+# https://docs.qwencloud.com/api-reference/chat/openai-chat
+# Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates and effort_updates are left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (the DeepSeek, Kimi and MiniMax series do not support top_k).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = false
+top_k = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

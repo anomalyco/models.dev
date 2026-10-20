@@ -1,35 +1,38 @@
 # OpenRouter alias currently redirects to Claude Sonnet 5.
 # https://openrouter.ai/~anthropic/claude-sonnet-latest
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded to Claude in place (live: cache prefix kept)
+# effort_updates: configuration_update accepted, cache kept (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: tool_addition/tool_removal system blocks are accepted but have no effect on Chat Completions (live)
+# Cache: cache_control (top-level or per block), 4 breakpoints, 5m/1h TTL, 1h write = 2x input; min tokens per model (https://openrouter.ai/docs/guides/best-practices/prompt-caching#anthropic-claude)
+schema = 2
 name = "Claude Sonnet Latest"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-01-31"
 open_weights = false
+knowledge = "2026-01-31"
+release_date = "2026-04-27"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
+system_updates = true
+effort_updates = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

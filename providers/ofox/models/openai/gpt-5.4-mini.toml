@@ -3,15 +3,16 @@
 # https://ofox.ai/en/models
 # https://ofox.ai/docs (example model id openai/gpt-5.4-mini)
 base_model = "openai/gpt-5.4-mini"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high", "xhigh"]
 
 [cost]
-input = 0.6
-output = 3.6
-cache_read = 0.06
+input = 0.75
+output = 4.5
+cache_read = 0.075
 
 [provider]
 npm = "@ai-sdk/openai"

@@ -1,0 +1,29 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+schema = 2
+type = "decision"
+name = "GPT-6 Luna Decisions"
+description = "Decision model for typed evaluation of shared state"
+family = "gpt"
+open_weights = false
+release_date = "2026-10-06"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 1_050_000
+output = 0
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

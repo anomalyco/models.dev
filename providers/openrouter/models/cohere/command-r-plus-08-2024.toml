@@ -1,6 +1,16 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "cohere/command-r-plus-08-2024"
-structured_output = true
 
-[cost]
-input = 2.5
-output = 10
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10

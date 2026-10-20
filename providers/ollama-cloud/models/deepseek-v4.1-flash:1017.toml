@@ -1,0 +1,22 @@
+# Cost from https://ollama.com/pricing and https://ollama.com/library/deepseek-v4.1-flash:1017-cloud (Peak $0.30/$0.006/$1.20, Off-peak $0.15/$0.003/$0.60 per 1M; off-peak Base recorded, Peak is 2x 12:00-18:00 UTC Mon-Fri).
+# Ollama bills Base (off-peak) and Peak rates; schema cannot express time-based tiers. See https://github.com/anomalyco/models.dev/issues/5913.
+# Toggle: native POST /api/chat and /api/generate use `think = true|false`.
+# Effort: OpenAI POST /v1/chat/completions accepts top-level `reasoning_effort` or `reasoning.effort` with low|high|max (Flash maps requested low -> low).
+# Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
+# Context/modalities: https://ollama.com/library/deepseek-v4.1-flash:1017-cloud and https://ollama.com/library/deepseek-v4.1-flash/tags (1M context, Text + Image input); API model `deepseek-v4.1-flash:1017`.
+# Lab release: https://api-docs.deepseek.com/news/news261017/ (1017 released 2026-10-17 as minor update to V4.1-Flash).
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+structured_output = true
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1048576
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.003

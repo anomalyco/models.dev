@@ -1,0 +1,26 @@
+schema = 2
+type = "decision"
+name = "Tev1 4B Experimental"
+description = "Decision model for typed evaluation of shared state"
+open_weights = true
+release_date = "2026-09-30"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 32_768
+output = 0
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

@@ -12,6 +12,7 @@
 # reasoning_content is ever returned (stream + non-stream), so there is no
 # toggle and no interleaved channel on this host.
 base_model = "alibaba/qwen3.8-flash-next"
+structured_output = true
 reasoning_options = [
   { type = "effort", values = ["low", "medium", "xhigh"] },
 ]

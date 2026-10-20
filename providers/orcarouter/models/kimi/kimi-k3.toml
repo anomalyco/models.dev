@@ -1,5 +1,6 @@
 # Toggle: thinking true|false
 base_model = "moonshotai/kimi-k3"
+structured_output = true
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["low", "high", "max"] },

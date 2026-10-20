@@ -1,0 +1,20 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+schema = 2
+base_model = "typesafe/jev-latest"
+name = "Jev Latest"
+
+[capabilities]
+structured_output = true
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

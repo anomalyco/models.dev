@@ -1,0 +1,28 @@
+name = "Qwen 3.8 27B Uncensored Fast by Heabsy"
+description = "Heabsy's NVFP4 build of Qwen3.8-27B by Alibaba Cloud, with refusal removal based on huihui-ai's Huihui-Qwen3.8-27B-abliterated. Quantized and calibrated by Heabsy, with unpublished weights under the Heabsy Model License. Supports text and image input, tools, and optional reasoning capped at 16,384 tokens within the output budget. This named build is separate from Qwen 3.8 27B Uncensored."
+family = "qwen"
+release_date = "2026-10-16"
+last_updated = "2026-10-16"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.22
+
+[limit]
+context = 524_288
+input = 524_288
+output = 235_929
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

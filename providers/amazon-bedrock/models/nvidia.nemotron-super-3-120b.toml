@@ -1,14 +1,33 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-nvidia-nemotron-super-3-120b.html
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Live 2026-09-09: maxTokens=131072 accepted; chat_template_kwargs.enable_thinking had no visible effect.
-name = "NVIDIA Nemotron 3 Super 120B A12B"
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = []
-structured_output = true
+name = "NVIDIA Nemotron 3 Super 120B A12B"
 
-[cost]
-input = 0.15
-output = 0.65
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+system_updates = false
+effort_updates = false
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.65
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

@@ -1,0 +1,15 @@
+base_model = "openai/gpt-5-search-api"
+attachment = true
+tool_call = true
+structured_output = true
+
+[cost]
+input = 1.25
+output = 10
+
+[limit]
+context = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]

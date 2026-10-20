@@ -1,4 +1,5 @@
 base_model = "meta/muse-spark-1.2"
+structured_output = true
 
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
 
@@ -9,3 +10,4 @@ cache_read = 0.15
 
 [provider]
 npm = "@ai-sdk/openai"
+api = "https://opencode.ai/inference/openai/v1"

@@ -2,6 +2,7 @@
 # EUR list: input €0.224 / output €0.269 / cache_read €0.056 per MTok.
 # https://api.cortecs.ai/v1/models (accessed 2026-08-04)
 base_model = "deepseek/deepseek-v4-flash-0731"
+structured_output = true
 base_model_omit = ["structured_output"]
 
 [interleaved]
@@ -12,9 +13,9 @@ type = "effort"
 values = ["low", "medium", "high"]
 
 [cost]
-input = 0.055
-output = 0.174
-cache_read = 0.009
+input = 0.082
+output = 0.413
+cache_read = 0.06
 
 [limit]
 context = 1_048_576

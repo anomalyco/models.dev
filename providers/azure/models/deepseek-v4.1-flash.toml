@@ -1,0 +1,39 @@
+# Source: https://ai.azure.com/catalog/models/DeepSeek-V4.1-Flash
+# Pricing: Azure Deepseek Models product, global deployment, USD per 1M tokens,
+# effective 2026-10-01. input 0.30, output 1.20, cached input 0.006.
+# Azure bills a flat rate equal to DeepSeek's peak rate (off-peak is half), so
+# these are 2x the off-peak figures recorded on providers/deepseek.
+# https://api-docs.deepseek.com/quick_start/pricing
+# Data-zone deployment is 0.33/1.32/0.0066.
+# https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Deepseek Models'
+# Azure catalog lists context 1000k (same as the base model) and output 128k (base is 384k).
+# Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
+# Its published request schema documents no toggle, effort, or reasoning budget.
+# https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-10-08)
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek-V4.1-Flash"
+status = "beta"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+system_updates = false
+effort_updates = false
+
+[limit]
+output = 128_000
+
+[api.chat-completions]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

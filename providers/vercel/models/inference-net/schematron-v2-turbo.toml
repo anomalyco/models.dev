@@ -1,21 +1,15 @@
-name = "Schematron V2 Turbo"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-release_date = "2026-04-16"
-last_updated = "2026-04-16"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = false
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "inference-net/schematron-v2-turbo"
 
-[cost]
-input = 0.03
-output = 0.15
-cache_read = 0.03
+[capabilities]
+structured_output = true
+system_updates = true
+effort_updates = false
 
-[limit]
-context = 128_000
-output = 8_192
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.15

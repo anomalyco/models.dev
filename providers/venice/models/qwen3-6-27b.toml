@@ -4,6 +4,7 @@ base_model = "alibaba/qwen3.6-27b"
 name = "Qwen 3.6 27B"
 release_date = "2026-04-24"
 last_updated = "2026-06-11"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -15,6 +16,3 @@ output = 3.25
 
 [limit]
 context = 256_000
-
-[modalities]
-input = ["text", "image", "video"]

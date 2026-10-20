@@ -1,5 +1,6 @@
 base_model = "alibaba/qwen3.7-flash"
 name = "Qwen3.7 Flash Thinking"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -14,3 +15,4 @@ cache_write = 0.038
 [limit]
 context = 983_616
 input = 983_616
+output = 65_536

@@ -1,33 +1,34 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding; video: https://openrouter.ai/docs/guides/overview/multimodal/videos
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes disagreed (in place on InferenceNet; hoisted on Wafer)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 name = "Kimi Latest"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-04-27"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.4989
-output = 10.758
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+temperature = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.238
+cache = { read = 0.228 }
+
+[cost.text.output]
+price = 16

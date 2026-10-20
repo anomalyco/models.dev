@@ -1,14 +1,21 @@
+# v2 capabilities (docs for China (Beijing), accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling incl. top_k, which the DeepSeek, Kimi and MiniMax series do not support; enable_thinking defaults; stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
+# Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
+# China (Beijing) list: $1.65/$4.951 (previously the Singapore prices). Cache: implicit hit 20%, explicit creation 125% of input.
+schema = 2
 base_model = "alibaba/qwen3.7-max"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
-[[reasoning_options]]
-type = "budget_tokens"
-max = 262_144
+[cost.text.input]
+price = 1.65
+cache = { read = 0.33, write = 2.0625 }
 
-[cost]
-input = 2.5
-output = 7.5
-cache_read = 0.5
-cache_write = 3.125
+[cost.text.output]
+price = 4.951

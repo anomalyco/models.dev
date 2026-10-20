@@ -1,25 +1,38 @@
+# Status: retired on Model Studio international. Live 2026-10-19 the API answers 404 and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
+# Type: realtime (WebSocket) model, not served on chat completions.
+# MIME types: https://www.alibabacloud.com/help/en/model-studio/realtime — images (and video, sent as image frames) "must be JPG or JPEG"; audio in/out is raw 16-bit PCM ("pcm"), registered as audio/L16.
+schema = 2
+type = "realtime"
 name = "Qwen-Omni Turbo Realtime"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
 family = "qwen"
-release_date = "2025-05-08"
-last_updated = "2025-05-08"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
 open_weights = false
+knowledge = "2024-04"
+release_date = "2025-05-08"
+status = "deprecated"
 
-[cost]
-input = 0.27
-output = 1.07
-input_audio = 4.44
-output_audio = 8.89
+[modalities]
+input = ["text", "image/jpeg", "audio/L16"]
+output = ["text", "audio/L16"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+temperature = true
+effort_updates = false
 
 [limit]
 context = 32_768
 output = 2_048
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text", "audio"]
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 1.07
+
+[cost.audio.input]
+price = 4.44
+
+[cost.audio.output]
+price = 8.89

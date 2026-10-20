@@ -1,4 +1,5 @@
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 description = "GLM-5.3 is a large-scale reasoning model from Z.ai, built for complex software engineering and long-horizon agent tasks. It supports text input and output with a 1M-token context window, and improves..."
 
 [[reasoning_options]]
@@ -12,3 +13,4 @@ cache_read = 0.26
 
 [limit]
 context = 1_048_576
+output = 943_718

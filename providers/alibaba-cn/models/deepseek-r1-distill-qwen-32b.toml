@@ -1,23 +1,28 @@
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
+schema = 2
 name = "DeepSeek R1 Distill Qwen 32B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-01-01"
-last_updated = "2025-01-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
-reasoning_options = []
+release_date = "2025-01-01"
+status = "deprecated"
 
-[cost]
-input = 0.287
-output = 0.861
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+temperature = true
+effort_updates = false
 
 [limit]
 context = 32_768
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.287
+
+[cost.text.output]
+price = 0.861

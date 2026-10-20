@@ -1,20 +1,81 @@
+# Scores: https://raw.githubusercontent.com/zai-org/GLM-5/refs/heads/main/resources/bench_53.png
 # Open weights: https://huggingface.co/zai-org/GLM-5.3-Flash (MIT, safetensors)
+# Input formats (Z.AI / Zhipu Chat API, vision request content items, accessed 2026-10-20):
+# image_url: jpg, jpeg, png (≤5 MB, ≤6000×6000 px); video_url: mp4, mkv, mov (≤200 MB).
+# - https://docs.z.ai/api-reference/llm/chat-completion
+# - https://docs.bigmodel.cn/api-reference/模型-api/对话补全 (names the GLM-5.3-Flash, GLM-5V-Turbo, GLM-4.6V and GLM-4.5V series)
+# file: file_id / file_url / file_data (pdf, txt, word, jsonl, xlsx, pptx; ≤50 MB); PDF verified live 2026-10-17.
+schema = 2
 name = "GLM-5.3-Flash"
 description = "Native multimodal GLM model for efficient coding and long-horizon agent tasks"
 family = "glm-flash"
-release_date = "2026-08-26"
-last_updated = "2026-08-26"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-08-26"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_000_000
 output = 131_072
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 84.3
+metric = "pass@1"
+variant = "max effort"
+version = "2.1"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 63.4
+metric = "resolved"
+variant = "max effort"
+version = "1.1"
+harness = "mini-swe-agent"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 26.3
+metric = "score"
+variant = "max effort"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 48.8
+metric = "pass@1"
+variant = "max effort"
+version = "1.0.6"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 55.3
+metric = "accuracy"
+variant = "max effort; with tools"
+dataset = "full set"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1773
+metric = "Elo"
+variant = "max effort"
+version = "2"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"

@@ -1,4 +1,5 @@
 base_model = "alibaba/qwen3.5-27b"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -23,6 +24,3 @@ cache_read = 0.258
 [limit]
 context = 256_000
 output = 64_000
-
-[modalities]
-input = ["text", "image", "video"]

@@ -1,0 +1,14 @@
+# Cost: https://neon.com/models.json gemini-3-7-flash (USD / 1M tokens).
+# Google's own API takes temperature; the Neon gateway answers
+# "Model gemini-3.7-flash does not support the temperature parameter".
+# `minimal` effort is rejected: "Thinking level is unsupported: THINKING_LEVEL_MINIMAL".
+# Measured 2026-10-13.
+base_model = "google/gemini-3.7-flash"
+structured_output = true
+temperature = false
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.15

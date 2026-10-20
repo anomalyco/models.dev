@@ -1,3 +1,6 @@
+# Output limit 131_072 per Alibaba Model Studio qwen3.7-max (Max Output Length 131072):
+# https://www.alibabacloud.com/help/en/model-studio/qwen3-7-max
+# Serverless 1M context per https://www.together.ai/models/qwen37-max
 name = "Qwen3.7 Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
 family = "qwen"
@@ -16,7 +19,7 @@ cache_read = 0.125
 
 [limit]
 context = 1_000_000
-output = 500_000
+output = 131_072
 
 [modalities]
 input = ["text"]

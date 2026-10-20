@@ -1,0 +1,22 @@
+name = "ScaleDown: Summarize"
+description = "Summarize is an abstractive summarization model from ScaleDown. It condenses long text and documents into a fluent, faithful rewrite rather than lifting sentences from the source, and is suited for..."
+release_date = "2026-10-13"
+last_updated = "2026-10-13"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0
+
+[limit]
+context = 1_000_000
+output = 4_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

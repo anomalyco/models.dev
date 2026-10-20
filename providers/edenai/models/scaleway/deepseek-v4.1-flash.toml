@@ -1,0 +1,15 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash (Scaleway)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.6735
+output = 2.020499
+cache_read = 0.1347
+
+[limit]
+context = 256_000

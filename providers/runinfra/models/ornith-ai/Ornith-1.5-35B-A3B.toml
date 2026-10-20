@@ -10,6 +10,7 @@
 # The output budget is what THIS deployment was launched with; the context window matches the
 # lab entry and is therefore not restated here.
 base_model = "deepreinforce/ornith-1.5-35b-a3b"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

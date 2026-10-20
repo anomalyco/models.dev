@@ -2,10 +2,18 @@
 # Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json
 # Standard us-east-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
 # Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+schema = 2
 base_model = "amazon/nova-micro"
 
-[cost]
-input = 0.035
-output = 0.14
-cache_read = 0.00875
-cache_write = 0.035
+[capabilities]
+tools = { supported = true, updates = false }
+system_updates = false
+effort_updates = false
+
+[cost.text.input]
+price = 0.035
+cache = { read = 0.00875, write = 0.035 }
+
+[cost.text.output]
+price = 0.14

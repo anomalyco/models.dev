@@ -9,19 +9,27 @@
 # API: {"enable_thinking":true,"reasoning_effort":"medium"} or
 # {"enable_thinking":true,"thinking_budget":16384}
 # Pay-as-you-go on DashScope/QwenCloud (not Token Plan only). Cost USD/MTok from model page.
+# v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the explicit cache (in place); toggle, reasoning_effort and cross-tier thinking_budget changes missed the cache; adding tools missed the cache.
+schema = 2
 base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens", min = 0, max = 262_144 },
-]
+system_updates = true
+effort_updates = false
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 2.00
-output = 6.00
-cache_read = 0.25
-cache_write = 2.5
+[cost.text.input]
+price = 2
+cache = { read = 0.25, write = 2.5 }
+
+[cost.text.output]
+price = 6

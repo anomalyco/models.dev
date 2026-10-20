@@ -1,12 +1,10 @@
 base_model = "openai/o4-mini"
+structured_output = true
 name = "o4-mini (EU)"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
 
 [cost]
 input = 1.21

@@ -11,6 +11,7 @@
 # intentionally differs from other "1M" IDs on this host (DeepSeek-V4-Pro, GLM-5.2,
 # Nemotron entries serve max_model_len = 1_048_576).
 base_model = "deepseek/deepseek-v4-flash-0731"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [interleaved]

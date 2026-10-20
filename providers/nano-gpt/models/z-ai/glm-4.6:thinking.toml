@@ -4,12 +4,12 @@ structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["none", "high"]
 
 [cost]
-input = 0.35
-output = 1.4
-cache_read = 0.175
+input = 0.5
+output = 2
+cache_read = 0.1
 
 [limit]
 context = 200_000

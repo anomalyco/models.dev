@@ -1,13 +1,52 @@
+# v2 capabilities and prices:
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/context-cache/context-cache-overview
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/priority-paygo
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/flex-paygo (global endpoint only)
+# Flex lists no cached-input price, so the flex multiplier leaves cache reads alone.
+# Explicit cache storage is per 1M tokens per hour and isn't scaled by tier, region, or date.
+# Mid-conversation updates: false. Vertex takes system instructions, thinking config and tools only as request-level
+# fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
+# Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-pro
+# The documented text/plain document type is covered by `text`.
+schema = 2
 base_model = "google/gemini-3.1-pro-preview"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+status = "beta"
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/x-flv", "video/quicktime", "video/mpeg", "video/mpegs", "video/mpg", "video/mp4", "video/webm", "video/wmv", "video/3gpp", "audio/x-aac", "audio/flac", "audio/mp3", "audio/m4a", "audio/mpeg", "audio/mpga", "audio/mp4", "audio/ogg", "audio/pcm", "audio/wav", "audio/webm", "application/pdf"]
+output = ["text"]
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4
-output = 18
-cache_read = 0.4
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 6_144 }, explicit = { min_tokens = 4_096 } }
+service_tier = ["flex", "priority"]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, storage = 4.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.8 } }, output = 1.8 } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5 }, output = 0.5 } }

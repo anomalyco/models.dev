@@ -5,6 +5,7 @@
 # Effort: reasoning_effort = none|low|high|max (none disables thinking; matches DeepSeek Flash graded set + off)
 # ClinePass is an OpenAI-compatible relay; do not advertise GPT-style medium/xhigh.
 base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [cost]

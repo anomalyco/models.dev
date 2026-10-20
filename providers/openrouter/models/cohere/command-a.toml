@@ -1,24 +1,15 @@
-name = "Command A"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "cohere/command-a"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
-family = "command-a"
-release_date = "2025-03-13"
-last_updated = "2025-03-13"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
 structured_output = true
-knowledge = "2024-08-31"
-open_weights = true
+effort_updates = false
 
-[cost]
-input = 2.5
-output = 10
+[cost.text.input]
+price = 2.5
 
-[limit]
-context = 256_000
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 10

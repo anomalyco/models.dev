@@ -1,24 +1,18 @@
-name = "Uncensored"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Venice (live)
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "cognitivecomputations/dolphin-mistral-24b-venice-edition"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-family = "mistral"
-release_date = "2025-07-09"
-last_updated = "2025-07-09"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = false
-knowledge = "2024-04-30"
-open_weights = true
+system_updates = false
+effort_updates = false
 
-[cost]
-input = 0.2
-output = 0.9
+[cost.text.input]
+price = 0.2
 
-[limit]
-context = 128_000
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.9

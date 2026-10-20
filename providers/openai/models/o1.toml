@@ -1,27 +1,34 @@
+schema = 2
 name = "o1"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 family = "o"
-release_date = "2024-12-05"
-last_updated = "2024-12-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-knowledge = "2023-09"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2023-09"
+release_date = "2024-12-05"
 status = "deprecated"
 
-[cost]
-input = 15.00
-output = 60.00
-cache_read = 7.50
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = false
+system_updates = true
+effort_updates = false
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+prompt_cache_key = true
 
 [limit]
 context = 200_000
 output = 100_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 15
+cache = { read = 7.5 }
+
+[cost.text.output]
+price = 60

@@ -1,4 +1,5 @@
 base_model = "meta/muse-spark-1.1"
+structured_output = true
 description = "Muse Spark 1.1 is a multimodal reasoning model from Meta, built for agentic tasks. It accepts text, images, video, audio, and PDF documents and returns text, with a 1M-token context..."
 
 [[reasoning_options]]
@@ -12,6 +13,3 @@ cache_read = 0.15
 
 [limit]
 output = 943_718
-
-[modalities]
-input = ["text", "image", "video", "pdf", "audio"]

@@ -1,17 +1,6 @@
-name = "TTS-1"
+schema = 2
+base_model = "openai/tts-1"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-release_date = "2023-11-06"
-last_updated = "2023-11-06"
-attachment = false
-reasoning = false
+
+[capabilities]
 temperature = true
-tool_call = false
-open_weights = false
-
-[limit]
-context = 0
-output = 0
-
-[modalities]
-input = ["text"]
-output = ["audio"]

@@ -2,6 +2,7 @@
 # https://huggingface.co/Qwen/Qwen3.8-27B
 # Lab reasoning_effort is low|medium|xhigh (not high). Cortecs cost/limits retained.
 base_model = "alibaba/qwen3.8-27b"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -13,7 +14,8 @@ output = 0.4
 cache_read = 0.04
 
 [limit]
-output = 262_144
+context = 1_000_000
+output = 500_000
 
 [modalities]
 input = ["text", "image"]

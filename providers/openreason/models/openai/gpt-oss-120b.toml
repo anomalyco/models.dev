@@ -8,6 +8,7 @@
 # the `reasoning_content` field.
 # https://openreason.app
 base_model = "openai/gpt-oss-120b"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

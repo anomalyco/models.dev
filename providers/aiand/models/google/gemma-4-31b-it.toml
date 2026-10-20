@@ -5,6 +5,7 @@
 # Modalities: image, video, and PDF accepted on this host (2026-07-24 probes).
 # Reasoning side channel: message.reasoning_content
 base_model = "google/gemma-4-31b-it"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

@@ -1,0 +1,10 @@
+# Sources (accessed 2026-10-19):
+# - Pricing: https://docs.z.ai/guides/overview/pricing
+# - Model: https://docs.z.ai/guides/audio/glm-asr-2512
+# - API: https://docs.z.ai/api-reference/audio/audio-transcriptions
+# The pricing page lists "$0.03 / MTok (equivalent to approximately $0.0024/minute)". At the ~750 audio
+# tokens per minute implied by the CN page (CNY 16/MTok ≈ CNY 0.0002/s), those two figures differ by
+# about 100x, so no [cost] is authored until the page is corrected.
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-asr-2512"

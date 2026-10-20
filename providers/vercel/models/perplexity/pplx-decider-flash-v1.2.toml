@@ -1,0 +1,25 @@
+# Modalities: Decisions API accepts PNG, JPEG and WebP data URLs, https://docs.perplexity.ai/docs/decisions/quickstart
+schema = 2
+type = "decision"
+name = "Decider Flash V1.2 4B"
+description = "Perplexity Decider Flash V1.2 is a 4B multimodal decision model for high-volume classification, routing, labeling, and filtering. It evaluates text, structured JSON, and images against yes/no questions, custom choices, and ordered rubrics, returning typed answers with probabilities. It supports a 256K context window."
+open_weights = false
+release_date = "2026-10-16"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 262_144
+output = 0
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

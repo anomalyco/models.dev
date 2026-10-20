@@ -1,0 +1,7 @@
+# Rerank API (POST https://api.cohere.com/v2/rerank): https://docs.cohere.com/reference/rerank
+# Served: GET /v1/models lists it with the `rerank` endpoint; live rerank returned 200 (2026-10-19).
+# Pricing: https://cohere.com/pricing says Rerank 4 Pro is $2.50 per 1K searches (one search = one query with up to 100
+#   documents); the v2 cost schema has no per-search unit, so no cost is set.
+schema = 2
+v2_only = true
+base_model = "cohere/rerank-v4.0-pro"

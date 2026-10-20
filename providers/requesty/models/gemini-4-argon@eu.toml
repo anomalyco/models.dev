@@ -1,0 +1,12 @@
+base_model = "google/gemini-4-argon"
+structured_output = true
+name = "Gemini 4 Argon (EU)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 2.2
+output = 11
+cache_read = 0.11

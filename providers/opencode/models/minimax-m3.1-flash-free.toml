@@ -1,0 +1,16 @@
+base_model = "minimax/MiniMax-M3.1-Flash"
+name = "MiniMax M3.1 Flash Free"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

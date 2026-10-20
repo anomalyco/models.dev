@@ -1,0 +1,35 @@
+# Source: https://api.lowrouter.ai/v1/models?currency=usd (read 2026-10-12): this ID has 1 route on openai.
+# Cost is the route a plain request resolved to on 2026-10-12 under the default routing profile:
+# OpenAI's API, global endpoint;
+# that route bills in USD, so this is its USD quote as the API returns it, with no currency conversion.
+# USD 2 in / 10 out / 0.2 cache read / 2.5 cache write per MTok.
+# Another route can serve a request (the key's routing policy, or a failover); usage.cost on the
+# response carries the amount debited.
+# Effort: reasoning_effort = none|low|medium|high|xhigh, forwarded unchanged to OpenAI
+# (https://lowrouter.ai/docs/guides/request-parameters). OpenAI's none turns reasoning off, so it is listed
+# where OpenAI takes it. Live check 2026-10-12 on this ID: accepted none, low, medium, high, xhigh;
+# disclosed as rejected_by_provider and served without the parameter: minimal;
+# max is refused by LowRouter itself with 400 'reasoning_effort "max" is not valid (expected one of: none,
+# minimal, low, medium, high, xhigh)'.
+# Tool calls with reasoning on this family go through OpenAI's Responses API (verified 2026-10-12:
+# a tool call came back with reasoning_effort = high and nothing disclosed).
+# Long-context tier over 272,000 tokens copied from OpenAI's published pricing (same as providers/openai).
+base_model = "openai/gpt-6-sol"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4
+output = 15
+cache_read = 0.4
+cache_write = 5

@@ -3,14 +3,15 @@
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
 base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6 27B TEE"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"
 
 [cost]
-input = 0.3
+input = 0.25
 output = 2
-cache_read = 0.029999999999999992
+cache_read = 0.024999999999999994
 
 [modalities]
 input = ["text", "image"]

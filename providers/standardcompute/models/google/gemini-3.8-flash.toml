@@ -1,0 +1,25 @@
+# Model ID google/gemini-3.8-flash. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
+# of the endpoint Standard Compute routes this model to, as charged against the budget
+# (price listing: https://openrouter.ai/api/v1/models/google/gemini-3.8-flash/endpoints, accessed 2026-10-16).
+# Includes a 50% promotion until 2026-12-31; regular $1.50 / $7.50, cache read
+# $0.15 from 2027-01-01 (https://ai.google.dev/gemini-api/docs/pricing, accessed 2026-10-16).
+base_model = "google/gemini-3.8-flash"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+cache_write = 0.041667
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

@@ -1,13 +1,20 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.6
-output = 2.4
-cache_read = 0.12
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 65_000
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 2.4

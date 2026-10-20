@@ -1,12 +1,10 @@
 base_model = "google/gemini-3.8-flash"
+structured_output = true
 name = "Gemini 3.8 Flash (EU)"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
 
 [cost]
 input = 0.825

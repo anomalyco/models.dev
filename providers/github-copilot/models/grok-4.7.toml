@@ -5,6 +5,7 @@
 # - https://docs.x.ai/developers/models/grok-4.7
 # - https://docs.x.ai/developers/pricing
 base_model = "xai/grok-4.7"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]
@@ -22,3 +23,6 @@ cache_read = 1
 context = 500_000
 input = 372_000
 output = 128_000
+
+[provider]
+npm = "@ai-sdk/openai"

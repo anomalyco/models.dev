@@ -1,0 +1,17 @@
+base_model = "sakana/fugu-max"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+output = 131_072
+
+[modalities]
+input = ["text", "image"]

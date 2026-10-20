@@ -3,6 +3,7 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max (Flash; lab maps xhigh→high)
 base_model = "deepseek/deepseek-v4-flash-0731"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -12,6 +13,6 @@ type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.308
-output = 0.924
-cache_read = 0.0098
+input = 0.44
+output = 1.32
+cache_read = 0.014

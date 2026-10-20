@@ -1,0 +1,23 @@
+# Embedding model (POST /v1/embeddings): https://docs.mistral.ai/models/mistral-embed-23-12
+schema = 2
+type = "embedding"
+name = "Mistral Embed"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+family = "mistral-embed"
+open_weights = false
+release_date = "2023-12-11"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_000
+output = 3_072

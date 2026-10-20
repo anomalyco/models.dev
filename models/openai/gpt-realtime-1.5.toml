@@ -1,0 +1,28 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-realtime-1.5
+# https://developers.openai.com/api/docs/changelog
+# Realtime audio MIME types: https://developers.openai.com/api/reference/resources/realtime (audio/pcm, audio/pcmu, audio/pcma)
+schema = 2
+v2_only = true
+type = "realtime"
+name = "GPT-Realtime-1.5"
+description = "Realtime speech-to-speech model for voice agents and customer support"
+family = "gpt"
+open_weights = false
+knowledge = "2024-09-30"
+release_date = "2026-02-23"
+
+[modalities]
+input = ["text", "audio/pcm", "audio/pcmu", "audio/pcma", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text", "audio/pcm", "audio/pcmu", "audio/pcma"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 4_096

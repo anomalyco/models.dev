@@ -5,22 +5,31 @@
 #   - base_model: any proxied id whose canonical file name differs from its catalog id.
 #   - structured_output: a quality judgement. Cloudflare advertises response_format for
 #     nearly every model, but several do not honour it, so this stays hand-set.
-#   - reasoning_options: the catalog has no reasoning schema, so reasoning shapes are curated.
+#   - reasoning_options: the per-model schema can enumerate effort, but toggles and
+#     incomplete or route-specific reasoning shapes are curated here.
 #   - interleaved: whether a wire returns reasoning content as a separate field. Never
 #     inheritable from base_model (this deployment's wire format can differ from the lab's).
+#   - cost: only for proxied rows whose catalog entry has provider_details = null (no
+#     structured pricing). Sync fails if such a row has no curated cost, and fails if a
+#     curated cost remains after Cloudflare adds provider_details.
 #   - limit.output: the catalog's max_output_tokens is not a reliable ceiling (verified wrong
 #     against lab/first-party for several models), so output is hand-curated; only
 #     limit.context is auto-derived.
 #   - note: leading `#` comment lines (wire-path docs, source citations) that would otherwise
 #     be lost on every regeneration.
+#   - prefix_notes: leading comment lines shared by every model whose id starts with the key,
+#     written before the model's own note.
 #   - skip: catalog ids with no lab file, or not reachable via unified billing (BYOK-only).
 # Consumed by: bun run cloudflare-ai-gateway:generate
 
-# Proxied Text-Generation catalog ids with no lab file under models/ (cannot publish yet).
+# Proxied Text-Generation catalog ids with no lab file under models/, or not reachable via
+# unified billing (BYOK-only).
 skip = [
   "google/gemini-3-flash",
   "google/gemini-3.1-pro",
   "xai/grok-4.20-multi-agent-0309",
+  # Inkling has a lab file, but both ids are BYOK-only: unified billing returns code 2047
+  # on /ai/v1/chat/completions and /ai/v1/messages (verified live 2026-10-16).
   "thinkingmachines/inkling-256k",
   "minimax/m2.7",
   "minimax/m3",
@@ -37,10 +46,117 @@ skip = [
   "stealth/union-alpha",
 ]
 
+# Leading comment lines for every model whose id starts with the key, written before the
+# model's own note. They cite the route and sources behind the hand-authored v2 fields in the
+# model files (cache, mid-conversation flags), which sync keeps as they are.
+[prefix_notes]
+"openai/" = [
+  "Route: provider-native passthrough /openai (Responses body forwarded unchanged): https://developers.cloudflare.com/ai-gateway/usage/providers/openai/",
+  "v2 capabilities and cache follow OpenAI's own API (providers/openai). Live via the gateway 2026-10-19: mid-conversation developer messages and additional_tools keep the cached prefix (gpt-4.1-nano, gpt-5-nano, gpt-5.4-nano), configuration_update is accepted on gpt-6-luna and gpt-5.6-luna, json_schema output is enforced.",
+]
+"anthropic/" = [
+  "Route: provider-native passthrough /anthropic (Messages body and anthropic-beta headers forwarded): https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/",
+  "v2 capabilities and cache follow Anthropic's own API (providers/anthropic). Live via the gateway 2026-10-19: mid-conversation system text, per-message output_config.effort and tool_addition/tool_removal keep the cache on Sonnet 5.5; Haiku 4.5 rejects them upstream; cache_control ttl 1h is accepted; output_config.format json_schema is enforced on Sonnet 5.5 and Opus 5.5.",
+  "1h cache writes: unified billing passes provider prices through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/), i.e. Anthropic's 2x input rate.",
+]
+"alibaba/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19 (qwen3.7-plus): a mid-conversation system message keeps the cached prefix (in place).",
+]
+"deepseek/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
+  "system_updates unset: every request returned 500 (code 2002) on 2026-10-19, so it could not be checked live.",
+]
+"fireworks/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).",
+]
+"google/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI: no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19: a mid-conversation system message misses the warm cache (hoisted into the system instruction), so system_updates = false; response_format json_schema is enforced.",
+]
+"meta/muse-spark-1" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), translated to Meta's Responses API: no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19 (muse-spark-1.1, gateway logs): distinct mid-conversation system messages miss the warm cache every time while plain turns hit it (hoisted), so system_updates = false.",
+  "Live 2026-10-19 (muse-spark-1.1, 1.3, wonder-1.0): response_format json_schema is dropped and the answer is prose, so structured_output = false.",
+]
+"meta/muse-wonder" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), translated to Meta's Responses API: no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19 (muse-spark-1.1, same route, gateway logs): distinct mid-conversation system messages miss the warm cache every time while plain turns hit it (hoisted), so system_updates = false.",
+  "Live 2026-10-19: response_format json_schema is dropped and the answer is prose, so structured_output = false.",
+]
+"meta/muse-spark-open" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Fireworks: no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place); response_format json_schema is enforced.",
+]
+"moonshotai/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort mechanism (changing reasoning_effort rewrites the prefix cache: https://platform.kimi.ai/docs/api/models-overview).",
+  "Live 2026-10-19: a mid-conversation system message keeps the cached prefix, and a system message carrying `tools` (https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading) is forwarded, keeps the cache, and the added tool is called.",
+]
+"reflection-ai/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).",
+]
+"unbiased/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).",
+]
+"xai/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
+  "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (grok-4.3, in place); response_format json_schema is enforced (grok-4.3, grok-4.20-0309-non-reasoning).",
+]
+
 # Cloudflare exposes TypeSafe's evaluation-only Jev alias over /ai/run. The shared
 # metadata marks its structured output support and lack of tool calling.
 [models."typesafe/jev"]
 base_model = "typesafe/jev-latest"
+
+# Muse Spark 1.x / Muse Wonder: the catalog schema's reasoning.effort enum (none..max) is the generic
+# Responses schema, not what the model accepts. Cloudflare's own validation error lists the values:
+# 1.1/1.2 "Supported values: [minimal, low, medium, high, xhigh]", 1.3/Wonder "[minimal, low, medium,
+# high, xhigh, max]"; none is rejected on all four (live 2026-10-19). Curated to override the schema.
+# structured_output, live json_schema checks through the gateway (2026-10-19, see the notes in
+# each family's prefix_notes): REST chat-completions response_format is enforced for xAI (grok-4.3,
+# grok-4.20-0309-non-reasoning), Gemini 4 Argon and Muse Spark Open, but dropped for Muse Spark
+# 1.x / Muse Wonder (Cloudflare translates them to Meta's Responses API and answers in prose).
+# Anthropic passthrough output_config.format is enforced on Sonnet 5.5 and Opus 5.5.
+[models."xai/grok-4.3"]
+structured_output = true
+note = ["Effort: reasoning_effort = none|low|medium|high (POST /ai/v1/chat/completions; live 2026-10-19: none -> 0 reasoning tokens, low 4562 vs medium 6602 median)."]
+
+[models."xai/grok-4.5"]
+structured_output = true
+note = ["Effort: reasoning_effort = low|medium|high (POST /ai/v1/chat/completions; xhigh rejected; live 2026-10-19: low 107 / medium 190 / high 362 reasoning tokens)."]
+
+[models."xai/grok-4.7"]
+structured_output = true
+note = ["Effort: reasoning_effort = low|medium|high|xhigh (POST /ai/v1/chat/completions; none rejected; live 2026-10-19: low 108 / medium 225 / xhigh 190 reasoning tokens)."]
+
+[models."xai/grok-4.20-0309-non-reasoning"]
+structured_output = true
+
+[models."meta/muse-spark-1.1"]
+structured_output = false
+note = ["Effort: reasoning_effort = minimal|low|medium|high|xhigh (POST /ai/v1/chat/completions, translated to reasoning.effort; values from Cloudflare's validation error; none and max rejected; live 2026-10-19: low 414 / medium 687 / high 1372 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+
+[models."meta/muse-spark-1.2"]
+structured_output = false
+note = ["Effort: reasoning_effort = minimal|low|medium|high|xhigh (POST /ai/v1/chat/completions, translated to reasoning.effort; values from Cloudflare's validation error; none and max rejected; live 2026-10-19: low 561 / high 960 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+
+[models."meta/muse-spark-1.3"]
+structured_output = false
+note = ["Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (POST /ai/v1/chat/completions, translated to reasoning.effort; values from Cloudflare's validation error; none rejected; live 2026-10-19: low 642 / high 712 / max 1060 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[models."meta/muse-wonder-1.0"]
+structured_output = false
+note = ["Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (POST /ai/v1/chat/completions, translated to reasoning.effort; values from Cloudflare's validation error; none rejected; live 2026-10-19: low 456 / high 676 reasoning tokens)."]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-opus-5.5"]
+structured_output = true
 
 [models."anthropic/claude-fable-5"]
 structured_output = true
@@ -61,6 +177,22 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhig
 [models."anthropic/claude-haiku-4.5"]
 structured_output = true
 reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+
+# Claude Haiku 5.5: adaptive thinking on by default; disabled accepted at high
+# effort or below, rejected at xhigh/max, so toggle + effort (no none in effort).
+# Wire: thinking.type = adaptive|disabled; output_config.effort = low|medium|high|xhigh|max
+# on the Anthropic Messages path.
+# https://platform.claude.com/docs/en/build-with-claude/effort
+# https://platform.claude.com/docs/en/models/haiku-5-5/overview
+# https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide
+[models."anthropic/claude-haiku-5.5"]
+structured_output = true
+note = [
+  "Toggle: thinking.type = adaptive|disabled (disabled accepted at high effort or below; xhigh|max reject it).",
+  "Effort: output_config.effort = low|medium|high|xhigh|max (Anthropic Messages API; adaptive thinking on by default).",
+  "Sources: https://platform.claude.com/docs/en/build-with-claude/effort ; https://platform.claude.com/docs/en/models/haiku-5-5/overview ; https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide",
+]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [models."anthropic/claude-opus-4.5"]
 structured_output = true
@@ -84,7 +216,6 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhig
 
 [models."anthropic/claude-sonnet-4.5"]
 structured_output = true
-limit = { context = 1000000 }
 reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 
 [models."anthropic/claude-sonnet-4.6"]
@@ -97,43 +228,92 @@ structured_output = true
 note = ["Toggle: thinking.type = adaptive|disabled.", "Effort: output_config.effort = low|medium|high|xhigh|max."]
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
+# Claude Sonnet 5.5: adaptive thinking on by default; disabled is rejected, so no toggle.
+# between_tools is the lowest setting (low|medium|high only), not a full off. Effort only.
+[models."anthropic/claude-sonnet-5.5"]
+structured_output = true
+note = [
+  "Effort: output_config.effort = low|medium|high|xhigh|max (Anthropic Messages API; adaptive thinking on by default, disabled rejected).",
+  "Sources: https://platform.claude.com/docs/en/build-with-claude/effort ; https://platform.claude.com/docs/en/models/sonnet-5-5/overview ; https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+# structured_output follows OpenAI's own API (providers/openai); json_schema output was enforced
+# through the gateway's Responses passthrough on gpt-4.1-nano, gpt-5-nano and gpt-5.4-nano (2026-10-19).
+[models."openai/gpt-4.1"]
+structured_output = true
+
+[models."openai/gpt-4.1-mini"]
+structured_output = true
+
+[models."openai/gpt-4.1-nano"]
+structured_output = true
+
+[models."openai/gpt-4o"]
+structured_output = true
+
+[models."openai/gpt-4o-mini"]
+structured_output = true
+
+[models."openai/gpt-6-luna"]
+structured_output = true
+
+[models."openai/gpt-6-sol"]
+structured_output = true
+
+[models."openai/gpt-6.1-sol"]
+structured_output = true
+
 [models."openai/gpt-5"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [models."openai/gpt-5-mini"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [models."openai/gpt-5-nano"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [models."openai/gpt-5.1"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [models."openai/gpt-5.4"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [models."openai/gpt-5.4-mini"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [models."openai/gpt-5.4-nano"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [models."openai/gpt-5.4-pro"]
+structured_output = false
 reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
 
 [models."openai/gpt-5.5"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [models."openai/gpt-5.5-pro"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
 
 [models."openai/gpt-5.6-luna"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [models."openai/gpt-5.6-sol"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [models."openai/gpt-5.6-terra"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 # GPT-6 Astra has conflicting validation layers on Cloudflare's Responses route. The catalog
@@ -141,52 +321,80 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high
 # xhigh|max are rejected by Cloudflare before forwarding. POST /ai/v1/responses verified
 # low end-to-end and those three rejection paths on 2026-09-17.
 [models."openai/gpt-6-astra"]
+structured_output = true
 note = ["Effort: reasoning.effort = low|medium|high; Cloudflare rejects xhigh|max, and OpenAI rejects none after forwarding (live verified 2026-09-17)."]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [models."openai/o3"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [models."openai/o3-mini"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [models."openai/o4-mini"]
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 # Proxied reasoning models whose reasoning shape the Cloudflare catalog schema does not
 # expose (native-format providers). Values mirror models.dev's merge-gateway provider, which
 # proxies the same upstreams. Google uses thinkingConfig.thinkingBudget / thinking_level.
 #
-# DeepSeek: toggle-only would only be correct if AI Gateway drops the effort field on this
-# route (merge-gateway's own toggle-only shape is backed by a live-tested selected-route
-# comment specific to *their* relay, not evidence about Cloudflare's). Absent host-specific
-# proof that Cloudflare strips it, match the lab + Workers AI baseline: toggle + high/max.
+# Cloudflare serves this DeepSeek V4 Pro route via Fireworks. Fireworks' V4 renderer
+# accepts reasoning_effort=none to disable thinking and low|high|max for graded effort;
+# off is an effort value, not a separate thinking.type toggle.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
 [models."deepseek/deepseek-v4-pro"]
-note = ["Toggle: thinking.type = enabled|disabled.", "Effort: reasoning_effort = high|max."]
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+note = [
+  "Off: reasoning_effort = none; effort: low|high|max (POST /ai/v1/chat/completions, Fireworks route; not verified live: every request returned 500, code 2002, on 2026-10-19).",
+  "Source: https://docs.fireworks.ai/api-reference/post-chatcompletions",
+]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
-# Alibaba is a first-party lab; the catalog's OpenAI-compat schema exposes a generic
-# `reasoning_effort` enum, but Alibaba's real API (see providers/alibaba/models/qwen3.7-plus.toml)
-# is toggle + budget_tokens, not graded effort. Match the lab shape per AGENTS.md.
+# Muse Spark Open always reasons; native ladder is low|medium|high|xhigh (default xhigh).
+# Reasoning cannot be disabled: none is rejected. Cloudflare serves this route via
+# Fireworks and preserves reasoning_effort on POST /ai/v1/chat/completions. Live 2026-10-19:
+# low 506 / high 1038 / xhigh 1519 reasoning tokens; max is accepted but undocumented, so not listed.
+# https://dev.meta.ai/docs/muse-spark-open/prompting
+# https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
+# https://developers.cloudflare.com/ai/models/meta/muse-spark-open/
+[models."meta/muse-spark-open"]
+structured_output = true
+note = [
+  "Effort: reasoning_effort = low|medium|high|xhigh (POST /ai/v1/chat/completions; default xhigh; none rejected; live 2026-10-19: low 506 / high 1038 / xhigh 1519 reasoning tokens).",
+  "Sources: https://dev.meta.ai/docs/muse-spark-open/prompting ; https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B ; https://developers.cloudflare.com/ai/models/meta/muse-spark-open/",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+# Alibaba Qwen on the REST chat-completions route. Cloudflare forwards Alibaba's top-level
+# enable_thinking and thinking_budget fields. Live 2026-10-19 (qwen3.5-397b-a17b, qwen3.7-max,
+# qwen3.7-plus): enable_thinking=false returns no reasoning; thinking_budget=100 caps reasoning at
+# exactly 100 tokens. reasoning_effort=none also turns thinking off, but low/high did not grade
+# reasoning consistently, so effort is not listed. The Responses-style reasoning.effort object is
+# ignored on this route.
 [models."alibaba/qwen3.7-plus"]
-note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+note = ["Toggle: enable_thinking = true|false (top-level field on POST /ai/v1/chat/completions; live 2026-10-19: false -> no reasoning).", "Budget: thinking_budget = <integer reasoning tokens> (top-level field; live 2026-10-19: 100 -> 100 reasoning tokens)."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [models."alibaba/qwen3.5-397b-a17b"]
-note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+note = ["Toggle: enable_thinking = true|false (top-level field on POST /ai/v1/chat/completions; live 2026-10-19: false -> no reasoning).", "Budget: thinking_budget = <integer reasoning tokens> (top-level field; live 2026-10-19: 100 -> 100 reasoning tokens)."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [models."alibaba/qwen3.7-max"]
-note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+note = ["Toggle: enable_thinking = true|false (top-level field on POST /ai/v1/chat/completions; live 2026-10-19: false -> no reasoning).", "Budget: thinking_budget = <integer reasoning tokens> (top-level field; live 2026-10-19: 100 -> 100 reasoning tokens)."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 # providers/alibaba/models/qwen3.8-max.toml: hybrid toggle, low|medium|xhigh effort (high
-# aliases to xhigh), and a 0..262144 budget that cannot combine with effort.
+# aliases to xhigh), and a 0..262144 budget that cannot combine with effort. Cloudflare forwards
+# all three as top-level chat-completions fields. Live 2026-10-19: enable_thinking=false -> no
+# reasoning; thinking_budget=100 -> 100 reasoning tokens; reasoning_effort low 172 / medium 363 /
+# high 370 reasoning tokens (single run), none -> off.
 [models."alibaba/qwen3.8-max"]
 note = [
-  "Toggle: enable_thinking true|false (hybrid).",
-  "Effort: reasoning_effort = low|medium|xhigh (default xhigh); high accepted as alias -> xhigh.",
-  "Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort.",
+  "Toggle: enable_thinking = true|false (top-level field on POST /ai/v1/chat/completions; live 2026-10-19: false -> no reasoning).",
+  "Effort: reasoning_effort = low|medium|xhigh (default xhigh; high is an alias for xhigh; live 2026-10-19: medium reasons about 2x low).",
+  "Budget: thinking_budget = 0..262144 (cannot be combined with reasoning_effort; live 2026-10-19: 100 -> 100 reasoning tokens).",
 ]
 interleaved = { field = "reasoning_content" }
 reasoning_options = [
@@ -199,19 +407,59 @@ reasoning_options = [
 # Cloudflare's gateway route rejects it (verified live: reasoning_effort accepts only
 # low|medium|high, code 7003) — a host delta, so match what the CF route actually accepts.
 [models."xai/grok-4.6"]
+structured_output = true
+note = ["Effort: reasoning_effort = low|medium|high (POST /ai/v1/chat/completions; xhigh rejected; live 2026-10-19: low 298 / medium 442 / high 548 reasoning tokens)."]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 # First-party xAI Grok 4.20 (Reasoning) is always-on with no caller control
-# (providers/xai/models/grok-4.20-0309-reasoning.toml: reasoning_options = []).
+# (providers/xai/models/grok-4.20-0309-reasoning.toml: reasoning_options = []). The catalog
+# schema advertises reasoning_effort low|high, but xAI rejects both (400 invalid-argument, live
+# 2026-10-19), so no control is listed.
 [models."xai/grok-4.20-0309-reasoning"]
+structured_output = true
+note = ["Always reasons; no caller control: reasoning_effort low|high is rejected by xAI on POST /ai/v1/chat/completions (live 2026-10-19)."]
 reasoning_options = []
 
+# Kimi K3 on the REST chat-completions route. Live 2026-10-19: reasoning_effort = none (and
+# thinking.type = disabled) returns no reasoning (76 completion tokens vs 457 by default), and
+# low 85 / high 166 / max 738 reasoning tokens, so off is the effort value none (no separate toggle).
 [models."moonshotai/kimi-k3"]
 note = [
-  "API: thinking.type = enabled|disabled|adaptive; in adaptive mode the",
-  "reasoning depth is set by output_config.effort = low|high|max.",
+  "Effort: reasoning_effort = none|low|high|max (POST /ai/v1/chat/completions; default max; live 2026-10-19: none -> no reasoning, low 85 / high 166 / max 738 reasoning tokens).",
+  "Sources: https://platform.kimi.ai/docs/api/models-overview ; https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3/",
 ]
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+# Ember-1 is Fireworks' Kimi K3 derivative, served on the Fireworks route. The catalog
+# schema advertises a generic none|low|medium|high|xhigh|max enum, but Fireworks' K3 tiers
+# promote medium -> high and xhigh -> max, so the distinct levels are none|low|high|max
+# (same as providers/kilo/models/fireworks/ember-1.toml and the deepseek-v4-pro route above).
+# Live CF chat-completions accepts all six and returns reasoning_content (2026-10-16).
+# Live 2026-10-19: none -> 0 reasoning tokens; low 50 / high 103 / max 151.
+[models."fireworks/ember-1"]
+note = [
+  "Off: reasoning_effort = none; effort: low|high|max (POST /ai/v1/chat/completions, Fireworks route; medium -> high, xhigh -> max; live 2026-10-19: none -> 0, low 50 / high 103 / max 151 reasoning tokens).",
+  "Sources: https://docs.fireworks.ai/api-reference/post-chatcompletions ; https://docs.fireworks.ai/guides/reasoning",
+]
+interleaved = { field = "reasoning_content" }
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+# Reflection's catalog id (reflection-ai/...) differs from the lab dir (reflection/...).
+# Live CF chat-completions (2026-10-16, unified billing): reasoning_effort accepts
+# low|medium|high|xhigh|max and rejects none|minimal (code 7003); reasoning is always on and
+# returned in reasoning_content, and omitting it from a prior assistant turn is rejected.
+# The catalog row has provider_details = null, so cost is curated: free, matching the
+# catalog's display pricing (input/cached input/output $0 per 1M) on 2026-10-16.
+[models."reflection-ai/beam-1.0-501b-a23b"]
+base_model = "reflection/beam-1.0-501b-a23b"
+note = [
+  "Always reasons; effort: reasoning_effort = low|medium|high|xhigh|max (POST /ai/v1/chat/completions; none/minimal rejected; live 2026-10-19: low 3285 vs high 11455 median reasoning tokens).",
+  "Interleaved: reasoning_content must be sent back on every prior assistant message.",
+  "Source: https://developers.reflection.ai/reasoning",
+]
+interleaved = { field = "reasoning_content" }
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+cost = { input = 0, output = 0, cache_read = 0 }
 
 [models."thinkingmachines/inkling"]
 note = [
@@ -220,3 +468,19 @@ note = [
 ]
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 limit = { output = 65_536 }
+
+# Gemini 4 Argon is served by Vertex AI over the REST API's chat-completions route (catalog
+# provider_details = google-vertex-ai, request_formats = chat-completions), not Google AI Studio.
+# Effort is reasoning_effort, which maps to Gemini's thinking level (low|medium|high, default
+# medium); thinking cannot be disabled. Live 2026-10-19: low|medium|high accepted with rising
+# reasoning tokens (0 / 79 / 550), none rejected (code 7003).
+# https://ai.google.dev/gemini-api/docs/thinking
+# https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
+# https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+[models."google/gemini-4-argon"]
+structured_output = true
+note = [
+  "Effort: reasoning_effort = low|medium|high (maps to Gemini's thinking level; default medium, thinking cannot be disabled, none rejected; live 2026-10-19).",
+  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-argon",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

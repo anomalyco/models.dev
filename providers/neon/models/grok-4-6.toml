@@ -7,6 +7,7 @@
 # Do not advertise an off switch we cannot verify.
 # Cost: https://neon.com/models.json grok-4-6 (USD / 1M tokens).
 base_model = "xai/grok-4.6"
+structured_output = true
 reasoning_options = [
   { type = "effort", values = ["low", "medium", "high", "xhigh"] },
 ]

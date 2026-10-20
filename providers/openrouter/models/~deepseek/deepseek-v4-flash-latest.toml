@@ -1,33 +1,34 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Wafer (live)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 name = "DeepSeek V4 Flash Latest"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 family = "deepseek"
-release_date = "2026-08-01"
-last_updated = "2026-08-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.038
-output = 0.55
-cache_read = 0.0228
-
-[limit]
-context = 1_310_720
-output = 943_718
+release_date = "2026-08-01"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+temperature = true
+system_updates = false
+effort_updates = false
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[cost.text.input]
+price = 0.0049
+cache = { read = 0.0049 }
+
+[cost.text.output]
+price = 0.45

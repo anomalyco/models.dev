@@ -1,11 +1,12 @@
 # https://ofox.ai/models/openai/gpt-4.1-mini
 # Pricing: input $0.4/M, output $1.6/M, cache_read $0.1/M (USD per million tokens)
 base_model = "openai/gpt-4.1-mini"
+structured_output = true
 
 [cost]
-input = 0.32
-output = 1.28
-cache_read = 0.08
+input = 0.4
+output = 1.6
+cache_read = 0.1
 
 [provider]
 npm = "@ai-sdk/openai"

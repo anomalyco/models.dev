@@ -5,6 +5,7 @@
 # https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-6.htm (500K context).
 # Effort: reasoning_effort mirrors xAI's controls for this model.
 base_model = "xai/grok-4.6"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]

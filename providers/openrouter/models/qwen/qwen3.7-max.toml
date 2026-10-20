@@ -1,16 +1,21 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Alibaba)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "alibaba/qwen3.7-max"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
+system_updates = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1.475
+cache = { read = 0.295, write = 1.84375 }
 
-[cost]
-input = 1.475
-output = 4.425
-cache_read = 0.295
-cache_write = 1.84375
-
-[limit]
-output = 131_072
+[cost.text.output]
+price = 4.425

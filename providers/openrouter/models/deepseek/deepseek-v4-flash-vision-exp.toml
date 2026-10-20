@@ -1,20 +1,25 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes disagreed (in place on SiliconFlow; hoisted on DeepInfra)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.22
-output = 0.66
-cache_read = 0.007
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
-output = 943_718
+output = 262_144
+
+[cost.text.input]
+price = 0.2156
+cache = { read = 0.00686 }
+
+[cost.text.output]
+price = 0.6468

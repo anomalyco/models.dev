@@ -6,6 +6,7 @@
 # charged. See https://docs.greenpt.ai/prompt-caching
 base_model = "moonshotai/kimi-k2.7-code"
 attachment = false
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 
 [cost]

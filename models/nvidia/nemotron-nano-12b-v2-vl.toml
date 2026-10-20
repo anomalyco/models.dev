@@ -1,18 +1,24 @@
+# Formats (model card input format: Image png, jpg; Video MP4, MKV, FLV, 3GP):
+#   https://huggingface.co/nvidia/NVIDIA-Nemotron-Nano-12B-v2-VL-BF16
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
 name = "Nemotron Nano 12B v2 VL"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 family = "nemotron"
-release_date = "2025-10-28"
-last_updated = "2025-10-28"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-10-28"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "video/mp4", "video/x-matroska", "video/x-flv", "video/3gpp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 128_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]

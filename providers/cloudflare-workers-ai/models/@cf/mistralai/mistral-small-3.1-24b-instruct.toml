@@ -1,15 +1,24 @@
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is rejected ("Unexpected role 'system' after role 'assistant'").
+# No prefix cache on this model, so effort and tool changes keep nothing.
+schema = 2
 base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
 name = "Mistral Small 3.1 24B Instruct"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-attachment = false
-structured_output = false
 
-[cost]
-input = 0.351
-output = 0.555
+[capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = false }
+structured_output = false
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 128_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.351
+
+[cost.text.output]
+price = 0.555

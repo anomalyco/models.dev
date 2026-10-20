@@ -1,9 +1,10 @@
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 name = "GLM-5.3 (Together AI)"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "high", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 1.4

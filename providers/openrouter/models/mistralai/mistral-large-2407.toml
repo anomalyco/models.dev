@@ -1,25 +1,19 @@
-name = "Mistral Large 2407"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Mistral (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "mistral/mistral-large-2407"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
-family = "mistral-large"
-release_date = "2024-11-19"
-last_updated = "2024-11-19"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
-knowledge = "2024-03-31"
-open_weights = false
+system_updates = false
+effort_updates = false
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.2
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
 
-[limit]
-context = 131_072
-output = 104_857
-
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 6

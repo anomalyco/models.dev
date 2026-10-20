@@ -1,34 +1,61 @@
+# Sources (docs.x.ai):
+# - Model page: https://docs.x.ai/developers/models/grok-4.3
+# - Models/pricing: https://docs.x.ai/developers/models, https://docs.x.ai/developers/pricing (long context: prompts ≥ 200k tokens)
+# - Reasoning: https://docs.x.ai/developers/model-capabilities/text/reasoning
+# - Caching (automatic prefix cache, prompt_cache_key): https://docs.x.ai/developers/advanced-api-usage/prompt-caching
+# - Priority (service_tier = priority, 2x): https://docs.x.ai/developers/advanced-api-usage/priority-processing
+# - API params (store, stream_options.include_usage, top_k): https://docs.x.ai/developers/rest-api-reference/inference/responses, https://docs.x.ai/developers/rest-api-reference/inference/chat-completions
+# Effort values: GET https://api.x.ai/v1/models lists capabilities.reasoning_effort = none, low, medium, high, xhigh (default low).
+# The API rejects values a model lacks (e.g. "none" on grok-4.5) and accepts each listed value (checked 2026-10-19).
+# Mid-conversation: system/developer messages are accepted in any order (docs.x.ai/developers/models);
+# changing reasoning effort or tools between turns drops the prompt cache, and there is no per-turn
+# mechanism (configuration_update/additional_tools return 422), checked live 2026-10-19.
+schema = 2
 name = "Grok 4.3"
 description = "xAI's Grok for chat, coding, agentic tools, and lower hallucination risk"
 family = "grok"
-release_date = "2026-04-17"
-last_updated = "2026-04-17"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-04-17"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 2.5
-output = 5
-cache_read = 0.4
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
+system_updates = true
+effort_updates = false
+store = true
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
+service_tier = ["priority"]
 
 [limit]
 context = 1_000_000
 output = 30_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2

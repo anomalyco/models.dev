@@ -1,23 +1,26 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "alibaba/qwen3.5-flash"
 name = "Qwen 3.5 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 81_920
-
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.01
-cache_write = 0.125
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"], budget = { min = 1, max = 81_920 } }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[cost.text.output]
+price = 0.4

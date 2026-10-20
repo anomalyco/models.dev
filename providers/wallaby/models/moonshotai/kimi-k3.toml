@@ -7,6 +7,7 @@
 # "none" in values and no toggle.
 # Pricing: https://wallabytoken.com/pricing.json (accessed 2026-09-14), USD per 1M tokens.
 base_model = "moonshotai/kimi-k3"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 
 [interleaved]

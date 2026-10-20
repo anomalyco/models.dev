@@ -1,35 +1,35 @@
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 # POST .../endpoints/openapi/chat/completions; toggle with
 # $.chat_template_kwargs.enable_thinking = true | false.
 # https://cloud.google.com/vertex-ai/generative-ai/docs/maas/capabilities/thinking (accessed 2026-06-25)
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = true
+# Vertex quota (global): 128,000 maximum output, 200,000 context length.
+# https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/zaiorg/glm-5
+# Implicit caching (4,096-token minimum): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models#context-caching
+# Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+schema = 2
+base_model = "zhipuai/glm-5"
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.00
-output = 3.20
-cache_read = 0.10
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 4_096 } }
 
 [limit]
-context = 202752
-output = 131072
+context = 200_000
+output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
-api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3.2

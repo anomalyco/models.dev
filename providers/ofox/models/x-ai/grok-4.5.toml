@@ -4,6 +4,7 @@
 # - https://docs.x.ai/developers/models/grok-4.5 (first-party effort low|medium|high; lab pricing tiers not listed on Ofox)
 # reasoning_options: multi-model relay — copy first-party xAI + peer relays (low/medium/high)
 base_model = "xai/grok-4.5"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

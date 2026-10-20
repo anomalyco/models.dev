@@ -1,17 +1,19 @@
+# Modalities: MiniMax H3 image inputs JPG, JPEG, PNG, WEBP, HEIC, HEIF (https://platform.minimax.io/docs/api-reference/video-generation-v2-create); output MP4 per AI Gateway video docs (https://vercel.com/docs/ai-gateway/modalities/video-generation)
+schema = 2
 name = "MiniMax H3 Max"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "minimax"
-release_date = "2026-08-27"
-last_updated = "2026-08-27"
-attachment = true
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-08-27"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text", "image"]
-output = ["video"]

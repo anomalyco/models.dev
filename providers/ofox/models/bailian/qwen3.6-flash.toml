@@ -4,6 +4,7 @@
 # Toggle: enable_thinking true|false (Alibaba/DashScope hybrid; Ofox OpenAI-compatible path)
 # Budget: thinking_budget
 base_model = "alibaba/qwen3.6-flash"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [cost]

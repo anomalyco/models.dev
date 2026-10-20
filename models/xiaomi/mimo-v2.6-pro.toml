@@ -1,22 +1,173 @@
+# Benchmarks sourced from MiMo-V2.6-Flash-RL use its "MiMo-V2.6 Pro" comparison column.
+# Formats (Xiaomi MiMo API, lists this model as supported):
+#   images JPEG, PNG, GIF, WebP, BMP: https://mimo.mi.com/docs/en-US/quick-start/usage-guide/multimodal-understanding/image-understanding
+#   audio MP3, WAV, FLAC, M4A, OGG: https://mimo.mi.com/docs/en-US/quick-start/usage-guide/multimodal-understanding/audio-understanding
+#   video MP4, MOV, AVI, WMV: https://mimo.mi.com/docs/en-US/quick-start/usage-guide/multimodal-understanding/video-understanding
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host. The checkpoint's
+#   generation_config.json sets temperature 1.0 and top_p 0.95; the MiMo API pins both in thinking mode
+#   (https://mimo.mi.com/docs/en-US/api/chat/openai-api).
+schema = 2
 name = "MiMo-V2.6-Pro"
 description = "Stronger MiMo Pro tier for multimodal reasoning and coding-agent execution"
 family = "mimo"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-09-22"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/flac",
+  "audio/mp4",
+  "audio/ogg",
+  "video/mp4",
+  "video/quicktime",
+  "video/x-msvideo",
+  "video/x-ms-wmv",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
-
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 71.9
+metric = "score"
+version = "1.1"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "ProgramBench"
+score = 26.5
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "MiMo Code Bench"
+score = 63.2
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 53.1
+metric = "score"
+version = "1.0.6"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 76.9
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1673
+metric = "Elo"
+version = "2.1"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 31.6
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 34.9
+metric = "score"
+version = "4.0"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 89.9
+metric = "score"
+version = "2.1"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 82
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "JobBench"
+score = 62
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "CyberGym"
+score = 94
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "MiMo Cyber Bench"
+score = 80.2
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "ExploitGym"
+score = 17.8
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "ExploitBench"
+score = 47.9
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "SEC-Bench Pro"
+score = 66.3
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "MiMo VisualCoding"
+score = 72.3
+metric = "score"
+variant = "MiMo-V2.6 Pro comparison column"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"

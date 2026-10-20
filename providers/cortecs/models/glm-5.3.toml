@@ -3,15 +3,16 @@
 # https://docs.z.ai/guides/llm/glm-5.3
 # https://docs.cortecs.ai/examples/reasoning
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 1.114
-output = 3.899
-cache_read = 0.279
+input = 0.511
+output = 2.045
+cache_read = 0.154
 
 [limit]
 context = 1_048_576

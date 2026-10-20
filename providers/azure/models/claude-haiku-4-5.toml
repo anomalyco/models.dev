@@ -1,31 +1,39 @@
+# Modalities: Claude image formats https://platform.claude.com/docs/en/build-with-claude/vision#supported-formats; PDF support on Foundry https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#model-capabilities
+# Mid-conversation: Foundry lists "Mid-conversation role: system" (haiku-5-5, opus-5-5, opus-5, sonnet-5-5, sonnet-5) and "Per-turn effort controls" (opus-5-5, opus-5) as Beta:
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#available-claude-models. Anthropic lists mid-conversation system messages, per-message effort and
+# the tool-change beta (tool_addition/tool_removal) for the Claude API, Bedrock and Google Cloud only, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
+schema = 2
 name = "Claude Haiku 4.5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
 family = "claude-haiku"
-release_date = "2025-11-18"
-last_updated = "2025-11-18"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
-temperature = true
-knowledge = "2025-02-28"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2025-02-28"
+release_date = "2025-11-18"
 
-[cost]
-input = 1.00
-output = 5.00
-cache_read = 0.10
-cache_write = 1.25
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = { min = 1_024 } }
+structured_output = true
+temperature = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 200_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

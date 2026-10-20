@@ -1,12 +1,21 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Sakana AI)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "sakana/sakana-namazu"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 temperature = false
+system_updates = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 0.95
+cache = { read = 0.15 }
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.15
+[cost.text.output]
+price = 4

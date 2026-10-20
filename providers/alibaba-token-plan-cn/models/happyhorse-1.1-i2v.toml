@@ -7,24 +7,30 @@
 # Sources:
 # https://help.aliyun.com/zh/model-studio/happyhorse-text-to-video-api-reference
 # https://help.aliyun.com/zh/model-studio/token-plan-overview
+# Type: video generation model (https://help.aliyun.com/zh/model-studio/token-plan-team-overview).
+# MIME types: input images JPEG, JPG, PNG, WEBP (the doc's image/jpeg, image/png, image/webp); output MP4 (H.264), per https://www.alibabacloud.com/help/en/model-studio/happyhorse-image-to-video-api-reference.
+schema = 2
+type = "video"
 name = "HappyHorse 1.1 Image-to-Video"
 description = "Video model for image-to-video generation"
-release_date = "2026-07-17"
-last_updated = "2026-07-17"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
 open_weights = false
+release_date = "2026-07-17"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["image/jpeg", "image/png", "image/webp", "text"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["image", "text"]
-output = ["video"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

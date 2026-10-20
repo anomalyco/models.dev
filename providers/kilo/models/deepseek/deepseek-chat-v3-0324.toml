@@ -1,23 +1,12 @@
-name = "DeepSeek: DeepSeek V3 0324"
-description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-release_date = "2025-03-24"
-last_updated = "2025-03-24"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
+base_model = "deepseek/deepseek-chat-v3-0324"
 structured_output = true
-open_weights = false
+description = "DeepSeek chat model for instruction following, coding, and analysis"
 
 [cost]
-input = 0.25
-output = 1
+input = 0.29
+output = 1.14
+cache_read = 0.11
 
 [limit]
-context = 163_840
-output = 147_456
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 128_000
+output = 115_200

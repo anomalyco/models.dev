@@ -1,12 +1,23 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "google/gemma-4-31b-it"
-reasoning = false
 
-[cost]
-input = 0.14
-output = 0.4
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 131_072
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.4

@@ -1,12 +1,10 @@
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 name = "GLM-5.2 (EU)"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
 
 [cost]
 input = 1.2

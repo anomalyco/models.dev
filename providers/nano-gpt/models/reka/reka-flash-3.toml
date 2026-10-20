@@ -1,0 +1,24 @@
+name = "Reka Flash 3"
+description = "Reka's 21B reasoning model for chat and coding, served directly by Reka."
+family = "reka"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.105
+output = 0.21
+
+[limit]
+context = 65_536
+input = 65_536
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

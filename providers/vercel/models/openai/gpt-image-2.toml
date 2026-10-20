@@ -1,12 +1,17 @@
+schema = 2
 base_model = "openai/gpt-image-2"
 name = "GPT Image 2"
-attachment = false
-temperature = true
-
-[cost]
-input = 5
-output = 30
-cache_read = 1.25
 
 [modalities]
 input = ["text"]
+output = ["image/png", "image/jpeg", "image/webp"]
+
+[capabilities]
+temperature = true
+
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 30

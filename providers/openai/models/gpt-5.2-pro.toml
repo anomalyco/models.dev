@@ -1,26 +1,32 @@
+schema = 2
 name = "GPT-5.2 Pro"
 description = "Higher-accuracy GPT-5.2 variant for tougher reasoning and review workflows"
 family = "gpt-pro"
-release_date = "2025-12-11"
-last_updated = "2025-12-11"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
-temperature = false
-knowledge = "2025-08-31"
-tool_call = true
-structured_output = false
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2025-12-11"
 
-[cost]
-input = 21.00
-output = 168.00
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+structured_output = false
+temperature = false
+system_updates = true
+effort_updates = false
+store = true
+cache = { supported = false }
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 21
+
+[cost.text.output]
+price = 168

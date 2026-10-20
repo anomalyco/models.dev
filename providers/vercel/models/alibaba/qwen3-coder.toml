@@ -1,37 +1,39 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3 Coder 480B A35B Instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2025-07-22"
-last_updated = "2025-04"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-04"
-open_weights = false
-reasoning_options = []
 
-[cost]
-input = 1.5
-output = 7.5
-cache_read = 0.3
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_001 }
-input = 2.7
-output = 13.5
-cache_read = 0.54
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_001 }
-input = 4.5
-output = 22.5
-cache_read = 0.9
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+system_updates = true
+effort_updates = false
 
 [limit]
-context = 262_144
-output = 65_536
+output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.22
+cache = { read = 0.022 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_001 } }
+price = 2.7
+cache = { read = 0.54 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_001 } }
+price = 4.5
+cache = { read = 0.9 }
+
+[cost.text.output]
+price = 1.8
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_001 } }
+price = 13.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_001 } }
+price = 22.5

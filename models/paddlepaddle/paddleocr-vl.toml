@@ -1,0 +1,32 @@
+# https://huggingface.co/PaddlePaddle/PaddleOCR-VL
+# Release: 2025-10-16 (model card news). Sampling: open weights, so temperature, top_p and top_k are runtime
+#   sampler settings on any host.
+# Image input: the model card and the PaddleOCR-VL pipeline docs
+#   (https://github.com/PaddlePaddle/PaddleOCR/blob/main/docs/version3.x/pipeline_usage/PaddleOCR-VL.en.md)
+#   take image files or PDFs through the pipeline but list no image formats for the model, so the input stays
+#   generic `image`.
+schema = 2
+name = "PaddleOCR VL"
+description = "Compact vision-language model for multilingual document parsing, OCR, tables, formulas, and charts"
+open_weights = true
+release_date = "2025-10-16"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/PaddlePaddle/PaddleOCR-VL"

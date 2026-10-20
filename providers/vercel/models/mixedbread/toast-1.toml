@@ -1,6 +1,15 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "mixedbread/toast-1"
 
-[cost]
-input = 0.3
-output = 0.72
-cache_read = 0.036
+[capabilities]
+tools = { supported = true, updates = false }
+system_updates = false
+effort_updates = false
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 0.72

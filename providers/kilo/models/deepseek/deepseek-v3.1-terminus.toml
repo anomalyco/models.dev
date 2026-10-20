@@ -1,4 +1,4 @@
-name = "DeepSeek: DeepSeek V3.1 Terminus (retires Sep 28)"
+name = "DeepSeek: DeepSeek V3.1 Terminus"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
 release_date = "2025-09-22"
@@ -17,11 +17,10 @@ values = ["none", "high"]
 [cost]
 input = 0.27
 output = 1
-cache_read = 0.135
 
 [limit]
-context = 131_072
-output = 32_768
+context = 163_840
+output = 147_456
 
 [modalities]
 input = ["text"]

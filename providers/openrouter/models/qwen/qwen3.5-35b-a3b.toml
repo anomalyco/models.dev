@@ -1,17 +1,24 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Venice (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "alibaba/qwen3.5-35b-a3b"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.3125
-output = 1.25
-cache_read = 0.15625
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
-output = 16_384
+output = 235_929
 
-[modalities]
-input = ["text", "image", "video"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1

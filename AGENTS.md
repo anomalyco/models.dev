@@ -106,6 +106,79 @@ doc = "https://example.com/docs"
 
 If the provider has a rich catalog API that can populate model data or authoritatively remove models it no longer serves, add a sync module (see `sync.md`). Thin endpoints stay hand-authored.
 
+## v2 migration (`schema = 2`)
+
+Labs and providers are moving to the v2 format one at a time. A file that starts with `schema = 2` is v2. Any other file is v1. Readers translate v2 files back to v1, so v1 and v2 files can `base_model` each other. To see whether a lab or provider is migrated, check its files for `schema = 2`.
+
+v2 lab file (`models/<lab>/*.toml`). It only holds facts that are true on every host:
+
+```toml
+schema = 2
+name = "Claude Opus 5.5"
+description = "…"
+family = "claude-opus"
+open_weights = false
+knowledge = "2026-06"
+release_date = "2026-09-22"
+# last_updated: only when it differs from release_date
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+```
+
+v2 provider model file (`providers/<p>/models/*.toml`). It covers everything about the host: reasoning controls, `structured_output`, `cache`, `service_tier`, `system_updates`, `effort_updates`, and cost:
+
+```toml
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+service_tier = ["fast"]
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
+
+[cost.text.output]
+price = 20
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 2
+
+[experimental.modes.fast]
+body = { speed = "fast" }
+```
+
+- v2 has no `attachment`. The v1 output derives it from whether `modalities.input` includes anything besides text.
+- Use MIME types where the lab documents them (`image/png`, `application/pdf`). The v1 output collapses them to `image` and `pdf`.
+- `tool_call` becomes `capabilities.tools`, `reasoning` plus `reasoning_options` become `capabilities.reasoning`, and context tiers become `context > size` overrides.
+- The v1 output only gets the first cache-write TTL listed and the context tiers. A mode without a cost takes the base prices times the multiplier for its service tier: the mode's `service_tier`, or its name when unset (OpenAI's `fast` mode sets `service_tier = "priority"`).
+- New models that v1 shouldn't publish (e.g. realtime, audio, transcription and speech models) set `v2_only = true` in their lab and provider files. v1 output leaves them out; the v2 output includes them, and v2-only labs still work as `base_model`.
+- Sync patches v2 files in place: it updates the fields it owns and keeps v2-only data (cache, tiers, multipliers, cache TTLs). Once a provider has v2 files, sync creates new ones in v2. If a patch can't reproduce the synced fields, sync leaves the file and reports a notice.
+- Lab files must set `temperature`, `top_p` and `top_k` explicitly. Provider-level mid-conversation flags record what the API accepts (per its docs, confirmed live), not whether the model obeys: `system_updates` (system/developer messages after the conversation starts, sent in place), `effort_updates` (a per-turn effort change that keeps the cache, e.g. OpenAI `configuration_update`, Anthropic per-message `output_config`), `tools.updates` (adding/removing tools mid-conversation while keeping the cache, e.g. Anthropic `tool_addition`/`tool_removal`, OpenAI Responses `additional_tools`). Tool search is `tools.search`.
+- A model served differently from its provider's default (another SDK, base URL, protocol, or reasoning field) gets one `[api.<protocol>]` table with `base_url`, `sdk.aisdk` and `compatibility.reasoning_field`/`replay_reasoning`. It stands for v1's `provider` and `interleaved` fields. With several tables, the first one is the default and is what v1 gets.
+- To migrate, run `bun packages/core/script/migrate-v2.ts <lab|provider> <id>`. The script fails if any file would change in the v1 output.
+- After any catalog change, run `bun run v1:check` (or `bun run v1:check <ref>`). It compares the v1 output with the merge-base of `origin/dev`, lists every changed field, every model added to or removed from v1, and changed v2 files that still use generic modalities, and exits 1 if v1 changed. Keep v1 changes to additive or clearly sourced fixes, and list them in the PR.
+- A v1-only alias provider (for example `azure-cognitive-services`) has a `provider.toml` with `[v1_alias] provider = "<id>"`, plus optional `env` renames for `${VAR}` templates, and no `models/` directory. v1 serves the target's models under the alias, and the v2 output leaves it out. Edit models in the target provider.
+
 ## Model fields
 
 ### Required on lab metadata (`models/`)
@@ -138,6 +211,7 @@ With `base_model`, do not restate fields already correct on the lab entry. Still
 
 | Field | Notes |
 | --- | --- |
+| `type` | Model category (`"chat"`, `"image"`, `"video"`, `"embedding"`, `"reranking"`, `"decision"`, `"transcription"`, `"speech"`, `"realtime"`). Defaults to `"chat"` when omitted; set explicitly on non-chat models |
 | `family` | Model family slug — set when known |
 | `knowledge` | Knowledge cutoff (`YYYY-MM` or `YYYY-MM-DD`) |
 | `temperature` | Whether temperature is respected |
@@ -199,7 +273,7 @@ Do **not** invent a universal `low`/`medium`/`high` for every reasoner.
 2. Author **that** effort list (and toggle/budget if those entries have them and this host exposes the same kind of control).
 3. Common cases:
    - GPT-style on relays → often `low` / `medium` / `high` (add `none` / `xhigh` only if native/peers have them)
-   - DeepSeek V4 → `toggle` + `high` / `max` (not L/M/H; lab maps low/medium→high)
+   - DeepSeek V4 → `toggle` + `low` / `high` / `max` (no `medium`; the lab maps minimal→low and medium/xhigh→high)
    - Always-on / no control → `[]`
 4. On relays: **do not** use `[]` just because you could not re-test this host. Empty means **no caller control**, not uncertainty.
 5. Never invent `budget_tokens` unless this host (or the lab API it clearly proxies) has a real **reasoning** budget field. Not `max_tokens`.
@@ -218,11 +292,11 @@ Every `toggle` needs a **leading top-of-file comment** with the exact wire path 
 
 ```toml
 # Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = high|max
+# Effort: reasoning_effort = low|high|max
 name = "DeepSeek V4 Pro"
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["high", "max"] },
+  { type = "effort", values = ["low", "high", "max"] },
 ]
 ```
 

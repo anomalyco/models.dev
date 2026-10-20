@@ -2,25 +2,29 @@
 # https://huggingface.co/mistralai/Magistral-Small-2509
 # https://huggingface.co/mistralai/Magistral-Small-2509/blob/main/generation_config.json
 # Native generation config sets max_new_tokens = 131072, matching the model card's max_tokens setting.
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
+schema = 2
 name = "Magistral Small 1.2"
 description = "Open multimodal reasoning model for transparent analysis of text and images"
 family = "magistral"
-release_date = "2025-09-18"
-last_updated = "2025-09-18"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-09-18"
 license = "Apache 2.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 131_072
 output = 131_072
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

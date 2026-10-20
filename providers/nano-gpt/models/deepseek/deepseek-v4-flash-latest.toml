@@ -3,10 +3,10 @@ description = "Compatibility alias that routes to the newest dated DeepSeek V4 F
 family = "deepseek"
 release_date = "2026-08-02"
 last_updated = "2026-08-02"
-attachment = false
+attachment = true
 reasoning = true
 tool_call = true
-structured_output = true
+structured_output = false
 open_weights = true
 
 [[reasoning_options]]
@@ -14,15 +14,15 @@ type = "effort"
 values = ["none", "low", "high", "max"]
 
 [cost]
-input = 0.05
-output = 0.16
-cache_read = 0.013
+input = 0.1
+output = 0.6
+cache_read = 0.003
 
 [limit]
-context = 1_000_000
-input = 1_000_000
-output = 131_072
+context = 1_048_576
+input = 1_048_576
+output = 393_216
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

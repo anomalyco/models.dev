@@ -1,5 +1,6 @@
 # Toggle/budget: generationConfig.thinkingConfig
 base_model = "google/gemini-robotics-er-1.6-preview"
+structured_output = true
 reasoning_options = [
   { type = "toggle" },
   { type = "budget_tokens", min = 0 },

@@ -1,27 +1,56 @@
-# Sources :
-#   https://docs.mistral.ai/models/model-cards/voxtral-small-25-07
-#   https://mistral.ai/news/voxtral/
-# Le bloc [cost] ne porte que le texte ($0.10 / $0.30 per 1M tokens) : l'audio en
-# entrée se facture à la MINUTE ($0.004/min), unité que le schéma ne modélise pas.
+# Model: https://docs.mistral.ai/models/voxtral-small-25-07 (/v1/models: voxtral-small-latest -> voxtral-small-2507; $0.1 input, $0.4 output per MTok,
+# plus $0.004 per minute of input audio, which the cost schema below does not model).
+# https://mistral.ai/news/voxtral (2025-07-15, 24B, Apache 2.0).
+# Caching works live (cached_tokens reported) but the pricing page lists no cached-input price for this model.
+# Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
+# - Pricing: https://docs.mistral.ai/inference/pricing (cached input is billed at 10% of input).
+# - Prompt caching: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic prefix
+#   cache in 64-token blocks, no write price, optional prompt_cache_key). Usage is reported when streaming.
+# - Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named
+#   function; function.strict). All five tool_choice forms worked live.
+# - Structured output: https://docs.mistral.ai/studio/conversations/structured-output (json_schema
+#   response_format returned schema-valid JSON live).
+# - PDF: chat takes document_url PDFs (https://docs.mistral.ai/studio/document-processing/document_qna);
+#   a base64 PDF was read correctly live.
+# - Sampling: temperature and top_p; no top_k (live 400 "top_k sampling is not enabled for this model").
+# - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests keeps the cached
+#   prefix (Mistral renders tools after it).
+# Audio formats: Mistral's docs list none for chat audio input (the known-limitations page lists WAV, MP3, FLAC, OGG and
+#   WEBM for /v1/audio/transcriptions only; the Hugging Face card and mistral-common, which decodes through libsndfile,
+#   list none). Mistral's chat API rejects other files with "Failed to load audio file. Verify that the given file is
+#   valid mp3 or wav." (live 2026-10-19 on voxtral-small-2507: WAV and MP3 transcribed, OGG and WEBM rejected, FLAC
+#   also decoded but is not in that list).
+schema = 2
 name = "Voxtral Small (latest)"
 description = "Instruct model with native audio input for speech understanding and tool use"
 family = "voxtral"
-release_date = "2025-07-15"
-last_updated = "2025-07-15"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = true
-
-[cost]
-input = 0.10
-output = 0.30
-
-[limit]
-context = 32_000
-output = 32_000
+release_date = "2025-07-15"
 
 [modalities]
-input = ["text", "audio"]
+input = ["text", "audio/wav", "audio/mpeg", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+top_p = true
+top_k = false
+system_updates = true
+effort_updates = false
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 64 }, explicit = false }
+
+[limit]
+context = 32_768
+output = 32_000
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.4

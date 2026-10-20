@@ -1,3 +1,4 @@
+# Costs corrected to Moark's USD price list: https://moark.ai/serverless-api (accessed 2026-10-10); previous values were RMB published as USD.
 # The Moark raw Chat schema exposes no user-selectable reasoning control for
 # this reasoning-only model.
 # https://moark.com/docs/openapi/v1 (accessed 2026-06-25)
@@ -18,8 +19,8 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
-input = 3.50
-output = 14.00
+input = 0.42
+output = 2.20
 
 [limit]
 context = 204800

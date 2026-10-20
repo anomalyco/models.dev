@@ -5,6 +5,7 @@ base_model = "moonshotai/kimi-k2.6"
 description = "Kimi K2.6 sparse MoE model with a 262K context window. Available serverless and not included in standard Wafer Pass. Non-ZDR only: requests with `Wafer-ZDR: required` are rejected."
 reasoning_options = [{ type = "toggle" }]
 temperature = false
+structured_output = true
 
 [cost]
 input = 1.14

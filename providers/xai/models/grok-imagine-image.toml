@@ -1,18 +1,8 @@
-name = "Grok Imagine Image"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "grok"
-release_date = "2026-01-28"
-last_updated = "2026-01-28"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = false
-
-[limit]
-context = 16_000
-output = 0
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["image", "pdf"]
+# Sources:
+# - https://docs.x.ai/docs/models
+# - https://docs.x.ai/developers/models/grok-imagine-image
+# - https://docs.x.ai/docs/guides/image-generation
+# Image generation on the images endpoint. The model's own metadata now lives in
+# models/xai/grok-imagine-image.toml, so this file is override-only per AGENTS.md.
+schema = 2
+base_model = "xai/grok-imagine-image"

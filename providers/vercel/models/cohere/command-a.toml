@@ -1,23 +1,19 @@
-name = "Command A"
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "cohere/command-a"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
-family = "command"
-release_date = "2025-03-13"
-last_updated = "2025-03-13"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
-knowledge = "2024-10"
 
-[cost]
-input = 2.5
-output = 10
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
-context = 256000
-output = 8000
+output = 8_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10

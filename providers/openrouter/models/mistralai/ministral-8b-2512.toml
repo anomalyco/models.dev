@@ -1,24 +1,19 @@
-name = "Ministral 3 8B 2512"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Mistral (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "mistral/ministral-8b-2512"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "ministral"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
-open_weights = true
+system_updates = false
+effort_updates = false
 
-[cost]
-input = 0.15
-output = 0.15
-cache_read = 0.015
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
 
-[limit]
-context = 262_144
-output = 209_715
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 0.15

@@ -1,15 +1,21 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Venice, Novita (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "zhipuai/glm-4.6"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
+system_updates = false
+effort_updates = false
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.55
+cache = { read = 0.11 }
 
-[cost]
-input = 0.43
-output = 1.75
-cache_read = 0.08
-
-[limit]
-output = 16_384
+[cost.text.output]
+price = 2.2

@@ -1,12 +1,13 @@
 base_model = "deepseek/deepseek-v3.2"
+structured_output = true
 name = "DeepSeek V3.2 Thinking"
 attachment = true
 reasoning_options = []
 
 [cost]
-input = 0.28
-output = 0.42
-cache_read = 0.14
+input = 0.2088
+output = 0.3096
+cache_read = 0.0216
 
 [limit]
 context = 163_000

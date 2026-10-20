@@ -1,16 +1,23 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+schema = 2
 base_model = "minimax/MiniMax-M2"
-reasoning_options = []
 name = "MiniMax M2"
-knowledge = "2024-10"
 
-interleaved = true
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
-cache_write = 0.375
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = {} }
+effort_updates = false
 
 [limit]
 context = 205_000
-output = 205_000
+output = 196_608
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 1.2

@@ -1,0 +1,27 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding; audio: https://openrouter.ai/docs/guides/overview/multimodal/audio; video: https://openrouter.ai/docs/guides/overview/multimodal/videos
+schema = 2
+type = "decision"
+name = "Clef Omni"
+description = "Decision model for typed evaluation of shared state"
+open_weights = true
+release_date = "2026-10-09"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "audio/wav", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mp4", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 65_536
+output = 0
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0

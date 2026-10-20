@@ -1,24 +1,31 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
 name = "Llama Guard 4 12B"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "llama"
-release_date = "2025-04-30"
-last_updated = "2025-04-30"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-knowledge = "2024-08-31"
 open_weights = true
+knowledge = "2024-08-31"
+release_date = "2025-04-30"
 
-[cost]
-input = 0.18
-output = 0.18
+[modalities]
+input = ["image/png", "image/jpeg", "image/webp", "image/gif", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+effort_updates = false
 
 [limit]
 context = 163_840
 output = 16_384
 
-[modalities]
-input = ["image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 0.18
+
+[cost.text.output]
+price = 0.18

@@ -1,10 +1,11 @@
 base_model = "openai/o3-mini"
+structured_output = true
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 attachment = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high"]
+values = ["high"]
 
 [cost]
 input = 1.1

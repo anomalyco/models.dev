@@ -1,0 +1,29 @@
+# https://developers.cloudflare.com/workers-ai/models/clef-omni/
+# Images: embedded PNG, JPEG or WebP (model page). Audio and video inputs are also documented,
+# without formats; not listed here (Search reports text and image only).
+schema = 2
+type = "decision"
+name = "Clef Omni"
+description = "Mixture-of-experts multimodal decision model for typed questions over text, structured state, and media"
+open_weights = true
+release_date = "2026-10-09"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 65_536
+output = 65_536
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0

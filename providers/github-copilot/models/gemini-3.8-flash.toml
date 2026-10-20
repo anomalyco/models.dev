@@ -5,6 +5,7 @@
 # Pricing: Gemini 3.8 Flash promo $0.75/$0.075/$3.75 per 1M tokens through 2026-12-31
 # Reasoning: effort low|medium|high (matches lab + github-copilot gemini-3.7-flash peer)
 base_model = "google/gemini-3.8-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

@@ -1,22 +1,30 @@
+# Sampling: the Sonar chat completions reference documented temperature (0-2) and top_p, and no top_k
+#   (https://web.archive.org/web/20260804172333/https://docs.perplexity.ai/api-reference/sonar-post).
+# Input formats: PNG (image/png), JPEG (image/jpeg), WEBP (image/webp) and GIF (image/gif), per
+#   https://docs.perplexity.ai/docs/agent-api/image-attachments (formerly the Sonar image attachments guide).
+schema = 2
 name = "Sonar Pro"
 description = "Deeper Sonar search model with broader retrieval and stronger synthesis"
 family = "sonar-pro"
+open_weights = false
+knowledge = "2025-09-01"
 release_date = "2024-01-01"
 last_updated = "2025-09-01"
-attachment = true
-reasoning = false
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = true
-tool_call = false
-knowledge = "2025-09-01"
-open_weights = false
+top_p = true
+top_k = false
 
 [limit]
 context = 200_000
 output = 8_192
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[benchmarks]]
 name = "SciCode"

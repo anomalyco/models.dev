@@ -1,0 +1,34 @@
+# Flex-tier variant of mimo-v2.6-pro: same model, context (1,048,560),
+# output cap (393,216), vision+audio input, and none|high effort ladder as the
+# standard tier; requested via the `-flex` model ID or service_tier="flex" and
+# requires stream=true (non-streaming requests fall through to the standard
+# tier). Cost is the flex rate: 0.65x of standard pricing (35% off) per the
+# flex-tier guide, applied to the standard rates advertised by live
+# GET /v1/models ($0.87/$1.74/$0.036, checked 2026-10-08).
+# Budget: thinking_token_budget (integer reasoning tokens)
+# https://docs.neuralwatt.com/api/models#list-models
+# https://portal.neuralwatt.com/models/mimo-v2.6-pro
+# https://docs.neuralwatt.com/api/chat-completions#reasoning-effort
+base_model = "xiaomi/mimo-v2.6-pro"
+name = "MiMo-V2.6-Pro Flex"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.5655
+output = 1.131
+cache_read = 0.0234
+
+[limit]
+context = 1_048_560
+output = 393_216
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]

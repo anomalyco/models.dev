@@ -1,23 +1,30 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
 name = "Sonar Pro"
 description = "Advanced Sonar search model for deeper research and cited synthesis"
 family = "sonar-pro"
-release_date = "2025-03-07"
-last_updated = "2025-03-07"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-03-07"
 
-[cost]
-input = 3
-output = 15
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+effort_updates = false
 
 [limit]
 context = 200_000
 output = 8_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

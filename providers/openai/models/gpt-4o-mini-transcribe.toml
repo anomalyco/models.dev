@@ -1,0 +1,17 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe
+# https://developers.openai.com/api/docs/pricing
+# https://developers.openai.com/api/docs/deprecations
+schema = 2
+v2_only = true
+base_model = "openai/gpt-4o-mini-transcribe"
+status = "deprecated"
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 5
+
+[cost.audio.input]
+price = 1.25

@@ -1,0 +1,28 @@
+schema = 2
+type = "decision"
+name = "Solar Decide Flash"
+description = "Decision model for typed evaluation of shared state"
+family = "solar"
+open_weights = false
+release_date = "2026-10-08"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 524_288
+output = 0
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0

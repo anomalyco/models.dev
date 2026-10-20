@@ -43,12 +43,45 @@ test.each(["claude-fable-5.1", "claude-fable-5.1@eu"])(
       structured_output: true,
       reasoning_options: [
         { type: "effort", values: ["none", "low", "medium", "high", "max"] },
-        { type: "budget_tokens" },
       ],
       cost: { input: 10, output: 50, cache_read: 0.25, cache_write: 12.5 },
     });
   },
 );
+
+test.each([
+  "claude-sonnet-5-5",
+  "claude-sonnet-5-5@eu",
+  "claude-sonnet-4-5",
+  "openai/gpt-5.4",
+  "google/gemini-2.5-pro",
+  "requesty-unknown-model",
+])("advertises only Requesty's effort control for %s", (id) => {
+  const model = buildRequestyModel(RequestyModel.parse({
+    id,
+    created: Date.parse("2026-09-01") / 1_000,
+    description: "Reasoning model",
+    context_window: 200_000,
+    max_output_tokens: 16_000,
+    supports_reasoning: true,
+  }));
+
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "max"] },
+  ]);
+});
+
+test("does not advertise controls for non-reasoning models", () => {
+  const model = buildRequestyModel(RequestyModel.parse({
+    id: "requesty-non-reasoning-model",
+    created: Date.parse("2026-09-01") / 1_000,
+    description: "Non-reasoning model",
+    context_window: 200_000,
+    max_output_tokens: 16_000,
+  }));
+
+  expect(model.reasoning_options).toBeUndefined();
+});
 
 test("uses the first Requesty pricing band as the base cost", () => {
   const model = buildRequestyModel(RequestyModel.parse({

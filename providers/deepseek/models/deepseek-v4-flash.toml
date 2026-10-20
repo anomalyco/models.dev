@@ -1,25 +1,57 @@
-# Legacy alias. The DeepSeek-V4-Flash model is retired; requests to
-# `deepseek-v4-flash` are still accepted but served by DeepSeek-V4.1-Flash and
-# billed at the Flash price.
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
-# https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-10)
-base_model = "deepseek/deepseek-v4.1-flash"
+# Legacy alias. The DeepSeek-V4-Flash model is retired; requests to `deepseek-v4-flash` are still
+# accepted but served by DeepSeek-V4.1-Flash-1017 and billed at the Flash price.
+# Sources (api-docs.deepseek.com, accessed 2026-10-19):
+# - Models & pricing: https://api-docs.deepseek.com/quick_start/pricing
+#   Off-peak rates are half of peak. Peak is 01:00-04:00 and 06:00-10:00 UTC, Mon-Fri, excluding
+#   Chinese public holidays. Base prices below are off-peak; the multiplier doubles them at peak.
+#   Reasoning tokens are billed at the output rate (no separate CoT price).
+# - Thinking: https://api-docs.deepseek.com/guides/thinking_mode
+#   Toggle: thinking.type = enabled|disabled (default enabled)
+#   Effort: reasoning_effort = low|high|max (default high; minimal->low, medium/xhigh->high;
+#   `none` is also accepted and disables thinking). Anthropic format: output_config.effort.
+#   `low` is a distinct level, not mapped to high: the thinking_mode mapping table lists low->low,
+#   the 2026-08-13 changelog introduces "three thinking effort levels: low / high / max"
+#   (https://api-docs.deepseek.com/updates/#date-2026-08-13), and GET /models reports
+#   effort.supported_levels = [low, high, max] for both models.
+# - Chat Completions params (max_tokens <= 393216, stream_options.include_usage, no top_k):
+#   https://api-docs.deepseek.com/api/create-chat-completion
+# - Context caching (automatic disk cache, no write price, no TTL): https://api-docs.deepseek.com/guides/kv_cache
+# - GET /models reports context_window 1048576 and max_output_tokens 393216.
+# Mid-conversation: system messages can be inserted mid-conversation on Chat Completions
+# (https://api-docs.deepseek.com/guides/tool_calls#inserting-tool-calls-mid-conversation); GET /models
+# reports system_prompt_update = "in-history" and a late system message keeps the cache (checked live).
+# Changing reasoning effort, the thinking toggle, or the tool list between turns drops the
+# prompt cache (prompt_cache_hit_tokens drops to 0-256), checked live 2026-10-19.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4 Flash"
 status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+system_updates = true
+effort_updates = false
+stream_usage = true
+cache = { supported = true, implicit = true, explicit = false }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[limit]
+context = 1_048_576
+output = 393_216
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.15
-output = 0.6
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6
 reasoning = 0.6
-cache_read = 0.003
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, not = { holiday = { equals = "CN" } }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

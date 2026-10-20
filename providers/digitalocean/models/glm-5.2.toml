@@ -1,4 +1,5 @@
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"
@@ -14,4 +15,3 @@ cache_read = 0.21
 
 [limit]
 context = 262_144
-output = 262_144

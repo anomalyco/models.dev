@@ -1,0 +1,26 @@
+# Sources:
+#   https://docs.mistral.ai/models/mistral-moderation-26-03 (released 2026-03-01, 128k context, no open weights, free)
+#   https://docs.mistral.ai/studio/safety-moderation (POST /v1/moderations and /v1/chat/moderations; category scores)
+#   GET https://api.mistral.ai/v1/models (mistral-moderation-2603, capabilities classification + moderation,
+#     max_context_length 131072)
+schema = 2
+v2_only = true
+name = "Mistral Moderation 26.03"
+description = "Moderation classifier for text and conversations with jailbreak detection and multilingual coverage"
+open_weights = false
+release_date = "2026-03-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 131_072
+output = 0

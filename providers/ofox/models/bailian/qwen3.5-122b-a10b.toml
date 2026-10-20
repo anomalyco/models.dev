@@ -3,6 +3,7 @@
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (DashScope/bailian chat path; same as ofox bailian/qwen3.7-max)
 base_model = "alibaba/qwen3.5-122b-a10b"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [cost]

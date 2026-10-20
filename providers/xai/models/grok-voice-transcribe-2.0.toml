@@ -1,0 +1,10 @@
+# Sources:
+# - https://docs.x.ai/developers/models/grok-voice-transcribe-2.0
+# - https://docs.x.ai/developers/model-capabilities/audio/speech-to-text
+# - https://docs.x.ai/developers/pricing (Speech to Text: $0.10/hr REST, $0.20/hr streaming)
+# REST POST /v1/stt and streaming wss://api.x.ai/v1/stt; default STT model.
+# Not listed by the models endpoints, so xAI sync keeps this file as authored.
+# Pricing is per audio hour, which v1 cost can't express; no [cost] authored.
+schema = 2
+v2_only = true
+base_model = "xai/grok-voice-transcribe-2.0"

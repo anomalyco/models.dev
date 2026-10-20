@@ -1,0 +1,30 @@
+# https://huggingface.co/inclusionAI/Ling-3.0-flash
+# https://openrouter.ai/inclusionai/ling-3.0-flash
+# Sampling: open weights; the model card recommends temperature, top_p and top_k (temperature=0.6, top_p=0.95, top_k=20)
+#   (https://huggingface.co/inclusionAI/Ling-3.0-flash).
+schema = 2
+name = "Ling 3.0 Flash"
+description = "Hybrid-linear MoE reasoning model with 124B total and 5.1B active parameters for efficient agents"
+family = "ling"
+open_weights = true
+release_date = "2026-07-23"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/Ling-3.0-flash"

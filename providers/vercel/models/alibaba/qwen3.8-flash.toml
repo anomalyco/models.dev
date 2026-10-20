@@ -4,24 +4,29 @@
 # https://vercel.com/docs/ai-gateway/models-and-providers/provider-options
 # Toggle: providerOptions.alibaba.enableThinking true|false -> enable_thinking
 # Budget: providerOptions.alibaba.thinkingBudget -> thinking_budget (reasoning tokens)
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
 name = "Qwen 3.8 Flash"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
-cache_write = 0.2
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 991_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016, write = 0.2 }
+
+[cost.text.output]
+price = 0.47

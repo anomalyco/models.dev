@@ -1,9 +1,9 @@
-import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
+import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -14,16 +14,14 @@ const baseModelReasoningCache = new Map<string, boolean>();
 function baseModelReasoning(modelID: string): boolean {
   let value = baseModelReasoningCache.get(modelID);
   if (value === undefined) {
-    const parsed = Bun.TOML.parse(
-      readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8"),
-    ) as Record<string, unknown>;
+    const parsed = readLabModel(path.join(MODELS_DIR, `${modelID}.toml`), modelID);
     value = parsed.reasoning === true;
     baseModelReasoningCache.set(modelID, value);
   }
   return value;
 }
 
-const API_ENDPOINT = "https://api.pioneer.ai/v1/models";
+const API_ENDPOINT = "https://api.fastino.ai/v1/models";
 
 const BaseModels: Record<string, string> = {
   "Qwen/Qwen2.5-Coder-0.5B": "alibaba/qwen2.5-coder-0.5b",

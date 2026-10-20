@@ -1,0 +1,19 @@
+# Modalities: FLUX 3 Image Klein output_format jpeg | png, https://api.bfl.ai/openapi.json
+schema = 2
+name = "FLUX 3 Image Klein"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "flux"
+open_weights = false
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text"]
+output = ["image/jpeg", "image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 0
+output = 0

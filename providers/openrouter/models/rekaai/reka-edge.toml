@@ -1,23 +1,19 @@
-name = "Reka Edge"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: dropped on Reka (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "rekaai/reka-edge"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-family = "reka"
-release_date = "2026-03-20"
-last_updated = "2026-03-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
 structured_output = true
-open_weights = true
+system_updates = false
+effort_updates = false
 
-[cost]
-input = 0.1
-output = 0.1
+[cost.text.input]
+price = 0.1
 
-[limit]
-context = 16_384
-output = 14_745
-
-[modalities]
-input = ["image", "text", "video"]
-output = ["text"]
+[cost.text.output]
+price = 0.1

@@ -45,7 +45,7 @@ describe("catalog generation", () => {
     });
   });
 
-  test("base_model can factor metadata without changing provider JSON", async () => {
+  test("base_model publishes canonical identity with the provider model", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
       await write(root, "providers/factored/provider.toml", providerToml("Factored"));
@@ -96,9 +96,10 @@ cache_read = 0.125
         },
       ]);
 
-      expect(catalog.providers.factored?.models.model).toEqual(
-        catalog.providers.direct?.models.model,
-      );
+      expect(catalog.providers.factored?.models.model).toEqual({
+        ...catalog.providers.direct?.models.model,
+        canonical_model_id: "lab/model",
+      });
       expect(catalog.providers.factored?.models.model).not.toHaveProperty(
         "base_model",
       );
@@ -176,6 +177,81 @@ input = ["text"]
         input: ["text"],
         output: ["text"],
       });
+    });
+  });
+
+  test("v1_alias providers serve the target's models with renamed env vars", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/target/provider.toml", providerToml("Target"));
+      await write(
+        root,
+        "providers/target/models/model.toml",
+        `${providerFieldsToml()}
+[cost]
+input = 1
+output = 2
+
+[provider]
+api = "https://\${TARGET_RESOURCE}.example.com/v1"
+`,
+      );
+      await write(
+        root,
+        "providers/legacy/provider.toml",
+        `${providerToml("Legacy")}
+[v1_alias]
+provider = "target"
+env = { TARGET_RESOURCE = "LEGACY_RESOURCE" }
+`,
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(Object.keys(providers.legacy!)).not.toContain("v1_alias");
+      expect(providers.legacy?.name).toBe("Legacy");
+      expect(providers.legacy?.models.model?.provider?.api).toBe(
+        "https://${LEGACY_RESOURCE}.example.com/v1",
+      );
+      expect(providers.target?.models.model?.provider?.api).toBe(
+        "https://${TARGET_RESOURCE}.example.com/v1",
+      );
+    });
+  });
+
+  test("v1_alias renames the target's provider-level api and rejects model files", async () => {
+    await withFixture(async (root) => {
+      await write(
+        root,
+        "providers/target/provider.toml",
+        `name = "Target"
+npm = "@ai-sdk/openai"
+env = ["TARGET_RESOURCE", "TARGET_KEY"]
+api = "https://\${TARGET_RESOURCE}.example.com/v1"
+doc = "https://example.com/models"
+`,
+      );
+      await write(root, "providers/target/models/plain.toml", `${providerFieldsToml()}
+[cost]
+input = 1
+output = 2
+`);
+      const alias = `name = "Legacy"
+npm = "@ai-sdk/openai"
+env = ["LEGACY_RESOURCE", "LEGACY_KEY"]
+doc = "https://example.com/models"
+
+[v1_alias]
+provider = "target"
+env = { TARGET_RESOURCE = "LEGACY_RESOURCE", TARGET_KEY = "LEGACY_KEY" }
+`;
+      await write(root, "providers/legacy/provider.toml", alias);
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.legacy?.api).toBe("https://${LEGACY_RESOURCE}.example.com/v1");
+      expect(providers.legacy?.models.plain?.provider).toBeUndefined();
+      expect(JSON.stringify(providers.legacy)).not.toContain("TARGET_");
+
+      await write(root, "providers/legacy/models/plain.toml", `${providerFieldsToml()}`);
+      expect(generate(path.join(root, "providers"))).rejects.toThrow("can't have a models directory");
     });
   });
 

@@ -1,0 +1,17 @@
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+structured_output = true
+release_date = "1970-01-01"
+last_updated = "2026-10-19"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.33
+output = 1.31
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 262_144

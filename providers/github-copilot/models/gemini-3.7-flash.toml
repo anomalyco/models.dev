@@ -2,6 +2,7 @@
 # - https://api.githubcopilot.com/models
 # - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 base_model = "google/gemini-3.7-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

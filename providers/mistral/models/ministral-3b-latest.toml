@@ -1,23 +1,53 @@
+# /v1/models: ministral-3b-latest -> ministral-3b-2512 (Ministral 3 3B). Prices are Ministral 3 3B's:
+# https://docs.mistral.ai/models/ministral-3-3b-25-12 and https://docs.mistral.ai/inference/pricing ($0.1 input,
+# $0.01 cached input, $0.1 output). The old prices were the retired Ministral 3B 24.10's.
+# Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
+# - Pricing: https://docs.mistral.ai/inference/pricing (cached input is billed at 10% of input).
+# - Prompt caching: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic prefix
+#   cache in 64-token blocks, no write price, optional prompt_cache_key). Usage is reported when streaming.
+# - Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named
+#   function; function.strict). All five tool_choice forms worked live.
+# - Structured output: https://docs.mistral.ai/studio/conversations/structured-output (json_schema
+#   response_format returned schema-valid JSON live).
+# - PDF: chat takes document_url PDFs (https://docs.mistral.ai/studio/document-processing/document_qna);
+#   a base64 PDF was read correctly live.
+# - Sampling: temperature and top_p; no top_k (live 400 "top_k sampling is not enabled for this model").
+# - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests keeps the cached
+#   prefix (Mistral renders tools after it).
+schema = 2
 name = "Ministral 3B (latest)"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "ministral"
+open_weights = true
+knowledge = "2024-10"
 release_date = "2024-10-01"
 last_updated = "2024-10-04"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-10"
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.04
-output = 0.04
-
-[limit]
-context = 128_000
-output = 128_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+top_p = true
+top_k = false
+system_updates = true
+effort_updates = false
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 64 }, explicit = false }
+
+[limit]
+context = 131_072
+output = 128_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.1

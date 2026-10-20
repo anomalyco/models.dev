@@ -4,6 +4,7 @@
 # Effort: reasoning_effort = minimal|low|medium|high|xhigh on /v1/chat/completions.
 # https://docs.aihubmix.com/cn/api/unified-inference
 base_model = "meta/muse-spark-1.2"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

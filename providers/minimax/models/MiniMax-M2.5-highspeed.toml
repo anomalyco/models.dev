@@ -1,25 +1,37 @@
+# Source (accessed 2026-10-07): https://platform.minimax.io/docs/guides/pricing-paygo
+# MiniMax-M2.5-highspeed: input $0.6, output $2.4, cache read $0.03, cache write $0.375 per 1M tokens.
+# Closed to new users 2026-10-19, retired 2026-11-18
+#   (https://platform.minimax.io/docs/faq/models). Prices are from before the model left the pricing page.
+# Thinking is always on; thinking.type = disabled is accepted and ignored.
+# Caching: cache_control (explicit) and, from M2.1, an automatic prefix cache from 512 input
+#   tokens; M2 caches only with cache_control (checked live 2026-10-19).
+schema = 2
 name = "MiniMax-M2.5-highspeed"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
 family = "minimax"
-release_date = "2026-02-13"
-last_updated = "2026-02-13"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-02-13"
+status = "deprecated"
 
-[cost]
-input = 0.60
-output = 2.40
-cache_read = 0.06
-cache_write = 0.375
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+cache = { supported = true, implicit = { min_tokens = 512 }, explicit = true }
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.6
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 2.4

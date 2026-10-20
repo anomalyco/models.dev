@@ -1,0 +1,14 @@
+# Source: https://api.lowrouter.ai/v1/models?currency=usd (read 2026-10-12): this ID has 1 route on openai.
+# Cost is the route a plain request resolved to on 2026-10-12 under the default routing profile:
+# OpenAI's API, global endpoint;
+# that route bills in USD, so this is its USD quote as the API returns it, with no currency conversion.
+# USD 0.15 in / 0.6 out / 0.075 cache read per MTok.
+# Another route can serve a request (the key's routing policy, or a failover); usage.cost on the
+# response carries the amount debited.
+base_model = "openai/gpt-4o-mini"
+structured_output = true
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.075

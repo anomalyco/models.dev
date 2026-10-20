@@ -11,6 +11,7 @@
 # Served window: models_info max_model_len = 1_048_576 for this model with no separate
 # output cap, so context and output both take the full served window.
 base_model = "deepseek/deepseek-v4-pro"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [interleaved]

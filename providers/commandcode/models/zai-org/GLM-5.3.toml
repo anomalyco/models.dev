@@ -1,0 +1,12 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+base_model = "zhipuai/glm-5.3"
+structured_output = true
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26

@@ -1,21 +1,21 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "alibaba/qwen3.7-max"
 name = "Qwen 3.7 Max"
-attachment = true
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 262_144
-
-[cost]
-input = 2.5
-output = 7.5
-cache_read = 0.5
-cache_write = 3.125
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"], budget = { min = 1, max = 262_144 } }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 991_000
 output = 64_000
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.5, write = 3.125 }
+
+[cost.text.output]
+price = 7.5

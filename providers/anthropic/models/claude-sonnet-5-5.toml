@@ -1,0 +1,28 @@
+# Thinking: adaptive (default) or between_tools (lowest setting; still returns thinking between tools).
+# disabled is rejected; between_tools works only at low, medium, or high effort.
+# https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide#turn-off-up-front-thinking
+# Pricing: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
+# Cache read $0.10/MTok (5% of base input): https://platform.claude.com/docs/en/about-claude/pricing
+# Pricing: https://www.anthropic.com/pricing
+# tools.updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = 1.1

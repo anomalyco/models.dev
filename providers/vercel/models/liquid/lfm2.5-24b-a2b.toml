@@ -1,0 +1,28 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+name = "LFM2.5-24B-A2B"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "liquid"
+open_weights = false
+release_date = "2026-10-13"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+system_updates = true
+effort_updates = false
+
+[limit]
+context = 128_000
+output = 8_200
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.7

@@ -1,0 +1,12 @@
+# Cost from https://ollama.com/pricing and https://ollama.com/library/minimax-m3.1-flash (accessed 2026-10-19): $0.15 input, $0.015 cached input, $0.60 output per 1M tokens.
+# Reasoning effort low|medium|high|xhigh|max from first-party MiniMax API (thinking always on; disabled returns 400): https://platform.minimax.io/docs/api-reference/text-openai-api, https://platform.minimax.io/docs/api-reference/text-anthropic-api and providers/minimax/models/MiniMax-M3.1-Flash.toml; Ollama OpenAI passthrough via reasoning_effort / reasoning.effort: https://docs.ollama.com/openai
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015

@@ -1,18 +1,23 @@
+# Audio format (input format String, WAV/WebAudio; 16 kHz): https://build.nvidia.com/nvidia/nemotron-voicechat/modelcard
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
 name = "Nemotron VoiceChat"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 family = "nemotron"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-03-16"
+
+[modalities]
+input = ["text", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 128_000
 output = 8_192
-
-[modalities]
-input = ["text", "audio"]
-output = ["text"]

@@ -1,0 +1,28 @@
+# https://huggingface.co/NousResearch/Hermes-2-Pro-Llama-3-8B
+# Sampling: open weights; temperature, top_p and top_k are standard sampling controls for this checkpoint
+#   (generation_config.json enables sampling: https://huggingface.co/NousResearch/Hermes-2-Pro-Llama-3-8B).
+schema = 2
+name = "Hermes 2 Pro Llama 3 8B"
+description = "Llama 3 fine-tune optimized for function calling, structured JSON responses, and dialogue"
+open_weights = true
+release_date = "2024-04-30"
+license = "Llama 3 Community License"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8_192
+output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/NousResearch/Hermes-2-Pro-Llama-3-8B"

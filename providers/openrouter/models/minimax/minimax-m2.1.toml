@@ -1,11 +1,22 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Minimax (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "minimax/MiniMax-M2.1"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
 structured_output = false
-reasoning_options = []
+system_updates = false
+effort_updates = false
 
-[interleaved]
-field = "reasoning_details"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

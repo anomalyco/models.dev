@@ -1,6 +1,7 @@
 # Host prices this alias below Google's own flash-latest rate.
 # /api/pricing publishes no audio_ratio for it, so no input_audio.
 base_model = "google/gemini-flash-latest"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

@@ -3,6 +3,7 @@
 # Lab Moonshot K3: thinking.type + output_config.effort low|high|max (providers/moonshotai/models/kimi-k3.toml)
 # Effort: reasoning_effort = none|low|high|max (none disables; no medium/xhigh)
 base_model = "moonshotai/kimi-k3"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [cost]

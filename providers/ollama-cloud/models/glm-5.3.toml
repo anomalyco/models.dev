@@ -5,6 +5,7 @@
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
 # API-verified context: https://ollama.com/api/show (glm_dsa_moe.context_length = 1048576)
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 open_weights = true
 
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]

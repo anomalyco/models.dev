@@ -1,9 +1,10 @@
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 name = "GLM-5.3 Flash (Together AI)"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.15

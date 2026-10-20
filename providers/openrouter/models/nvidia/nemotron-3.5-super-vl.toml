@@ -1,0 +1,26 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on DeepInfra (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "Nemotron 3.5 Super VL"
+description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = false
+effort_updates = false
+
+[limit]
+output = 235_929
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.5

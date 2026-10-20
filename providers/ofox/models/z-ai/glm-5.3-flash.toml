@@ -4,6 +4,7 @@
 # - https://docs.z.ai/guides/llm/glm-5.3-flash (thinking.type only enabled; cannot disable; reasoning_effort recommended max)
 # Effort: reasoning_effort = low|high|max (thinking always on)
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

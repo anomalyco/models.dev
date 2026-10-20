@@ -1,24 +1,46 @@
 # Pricing: https://developers.openai.com/api/docs/models/gpt-6-luna
 # Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-luna
+schema = 2
 base_model = "openai/gpt-6-luna"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 0.10
-output = 0.50
-cache_read = 0.01
-cache_write = 0.125
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.20
-output = 0.75
-cache_read = 0.02
-cache_write = 0.25
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
 
 [experimental.modes.fast]
-cost = { input = 0.20, output = 1.00, cache_read = 0.02, cache_write = 0.25 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }
 
 [experimental.modes.pro]
-provider = { body = { reasoning = { mode = "pro" } } }
+body = { reasoning = { mode = "pro" } }

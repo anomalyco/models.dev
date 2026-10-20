@@ -9,13 +9,25 @@
 # Live US-family probe, 2026-09-09: Legacy access denied (404) without active use in the last 30 days.
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
+# Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html);
+# toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
+# Per-turn effort is a system-message output_config on InvokeModel only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html); a Converse Message has no such field, so effort_updates = false.
+schema = 2
 base_model = "anthropic/claude-sonnet-4-20250514"
 name = "Claude Sonnet 4 (EU)"
 status = "deprecated"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+system_updates = false
+effort_updates = false
+cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

@@ -9,6 +9,7 @@
 # max 389/204/240/1535/688. The levels are not separable, so only the toggle is
 # declared, matching the toggle the lab (providers/deepseek) exposes.
 base_model = "deepseek/deepseek-v4-pro"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"

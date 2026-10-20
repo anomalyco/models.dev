@@ -1,0 +1,26 @@
+schema = 2
+type = "decision"
+name = "Kev 4B"
+description = "Decision model for typed evaluation of shared state"
+open_weights = true
+release_date = "2026-09-25"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 8_192
+output = 0
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

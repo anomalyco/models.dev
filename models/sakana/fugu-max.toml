@@ -1,0 +1,26 @@
+# Lab metadata carried over from providers/openrouter/models/sakana/fugu-max.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: https://console.sakana.ai/models?model=fugu lists temperature and top_p as "Accepted but ignored" on
+#   Responses and Chat Completions and documents no top_k, so all three are off.
+# Input: the Sakana docs list no image formats (image input only), so input stays generic `image`.
+schema = 2
+name = "Fugu Max"
+description = "Multi-agent model for routing expert agents across complex analytical tasks"
+family = "fugu"
+open_weights = false
+release_date = "2026-09-11"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 128_000

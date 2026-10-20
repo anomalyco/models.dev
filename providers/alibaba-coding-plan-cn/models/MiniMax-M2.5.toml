@@ -1,34 +1,38 @@
-name = "MiniMax-M2.5"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
 # Reasoning HTTP format (accessed 2026-06-25):
 # Coding Plan exact-string allowlist model; Alibaba-deployed MiniMax-M2.5 is
 # thinking-only. No toggle, effort, or numeric budget request field is documented.
 # Sources:
 # https://help.aliyun.com/zh/model-studio/coding-plan
 # https://help.aliyun.com/zh/model-studio/deep-thinking
+# Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates is left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (the DeepSeek, Kimi and MiniMax series do not support top_k).
+schema = 2
+name = "MiniMax-M2.5"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-02-12"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+temperature = true
+top_k = false
+effort_updates = false
 
 [limit]
 context = 196_608
 output = 24_576
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

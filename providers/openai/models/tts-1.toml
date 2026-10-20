@@ -1,0 +1,12 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/tts-1
+# https://developers.openai.com/api/docs/pricing
+# https://developers.openai.com/api/docs/deprecations
+schema = 2
+v2_only = true
+base_model = "openai/tts-1"
+status = "deprecated"
+
+[cost.text.input]
+unit = "character"
+price = 15

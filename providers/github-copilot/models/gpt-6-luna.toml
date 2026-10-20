@@ -1,6 +1,7 @@
 # Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 # GPT-6 Luna rates: ≤272K $0.10/$0.01/$0.125/$0.50; >272K $0.20/$0.02/$0.25/$0.75 per 1M (input/cached/cache write/output)
 base_model = "openai/gpt-6-luna"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -18,3 +19,6 @@ input = 0.2
 output = 0.75
 cache_read = 0.02
 cache_write = 0.25
+
+[provider]
+npm = "@ai-sdk/openai"

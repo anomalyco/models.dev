@@ -1,0 +1,25 @@
+# Cost: https://neon.com/models.json gpt-6-luna (USD / 1M tokens).
+# Effort values are the gateway's own list:
+# "'reasoning_effort' does not support 'max' with this model. Supported values are: 'none', 'low', 'medium', 'high', and 'xhigh'".
+# Measured 2026-10-13.
+base_model = "openai/gpt-6-luna"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.2
+output = 0.75
+cache_read = 0.02
+cache_write = 0.25
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+shape = "responses"

@@ -1,13 +1,7 @@
-name = "ministral-3b-2512"
-description = "Ministral 3 3B is a compact, efficient multimodal model with strong language, vision capabilities, and ideal for custom fine-tuning."
-release_date = "2025-12-03"
-last_updated = "2025-12-03"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = true
+base_model = "mistral/ministral-3b-2512"
 structured_output = true
-open_weights = false
+description = "Ministral 3 3B is a compact, efficient multimodal model with strong language, vision capabilities, and ideal for custom fine-tuning."
+temperature = false
 
 [cost]
 input = 0.123
@@ -17,7 +11,3 @@ cache_read = 0.012
 [limit]
 context = 256_000
 output = 256_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

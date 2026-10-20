@@ -3,6 +3,7 @@
 # with top-level `reasoning_effort`: low|high|max, default max.
 # https://docs.nvidia.com/nim/large-language-models/2.0.11/get-started/advanced/get-started-glm-5.3.html
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 

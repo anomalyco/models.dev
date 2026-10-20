@@ -4,6 +4,7 @@
 # Live probe 2026-09-14: low|medium|high → 200; none|minimal|xhigh|max → 400.
 # Reasoning side channel: message.reasoning_content
 base_model = "openai/gpt-oss-120b"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

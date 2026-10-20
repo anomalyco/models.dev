@@ -1,5 +1,6 @@
 base_model = "alibaba/qwen3.5-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -8,6 +9,3 @@ values = ["none", "high"]
 [cost]
 input = 0.195
 output = 1.56
-
-[modalities]
-input = ["text", "image", "video"]

@@ -1,13 +1,34 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-30b-a3b-instruct.html
 # Runtime ID; US Standard pricing.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Status: Legacy 2026-09-30, EOL 2027-03-30 per https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle.html.
+schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 release_date = "2025-07-31"
 last_updated = "2025-09-18"
-structured_output = true
+status = "deprecated"
 
-[cost]
-input = 0.15
-output = 0.6
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+system_updates = false
+effort_updates = false
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

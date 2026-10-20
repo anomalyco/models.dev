@@ -1,11 +1,23 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Poolside (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Deprecated: GET /api/v1/models lists expiration_date 2026-10-31
+schema = 2
 base_model = "poolside/laguna-xs-2.1"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = false
+system_updates = false
+effort_updates = false
 
-[cost]
-input = 0.06
-output = 0.12
-cache_read = 0.03
+[cost.text.input]
+price = 0.06
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.12

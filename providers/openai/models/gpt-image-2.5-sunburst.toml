@@ -1,0 +1,17 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst
+# https://developers.openai.com/api/docs/pricing
+schema = 2
+v2_only = true
+base_model = "openai/gpt-image-2.5-sunburst"
+
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 30
+
+[cost.image.input]
+price = 8
+cache = { read = 2 }

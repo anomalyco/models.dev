@@ -1,0 +1,23 @@
+# Toggle: chat_template_kwargs.thinking_mode = enabled|disabled
+# Live POST /v1/chat/completions on MiniMax-M3 (2026-10-11): omitted/enabled return a separate
+# reasoning field; disabled removes it (enable_thinking alias behaves identically).
+# Docs: https://docs.vllm.ai/projects/ascend/en/latest/tutorials/models/MiniMax-M3.html
+# Text-only, limits, pricing: supported-models + GET /v1/models (1048576/1048576; 0.60/2.40+0.06).
+# Live: prompt + max_tokens enforced <= 1048576 (context_length_exceeded beyond), so 1048576 is the served cap.
+base_model = "minimax/MiniMax-M3"
+
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 0.60
+output = 2.40
+cache_read = 0.06
+
+[limit]
+output = 1_048_576

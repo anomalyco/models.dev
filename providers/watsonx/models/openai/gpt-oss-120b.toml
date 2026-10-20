@@ -2,6 +2,7 @@
 # Reasoning: https://github.com/IBM/watsonx-ai-provider/blob/main/package/README.md (accessed 2026-08-08)
 # Effort: providerOptions.watsonx.reasoningEffort
 base_model = "openai/gpt-oss-120b"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

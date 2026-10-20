@@ -1,7 +1,10 @@
 base_model = "mistral/magistral-medium-latest"
 attachment = true
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 1.5

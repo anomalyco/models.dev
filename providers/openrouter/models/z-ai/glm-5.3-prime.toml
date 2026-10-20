@@ -1,0 +1,32 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Alibaba)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+name = "GLM 5.3 Prime"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
+open_weights = false
+release_date = "2026-09-23"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
+temperature = true
+system_updates = true
+effort_updates = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[cost.text.input]
+price = 2.8
+cache = { read = 0.56 }
+
+[cost.text.output]
+price = 8.8

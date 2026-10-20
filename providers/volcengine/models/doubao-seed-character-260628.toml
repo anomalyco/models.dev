@@ -13,6 +13,7 @@
 # max overlaps high rather than exceeding it, and medium/xhigh sit inside the same
 # band, so they are dropped.
 base_model = "bytedance-seed/seed-character"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"

@@ -2,7 +2,8 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
-import { ReasoningOption } from "../../schema.js";
+import { AuthoredModelShape, ReasoningOption } from "../../schema.js";
+import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 
@@ -42,10 +43,12 @@ const CatalogEntry = z.object({
   context_length: z.number().int().positive().nullish(),
   provider_details: z.array(ProviderDetail).nullish(),
 }).passthrough();
+// Some proxied rows (e.g. reflection-ai/beam-1.0-501b-a23b at launch) ship with
+// provider_details = null. Those need a curated cost; see catalogCost.
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  provider_details: z.array(ProviderDetail).length(1),
+  provider_details: z.array(ProviderDetail).length(1).nullish(),
 });
 
 const FlatPricing = z.object({
@@ -102,9 +105,13 @@ const SourceModel = z.object({
   schemaInput: z.unknown().optional(),
 });
 
+const NoteLines = z.array(z.string().refine((value) => !/[\r\n]/.test(value)));
+
 const CuratedModel = z.object({
   base_model: z.string().refine(isSafeModelID, "base_model must be a safe relative provider/model path").optional(),
   structured_output: z.boolean().optional(),
+  // Only for rows without structured provider_details; see catalogCost.
+  cost: AuthoredModelShape.shape.cost,
   reasoning_options: z.array(ReasoningOption).optional(),
   limit: z.object({
     context: z.number().optional(),
@@ -115,11 +122,14 @@ const CuratedModel = z.object({
     z.literal(true),
     z.object({ field: z.enum(["reasoning_content", "reasoning_details"]) }).strict(),
   ]).optional(),
-  note: z.array(z.string().refine((value) => !/[\r\n]/.test(value))).optional(),
+  note: NoteLines.optional(),
 }).strict();
 
 const Curation = z.object({
   skip: z.array(z.string()).default([]),
+  // Leading comment lines for every model whose id starts with the key (route and
+  // source notes shared by a family), written before the model's own note.
+  prefix_notes: z.record(NoteLines).default({}),
   models: z.record(CuratedModel).default({}),
 }).strict();
 
@@ -150,7 +160,11 @@ export const cloudflareAiGateway = {
 
     const emittedModels = textModels.filter(
       (model) => !model.model_id.startsWith("@cf/") && !skippedModels.has(model.model_id),
-    ).map((model) => CatalogModel.parse(model));
+    ).map((model) => {
+      const parsed = CatalogModel.safeParse(model);
+      if (!parsed.success) throw new Error(`${model.model_id}: invalid catalog entry: ${parsed.error.message}`);
+      return parsed.data;
+    });
     if (emittedModels.length === 0) {
       throw new Error("Cloudflare AI Gateway catalog returned no eligible proxied models");
     }
@@ -180,7 +194,7 @@ export const cloudflareAiGateway = {
         curated,
         context.authored(id),
       ),
-      header: noteHeader(curated.note),
+      header: noteHeader([...prefixNotes(id), ...curated.note ?? []]),
     };
   },
 } satisfies SyncProvider<SourceModel>;
@@ -193,7 +207,7 @@ export function buildCloudflareAiGatewayModel(
 ): SyncedBaseModel {
   const id = catalog.model_id;
   // Pricing failures must not be hidden by missing reasoning controls.
-  const cost = proxiedCost(catalog.provider_details[0]!.pricing, id);
+  const cost = catalogCost(catalog, curated);
   const baseModel = curated.base_model ?? resolveBaseModel(id);
   if (baseModel === undefined) {
     throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
@@ -235,7 +249,6 @@ export function buildCloudflareAiGatewayModel(
 export function deriveReasoningOptions(
   schemaInput: unknown,
 ): NonNullable<SyncedBaseModel["reasoning_options"]> {
-  let hasToggle = false;
   let effortValues: Array<"none" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max" | "default">
     | undefined;
 
@@ -265,7 +278,6 @@ export function deriveReasoningOptions(
 
       for (const [property, rawSchema] of Object.entries(value)) {
         const propertySchema = rawSchema as Record<string, unknown>;
-        if (property === "enable_thinking" || property === "thinking") hasToggle = true;
         if (property === "effort" || property === "reasoning_effort") {
           const candidates = [propertySchema, ...arrayValue(propertySchema.anyOf), ...arrayValue(propertySchema.oneOf)];
           for (const candidate of candidates) {
@@ -279,10 +291,9 @@ export function deriveReasoningOptions(
   };
   visit(schemaInput);
 
-  const options: NonNullable<SyncedBaseModel["reasoning_options"]> = [];
-  if (hasToggle) options.push({ type: "toggle" });
-  if (effortValues !== undefined) options.push({ type: "effort", values: effortValues });
-  return options;
+  // A thinking field describes an accepted input shape, not proof that this route
+  // supports disabling thinking. Toggle support is curated per model instead.
+  return effortValues === undefined ? [] : [{ type: "effort", values: effortValues }];
 }
 
 function arrayValue(value: unknown): Array<Record<string, unknown>> {
@@ -484,6 +495,23 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
   return results;
 }
 
+// Structured provider_details is the source of truth. A curated cost is only allowed
+// (and then required) when Cloudflare omits it, so a stale override can't outlive it.
+function catalogCost(catalog: CatalogModel, curated: CuratedModel): NonNullable<SyncedBaseModel["cost"]> {
+  const id = catalog.model_id;
+  const detail = catalog.provider_details?.[0];
+  if (detail !== undefined) {
+    if (curated.cost !== undefined) {
+      throw new Error(`${id}: catalog now has provider_details pricing; remove the curated cost`);
+    }
+    return proxiedCost(detail.pricing, id);
+  }
+  if (curated.cost === undefined) {
+    throw new Error(`${id}: catalog has no provider_details pricing; add a curated cost`);
+  }
+  return curated.cost;
+}
+
 function proxiedCost(pricing: Record<string, number>, id: string): NonNullable<SyncedBaseModel["cost"]> {
   try {
     if ("long_context_threshold_tokens" in pricing) {
@@ -591,7 +619,14 @@ function labFileExists(id: string) {
 function baseReasoning(id: string) {
   const file = path.join(MODELS_ROOT, `${id}.toml`);
   return existsSync(file) && z.object({ reasoning: z.boolean().optional() }).passthrough()
-    .parse(Bun.TOML.parse(readFileSync(file, "utf8"))).reasoning === true;
+    .parse(readLabModel(file, id)).reasoning === true;
+}
+
+function prefixNotes(id: string) {
+  return Object.entries(curation.prefix_notes)
+    .filter(([prefix]) => id.startsWith(prefix))
+    .sort(([a], [b]) => a.length - b.length)
+    .flatMap(([, lines]) => lines);
 }
 
 function noteHeader(note: string[] | undefined) {

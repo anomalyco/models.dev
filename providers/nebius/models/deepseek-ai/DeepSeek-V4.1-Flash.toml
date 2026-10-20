@@ -15,6 +15,7 @@
 # input are billed identically, so cache_read = input (same rationale as
 # DeepSeek-V4-Flash-0731 / Kimi-K3 / GLM-5.3-Flash).
 base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [interleaved]

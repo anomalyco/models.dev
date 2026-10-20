@@ -2,6 +2,7 @@
 # = "low"|"medium"|"high"; no exact token budget is documented for it.
 # https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
 base_model = "xai/grok-build-0.1"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

@@ -3,8 +3,12 @@ name = "Ling 3.0 Flash Fin Free"
 temperature = true
 structured_output = false
 reasoning_options = [{ type = "toggle" }]
+status = "deprecated"
 
 [cost]
 input = 0
 output = 0
 cache_read = 0
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

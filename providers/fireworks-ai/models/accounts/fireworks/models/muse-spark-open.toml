@@ -1,0 +1,19 @@
+# Sources (accessed 2026-10-15):
+# https://fireworks.ai/models/fireworks/muse-spark-open — model path accounts/fireworks/models/muse-spark-open; Serverless $1.25 / $0.15 / $4.25 per 1M tokens (input/cached input/output); Context Length 1M tokens; Function Calling Supported; Image Input Supported; Provider Meta; Inputs text and images, output text
+# https://app.fireworks.ai/models/fireworks/muse-spark-open — Standard Uncached $1.25/M, Cached $0.15/M, Output $4.25/M; usage example max_tokens 131072 (inherited output limit)
+# Native reasoning: https://dev.meta.ai/docs/muse-spark-open/prompting — reasoning_effort low|medium|high|xhigh (default xhigh); reasoning cannot be turned off, none|max rejected
+# Lab context/modalities: https://dev.meta.ai/docs/muse-spark-open — 1,048,576-token context; text, image, audio, and video input with text output (Fireworks serves text+image subset)
+base_model = "meta/muse-spark-open"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[modalities]
+input = ["text", "image"]

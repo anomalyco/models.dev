@@ -1,28 +1,20 @@
-name = "Fugu Max"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Sakana AI)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "sakana/fugu-max"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
-family = "fugu"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
-open_weights = false
+system_updates = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 6

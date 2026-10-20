@@ -1,14 +1,6 @@
-name = "OpenAI: GPT-5.4 Image 2"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "gpt"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = false
+base_model = "openai/gpt-5.4-image-2"
 structured_output = true
-open_weights = false
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
 
 [[reasoning_options]]
 type = "effort"
@@ -18,11 +10,3 @@ values = ["none", "low", "medium", "high", "xhigh"]
 input = 8
 output = 15
 cache_read = 2
-
-[limit]
-context = 272_000
-output = 128_000
-
-[modalities]
-input = ["image", "text", "pdf"]
-output = ["image", "text"]

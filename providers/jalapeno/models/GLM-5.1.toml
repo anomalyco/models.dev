@@ -2,6 +2,7 @@
 # Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
 # Limits: GET https://api.jalapeno-cloud.ai/v1/models id=GLM-5.1 (2026-08-17)
 base_model = "zhipuai/glm-5.1"
+structured_output = true
 reasoning_options = [{ type = "toggle" }]
 
 [interleaved]

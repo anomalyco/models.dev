@@ -1,12 +1,10 @@
-name = "OpenCode Zen"
+name = "OpenCode"
 env = ["OPENCODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Raw HTTP endpoint map (source accessed 2026-06-25): Zen uses POST
-# `/zen/v1/responses` for OpenAI, `/zen/v1/messages` for Anthropic and Qwen,
-# `/zen/v1/models/{model}` for Gemini, and `/zen/v1/chat/completions` for the
-# listed compatible models. Zen does not document reasoning request fields,
-# values, bounds, translation, or passthrough; upstream-native formats are not
-# independently guaranteed by this endpoint table.
-# https://opencode.ai/docs/zen#endpoints
-api = "https://opencode.ai/zen/v1"
-doc = "https://opencode.ai/docs/zen"
+# Every model sets its own `provider.api` for its protocol (accessed 2026-10-15):
+# `/inference/openai/v1`, `/inference/anthropic/v1`, `/inference/google/v1beta`,
+# or `/inference/systemone/v1`. `api` here is required by the schema for
+# `@ai-sdk/openai-compatible`. https://opencode.ai/v2/docs/console/api/inference/
+# Model endpoints: https://opencode.ai/v2/docs/console/models/#endpoints
+api = "https://opencode.ai/inference/openai/v1"
+doc = "https://opencode.ai/v2/docs/console/models/"

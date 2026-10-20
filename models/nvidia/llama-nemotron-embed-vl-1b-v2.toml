@@ -1,18 +1,25 @@
+# Release date (12/18/2025) and embedding model: https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2
+# Image formats: "image data URLs are accepted in image/png or image/jpeg format":
+#   https://docs.nvidia.com/nim/nemo-retriever/text-embedding/latest/use-the-api-openai.html
+schema = 2
+type = "embedding"
 name = "Llama Nemotron Embed VL 1B v2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "nemotron"
-release_date = "2026-02-10"
-last_updated = "2026-02-10"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = true
+release_date = "2025-12-18"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 32_768
 output = 2_048
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

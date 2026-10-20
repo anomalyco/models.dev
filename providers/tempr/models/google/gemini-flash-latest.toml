@@ -3,6 +3,7 @@
 # /v1/messages: output_config.effort = low|medium|high
 # /v1/responses: reasoning.effort = low|medium|high
 base_model = "google/gemini-flash-latest"
+structured_output = true
 
 reasoning_options = [
   { type = "effort", values = ["low", "medium", "high"] },

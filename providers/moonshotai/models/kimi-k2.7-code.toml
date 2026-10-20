@@ -1,10 +1,33 @@
+# Sources (platform.kimi.ai/docs, accessed 2026-10-19):
+# - Pricing: https://platform.kimi.ai/docs/pricing/chat (automatic prefix cache, no cache-write charge for K2.x)
+# - Parameters: https://platform.kimi.ai/docs/api/models-overview (thinking always on, tool_choice "required" not
+#   supported)
+# - Chat API: https://platform.kimi.ai/docs/api/chat (response_format json_schema, tool strict, prompt_cache_key,
+#   stream_options.include_usage)
+# - Caching: https://platform.kimi.ai/docs/guide/context-caching
+# Reasoning is always on (thinking.type only accepts "enabled"); reasoning returned in reasoning_content and must be
+# passed back (Preserved Thinking is always on).
+# Live 2026-10-19: tool_choice "required" or a named function returns 400 ("incompatible with thinking enabled");
+# a system message after the first turn is accepted and keeps the prefix cache; dynamic tool messages fail
+# ("tokenization failed").
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"], updates = false }
+reasoning = { supported = true }
+structured_output = true
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
 
-[cost]
-input = 0.95
-output = 4.0
-cache_read = 0.19
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

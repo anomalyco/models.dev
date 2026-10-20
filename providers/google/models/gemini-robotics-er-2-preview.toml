@@ -1,0 +1,30 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-preview
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/thinking (default high)
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - Introductory rates through 2026-12-31 double from 2027-01-01 (cache storage too).
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
+v2_only = true
+base_model = "google/gemini-robotics-er-2-preview"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { supported = true, implicit = true, explicit = true }
+system_updates = false
+effort_updates = false
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, storage = 0.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = 2

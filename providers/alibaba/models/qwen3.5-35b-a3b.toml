@@ -1,29 +1,35 @@
+# v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted and obeyed; not in the context-cache model lists and no cache hits observed.
+# Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
+schema = 2
 name = "Qwen3.5 35B-A3B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
-release_date = "2026-02-23"
-last_updated = "2026-02-23"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-02-23"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.25
-output = 2
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
+system_updates = true
+stream_usage = true
+cache = { supported = false }
 
 [limit]
 context = 262_144
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 2

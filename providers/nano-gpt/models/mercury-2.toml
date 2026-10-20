@@ -1,14 +1,6 @@
 # Not included in subscription
-name = "Mercury 2"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "mercury"
-release_date = "2024-01-01"
-last_updated = "2024-01-01"
-attachment = false
-reasoning = true
-tool_call = true
+base_model = "inception/mercury-2"
 structured_output = true
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -17,10 +9,4 @@ output = 0.75
 cache_read = 0.025
 
 [limit]
-context = 128_000
 input = 128_000
-output = 50_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,18 +1,27 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on StreamLake, SiliconFlow)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "zhipuai/glm-5"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.6
-output = 1.92
-cache_read = 0.12
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.92

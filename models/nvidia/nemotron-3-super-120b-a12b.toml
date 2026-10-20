@@ -1,18 +1,26 @@
+# Knowledge: pre-training data cutoff June 2025 (post-training February 2026):
+#   https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
+#   the model card recommends temperature 1.0 and top_p 0.95.
+schema = 2
 name = "Nemotron 3 Super 120B A12B"
 description = "Nemotron middle tier for collaborative agents and high-volume reasoning workloads"
 family = "nemotron"
-release_date = "2026-03-11"
-last_updated = "2026-03-11"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 262_144
-output = 262_144
+knowledge = "2025-06"
+release_date = "2026-03-11"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 262_144

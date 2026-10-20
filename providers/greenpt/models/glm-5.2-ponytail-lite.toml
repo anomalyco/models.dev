@@ -5,6 +5,7 @@
 # cache_read: discounted rate for cached prompt tokens. Cache writes are not
 # charged. See https://docs.greenpt.ai/prompt-caching
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 name = "GLM-5.2 Ponytail Lite"
 description = "glm-5.2 carrying a built-in ruleset that compresses generated code, preferring platform features over custom code. The gentlest tier: it cuts filler only and keeps the explanation intact. Same upstream model and price per token as glm-5.2, with fewer output tokens."
 reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]

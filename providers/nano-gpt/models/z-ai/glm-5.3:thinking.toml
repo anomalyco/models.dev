@@ -1,4 +1,5 @@
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 name = "GLM 5.3 Thinking"
 
 [[reasoning_options]]
@@ -6,8 +7,8 @@ type = "effort"
 values = ["high", "max"]
 
 [cost]
-input = 1
-output = 3.2
+input = 0.6
+output = 1.1
 cache_read = 0.2
 
 [limit]
