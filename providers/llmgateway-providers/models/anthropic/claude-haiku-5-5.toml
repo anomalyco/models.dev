@@ -1,10 +1,10 @@
 base_model = "anthropic/claude-haiku-5-5"
-structured_output = true
 name = "Claude Haiku 5.5 (Anthropic)"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.1
