@@ -1,15 +1,16 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.7-highspeed"
 name = "MiniMax M2.7 High Speed"
-attachment = true
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.6
-output = 2.4
-cache_read = 0.06
-cache_write = 0.375
+[capabilities]
+reasoning = { supported = true, budget = {  } }
 
 [limit]
 output = 131_100
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06, write = 0.375 }
+
+[cost.text.output]
+price = 2.4

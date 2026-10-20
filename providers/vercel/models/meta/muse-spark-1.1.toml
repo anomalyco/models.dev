@@ -1,19 +1,21 @@
+schema = 2
 base_model = "meta/muse-spark-1.1"
-structured_output = true
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-attachment = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
 
 [limit]
 output = 1_048_576
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25
