@@ -105,6 +105,9 @@ function formatLabModel(text: string, model: ModelMetadata) {
   if (model.tool_call === undefined || model.reasoning === undefined) {
     throw new Error(`${model.id}: missing tool_call or reasoning`);
   }
+  if (model.temperature === undefined) {
+    throw new Error(`${model.id}: missing temperature (v2 lab files require it)`);
+  }
 
   const out: string[] = [...header, "schema = 2"];
   out.push(...identityLines(model));
@@ -118,7 +121,13 @@ function formatLabModel(text: string, model: ModelMetadata) {
   if (model.structured_output !== undefined) {
     throw new Error(`${model.id}: move structured_output to the provider files first`);
   }
-  if (model.temperature !== undefined) out.push(`temperature = ${model.temperature}`);
+  // v2 lab files require top_p and top_k, which v1 doesn't have. They start out
+  // matching temperature; check them against the lab's docs after migrating.
+  out.push(
+    `temperature = ${model.temperature}`,
+    `top_p = ${model.temperature}`,
+    `top_k = ${model.temperature}`,
+  );
   out.push(...limitLines(model.limit!));
   if (tail.length > 0) out.push("", ...tail);
   return `${out.join("\n").trimEnd()}\n`;
