@@ -1,0 +1,42 @@
+# Alias for the current Gemini Pro release (gemini-3.1-pro-preview).
+# Target: generateContent on gemini-pro-latest returns modelVersion "gemini-3.1-pro-preview" (checked 2026-10-20);
+# the last documented switch was to gemini-3-pro-preview (https://ai.google.dev/gemini-api/docs/changelog, 2026-01-21),
+# which shut down 2026-03-09 (https://ai.google.dev/gemini-api/docs/deprecations).
+# Keep capabilities and cost in sync with gemini-3.1-pro-preview. Flex/Priority are not listed for the alias.
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models (latest aliases)
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/thinking
+# - https://generativelanguage.googleapis.com/v1beta/models (displayName, limits, topP/topK)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.1-pro-preview"
+name = "Gemini Pro Latest"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { supported = true, implicit = { min_tokens = 4_096 }, explicit = true }
+system_updates = false
+effort_updates = false
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, storage = 4.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18
