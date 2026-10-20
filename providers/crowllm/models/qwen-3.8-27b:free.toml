@@ -3,12 +3,14 @@
 # cache_read = input x cache_ratio (service/text_quota.go bills cached prompt tokens at cache_ratio of a fresh one).
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-20).
 # Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-20): "qwen-3.8-27b:free".
+# Toggle: enable_thinking = true|false (Qwen hybrid thinking)
 # Effort: reasoning_effort = none|low|medium|xhigh (top-level, forwarded verbatim)
 # reasoning_options mirror providers/nebius for the same model on this surface.
+# The toggle is this host's own field: enable_thinking is parsed top-level (relaykit/dto/openai_request.go) and forwarded untouched by relay/channel/ali/text.go.
 # Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B (free)"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] } ]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["none", "low", "medium", "xhigh"] } ]
 
 [cost]
 input = 0
