@@ -2,10 +2,13 @@
 # https://blog.cloudflare.com/clef-faster-cheaper-multimodal/ (2026-10-09),
 # https://developers.cloudflare.com/workers-ai/models/clef-flash/ and
 # https://huggingface.co/Cloudflare/clef-flash (all accessed 2026-10-20).
-# Clef Flash generates no free-form text, so output is 0. The published weights were
-# trained for up to 256K tokens; Cloudflare's own hosted endpoint caps it at 24K for
-# price, so each host entry records its own limit. Apache-2.0 weights, 9B parameters,
-# post-trained from Qwen3.5-9B with a vision encoder for text, image and video input.
+# Clef Flash generates no free-form text, so output is 0. Context: the 2026-10-09
+# update says "The Clef-flash weights on Hugging Face are unchanged and support up to
+# a 256K context window if you self-host", while Cloudflare's hosted endpoint caps
+# Flash at 24K for price. The lab limit is the weights capability; each host entry
+# records its own cap. Input: Cloudflare's model docs say Clef Flash "reads the state
+# as text, JSON, images, or video", and the model card documents image and video
+# frame-array inputs. Apache-2.0 weights, 9B parameters, post-trained from Qwen3.5-9B.
 type = "decision"
 name = "Clef Flash"
 description = "Cloudflare's fast 9B open-weight decision model that returns probabilities for typed choice, score and yes/no questions about text, images or video"

@@ -3,7 +3,8 @@
 # https://huggingface.co/Cloudflare/clef (both accessed 2026-10-20).
 # Clef returns one probability per allowed option and generates no free-form text,
 # so output is 0. The hosted context window is 64K; the weights are published under
-# Apache-2.0. It takes text, images and video frame arrays and has a vision encoder.
+# Apache-2.0. Input: Cloudflare's model docs say Clef "reads the state as text, JSON,
+# images, or video", and the model card documents image and video frame-array inputs.
 type = "decision"
 name = "Clef"
 description = "Cloudflare's open-weight decision model that returns probabilities for typed choice, score and yes/no questions about text, images or video"
