@@ -1232,6 +1232,43 @@ test("tracks missing models except for unreliable first-party inventories", () =
   expect(xai.trackMissingModels).not.toBe(false);
 });
 
+function pioneerCatalogModel(id: string, efforts: string[]) {
+  const [model] = pioneer.parseModels({
+    data: [{
+      id,
+      display_name: id,
+      created: 1_704_067_200,
+      max_input_tokens: 8_192,
+      max_tokens: 4_096,
+      input_price_per_million: 0.03,
+      output_price_per_million: 0,
+      capabilities: { thinking: { supported: false } },
+    }],
+    models: [{ slug: id, supported_reasoning_levels: efforts.map((effort) => ({ effort })) }],
+  });
+  return model!;
+}
+
+test("Pioneer sync sorts catalog reasoning levels low to high", () => {
+  const model = pioneerCatalogModel("fastino/example-decoder", ["xhigh", "high", "low", "medium"]);
+  const existing = { name: "Example", reasoning: true } as ExistingModel;
+  const translated = pioneer.translateModel(model, { existing: () => existing, authored: () => existing });
+  expect(translated?.model).toMatchObject({
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh"] }],
+  });
+});
+
+test("Pioneer sync keeps an authored non-reasoning file despite the catalog's boilerplate levels", () => {
+  // Encoders (GLiNER) list the same reasoning levels as decoders in /v1/models.
+  const model = pioneerCatalogModel("fastino/gliner2-base-v1", ["low", "medium", "high"]);
+  const existing = { name: "GLiNER2 Base", reasoning: false, tool_call: false } as ExistingModel;
+  const translated = pioneer.translateModel(model, { existing: () => existing, authored: () => existing });
+  expect(translated?.model).toMatchObject({ reasoning: false, tool_call: false });
+  expect((translated?.model as ExistingModel).reasoning_options).toBeUndefined();
+  expect((translated?.model as ExistingModel).interleaved).toBeUndefined();
+});
+
 test("keeps xAI voice models that no models endpoint lists", () => {
   const models = xai.parseModels({ models: [] });
   const voice = models.find((model) => model.id === "grok-voice-3.0");
