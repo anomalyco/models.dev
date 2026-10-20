@@ -19,8 +19,10 @@ const ENABLE_THINKING_MODELS = new Set([
   "@cf/zai-org/glm-5.2",
 ]);
 // Workers AI search reports these as text generation, but their served API takes
-// state + typed questions and returns decisions rather than chat completions.
+// state + typed questions (or fields, for Clairic) and returns typed answers rather
+// than chat completions.
 const DECISION_MODELS = new Set([
+  "@cf/cloudflare/clairic",
   "@cf/cloudflare/clef",
   "@cf/cloudflare/clef-flash",
   "@cf/cloudflare/clef-omni",

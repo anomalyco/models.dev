@@ -95,8 +95,8 @@ test("never raises a context window or pins other models", () => {
   expect(translatedContext("@cf/test/unpinned", 1_310_720)).toBe(1_310_720);
 });
 
-test("marks Clef routes as decisions even when Workers AI search labels them text generation", () => {
-  for (const id of ["@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
+test("marks Clef and Clairic routes as decisions even when Workers AI search labels them text generation", () => {
+  for (const id of ["@cf/cloudflare/clairic", "@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
     const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow(id, 65_536)] } });
     const translated = cloudflareWorkersAi.translateModel(source!, {
       existing: () => undefined,
