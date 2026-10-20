@@ -2,17 +2,23 @@
 # Prices are USD per million tokens; lab facts are inherited via base_model.
 # Effort: top-level reasoning_effort = none|low|medium|high|xhigh|max.
 # Generic file input is omitted; it does not imply PDF support.
+# Mid-conversation: Prime serves this model on POST /api/v1/chat/completions (https://docs.primeintellect.ai/api-reference/inference-chat-completions);
+# reasoning_effort and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: gateway models go to an external provider (https://docs.primeintellect.ai/inference/overview) and Prime doesn't document where a later system message goes.
+# Input MIME types: the lab's entries for each kind Prime lists (Prime documents no formats).
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 base_model_omit = ["limit.input"]
 
 [modalities]
-input = ["image", "text"]
+input = ["image/jpeg", "image/png", "image/gif", "image/webp", "text"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.2
