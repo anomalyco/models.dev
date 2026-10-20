@@ -958,6 +958,45 @@ function perMillion(units: readonly z.infer<typeof PricingUnit>[], origin: strin
   return Math.round(((unit.price / unit.per) * 1_000_000) * 1e6) / 1e6;
 }
 
+/**
+ * Cache write prices. The catalog names the default write `cache_write` and
+ * every other TTL `cache_write_<ttl>` (Claude rows: `cache_write` is the 5m
+ * write, `cache_write_1h` the 1h one). With TTL prices, the TTL keys come
+ * from the file's explicit cache capability: the unsuffixed price is its
+ * first TTL and the rest must match by name, so the v2 `cache.write` map
+ * carries the catalog's own price for every TTL. v1 only carries the first.
+ */
+function cacheWritePrices(
+  id: string,
+  units: readonly z.infer<typeof PricingUnit>[],
+  capabilities: Record<string, unknown> | undefined,
+): { v1: number; v2: number | Record<string, number> } | undefined {
+  const base = perMillion(units, "cache_write");
+  const byTtl = new Map<string, number>();
+  for (const unit of units) {
+    const ttl = /^cache_write_(\d+(?:ms|s|m|h|d))$/.exec(unit.origin ?? "")?.[1];
+    const price = ttl === undefined ? undefined : perMillion(units, unit.origin!);
+    if (ttl !== undefined && price !== undefined) byTtl.set(ttl, price);
+  }
+  if (base === undefined) {
+    if (byTtl.size > 0) console.warn(`${id}: TTL cache write prices without a default cache_write; not written`);
+    return undefined;
+  }
+  if (byTtl.size === 0) return { v1: base, v2: base };
+
+  const cache = capabilities?.["cache"] as { explicit?: { ttl?: unknown } } | undefined;
+  const ttls = Array.isArray(cache?.explicit?.ttl) ? (cache.explicit.ttl as string[]) : [];
+  const [first, ...rest] = ttls;
+  const matches = first !== undefined && !byTtl.has(first) && rest.length === byTtl.size && rest.every((ttl) => byTtl.has(ttl));
+  if (!matches) {
+    console.warn(
+      `${id}: cache write TTLs ${[...byTtl.keys()].join(", ")} don't match the file's explicit cache TTLs (${ttls.join(", ") || "none"}); only the default write is written`,
+    );
+    return { v1: base, v2: base };
+  }
+  return { v1: base, v2: Object.fromEntries([[first, base], ...rest.map((ttl) => [ttl, byTtl.get(ttl)!])]) };
+}
+
 function positive(value: number | null | undefined): number | undefined {
   return value != null && value > 0 ? value : undefined;
 }
@@ -1327,9 +1366,13 @@ export const aimlapi = {
     const outputCost = perMillion(units, "generated") ?? existing?.cost?.output;
     if (inputCost === undefined || outputCost === undefined) return undefined;
 
+    const capabilities = v2Capabilities(context.v2?.(model.id));
+    const cacheWrite = cacheWritePrices(model.id, units, capabilities);
+
     return {
       id: model.id,
-      header: wireHeader(model.id, reasoningOptions, v2Capabilities(context.v2?.(model.id))),
+      header: wireHeader(model.id, reasoningOptions, capabilities),
+      v2Set: cacheWrite === undefined ? undefined : { "cost.text.input.cache.write": cacheWrite.v2 },
       model: factorBaseModel(
         base,
         {
@@ -1337,6 +1380,7 @@ export const aimlapi = {
             input: inputCost,
             output: outputCost,
             cache_read: perMillion(units, "cached") ?? existing?.cost?.cache_read,
+            cache_write: cacheWrite?.v1,
           },
           // Aliases such as `-pro` and `-fast` factor onto the base model and
           // would inherit its display name, so the catalogue would list two rows

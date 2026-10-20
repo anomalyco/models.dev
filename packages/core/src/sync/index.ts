@@ -144,6 +144,13 @@ export interface SyncProvider<SourceModel> {
      * authoritativeHeaders is enabled.
      */
     header?: string;
+    /**
+     * v2 values the source states that v1 fields can't carry (e.g. a price per
+     * cache TTL), keyed by dotted path as in `base_model_omit`. Each replaces
+     * the value at its path in a v2 file after the v1 patch, and a v2 file is
+     * rewritten when one differs even if its v1 view is unchanged.
+     */
+    v2Set?: Record<string, unknown>;
   } | SyncedV2Model | undefined;
 }
 
@@ -312,6 +319,7 @@ export async function syncProvider<SourceModel>(
     model: z.infer<typeof SyncedAuthoredModel>;
     content: string;
     header: string;
+    v2Set?: Record<string, unknown>;
   }>();
   const desiredV2 = new Map<string, { content: string }>();
   const caseNormalizedDesiredPaths = new Map<string, string>();
@@ -442,6 +450,7 @@ export async function syncProvider<SourceModel>(
       model: parsed.data,
       content: header + formatToml(parsed.data),
       header,
+      v2Set: translated.v2Set,
     });
   }
 
@@ -509,6 +518,8 @@ export async function syncProvider<SourceModel>(
             withBaseModalities(file.model, modelMetadata ?? {}),
             v2Notices,
             await newModelProtocol(provider.modelsDir, file.model),
+            undefined,
+            file.v2Set,
           ) ?? file.content
         : file.content;
       files.push({ status: "created", path: filePath });
@@ -539,7 +550,7 @@ export async function syncProvider<SourceModel>(
       };
       const sameFlags = resolved.before.reasoning === resolved.after.reasoning
         && resolved.before.tool_call === resolved.after.tool_call;
-      if (!headerChanged && sameFlags && sameV1Model(current.authored, model)) {
+      if (!headerChanged && sameFlags && sameV1Model(current.authored, model) && hasV2Values(current.v2, file.v2Set)) {
         unchanged++;
         continue;
       }
@@ -552,6 +563,7 @@ export async function syncProvider<SourceModel>(
         v2Notices,
         undefined,
         resolved,
+        file.v2Set,
       );
       if (content === undefined || options.newOnly) {
         unchanged++;
@@ -701,6 +713,7 @@ function v2Content(
   notices: string[],
   protocol?: string,
   resolved?: { before: InheritedFlags; after: InheritedFlags },
+  v2Set?: Record<string, unknown>,
 ) {
   const { id, ...synced } = model;
   try {
@@ -711,6 +724,7 @@ function v2Content(
     const next = doc === undefined || before === undefined
       ? providerModelToV2(after, protocol)
       : patchModelV2(doc, withoutModeCosts(before, carried), after, resolved);
+    for (const [key, value] of Object.entries(v2Set ?? {})) setPath(next, key, value);
     const content = header + formatModelV2(next);
     const translated = modelV2ToV1(
       { ...(Bun.TOML.parse(content) as Record<string, unknown>), id },
@@ -725,6 +739,27 @@ function v2Content(
     console.warn(notice);
     return undefined;
   }
+}
+
+// Whether a v2 file already holds every `v2Set` value.
+function hasV2Values(doc: Record<string, unknown>, v2Set: Record<string, unknown> | undefined) {
+  return Object.entries(v2Set ?? {}).every(([key, value]) => {
+    const current = key.split(".").reduce<unknown>(
+      (node, part) => (node !== null && typeof node === "object" ? (node as Record<string, unknown>)[part] : undefined),
+      doc,
+    );
+    return stable(current) === stable(value);
+  });
+}
+
+function setPath(doc: Record<string, unknown>, key: string, value: unknown) {
+  const parts = key.split(".");
+  let node = doc;
+  for (const part of parts.slice(0, -1)) {
+    if (node[part] === null || typeof node[part] !== "object") node[part] = {};
+    node = node[part] as Record<string, unknown>;
+  }
+  node[parts.at(-1)!] = value;
 }
 
 // A new v2 file puts `provider` and `interleaved` fields under the model's API
