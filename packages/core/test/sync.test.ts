@@ -6752,6 +6752,12 @@ test("Hugging Face creates v2 files with host data only and the lab's exact MIME
     architecture: { input_modalities: ["text"], output_modalities: ["text"] },
   }), "openai/gpt-oss-20b");
   expect(textOnly).not.toHaveProperty("modalities");
+
+  // No live provider reports tools: tool support is inherited, not copied from the lab.
+  const noTools = buildHuggingFaceModel(huggingFaceModel({
+    providers: [{ provider: "fast", status: "live", pricing: { input: 0.4, output: 3.2 }, throughput: 90 }],
+  }), "alibaba/qwen3.5-122b-a10b");
+  expect(noTools.capabilities).not.toHaveProperty("tools");
 });
 
 test("Hugging Face writes existing files back unchanged", () => {

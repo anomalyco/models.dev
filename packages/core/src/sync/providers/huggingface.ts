@@ -205,11 +205,10 @@ export function buildHuggingFaceModel(
 
   // Chat Completions takes tools and reasoning_effort per request, with no
   // per-turn effort or tool-change message.
-  const capabilities = (lab.capabilities ?? {}) as { tools?: { supported?: boolean }; reasoning?: { supported?: boolean } };
+  // Tool support comes from the router (any live provider); otherwise it's inherited.
+  const capabilities = (lab.capabilities ?? {}) as { reasoning?: { supported?: boolean } };
   const next: Record<string, unknown> = {};
-  if (aggregate.tools || (capabilities.tools?.supported ?? lab.tool_call) === true) {
-    next.tools = { supported: true, updates: false };
-  }
+  if (aggregate.tools) next.tools = { supported: true, updates: false };
   if ((capabilities.reasoning?.supported ?? lab.reasoning) === true) next.reasoning = { supported: true };
   Object.assign(next, doc.capabilities, { effort_updates: false });
   doc.capabilities = next;
