@@ -3466,6 +3466,42 @@ test("prefers OpenRouter API reasoning options over authored ones", () => {
   });
 });
 
+test("OpenRouter base_model files leave model facts to the lab", async () => {
+  const { patchModelV2 } = await import("../src/model-file-v2.js");
+  const { modelV2ToV1 } = await import("../src/translate.js");
+  // A route with no canonical prefix, linked to its lab by hand, still carrying stale facts.
+  const doc = {
+    schema: 2,
+    base_model: "aion-labs/aion-2.0",
+    family: "aion",
+    open_weights: true,
+    knowledge: "2024-01",
+    release_date: "2020-01-01",
+    last_updated: "2020-02-01",
+    capabilities: { reasoning: { supported: true } },
+    cost: { text: { input: { price: 0.8 }, output: { price: 1.6 } } },
+  };
+  const { id: _id, ...existing } = modelV2ToV1({ ...doc, id: "aion-labs/aion-2.0" });
+  const synced = buildOpenRouterModel(openRouterModel({
+    id: "aion-labs/aion-2.0",
+    name: "AionLabs: Aion 2.0",
+    hugging_face_id: "aion-labs/aion-2.0",
+    knowledge_cutoff: "2025-06-30",
+    architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+    supported_parameters: ["reasoning", "tools"],
+    pricing: { prompt: "0.0000008", completion: "0.0000016" },
+  }), existing as ExistingModel) as Record<string, unknown>;
+
+  expect(synced.base_model).toBe("aion-labs/aion-2.0");
+  for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated"]) {
+    expect(synced).not.toHaveProperty(fact);
+  }
+  const next = patchModelV2(doc, existing, synced);
+  for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated"]) {
+    expect(next).not.toHaveProperty(fact);
+  }
+});
+
 test("keeps authored OpenRouter reasoning options when API omits reasoning metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     supported_parameters: ["tools", "tool_choice", "reasoning", "temperature"],
