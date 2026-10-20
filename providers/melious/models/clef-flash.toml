@@ -5,9 +5,11 @@
 # https://melious.ai/docs/reference/systemone (both accessed 2026-10-20)
 # Serving: POST /v1/systemone, not chat completions. Melious caps the context at
 # 16,384 tokens and rejects images with 422 invalid_request, so this entry is text
-# only. Reasoning is always off; there is no caller control.
+# only. System One has no temperature parameter, so temperature is false. Reasoning
+# is always off; there is no caller control.
 base_model = "cloudflare/clef-flash"
 attachment = false
+temperature = false
 
 [cost]
 input = 0.033675
