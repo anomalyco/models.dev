@@ -539,6 +539,44 @@ test("reconciles authoritative generated headers", async () => {
   }
 });
 
+test("writes new native-route models as v2 files with their API protocol", async () => {
+  const providersDir = path.join(import.meta.dirname, "..", "..", "..", "providers");
+  const providerDir = await mkdtemp(path.join(providersDir, ".cloudflare-ai-gateway-v2-"));
+  const modelsDir = path.join(providerDir, "models");
+  await mkdir(path.join(modelsDir, "openai"), { recursive: true });
+  await writeFile(path.join(providerDir, "provider.toml"), 'name = "Test"\nnpm = "ai-gateway-provider"\nenv = []\n');
+  const existing = 'schema = 2\nbase_model = "openai/gpt-4.1"\n\n[capabilities]\nsystem_updates = true\n\n'
+    + '[api.responses]\nsdk = { aisdk = "@ai-sdk/openai" }\n';
+  await writeFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), existing);
+
+  try {
+    const provider = {
+      ...cloudflareAiGateway,
+      modelsDir,
+      async fetchModels() {
+        return ["openai/gpt-4.1", "anthropic/claude-opus-4.7", "openai/gpt-5.5"].map((model_id) => ({
+          catalog: {
+            model_id,
+            task: "Text Generation",
+            provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+          },
+        }));
+      },
+    };
+    const result = await syncProvider(provider);
+
+    expect(result.notices ?? []).toEqual([]);
+    const opus = await readFile(path.join(modelsDir, "anthropic", "claude-opus-4.7.toml"), "utf8");
+    expect(opus).toStartWith("schema = 2\n");
+    expect(opus).toContain('[api.messages]\nsdk = { aisdk = "@ai-sdk/anthropic" }');
+    const gpt = await readFile(path.join(modelsDir, "openai", "gpt-5.5.toml"), "utf8");
+    expect(gpt).toContain('[api.responses]\nsdk = { aisdk = "@ai-sdk/openai" }');
+    expect(await readFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), "utf8")).toContain("system_updates = true");
+  } finally {
+    await rm(providerDir, { recursive: true, force: true });
+  }
+});
+
 test("refuses to write through a symlinked model directory", async () => {
   const providersDir = path.join(import.meta.dirname, "..", "..", "..", "providers");
   const providerDir = await mkdtemp(path.join(providersDir, ".sync-symlink-"));

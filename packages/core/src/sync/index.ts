@@ -3,7 +3,8 @@ import { lstat, mkdir, readdir, rm } from "node:fs/promises";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
-import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { AuthoredModel, AuthoredModelShape, ModelMetadata, type Model, type Provider } from "../schema.js";
+import { resolveProtocol } from "../generate-v2.js";
 import {
   formatModelV2,
   multiplierModes,
@@ -477,6 +478,7 @@ export async function syncProvider<SourceModel>(
             undefined,
             withBaseModalities(file.model, modelMetadata ?? {}),
             v2Notices,
+            await newModelProtocol(provider.modelsDir, file.model),
           ) ?? file.content
         : file.content;
       files.push({ status: "created", path: filePath });
@@ -634,6 +636,7 @@ function v2Content(
   before: ExistingModel | undefined,
   model: z.infer<typeof SyncedAuthoredModel>,
   notices: string[],
+  protocol?: string,
 ) {
   const { id, ...synced } = model;
   try {
@@ -642,7 +645,7 @@ function v2Content(
       : multiplierModes(doc, before, synced);
     const after = withoutModeCosts(synced, carried);
     const next = doc === undefined || before === undefined
-      ? providerModelToV2(after)
+      ? providerModelToV2(after, protocol)
       : patchModelV2(doc, withoutModeCosts(before, carried), after);
     const content = header + formatModelV2(next);
     const translated = modelV2ToV1(
@@ -658,6 +661,20 @@ function v2Content(
     console.warn(notice);
     return undefined;
   }
+}
+
+// A new v2 file puts `provider` and `interleaved` fields under the model's API
+// protocol, resolved from provider.toml the same way migrate-v2 does.
+async function newModelProtocol(modelsDir: string, model: z.infer<typeof SyncedAuthoredModel>) {
+  const file = Bun.file(path.join(path.dirname(modelsDir), "provider.toml"));
+  if (!(await file.exists())) return undefined;
+  const provider = {
+    ...(Bun.TOML.parse(await file.text()) as Record<string, unknown>),
+    id: path.basename(path.dirname(modelsDir)),
+  } as unknown as Provider;
+  const shape = "provider" in model ? model.provider?.shape : undefined;
+  const npm = ("provider" in model ? model.provider?.npm : undefined) ?? provider.npm;
+  return resolveProtocol(model as unknown as Model, provider, npm, shape);
 }
 
 // v2 files list both modality sides, but a synced base_model override only lists
