@@ -1,16 +1,19 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fo4-mini (accessed 2026-07-21)
+schema = 2
 base_model = "openai/o4-mini"
-structured_output = true
 name = "o4 Mini"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.275
-
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.275 }
+
+[cost.text.output]
+price = 4.4

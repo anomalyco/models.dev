@@ -1,9 +1,13 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-3.5-turbo (accessed 2026-07-21)
-
+schema = 2
 base_model = "openai/gpt-3.5-turbo"
-structured_output = false
 name = "GPT-3.5 Turbo"
 
-[cost]
-input = 0.5
-output = 1.5
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

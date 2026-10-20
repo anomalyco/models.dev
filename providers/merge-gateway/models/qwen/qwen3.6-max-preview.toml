@@ -1,11 +1,16 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.6-max-preview (accessed 2026-07-21)
+schema = 2
 base_model = "alibaba/qwen3.6-max-preview"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 1.31
-output = 7.88
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
+
+[cost.text.input]
+price = 1.31
+
+[cost.text.output]
+price = 7.88

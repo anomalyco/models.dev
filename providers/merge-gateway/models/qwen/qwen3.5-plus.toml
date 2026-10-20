@@ -1,19 +1,21 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.5-plus (accessed 2026-07-21)
+schema = 2
 base_model = "alibaba/qwen3.5-plus"
-attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.115
-output = 0.688
-cache_read = 0.0115
-cache_write = 0.14375
 
 [limit]
 output = 250_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.115
+cache = { read = 0.0115, write = 0.14375 }
+
+[cost.text.output]
+price = 0.688

@@ -1,10 +1,15 @@
+schema = 2
 base_model = "alibaba/qwen3-max-preview"
-structured_output = true
 
-[cost]
-input = 1.08
-output = 4.8
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
 output = 65_536
+
+[cost.text.input]
+price = 1.08
+
+[cost.text.output]
+price = 4.8

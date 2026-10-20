@@ -1,24 +1,24 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemini-2.5-flash-lite (accessed 2026-07-21)
-
+schema = 2
 base_model = "google/gemini-2.5-flash-lite"
+
+[modalities]
+input = ["text", "image", "audio", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 512, max = 24_576 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 512
-max = 24_576
-
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.01
-input_audio = 0.3
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image", "audio", "pdf"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4
+
+[cost.audio.input]
+price = 0.3

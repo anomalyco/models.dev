@@ -1,16 +1,19 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.6-35b-a3b (accessed 2026-07-21)
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B A3B"
-attachment = false
-structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.248
-output = 1.485
-cache_read = 0.0496
 
 [modalities]
 input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.248
+cache = { read = 0.0496 }
+
+[cost.text.output]
+price = 1.485

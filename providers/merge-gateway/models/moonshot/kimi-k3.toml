@@ -1,20 +1,20 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 2.9
-output = 14
-cache_read = 0.3
 
 [limit]
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 2.9
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 14

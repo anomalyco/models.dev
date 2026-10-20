@@ -1,8 +1,13 @@
+schema = 2
 base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 name = "Qwen3-VL 235B A22B Instruct"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.21
-output = 1.9
-cache_read = 0.105
+[cost.text.input]
+price = 0.21
+cache = { read = 0.105 }
+
+[cost.text.output]
+price = 1.9

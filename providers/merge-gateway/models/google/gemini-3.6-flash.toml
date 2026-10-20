@@ -1,10 +1,13 @@
+schema = 2
 base_model = "google/gemini-3.6-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
 
-[cost]
-input = 1.5
-output = 7.5
-cache_read = 0.15
+[cost.text.output]
+price = 7.5

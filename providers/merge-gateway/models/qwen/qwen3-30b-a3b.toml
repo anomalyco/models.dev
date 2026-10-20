@@ -1,13 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen3-30b-a3b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.108
-output = 1.076
-cache_read = 0.0216
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.108
+cache = { read = 0.0216 }
+
+[cost.text.output]
+price = 1.076

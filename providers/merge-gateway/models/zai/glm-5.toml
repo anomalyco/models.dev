@@ -1,19 +1,20 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=zai%2Fglm-5 (accessed 2026-07-21)
-
+schema = 2
 base_model = "zhipuai/glm-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = false
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1
-output = 3.2
-cache_read = 0.2
-cache_write = 0
 
 [limit]
 context = 200_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2, write = 0 }
+
+[cost.text.output]
+price = 3.2

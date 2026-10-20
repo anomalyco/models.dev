@@ -1,17 +1,22 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=meta%2Fmuse-spark-1.1 (accessed 2026-07-21)
-
+schema = 2
 base_model = "meta/muse-spark-1.1"
-structured_output = false
-reasoning_options = []
 
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 1_048_576
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

@@ -1,20 +1,22 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.6-plus (accessed 2026-07-21)
 # Selected route reasoning.controls = ["thinking"], disable_supported = true.
+schema = 2
 base_model = "alibaba/qwen3.6-plus"
-attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.276
-output = 1.651
-cache_read = 0.0276
-cache_write = 0.345
 
 [limit]
 output = 250_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.276
+cache = { read = 0.0276, write = 0.345 }
+
+[cost.text.output]
+price = 1.651

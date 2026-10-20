@@ -1,15 +1,17 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen-flash (accessed 2026-07-21)
+schema = 2
 base_model = "alibaba/qwen-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.022
-output = 0.216
-cache_read = 0.0044
-cache_write = 0.0275
 
 [limit]
 output = 250_000
+
+[cost.text.input]
+price = 0.022
+cache = { read = 0.0044, write = 0.0275 }
+
+[cost.text.output]
+price = 0.216
