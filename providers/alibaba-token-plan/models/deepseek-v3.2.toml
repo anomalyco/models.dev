@@ -3,29 +3,32 @@
 # Sources:
 # https://docs.qwencloud.com/token-plan/team/token-plan-team-overview
 # https://docs.qwencloud.com/api-reference/chat/openai-chat
+schema = 2
 name = "DeepSeek V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
+open_weights = true
+knowledge = "2025-01"
 release_date = "2025-12-03"
 last_updated = "2025-12-05"
-attachment = false
-reasoning = true
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
-tool_call = true
-knowledge = "2025-01"
-open_weights = true
-status = "deprecated"
-reasoning_options = [{ type = "toggle" }]
-
-[cost]
-input = 0
-output = 0
 
 [limit]
 context = 131_072
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

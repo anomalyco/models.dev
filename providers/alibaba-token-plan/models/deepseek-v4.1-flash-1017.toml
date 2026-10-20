@@ -13,15 +13,19 @@
 # Sources:
 # https://docs.qwencloud.com/token-plan/team/token-plan-team-overview
 # https://docs.qwencloud.com/api-reference/chat/openai-chat
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = false
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

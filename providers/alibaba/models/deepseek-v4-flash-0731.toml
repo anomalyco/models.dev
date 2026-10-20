@@ -5,17 +5,19 @@
 # Pay-as-you-go on DashScope international, not Token Plan only.
 # Toggle: enable_thinking true|false
 # Effort: reasoning_effort = high (default) | max; low/medium map to high, xhigh maps to max
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["high", "max"] },
-]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.20
-output = 0.40
-cache_read = 0.04
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.4

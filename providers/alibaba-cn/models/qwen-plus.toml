@@ -1,33 +1,29 @@
+schema = 2
 name = "Qwen Plus"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
+open_weights = false
+knowledge = "2024-04"
 release_date = "2024-01-25"
 last_updated = "2025-09-11"
-attachment = false
-reasoning = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
 temperature = true
-knowledge = "2024-04"
-tool_call = true
-open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-max = 81_920
-
-[cost]
-input = 0.115
-output = 0.287
-reasoning = 1.147
-cache_read = 0.012
-cache_write = 0.144
 
 [limit]
 context = 1_000_000
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.115
+cache = { read = 0.012, write = 0.144 }
+
+[cost.text.output]
+price = 0.287
+reasoning = 1.147

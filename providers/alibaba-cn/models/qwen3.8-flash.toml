@@ -9,19 +9,19 @@
 # Effort: reasoning_effort = low|medium|xhigh (not yet in the API reference; see
 # the Qwen3.8-Flash-Next release blog)
 # Budget: thinking_budget (Max Reasoning 262K)
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens", max = 262_144 },
-]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.11875
-output = 0.40073
-cache_read = 0.01187
-cache_write = 0.14844
+[cost.text.input]
+price = 0.11875
+cache = { read = 0.01187, write = 0.14844 }
+
+[cost.text.output]
+price = 0.40073

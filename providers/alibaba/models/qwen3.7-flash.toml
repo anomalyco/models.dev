@@ -5,29 +5,37 @@
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (integer reasoning tokens, maximum 262144)
 # Explicit cache: read 10%, creation 125% of the input price in each tier.
+schema = 2
 base_model = "alibaba/qwen3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.03
-output = 0.13
-cache_read = 0.003
-cache_write = 0.0375
+[cost.text.input]
+price = 0.03
+cache = { read = 0.003, write = 0.0375 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.10
-output = 0.40
-cache_read = 0.01
-cache_write = 0.125
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.20
-output = 0.80
-cache_read = 0.02
-cache_write = 0.25
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.13
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.8

@@ -1,25 +1,33 @@
+schema = 2
 name = "Qwen-Omni Turbo"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
 family = "qwen"
+open_weights = false
+knowledge = "2024-04"
 release_date = "2025-01-19"
 last_updated = "2025-03-26"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-open_weights = false
 
-[cost]
-input = 0.058
-output = 0.23
-input_audio = 3.584
-output_audio = 7.168
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text", "audio"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 32_768
 output = 2_048
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text", "audio"]
+[cost.text.input]
+price = 0.058
+
+[cost.text.output]
+price = 0.23
+
+[cost.audio.input]
+price = 3.584
+
+[cost.audio.output]
+price = 7.168

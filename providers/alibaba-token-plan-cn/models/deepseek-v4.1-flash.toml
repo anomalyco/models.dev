@@ -6,16 +6,19 @@
 # Sources:
 # https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
 # https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.output]
+price = 0

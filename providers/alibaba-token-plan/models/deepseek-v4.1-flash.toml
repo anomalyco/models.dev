@@ -10,8 +10,6 @@
 # https://www.alibabacloud.com/help/en/model-studio/deepseek-api
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview
-base_model = "deepseek/deepseek-v4.1-flash"
-
 # Structured output: PARTIAL on this gateway despite the lab row's
 # structured_output = true. response_format json_object works, but strict
 # json_schema is rejected with 400 "This response_format type is unavailable
@@ -19,15 +17,19 @@ base_model = "deepseek/deepseek-v4.1-flash"
 # Plan gateway, Personal and Team editions). Omitting this field would
 # inherit the lab value and advertise an unsupported capability, so the
 # override is explicit.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = false
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.output]
+price = 0

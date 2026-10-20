@@ -1,14 +1,12 @@
+schema = 2
 base_model = "alibaba/qwen3.7-max"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
 
-[[reasoning_options]]
-type = "budget_tokens"
-max = 262_144
+[cost.text.input]
+price = 2.5
+cache = { read = 0.5, write = 3.125 }
 
-[cost]
-input = 2.5
-output = 7.5
-cache_read = 0.5
-cache_write = 3.125
+[cost.text.output]
+price = 7.5

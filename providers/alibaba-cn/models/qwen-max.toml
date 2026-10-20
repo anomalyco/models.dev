@@ -1,23 +1,27 @@
+schema = 2
 name = "Qwen Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
 family = "qwen"
+open_weights = false
+knowledge = "2024-04"
 release_date = "2024-04-03"
 last_updated = "2025-01-25"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-open_weights = false
 
-[cost]
-input = 0.345
-output = 1.377
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 131_072
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.345
+
+[cost.text.output]
+price = 1.377

@@ -1,23 +1,26 @@
+schema = 2
 name = "Qwen Plus Character"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2024-01"
-last_updated = "2024-01"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
 open_weights = false
+knowledge = "2024-04"
+release_date = "2024-01"
 
-[cost]
-input = 0.115
-output = 0.287
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 32_768
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.115
+
+[cost.text.output]
+price = 0.287

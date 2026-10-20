@@ -1,34 +1,30 @@
+schema = 2
 name = "Moonshot Kimi K2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi-k2"
-release_date = "2026-01-27"
-last_updated = "2026-01-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
 knowledge = "2025-01"
+release_date = "2026-01-27"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
 structured_output = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-max = 81_920
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.574
-output = 2.411
+temperature = true
 
 [limit]
 context = 262_144
 output = 32_768
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.574
+
+[cost.text.output]
+price = 2.411

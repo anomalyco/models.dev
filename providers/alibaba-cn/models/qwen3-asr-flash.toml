@@ -1,23 +1,26 @@
+schema = 2
 name = "Qwen3-ASR Flash"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "qwen"
-release_date = "2025-09-08"
-last_updated = "2025-09-08"
-attachment = true
-reasoning = false
-temperature = false
-knowledge = "2024-04"
-tool_call = false
 open_weights = false
+knowledge = "2024-04"
+release_date = "2025-09-08"
 
-[cost]
-input = 0.032
-output = 0.032
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 53_248
 output = 4_096
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.032
+
+[cost.text.output]
+price = 0.032

@@ -4,15 +4,19 @@
 # https://www.qwencloud.com/models/qwen3.5-flash
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (integer reasoning tokens, maximum 81920)
+schema = 2
 base_model = "alibaba/qwen3.5-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 81_920 }]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.10
-output = 0.40
-cache_read = 0.01
-cache_write = 0.125
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[cost.text.output]
+price = 0.4

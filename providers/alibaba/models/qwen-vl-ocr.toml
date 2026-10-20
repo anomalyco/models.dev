@@ -1,25 +1,29 @@
 # Source (accessed 2026-10-07): https://www.alibabacloud.com/help/en/model-studio/model-pricing
 # International (Singapore) list: qwen-vl-ocr input $0.07, output $0.16 per 1M tokens.
+schema = 2
 name = "Qwen-VL OCR"
 description = "OCR model for extracting structured text from documents and screenshots"
 family = "qwen"
+open_weights = false
+knowledge = "2024-04"
 release_date = "2024-10-28"
 last_updated = "2025-04-13"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = false
-open_weights = false
 
-[cost]
-input = 0.07
-output = 0.16
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 34_096
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.16

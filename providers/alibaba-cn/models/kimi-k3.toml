@@ -6,23 +6,26 @@
 # no video; reasoning_content streamed in deltas)
 # Effort: reasoning_effort = low|high|max (default max). Thinking is always on:
 # enable_thinking only accepts true (passing false errors), no thinking_budget.
+schema = 2
 base_model = "moonshotai/kimi-k3"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 2.827
-output = 14.133
-cache_read = 0.283
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.827
+cache = { read = 0.283 }
+
+[cost.text.output]
+price = 14.133

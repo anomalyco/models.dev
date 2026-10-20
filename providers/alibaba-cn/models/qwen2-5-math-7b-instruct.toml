@@ -1,23 +1,26 @@
+schema = 2
 name = "Qwen2.5-Math 7B Instruct"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2024-09"
-last_updated = "2024-09"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
 open_weights = true
+knowledge = "2024-04"
+release_date = "2024-09"
 
-[cost]
-input = 0.144
-output = 0.287
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 4_096
 output = 3_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.144
+
+[cost.text.output]
+price = 0.287

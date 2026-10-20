@@ -1,23 +1,25 @@
+schema = 2
 name = "DeepSeek R1 0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
 family = "deepseek-thinking"
-release_date = "2025-05-28"
-last_updated = "2025-05-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
-reasoning_options = []
+release_date = "2025-05-28"
 
-[cost]
-input = 0.574
-output = 2.294
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 131_072
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.574
+
+[cost.text.output]
+price = 2.294

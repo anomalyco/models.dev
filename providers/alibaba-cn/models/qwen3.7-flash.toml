@@ -3,32 +3,34 @@
 # Cache pricing: https://help.aliyun.com/zh/model-studio/context-cache (explicit: read 10%, write 125% of input)
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget
+schema = 2
 base_model = "alibaba/qwen3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.02962
+cache = { read = 0.002962, write = 0.03703 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-max = 262_144
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.08887
+cache = { read = 0.008887, write = 0.11109 }
 
-[cost]
-input = 0.02962
-output = 0.1185
-cache_read = 0.002962
-cache_write = 0.03703
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.17774
+cache = { read = 0.017774, write = 0.22218 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.08887
-output = 0.35549
-cache_read = 0.008887
-cache_write = 0.11109
+[cost.text.output]
+price = 0.1185
 
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.17774
-output = 0.71098
-cache_read = 0.017774
-cache_write = 0.22218
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.35549
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.71098

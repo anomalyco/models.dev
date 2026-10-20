@@ -1,24 +1,26 @@
+schema = 2
 name = "QwQ 32B"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 family = "qwen"
-release_date = "2024-12"
-last_updated = "2024-12"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2024-04"
-tool_call = true
 open_weights = true
-reasoning_options = []
+knowledge = "2024-04"
+release_date = "2024-12"
 
-[cost]
-input = 0.287
-output = 0.861
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 131_072
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.287
+
+[cost.text.output]
+price = 0.861

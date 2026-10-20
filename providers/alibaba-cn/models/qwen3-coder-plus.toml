@@ -1,41 +1,54 @@
 # China-site (Bailuan) pricing differs from the international console,
 # so this provider entry can no longer share the alibaba symlink ($1/$5).
 # https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-09-11)
+schema = 2
 name = "Qwen3 Coder Plus"
 description = "Hosted Qwen coder for software agents, repo edits, and long-context code"
 family = "qwen"
+open_weights = true
+knowledge = "2025-04"
 release_date = "2025-07-23"
 last_updated = "2026-09-11"
-attachment = false
-reasoning = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
 temperature = true
-knowledge = "2025-04"
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.574
-output = 2.296
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.861
-output = 3.444
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 1.435
-output = 5.74
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 2.87
-output = 28.7
 
 [limit]
 context = 1_048_576
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.574
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.861
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.435
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2.87
+
+[cost.text.output]
+price = 2.296
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.444
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 5.74
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 28.7

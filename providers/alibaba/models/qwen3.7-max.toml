@@ -2,33 +2,29 @@
 # (POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions,
 # model qwen3.7-max, checked 2026-09-23).
 # Model card: https://www.qwencloud.com/models/qwen3.7-max
+schema = 2
 name = "Qwen3.7 Max"
 description = "Qwen frontier model tuned for agent frameworks, coding assistants, and long tasks"
 family = "qwen"
-release_date = "2026-05-21"
-last_updated = "2026-05-21"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-05-21"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 2.50
-output = 7.50
-cache_read = 0.50
-cache_write = 3.125
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, budget = {  } }
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 2.5
+cache = { read = 0.5, write = 3.125 }
+
+[cost.text.output]
+price = 7.5

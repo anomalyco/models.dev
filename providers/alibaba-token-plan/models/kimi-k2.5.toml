@@ -1,4 +1,3 @@
-base_model = "moonshotai/kimi-k2.5"
 # Reasoning HTTP format (accessed 2026-06-25):
 # Hybrid model: top-level `enable_thinking` true enables thinking; false is the
 # default. `thinking_budget` is an integer token cap; no bounds are documented.
@@ -11,20 +10,24 @@ base_model = "moonshotai/kimi-k2.5"
 # Sources:
 # https://www.alibabacloud.com/help/en/model-studio/kimi-api
 # https://www.alibabacloud.com/help/en/model-studio/deep-thinking
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
 family = "kimi-k2"
-attachment = true
-temperature = true
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {  } }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+temperature = true
 
 [limit]
 output = 98_304
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

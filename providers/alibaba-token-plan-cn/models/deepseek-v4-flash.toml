@@ -4,9 +4,6 @@
 # Sources:
 # https://platform.qianwenai.com/docs/token-plan/team/token-plan-team-overview
 # https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
-base_model = "deepseek/deepseek-v4-flash"
-structured_output = true
-status = "deprecated"
 # Reasoning HTTP format (accessed 2026-08-15):
 # This model toggles with `enable_thinking`: true or false. Chat Completions
 # `reasoning_effort` accepts high (default) or max; low/medium map to high and
@@ -14,14 +11,20 @@ status = "deprecated"
 # Sources:
 # https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
 # https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+status = "deprecated"
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

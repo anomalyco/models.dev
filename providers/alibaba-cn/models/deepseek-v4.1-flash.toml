@@ -14,15 +14,19 @@
 # supported (Beijing and Singapore only). Limits and modalities are identical
 # to the deepseek lab entry (1M context, 384_000 output, text+image input),
 # so they are inherited and not restated.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.29754
+cache = { read = 0.01488 }
 
-[cost]
-input = 0.29754
-output = 1.19015
-cache_read = 0.01488
+[cost.text.output]
+price = 1.19015
