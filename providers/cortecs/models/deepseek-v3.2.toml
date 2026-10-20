@@ -1,3 +1,5 @@
+# Effort: reasoning_effort = low|medium|high, the Cortecs-level control it translates per routed backend (arkane); no
+# toggle or max is documented for every route (Entrim alone documents low|high|max and thinking off). https://docs.cortecs.ai/routing/reasoning
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: automatic prefix caching on every routed provider (arkane). https://docs.cortecs.ai/routing/prompt-caching
 schema = 2
