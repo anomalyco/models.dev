@@ -135,6 +135,7 @@ async function generateProviders(
         cause: { providerPath },
       });
     }
+    let v2OnlyCount = 0;
     for await (const modelPath of new Bun.Glob("**/*.toml").scan({
       cwd: modelsPath,
       absolute: true,
@@ -148,7 +149,10 @@ async function generateProviders(
       }).then((mod) => mod.default);
       raw.id = modelID;
       // Models marked `v2_only = true` are only published in the v2 API.
-      if (raw.v2_only === true) continue;
+      if (raw.v2_only === true) {
+        v2OnlyCount++;
+        continue;
+      }
       const toml = modelV2ToV1(raw, { modelPath }, provider.data.npm);
       if (toml.base_model !== undefined) {
         const baseModel = BaseModel.safeParse(toml);
@@ -177,6 +181,8 @@ async function generateProviders(
       provider.data.models[modelID] = normalizeModelCost(model.data);
     }
     if (Object.keys(provider.data.models).length === 0) {
+      // A provider that serves only v2_only models is left out of v1.
+      if (v2OnlyCount > 0) continue;
       throw new Error(`Provider "${providerID}" has no models`, {
         cause: { providerPath },
       });

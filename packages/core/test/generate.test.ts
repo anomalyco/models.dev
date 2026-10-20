@@ -45,6 +45,51 @@ describe("catalog generation", () => {
     });
   });
 
+  test("leaves providers with only v2_only models out of v1", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/decider/provider.toml", providerToml("Decider"));
+      await write(
+        root,
+        "providers/decider/models/decide.toml",
+        `schema = 2
+v2_only = true
+type = "decision"
+name = "Decide"
+description = "Example decision model that only the v2 catalog publishes"
+open_weights = true
+release_date = "2026-01-02"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 0
+`,
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.decider).toBeUndefined();
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(Object.keys(providersV2.decider?.models ?? {})).toEqual(["decide"]);
+    });
+  });
+
   test("base_model publishes canonical identity with the provider model", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
