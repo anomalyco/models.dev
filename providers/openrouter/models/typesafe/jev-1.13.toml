@@ -3,6 +3,9 @@ schema = 2
 base_model = "typesafe/jev-latest"
 name = "Jev 1.13"
 
+[capabilities]
+structured_output = true
+
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]

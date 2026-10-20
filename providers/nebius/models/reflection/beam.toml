@@ -17,6 +17,7 @@
 # Limits are inherited from the lab entry (1_048_576 context, matching models_info
 # max_model_len; 131_072 output).
 base_model = "reflection/beam-1.0-501b-a23b"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

@@ -4,6 +4,9 @@ base_model = "typesafe/jev-1.14.0"
 name = "Jev 1.14.0"
 description = "Jev 1.14.0 is TypeSafe AI’s System One evaluation model for fast, structured decisions in software. It evaluates shared state against typed questions and returns choices, scores, and boolean probabilities, supporting classification, routing, rubric-based assessment, and automated verification. Multiple questions can be evaluated in parallel within a single request."
 
+[capabilities]
+structured_output = true
+
 [modalities]
 input = ["text", "image/png", "image/jpeg"]
 output = ["text"]

@@ -2,6 +2,7 @@
 # Interleaved: reasoning_content must be sent back on every prior assistant message.
 # Source: https://developers.reflection.ai/reasoning
 base_model = "reflection/beam-1.0-501b-a23b"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"

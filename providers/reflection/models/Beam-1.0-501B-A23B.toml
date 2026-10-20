@@ -8,6 +8,7 @@
 # Cost: Beam is currently free on the Reflection API; usage reports cached prompt tokens,
 #   so cache_read is set too.
 base_model = "reflection/beam-1.0-501b-a23b"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
