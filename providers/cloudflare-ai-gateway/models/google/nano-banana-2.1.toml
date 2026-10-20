@@ -1,0 +1,28 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image fields (the lab's MIME types) and output_format enum, else the lab's outputs. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+schema = 2
+v2_only = true
+base_model = "google/gemini-nano-banana-2.1"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["image/jpeg", "image/png"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5
+reasoning = 7.5
+
+[cost.image.input]
+price = 1.5
+
+[cost.image.output]
+price = 30

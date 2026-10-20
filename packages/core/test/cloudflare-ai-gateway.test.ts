@@ -737,7 +737,7 @@ test("refuses a symlinked metadata file", async () => {
   }
 });
 
-test("syncs speech and transcription tasks as media sources and leaves other tasks out", async () => {
+test("syncs speech, transcription, image and video tasks as media sources and leaves other tasks out", async () => {
   const originalFetch = globalThis.fetch;
   const originalToken = process.env.CLOUDFLARE_API_TOKEN;
   const originalAccount = process.env.CLOUDFLARE_ACCOUNT_ID;
@@ -763,6 +763,7 @@ test("syncs speech and transcription tasks as media sources and leaves other tas
       "openai/gpt-4.1",
       "openai/tts-1",
       "openai/gpt-4o-transcribe",
+      "openai/gpt-image-2",
     ]);
     expect(warn.mock.calls.map(([message]) => message)).toContain(
       "warning: unknown Cloudflare AI Gateway catalog task: Text-to-Hologram",
@@ -922,6 +923,118 @@ test("writes media models as v2-only files and a second sync is a no-op", async 
   } finally {
     await rm(providerDir, { recursive: true, force: true });
   }
+});
+
+test("turns off tools and reasoning controls the /ai/run image route doesn't take", () => {
+  const { doc } = buildCloudflareAiGatewayMediaModel(
+    { model_id: "google/nano-banana-2-lite", task: "Text-to-Image", provider_details: providerDetails({ input_tokens: 0.25, output_tokens: 30 }) },
+    { properties: { prompt: {}, image_input: {}, output_format: { enum: ["jpg", "png"] } } },
+    { base_model: "google/gemini-3.1-flash-lite-image", output_tokens: "image" },
+  );
+  expect(doc.capabilities).toEqual({ tools: { supported: false }, reasoning: { supported: true } });
+  expect(doc.cost).toEqual({ text: { input: { price: 0.25 } }, image: { output: { price: 30 } } });
+});
+
+test("maps image pricing patterns to typed v2 costs", () => {
+  expect(mediaCost({ output_image_count: 0.04, input_image_count: 0.01 }, "image")).toEqual({
+    cost: { image: { input: { unit: "image", price: 0.01 }, output: { unit: "image", price: 0.04 } } },
+  });
+  // Size prices become resolution overrides, spelled as the request schema spells them.
+  expect(mediaCost(
+    { output_image_count: 0.03, output_size_1k: 0.03, output_size_2k: 0.06 },
+    "image",
+    undefined,
+    { properties: { resolution: { enum: ["1K", "2K"] } } },
+  )).toEqual({
+    cost: { image: { output: { unit: "image", price: 0.03, overrides: [{ when: { resolution: { equals: "2K" } }, price: 0.06 }] } } },
+  });
+  expect(mediaCost({ first_output_megapixel: 0.05, subsequent_output_megapixel: 0.05, input_megapixel: 0.05 }, "image")).toEqual({
+    cost: { image: { input: { unit: "megapixel", price: 0.05 }, output: { unit: "megapixel", price: 0.05 } } },
+  });
+  // A first megapixel priced apart from the rest has no unit.
+  expect(mediaCost({ first_output_megapixel: 0.07, subsequent_output_megapixel: 0.03, input_megapixel: 0.03 }, "image")).toEqual({
+    unpriced: ["first_output_megapixel", "subsequent_output_megapixel"],
+  });
+  expect(mediaCost({ mp_1_4: 0.005, mp_5_8: 0.01, mp_9_16: 0.02 }, "image")).toEqual({
+    cost: {
+      image: {
+        output: {
+          unit: "image",
+          price: 0.005,
+          overrides: [{ when: { megapixels: { gte: 5 } }, price: 0.01 }, { when: { megapixels: { gte: 9 } }, price: 0.02 }],
+        },
+      },
+    },
+  });
+  // A bare output_tokens price on an image model needs curation to say which modality it bills.
+  expect(mediaCost({ input_tokens: 0.3, output_tokens: 30 }, "image")).toEqual({ unpriced: ["output_tokens"] });
+  expect(mediaCost({ input_tokens: 0.3, output_tokens: 30 }, "image", "image")).toEqual({
+    cost: { text: { input: { price: 0.3 } }, image: { output: { price: 30 } } },
+  });
+});
+
+test("maps video pricing patterns to per-second costs with overrides", () => {
+  expect(mediaCost({ default: 0.4, "720p": 0.2, "720p_audio": 0.4, "4k_audio": 0.6 }, "video")).toEqual({
+    cost: {
+      video: {
+        output: {
+          unit: "second",
+          price: 0.4,
+          overrides: [
+            { when: { all: [{ resolution: { equals: "720p" } }, { generate_audio: { equals: false } }] }, price: 0.2 },
+            { when: { all: [{ resolution: { equals: "4k" } }, { generate_audio: { equals: true } }] }, price: 0.6 },
+          ],
+        },
+      },
+    },
+  });
+  // Clip prices for fixed lengths become per-second prices for that length; input video and
+  // draft mode are conditions too.
+  expect(mediaCost(
+    { default: 0.047, "768p_6s": 0.28, "720p_video_in": 0.372, "720p_non_video_in": 0.15, "720p_draft": 0.005 },
+    "video",
+    undefined,
+    { properties: { resolution: { enum: ["768P", "720p"] } } },
+  ).cost?.video?.output?.overrides).toEqual([
+    { when: { all: [{ resolution: { equals: "768P" } }, { duration: { equals: 6 } }] }, price: 0.0466666667 },
+    { when: { all: [{ resolution: { equals: "720p" } }, { input_video: { equals: true } }] }, price: 0.372 },
+    { when: { all: [{ resolution: { equals: "720p" } }, { input_video: { equals: false } }] }, price: 0.15 },
+    { when: { all: [{ resolution: { equals: "720p" } }, { mode: { equals: "draft" } }] }, price: 0.005 },
+  ]);
+  // Overrides at the base price are dropped, unless they undo a broader one.
+  expect(mediaCost({ default: 0.08, "768p": 0.08, "2k": 0.13 }, "video").cost?.video?.output?.overrides).toEqual([
+    { when: { resolution: { equals: "2k" } }, price: 0.13 },
+  ]);
+  expect(mediaCost({ default: 0.4, "720p": 0.2, "720p_audio": 0.4 }, "video").cost?.video?.output?.overrides).toEqual([
+    { when: { all: [{ resolution: { equals: "720p" } }, { generate_audio: { equals: false } }] }, price: 0.2 },
+  ]);
+  expect(mediaCost({ default: 0.05, "480p": 0.05 }, "video")).toEqual({ cost: { video: { output: { unit: "second", price: 0.05 } } } });
+  // Without a per-second base, or with keys of unknown unit, there's no cost.
+  expect(mediaCost({ hd: 0.17, fhd: 0.29 }, "video")).toEqual({ unpriced: ["hd", "fhd"] });
+  expect(mediaCost({ "720p": 0.1 }, "video")).toEqual({ unpriced: ["720p"] });
+  expect(mediaCost({ units: 0.12 }, "video")).toEqual({ unpriced: ["units"] });
+  expect(mediaCost({ precise: 0.07, creative: 0.1 }, "video")).toEqual({ unpriced: ["precise", "creative"] });
+});
+
+test("reads image and video route modalities from the request schema", () => {
+  const lab = {
+    modalities: {
+      input: ["text", "image/jpeg", "image/png", "video/mp4", "audio/wav"],
+      output: ["text", "image/png", "image/jpeg"],
+    },
+  };
+  expect(routeModalities("image", {
+    properties: { prompt: {}, image_input: {}, output_format: { enum: ["jpg", "png", "webp"] } },
+  }, lab)).toEqual({ input: ["text", "image/jpeg", "image/png"], output: ["image/jpeg", "image/png", "image/webp"] });
+  // No format enum: the lab's image outputs, without its text output.
+  expect(routeModalities("image", { properties: { prompt: {} } }, lab)).toEqual({ input: ["text"], output: ["image/png", "image/jpeg"] });
+  expect(routeModalities("video", {
+    properties: { prompt: {}, reference_video: {}, reference_audio: {}, output_format: { enum: ["mp4", "mov"] } },
+  }, lab)).toEqual({ input: ["text", "video/mp4", "audio/wav"], output: ["video/mp4", "video/quicktime"] });
+  expect(() => routeModalities("video", { properties: { prompt: {}, video: {} } }, { modalities: { input: ["text"], output: ["video/mp4"] } }))
+    .toThrow("the route takes video input but the lab lists no video MIME types");
+  // Inputs carried in a content-parts array aren't read; the lab's modalities apply.
+  expect(routeModalities("video", { properties: { content: {}, duration: {} } }, lab)).toBeUndefined();
 });
 
 function testSyncProvider(modelsDir: string, id: string) {

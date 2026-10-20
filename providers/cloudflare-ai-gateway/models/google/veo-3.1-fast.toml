@@ -1,0 +1,37 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image/video/audio fields (the lab's MIME types) and output_format enum, else the lab's video outputs. Prices: catalog provider_details per second of output video, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+schema = 2
+v2_only = true
+base_model = "google/veo-3.1-fast-generate-preview"
+name = "Veo 3.1 Fast"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+
+[cost.video.output]
+unit = "second"
+price = 0.08
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "1080p" } }, { generate_audio = { equals = false } }] }
+price = 0.1
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "4k" } }, { generate_audio = { equals = false } }] }
+price = 0.25
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "720p" } }, { generate_audio = { equals = true } }] }
+price = 0.1
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "1080p" } }, { generate_audio = { equals = true } }] }
+price = 0.12
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "4k" } }, { generate_audio = { equals = true } }] }
+price = 0.3

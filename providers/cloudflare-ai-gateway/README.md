@@ -40,25 +40,36 @@ consumers route to the Messages/Responses endpoint rather than the generic compa
 The generator emits override-only `base_model` stubs (see the repo `AGENTS.md`): the lab
 metadata lives under `models/<lab>/`, and each provider file only records real deltas.
 
-### Speech and transcription models
+### Speech, transcription, image and video models
 
-`Text-to-Speech` and `Automatic Speech Recognition` catalog rows are written as complete
+`Text-to-Speech`, `Automatic Speech Recognition`, `Text-to-Image`, `Image-to-Image`,
+`Text-to-Video`, `Image-to-Video` and `video-to-video` catalog rows are written as complete
 v2-only files (`schema = 2`, `v2_only = true`), so they stay out of the v1 API:
 
-- `base_model` points at a lab file of the same type (`speech` / `transcription`). Ids that
+- `base_model` points at a lab file of the same type (`speech`, `transcription`, `image`,
+  `video`). Ids that
   match a lab file without punctuation (`eleven-v3` → `eleven_v3`) resolve on their own; other
   aliases are mapped in `curation.toml`. A lab of another type fails the sync.
 - `[api.workers-ai-run]` is the REST API's universal endpoint: `POST {base_url}/run` with
   `{ model, input }`, where `input` follows the model's catalog schema.
-- `[modalities]` comes from the schema: a TTS model's output format enum, or the formats an
-  STT model's file field documents. It is written only when it differs from the lab.
+- `[modalities]` comes from the schema: a TTS model's output format enum, the formats an STT
+  model's file field documents, or an image/video model's prompt, image, video and audio
+  fields (with the lab's MIME types) and `output_format` enum. It is written only when it
+  differs from the lab.
+- `[capabilities]` turns tools off and keeps reasoning without controls when the lab has
+  them, since the `/ai/run` schemas take neither.
 - `[cost]` maps `provider_details` pricing to v2 units: `input_characters` → per 1M
   characters, `input_audio_minutes` → per minute (feature surcharges and streaming become
-  conditional overrides), `*_tokens` → per 1M tokens by modality. If any pricing key has no
-  mapping, the file gets no `[cost]` and its header lists the keys.
+  conditional overrides), `*_tokens` → per 1M tokens by modality, `output_image_count` /
+  `input_image_count` → per image (`output_size_*` and `mp_*` bands become resolution and
+  megapixel overrides), equal first/extra megapixel prices → per megapixel, and video
+  `default` → per second of output, with resolution, audio, clip-length, input-video and
+  draft keys as overrides. If any pricing key has no mapping, the file gets no `[cost]` and
+  its header lists the keys.
 - `name` is written only for aliases whose catalog name is more than the lab name with a vendor prefix.
 
-Image, video, music, document and realtime (`websocket`) tasks aren't synced.
+Music, document and realtime (`websocket`) tasks aren't synced, and image/video ids without
+a lab file are in `skip` until one is added.
 
 ### `--check`
 
