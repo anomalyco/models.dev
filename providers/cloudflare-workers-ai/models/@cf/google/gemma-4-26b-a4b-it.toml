@@ -2,20 +2,23 @@
 # Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
 # Per-model Search config normalizes low/medium to high; these are aliases,
 # not distinct levels despite the generic sync-input.json effort enum.
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.05
 
 [limit]
 context = 256_000
 output = 16_384
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.3

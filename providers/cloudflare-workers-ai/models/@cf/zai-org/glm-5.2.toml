@@ -2,19 +2,21 @@
 # Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
 # Context and output limits verified against Cloudflare Workers AI's OpenAI-compatible endpoint.
 # https://developers.cloudflare.com/workers-ai/models/glm-5.2/
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 name = "Glm 5.2"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 262_144
 output = 256_000
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

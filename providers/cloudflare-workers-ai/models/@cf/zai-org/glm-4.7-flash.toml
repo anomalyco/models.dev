@@ -3,19 +3,22 @@
 # Workers AI's per-model config exposes only the binary thinking toggle;
 # the generic sync-input.json low/medium/high enum is not an effort selector here.
 # Creator template: https://huggingface.co/zai-org/GLM-4.7-Flash/blob/main/chat_template.jinja
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.0605
-output = 0.4
 
 [limit]
 context = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.0605
+
+[cost.text.output]
+price = 0.4

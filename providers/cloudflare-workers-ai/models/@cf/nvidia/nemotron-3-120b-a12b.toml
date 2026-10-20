@@ -1,23 +1,23 @@
 # Native `/ai/run` accepts `reasoning_effort = low|medium|high` and
 # `chat_template_kwargs.enable_thinking = true|false`; no budget is documented.
 # https://developers.cloudflare.com/workers-ai/models/nemotron-3-120b-a12b/sync-input.json (accessed 2026-06-25)
-
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super 120B"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 structured_output = true
-interleaved = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.5
-output = 1.5
 
 [limit]
 context = 256_000
 output = 256_000
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

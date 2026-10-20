@@ -1,7 +1,12 @@
+schema = 2
 base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
 name = "Gemma Sea Lion V4 27B It"
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 0.351
-output = 0.555
+[cost.text.input]
+price = 0.351
+
+[cost.text.output]
+price = 0.555

@@ -1,22 +1,25 @@
+schema = 2
 name = "Clairic"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2026-10-14"
-last_updated = "2026-10-14"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = true
+release_date = "2026-10-14"
 
-[cost]
-input = 0.1
-output = 0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0

@@ -2,23 +2,26 @@
 # Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
 # Context/output capped to Cloudflare Workers AI context window (1,048,576).
 # Search reports 1,310,720, exceeding AI Gateway max_completion_tokens.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 name = "Glm 5.3 Flash"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

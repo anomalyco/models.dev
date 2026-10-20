@@ -2,24 +2,26 @@
 # Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
 # Per-model Search config normalizes low/medium to high; these are aliases,
 # not distinct levels despite the generic sync-input.json effort enum.
-
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.16
 
 [limit]
 output = 256_000
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4
