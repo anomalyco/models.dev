@@ -16,7 +16,7 @@ name = "Claude Haiku 5.5 (US)"
 [capabilities]
 tools = { supported = true, updates = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-structured_output = false
+structured_output = true
 system_updates = true
 effort_updates = false
 cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }

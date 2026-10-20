@@ -12,6 +12,7 @@ base_model = "anthropic/claude-opus-4-7"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 system_updates = false
 effort_updates = false
 cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }

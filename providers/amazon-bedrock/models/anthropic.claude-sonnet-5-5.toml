@@ -3,8 +3,8 @@
 # Cache read $0.10/MTok (50% reduction effective 2026-10-07): https://aws.amazon.com/bedrock/pricing/
 # https://www.anthropic.com/pricing and https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching (5% of $2 input)
 # Bedrock runtime serves on-demand traffic through the global inference profile (global.anthropic.claude-sonnet-5-5).
-# Live global Sonnet 5.5 probes, 2026-09-29: outputConfig.textFormat rejected (output_config.format: Extra inputs are not permitted);
-# thinking.type=disabled rejected in favor of between_tools, so there is no off toggle.
+# Live global Sonnet 5.5 probes: outputConfig.textFormat accepted on 2026-10-20 (rejected on 2026-09-29);
+# thinking.type=disabled rejected in favor of between_tools (2026-09-29), so there is no off toggle.
 # Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel).
 # v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 # Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html);
@@ -17,7 +17,7 @@ base_model = "anthropic/claude-sonnet-5-5"
 [capabilities]
 tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-structured_output = false
+structured_output = true
 system_updates = true
 effort_updates = false
 cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }

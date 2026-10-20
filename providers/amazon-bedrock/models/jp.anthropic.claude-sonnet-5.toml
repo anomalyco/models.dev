@@ -2,7 +2,7 @@
 # Pricing: Tokyo Standard dimensions, https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/ap-northeast-1/index.json
 # https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
 # API: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html
-# Live US/global Sonnet 5 schema probes, 2026-09-09: outputConfig.textFormat rejected (output_config.format: Extra inputs are not permitted).
+# Live outputConfig.textFormat probes, 2026-10-20: JSON schema output accepted (rejected on 2026-09-09).
 # Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
 # Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel).
 # v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
@@ -17,7 +17,7 @@ name = "Claude Sonnet 5 (JP)"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-structured_output = false
+structured_output = true
 system_updates = true
 effort_updates = false
 cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
