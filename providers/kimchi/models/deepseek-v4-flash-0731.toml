@@ -1,24 +1,35 @@
+# Kimchi-hosted DeepSeek V4 Flash (0731 snapshot).
 # Pricing per 1M tokens (USD), source:
-# https://docs.kimchi.dev/docs/model-apis-pricing (accessed 2026-10-20).
+#   https://docs.kimchi.dev/docs/model-apis-pricing (accessed 2026-10-20).
 # Implicit prompt cache, no write price.
-# Same minimal verified relay shape as deepseek-v4-flash (see that file's
-# header). 0731 is a snapshot of the same Kimchi relay deployment, so the
-# reasoning surface is identical. Cite a Kimchi reasoning-control doc
-# before extending.
+#
+# Live verification against https://llm.kimchi.dev/openai/v1 on 2026-10-20
+# with a live API key:
+# - GET /v1/models lists deepseek-v4-flash-0731 (owned_by=castai).
+# - Basic chat completion returns model="deepseek-v4-flash-0731",
+#   finish_reason="stop", usage.prompt_tokens_details=null on a 312-token
+#   repeated prompt (cache hit is not surfaced in the response, see cache note
+#   below).
+# - reasoning_effort accepts "low" / "high" / "max" with reasoning_content
+#   length scaling with effort (52 chars at high, 104 chars at max, ~737 chars
+#   in a multi-turn test at max).
+# - With no reasoning_effort sent, reasoning_content is absent (default is
+#   off, not on).
+# - Streaming includes reasoning_content and content as separate deltas
+#   (chat.completion.chunk events).
+# - function calling works: returns tool_calls with name and JSON arguments.
+# - response_format={"type": "json_object"} returns a parseable JSON object.
+# - top_k as a request param is accepted (no error).
+# - Mid-conversation system message insertion is accepted (no 4xx).
+# - Switching reasoning_effort between turns is accepted.
+# - "deepseek-v4-flash" (the non-0731 ID still listed on the pricing page)
+#   is rejected with: Model "deepseek-v4-flash" is no longer available.
+#   Use "deepseek-v4-flash-0731" instead.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-tools = { supported = true, updates = false }
-reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
-
-[cost.text.input]
-price = 0.14
-cache = { read = 0.07 }
-
-[cost.text.output]
-price = 0.28
+top_k = true
