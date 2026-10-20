@@ -1,0 +1,34 @@
+# Source: https://huggingface.co/vllm-sr/d3-mini (model card, config.json, decision_config.json; accessed
+# 2026-10-21). Decision 3.0 from vLLM Semantic Router: a fine-tune of Qwen3.5-4B (4.54B parameters with a
+# 0.33B vision encoder) that returns a probability per option and generates no text, so output is 0.
+# Context: decision_config.json sets max_length = null, so the vLLM-SR runtime serves max_position_embeddings,
+# 262,144 (vllm-project/semantic-router src/model-runtime/vllm_srun/families/decision3/package.py).
+# Tag v3.0.0 was pushed on 2026-10-10 and the current weights, v3.1.0, on 2026-10-11.
+schema = 2
+v2_only = true
+type = "decision"
+name = "d3-mini"
+description = "vLLM Semantic Router 4B decision model that answers typed choice, yes/no and score questions about text, images or video with probabilities"
+open_weights = true
+release_date = "2026-10-10"
+last_updated = "2026-10-11"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/vllm-sr/d3-mini"
