@@ -1,13 +1,15 @@
 # mistral-medium-latest is Mistral's alias for Mistral Medium 3.5 (mistral-medium-2604).
 # Medium 3.1 (mistral-medium-2508) was deprecated 2026-05-22, retiring 2026-08-31.
 # Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
+schema = 2
 base_model = "mistral/mistral-medium-latest"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 
-[cost]
-input = 1.5
-output = 7.5
-cache_read = 0.15
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

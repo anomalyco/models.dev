@@ -2,18 +2,20 @@
 # Effort: reasoning_effort = none|high|max. Verified live 2026-09-17: none
 # disables thinking; low|medium map to high, xhigh maps to max (GLM-5.2 native
 # mapping). Model reasons by default (default effort: max).
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.14
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

@@ -6,18 +6,20 @@
 # https://github.com/BerriAI/litellm/pull/37110 (fallback source).
 # Pricing: $1.4 input / $0.14 cached / $4.4 output per MTok per Mistral docs.
 # Effort: reasoning_effort = none|high|max, same native mapping as the zai-glm-5-2 peer.
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.14
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

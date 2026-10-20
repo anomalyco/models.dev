@@ -7,14 +7,16 @@
 # max_tokens above 262144 is rejected.
 # Effort verified live 2026-10-06: reasoning_effort = none|high; minimal, low,
 # medium, xhigh and max are rejected. Omitting it behaves like none.
+schema = 2
 base_model = "mistral/mistral-large-4"
 status = "beta"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 
-[cost]
-input = 0.68
-output = 2.09
-cache_read = 0.07
+[cost.text.input]
+price = 0.68
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2.09

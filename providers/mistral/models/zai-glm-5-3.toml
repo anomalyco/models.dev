@@ -1,17 +1,19 @@
 # Source: https://docs.mistral.ai/models/zai-glm-5-3 (accessed 2026-09-17)
 # Effort: reasoning_effort = low|high|max; GLM-5.3 native effective levels
 # (unlike 5.2, low is a real level), served unmodified by Mistral.
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.14
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4
