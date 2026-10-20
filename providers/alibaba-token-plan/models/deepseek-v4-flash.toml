@@ -1,3 +1,7 @@
+# Removed from Token Plan supported-model tables and Team GET /models;
+# rechecked 2026-10-20. Preserve this historical entry, not a current selection.
+status = "deprecated"
+
 base_model = "deepseek/deepseek-v4-flash"
 # Reasoning HTTP format (accessed 2026-06-25):
 # This model toggles with `enable_thinking`: true or false. Chat Completions
@@ -17,3 +21,4 @@ input = 0
 output = 0
 cache_read = 0
 cache_write = 0
+

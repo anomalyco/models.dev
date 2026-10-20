@@ -2,9 +2,9 @@
 # Toggle: enable_thinking = true|false. Chat Completions `reasoning_effort`
 # accepts low, high (default), and max; medium and xhigh map to high.
 # Reasoning streams on `reasoning_content`.
-# Model availability: listed in the Token Plan subscription console for the
-# China (Beijing) endpoint. POST /chat/completions accepts this id, but
-# GET /models does not return it (checked 2026-10-19).
+# Model availability: Token Plan China Team GET /models lists this id as of
+# 2026-10-20. Previously callable but unlisted on 2026-10-19.
+# China inference capability claims below are unchanged from the original row.
 # Sources:
 # https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
 # https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
@@ -20,3 +20,4 @@ input = 0
 output = 0
 cache_read = 0
 cache_write = 0
+
