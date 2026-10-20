@@ -88,7 +88,7 @@ import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
-import { buildVercelMediaModel, buildVercelModel, vercel, vercelMediaCost } from "../src/sync/providers/vercel.js";
+import { buildVercelMediaModel, buildVercelModel, realtimePriceNote, vercel, vercelMediaCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
@@ -5454,10 +5454,21 @@ test("Vercel media prices map to CostV2 units with conditional overrides", () =>
     ],
   });
 
-  // Session and per-message prices have no CostV2 field: no cost at all, never a partial one.
+  // Realtime sessions billed by duration: audio input per second. The per-message fee
+  // has no CostV2 unit and is left out (the file's leading comment says so); web
+  // search stays a tool fee.
   expect(cost("realtime", { realtime_client_message_cost: "0.004", realtime_session_duration_cost_per_second: "0.000834" }))
-    .toEqual({ issue: "no CostV2 field for realtime_client_message_cost, realtime_session_duration_cost_per_second" });
-  expect(cost("realtime", { web_search: "10", realtime_session_duration_cost_per_second: "0.0008334" }).cost).toBeUndefined();
+    .toEqual({ cost: { audio: { input: { unit: "second", price: 0.000834 } } } });
+  expect(cost("realtime", { web_search: "10", realtime_session_duration_cost_per_second: "0.0008334" }))
+    .toEqual({ cost: { audio: { input: { unit: "second", price: 0.0008334 } } } });
+  expect(cost("realtime", { audio_input_token_cost: "0.000032", realtime_session_duration_cost_per_second: "0.0008" }).issue)
+    .toBe("both audio_input_token_cost and realtime_session_duration_cost_per_second");
+  const voice = (pricing: Record<string, unknown>) => realtimePriceNote(vercelMedia({ id: "example/voice", type: "realtime", pricing }));
+  expect(voice({ realtime_client_message_cost: "0.004", realtime_session_duration_cost_per_second: "0.000834" }))
+    .toBe("# Price: session duration billed as audio input per second; $0.004 per client message not represented\n");
+  expect(voice({ realtime_session_duration_cost_per_second: "0.0008334" }))
+    .toBe("# Price: session duration billed as audio input per second\n");
+  expect(voice({ input: "0.000004" })).toBe("");
 });
 
 test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {

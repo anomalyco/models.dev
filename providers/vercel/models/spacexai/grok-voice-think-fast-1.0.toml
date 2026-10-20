@@ -1,5 +1,6 @@
 # Synced from https://ai-gateway.vercel.sh/v1/models (type realtime)
 # https://vercel.com/docs/ai-gateway/modalities/realtime
+# Price: session duration billed as audio input per second; $0.004 per client message not represented
 schema = 2
 type = "realtime"
 name = "Grok Voice Think Fast 1.0"
@@ -23,3 +24,7 @@ output = 0
 
 [api.realtime]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.audio.input]
+unit = "second"
+price = 0.000834

@@ -101,7 +101,7 @@ export const vercel = {
       return {
         id: model.id,
         v2: buildVercelMediaModel(model, mediaType, context.v2?.(model.id), context.authored(model.id)),
-        header: MEDIA_HEADERS[mediaType],
+        header: MEDIA_HEADERS[mediaType] + realtimePriceNote(model),
       };
     }
     const existing = context.existing(model.id);
@@ -618,6 +618,17 @@ function mediaLimit(
   };
 }
 
+// The caveat for duration-priced realtime sessions, written to new files' leading
+// comment (existing comments are kept on resync).
+export function realtimePriceNote(model: VercelModel) {
+  const pricing = (model.pricing ?? {}) as Record<string, unknown>;
+  if (pricing.realtime_session_duration_cost_per_second === undefined) return "";
+  const message = pricing.realtime_client_message_cost;
+  return message === undefined
+    ? "# Price: session duration billed as audio input per second\n"
+    : `# Price: session duration billed as audio input per second; $${Number(message)} per client message not represented\n`;
+}
+
 function routeCapabilities(model: VercelModel, type: MediaType): Doc {
   if (type === "realtime") {
     const temperature = (model as { temperature?: unknown }).temperature;
@@ -808,6 +819,9 @@ function stableValue(value: unknown): string {
 // Per-call tool fees (USD per 1,000 calls). Chat routes list them too and no
 // model price carries them; they aren't a price of the model's input or output.
 const TOOL_FEES = new Set(["web_search", "maps_search"]);
+// A flat fee per client message on realtime sessions; CostV2 has no per-message
+// unit, so it is left out and the file's leading comment says so.
+const UNPRICED_FIELDS = new Set(["realtime_client_message_cost"]);
 const PRICE_FIELDS = new Set([
   "input",
   "output",
@@ -817,6 +831,7 @@ const PRICE_FIELDS = new Set([
   "audio_output_token_cost",
   "speech_input_character_cost",
   "transcription_duration_cost_per_second",
+  "realtime_session_duration_cost_per_second",
   "image",
   "image_dimension_quality_pricing",
   "video_duration_pricing",
@@ -849,7 +864,7 @@ class Unrepresentable extends Error {}
  */
 export function vercelMediaCost(model: VercelModel, type: MediaType): { cost?: Doc; issue?: string } {
   const pricing = (model.pricing ?? {}) as Record<string, unknown>;
-  const fields = Object.keys(pricing).filter((key) => !TOOL_FEES.has(key));
+  const fields = Object.keys(pricing).filter((key) => !TOOL_FEES.has(key) && !UNPRICED_FIELDS.has(key));
   if (fields.length === 0) return {};
   const unknown = fields.filter((key) => !PRICE_FIELDS.has(key));
   if (unknown.length > 0) return { issue: `no CostV2 field for ${unknown.join(", ")}` };
@@ -914,6 +929,15 @@ function mediaCost(pricing: Record<string, unknown>, type: MediaType): Doc | und
 
   const audioInput = value("audio_input_token_cost");
   if (audioInput !== undefined) set("audio", "input", { price: perMillion(audioInput) });
+  // Realtime sessions billed by duration: the session second is priced as a
+  // second of audio input.
+  const session = value("realtime_session_duration_cost_per_second");
+  if (session !== undefined) {
+    if (audioInput !== undefined) {
+      throw new Unrepresentable("both audio_input_token_cost and realtime_session_duration_cost_per_second");
+    }
+    set("audio", "input", { unit: "second", price: roundPrice(session) });
+  }
   const audioOutput = value("audio_output_token_cost");
   if (audioOutput !== undefined) set("audio", "output", { price: perMillion(audioOutput) });
 
