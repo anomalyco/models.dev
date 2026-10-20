@@ -1,17 +1,18 @@
 # Off: reasoning_effort = none; effort: low|high|max (Fireworks route).
 # Source: https://docs.fireworks.ai/api-reference/post-chatcompletions
-
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.145
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.145 }
+
+[cost.text.output]
+price = 3.48

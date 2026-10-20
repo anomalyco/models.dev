@@ -1,18 +1,19 @@
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
 
 [limit]
 context = 200_000
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

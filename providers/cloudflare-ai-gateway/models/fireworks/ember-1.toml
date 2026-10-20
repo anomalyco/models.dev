@@ -1,18 +1,20 @@
 # Off: reasoning_effort = none; effort: low|high|max (Fireworks route; medium -> high, xhigh -> max).
 # Sources: https://docs.fireworks.ai/api-reference/post-chatcompletions ; https://docs.fireworks.ai/guides/reasoning
+schema = 2
 base_model = "fireworks/ember-1"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 
 [limit]
 context = 1_040_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

@@ -1,16 +1,18 @@
+schema = 2
 base_model = "openai/o3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 2
-output = 8
-cache_read = 0.5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 200_000
 
-[provider]
-npm = "@ai-sdk/openai"
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8

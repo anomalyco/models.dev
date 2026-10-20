@@ -1,19 +1,21 @@
 # Always reasons; effort: reasoning_effort = low|medium|high|xhigh|max (none/minimal rejected).
 # Interleaved: reasoning_content must be sent back on every prior assistant message.
 # Source: https://developers.reflection.ai/reasoning
+schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

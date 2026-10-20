@@ -1,15 +1,17 @@
 # Effort: reasoning_effort = low|medium|high|xhigh (default xhigh; reasoning cannot be disabled, none|max rejected; POST /ai/v1/chat/completions).
 # Sources: https://dev.meta.ai/docs/muse-spark-open/prompting ; https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B ; https://developers.cloudflare.com/ai/models/meta/muse-spark-open/
+schema = 2
 base_model = "meta/muse-spark-open"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
 [limit]
 context = 1_040_000
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

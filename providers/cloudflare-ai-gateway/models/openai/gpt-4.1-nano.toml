@@ -1,12 +1,15 @@
+schema = 2
 base_model = "openai/gpt-4.1-nano"
-
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.025
 
 [limit]
 context = 1_000_000
 
-[provider]
-npm = "@ai-sdk/openai"
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.4
