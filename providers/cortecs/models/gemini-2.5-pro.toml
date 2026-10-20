@@ -1,4 +1,5 @@
 # Effort: reasoning_effort = low|medium|high; Cortecs converts it to a Gemini thinking budget (https://docs.cortecs.ai/routing/reasoning, "Google Gemini (2.5 and later)").
+# Budget: a custom numeric thinking budget is accepted ("Custom Budget (Gemini)", same page); bounds are Gemini's (providers/google/models).
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: automatic prefix caching on every routed provider (google). https://docs.cortecs.ai/routing/prompt-caching
 # Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
@@ -12,7 +13,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 128, max = 32_768 } }
 cache = { supported = true, implicit = true }
 structured_output = true
 effort_updates = false
