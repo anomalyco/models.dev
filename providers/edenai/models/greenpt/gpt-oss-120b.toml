@@ -1,14 +1,16 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Greenpt)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.2243
-output = 0.78505
 
 [limit]
 context = 128_000
+
+[cost.text.input]
+price = 0.2243
+
+[cost.text.output]
+price = 0.78505

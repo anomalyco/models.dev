@@ -1,18 +1,20 @@
+schema = 2
 base_model = "mistral/magistral-medium-latest"
-attachment = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 1.5
-output = 7.5
-cache_read = 0.15
 
 [limit]
 context = 262_144
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

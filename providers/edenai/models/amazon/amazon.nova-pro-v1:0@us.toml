@@ -1,8 +1,13 @@
+schema = 2
 base_model = "amazon/nova-pro"
 name = "Nova Pro (US)"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.8
-output = 3.2
-cache_read = 0.2
+[cost.text.input]
+price = 0.8
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

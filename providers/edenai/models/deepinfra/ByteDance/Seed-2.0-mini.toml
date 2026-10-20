@@ -1,15 +1,18 @@
+schema = 2
 base_model = "bytedance-seed/seed-2.0-mini"
 name = "Seed 2.0 Mini (Deep Infra)"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high"]
-
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.02
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.4

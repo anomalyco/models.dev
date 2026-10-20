@@ -1,14 +1,16 @@
+schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "GPT OSS 20B (Cloudflare)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.2
-output = 0.3
 
 [limit]
 context = 128_000
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.3

@@ -1,12 +1,14 @@
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
-structured_output = true
 name = "DeepSeek V4.1 Flash 1017 (Alibaba)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.015
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

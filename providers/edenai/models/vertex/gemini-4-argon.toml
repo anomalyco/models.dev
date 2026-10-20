@@ -1,15 +1,18 @@
+schema = 2
 base_model = "google/gemini-4-argon"
-structured_output = true
 name = "Gemini 4 Argon (Vertex AI)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 4
-output = 20
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 0.375 }
+
+[cost.text.output]
+price = 20
 reasoning = 20
-cache_read = 0.2
-cache_write = 0.375
-input_audio = 4
+
+[cost.audio.input]
+price = 4

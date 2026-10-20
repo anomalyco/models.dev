@@ -1,10 +1,15 @@
+schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3-Next 80B-A3B Instruct (Deep Infra)"
-structured_output = true
 
-[cost]
-input = 0.09
-output = 1.1
+[capabilities]
+structured_output = true
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 1.1

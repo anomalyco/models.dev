@@ -1,13 +1,16 @@
+schema = 2
 base_model = "google/gemini-3.1-flash-image-preview"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
-
-[cost]
-input = 0.5
-output = 3
 
 [modalities]
 input = ["image", "text"]
+output = ["text", "image"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3

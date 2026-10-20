@@ -1,10 +1,15 @@
+schema = 2
 base_model = "deepseek/deepseek-chat"
-structured_output = true
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.003
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6

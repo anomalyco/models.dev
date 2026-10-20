@@ -1,12 +1,14 @@
+schema = 2
 base_model = "ibm/granite-4.2-8b"
-structured_output = true
 name = "Granite 4.2 8B (Deep Infra)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
 
-[cost]
-input = 0.06
-output = 0.25
-cache_read = 0.015
+[cost.text.input]
+price = 0.06
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25

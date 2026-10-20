@@ -1,10 +1,15 @@
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
 name = "Qwen3 Coder Next (IONOS)"
-structured_output = true
 
-[cost]
-input = 0.168225
-output = 0.8972
+[capabilities]
+structured_output = true
 
 [limit]
 context = 128_000
+
+[cost.text.input]
+price = 0.168225
+
+[cost.text.output]
+price = 0.8972

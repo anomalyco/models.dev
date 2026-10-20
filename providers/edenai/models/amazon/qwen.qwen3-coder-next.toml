@@ -1,10 +1,15 @@
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
 name = "Qwen3 Coder Next (Amazon Bedrock)"
-structured_output = true
 
-[cost]
-input = 0.5
-output = 1.2
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.2

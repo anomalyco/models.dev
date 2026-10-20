@@ -1,12 +1,14 @@
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super 120B A12B (Nebius)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.3 }
 
-[cost]
-input = 0.3
-output = 0.9
-cache_read = 0.3
+[cost.text.output]
+price = 0.9

@@ -1,8 +1,13 @@
+schema = 2
 base_model = "alibaba/qwen-max"
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
 structured_output = true
 
-[cost]
-input = 1.6
-output = 6.4
-cache_read = 0.32
+[cost.text.input]
+price = 1.6
+cache = { read = 0.32 }
+
+[cost.text.output]
+price = 6.4

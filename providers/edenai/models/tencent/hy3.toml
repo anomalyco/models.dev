@@ -1,12 +1,14 @@
+schema = 2
 base_model = "tencent/hy3"
 name = "Hy3 (Tencent)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
+[cost.text.input]
+price = 0.132
+cache = { read = 0.033 }
 
-[cost]
-input = 0.132
-output = 0.528
-cache_read = 0.033
+[cost.text.output]
+price = 0.528

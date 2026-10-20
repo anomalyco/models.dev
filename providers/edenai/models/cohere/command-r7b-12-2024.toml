@@ -1,9 +1,14 @@
+schema = 2
 base_model = "cohere/command-r7b-12-2024"
-structured_output = true
 
-[cost]
-input = 0.0375
-output = 0.15
+[capabilities]
+structured_output = true
 
 [limit]
 context = 132_000
+
+[cost.text.input]
+price = 0.0375
+
+[cost.text.output]
+price = 0.15

@@ -1,15 +1,18 @@
+schema = 2
 base_model = "google/gemini-3.7-flash"
-structured_output = true
 name = "Gemini 3.7 Flash (Vertex AI, US)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 1.5
-output = 7.5
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15, write = 0.083333 }
+
+[cost.text.output]
+price = 7.5
 reasoning = 7.5
-cache_read = 0.15
-cache_write = 0.083333
-input_audio = 1.5
+
+[cost.audio.input]
+price = 1.5

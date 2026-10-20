@@ -1,11 +1,13 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
-structured_output = true
 name = "GPT OSS 120B (Deep Infra)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.037
-output = 0.17
+[cost.text.input]
+price = 0.037
+
+[cost.text.output]
+price = 0.17

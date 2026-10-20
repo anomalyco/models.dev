@@ -1,10 +1,15 @@
+schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B-A22B Instruct 2507 (Greenpt)"
-structured_output = true
 
-[cost]
-input = 1.00935
-output = 3.02805
+[capabilities]
+structured_output = true
 
 [limit]
 context = 250_000
+
+[cost.text.input]
+price = 1.00935
+
+[cost.text.output]
+price = 3.02805

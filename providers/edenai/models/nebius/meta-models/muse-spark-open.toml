@@ -1,15 +1,18 @@
+schema = 2
 base_model = "meta/muse-spark-open"
 name = "Muse Spark Open (Nebius)"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 1.25
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 4.25

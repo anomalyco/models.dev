@@ -1,8 +1,13 @@
+schema = 2
 base_model = "nousresearch/hermes-3-llama-3.1-405b"
 name = "Hermes 3 405B Instruct (Deep Infra)"
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
 structured_output = true
 
-[cost]
-input = 1
-output = 1
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 1

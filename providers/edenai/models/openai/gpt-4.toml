@@ -1,9 +1,14 @@
+schema = 2
 base_model = "openai/gpt-4"
-structured_output = true
 
-[cost]
-input = 30
-output = 60
+[capabilities]
+structured_output = true
 
 [limit]
 context = 8_191
+
+[cost.text.input]
+price = 30
+
+[cost.text.output]
+price = 60

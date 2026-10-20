@@ -1,15 +1,18 @@
+schema = 2
 base_model = "meta/muse-spark-open"
-structured_output = true
 name = "Muse Spark Open (Fireworks AI)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.25
-output = 4.25
-cache_read = 0.15
-
 [modalities]
-input = ["text", "image", "video", "pdf", "audio"]
+input = ["text", "image", "video", "application/pdf", "audio"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

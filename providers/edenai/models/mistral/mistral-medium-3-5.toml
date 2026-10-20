@@ -1,11 +1,13 @@
+schema = 2
 base_model = "mistral/mistral-medium-3-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
 
-[cost]
-input = 1.5
-output = 7.5
-cache_read = 0.15
+[cost.text.output]
+price = 7.5

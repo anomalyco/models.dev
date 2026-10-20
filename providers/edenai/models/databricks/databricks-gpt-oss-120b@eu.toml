@@ -1,13 +1,14 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Databricks, EU)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.15001
+cache = { read = 0.015001, write = 0.15001 }
 
-[cost]
-input = 0.15001
-output = 0.59997
-cache_read = 0.015001
-cache_write = 0.15001
+[cost.text.output]
+price = 0.59997

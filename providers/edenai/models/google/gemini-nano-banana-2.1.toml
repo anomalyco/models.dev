@@ -1,17 +1,20 @@
+schema = 2
 base_model = "google/gemini-nano-banana-2.1"
-tool_call = true
+
+[modalities]
+input = ["image", "text"]
+output = ["text", "image"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "medium", "high"]
-
-[cost]
-input = 1.5
-output = 7.5
 
 [limit]
 context = 65_536
 
-[modalities]
-input = ["image", "text"]
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

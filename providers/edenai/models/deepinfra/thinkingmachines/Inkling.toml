@@ -1,15 +1,17 @@
+schema = 2
 base_model = "thinkingmachines/inkling"
 name = "Inkling (Deep Infra)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "max"]
-
-[cost]
-input = 0.95
-output = 4.05
-cache_read = 0.16
 
 [limit]
 context = 524_288
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4.05

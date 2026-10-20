@@ -1,12 +1,17 @@
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 name = "GLM-4.7-Flash (Deep Infra)"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.06
-output = 0.4
-cache_read = 0.01
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 202_752
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4

@@ -1,7 +1,12 @@
+schema = 2
 base_model = "mistral/codestral-latest"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.3
-output = 0.9
-cache_read = 0.03
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.9

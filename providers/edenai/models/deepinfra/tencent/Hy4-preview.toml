@@ -1,15 +1,17 @@
+schema = 2
 base_model = "tencent/hy4-preview"
 name = "Hy4 preview (Deep Infra)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
-
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

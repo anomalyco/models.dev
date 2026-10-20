@@ -1,11 +1,16 @@
+schema = 2
 base_model = "zhipuai/glm-5-turbo"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 1.2
-output = 4
-cache_read = 0.24
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 202_752
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 4

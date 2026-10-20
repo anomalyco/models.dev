@@ -1,15 +1,17 @@
+schema = 2
 base_model = "openai/o3-mini"
-structured_output = true
-attachment = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.55
 
 [modalities]
-input = ["text", "pdf"]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4

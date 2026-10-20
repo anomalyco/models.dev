@@ -1,9 +1,13 @@
+schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3-Next 80B-A3B Instruct (Databricks)"
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 0.15001
-output = 1.20001
-cache_read = 0.015001
-cache_write = 0.15001
+[cost.text.input]
+price = 0.15001
+cache = { read = 0.015001, write = 0.15001 }
+
+[cost.text.output]
+price = 1.20001

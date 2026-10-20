@@ -1,13 +1,16 @@
+schema = 2
 base_model = "openai/o1-pro"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 150
-output = 600
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 150
+
+[cost.text.output]
+price = 600

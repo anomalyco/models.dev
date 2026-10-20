@@ -1,15 +1,17 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-structured_output = true
 name = "DeepSeek V4 Pro 0813 (Nebius)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 1.32
-output = 3.96
-cache_read = 1.32
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 979_000
+
+[cost.text.input]
+price = 1.32
+cache = { read = 1.32 }
+
+[cost.text.output]
+price = 3.96
