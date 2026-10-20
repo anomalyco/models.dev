@@ -2,19 +2,22 @@
 # Prices are USD per million tokens; lab facts are inherited via base_model.
 # Effort: top-level reasoning_effort = xhigh|high|medium|low.
 # Generic file input is omitted; it does not imply PDF support.
+schema = 2
 base_model = "xai/grok-4.7"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.6
-output = 4.8
 
 [limit]
 output = 450_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.6
+
+[cost.text.output]
+price = 4.8

@@ -2,16 +2,19 @@
 # Prices are USD per million tokens; lab facts are inherited via base_model.
 # Effort: top-level reasoning_effort = max|xhigh|high|medium|low.
 # Generic file input is omitted; it does not imply PDF support.
+schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 2
-output = 10
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 10
