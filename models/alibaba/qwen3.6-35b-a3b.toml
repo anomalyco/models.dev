@@ -1,5 +1,7 @@
 # Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
-# No audio input: Hugging Face lists this model as image-text-to-text, and Model Studio serves it with text, image and video input.
+# No audio input (accessed 2026-10-20): the model card https://huggingface.co/Qwen/Qwen3.6-35B-A3B states "Type: Causal Language Model with Vision Encoder"
+#   (README line 34), its pipeline_tag is image-text-to-text, and its benchmarks cover image and video understanding only (no audio encoder or audio benchmark).
+#   Model Studio documents image and video input for the "qwen3.5 series"/"qwen3.6 series" (https://www.alibabacloud.com/help/en/model-studio/vision, Image limits and Video limits) and no audio input.
 # Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3.6 35B-A3B"
