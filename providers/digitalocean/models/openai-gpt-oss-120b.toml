@@ -3,24 +3,15 @@
 # system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
 # Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
 schema = 2
+base_model = "openai/gpt-oss-120b"
 name = "OpenAI GPT-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-open_weights = true
-knowledge = "2024-06"
-release_date = "2025-08-05"
-last_updated = "2026-04-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { supported = true, implicit = true }
 structured_output = true
-temperature = true
 system_updates = true
 effort_updates = false
 prompt_cache_key = true
