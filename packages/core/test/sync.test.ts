@@ -86,6 +86,7 @@ import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/pr
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
+import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
 import { buildWandbModel, mergeReasoningOptions, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -5673,4 +5674,70 @@ test("Vercel sync keeps exact MIME modalities and leaves model facts to the lab 
     { base_model: "anthropic/claude-sonnet-4-6", reasoning_options: [{ type: "effort", values: ["low", "high"] }] },
   );
   expect(inherited).not.toHaveProperty("modalities");
+});
+
+test("Kilo sync keeps v2-only data and leaves model facts to the lab in v2 files", () => {
+  const [model] = kilo.parseModels({
+    data: [{
+      id: "anthropic/claude-opus-5.5",
+      name: "Anthropic: Claude Opus 5.5",
+      created: 1_790_000_000,
+      hugging_face_id: "",
+      knowledge_cutoff: "2026-06-30",
+      context_length: 1_000_000,
+      architecture: { input_modalities: ["text", "image"], output_modalities: ["text"] },
+      pricing: { prompt: "0.000004", completion: "0.00002", input_cache_read: "0.0000002", input_cache_write: "0.000005" },
+      top_provider: { context_length: 1_000_000, max_completion_tokens: 128_000 },
+      supported_parameters: ["reasoning", "include_reasoning", "tools", "tool_choice", "structured_outputs"],
+      opencode: {
+        variants: {
+          max: { reasoning: { enabled: true, effort: "max" } },
+          low: { reasoning: { enabled: true, effort: "low" } },
+          high: { reasoning: { enabled: true, effort: "high" } },
+        },
+      },
+    }],
+  });
+  // A host override of the lab's MIME list (no PDF), mid-conversation flags and cache support, next to stale model facts.
+  const doc = {
+    schema: 2,
+    base_model: "anthropic/claude-opus-5-5",
+    family: "claude",
+    open_weights: true,
+    knowledge: "2025-01",
+    release_date: "2025-01-01",
+    last_updated: "2025-02-01",
+    modalities: { input: ["text", "image/jpeg", "image/png", "image/gif", "image/webp"], output: ["text"] },
+    capabilities: {
+      tools: { supported: true, updates: false },
+      reasoning: { supported: true, effort: ["low", "high", "max"] },
+      structured_output: true,
+      effort_updates: false,
+      cache: { supported: true, implicit: true },
+    },
+    cost: { text: { input: { price: 4, cache: { read: 0.2, write: 5 } }, output: { price: 20 } } },
+  };
+  const { id: _id, ...existing } = modelV2ToV1({ ...doc, id: "anthropic/claude-opus-5.5" });
+
+  const synced = buildKiloModel(model!, existing as ExistingModel) as Record<string, any>;
+  expect(synced.base_model).toBe("anthropic/claude-opus-5-5");
+  expect(synced.modalities).toEqual({ input: ["text", "image"] });
+  expect(synced.reasoning_options).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
+  for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated"]) {
+    expect(synced).not.toHaveProperty(fact);
+  }
+
+  // The engine fills the unchanged modality side from the lab before patching.
+  const after = { ...synced, modalities: { input: ["text", "image"], output: ["text"] }, cost: { ...synced.cost, input: 5 } };
+  const next = patchModelV2(doc, existing, after) as Record<string, any>;
+  expect(next.modalities).toEqual(doc.modalities);
+  expect(next.capabilities).toMatchObject({
+    tools: { supported: true, updates: false },
+    effort_updates: false,
+    cache: { supported: true, implicit: true },
+  });
+  expect(next.cost.text.input.price).toBe(5);
+  for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated"]) {
+    expect(next).not.toHaveProperty(fact);
+  }
 });
