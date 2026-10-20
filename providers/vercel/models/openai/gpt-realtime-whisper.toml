@@ -1,5 +1,5 @@
-# Vercel's transcription route has no token context and advertises output 0.
-# https://vercel.com/ai-gateway/models/gpt-realtime-whisper
+# Synced from https://ai-gateway.vercel.sh/v1/models (type transcription)
+# https://vercel.com/docs/ai-gateway/modalities/speech-to-text
 schema = 2
 base_model = "openai/gpt-realtime-whisper"
 name = "gpt-realtime-whisper"
@@ -7,10 +7,6 @@ name = "gpt-realtime-whisper"
 [capabilities]
 temperature = false
 top_p = false
-
-[limit]
-context = 0
-output = 0
 
 [api.transcriptions]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

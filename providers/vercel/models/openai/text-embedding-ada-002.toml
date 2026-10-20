@@ -2,11 +2,6 @@
 # https://vercel.com/docs/ai-gateway/modalities/embeddings
 schema = 2
 base_model = "openai/text-embedding-ada-002"
-description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-
-[limit]
-input = 6_656
-output = 1_536
 
 [api.embeddings]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

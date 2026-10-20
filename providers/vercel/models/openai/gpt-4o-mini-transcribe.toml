@@ -3,7 +3,6 @@
 schema = 2
 base_model = "openai/gpt-4o-mini-transcribe"
 name = "GPT-4o mini Transcribe"
-description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 
 [modalities]
 input = ["audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/webm", "audio/pcm", "audio/pcmu", "audio/pcma"]
@@ -11,10 +10,6 @@ output = ["text"]
 
 [capabilities]
 temperature = false
-
-[limit]
-context = 0
-output = 0
 
 [api.transcriptions]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

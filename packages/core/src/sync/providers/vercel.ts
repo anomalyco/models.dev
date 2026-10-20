@@ -544,10 +544,10 @@ export function buildVercelMediaModel(
     if (existing?.base_model_omit !== undefined) doc.base_model_omit = existing.base_model_omit;
     const sameType = (lab.type ?? "chat") === type;
     if (!sameType) doc.type = type;
-    // Model facts stay with the lab, as on the chat path.
-    for (const key of ["name", "description", "status"]) {
-      if (existing?.[key] !== undefined) doc[key] = existing[key];
-    }
+    // Model facts, including the description, stay with the lab. Only Vercel's
+    // display name is kept when it differs from the lab's, as on the chat path.
+    if (model.name !== lab.name) doc.name = model.name;
+    if (existing?.status !== undefined) doc.status = existing.status;
     // A lab of this type keeps its inputs and outputs, so only a host override
     // (with generic kinds made exact from the lab) is kept. A lab of another type
     // takes on what this endpoint accepts and returns.
@@ -560,7 +560,11 @@ export function buildVercelMediaModel(
         .filter(([key, value]) => !sameValue(value, lab.capabilities?.[key])),
     );
     if (Object.keys(capabilities).length > 0) doc.capabilities = capabilities;
-    if (existing?.limit !== undefined) doc.limit = existing.limit;
+    const limit = Object.fromEntries(
+      Object.entries(mediaLimit(model, type, lab.limit))
+        .filter(([key, value]) => value !== lab.limit?.[key]),
+    );
+    if (Object.keys(limit).length > 0) doc.limit = limit;
   } else {
     doc.type = type;
     doc.name = existing?.name ?? model.name;
@@ -581,10 +585,7 @@ export function buildVercelMediaModel(
       ...pickCapabilities(existing?.capabilities),
       ...route,
     });
-    doc.limit = existing?.limit ?? {
-      context: model.context_window,
-      output: type === "embedding" || type === "reranking" ? 0 : model.max_tokens,
-    };
+    doc.limit = mediaLimit(model, type, undefined, existing?.limit?.context);
   }
 
   doc.api = { [LIVE_MODELS.has(model.id) ? "live" : MEDIA_PROTOCOLS[type]]: { base_url: MEDIA_BASE_URL } };
@@ -595,6 +596,24 @@ export function buildVercelMediaModel(
     if (existing?.[key] !== undefined) doc[key] = existing[key];
   }
   return doc;
+}
+
+// Limits come from Vercel's catalog for the model's type, else the lab's. Embedding
+// and rerank calls produce no output tokens, and the catalog's `max_tokens` for
+// them only repeats the input window, so their output is the lab's (0 without a
+// lab). Chat-path output and input limits in the file are not kept; a standalone
+// file keeps its context, an earlier catalog value, when the catalog gives none.
+function mediaLimit(
+  model: VercelModel,
+  type: MediaType,
+  lab: { context?: number; output?: number } | undefined,
+  context?: number,
+) {
+  const tokenOutput = type !== "embedding" && type !== "reranking";
+  return {
+    context: model.context_window > 0 ? model.context_window : lab?.context ?? context ?? 0,
+    output: tokenOutput && model.max_tokens > 0 ? model.max_tokens : lab?.output ?? 0,
+  };
 }
 
 function routeCapabilities(model: VercelModel, type: MediaType): Doc {
@@ -746,6 +765,8 @@ function labDoc(modelID: string): Doc | undefined {
   if (raw.schema === 2) return raw;
   return {
     type: raw.type,
+    name: raw.name,
+    limit: raw.limit,
     modalities: raw.modalities && {
       input: raw.modalities.input?.map((value: string) => value === "pdf" ? "application/pdf" : value),
       output: raw.modalities.output?.map((value: string) => value === "pdf" ? "application/pdf" : value),

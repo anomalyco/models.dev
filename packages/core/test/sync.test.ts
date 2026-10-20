@@ -5286,6 +5286,50 @@ test("Vercel media models on a lab of the same type keep only host differences",
   expect(v1.cost).toEqual({ input: 4, output: 16, cache_read: 0.4, input_audio: 32, output_audio: 64 });
 });
 
+test("Vercel media base_model files inherit lab descriptions and limits, keeping only Vercel deltas", () => {
+  // Stale chat-path values: a generic description and token limits on an embedding model.
+  const current = {
+    schema: 2,
+    base_model: "openai/text-embedding-3-large",
+    name: "text-embedding-3-large",
+    description: "Embedding model for semantic search, retrieval, clustering, and ranking pipelines",
+    limit: { input: 6_656, output: 1_536 },
+  };
+  const embedding = buildVercelMediaModel(
+    vercelMedia({ id: "openai/text-embedding-3-large", name: "text-embedding-3-large", type: "embedding", max_tokens: 8_192 }),
+    "embedding",
+    current,
+  );
+  for (const key of ["name", "description", "limit"]) expect(embedding).not.toHaveProperty(key);
+
+  // Vercel's display name differs from the lab's ("Rerank 3.5"), and the catalog's
+  // context differs too; the catalog's max_tokens is not a rerank output limit.
+  const rerank = buildVercelMediaModel(
+    vercelMedia({ id: "cohere/rerank-v3.5", name: "Cohere Rerank 3.5", type: "reranking", context_window: 4_000, max_tokens: 4_000 }),
+    "reranking",
+    { schema: 2, base_model: "cohere/rerank-v3.5", description: "Reranking model", limit: { output: 4_096 } },
+  );
+  expect(rerank.name).toBe("Cohere Rerank 3.5");
+  expect(rerank).not.toHaveProperty("description");
+  expect(rerank.limit).toEqual({ context: 4_000 });
+
+  // No catalog limits: the lab's apply, not the file's zeros.
+  const live = buildVercelMediaModel(
+    vercelMedia({ id: "google/gemini-3.8-live", name: "Gemini 3.8 Live", type: "realtime" }),
+    "realtime",
+    { schema: 2, base_model: "google/gemini-3.8-live", limit: { context: 0, output: 0 } },
+  );
+  expect(live).not.toHaveProperty("limit");
+
+  // Standalone embedding files take the catalog's context and no output tokens.
+  const standalone = buildVercelMediaModel(
+    vercelMedia({ id: "example/embed", type: "embedding", context_window: 32_768, max_tokens: 32_768 }),
+    "embedding",
+    { schema: 2, name: "Embed", description: "Embedding model", open_weights: false, release_date: "2026-01-01", limit: { context: 32_768, output: 32_768 } },
+  );
+  expect(standalone.limit).toEqual({ context: 32_768, output: 0 });
+});
+
 test("Vercel media prices map to CostV2 units with conditional overrides", () => {
   const cost = (type: Parameters<typeof vercelMediaCost>[1], pricing: Record<string, unknown>) =>
     vercelMediaCost(vercelMedia({ id: "example/model", type, pricing }), type);

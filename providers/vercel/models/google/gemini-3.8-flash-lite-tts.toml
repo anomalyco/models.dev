@@ -3,16 +3,11 @@
 schema = 2
 base_model = "google/gemini-3.8-flash-lite-tts"
 name = "Gemini 3.8 Flash-Lite TTS"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
 
 [capabilities]
 temperature = false
 top_p = false
 top_k = false
-
-[limit]
-context = 0
-output = 0
 
 [api.speech]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

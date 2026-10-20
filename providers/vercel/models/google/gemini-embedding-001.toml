@@ -3,10 +3,6 @@
 schema = 2
 base_model = "google/gemini-embedding-001"
 
-[limit]
-context = 8_192
-output = 1_536
-
 [api.embeddings]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
 
