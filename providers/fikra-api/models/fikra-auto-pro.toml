@@ -1,7 +1,8 @@
-# Host lane on Fikra's OpenAI-compatible /v1 (limits and prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
-# No public host source maps this lane to a single lab checkpoint, so it stays standalone; reasoning content is not
-# exposed on the wire (live probe 2026-10-20).
+# Host lane on Fikra's OpenAI-compatible /v1 (prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
+# Router lane with no single nameable lab checkpoint, so it stays standalone; reasoning content is not exposed
+# on the wire and `reasoning_effort` is accepted silently (live probe 2026-10-20, data in the PR thread).
 # Image input verified live (2026-10-20) with a minimum image size enforced upstream.
+# Limits: host GET /v1/models `context_window`/`max_output_tokens` (fetched 2026-10-20).
 name = "Fikra Auto Pro"
 description = "Auto-routed premium lane for long-context agent and coding runs on a 1M context"
 release_date = "2026-09"

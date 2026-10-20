@@ -1,17 +1,15 @@
-# Host lane on Fikra's OpenAI-compatible /v1 (limits and prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
-# No public host source maps this lane to a single lab checkpoint, so it stays standalone; reasoning content is not
-# exposed on the wire (live probe 2026-10-20).
+# Host lane on Fikra's OpenAI-compatible /v1 (prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
+# Control surface (live probe 2026-10-20, raw counts and p-values in the PR thread): the documented request whitelist
+# (https://fikraapi.co.ke/docs, verified 2026-10-19) covers only tools/tool_choice/n/seed/stop/penalties/response_format;
+# `thinking` and `reasoning_effort` return 200 and are accepted silently, and no response on any lane carries a
+# `reasoning_content` field (message keys: content/role only). reasoning_options stays empty until a control is shown to
+# change the wire; effort levels are indistinguishable from sampling noise (MWU n=10-16/level, all p >= 0.11).
 # Image input verified live (2026-10-20) with a minimum image size enforced upstream.
+# Limits: host GET /v1/models `context_window`/`max_output_tokens` (fetched 2026-10-20).
 name = "Fikra Qwen Max"
 description = "Premium long-context Qwen lane for long-horizon agent runs on a 1M context"
-release_date = "2026-09"
-last_updated = "2026-10-20"
-attachment = true
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-open_weights = false
+base_model = "alibaba/qwen3.8-max"
+reasoning_options = []
 
 [cost]
 input = 6.0
@@ -20,7 +18,3 @@ output = 12.0
 [limit]
 context = 1048576
 output = 256000
-
-[modalities]
-input = ["text","image"]
-output = ["text"]

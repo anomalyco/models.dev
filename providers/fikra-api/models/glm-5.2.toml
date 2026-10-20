@@ -1,21 +1,19 @@
 # Relay of the lab entry behind Fikra's OpenAI-compatible /v1 (prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
-# Control surface (live probe 2026-10-20): the documented request whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19)
-# covers only tools/tool_choice/n/seed/stop/penalties/response_format. `thinking` and `reasoning_effort` return 200 and are
-# accepted silently, and no response carries a `reasoning_content` field (message keys: content/role only), so
-# reasoning_options stays empty until a control is shown to change the wire; effort levels are indistinguishable from
-# sampling noise (MWU on completion tokens, n=10-16/level, all p >= 0.11, the one near-significant pair reversed).
+# Control surface (live probe 2026-10-20, raw counts and p-values in the PR thread): the documented request whitelist
+# (https://fikraapi.co.ke/docs, verified 2026-10-19) covers only tools/tool_choice/n/seed/stop/penalties/response_format;
+# `thinking` and `reasoning_effort` return 200 and are accepted silently, and no response on any lane carries a
+# `reasoning_content` field (message keys: content/role only). reasoning_options stays empty until a control is shown to
+# change the wire; effort levels are indistinguishable from sampling noise (MWU n=10-16/level, all p >= 0.11).
+# Image content rejected (HTTP 400) live (2026-10-20).
+# Limits: host GET /v1/models `context_window`/`max_output_tokens` (fetched 2026-10-20).
 base_model = "zhipuai/glm-5.2"
 description = "Zhipu GLM 5.2: coding and reasoning work at a lower price than GLM 5.3"
 reasoning_options = []
-attachment = false
 
 [cost]
 input = 0.75
 output = 1.65
 
 [limit]
+context = 1048576
 output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]

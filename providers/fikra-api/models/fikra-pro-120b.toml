@@ -1,10 +1,15 @@
-# Host lane on Fikra's OpenAI-compatible /v1 (limits and prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
+# Host lane on Fikra's OpenAI-compatible /v1 (prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
 # Upstream identity (live probe 2026-10-20): an image-input request is rejected by the host with the verbatim error "Model openai/gpt-oss-120b does not accept image input".
+# Control surface (live probe 2026-10-20, raw counts and p-values in the PR thread): the documented request whitelist
+# (https://fikraapi.co.ke/docs, verified 2026-10-19) covers only tools/tool_choice/n/seed/stop/penalties/response_format;
+# `thinking` and `reasoning_effort` return 200 and are accepted silently, and no response on any lane carries a
+# `reasoning_content` field (message keys: content/role only). reasoning_options stays empty until a control is shown to
+# change the wire; effort levels are indistinguishable from sampling noise (MWU n=10-16/level, all p >= 0.11).
+# Limits: host GET /v1/models `context_window`/`max_output_tokens` (fetched 2026-10-20).
 name = "Fikra Pro 120B"
 description = "Open GPT-OSS 120B lane for general chat and summarization on a 131K context"
 base_model = "openai/gpt-oss-120b"
 reasoning_options = []
-attachment = false
 
 [cost]
 input = 0.3
@@ -12,7 +17,3 @@ output = 0.3
 
 [limit]
 output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
