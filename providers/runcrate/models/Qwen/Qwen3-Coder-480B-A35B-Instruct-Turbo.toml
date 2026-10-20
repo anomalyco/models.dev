@@ -1,0 +1,11 @@
+# Pricing and limits: GET https://api.runcrate.ai/v1/models (accessed 2026-10-20): Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo prompt 0.0000003/completion 0.000001 USD per token, context_length 262144, max_output_length 262144, input_modalities text.
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+structured_output = true
+
+[cost]
+input = 0.3
+output = 1.00
+
+[limit]
+context = 262_144
+output = 262_144
