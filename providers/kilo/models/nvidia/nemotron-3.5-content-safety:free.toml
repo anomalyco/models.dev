@@ -1,3 +1,6 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 base_model = "nvidia/nemotron-3.5-content-safety"
 name = "NVIDIA: Nemotron 3.5 Content Safety (free)"
@@ -6,6 +9,7 @@ description = "NVIDIA Nemotron 3.5 Content Safety is a compact 4B-parameter mult
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
+effort_updates = false
 
 [cost.text.input]
 price = 0

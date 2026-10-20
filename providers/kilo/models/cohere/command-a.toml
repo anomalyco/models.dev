@@ -1,5 +1,8 @@
 # tool_call = false: Kilo's catalog (https://api.kilo.ai/api/gateway/models) lists supported_parameters for
 #   cohere/command-a without "tools" or "tool_choice" (checked 2026-10-20), and the Kilo sync derives tool_call from those.
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 base_model = "cohere/command-a"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
@@ -7,6 +10,7 @@ description = "Cohere command model for multilingual enterprise agents, tools, a
 [capabilities]
 tools = { supported = false }
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 2.5

@@ -1,3 +1,6 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 name = "Reflection: Beam 1.0 (free)"
 description = "Your prompts and completions may be retained and used to train or improve the provider's services. Beam is Reflection's reasoning model for coding and agentic workflows, combining strong coding capabilities with fast, low-latency inference, served through Vercel AI Gateway at no cost. It supports function calling, structured outputs, and streaming, and takes text input only. Zero Data Retention is not available for this model."
@@ -10,10 +13,11 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
 temperature = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

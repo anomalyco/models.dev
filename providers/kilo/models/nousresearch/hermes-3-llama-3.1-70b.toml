@@ -1,8 +1,14 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Deprecated: Kilo's catalog names it "Nous: Hermes 3 70B Instruct (retires Nov 2)" (GET https://api.kilo.ai/api/gateway/models, 2026-10-20)
 schema = 2
 base_model = "nousresearch/hermes-3-llama-3.1-70b"
+status = "deprecated"
 
 [capabilities]
 structured_output = true
+effort_updates = false
 
 [cost.text.input]
 price = 0.7
