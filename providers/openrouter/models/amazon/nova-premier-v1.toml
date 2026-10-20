@@ -4,11 +4,9 @@
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Deprecated: every request returns 404 (Amazon Nova Premier reached end of life on Bedrock, 2026-09-14)
 schema = 2
+base_model = "amazon/nova-premier"
 name = "Nova Premier 1.0"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "nova"
-open_weights = false
-release_date = "2025-10-31"
 status = "deprecated"
 
 [modalities]
@@ -19,12 +17,10 @@ output = ["text"]
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
 system_updates = false
 effort_updates = false
 
 [limit]
-context = 1_000_000
 output = 32_000
 
 [cost.text.input]

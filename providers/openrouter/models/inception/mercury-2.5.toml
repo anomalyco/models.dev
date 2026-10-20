@@ -2,27 +2,15 @@
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
-name = "Mercury 2.5"
+base_model = "inception/mercury-2.5"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "mercury"
-open_weights = false
-release_date = "2026-09-08"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-temperature = true
 system_updates = false
 effort_updates = false
-
-[limit]
-context = 260_000
-output = 65_536
 
 [cost.text.input]
 price = 0.04

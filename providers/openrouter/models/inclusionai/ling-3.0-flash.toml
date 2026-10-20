@@ -4,27 +4,15 @@
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
-name = "Ling 3.0 Flash"
+base_model = "inclusionai/ling-3.0-flash"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "ling"
-open_weights = true
-release_date = "2026-07-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-temperature = true
 system_updates = true
 effort_updates = false
-
-[limit]
-context = 262_144
-output = 32_768
 
 [cost.text.input]
 price = 0.021

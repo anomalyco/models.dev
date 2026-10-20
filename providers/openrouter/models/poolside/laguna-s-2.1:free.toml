@@ -5,27 +5,19 @@
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Deprecated: GET /api/v1/models lists expiration_date 2026-10-31
 schema = 2
+base_model = "poolside/laguna-s-2.1"
 name = "Laguna S 2.1 (free)"
 description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
-family = "laguna-s"
-open_weights = true
-release_date = "2026-07-21"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-temperature = true
 effort_updates = false
 
 [limit]
 context = 262_144
-output = 32_768
 
 [cost.text.input]
 price = 0

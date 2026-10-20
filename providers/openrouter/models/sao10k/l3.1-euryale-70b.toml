@@ -1,27 +1,14 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
 # effort_updates = false: no per-turn effort control
 schema = 2
-name = "Llama 3.1 Euryale 70B v2.2"
+base_model = "sao10k/l3.1-euryale-70b"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-open_weights = true
-knowledge = "2023-12-31"
-release_date = "2024-08-28"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
 effort_updates = false
-
-[limit]
-context = 131_072
-output = 16_384
 
 [cost.text.input]
 price = 0.85

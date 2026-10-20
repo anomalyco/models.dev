@@ -1,29 +1,19 @@
-# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
+base_model = "meta/llama-4-scout-17b-instruct"
 name = "Llama 4 Scout"
 description = "Open multimodal Llama model for long-context analysis and efficient agents"
-family = "llama"
-open_weights = true
-knowledge = "2024-08-31"
-release_date = "2025-04-05"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
 effort_updates = false
 
 [limit]
 context = 1_310_720
-output = 16_384
 
 [cost.text.input]
 price = 0.1

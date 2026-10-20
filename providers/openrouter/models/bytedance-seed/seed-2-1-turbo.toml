@@ -1,25 +1,16 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding; video: https://openrouter.ai/docs/guides/overview/multimodal/videos
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Seed)
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
-name = "Seed 2.1 Turbo"
+base_model = "bytedance-seed/seed-2.1-turbo"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "seed"
-open_weights = false
-release_date = "2026-08-12"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 system_updates = true
 effort_updates = false
 

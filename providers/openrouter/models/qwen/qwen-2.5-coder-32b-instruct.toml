@@ -1,22 +1,13 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
 # effort_updates = false: no per-turn effort control
 schema = 2
-name = "Qwen2.5 Coder 32B Instruct"
+base_model = "alibaba/qwen2.5-coder-32b-instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-open_weights = true
-knowledge = "2024-06-30"
-release_date = "2024-11-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
 effort_updates = false
 
 [limit]

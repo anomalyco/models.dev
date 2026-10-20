@@ -1,30 +1,16 @@
-# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: served only on Amazon Bedrock Converse, which takes no mid-conversation system message for this model
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
-name = "Nova Lite 1.0"
+base_model = "amazon/nova-lite-v1"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "nova-lite"
-open_weights = false
-knowledge = "2024-10-31"
-release_date = "2024-12-05"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
 system_updates = false
 effort_updates = false
-
-[limit]
-context = 300_000
-output = 5_120
 
 [cost.text.input]
 price = 0.06

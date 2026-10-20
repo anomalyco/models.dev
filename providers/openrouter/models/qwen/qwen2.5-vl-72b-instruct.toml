@@ -1,23 +1,13 @@
-# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
 # effort_updates = false: no per-turn effort control
 schema = 2
-name = "Qwen2.5 VL 72B Instruct"
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = true
-knowledge = "2024-06-30"
-release_date = "2025-02-01"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
 system_updates = true
 effort_updates = false
 

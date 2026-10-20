@@ -2,28 +2,15 @@
 # effort_updates = false: no per-turn effort control
 # Deprecated: GET /api/v1/models lists expiration_date 2026-11-02
 schema = 2
-name = "Hermes 3 70B Instruct"
+base_model = "nousresearch/hermes-3-llama-3.1-70b"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "nousresearch"
-open_weights = true
-knowledge = "2023-12-31"
-release_date = "2024-08-18"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
 effort_updates = false
-
-[limit]
-context = 131_072
-output = 16_384
 
 [cost.text.input]
 price = 0.7

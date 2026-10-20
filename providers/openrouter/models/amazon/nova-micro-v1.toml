@@ -2,28 +2,15 @@
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
-name = "Nova Micro 1.0"
+base_model = "amazon/nova-micro-v1"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "nova-micro"
-open_weights = false
-knowledge = "2024-10-31"
-release_date = "2024-12-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
 system_updates = false
 effort_updates = false
-
-[limit]
-context = 128_000
-output = 5_120
 
 [cost.text.input]
 price = 0.035

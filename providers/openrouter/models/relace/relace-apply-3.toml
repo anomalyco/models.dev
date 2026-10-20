@@ -1,25 +1,14 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
 # effort_updates = false: no per-turn effort control
 schema = 2
-name = "Relace Apply 3"
+base_model = "relace/relace-apply-3"
 description = "General-purpose chat model for instruction following, writing, and analysis"
-open_weights = false
-release_date = "2025-09-26"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = false
 effort_updates = false
-
-[limit]
-context = 256_000
-output = 128_000
 
 [cost.text.input]
 price = 0.85
