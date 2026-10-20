@@ -8,11 +8,12 @@
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Toggle: enable_thinking true|false (the Chat API reference: "kimi-k3 supports passing false to disable thinking"); Effort: reasoning_effort = low|high|max (default max).
+# Input: text and image only on Model Studio (https://www.alibabacloud.com/help/en/model-studio/kimi-api: "kimi-k3 does not currently support video input"), which lists no image formats, so the moonshotai/kimi-k3 lab's image MIME list is used.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

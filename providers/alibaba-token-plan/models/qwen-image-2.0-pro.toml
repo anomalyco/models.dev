@@ -1,4 +1,5 @@
 # Type: image generation model (https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview).
+# MIME types: input images JPG, JPEG, PNG, BMP, TIFF, WEBP or GIF; output PNG, per https://www.alibabacloud.com/help/en/model-studio/qwen-image-edit-api.
 schema = 2
 type = "image"
 name = "Qwen Image 2.0 Pro"
@@ -9,7 +10,7 @@ release_date = "2026-03-03"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png"]
 
 [capabilities]
 tools = { supported = false }

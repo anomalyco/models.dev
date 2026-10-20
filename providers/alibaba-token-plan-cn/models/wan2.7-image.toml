@@ -1,4 +1,5 @@
 # Type: image generation model (https://help.aliyun.com/zh/model-studio/token-plan-team-overview).
+# MIME types: input images JPEG, JPG, PNG, BMP, WEBP; output PNG, per https://www.alibabacloud.com/help/en/model-studio/wan-image-generation-and-editing-api-reference.
 schema = 2
 type = "image"
 name = "Wan2.7 Image"
@@ -8,7 +9,7 @@ release_date = "2026-05-29"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png"]
 
 [capabilities]
 tools = { supported = false }

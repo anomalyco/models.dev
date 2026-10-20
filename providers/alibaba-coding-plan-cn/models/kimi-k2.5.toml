@@ -6,6 +6,7 @@
 # https://help.aliyun.com/zh/model-studio/coding-plan
 # https://www.alibabacloud.com/help/en/model-studio/kimi-api
 # Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates is left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (the DeepSeek, Kimi and MiniMax series do not support top_k).
+# Input MIME types: Model Studio's Kimi doc (https://www.alibabacloud.com/help/en/model-studio/kimi-api) lists no formats, so the moonshotai/kimi-k2.5 lab's list is used.
 schema = 2
 name = "Kimi K2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -15,7 +16,7 @@ knowledge = "2025-01"
 release_date = "2026-01-27"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

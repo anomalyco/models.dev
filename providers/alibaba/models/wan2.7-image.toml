@@ -1,5 +1,6 @@
 # Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, Singapore, accessed 2026-10-19). Billed per output image.
 # Image generation and editing: https://www.alibabacloud.com/help/en/model-studio/image-model
+# MIME types: input images JPEG, JPG, PNG, BMP, WEBP; output PNG, per https://www.alibabacloud.com/help/en/model-studio/wan-image-generation-and-editing-api-reference.
 schema = 2
 v2_only = true
 type = "image"
@@ -9,8 +10,8 @@ open_weights = false
 release_date = "2026-05-29"
 
 [modalities]
-input = ["text", "image"]
-output = ["image"]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp"]
+output = ["image/png"]
 
 [capabilities]
 tools = { supported = false }

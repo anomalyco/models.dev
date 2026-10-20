@@ -1,4 +1,5 @@
 # Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
+# MIME types: image/video per https://www.alibabacloud.com/help/en/model-studio/vision, audio input AMR/WAV/3GP/3GPP/AAC/MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni; output audio "Only wav is supported" per https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
 schema = 2
 name = "Qwen2.5-Omni 7B"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
@@ -9,8 +10,8 @@ release_date = "2024-12"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text", "audio"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "audio/amr", "audio/wav", "audio/3gpp", "audio/aac", "audio/mpeg", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text", "audio/wav"]
 
 [capabilities]
 tools = { supported = true, updates = false }

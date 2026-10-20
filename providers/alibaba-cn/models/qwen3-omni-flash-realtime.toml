@@ -1,5 +1,6 @@
 # Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
 # Type: realtime (WebSocket) model, not served on chat completions.
+# MIME types: https://www.alibabacloud.com/help/en/model-studio/realtime — images (and video, sent as image frames) "must be JPG or JPEG"; audio in/out is raw 16-bit PCM ("pcm"), registered as audio/L16.
 schema = 2
 type = "realtime"
 name = "Qwen3-Omni Flash Realtime"
@@ -11,8 +12,8 @@ release_date = "2025-09-15"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "audio"]
-output = ["text", "audio"]
+input = ["text", "image/jpeg", "audio/L16"]
+output = ["text", "audio/L16"]
 
 [capabilities]
 tools = { supported = true, updates = false }

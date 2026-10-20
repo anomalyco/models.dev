@@ -8,6 +8,7 @@
 # output budget); the number of output images is a request parameter, not a
 # token limit.
 # Type and sampling: a diffusion image model; its pipeline has no temperature, top_p or top_k (https://huggingface.co/Qwen/Qwen-Image-2.1).
+# MIME types: input images JPG, JPEG, PNG, BMP, TIFF, WEBP or GIF; output PNG, per https://www.alibabacloud.com/help/en/model-studio/qwen-image-edit-guide (covers the qwen-image-2.1 series).
 schema = 2
 type = "image"
 name = "Qwen-Image-2.1"
@@ -19,8 +20,8 @@ last_updated = "2026-09-21"
 license = "qwen-research"
 
 [modalities]
-input = ["text", "image"]
-output = ["image"]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/tiff", "image/webp", "image/gif"]
+output = ["image/png"]
 
 [capabilities]
 tools = { supported = false }

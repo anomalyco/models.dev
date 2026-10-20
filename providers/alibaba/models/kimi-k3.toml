@@ -10,11 +10,12 @@
 # Toggle: enable_thinking true|false (the Chat API reference: "kimi-k3 supports passing false to disable thinking")
 # Effort: reasoning_effort = low|high|max (default max); no thinking_budget
 # top_k: the Kimi series does not support top_k (Chat API reference)
+# Input: text and image only on Model Studio (https://www.alibabacloud.com/help/en/model-studio/kimi-api: "kimi-k3 does not currently support video input"), which lists no image formats, so the moonshotai/kimi-k3 lab's image MIME list is used.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

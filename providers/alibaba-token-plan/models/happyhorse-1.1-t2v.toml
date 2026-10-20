@@ -10,6 +10,7 @@
 # https://www.alibabacloud.com/help/en/model-studio/happyhorse-text-to-video-api-reference
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-overview
 # Type: video generation model (https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview).
+# MIME types: input images JPEG, JPG, PNG, WEBP (the doc's image/jpeg, image/png, image/webp); output MP4 (H.264), per https://www.alibabacloud.com/help/en/model-studio/happyhorse-text-to-video-api-reference.
 schema = 2
 type = "video"
 name = "HappyHorse 1.1 Text-to-Video"
@@ -19,7 +20,7 @@ release_date = "2026-07-17"
 
 [modalities]
 input = ["text"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }
