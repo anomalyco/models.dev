@@ -2,19 +2,21 @@
 # https://developers.cloudflare.com/workers-ai/models/clef/ and
 # https://huggingface.co/Cloudflare/clef (both accessed 2026-10-20).
 # Clef returns one probability per allowed option and generates no free-form text,
-# so output is 0. The hosted context window is 64K; the weights are published under
-# Apache-2.0. Input: Cloudflare's model docs say Clef "reads the state as text, JSON,
-# images, or video", and the model card documents image and video frame-array inputs.
+# so output is 0 and structured_output is true. The hosted context window is 64K;
+# the weights are published under Apache-2.0. Input follows the same-model Workers AI
+# and OpenRouter entries: text and images. Temperature: the System One request takes
+# model, state, questions and images only, with no temperature or sampling parameter,
+# so temperature is false.
 type = "decision"
 name = "Clef"
-description = "Cloudflare's open-weight decision model that returns probabilities for typed choice, score and yes/no questions about text, images or video"
+description = "Cloudflare's open-weight decision model that returns probabilities for typed choice, score and yes/no questions about text or images"
 release_date = "2026-10-01"
 last_updated = "2026-10-01"
 attachment = true
 reasoning = false
 temperature = false
 tool_call = false
-structured_output = false
+structured_output = true
 open_weights = true
 license = "Apache-2.0"
 
@@ -23,7 +25,7 @@ context = 65_536
 output = 0
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image"]
 output = ["text"]
 
 [[links]]
