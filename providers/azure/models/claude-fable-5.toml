@@ -1,4 +1,6 @@
 # Azure catalog: https://ai.azure.com/catalog/models/claude-fable-5
+# Effort: output_config.effort = low|medium|high|xhigh. Foundry's effort table lists max as "No" for claude-fable-5 ("xhigh produces the same result as max"):
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#thinking-and-effort
 schema = 2
 base_model = "anthropic/claude-fable-5"
 status = "beta"

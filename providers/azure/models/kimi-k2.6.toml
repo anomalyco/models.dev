@@ -10,7 +10,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 
 [api.chat-completions]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"

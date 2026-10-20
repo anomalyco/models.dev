@@ -1,5 +1,7 @@
-# Cached input: Azure Retail Prices API, Global Standard meter (https://prices.azure.com/api/retail/prices, accessed 2026-10-19)
+# Cached input: Azure Retail Prices API, Global Standard, skuName "gpt-5-codex-ccchd-inp-glbl" (meterId 8e0495b5-3453-53eb-a27d-b76564e42a97): 0.000125 per 1K = 0.125 per 1M.
+# https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Foundry Models' and skuName eq 'gpt-5-codex-ccchd-inp-glbl' (accessed 2026-10-19)
 # Modalities: Azure OpenAI Responses image inputs (PNG, JPEG, WebP, non-animated GIF) and PDF input for vision models: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#image-input-requirements
+# Capabilities: gpt-5-codex: "Input: Text/Image - Output: Text only". https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai#gpt-5
 schema = 2
 name = "GPT-5-Codex"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
