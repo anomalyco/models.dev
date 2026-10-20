@@ -1,13 +1,6 @@
 schema = 2
-name = "text-embedding-ada-002"
+base_model = "openai/text-embedding-ada-002"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "text-embedding"
-open_weights = false
-release_date = "2022-12-15"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
@@ -15,6 +8,5 @@ reasoning = { supported = false }
 temperature = true
 
 [limit]
-context = 8_192
 input = 6_656
 output = 1_536
