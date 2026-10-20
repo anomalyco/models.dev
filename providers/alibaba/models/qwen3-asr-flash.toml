@@ -1,28 +1,26 @@
-# Type: speech recognition model (DashScope ASR task; not served on chat completions), per https://www.alibabacloud.com/help/en/model-studio/model-pricing (Qwen-ASR, per-second billing)
-schema = 2
+# Kept as a v1 file: an audio-only speech-recognition model whose v1 attachment is false (v2 would derive true from the audio input).
+# Type: speech recognition (DashScope ASR task, per-second billing), per https://www.alibabacloud.com/help/en/model-studio/model-pricing (Qwen-ASR).
 type = "transcription"
 name = "Qwen3-ASR Flash"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "qwen"
-open_weights = false
-knowledge = "2024-04"
 release_date = "2025-09-08"
-
-[modalities]
-input = ["audio"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
+last_updated = "2025-09-08"
+attachment = false
+reasoning = false
 temperature = false
+knowledge = "2024-04"
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.035
+output = 0.035
 
 [limit]
 context = 53_248
 output = 4_096
 
-[cost.text.input]
-price = 0.035
-
-[cost.text.output]
-price = 0.035
+[modalities]
+input = ["audio"]
+output = ["text"]
