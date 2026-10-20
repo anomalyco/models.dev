@@ -1,5 +1,6 @@
 # Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
-# Effort: reasoning.effort in Fastino's normalized `reasoning` object (https://docs.fastino.ai/openapi.json ChatCompletionRequest.reasoning), rendered to each upstream's native field.
+# Reasoning: the underlying model's controls from providers/anthropic/models/claude-sonnet-4-5.toml; Pioneer's catalog listed the same boilerplate levels on every model.
+# Budget: reasoning.max_tokens (Anthropic-style budget) in the same object.
 # Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
 # tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
 # system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
@@ -9,7 +10,7 @@ status = "deprecated"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, budget = { min = 1_024 } }
 effort_updates = false
 
 [limit]

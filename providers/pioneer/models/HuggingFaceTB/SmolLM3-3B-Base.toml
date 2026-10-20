@@ -1,7 +1,6 @@
 # Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
-# Effort: reasoning.effort in Fastino's normalized `reasoning` object (https://docs.fastino.ai/openapi.json ChatCompletionRequest.reasoning), rendered to each upstream's native field.
-# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
-# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# Reasoning: none. SmolLM3-3B-Base is a pretrained base checkpoint; thinking mode is in SmolLM3-3B (https://huggingface.co/HuggingFaceTB/SmolLM3-3B-Base); Pioneer's catalog listed the same boilerplate levels on every model.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): tools.updates = false: `tools` is request-level, with no tool addition/removal field.
 # system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
 name = "SmolLM3 3B Base"
@@ -16,16 +15,12 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = false }
 temperature = true
-effort_updates = false
 
 [limit]
 context = 32_768
 output = 32_768
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.15

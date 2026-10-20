@@ -1,8 +1,7 @@
 # Lab: meta/llama-3.1-8b-instruct (Pioneer id meta-llama/Llama-3.1-8B-Instruct is the Hugging Face repo name).
 # Reasoning: none. Llama 3.1 8B Instruct is not a reasoning model; the effort levels Pioneer's catalog listed are the same boilerplate on every model.
 # Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
-# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
-# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): tools.updates = false: `tools` is request-level, with no tool addition/removal field.
 # system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
 base_model = "meta/llama-3.1-8b-instruct"
@@ -11,7 +10,6 @@ status = "deprecated"
 
 [capabilities]
 tools = { supported = true, updates = false }
-effort_updates = false
 
 [limit]
 output = 8_192

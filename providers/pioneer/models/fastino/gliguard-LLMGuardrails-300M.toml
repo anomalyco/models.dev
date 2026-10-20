@@ -2,8 +2,7 @@
 # through /v1/chat/completions with a top-level `schema` (https://docs.fastino.ai/inference/chat-completions); they don't generate text, reason or call tools.
 # Description: GET https://api.fastino.ai/v1/base-models description (replaces a generic chat-model description).
 # Cost: GET https://api.fastino.ai/v1/base-models and https://docs.fastino.ai/pricing (2026-10-20): input $0.15, output $0.15, cache read/write $0.15 per 1M tokens.
-# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
-# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): no reasoning or tools, so no effort or tool updates.
 # system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
 name = "GLiGuard LLM Guardrails 300M"
@@ -19,7 +18,6 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
-effort_updates = false
 
 [limit]
 context = 8_192
