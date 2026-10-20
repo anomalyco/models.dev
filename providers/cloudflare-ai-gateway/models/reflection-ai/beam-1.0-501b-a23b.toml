@@ -5,7 +5,6 @@
 # Source: https://developers.reflection.ai/reasoning
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
-structured_output = true
 
 [capabilities]
 tools = { supported = true, updates = false }
@@ -13,6 +12,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 cache = { supported = true, implicit = true }
 system_updates = true
 effort_updates = false
+structured_output = true
 
 [limit]
 context = 262_144
