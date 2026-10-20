@@ -1,6 +1,7 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
+# No caller control: reasoning_tokens stay 0 at low|medium|high|xhigh|max; reasoning_effort = off is rejected.
 base_model = "moonshotai/kimi-k2.5"
 reasoning_options = []
 

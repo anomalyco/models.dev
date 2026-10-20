@@ -1,6 +1,7 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
+# No caller control: reasoning_effort = off is rejected; low|medium|high all run thinking to the probe cap with no observable toggle or grading.
 base_model = "poolside/laguna-s-2.1"
 reasoning_options = []
 

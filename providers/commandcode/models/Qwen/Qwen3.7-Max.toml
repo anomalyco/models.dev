@@ -1,8 +1,10 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
+# Effort: reasoning_effort = low|medium|xhigh
+# No off: reasoning_effort = off is rejected by the upstream provider.
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 
 [cost]
 input = 2.5

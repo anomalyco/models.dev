@@ -1,8 +1,10 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
+# Toggle: omit reasoning_effort for off (0 reasoning tokens); reasoning_effort = low for on (reasoning tokens > 0).
+# The `off` value is rejected; the toggle is omission versus low.
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "toggle" }]
 
 [limit]
 context = 262144
