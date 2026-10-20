@@ -3,7 +3,7 @@ base_model = "openai/o3-pro"
 name = "o3 Pro"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

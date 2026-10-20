@@ -3,7 +3,7 @@ base_model = "openai/gpt-image-2.5-flare"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png", "image/jpeg", "image/webp"]
 
 [cost.text.input]
 price = 5

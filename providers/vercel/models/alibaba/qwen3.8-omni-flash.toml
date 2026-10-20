@@ -6,7 +6,7 @@ base_model = "alibaba/qwen3.8-omni-flash"
 name = "Qwen 3.8 Omni Flash"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

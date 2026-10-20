@@ -5,7 +5,7 @@ base_model = "alibaba/qwen3.8-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
 output = ["text"]
 
 [capabilities]

@@ -3,7 +3,7 @@ base_model = "minimax/MiniMax-M3.1-Flash"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

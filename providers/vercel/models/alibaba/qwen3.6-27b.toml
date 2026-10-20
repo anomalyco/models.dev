@@ -3,7 +3,7 @@ base_model = "alibaba/qwen3.6-27b"
 name = "Qwen 3.6 27B"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
 output = ["text"]
 
 [capabilities]

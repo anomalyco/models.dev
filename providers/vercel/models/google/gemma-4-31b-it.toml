@@ -2,7 +2,7 @@ schema = 2
 base_model = "google/gemma-4-31b-it"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
 output = ["text"]
 
 [capabilities]

@@ -4,7 +4,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

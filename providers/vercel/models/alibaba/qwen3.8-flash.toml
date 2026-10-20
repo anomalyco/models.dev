@@ -9,7 +9,7 @@ base_model = "alibaba/qwen3.8-flash"
 name = "Qwen 3.8 Flash"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
 output = ["text"]
 
 [capabilities]

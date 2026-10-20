@@ -3,7 +3,7 @@ base_model = "meta/muse-spark-1.1"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

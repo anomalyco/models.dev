@@ -3,7 +3,7 @@ base_model = "openai/o4-mini"
 name = "o4-mini (Fast)"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

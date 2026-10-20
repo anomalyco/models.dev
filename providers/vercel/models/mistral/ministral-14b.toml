@@ -3,7 +3,7 @@ base_model = "mistral/ministral-14b"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]

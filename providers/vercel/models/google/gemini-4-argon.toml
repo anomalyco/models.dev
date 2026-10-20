@@ -3,7 +3,7 @@ base_model = "google/gemini-4-argon"
 description = "Gemini multimodal model for text, image, audio, video, and document tasks"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
 output = ["text"]
 
 [capabilities]

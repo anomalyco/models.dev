@@ -3,7 +3,7 @@ base_model = "google/gemini-3.5-flash-lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
 output = ["text"]
 
 [capabilities]

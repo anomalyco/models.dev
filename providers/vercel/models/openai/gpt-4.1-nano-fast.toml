@@ -3,7 +3,7 @@ base_model = "openai/gpt-4.1-nano"
 name = "GPT-4.1 nano (Fast)"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
