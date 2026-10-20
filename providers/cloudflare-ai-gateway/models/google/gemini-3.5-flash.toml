@@ -15,14 +15,5 @@ context = 1_048_576
 price = 1.5
 cache = { read = 0.15 }
 
-[[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
-price = 1.5
-cache = { read = 0.15 }
-
 [cost.text.output]
-price = 9
-
-[[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
 price = 9

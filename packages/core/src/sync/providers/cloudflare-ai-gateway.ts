@@ -933,6 +933,8 @@ function contextCost(
   short: ReturnType<typeof tokenCost>,
   long: ReturnType<typeof tokenCost>,
 ): NonNullable<SyncedBaseModel["cost"]> {
+  // Some rows repeat the same prices above the threshold; that isn't a tier.
+  if (JSON.stringify(short) === JSON.stringify(long)) return short;
   return {
     ...short,
     tiers: [{ ...long, tier: { type: "context", size } }],

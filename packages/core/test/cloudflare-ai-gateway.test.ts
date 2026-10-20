@@ -130,6 +130,22 @@ test("maps structured provider pricing instead of display labels", () => {
   });
 });
 
+test("drops a context tier whose prices equal the base", () => {
+  const model = buildCloudflareAiGatewayModel({
+    model_id: "unbiased/pareto",
+    task: "Text Generation",
+    provider_details: providerDetails({
+      under_200k_per_1m_input_tokens: 0.5,
+      under_200k_per_1m_input_cached_tokens: 0.05,
+      under_200k_per_1m_output_tokens: 3,
+      over_200k_per_1m_input_tokens: 0.5,
+      over_200k_per_1m_input_cached_tokens: 0.05,
+      over_200k_per_1m_output_tokens: 3,
+    }),
+  }, undefined);
+  expect(model.cost).toEqual({ input: 0.5, output: 3, cache_read: 0.05 });
+});
+
 test("derives nested Cloudflare effort values without inventing a toggle", () => {
   expect(deriveReasoningOptions({
     properties: {
