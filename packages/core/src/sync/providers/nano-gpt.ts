@@ -159,14 +159,12 @@ export function buildNanoGptModel(
     const sourceReasoning = inferredSourceReasoning;
     const sourceReasoningOptions = reasoningOptions(model, sourceReasoning, existing?.reasoning_options);
 
+    // Model facts (family, dates, knowledge, open weights) come from the lab file.
     return factorBaseModel(
       baseModel,
       {
         name: existing?.name ?? model.name ?? undefined,
         description: existingAlreadyFactored ? existing?.description : undefined,
-        family: existingAlreadyFactored ? existing?.family : undefined,
-        release_date: existingAlreadyFactored ? existing?.release_date : undefined,
-        last_updated: existingAlreadyFactored ? existing?.last_updated : undefined,
         attachment: hasInputMetadata
           ? input.some((value) => value !== "text")
           : existing?.attachment,
@@ -175,7 +173,6 @@ export function buildNanoGptModel(
         temperature: existing?.temperature,
         tool_call: capabilities.tool_calling ?? existing?.tool_call,
         structured_output: capabilities.structured_output ?? existing?.structured_output,
-        knowledge: existing?.knowledge,
         status: existing?.status,
         interleaved: existing?.interleaved,
         provider: existing?.provider,

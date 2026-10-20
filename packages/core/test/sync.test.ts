@@ -740,6 +740,27 @@ test("factored NanoGPT models inherit missing intrinsic metadata without zero ov
   expect(sparse).not.toHaveProperty("modalities");
 });
 
+test("NanoGPT base_model files leave model facts to the lab", () => {
+  const model = buildNanoGptModel(nanoGptModel({
+    id: "google/gemini-2.5-pro",
+    created: 1_790_208_000,
+    open_weights: true,
+  }), {
+    base_model: "google/gemini-2.5-pro",
+    family: "gemini",
+    release_date: "2024-01-01",
+    last_updated: "2024-01-01",
+    knowledge: "2023-01",
+    open_weights: true,
+    limit: { context: 1_048_576, output: 65_536 },
+  });
+
+  expect(model).toMatchObject({ base_model: "google/gemini-2.5-pro" });
+  for (const key of ["family", "release_date", "last_updated", "knowledge", "open_weights"]) {
+    expect(model).not.toHaveProperty(key);
+  }
+});
+
 test("preserves route-specific NanoGPT names when first factoring existing models", () => {
   const thinking = buildNanoGptModel(nanoGptModel({
     id: "claude-opus-4-thinking:8192",
