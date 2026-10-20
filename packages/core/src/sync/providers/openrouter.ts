@@ -307,11 +307,22 @@ const MEDIA_BASE_MODEL_OVERRIDES: Record<string, string> = {
   "fish-audio/s2.1-pro-free:free": "fish-audio/s2.1-pro",
   "mistralai/mistral-embed-2312": "mistral/mistral-embed",
   "mistralai/voxtral-small-24b-2507-stt": "mistral/voxtral-small-24b-2507",
+  // OpenRouter serves it as "mistralai/voxtral-mini-transcribe-2602" (endpoints API):
+  // Voxtral Mini Transcribe 2, API ID voxtral-mini-2602.
+  "mistralai/voxtral-mini-transcribe": "mistral/voxtral-mini-2602",
   // xAI's only TTS model, and its STT slug: grok-voice-transcribe-1.0 reached end
   // of life on 2026-10-02 and is served by 2.0 (https://docs.x.ai/developers/release-notes).
   "x-ai/grok-voice-tts-1.0": "xai/grok-tts",
   "x-ai/grok-stt-1.0": "xai/grok-voice-transcribe-2.0",
 };
+
+// Transcription models whose pricing.prompt is per audio hour, not per second.
+// Their OpenRouter pages bill "Audio Hours" ("$0.36/hour", "$0.10/hour"), matching
+// Microsoft's prices ("$0.10 per hour" for MAI-Transcribe-2):
+// https://openrouter.ai/microsoft/mai-transcribe-1.5
+// https://openrouter.ai/microsoft/mai-transcribe-2
+// https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/mai-transcribe-2-highest-quality-transcription-at-the-fastest-speed-and-lowest-c/4550972
+const HOURLY_TRANSCRIPTION = new Set(["microsoft/mai-transcribe-1.5", "microsoft/mai-transcribe-2"]);
 
 export function mediaType(model: OpenRouterModel): MediaType | undefined {
   const [output, ...rest] = model.architecture.output_modalities;
@@ -348,7 +359,13 @@ export function buildOpenRouterMediaModel(
     if (type === "speech" && stableInheritedValue(lab.modalities) !== stableInheritedValue(modalities)) {
       doc.modalities = modalities;
     }
-    if (current?.capabilities !== undefined) doc.capabilities = current.capabilities;
+    // Hand-authored host capabilities are kept, minus what the lab already says.
+    const capabilities = Object.fromEntries(
+      Object.entries((current?.capabilities ?? {}) as Record<string, unknown>).filter(
+        ([key, value]) => !sameInheritedValue(value, (lab.capabilities as Record<string, unknown> | undefined)?.[key]),
+      ),
+    );
+    if (Object.keys(capabilities).length > 0) doc.capabilities = capabilities;
     // Only embedding and rerank inputs are token-limited; OpenRouter's context for
     // speech and transcription models is often the chat model's it derives from.
     const labContext = (lab.limit as { context?: number } | undefined)?.context;
@@ -367,6 +384,7 @@ export function buildOpenRouterMediaModel(
       if (current?.[key] !== undefined) doc[key] = current[key];
     }
     doc.open_weights = Boolean(model.hugging_face_id);
+    // Only for models with no lab file yet; linked files take the lab's date.
     doc.release_date = dateFromTimestamp(model.created);
     if (current?.status !== undefined) doc.status = current.status;
     doc.modalities = modalities;
@@ -440,10 +458,9 @@ export function mediaCost(model: OpenRouterModel, type: MediaType) {
           audio: { input: { price: perMillion(prompt) } },
         };
       }
-      // Duration prices are per second, except a few OpenRouter lists per hour
-      // (MAI-Transcribe: "0.36", shown as "$0.36/hour"). No transcription costs
-      // $36 an hour, so anything from $0.01 a second up is an hourly price.
-      const perSecond = prompt >= 0.01 ? prompt / 3600 : prompt;
+      // "Duration-based ... Priced per second of audio input" (STT guide), except
+      // the models OpenRouter prices per audio hour.
+      const perSecond = HOURLY_TRANSCRIPTION.has(model.id) ? prompt / 3600 : prompt;
       return { audio: { input: { unit: "second", price: roundPrice(perSecond) } } };
     }
     case "embedding": {

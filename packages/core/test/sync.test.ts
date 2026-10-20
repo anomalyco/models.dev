@@ -5309,11 +5309,15 @@ test("prices OpenRouter media models in each type's cost unit", () => {
     text: { input: { price: 0.5 } },
     audio: { output: { price: 9 } },
   });
-  // Transcription: per input second (hourly prices converted), or per token.
+  // Transcription: per input second as reported, per token, or per hour for the
+  // models OpenRouter bills in audio hours.
   expect(cost("transcription", { prompt: "0.0001", completion: "0" })).toEqual({
     audio: { input: { unit: "second", price: 0.0001 } },
   });
   expect(cost("transcription", { prompt: "0.36", completion: "0" })).toEqual({
+    audio: { input: { unit: "second", price: 0.36 } },
+  });
+  expect(cost("transcription", { prompt: "0.36", completion: "0" }, "microsoft/mai-transcribe-1.5")).toEqual({
     audio: { input: { unit: "second", price: 0.0001 } },
   });
   expect(cost("transcription", { prompt: "0.0000025", completion: "0.00001" })).toEqual({

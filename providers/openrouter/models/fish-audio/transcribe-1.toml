@@ -4,23 +4,7 @@
 # https://openrouter.ai/docs/guides/overview/multimodal/stt
 schema = 2
 v2_only = true
-type = "transcription"
-name = "Transcribe 1"
-description = "Speech-to-text model"
-open_weights = false
-release_date = "2026-07-29"
-
-[modalities]
-input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-
-[limit]
-context = 0
-output = 0
+base_model = "fish-audio/transcribe-1"
 
 [api.transcriptions]
 base_url = "https://openrouter.ai/api/v1"

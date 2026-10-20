@@ -1,24 +1,13 @@
 # Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
 # https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+# Limit: OpenRouter's catalog reports 512, the encoder's position limit; the lab's context is sentence-transformers'
+#   default truncation (max_seq_length).
 schema = 2
 v2_only = true
-type = "embedding"
-name = "paraphrase-MiniLM-L6-v2"
-description = "Text embedding model"
-open_weights = true
-release_date = "2025-11-18"
-
-[modalities]
-input = ["text"]
-output = ["embedding"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
+base_model = "sentence-transformers/paraphrase-minilm-l6-v2"
 
 [limit]
 context = 512
-output = 0
 
 [api.embeddings]
 base_url = "https://openrouter.ai/api/v1"

@@ -1,5 +1,7 @@
 # Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
 # https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+# Limit: OpenRouter's catalog reports 20,000, Vertex AI's per-request total; each input text is limited to 2,048
+#   tokens (the lab's value): https://docs.cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings
 schema = 2
 v2_only = true
 base_model = "google/gemini-embedding-001"

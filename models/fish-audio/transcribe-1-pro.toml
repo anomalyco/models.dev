@@ -1,6 +1,6 @@
 # Released 2026-09-18: https://docs.fish.audio/developer-guide/getting-started/changelog
-# Input formats: the common list in OpenRouter's speech-to-text docs (the lab lists none here):
-#   https://openrouter.ai/docs/guides/overview/multimodal/stt
+# Input formats (WAV, MP3, AAC incl. M4A/MP4, FLAC, Ogg, WebM/Matroska, MOV):
+#   https://docs.fish.audio/api-reference/endpoint/openapi-v1/speech-to-text
 schema = 2
 v2_only = true
 type = "transcription"
@@ -10,7 +10,7 @@ open_weights = false
 release_date = "2026-09-18"
 
 [modalities]
-input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"]
+input = ["audio/wav", "audio/mpeg", "audio/aac", "audio/mp4", "audio/flac", "audio/ogg", "audio/webm", "video/x-matroska", "video/quicktime"]
 output = ["text"]
 
 [capabilities]

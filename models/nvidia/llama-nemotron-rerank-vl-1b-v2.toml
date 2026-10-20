@@ -1,6 +1,8 @@
 # Release date (12/18/2025) and reranking model: https://huggingface.co/nvidia/llama-nemotron-rerank-vl-1b-v2
 # Image formats: base64 data URLs; "PNG, JPEG, WebP, GIF, BMP, and TIFF image bytes are recognized":
 #   https://docs.nvidia.com/nim/nemo-retriever/text-reranking/latest/use-the-api-openai.html
+# Context: evaluated "with max_input_tiles = 6 and the maximum context length of 10240 tokens. Inputs exceeding the
+#   maximum length are truncated": https://huggingface.co/nvidia/llama-nemotron-rerank-vl-1b-v2
 schema = 2
 type = "reranking"
 name = "Llama Nemotron Rerank VL 1B v2"
@@ -11,7 +13,7 @@ release_date = "2025-12-18"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "image/bmp", "image/tiff"]
-output = ["text"]
+output = ["reranking"]
 
 [capabilities]
 tools = { supported = false }
@@ -21,5 +23,5 @@ top_p = false
 top_k = false
 
 [limit]
-context = 128_000
+context = 10_240
 output = 4_096

@@ -1,5 +1,7 @@
 # Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
 # https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+# Limit: OpenRouter's catalog reports 8,194, the encoder's max_position_embeddings
+#   (https://huggingface.co/BAAI/bge-m3/blob/main/config.json); BAAI documents 8,192 tokens.
 schema = 2
 v2_only = true
 base_model = "baai/bge-m3"
