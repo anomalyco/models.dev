@@ -7,9 +7,11 @@ import { AuthoredModel, AuthoredModelShape, ModelMetadata, type Model, type Prov
 import { resolveProtocol } from "../generate-v2.js";
 import {
   formatModelV2,
+  type InheritedFlags,
   multiplierModes,
   patchModelV2,
   providerModelToV2,
+  resolvedFlags,
   sameV1Model,
   withoutModeCosts,
 } from "../model-file-v2.js";
@@ -529,7 +531,15 @@ export async function syncProvider<SourceModel>(
       modelMetadata ??= await readModelMetadata(provider.modelsDir);
       const model = withBaseModalities(file.model, modelMetadata);
       const headerChanged = provider.authoritativeHeaders && current.header !== file.header;
-      if (!headerChanged && sameV1Model(current.authored, model)) {
+      // `reasoning` and `tool_call` compare resolved against the lab, so a switch
+      // between inheriting the lab's value and overriding it is still a change.
+      const resolved = {
+        before: resolvedFlags(current.authored, baseMetadata(current.authored, modelMetadata)),
+        after: resolvedFlags(model, baseMetadata(model, modelMetadata)),
+      };
+      const sameFlags = resolved.before.reasoning === resolved.after.reasoning
+        && resolved.before.tool_call === resolved.after.tool_call;
+      if (!headerChanged && sameFlags && sameV1Model(current.authored, model)) {
         unchanged++;
         continue;
       }
@@ -540,6 +550,8 @@ export async function syncProvider<SourceModel>(
         current.authored,
         model,
         v2Notices,
+        undefined,
+        resolved,
       );
       if (content === undefined || options.newOnly) {
         unchanged++;
@@ -688,6 +700,7 @@ function v2Content(
   model: z.infer<typeof SyncedAuthoredModel>,
   notices: string[],
   protocol?: string,
+  resolved?: { before: InheritedFlags; after: InheritedFlags },
 ) {
   const { id, ...synced } = model;
   try {
@@ -697,7 +710,7 @@ function v2Content(
     const after = withoutModeCosts(synced, carried);
     const next = doc === undefined || before === undefined
       ? providerModelToV2(after, protocol)
-      : patchModelV2(doc, withoutModeCosts(before, carried), after);
+      : patchModelV2(doc, withoutModeCosts(before, carried), after, resolved);
     const content = header + formatModelV2(next);
     const translated = modelV2ToV1(
       { ...(Bun.TOML.parse(content) as Record<string, unknown>), id },
@@ -726,6 +739,13 @@ async function newModelProtocol(modelsDir: string, model: z.infer<typeof SyncedA
   const shape = "provider" in model ? model.provider?.shape : undefined;
   const npm = ("provider" in model ? model.provider?.npm : undefined) ?? provider.npm;
   return resolveProtocol(model as unknown as Model, provider, npm, shape);
+}
+
+function baseMetadata(
+  model: Record<string, unknown>,
+  modelMetadata: Record<string, Record<string, unknown>>,
+) {
+  return typeof model.base_model === "string" ? modelMetadata[model.base_model] : undefined;
 }
 
 // v2 files list both modality sides, but a synced base_model override only lists

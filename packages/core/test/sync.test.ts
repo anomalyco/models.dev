@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test";
-import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
+import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncedModel, type SyncProvider } from "../src/sync/index.js";
 import {
   anthropic,
   buildAnthropicModel,
@@ -5931,6 +5931,95 @@ test("writes v2 sync entries as is and leaves unchanged files alone", async () =
     price = 20;
     expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 1, unchanged: 0 });
     expect(await readFile(file, "utf8")).toContain("price = 20");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("v2 patches switch tool_call and reasoning between the lab's value and an override", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-v2-flags-"));
+  const modelsDir = path.join(root, "providers", "example", "models");
+  await mkdir(path.join(root, "models", "lab"), { recursive: true });
+  await mkdir(path.join(modelsDir, "lab"), { recursive: true });
+  await writeFile(path.join(root, "models", "lab", "chat.toml"), [
+    "schema = 2",
+    'name = "Chat"',
+    'description = "Example chat model"',
+    "open_weights = false",
+    'release_date = "2026-01-01"',
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "temperature = true",
+    "top_p = true",
+    "top_k = false",
+    "",
+    "[limit]",
+    "context = 100_000",
+    "output = 10_000",
+    "",
+  ].join("\n"));
+  const file = path.join(modelsDir, "lab", "chat.toml");
+  const write = (capabilities: string[]) => writeFile(file, [
+    "schema = 2",
+    'base_model = "lab/chat"',
+    "",
+    "[capabilities]",
+    ...capabilities,
+    "effort_updates = false",
+    "",
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
+    "",
+  ].join("\n"));
+  let synced: SyncedModel = { base_model: "lab/chat", cost: { input: 1, output: 2 } };
+  const provider: SyncProvider<string> = {
+    id: "v2-flags-test",
+    name: "v2 flags test",
+    modelsDir,
+    async fetchModels() {
+      return ["lab/chat"];
+    },
+    parseModels(raw) {
+      return raw as string[];
+    },
+    translateModel(id) {
+      return { id, model: synced };
+    },
+  };
+
+  try {
+    // The file inherits tools from the lab; the source now reports none.
+    await write([]);
+    synced = { base_model: "lab/chat", tool_call: false, cost: { input: 1, output: 2 } };
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    let doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
+    expect(doc.capabilities).toEqual({ effort_updates: false, tools: { supported: false } });
+
+    // The source reports tools again, which the lab already says: the override goes.
+    synced = { base_model: "lab/chat", cost: { input: 1, output: 2 } };
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
+    expect(doc.capabilities).toEqual({ effort_updates: false });
+
+    // An explicit value equal to the lab's, with v2-only data, is left alone.
+    await write(["tools = { supported = true, updates = false }"]);
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1 });
+
+    // Reasoning switches the same way.
+    synced = { base_model: "lab/chat", reasoning: true, reasoning_options: [], cost: { input: 1, output: 2 } };
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
+    expect(doc.capabilities.reasoning).toEqual({ supported: true });
+    expect(doc.capabilities.tools).toEqual({ supported: true, updates: false });
   } finally {
     await rm(root, { recursive: true, force: true });
   }

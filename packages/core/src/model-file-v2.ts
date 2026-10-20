@@ -105,15 +105,23 @@ function apiEntry(model: Record<string, any>, fallback: string | undefined) {
 // Applies a v1 change (`before` → `after`) to an existing v2 file. Fields whose
 // v1 view didn't change keep their v2 data (MIME modalities, cache TTLs, extra
 // capabilities, multipliers); changed prices are updated in place.
-export function patchModelV2(doc: Doc, before: Record<string, any>, after: Record<string, any>): Doc {
+export function patchModelV2(
+  doc: Doc,
+  before: Record<string, any>,
+  after: Record<string, any>,
+  resolved?: { before: InheritedFlags; after: InheritedFlags },
+): Doc {
   const next = providerModelToV2(after, Object.keys(doc.api ?? {})[0]);
-  // `reasoning` and `tool_call` may be inherited from the lab on one side, as in sameV1Model.
+  // `reasoning` and `tool_call` may be inherited from the lab on one side, as in
+  // sameV1Model. With the lab's values (`resolved`), they compare resolved.
   const same = (...keys: string[]) =>
-    keys.every(
-      (key) =>
-        ((key === "reasoning" || key === "tool_call") && (before[key] === undefined || after[key] === undefined)) ||
-        stable(before[key]) === stable(after[key]),
-    );
+    keys.every((key) => {
+      if (key === "reasoning" || key === "tool_call") {
+        if (resolved !== undefined) return resolved.before[key] === resolved.after[key];
+        if (before[key] === undefined || after[key] === undefined) return true;
+      }
+      return stable(before[key]) === stable(after[key]);
+    });
 
   if (same("modalities") && doc.modalities !== undefined) next.modalities = doc.modalities;
 
@@ -261,6 +269,22 @@ function sameTier(a: unknown, b: unknown) {
 // Compares two v1 models the way v2 files can express them: v2 always states
 // `reasoning` and `tool_call` when it sets them and derives `attachment`, while v1
 // files may inherit or omit them.
+export interface InheritedFlags {
+  reasoning?: boolean;
+  tool_call?: boolean;
+}
+
+// A v1 model's `reasoning` and `tool_call`, falling back to its base model's.
+export function resolvedFlags(
+  model: Record<string, any>,
+  base: Record<string, any> | undefined,
+): InheritedFlags {
+  return {
+    reasoning: model.reasoning ?? base?.reasoning,
+    tool_call: model.tool_call ?? base?.tool_call,
+  };
+}
+
 export function sameV1Model(a: Record<string, any>, b: Record<string, any>) {
   const left = normalizeV1(a);
   const right = normalizeV1(b);
