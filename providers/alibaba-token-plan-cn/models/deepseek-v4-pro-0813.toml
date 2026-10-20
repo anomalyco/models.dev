@@ -7,12 +7,15 @@
 # https://help.aliyun.com/zh/model-studio/token-plan-overview
 # https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
 # https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
+# Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates and effort_updates are left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (the DeepSeek, Kimi and MiniMax series do not support top_k).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
+top_k = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

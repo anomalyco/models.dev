@@ -1,3 +1,4 @@
+# Status: no longer on the plan's supported model list (https://help.aliyun.com/zh/model-studio/coding-plan, accessed 2026-10-19).
 schema = 2
 name = "Qwen3 Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
@@ -5,15 +6,17 @@ family = "qwen"
 open_weights = false
 knowledge = "2025-04"
 release_date = "2026-01-23"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
+effort_updates = false
 
 [limit]
 context = 262_144

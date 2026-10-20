@@ -11,13 +11,16 @@
 # Sources:
 # https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
 # https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
+# Status: no longer on the plan's supported model list (https://help.aliyun.com/zh/model-studio/token-plan-team-overview, accessed 2026-10-19).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
+top_k = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

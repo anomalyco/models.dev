@@ -5,11 +5,15 @@
 # 32,769); the prior 24,576 was wrong.
 # Sources:
 # https://www.alibabacloud.com/help/en/model-studio/deep-thinking
+# Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates is left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (the DeepSeek, Kimi and MiniMax series do not support top_k).
 schema = 2
 base_model = "minimax/MiniMax-M2.5"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+top_k = false
+effort_updates = false
 
 [limit]
 context = 196_608

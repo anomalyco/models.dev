@@ -1,19 +1,22 @@
+# Status: no longer on the plan's supported model list (https://help.aliyun.com/zh/model-studio/coding-plan, accessed 2026-10-19).
 schema = 2
 name = "Qwen3 Coder Next"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 family = "qwen"
 open_weights = true
 release_date = "2026-02-03"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
+effort_updates = false
 
 [limit]
 context = 262_144

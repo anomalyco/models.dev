@@ -10,10 +10,12 @@
 # Sources:
 # https://help.aliyun.com/zh/model-studio/deep-thinking
 # https://help.aliyun.com/zh/model-studio/compatibility-with-openai-responses-api
+# Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates and effort_updates are left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
 schema = 2
 base_model = "alibaba/qwen3.6-plus"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = { max = 131_072 } }
 structured_output = true
 

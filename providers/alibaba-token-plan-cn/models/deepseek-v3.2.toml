@@ -18,10 +18,12 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+top_k = false
+effort_updates = false
 
 [limit]
 context = 131_072
