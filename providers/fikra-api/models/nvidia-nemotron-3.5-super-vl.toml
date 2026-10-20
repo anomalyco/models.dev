@@ -1,9 +1,9 @@
-# Host serves the lab Nemotron 3.5 Super VL entry under its short ID (https://fikraapi.co.ke/pricing, https://api.fikraapi.co.ke/models); the OpenAI-compatible whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19) does not accept `thinking` or `reasoning_effort`, so control options are not offered here. Limits inherit the lab entry pending a citable host source.
+# Relay of the lab entry behind Fikra's OpenAI-compatible /v1 (prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
+# Control surface: the host's documented request whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19)
+# rejects `thinking` and `reasoning_effort`, so reasoning runs lab-default and the options below stay empty
+# pending a live probe that shows a control being honored.
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 description = "Open-weight NVIDIA Nemotron 3.5 Super VL for classification, extraction and document parsing"
-
-# Reasoning content is emitted on the wire but no control surface is exposed (see top comment).
-reasoning = true
 reasoning_options = []
 
 [cost]

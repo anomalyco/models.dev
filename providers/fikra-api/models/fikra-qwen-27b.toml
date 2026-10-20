@@ -1,21 +1,13 @@
+# Host lane on Fikra's OpenAI-compatible /v1 (limits and prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
+# Relay of the lab entry that the host routes this lane to (upstream mapping is internal to the host).
 name = "Fikra Qwen 27B"
-description = "Fikra-tuned Qwen 27B for chat and agent completions with function calling"
-release_date = "2026-09"
-last_updated = "2026-10-19"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-open_weights = false
+description = "Qwen 3.8 27B relay for chat and agent completions with function calling"
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = []
 
 [cost]
 input = 0.045
 output = 0.35
-[limit]
-context = 262144
-output = 65536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[limit]
+output = 65536

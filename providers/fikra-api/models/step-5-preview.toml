@@ -1,15 +1,14 @@
-# Host relays lab weights with reasoning content generated on the wire; the OpenAI-compatible whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19) does not accept `thinking` or `reasoning_effort`, so control options are not offered here. Preview route: expect repetition loops and very high latency on long prompts, included for early evaluation.
+# Relay of the lab entry behind Fikra's OpenAI-compatible /v1 (prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
+# Control surface: the host's documented request whitelist (https://fikraapi.co.ke/docs, verified 2026-10-19)
+# rejects `thinking` and `reasoning_effort`, so reasoning runs lab-default and the options below stay empty
+# pending a live probe that shows a control being honored.
 base_model = "stepfun/step-5-preview"
-description = "StepFun Step 5 preview route for early evaluation"
-
-# Reasoning content is emitted on the wire but no control surface is exposed (see top comment).
-reasoning = true
+description = "StepFun Step 5 preview route for early evaluation; expect repetition loops and very high latency on long prompts"
 reasoning_options = []
 
 [cost]
 input = 1.25
 output = 3.3
 
-# Host serving caps below lab limits. Source: https://fikraapi.co.ke/pricing (verified 2026-10-19).
 [limit]
 output = 65536
