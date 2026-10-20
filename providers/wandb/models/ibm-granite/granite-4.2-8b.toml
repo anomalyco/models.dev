@@ -1,22 +1,13 @@
 schema = 2
-name = "Granite 4.2 8B"
+base_model = "ibm/granite-4.2-8b"
 description = "Granite 4.2 8B is an instruct model capable of enhanced tool calling, instruction following, and chat capabilities."
-family = "granite"
-open_weights = true
-release_date = "2026-08-24"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 
 [limit]
-context = 131_072
 output = 131_072
 
 [cost.text.input]

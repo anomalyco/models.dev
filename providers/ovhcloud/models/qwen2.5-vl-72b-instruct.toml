@@ -1,18 +1,12 @@
 schema = 2
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 name = "Qwen2.5-VL-72B-Instruct"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-open_weights = true
-release_date = "2025-03-31"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 32_768

@@ -1,24 +1,15 @@
 # W&B lists always-on reasoning with minimal/low/medium/high/xhigh/max effort; no on/off toggle.
 # https://trace.wandb.ai/inference/catalog/models
 schema = 2
-name = "Beam 1.0 501B A23B"
+base_model = "reflection/beam-1.0-501b-a23b"
 description = "Beam is a 501B-parameter MoE model with 23B active parameters built for coding, reasoning, and agentic workflows."
-family = "beam"
-open_weights = true
-release_date = "2026-10-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = true
 
 [limit]
-context = 1_048_576
 output = 1_048_576
 
 [cost.text.input]

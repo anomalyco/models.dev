@@ -1,10 +1,9 @@
 # Chat `reasoning_effort` supports none|minimal|low|medium|high; `none` disables it.
 # https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/qwen-3-6-27b/
 schema = 2
+base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6-27B"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-open_weights = true
-release_date = "2026-06-01"
 
 [modalities]
 input = ["text", "image"]
@@ -14,10 +13,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
-context = 262_144
 output = 262_144
 
 [cost.text.input]
