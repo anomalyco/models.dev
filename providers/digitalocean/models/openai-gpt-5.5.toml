@@ -2,6 +2,10 @@
 # `reasoning.effort = none|low|medium|high|xhigh`.
 # https://docs.digitalocean.com/products/inference/details/models/index.html.md (accessed 2026-06-25)
 # https://developers.openai.com/api/docs/models/gpt-5.5 (accessed 2026-06-25)
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: automatic for prompts of 1024+ tokens. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
 schema = 2
 base_model = "openai/gpt-5.5"
 base_model_omit = ["limit.input"]
@@ -13,8 +17,12 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
 structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_000_000

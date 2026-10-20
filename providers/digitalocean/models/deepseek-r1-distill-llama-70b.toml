@@ -1,19 +1,24 @@
+# Lifecycle: lifecycle_status = end_of_life in https://api.digitalocean.com/v2/gen-ai/models (2026-10-20).
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
 schema = 2
 name = "DeepSeek R1 Distill Llama 70B"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
 family = "deepseek-thinking"
 open_weights = true
 release_date = "2025-01-30"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 temperature = true
+effort_updates = false
 
 [limit]
 context = 32_678

@@ -1,10 +1,16 @@
+# Lifecycle: lifecycle_status = end_of_life in https://api.digitalocean.com/v2/gen-ai/models (2026-10-20).
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
 schema = 2
 base_model = "zhipuai/glm-5"
 name = "GLM 5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+effort_updates = false
 
 [limit]
 context = 64_000

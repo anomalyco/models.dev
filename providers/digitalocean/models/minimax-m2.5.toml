@@ -1,3 +1,7 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates = false: live 2026-10-20, a system message after an assistant turn returns 200 but is not delivered (4 of 4 attempts).
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
 schema = 2
 name = "MiniMax M2.5 (Public Preview)"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
@@ -12,9 +16,13 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true }
 temperature = true
+system_updates = false
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
 context = 65_536

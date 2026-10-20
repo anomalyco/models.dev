@@ -1,3 +1,5 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
 schema = 2
 base_model = "anthropic/claude-3-5-haiku-20241022"
 name = "Claude 3.5 Haiku"
@@ -9,7 +11,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
+effort_updates = false
 
 [cost.text.input]
 price = 0.8

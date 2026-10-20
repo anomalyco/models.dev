@@ -1,3 +1,5 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
 schema = 2
 base_model = "mistral/mistral-nemo"
 name = "Mistral Nemo Instruct"
@@ -5,7 +7,9 @@ description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
+effort_updates = false
 
 [limit]
 output = 16_384

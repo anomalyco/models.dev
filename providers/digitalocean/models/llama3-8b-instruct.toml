@@ -1,10 +1,14 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
 schema = 2
 base_model = "meta/llama-3.1-8b-instruct"
 name = "Llama 3.1 Instruct (8B)"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
+effort_updates = false
 
 [limit]
 context = 131_072

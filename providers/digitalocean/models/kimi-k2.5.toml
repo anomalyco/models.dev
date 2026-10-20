@@ -1,14 +1,20 @@
+# Lifecycle: lifecycle_status = end_of_life in https://api.digitalocean.com/v2/gen-ai/models (2026-10-20).
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
+effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
