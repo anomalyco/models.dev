@@ -397,9 +397,22 @@ function translateReasoningOptions(
       options.push({ type: "budget_tokens" });
       continue;
     }
+    if (option.type === "effort") {
+      // Low to high, so a reordered catalog never rewrites the files.
+      const values = [...option.values].sort((a, b) => effortRank(a) - effortRank(b));
+      options.push({ ...option, values } as NonNullable<SyncedFullModel["reasoning_options"]>[number]);
+      continue;
+    }
     options.push(option as NonNullable<SyncedFullModel["reasoning_options"]>[number]);
   }
   return options.length > 0 ? options : [];
+}
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
+
+function effortRank(value: string) {
+  const rank = EFFORT_ORDER.indexOf(value);
+  return rank === -1 ? EFFORT_ORDER.length : rank;
 }
 
 function translateInterleaved(

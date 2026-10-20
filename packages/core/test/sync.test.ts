@@ -89,6 +89,7 @@ import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
 import { buildWandbModel, mergeReasoningOptions, type WandbModel } from "../src/sync/providers/wandb.js";
+import { buildChutesModel } from "../src/sync/providers/chutes.js";
 import { buildXAIModel, xai } from "../src/sync/providers/xai.js";
 
 function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel {
@@ -3170,6 +3171,37 @@ test("W&B takes on/off from the endpoint and effort from the authored file", () 
   expect(mergeReasoningOptions([{ type: "toggle" }], [{ type: "toggle" }])).toEqual([{ type: "toggle" }]);
   expect(mergeReasoningOptions([], [{ type: "budget_tokens" }])).toEqual([]);
   expect(mergeReasoningOptions([], undefined)).toEqual([]);
+});
+
+test("base_model files from W&B, Hyper and Chutes leave model facts to the lab", () => {
+  const facts = ["family", "release_date", "last_updated", "knowledge", "open_weights"];
+  const wandb = buildWandbModel({
+    id: "zai-org/GLM-5.2",
+    name: "GLM 5.2",
+    family: "glm",
+    attachment: false,
+    reasoning: true,
+    tool_call: true,
+    knowledge: "2020-01",
+    release_date: "2020-01-02",
+    last_updated: "2020-01-03",
+    open_weights: false,
+  } as WandbModel, undefined, "zhipuai/glm-5.2");
+  const hyper = buildHyperModel(hyperModel({ id: "glm-5.2", created: 0 }), undefined, "zhipuai/glm-5.2");
+  const chutes = buildChutesModel({ id: "zai-org/GLM-5.2-TEE", created: 0 }, undefined);
+  for (const model of [wandb, hyper, chutes]) {
+    expect(model).toMatchObject({ base_model: "zhipuai/glm-5.2" });
+    for (const key of facts) expect(model).not.toHaveProperty(key);
+  }
+});
+
+test("Hyper writes effort levels from lowest to highest", () => {
+  const model = hyperModel({
+    id: "glm-5.2",
+    reasoning: { effort_levels: [{ value: "max" }, { value: "low" }, { value: "high" }] },
+  });
+  expect(buildHyperModel(model, undefined, "zhipuai/glm-5.2").reasoning_options)
+    .toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
 });
 
 test("formats reasoning efforts from lowest to highest", () => {
