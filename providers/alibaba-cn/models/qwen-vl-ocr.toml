@@ -2,6 +2,7 @@
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
+# Image input formats (BMP, JPEG, PNG, TIFF, WEBP, HEIC with their MIME types): https://www.alibabacloud.com/help/en/model-studio/qwen-vl-ocr (Image limits, Supported image formats).
 schema = 2
 name = "Qwen-VL OCR"
 description = "OCR model for extracting structured text from documents and screenshots"
