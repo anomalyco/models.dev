@@ -1,3 +1,6 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning (that page says Claude Fable 5 ignores the disable,
+# while the catalog route reports disable_supported = true, which the sync follows).
 # Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-fable-5 (accessed 2026-07-21)
 # The selected route advertises reasoning.effort and supports disabling reasoning;
 # exact effort values are not exposed, so only the verified toggle is listed.
