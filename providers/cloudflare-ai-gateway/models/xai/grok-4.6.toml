@@ -1,5 +1,6 @@
 # Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
 # Live 2026-10-19: a mid-conversation system message keeps the cached prefix (grok-4.3, in place); response_format json_schema is enforced (grok-4.3, grok-4.20-0309-non-reasoning).
+# Effort: reasoning_effort = low|medium|high (POST /ai/v1/chat/completions; xhigh rejected; live 2026-10-19: low 298 / medium 442 / high 548 reasoning tokens).
 schema = 2
 base_model = "xai/grok-4.6"
 

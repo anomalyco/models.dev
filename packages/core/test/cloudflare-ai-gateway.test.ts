@@ -200,7 +200,19 @@ test("uses Cloudflare's curated route controls for Kimi K3 and Fireworks DeepSee
   }, { authored: () => undefined, existing: () => undefined }).model.reasoning_options;
 
   expect(translate("moonshotai/kimi-k3")).toEqual([
-    { type: "effort", values: ["low", "high", "max"] },
+    { type: "effort", values: ["none", "low", "high", "max"] },
+  ]);
+  // The catalog schema's generic reasoning.effort enum (none..max) is not what Muse Spark 1.1
+  // accepts on this route; the curated list overrides it.
+  expect(cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id: "meta/muse-spark-1.1",
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+    schemaInput: { properties: { reasoning: { properties: { effort: { enum: ["none", "low", "medium", "high", "xhigh", "max"] } } } } },
+  }, { authored: () => undefined, existing: () => undefined }).model.reasoning_options).toEqual([
+    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh"] },
   ]);
   expect(translate("deepseek/deepseek-v4-pro")).toEqual([
     { type: "effort", values: ["none", "low", "high", "max"] },

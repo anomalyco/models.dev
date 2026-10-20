@@ -1,6 +1,6 @@
 # Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
 # Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).
-# Off: reasoning_effort = none; effort: low|high|max (Fireworks route; medium -> high, xhigh -> max).
+# Off: reasoning_effort = none; effort: low|high|max (POST /ai/v1/chat/completions, Fireworks route; medium -> high, xhigh -> max; live 2026-10-19: none -> 0, low 50 / high 103 / max 151 reasoning tokens).
 # Sources: https://docs.fireworks.ai/api-reference/post-chatcompletions ; https://docs.fireworks.ai/guides/reasoning
 schema = 2
 base_model = "fireworks/ember-1"

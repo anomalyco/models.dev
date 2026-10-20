@@ -1,6 +1,6 @@
 # Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Fireworks: no per-turn effort or tool-change mechanism.
 # Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place); response_format json_schema is enforced.
-# Effort: reasoning_effort = low|medium|high|xhigh (default xhigh; reasoning cannot be disabled, none|max rejected; POST /ai/v1/chat/completions).
+# Effort: reasoning_effort = low|medium|high|xhigh (POST /ai/v1/chat/completions; default xhigh; none rejected; live 2026-10-19: low 506 / high 1038 / xhigh 1519 reasoning tokens).
 # Sources: https://dev.meta.ai/docs/muse-spark-open/prompting ; https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B ; https://developers.cloudflare.com/ai/models/meta/muse-spark-open/
 schema = 2
 base_model = "meta/muse-spark-open"
