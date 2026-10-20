@@ -3,7 +3,7 @@ base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 name = "Nemotron 3 Nano Omni"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4"]
 output = ["text"]
 
 [capabilities]

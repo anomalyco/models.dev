@@ -1,23 +1,14 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/embeddings)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/
 schema = 2
+base_model = "sentence-transformers/all-minilm-l6-v2"
 name = "All-MiniLM-L6-v2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "text-embedding"
-open_weights = true
-release_date = "2021-08-30"
-last_updated = "2026-04-16"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
-context = 256
 output = 384
+
+[api.embeddings]
 
 [cost.text.input]
 price = 0.009

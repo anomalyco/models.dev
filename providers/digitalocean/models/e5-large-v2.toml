@@ -1,23 +1,13 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/embeddings)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/
 schema = 2
-name = "E5 Large v2"
+base_model = "intfloat/e5-large-v2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "text-embedding"
-open_weights = true
-release_date = "2023-05-19"
-last_updated = "2026-04-30"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
-context = 512
 output = 1_024
+
+[api.embeddings]
 
 [cost.text.input]
 price = 0.02

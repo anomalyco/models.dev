@@ -1,4 +1,7 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (fal models: POST /v1/async-invoke, no OpenAI protocol)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ($0.0030 per megapixel)
 schema = 2
+type = "image"
 name = "FLUX.1 [schnell]"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "flux"
@@ -18,3 +21,7 @@ temperature = false
 [limit]
 context = 0
 output = 0
+
+[cost.image.output]
+unit = "megapixel"
+price = 0.003

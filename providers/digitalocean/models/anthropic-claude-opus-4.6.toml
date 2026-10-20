@@ -4,11 +4,10 @@ name = "Anthropic Claude Opus 4.6"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 
 [limit]

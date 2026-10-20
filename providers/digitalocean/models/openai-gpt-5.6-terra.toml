@@ -3,7 +3,7 @@ base_model = "openai/gpt-5.6-terra"
 name = "OpenAI GPT-5.6 Terra"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

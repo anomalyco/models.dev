@@ -3,7 +3,7 @@ base_model = "openai/gpt-6-astra"
 name = "OpenAI GPT-6 Astra"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

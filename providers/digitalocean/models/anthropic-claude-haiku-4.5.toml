@@ -4,11 +4,10 @@ name = "Anthropic Claude Haiku 4.5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]

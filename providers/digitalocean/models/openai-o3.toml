@@ -4,11 +4,10 @@ name = "OpenAI o3"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 

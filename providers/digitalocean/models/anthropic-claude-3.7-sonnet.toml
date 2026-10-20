@@ -5,11 +5,10 @@ description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]

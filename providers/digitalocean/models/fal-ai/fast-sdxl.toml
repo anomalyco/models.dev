@@ -1,4 +1,7 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (fal models: POST /v1/async-invoke, no OpenAI protocol)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ($0.00111 per compute second; no cost unit for compute time)
 schema = 2
+type = "image"
 name = "Fast SDXL"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "stable-diffusion"

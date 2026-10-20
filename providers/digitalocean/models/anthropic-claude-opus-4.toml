@@ -3,7 +3,6 @@ base_model = "anthropic/claude-opus-4-0"
 name = "Claude Opus 4"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]

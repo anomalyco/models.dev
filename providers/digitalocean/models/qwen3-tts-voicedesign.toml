@@ -1,4 +1,7 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/audio/speech)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ (Qwen 3 TTS: $20.00 per 1M characters)
 schema = 2
+type = "speech"
 name = "Qwen3 TTS VoiceDesign"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "qwen"
@@ -18,3 +21,9 @@ temperature = false
 [limit]
 context = 32_768
 output = 1
+
+[api.speech]
+
+[cost.text.input]
+unit = "character"
+price = 20

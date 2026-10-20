@@ -4,11 +4,10 @@ name = "Anthropic Claude Sonnet 4.6"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 
 [limit]

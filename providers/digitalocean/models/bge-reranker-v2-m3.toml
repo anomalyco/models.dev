@@ -1,22 +1,11 @@
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/
+# No rerank endpoint is documented, so no API protocol is set.
 schema = 2
+base_model = "baai/bge-reranker-v2-m3"
 name = "BGE Reranker v2 M3"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
-family = "bge"
-open_weights = true
-release_date = "2024-03-12"
-last_updated = "2026-04-30"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
-context = 8_192
 output = 1
 
 [cost.text.input]

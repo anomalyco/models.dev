@@ -1,4 +1,7 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/embeddings)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/
 schema = 2
+type = "embedding"
 name = "GTE Large (v1.5)"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
@@ -8,7 +11,7 @@ last_updated = "2026-04-16"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
 
 [capabilities]
 tools = { supported = false }
@@ -18,6 +21,8 @@ temperature = false
 [limit]
 context = 8_192
 output = 1_024
+
+[api.embeddings]
 
 [cost.text.input]
 price = 0.09

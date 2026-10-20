@@ -1,4 +1,7 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/images/generations)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ($0.08 per image)
 schema = 2
+type = "image"
 name = "Stable Diffusion 3.5 Large"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "stable-diffusion"
@@ -19,8 +22,8 @@ temperature = false
 context = 256
 output = 1
 
-[cost.text.input]
-price = 0.08
+[api.images]
 
-[cost.text.output]
-price = 0
+[cost.image.output]
+unit = "image"
+price = 0.08

@@ -3,7 +3,7 @@ base_model = "alibaba/qwen3.8-max"
 name = "Qwen3.8-Max"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]

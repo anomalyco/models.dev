@@ -3,7 +3,7 @@ base_model = "openai/gpt-6-luna"
 name = "OpenAI GPT-6 Luna"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

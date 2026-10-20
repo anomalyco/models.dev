@@ -3,7 +3,7 @@ base_model = "anthropic/claude-fable-5-1"
 name = "Anthropic Claude Fable 5.1"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

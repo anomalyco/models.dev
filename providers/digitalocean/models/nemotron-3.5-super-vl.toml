@@ -4,11 +4,10 @@ name = "NVIDIA Nemotron 3.5 Super VL"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 
 [limit]

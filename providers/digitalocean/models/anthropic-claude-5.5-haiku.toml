@@ -3,7 +3,7 @@ base_model = "anthropic/claude-haiku-5-5"
 name = "Anthropic Claude 5.5 Haiku"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

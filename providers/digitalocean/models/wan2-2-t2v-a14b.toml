@@ -1,4 +1,7 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (async POST /v1/video/generations)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ($0.60 per video; no per-video cost unit, so no price)
 schema = 2
+type = "video"
 name = "Wan2.2-T2V-A14B"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 open_weights = true
@@ -17,9 +20,3 @@ temperature = false
 [limit]
 context = 100
 output = 1
-
-[cost.text.input]
-price = 0.6
-
-[cost.text.output]
-price = 0
