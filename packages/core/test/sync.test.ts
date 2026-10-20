@@ -39,6 +39,7 @@ import {
 } from "../src/sync/providers/edenai.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
 import { buildHuggingFaceModel, huggingface, type HuggingFaceModel } from "../src/sync/providers/huggingface.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   buildInceptronModel,
   parseInceptronModels,
@@ -6738,7 +6739,6 @@ test("Hugging Face creates v2 files with host data only and the lab's exact MIME
     },
     capabilities: {
       tools: { supported: true, updates: false },
-      reasoning: { supported: true },
       structured_output: true,
       effort_updates: false,
     },
@@ -6758,6 +6758,15 @@ test("Hugging Face creates v2 files with host data only and the lab's exact MIME
     providers: [{ provider: "fast", status: "live", pricing: { input: 0.4, output: 3.2 }, throughput: 90 }],
   }), "alibaba/qwen3.5-122b-a10b");
   expect(noTools.capabilities).not.toHaveProperty("tools");
+});
+
+test("Hugging Face skips new reasoning models until their controls are authored", () => {
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  expect(() => huggingface.translateModel(huggingFaceModel(), context)).toThrow(MissingReasoningOptionsError);
+  // Qwen3 Next Instruct doesn't reason: created.
+  expect(huggingface.translateModel(huggingFaceModel({ id: "Qwen/Qwen3-Next-80B-A3B-Instruct" }), context))
+    .toMatchObject({ v2: { base_model: "alibaba/qwen3-next-80b-a3b-instruct" } });
+  expect(() => buildHuggingFaceModel(huggingFaceModel(), "lab/missing")).toThrow("no lab file");
 });
 
 test("Hugging Face writes existing files back unchanged", () => {

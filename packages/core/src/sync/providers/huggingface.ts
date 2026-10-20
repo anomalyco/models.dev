@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { providerModelToV2 } from "../../model-file-v2.js";
 import type { SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://router.huggingface.co/v1/models";
@@ -105,14 +106,20 @@ export const huggingface = {
     if (authored !== undefined) return { id: model.id, model: authored as SyncedModel };
 
     const baseModel = resolveHuggingFaceBaseModel(model.id);
-    if (baseModel === undefined) return undefined;
+    const lab = baseModel === undefined ? undefined : labModel(baseModel);
+    if (baseModel === undefined || lab === undefined) return undefined;
 
     // The router only exposes pricing per inference provider, so a new model with
     // no priced provider cannot be created with a meaningful cost.
     const aggregate = aggregateProviders(model);
     if (aggregate.cost === undefined) return undefined;
+    // Reasoning controls depend on the inference provider the router picks, so a
+    // new reasoning model needs them researched before it's created.
+    if (((lab.capabilities as { reasoning?: { supported?: boolean } } | undefined)?.reasoning?.supported ?? lab.reasoning) === true) {
+      throw new MissingReasoningOptionsError(model.id, "Hugging Face reasoning controls vary by inference provider; author them before creating this model");
+    }
 
-    return { id: model.id, v2: buildHuggingFaceModel(model, baseModel, aggregate) };
+    return { id: model.id, v2: buildHuggingFaceModel(model, baseModel, aggregate, lab) };
   },
 } satisfies SyncProvider<HuggingFaceModel>;
 
@@ -185,8 +192,9 @@ export function buildHuggingFaceModel(
   model: HuggingFaceModel,
   baseModel: string,
   aggregate: Aggregate = aggregateProviders(model),
+  lab: Record<string, unknown> | undefined = labModel(baseModel),
 ): Record<string, unknown> {
-  const lab = labModel(baseModel);
+  if (lab === undefined) throw new Error(`Hugging Face model ${model.id}: no lab file for ${baseModel}`);
   const labModalities = lab.modalities as { input: string[]; output: string[] };
   const factored = factorBaseModel(baseModel, {
     structured_output: aggregate.structuredOutput || undefined,
@@ -206,17 +214,19 @@ export function buildHuggingFaceModel(
   // Chat Completions takes tools and reasoning_effort per request, with no
   // per-turn effort or tool-change message.
   // Tool support comes from the router (any live provider); otherwise it's inherited.
-  const capabilities = (lab.capabilities ?? {}) as { reasoning?: { supported?: boolean } };
   const next: Record<string, unknown> = {};
   if (aggregate.tools) next.tools = { supported: true, updates: false };
-  if ((capabilities.reasoning?.supported ?? lab.reasoning) === true) next.reasoning = { supported: true };
   Object.assign(next, doc.capabilities, { effort_updates: false });
   doc.capabilities = next;
   return doc;
 }
 
 function labModel(modelID: string) {
-  return Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as Record<string, unknown>;
+  try {
+    return Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as Record<string, unknown>;
+  } catch {
+    return undefined;
+  }
 }
 
 export function resolveHuggingFaceBaseModel(id: string) {

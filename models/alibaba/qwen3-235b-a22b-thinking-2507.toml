@@ -1,0 +1,30 @@
+# Model card: https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507 (created 2025-07-25, Apache 2.0).
+# Thinking mode only; 262,144-token native context; 81,920-token output length for hard reasoning tasks.
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
+v2_only = true
+name = "Qwen3 235B-A22B Thinking 2507"
+description = "Updated large open Qwen3 MoE thinking model for reasoning, math, coding, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2025-07-25"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 81_920
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507"
