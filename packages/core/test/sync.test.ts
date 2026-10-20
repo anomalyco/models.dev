@@ -86,6 +86,8 @@ import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/pr
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
+import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
+import { modelV2ToV1 } from "../src/translate.js";
 import { buildWandbModel, mergeReasoningOptions, type WandbModel } from "../src/sync/providers/wandb.js";
 import { buildXAIModel, xai } from "../src/sync/providers/xai.js";
 
@@ -5584,4 +5586,55 @@ test("rejects synced model paths that differ only in case", async () => {
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test("Vercel sync keeps exact MIME modalities and leaves model facts to the lab in v2 files", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "anthropic/claude-sonnet-4.6",
+      name: "Claude Sonnet 4.6",
+      created: 1_771_286_400,
+      context_window: 1_000_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision"],
+      pricing: { input: "0.000004", output: "0.000015" },
+    }],
+  });
+  // A host override of the lab's MIME list (no PDF, no GIF) next to stale model facts.
+  const doc = {
+    schema: 2,
+    base_model: "anthropic/claude-sonnet-4-6",
+    family: "claude",
+    open_weights: true,
+    knowledge: "2025-09",
+    release_date: "2025-01-01",
+    last_updated: "2025-02-01",
+    modalities: { input: ["text", "image/jpeg", "image/png", "image/webp"], output: ["text"] },
+    capabilities: { reasoning: { supported: true, effort: ["low", "high"] } },
+    cost: { text: { input: { price: 3 }, output: { price: 15 } } },
+  };
+  const { id: _id, ...existing } = modelV2ToV1({ ...doc, id: "anthropic/claude-sonnet-4.6" });
+
+  const synced = buildVercelModel(model!, existing as ExistingModel) as Record<string, any>;
+  expect(synced.modalities).toEqual({ input: ["text", "image"] });
+  for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated"]) {
+    expect(synced).not.toHaveProperty(fact);
+  }
+
+  const after = { ...synced, modalities: { input: ["text", "image"], output: ["text"] } };
+  const next = patchModelV2(doc, existing, after);
+  expect(next.modalities).toEqual(doc.modalities);
+  for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated"]) {
+    expect(next).not.toHaveProperty(fact);
+  }
+  expect(next.cost).toEqual({ text: { input: { price: 4 }, output: { price: 15 } } });
+  expect(sameV1Model(modelV2ToV1({ ...next, id: "x" }), { ...after, id: "x" })).toBe(true);
+
+  // A file that inherits the lab's MIME list gets no generic override.
+  const inherited = buildVercelModel(
+    vercel.parseModels({ data: [{ ...model!, tags: ["reasoning", "tool-use", "vision", "file-input"] }] })[0]!,
+    { base_model: "anthropic/claude-sonnet-4-6", reasoning_options: [{ type: "effort", values: ["low", "high"] }] },
+  );
+  expect(inherited).not.toHaveProperty("modalities");
 });
