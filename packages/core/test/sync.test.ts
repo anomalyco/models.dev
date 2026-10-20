@@ -5388,6 +5388,39 @@ test("factors OpenRouter media models onto lab files and authors their API proto
   });
 });
 
+test("OpenRouter media files keep a name only when it differs from the lab", () => {
+  const rerank = (id: string, name: string) => buildOpenRouterMediaModel(openRouterMediaModel({
+    id,
+    name,
+    architecture: { input_modalities: ["text"], output_modalities: ["rerank"] },
+    pricing: { prompt: "0", completion: "0" },
+  }), "reranking");
+
+  // Mapped through MEDIA_BASE_MODEL_OVERRIDES, same name as models/cohere/rerank-v4.0-pro.
+  expect(rerank("cohere/rerank-4-pro", "Cohere: Rerank 4 Pro")).not.toHaveProperty("name");
+  expect(rerank("cohere/rerank-4-pro", "Cohere: Rerank Four Pro")).toMatchObject({ name: "Rerank Four Pro" });
+});
+
+test("OpenRouter transcription routes on chat labs take the endpoint's capabilities", () => {
+  const doc = buildOpenRouterMediaModel(openRouterMediaModel({
+    id: "mistralai/voxtral-mini-3b-2507",
+    name: "Mistral: Voxtral Mini 3B 2507",
+    architecture: { input_modalities: ["audio"], output_modalities: ["transcription"] },
+    pricing: { prompt: "0.0000166667", completion: "0" },
+  }), "transcription");
+
+  expect(doc).toMatchObject({
+    base_model: "mistral/voxtral-mini-3b-2507",
+    type: "transcription",
+    modalities: { input: ["audio/wav", "audio/mpeg"], output: ["text"] },
+    capabilities: { tools: { supported: false } },
+    limit: { context: 0, output: 0 },
+    api: { transcriptions: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/openai" } } },
+  });
+  // Transcription takes temperature, as the chat lab does, so it isn't restated.
+  expect(doc.capabilities).not.toHaveProperty("temperature");
+});
+
 test("OpenRouter text models still sync through v1 fields", () => {
   const translated = openrouter.translateModel(openRouterModel(), {
     existing: () => undefined,

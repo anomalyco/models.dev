@@ -350,26 +350,40 @@ export function buildOpenRouterMediaModel(
 
   if (base !== undefined && lab !== undefined) {
     doc.base_model = base;
-    if (lab.type !== type) doc.type = type;
-    if (shouldPreserveFactoredName(model.id, base, undefined, MEDIA_BASE_MODEL_OVERRIDES[model.id])) {
-      doc.name = model.name.replace(/^[^:]+:\s+/, "");
+    const labCapabilities = (lab.capabilities ?? {}) as Record<string, unknown>;
+    const labContext = (lab.limit as { context?: number } | undefined)?.context;
+    // A lab of another type (a chat model served on a transcription endpoint)
+    // takes on what the endpoint accepts and returns.
+    const route = lab.type === type ? undefined : routeOverrides(type, lab, modalities, context);
+    if (route !== undefined) doc.type = type;
+    const name = model.name.replace(/^[^:]+:\s+/, "");
+    if (
+      name !== lab.name &&
+      shouldPreserveFactoredName(model.id, base, undefined, MEDIA_BASE_MODEL_OVERRIDES[model.id])
+    ) {
+      doc.name = name;
     }
     if (current?.status !== undefined) doc.status = current.status;
     // TTS output is always mp3 or pcm on OpenRouter; other types keep the lab's inputs.
-    if (type === "speech" && stableInheritedValue(lab.modalities) !== stableInheritedValue(modalities)) {
-      doc.modalities = modalities;
+    const routeModalities = route?.modalities ?? (type === "speech" ? modalities : undefined);
+    if (routeModalities !== undefined && !sameInheritedValue(routeModalities, lab.modalities)) {
+      doc.modalities = routeModalities;
     }
-    // Hand-authored host capabilities are kept, minus what the lab already says.
+    // Hand-authored host capabilities are kept; the route's own win. Either way,
+    // only what differs from the lab is written.
     const capabilities = Object.fromEntries(
-      Object.entries((current?.capabilities ?? {}) as Record<string, unknown>).filter(
-        ([key, value]) => !sameInheritedValue(value, (lab.capabilities as Record<string, unknown> | undefined)?.[key]),
-      ),
+      Object.entries({ ...(current?.capabilities as Record<string, unknown> | undefined), ...route?.capabilities })
+        .filter(([key, value]) => !sameInheritedValue(value, labCapabilities[key])),
     );
     if (Object.keys(capabilities).length > 0) doc.capabilities = capabilities;
-    // Only embedding and rerank inputs are token-limited; OpenRouter's context for
-    // speech and transcription models is often the chat model's it derives from.
-    const labContext = (lab.limit as { context?: number } | undefined)?.context;
-    if ((type === "embedding" || type === "reranking") && context > 0 && context !== labContext) {
+    if (route !== undefined) {
+      const limit = Object.fromEntries(
+        Object.entries(route.limit).filter(([key, value]) => !sameInheritedValue(value, (lab.limit as Record<string, unknown> | undefined)?.[key])),
+      );
+      if (Object.keys(limit).length > 0) doc.limit = limit;
+    } else if ((type === "embedding" || type === "reranking") && context > 0 && context !== labContext) {
+      // Only embedding and rerank inputs are token-limited; OpenRouter's context for
+      // speech and transcription models is often the chat model's it derives from.
       doc.limit = { context };
     }
   } else {
@@ -413,6 +427,36 @@ export function buildOpenRouterMediaModel(
     if (current?.[key] !== undefined) doc[key] = current[key];
   }
   return doc;
+}
+
+// Request fields per endpoint: transcription takes `temperature`; speech, embeddings
+// and rerank take no sampling parameters. None take tools.
+// https://openrouter.ai/docs/api/api-reference/stt/create-transcription ("Sampling temperature for transcription")
+// https://openrouter.ai/docs/api/api-reference/tts/create-speech
+function routeOverrides(
+  type: MediaType,
+  lab: Record<string, unknown>,
+  modalities: { input: string[]; output: string[] },
+  context: number,
+) {
+  const labInput = ((lab.modalities as { input?: string[] } | undefined)?.input ?? []);
+  // The audio formats the lab documents for the model, else OpenRouter's STT list.
+  const labAudio = labInput.filter((value) => value.startsWith("audio/"));
+  return {
+    modalities: type === "transcription"
+      ? { input: labAudio.length > 0 ? labAudio : AUDIO_INPUT, output: ["text"] }
+      : modalities,
+    capabilities: {
+      tools: { supported: false },
+      reasoning: { supported: false },
+      temperature: type === "transcription",
+      top_p: false,
+      top_k: false,
+    },
+    // OpenRouter's context for the endpoint; 0 where no token limit applies, as in
+    // transcription and speech labs.
+    limit: { context, output: 0 },
+  };
 }
 
 function mediaModalities(model: OpenRouterModel, type: MediaType) {
