@@ -3,7 +3,7 @@ base_model = "mistral/voxtral-small-24b-2507"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
 
 [modalities]
-input = ["text", "audio", "application/pdf"]
+input = ["text", "audio/wav", "audio/mpeg", "application/pdf"]
 output = ["text"]
 
 [capabilities]

@@ -3,8 +3,8 @@ base_model = "google/gemini-3.1-flash-image"
 description = "Gemini 3.1 Flash Image, a.k.a. \"Nano Banana 2,\" is Google’s latest state of the art image generation and editing model, delivering Pro-level visual quality at Flash speed. It combines advanced..."
 
 [modalities]
-input = ["image", "text", "application/pdf"]
-output = ["text", "image"]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "high"] }

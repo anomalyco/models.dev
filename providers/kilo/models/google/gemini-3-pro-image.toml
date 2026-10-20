@@ -3,8 +3,8 @@ base_model = "google/gemini-3-pro-image"
 description = "Nano Banana Pro is Google’s most advanced image-generation and editing model, built on Gemini 3 Pro. It extends the original Nano Banana with significantly improved multimodal reasoning, real-world grounding, and..."
 
 [modalities]
-input = ["image", "text", "application/pdf"]
-output = ["text", "image"]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 tools = { supported = true }

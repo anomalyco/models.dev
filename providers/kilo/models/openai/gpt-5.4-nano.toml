@@ -3,7 +3,7 @@ base_model = "openai/gpt-5.4-nano"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 
 [modalities]
-input = ["application/pdf", "image", "text"]
+input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]
 output = ["text"]
 
 [capabilities]

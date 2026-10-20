@@ -3,7 +3,7 @@ base_model = "google/gemma-4-31b-it"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 
 [modalities]
-input = ["image", "text", "video"]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "video"]
 output = ["text"]
 
 [capabilities]

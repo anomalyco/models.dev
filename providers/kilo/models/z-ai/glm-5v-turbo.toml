@@ -3,7 +3,7 @@ base_model = "zhipuai/glm-5v-turbo"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 
 [modalities]
-input = ["image", "text", "video"]
+input = ["image/jpeg", "image/png", "text", "video/mp4", "video/quicktime", "video/x-matroska"]
 output = ["text"]
 
 [capabilities]

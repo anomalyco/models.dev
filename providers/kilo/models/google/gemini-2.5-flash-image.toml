@@ -3,8 +3,8 @@ base_model = "google/gemini-2.5-flash-image"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 
 [modalities]
-input = ["image", "text", "application/pdf"]
-output = ["text", "image"]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 reasoning = { supported = false }

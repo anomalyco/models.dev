@@ -3,7 +3,7 @@ base_model = "openai/o4-mini"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 
 [modalities]
-input = ["image", "text", "application/pdf"]
+input = ["image/jpeg", "image/png", "image/gif", "image/webp", "text", "application/pdf"]
 output = ["text"]
 
 [capabilities]

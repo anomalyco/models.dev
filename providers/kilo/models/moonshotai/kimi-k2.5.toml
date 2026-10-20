@@ -3,7 +3,7 @@ base_model = "moonshotai/kimi-k2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

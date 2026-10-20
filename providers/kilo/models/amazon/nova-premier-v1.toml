@@ -3,7 +3,7 @@ base_model = "amazon/nova-premier"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

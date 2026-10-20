@@ -3,7 +3,7 @@ base_model = "openai/o3-pro"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 
 [modalities]
-input = ["text", "application/pdf", "image"]
+input = ["text", "application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

@@ -3,8 +3,8 @@ base_model = "openai/gpt-audio-mini"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 
 [modalities]
-input = ["text", "audio", "application/pdf"]
-output = ["text", "audio"]
+input = ["text", "audio/wav", "audio/mpeg", "application/pdf"]
+output = ["text", "audio/wav", "audio/aac", "audio/mpeg", "audio/flac", "audio/opus", "audio/pcm"]
 
 [capabilities]
 structured_output = true
