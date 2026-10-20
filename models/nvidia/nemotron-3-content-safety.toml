@@ -1,9 +1,11 @@
+# Release date (March 16, 2026): https://huggingface.co/nvidia/Nemotron-3-Content-Safety
+# Sampling: safety classifier; kept off with temperature (deterministic labels).
 schema = 2
 name = "Nemotron 3 Content Safety"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "nemotron"
 open_weights = true
-release_date = "2026-04-16"
+release_date = "2026-03-16"
 
 [modalities]
 input = ["text"]

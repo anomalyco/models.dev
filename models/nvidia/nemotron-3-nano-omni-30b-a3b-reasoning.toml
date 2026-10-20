@@ -1,3 +1,7 @@
+# Formats (model card input formats: video mp4, audio wav and mp3, image jpeg and png):
+#   https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
+#   the model card documents temperature, top_p and top_k per mode.
 schema = 2
 name = "Nemotron 3 Nano Omni 30B A3B Reasoning"
 description = "Open Nemotron omni model combining reasoning with text, vision, and audio"
@@ -6,7 +10,7 @@ open_weights = true
 release_date = "2026-04-28"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "audio/wav", "audio/mpeg"]
 output = ["text"]
 
 [capabilities]

@@ -1,8 +1,13 @@
+# Knowledge: pre-training data cutoff September 2025 (post-training May 2026):
+#   https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
+#   the model card recommends temperature 1.0 and top_p 0.95.
 schema = 2
 name = "Nemotron 3 Ultra 550B A55B"
 description = "Largest Nemotron 3 model for maximum open-weight reasoning and agent accuracy"
 family = "nemotron"
 open_weights = true
+knowledge = "2025-09"
 release_date = "2026-06-04"
 
 [modalities]

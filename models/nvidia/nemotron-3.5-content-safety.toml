@@ -1,12 +1,17 @@
+# Release date (06/02/2026): https://huggingface.co/nvidia/Nemotron-3.5-Content-Safety
+# Image formats: "The supported image formats are GIF, JPG, JPEG, and PNG":
+#   https://docs.nvidia.com/nim/vision-language-models/latest/vision-content-safety.html
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
+#   the model card's examples pass temperature and top_p.
 schema = 2
 name = "Nemotron 3.5 Content Safety"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "nemotron"
 open_weights = true
-release_date = "2026-06-04"
+release_date = "2026-06-02"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/gif", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

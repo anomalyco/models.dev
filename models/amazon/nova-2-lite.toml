@@ -1,6 +1,10 @@
 # Sources: https://docs.aws.amazon.com/nova/latest/nova2-userguide/what-is-nova-2.html
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-2-lite.html
 # Launch: https://aws.amazon.com/about-aws/whats-new/2025/12/nova-2-foundation-models-amazon-bedrock/
+# Formats: https://docs.aws.amazon.com/nova/latest/nova2-userguide/using-multimodal-models.html (images PNG, JPEG,
+#   GIF, WebP; video MP4, MOV, MKV, WebM, FLV, MPEG, MPG, WMV, 3GP; documents include PDF), as MIME types
+# Sampling: temperature, topP and topK are accepted (not together with maxReasoningEffort):
+#   https://docs.aws.amazon.com/nova/latest/nova2-userguide/using-converse-api.html
 schema = 2
 name = "Nova 2 Lite"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -11,7 +15,22 @@ release_date = "2025-12-02"
 last_updated = "2025-12-01"
 
 [modalities]
-input = ["text", "image", "video", "application/pdf"]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+  "video/mp4",
+  "video/quicktime",
+  "video/x-matroska",
+  "video/webm",
+  "video/x-flv",
+  "video/mpeg",
+  "video/x-ms-wmv",
+  "video/3gpp",
+  "application/pdf",
+]
 output = ["text"]
 
 [capabilities]

@@ -2,6 +2,10 @@
 # Specs (including 10K output): https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html
 # Prompted CoT, not a native thinking mode: https://docs.aws.amazon.com/nova/latest/userguide/prompting-chain-of-thought.html
 # Bedrock's generic Premier card conflicts on launch date, output limit, and reasoning; use the Nova V1 guide and launch announcement.
+# Formats: https://docs.aws.amazon.com/nova/latest/userguide/modalities.html (images PNG, JPG, JPEG, GIF, WebP;
+#   video MP4, MOV, MKV, WebM, FLV, MPEG, MPG, WMV, 3GP; media documents PDF, DOCX), as MIME types
+# Sampling: temperature, topP and topK are inferenceConfig fields:
+#   https://docs.aws.amazon.com/nova/latest/userguide/complete-request-schema.html
 schema = 2
 name = "Nova Premier"
 description = "Multimodal model for complex analysis, long-context understanding, tool use, and model distillation"
@@ -11,7 +15,22 @@ knowledge = "2024-10"
 release_date = "2025-04-30"
 
 [modalities]
-input = ["text", "image", "video", "application/pdf"]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+  "video/mp4",
+  "video/quicktime",
+  "video/x-matroska",
+  "video/webm",
+  "video/x-flv",
+  "video/mpeg",
+  "video/x-ms-wmv",
+  "video/3gpp",
+  "application/pdf",
+]
 output = ["text"]
 
 [capabilities]

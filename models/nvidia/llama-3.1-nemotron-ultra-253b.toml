@@ -1,3 +1,5 @@
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
+#   the model card recommends temperature 0.6 and top_p 0.95 with reasoning on: https://huggingface.co/nvidia/Llama-3_1-Nemotron-Ultra-253B-v1
 schema = 2
 name = "Llama 3.1 Nemotron Ultra 253B"
 description = "Flagship Nemotron model for high-throughput reasoning and complex agents"

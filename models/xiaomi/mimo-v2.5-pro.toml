@@ -1,4 +1,7 @@
 # Benchmarks sourced from MiMo-V2.6-Flash-RL use its "MiMo-V2.5 Pro" comparison column.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host. The checkpoint's
+#   generation_config.json sets temperature 1.0 and top_p 0.95; the MiMo API pins both in thinking mode
+#   (https://mimo.mi.com/docs/en-US/api/chat/openai-api).
 schema = 2
 name = "MiMo-V2.5-Pro"
 description = "Stronger MiMo Pro tier for multimodal reasoning and coding-agent execution"

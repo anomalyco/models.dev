@@ -1,5 +1,7 @@
 # Lab metadata carried over from providers/openrouter/models/amazon/nova-micro-v1.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: temperature, topP and topK are inferenceConfig fields:
+#   https://docs.aws.amazon.com/nova/latest/userguide/complete-request-schema.html
 schema = 2
 name = "Nova Micro 1.0"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"

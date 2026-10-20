@@ -1,12 +1,16 @@
+# Release date (12/18/2025) and reranking model: https://huggingface.co/nvidia/llama-nemotron-rerank-vl-1b-v2
+# Image formats: base64 data URLs; "PNG, JPEG, WebP, GIF, BMP, and TIFF image bytes are recognized":
+#   https://docs.nvidia.com/nim/nemo-retriever/text-reranking/latest/use-the-api-openai.html
 schema = 2
+type = "reranking"
 name = "Llama Nemotron Rerank VL 1B v2"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
 family = "nemotron"
 open_weights = true
-release_date = "2026-03-31"
+release_date = "2025-12-18"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "image/bmp", "image/tiff"]
 output = ["text"]
 
 [capabilities]

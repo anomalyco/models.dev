@@ -1,3 +1,5 @@
+# Sampling: the MiMo chat API takes temperature and top_p and has no top_k
+#   (https://mimo.mi.com/docs/en-US/api/chat/openai-api).
 schema = 2
 name = "MiMo-V2-Pro"
 description = "Earlier MiMo Pro model for multimodal agents, reasoning, and code tasks"
@@ -15,7 +17,7 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 1_048_576

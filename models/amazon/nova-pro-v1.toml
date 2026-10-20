@@ -1,5 +1,9 @@
 # Lab metadata carried over from providers/openrouter/models/amazon/nova-pro-v1.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Formats: https://docs.aws.amazon.com/nova/latest/userguide/modalities.html (images PNG, JPG, JPEG, GIF, WebP;
+#   video MP4, MOV, MKV, WebM, FLV, MPEG, MPG, WMV, 3GP; media documents PDF, DOCX), as MIME types
+# Sampling: temperature, topP and topK are inferenceConfig fields:
+#   https://docs.aws.amazon.com/nova/latest/userguide/complete-request-schema.html
 schema = 2
 name = "Nova Pro 1.0"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
@@ -9,7 +13,7 @@ knowledge = "2024-10-31"
 release_date = "2024-12-05"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

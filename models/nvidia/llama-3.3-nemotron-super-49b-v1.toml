@@ -1,9 +1,12 @@
+# Release date (3/18/2025): https://huggingface.co/nvidia/Llama-3_3-Nemotron-Super-49B-v1
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
+#   the model card recommends temperature 0.6 and top_p 0.95 with reasoning on.
 schema = 2
 name = "Llama 3.3 Nemotron Super 49B v1"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 family = "nemotron"
 open_weights = true
-release_date = "2025-04-07"
+release_date = "2025-03-18"
 
 [modalities]
 input = ["text"]
