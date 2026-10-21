@@ -1,3 +1,8 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 0.8, output 6.4; input ≥128k: input 2, output 16
+# knowledge: unsourced value kept from the v1 file (the lab has none).
 schema = 2
 base_model = "alibaba/qwen3.5-122b-a10b"
 name = "Qwen/Qwen3.5-122B-A10B"
@@ -7,7 +12,15 @@ knowledge = "2025-04"
 reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
-price = 0.29
+price = 0.11955798
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 128_000 } }
+price = 0.29889496
 
 [cost.text.output]
-price = 2.32
+price = 0.95646386
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 128_000 } }
+price = 2.39115964

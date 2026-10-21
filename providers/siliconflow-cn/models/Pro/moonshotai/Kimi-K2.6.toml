@@ -1,3 +1,7 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 6.5, output 27, cache read 1.1
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 name = "Pro/moonshotai/Kimi-K2.6"
@@ -19,8 +23,8 @@ output = 262_000
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.95
-cache = { read = 0.16 }
+price = 0.97140861
+cache = { read = 0.16439223 }
 
 [cost.text.output]
-price = 4
+price = 4.0350819

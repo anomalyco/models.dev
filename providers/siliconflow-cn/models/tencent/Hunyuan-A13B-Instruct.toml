@@ -1,6 +1,11 @@
 # enable_thinking = true|false for this model; the China schema documents
 # thinking_budget = 128..32768 only for "most" reasoning models.
 # https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 1, output 4; outside 09:00-18:00 Beijing (01:00-10:00 UTC): input 0.8, output 3.2
+# Tools: the China catalog lists functionCallSupport = false for this model (pricing page data, 2026-10-21).
 schema = 2
 name = "tencent/Hunyuan-A13B-Instruct"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
@@ -14,7 +19,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
@@ -24,7 +29,11 @@ context = 131_000
 output = 131_000
 
 [cost.text.input]
-price = 0.14
+price = 0.14944748
 
 [cost.text.output]
-price = 0.57
+price = 0.59778991
+
+[[cost.multipliers]]
+when = { not = { all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "10:00" } }] } }
+factor = 0.8

@@ -1,11 +1,13 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 0.7, output 2.8
+# Modalities: the China multimodal guide lists image and video input for the Qwen3-VL series
+# (https://docs.siliconflow.cn/docs/userguide/capabilities/multimodal-vision, 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
 name = "Qwen/Qwen3-VL-30B-A3B-Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-
-[modalities]
-input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
-output = ["text"]
 
 [capabilities]
 structured_output = true
@@ -15,7 +17,7 @@ context = 262_000
 output = 262_000
 
 [cost.text.input]
-price = 0.29
+price = 0.10461323
 
 [cost.text.output]
-price = 1
+price = 0.41845294

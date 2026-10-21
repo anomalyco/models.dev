@@ -1,3 +1,7 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 4, output 12, cache read 0.4
 schema = 2
 name = "Pro/deepseek-ai/DeepSeek-V3.1-Terminus"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
@@ -21,7 +25,8 @@ context = 164_000
 output = 164_000
 
 [cost.text.input]
-price = 0.27
+price = 0.59778991
+cache = { read = 0.05977899 }
 
 [cost.text.output]
-price = 1
+price = 1.79336973
