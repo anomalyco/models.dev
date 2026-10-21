@@ -4,17 +4,25 @@
 # Model is hosted by xAI and called through OCI. Limits from
 # https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-6.htm (500K context).
 # Effort: reasoning_effort mirrors xAI's controls for this model.
+schema = 2
 base_model = "xai/grok-4.6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
-[cost]
-input = 2.00
-output = 6.00
-cache_read = 0.50
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4.00
-output = 12.00
-cache_read = 1.00
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12
