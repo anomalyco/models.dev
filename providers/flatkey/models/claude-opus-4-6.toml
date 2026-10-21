@@ -4,7 +4,7 @@ schema = 2
 base_model = "anthropic/claude-opus-4-6"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = {} }
 
 [cost.text.input]
 price = 4
