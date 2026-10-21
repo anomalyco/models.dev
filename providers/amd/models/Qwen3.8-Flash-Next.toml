@@ -1,7 +1,5 @@
 # Sources (accessed 2026-09-03):
 # https://developer.amd.com.cn/radeon/tokenfactory
-# Pricing from the Token Factory models API: input $0.15, output $0.47,
-# cache read $0.016 per MTok.
 # The AMD deployment accepts image input (GET /v1/models reports text+image
 # modalities) and image understanding was verified live: a rendered-digit
 # test image was read back correctly. The multimodal base entry is therefore
@@ -11,20 +9,31 @@
 # (values outside the enum return 400; no none, no toggle). No
 # reasoning_content is ever returned (stream + non-stream), so there is no
 # toggle and no interleaved channel on this host.
+# Token Factory catalog (accessed 2026-10-21):
+# https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3AQwen3.8-Flash-Next
+# - Section "Public Free Model APIs", badge "Free"; pricing note "Free to use. Points show relative usage, not a
+#   charge." The listed 0.14 / 0.28 / 0.0028 per MTok (input / output / cache read) are usage points, so every
+#   price is 0. The earlier $0.15 / $0.47 / $0.016 came from the same field before the endpoint went free.
+# - vision: true, context_length 262144 (the lab's), supported_parameters temperature, max_tokens, top_p, stream,
+#   response_format, tools, tool_choice (no top_k).
+# - Image formats are not documented; the lab's image types are used (Alibaba Model Studio list).
+# APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models; decision models use /v1/systemone.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
 schema = 2
 base_model = "alibaba/qwen3.8-flash-next"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["low", "medium", "xhigh"] }
 structured_output = true
+top_k = false
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.016 }
+price = 0
+cache = { read = 0 }
 
 [cost.text.output]
-price = 0.47
+price = 0

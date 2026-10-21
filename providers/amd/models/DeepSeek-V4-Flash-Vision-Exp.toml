@@ -1,19 +1,30 @@
-# Pricing and reasoning controls verified against the AMD Token Factory API
+# Reasoning controls verified against the AMD Token Factory API
 # (accessed 2026-09-03): GET /v1/models and live POST /v1/chat/completions.
 # reasoning_effort is a validated enum none|minimal|low|medium|high|xhigh|max
 # (invalid values return 400) and affects generation; no reasoning_content is
 # ever returned (stream + non-stream), so no toggle and no interleaved channel.
 # Vision verified live: image input is accepted and understood.
+# Token Factory catalog (accessed 2026-10-21):
+# https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3ADeepSeek-V4-Flash-Vision-Exp
+# - Badge and status label "Retiring 10/23", so the model is deprecated.
+# - Pricing note "Free to use. Points show relative usage, not a charge." The listed 0.14 / 0.28 / 0.0028 per MTok
+#   are usage points, so every price is 0.
+# - vision: true, context_length 1048576, supported_parameters temperature, max_tokens, top_p, stream,
+#   response_format, tools, tool_choice (no top_k).
+# APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+top_k = false
 
 [cost.text.input]
-price = 0.14
-cache = { read = 0.0028 }
+price = 0
+cache = { read = 0 }
 
 [cost.text.output]
-price = 0.28
+price = 0
