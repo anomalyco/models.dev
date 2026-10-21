@@ -1,26 +1,41 @@
-# Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [api] override.
 # Verified from eu-west-1: returns 200 with reasoning effort set.
 # Global pricing and Runtime capabilities: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html
 # Cache rates: AWS-published Responses pricing; the card's API coverage can lag live behavior.
 # Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max (none verified 2026-09-09).
+# v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Structured outputs: Converse json_schema via outputConfig.textFormat plus additionalModelRequestFields.text.format.strict (model card "JSON Schema output on bedrock-runtime"); enforced live 2026-10-19.
+# Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card says Converse rejects document blocks, so no application/pdf here.
+schema = 2
 base_model = "openai/gpt-5.6-sol"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 name = "GPT-5.6 Sol (Global)"
-structured_output = false
-
-[cost]
-input = 4.00
-output = 20.00
-cache_read = 0.40
-cache_write = 5.00
-
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 8.00
-output = 30.00
-cache_read = 0.80
-cache_write = 10.00
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4, write = { "30m" = 5 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 8
+cache = { read = 0.8, write = { "30m" = 10 } }
+
+[cost.text.output]
+price = 20
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 30

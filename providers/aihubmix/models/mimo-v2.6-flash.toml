@@ -5,12 +5,22 @@
 # Catalog: https://aihubmix.com/api/v1/models?type=llm&sort_by=order
 # Currency proof: https://aihubmix.com/models/mimo-v2.6-flash
 # Canon export SHA: 826aa9e2dab1b2920959957c5a0222873f3f5f38
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
+schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
-[interleaved]
-field = "reasoning_content"
-[[reasoning_options]]
-type = "toggle"
-[cost]
-input = 0.155
-output = 0.31
-cache_read = 0.0031
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { supported = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.155
+cache = { read = 0.0031 }
+
+[cost.text.output]
+price = 0.31

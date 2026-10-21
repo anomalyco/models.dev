@@ -1,0 +1,24 @@
+schema = 2
+type = "decision"
+name = "Decision-1"
+description = "Microsoft Decision-1 is a text decision model from Microsoft AI for classification, routing, and evaluation. It answers yes/no questions, selects among predefined options, and scores inputs against custom criteria, returning calibrated probabilities and confidence values. With support for multiple questions per request and a 32,768-token context window, it helps developers triage support requests, guide automated workflows, and evaluate AI responses against a rubric."
+open_weights = false
+release_date = "2026-10-09"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 32_768
+output = 0
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

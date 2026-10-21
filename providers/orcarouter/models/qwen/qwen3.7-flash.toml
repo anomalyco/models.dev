@@ -1,12 +1,33 @@
 # Toggle: enable_thinking; budget: thinking_budget
+# Prices and context tiers: https://api.orcarouter.ai/v1/models (accessed 2026-10-21).
+schema = 2
 base_model = "alibaba/qwen3.7-flash"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "budget_tokens" },
-]
 
-[cost]
-input = 0.03
-output = 0.13
-cache_read = 0.006
-cache_write = 0.038
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006, write = 0.038 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1
+cache = { read = 0.02 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.13
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.8

@@ -1,17 +1,31 @@
+# Input formats: xAI container formats WAV, MP3, OGG, FLAC, AAC, MP4, and raw PCM for streaming (encoding pcm),
+#   https://docs.x.ai/developers/model-capabilities/audio/speech-to-text
+schema = 2
+type = "transcription"
 name = "Grok STT"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "grok"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-03-16"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/ogg", "audio/flac", "audio/aac", "audio/mp4", "audio/pcm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[api.transcriptions]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.audio.input]
+unit = "second"
+price = 0.000028

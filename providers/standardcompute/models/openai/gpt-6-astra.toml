@@ -1,0 +1,35 @@
+# Model ID openai/gpt-6-astra. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
+# of the endpoint Standard Compute routes this model to, as charged against the budget
+# (price listing: https://openrouter.ai/api/v1/models/openai/gpt-6-astra/endpoints, accessed 2026-10-16).
+# Context tiers start at 272,000 prompt tokens.
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+input = 850_000
+output = 50_000
+
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

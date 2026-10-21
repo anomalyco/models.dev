@@ -1,18 +1,14 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
+base_model = "stepfun/step-3.5-flash"
 name = "Stepfun/Step-3.5 Flash"
-description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
-release_date = "2026-02-02"
-last_updated = "2026-02-02"
-attachment = true
-reasoning = false
-tool_call = false
-temperature = true
+status = "deprecated"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = false
-open_weights = false
 
 [limit]
 context = 64_000
 output = 4_096
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

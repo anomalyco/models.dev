@@ -9,15 +9,19 @@
 # high 121/123/132/349/262, xhigh 928/753/268/480/110, max 811/435/570/910/623.
 # 'high' sits below 'low', so the levels are not separable and only the toggle is
 # declared, matching the toggle the lab (providers/deepseek) exposes.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

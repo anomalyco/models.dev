@@ -1,9 +1,20 @@
+schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+
+[capabilities]
 structured_output = true
+service_tier = ["flex", "priority"]
 
-[cost]
-input = 0.09
-output = 1.1
+[cost.text.input]
+price = 0.09
 
-[limit]
-context = 262_144
+[cost.text.output]
+price = 1.1
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

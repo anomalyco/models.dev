@@ -86,7 +86,7 @@ export const kilo = {
     }
     return {
       id: model.id,
-      model: buildKiloModel(model, context.existing(model.id)),
+      model: buildKiloModel(model, context.existing(model.id), undefined, context.authored(model.id)),
     };
   },
 } satisfies SyncProvider<KiloModel>;
@@ -142,6 +142,7 @@ export function buildKiloModel(
   model: KiloModel,
   existing: ExistingModel | undefined,
   baseModel?: string,
+  authored?: ExistingModel,
 ): SyncedModel {
   const params = new Set(model.supported_parameters);
   const name = model.name;
@@ -186,7 +187,14 @@ export function buildKiloModel(
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
+        // Kilo's catalog name is the display name on linked files, except on files
+        // that already inherit the lab's name.
+        name: baseModel !== undefined
+          || model.id.endsWith(":free")
+          || authored === undefined
+          || authored.name !== undefined
+          ? name
+          : undefined,
         description: existing?.description ?? apiDescription ?? describeModel({
           id: model.id,
           name,

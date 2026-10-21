@@ -1,34 +1,31 @@
-# Chat `reasoning_effort` and Messages `output_config.effort` accept low/high
-# (accessed 2026-06-25).
-# https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash
-name = "Step 3.5 Flash 2603"
-description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-01"
-open_weights = true
+# Sources (accessed 2026-10-21):
+# - Model card (256K context, text only): https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash
+# - Pricing (CNY per 1M tokens): 0.7 input, 0.14 cache hit, 2.1 output: https://platform.stepfun.com/docs/zh/guides/pricing/details
+# CNY→USD rate: 6.691314, 2026-10-21, source: https://open.er-api.com/v6/latest/USD
+# - Structured output (JSON Schema applies to step-5-preview, step-3.7-flash, step-3.5-flash, step-3.5-flash-2603):
+#   https://platform.stepfun.com/docs/zh/guides/developer/json-mode
+# - Caching: automatic prefix cache from 256 tokens, no cache_control; cache writes bill at the cache-miss input
+#   price: https://platform.stepfun.com/docs/zh/guides/developer/prompt-cache
+# Effort: reasoning_effort (Chat) and output_config.effort (Messages) = low|high, per the model card and API references
+#   (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, https://platform.stepfun.com/docs/zh/api-reference/chat/messages-create).
+# No Responses API for this model (Responses supports only step-5-preview and step-3.7-flash).
+# Chat Completions returns reasoning in both `reasoning` and `reasoning_content`.
+# Sampling: Chat documents temperature and top_p; Messages also documents top_k (0-500).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) unset: undocumented, and no StepFun key to test.
+schema = 2
+base_model = "stepfun/step-3.5-flash-2603"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+cache = { supported = true, implicit = { min_tokens = 256 }, explicit = false }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.10
-output = 0.30
-cache_read = 0.02
+[cost.text.input]
+price = 0.10461
+cache = { read = 0.02092 }
 
-[limit]
-context = 256_000
-input = 256_000
-output = 256_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.31384

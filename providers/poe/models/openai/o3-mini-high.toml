@@ -1,23 +1,18 @@
+# Status: https://poe.com/o3-mini-high is titled "o3-mini-high_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "openai/o3-mini"
 name = "o3-mini-high"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-mini"
-release_date = "2025-01-31"
-last_updated = "2025-01-31"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-open_weights = false
-tool_call = true
-
-[cost]
-input = 0.99
-output = 4
-
-[limit]
-context = 200_000
-output = 100_000
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.99
+
+[cost.text.output]
+price = 4

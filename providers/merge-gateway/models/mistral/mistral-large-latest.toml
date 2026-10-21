@@ -1,5 +1,12 @@
+schema = 2
 base_model = "mistral/mistral-large-latest"
 
-[cost]
-input = 0.5
-output = 1.5
+[capabilities]
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

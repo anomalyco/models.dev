@@ -1,8 +1,17 @@
+# Mid-conversation: Tinfoil serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.tinfoil.sh/models/chat
+schema = 2
 base_model = "openai/gpt-oss-safeguard-120b"
 name = "gpt-oss-safeguard-120b"
-reasoning = false
 knowledge = "2024-06"
 
-[cost]
-input = 0.15
-output = 0.6
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

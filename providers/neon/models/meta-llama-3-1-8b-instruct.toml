@@ -1,24 +1,22 @@
+# Linked to meta/llama-3.1-8b-instruct (Databricks endpoint databricks-meta-llama-3-1-8b-instruct).
+# Knowledge 2023-12-31 is unsourced (the lab has 2023-12); kept so v1 doesn't change.
+# Context 131_072 and output 8_192 are the existing host values (Neon's docs list 128K).
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+schema = 2
+base_model = "meta/llama-3.1-8b-instruct"
 name = "Llama 3.1 8B Instruct"
 description = "Meta's compact open-weight Llama 3.1 model for fast, low-cost text generation"
-family = "llama"
-release_date = "2024-07-23"
-last_updated = "2024-07-23"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 knowledge = "2023-12-31"
-open_weights = true
 
-[cost]
-input = 0.15
-output = 0.45
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_072
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.45

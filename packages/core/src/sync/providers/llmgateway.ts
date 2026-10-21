@@ -5,6 +5,7 @@ import path from "node:path";
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import { ReasoningOption } from "../../schema.js";
+import { readProviderModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
@@ -263,7 +264,7 @@ function siblingCuration(rootID: string): SiblingCuration {
   if (curation === undefined) {
     const filePath = path.join(AGGREGATED_MODELS_DIR, `${rootID}.toml`);
     const authored = existsSync(filePath)
-      ? Bun.TOML.parse(readFileSync(filePath, "utf8")) as SiblingCuration & {
+      ? readProviderModel(filePath) as SiblingCuration & {
           cost?: { tiers?: NonNullable<SyncedFullModel["cost"]>["tiers"] };
         }
       : undefined;
@@ -369,6 +370,9 @@ export function buildLLMGatewayModel(
     return factorBaseModel(
       existing.base_model,
       {
+        // LLM Gateway's display name stays as an override where it differs
+        // from the lab (factorBaseModel drops it when equal).
+        name: existing.name,
         attachment: existing.attachment,
         description: existing.description ?? describeModel({
           id: model.id,
@@ -388,7 +392,8 @@ export function buildLLMGatewayModel(
         structured_output: existing.structured_output,
         status: existing.status,
         interleaved: existing.interleaved,
-        knowledge: existing.knowledge,
+        // Model facts (family, dates, knowledge, open_weights) come from the
+        // lab file; a base_model file never carries them.
         modalities: existing.modalities,
         limit: factoredLimit,
         cost,
@@ -448,6 +453,7 @@ export function buildLLMGatewayModel(
   if (canonical !== undefined) {
     const factoredLimit = { context, input: undefined, output: undefined };
     return factorBaseModel(canonical, {
+      name: model.name,
       reasoning_options: reasoningOptions,
       limit: factoredLimit,
       cost,
@@ -751,6 +757,13 @@ function llmGatewayReasoningOptions(
   model: LLMGatewayModel,
   existing: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
+  // A curated toggle marks a hand-authored native control set (the upstream's
+  // on/off switch plus its own effort levels). The union of per-mapping
+  // efforts is not a set every route accepts (the gateway forwards efforts
+  // as-is and unsupported values fail upstream), so it never replaces them.
+  if (existing?.reasoning_options?.some((option) => option.type === "toggle")) {
+    return existing.reasoning_options;
+  }
   const advertised = new Set((model.providers ?? []).flatMap((provider) => provider.reasoning_efforts ?? []));
   if (advertised.size === 0) return undefined;
 
@@ -759,9 +772,7 @@ function llmGatewayReasoningOptions(
       - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
     return order || a.localeCompare(b);
   });
-  const preserved = existing?.reasoning_options?.filter((option) =>
-    option.type !== "effort" && !(option.type === "toggle" && advertised.has("none"))
-  ) ?? [];
+  const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
   return [
     ...preserved,
     ReasoningOption.parse({ type: "effort", values: efforts }),

@@ -1,0 +1,35 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live-extended-thinking
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/live-api/thinking (thinking_level low|medium|high)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.8-live-extended-thinking"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+cache = { supported = false }
+system_updates = false
+effort_updates = false
+
+[cost.text.input]
+price = 0.75
+
+[cost.text.output]
+price = 4.5
+
+[cost.audio.input]
+price = 3
+
+[cost.audio.output]
+price = 12
+
+[cost.image.input]
+price = 1
+
+[cost.video.input]
+price = 1

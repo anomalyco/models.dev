@@ -1,28 +1,31 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 name = "MoonshotAI: Kimi Latest"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-04-27"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
-[cost]
-input = 0.875
-output = 11.2
-cache_read = 0.29
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+temperature = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.238
+cache = { read = 0.228 }
+
+[cost.text.output]
+price = 24

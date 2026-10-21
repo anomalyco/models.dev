@@ -1,28 +1,29 @@
 # Effort: reasoning.effort = none|minimal|low|medium|high|xhigh|max
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
-name = "Seed 2.1 Turbo"
+# Modalities: BytePlus ModelArk supported image formats (JPEG, PNG, GIF, WEBP, BMP, TIFF, JPEG2000, HEIC/HEIF; ICO, ICNS and SGI have no registered MIME type), https://ai.byteplus.com/ark/region:ap-southeast-1/docs/image-understanding
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "bytedance-seed/seed-2.1-turbo"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "seed"
-release_date = "2026-06-23"
-last_updated = "2026-06-23"
-attachment = true
-reasoning = true
-tool_call = true
-open_weights = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/jp2", "image/heic", "image/heif"]
+output = ["text"]
 
-[cost]
-input = 0.5
-output = 2.5
-cache_read = 0.1
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.5

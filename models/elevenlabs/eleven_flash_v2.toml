@@ -1,0 +1,27 @@
+# Model IDs: https://elevenlabs.io/docs/overview/models
+# Introduced with eleven_flash_v2_5: https://elevenlabs.io/docs/changelog/2024/12/19
+# Output formats: output_format mp3_*, pcm_*, wav_*, opus_*, ulaw_8000, alaw_8000:
+#   https://elevenlabs.io/docs/api-reference/text-to-speech/convert
+schema = 2
+v2_only = true
+type = "speech"
+name = "Eleven Flash v2"
+description = "Ultra-low-latency English text-to-speech model for real-time use"
+family = "elevenlabs"
+open_weights = false
+release_date = "2024-12-19"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm", "audio/wav", "audio/opus", "audio/basic", "audio/alaw"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

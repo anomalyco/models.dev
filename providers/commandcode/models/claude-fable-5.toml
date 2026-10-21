@@ -1,0 +1,22 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Mid-conversation flags follow Anthropic's own API for this model: Command Code serves it via @ai-sdk/anthropic. See providers/anthropic/models/claude-fable-5.toml.
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+system_updates = true
+effort_updates = false
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[cost.text.output]
+price = 50

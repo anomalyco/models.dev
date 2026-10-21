@@ -1,24 +1,34 @@
+# Route: provider-native passthrough /openai (Responses body forwarded unchanged): https://developers.cloudflare.com/ai-gateway/usage/providers/openai/
+# v2 capabilities and cache follow OpenAI's own API (providers/openai). Live via the gateway 2026-10-19: mid-conversation developer messages and additional_tools keep the cached prefix (gpt-4.1-nano, gpt-5-nano, gpt-5.4-nano), configuration_update is accepted on gpt-6-luna and gpt-5.6-luna, json_schema output is enforced.
+schema = 2
 base_model = "openai/gpt-6-sol"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 4
-output = 15
-cache_read = 0.4
-cache_write = 5
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+structured_output = true
+system_updates = true
+effort_updates = true
 
 [limit]
 context = 1_050_000
 
-[provider]
-npm = "@ai-sdk/openai"
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.4, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15

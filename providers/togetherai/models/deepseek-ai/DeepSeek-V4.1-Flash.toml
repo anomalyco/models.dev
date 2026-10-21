@@ -1,13 +1,34 @@
+# Serverless: $0.30 input, $0.006 cached input, $1.20 output per 1M; the catalog API reports
+# context_length 1,048,576 and a larger request fails with "maximum context length is 1048576"
+# (accessed 2026-10-21): https://docs.together.ai/docs/serverless-models
+# Effort: reasoning_effort = none|low|high|max (live 2026-10-21). The chat template rejects other
+# names: "reasoning_effort must be low, high, xhigh, max, or an integer within [1, 100]"; `none`
+# turns thinking off (0 reasoning tokens). xhigh is accepted too but is not listed separately.
+# Inputs (live 2026-10-21): PNG, JPEG, GIF and WebP images; video and audio are rejected
+# ("DeepSeek V4.1 supports text and image content only").
+# Mid-conversation (live 2026-10-21): a late system message was followed and kept the cache;
+# adding a tool dropped the cache (7,936 → 256).
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { supported = true, implicit = true, explicit = false }
+structured_output = true
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

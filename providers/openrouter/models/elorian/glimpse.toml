@@ -1,0 +1,34 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding; video: https://openrouter.ai/docs/guides/overview/multimodal/videos
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Together (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+name = "Glimpse"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+open_weights = false
+release_date = "2026-10-17"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
+system_updates = false
+effort_updates = false
+
+[limit]
+context = 262_144
+output = 256_000
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 3

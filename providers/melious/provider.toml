@@ -19,6 +19,10 @@
 # typed hybrid yet ignores it. Reasoning text is returned in
 # choices[].message.reasoning_content.
 # https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
+# Decisions: Clef and Clef Flash are served on POST /v1/systemone, not chat
+# completions. They bill input tokens only, reject image input, and run without
+# caller reasoning control.
+# https://melious.ai/docs/reference/systemone (accessed 2026-10-20)
 # Routing: a flavour is selected with a model-ID suffix (`:balanced`, `:speed`,
 # `:price`, `:eco`, `:batch`). A bare chat model ID resolves to `balanced`, which is
 # what the ids and prices here describe; only bare ids are published. A `preset`

@@ -1,27 +1,36 @@
+# Deprecated on Alibaba Token Plan (China): absent from the exact-string
+# supported-models allowlist on 2026-10-20; use deepseek-v4.1-flash-1017.
+# Sources:
+# https://platform.qianwenai.com/docs/token-plan/team/token-plan-team-overview
+# https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
+schema = 2
 name = "DeepSeek V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
+open_weights = true
+knowledge = "2025-01"
 release_date = "2025-12-03"
 last_updated = "2025-12-05"
-attachment = false
-reasoning = true
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
-tool_call = true
-knowledge = "2025-01"
-open_weights = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0
-output = 0
+top_k = false
+effort_updates = false
 
 [limit]
 context = 131_072
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

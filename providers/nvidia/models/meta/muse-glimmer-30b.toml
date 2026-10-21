@@ -1,15 +1,30 @@
-base_model = "meta/muse-glimmer-30b"
-
 # NIM Chat schema: `reasoning_effort = none|minimal|low|medium|high|max`
 # (off = none; graded levels, no separate toggle).
 # https://docs.api.nvidia.com/nim/reference/meta-muse-glimmer-30b-infer
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
 # NVIDIA API catalog is free for prototyping (no published per-token price).
 # Matches other NVIDIA-hosted Meta models (e.g. llama-3.2-*).
-[cost]
-input = 0.00
-output = 0.00
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): changing reasoning_effort
+# (low → high) dropped the cache in 3 of 3 conclusive trials, and adding a tool dropped it in 2 of 2.
+# system_updates unset: cache hits were inconsistent across trials.
+# Inputs (live 2026-10-21): PNG, JPEG and WebP images are read; GIF returns 415 Unsupported Media Type.
+schema = 2
+base_model = "meta/muse-glimmer-30b"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

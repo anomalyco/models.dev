@@ -1,24 +1,32 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
+# effort_updates = false: no per-turn effort control
+schema = 2
 name = "UI-TARS 7B "
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2025-07-22"
-last_updated = "2025-07-22"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
-knowledge = "2025-01-31"
 open_weights = true
+knowledge = "2025-01-31"
+release_date = "2025-07-22"
 
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.1
+[modalities]
+input = ["image/png", "image/jpeg", "image/webp", "image/gif", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 2_048
 
-[modalities]
-input = ["image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 0.2

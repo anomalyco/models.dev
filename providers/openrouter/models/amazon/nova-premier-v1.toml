@@ -1,24 +1,31 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: served only on Amazon Bedrock Converse, which takes no mid-conversation system message for this model
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Deprecated: every request returns 404 (Amazon Nova Premier reached end of life on Bedrock, 2026-09-14)
+schema = 2
+base_model = "amazon/nova-premier"
 name = "Nova Premier 1.0"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "nova"
-release_date = "2025-10-31"
-last_updated = "2025-10-31"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
-
-[cost]
-input = 2.5
-output = 12.5
-cache_read = 0.625
-
-[limit]
-context = 1_000_000
-output = 32_000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = false
+system_updates = false
+effort_updates = false
+
+[limit]
+output = 32_000
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.625 }
+
+[cost.text.output]
+price = 12.5

@@ -1,24 +1,18 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Effort: top-level reasoning_effort on /openai/chat/completions (provider.toml), values from providers/openai or relay peers for this model.
+schema = 2
+base_model = "openai/gpt-5.1"
 name = "gpt-5.1"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2026-02"
-last_updated = "2026-02"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { supported = true, implicit = true }
 structured_output = true
-open_weights = false
 
-[cost]
-input = 1.125
-output = 9
+[cost.text.input]
+price = 1.1875
+cache = { read = 0.1187 }
 
-[limit]
-context = 400000
-output = 128000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 9.5

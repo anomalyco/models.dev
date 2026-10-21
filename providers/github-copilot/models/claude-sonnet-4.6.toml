@@ -1,13 +1,25 @@
+# Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-sonnet-4-6.toml.
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024, max = 32_000 }]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024, max = 32_000 } }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 200_000
 input = 168_000
 output = 32_000
+
+[api.messages]
+base_url = "https://api.githubcopilot.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

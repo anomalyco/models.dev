@@ -1,5 +1,11 @@
+schema = 2
 base_model = "ai21/jamba-large"
 
-[cost]
-input = 2.00
-output = 8.00
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 8

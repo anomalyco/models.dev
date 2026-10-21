@@ -1,21 +1,37 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: Gemini has one systemInstruction, so it is hoisted (live: cache prefix lost; https://openrouter.ai/docs/guides/best-practices/prompt-caching#google-gemini)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Cache: implicit on Gemini 2.5+; cache_control uses only the last breakpoint, 5m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#google-gemini)
+schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
-[interleaved]
-field = "reasoning_details"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[cost]
-input = 2
-output = 12
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 0.375 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
 reasoning = 12
-cache_read = 0.2
-cache_write = 0.375
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4
-output = 18
-cache_read = 0.4
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18
+
+[cost.image.input]
+price = 2

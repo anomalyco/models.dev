@@ -1,0 +1,21 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=tencent%2Fhy4-preview&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "tencent/hy4-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 1.147084
+cache = { read = 0.057767 }
+
+[cost.text.output]
+price = 3.439875

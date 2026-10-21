@@ -1,10 +1,19 @@
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): tools.updates = false: `tools` is request-level, with no tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 base_model = "deepseek/deepseek-v3"
+status = "deprecated"
 
-[cost]
-input = 0.27
-output = 1.12
-cache_read = 0.135
-cache_write = 0.27
+[capabilities]
+tools = { supported = true, updates = false }
 
 [limit]
 context = 163_840
+
+[cost.text.input]
+price = 0.27
+cache = { read = 0.135, write = 0.27 }
+
+[cost.text.output]
+price = 1.12

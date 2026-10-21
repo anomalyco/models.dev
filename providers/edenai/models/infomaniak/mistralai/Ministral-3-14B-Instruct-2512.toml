@@ -1,15 +1,17 @@
+schema = 2
 base_model = "mistral/ministral-3-14b-instruct-2512"
 name = "Ministral 3 14B (Infomaniak)"
-attachment = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.34134
-output = 0.45512
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 100_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.33702
+
+[cost.text.output]
+price = 0.44936

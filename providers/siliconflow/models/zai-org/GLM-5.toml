@@ -1,28 +1,24 @@
+# Limits: max output 131K on the model page (https://www.siliconflow.com/models/glm-5, 2026-10-21), as in the lab.
+# Budget: thinking_budget = 128..32768 (top-level request field)
+# https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions
+schema = 2
+base_model = "zhipuai/glm-5"
 name = "zai-org/GLM-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-12"
-last_updated = "2026-06-15"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
 structured_output = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.95
-output = 2.55
-cache_read = 0.2
 
 [limit]
 context = 205_000
-output = 205_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.55

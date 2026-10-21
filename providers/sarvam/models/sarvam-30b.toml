@@ -1,25 +1,17 @@
+# Deprecated: the Sarvam docs nav lists "Sarvam 30B (Deprecated)" (https://docs.sarvam.ai/api-reference-docs/getting-started/pricing, accessed 2026-10-21), and GET https://api.sarvam.ai/v1/models lists only sarvam-105b and sarvam-105b-conversations.
+# Toggle: reasoning_effort = null (off)
+# Effort: reasoning_effort = low|medium|high
+schema = 2
+base_model = "sarvam/sarvam-30b"
 name = "Sarvam-30B"
-description = "Efficient Indian-language reasoning model for chat, coding, and multilingual work"
-family = "sarvam"
-release_date = "2026-02-18"
-last_updated = "2026-03-06"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["null", "low", "medium", "high"]
-
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

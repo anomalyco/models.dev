@@ -1,4 +1,7 @@
-import { expect, test } from "bun:test";
+import { afterEach, expect, test } from "bun:test";
+import { mkdtemp, mkdir, rm } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 
 import {
   buildGitHubCopilotCost,
@@ -7,7 +10,7 @@ import {
   parseGitHubCopilotPricing,
   type GitHubCopilotPricingRow,
 } from "../src/sync/providers/github-copilot.js";
-import type { ExistingModel } from "../src/sync/index.js";
+import { syncProvider, type ExistingModel } from "../src/sync/index.js";
 
 function row(overrides: Partial<GitHubCopilotPricingRow>): GitHubCopilotPricingRow {
   return {
@@ -255,4 +258,64 @@ test("parses rows straight from the docs YAML format", () => {
       cache_write: 5,
     }],
   });
+});
+
+const roots: string[] = [];
+afterEach(async () => {
+  for (const root of roots.splice(0)) await rm(root, { recursive: true, force: true });
+});
+
+async function scratchProvider(files: Record<string, string>, labs: string[]) {
+  const root = await mkdtemp(path.join(os.tmpdir(), "github-copilot-sync-v2-test-"));
+  roots.push(root);
+  const modelsDir = path.join(root, "providers/github-copilot/models");
+  await mkdir(modelsDir, { recursive: true });
+  await Bun.write(path.join(root, "providers/github-copilot/provider.toml"), await Bun.file("providers/github-copilot/provider.toml").text());
+  for (const lab of labs) {
+    await Bun.write(path.join(root, "models", `${lab}.toml`), await Bun.file(`models/${lab}.toml`).text());
+  }
+  for (const [file, text] of Object.entries(files)) await Bun.write(path.join(modelsDir, file), text);
+  return modelsDir;
+}
+
+test("runner patches prices in v2 files in place and keeps MIME, flags, status and API tables", async () => {
+  const haiku = await Bun.file("providers/github-copilot/models/claude-haiku-4.5.toml").text();
+  const sol = await Bun.file("providers/github-copilot/models/gpt-5.6-sol.toml").text();
+  const retired = await Bun.file("providers/github-copilot/models/gpt-5.5.toml").text();
+  const modelsDir = await scratchProvider({
+    "claude-haiku-4.5.toml": haiku.replace("[cost.text.output]\nprice = 5", "[cost.text.output]\nprice = 6"),
+    "gpt-5.6-sol.toml": sol.replace("when = { context = { gt = 272_000 } }\nprice = 30", "when = { context = { gt = 272_000 } }\nprice = 31"),
+    "gpt-5.5.toml": retired,
+  }, ["anthropic/claude-haiku-4-5", "openai/gpt-5.6-sol", "openai/gpt-5.5"]);
+  const rows = [
+    row({ model: "Claude Haiku 4.5", provider: "anthropic", input: "$1.00", cached_input: "$0.10", cache_write: "$1.25", output: "$5.00" }),
+    row({ model: "GPT-5.6 Sol", threshold: "≤ 272K", tier: "Default", input: "$4.00", cached_input: "$0.40", cache_write: "$5.00", output: "$20.00" }),
+    row({ model: "GPT-5.6 Sol", threshold: "> 272K", tier: "Long context", input: "$8.00", cached_input: "$0.80", cache_write: "$10.00", output: "$30.00" }),
+  ];
+  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => rows };
+
+  expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 2, deleted: 0, unchanged: 1 });
+  expect(await Bun.file(path.join(modelsDir, "claude-haiku-4.5.toml")).text()).toBe(haiku);
+  expect(await Bun.file(path.join(modelsDir, "gpt-5.6-sol.toml")).text()).toBe(sol);
+  expect(await Bun.file(path.join(modelsDir, "gpt-5.5.toml")).text()).toBe(retired);
+  expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 3 });
+});
+
+test("a price update keeps the mid-conversation flags copied from Anthropic", async () => {
+  const opus = await Bun.file("providers/github-copilot/models/claude-opus-4.8.toml").text();
+  const modelsDir = await scratchProvider({
+    "claude-opus-4.8.toml": opus.replace("[cost.text.output]\nprice = 25", "[cost.text.output]\nprice = 26"),
+  }, ["anthropic/claude-opus-4-8"]);
+  const rows = [
+    row({ model: "Claude Opus 4.8", provider: "anthropic", input: "$5.00", cached_input: "$0.50", cache_write: "$6.25", output: "$25.00" }),
+  ];
+  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => rows };
+
+  expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+  const synced = await Bun.file(path.join(modelsDir, "claude-opus-4.8.toml")).text();
+  expect(Bun.TOML.parse(synced)).toMatchObject({
+    capabilities: { tools: { supported: true, updates: true }, system_updates: true, effort_updates: false },
+    cost: { text: { output: { price: 25 } } },
+  });
+  expect(synced).toBe(opus);
 });

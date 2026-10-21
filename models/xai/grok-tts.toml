@@ -1,0 +1,25 @@
+# xAI catalog ID: https://docs.x.ai/developers/models/grok-tts
+# Released 2026-03-16 ("Grok's Text to Speech API is now available"); GA in the March 2026 release notes.
+# https://docs.x.ai/developers/release-notes
+# Audio MIME types: https://docs.x.ai/developers/model-capabilities/audio/text-to-speech#codecs (Content-Type per codec: audio/mpeg, audio/wav, audio/pcm, audio/basic, audio/alaw)
+schema = 2
+type = "speech"
+name = "Grok TTS"
+description = "Convert text into spoken audio with a single API call. The API supports a rich set of expressive voices, inline speech tags for fine-grained delivery control, and output formats from high-fidelity MP3 to telephony-optimized μ-law."
+open_weights = false
+release_date = "2026-03-16"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/wav", "audio/pcm", "audio/basic", "audio/alaw"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 15_000
+output = 15_000

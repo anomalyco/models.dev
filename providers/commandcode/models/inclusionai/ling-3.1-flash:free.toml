@@ -1,0 +1,21 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-14): reasoning_effort = none -> HTTP 400 invalid option.
+# Retired: the free tier is gone. GET https://api.commandcode.ai/provider/v1/models (2026-10-21) lists only the paid
+#   inclusionai/ling-3.1-flash, and https://commandcode.ai/docs/resources/pricing-limits prices Ling 3.1 Flash at
+#   $0.30 / $0.90 / $0.06 with no free row. A live call to the :free id (2026-10-21, recorded in PR #10665) returned
+#   HTTP 403 "The free Ling 3.1 Flash tier has been retired."
+schema = 2
+base_model = "inclusionai/ling-3.1-flash"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

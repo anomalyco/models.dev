@@ -5,20 +5,23 @@
 # $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
 # $.output_config.effort on /v1/messages, subject to model support.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash 0731 Fast"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 0.28
+cache = { read = 0.07 }
 
-[cost]
-input = 0.28
-output = 1.4
-cache_read = 0.07
+[cost.text.output]
+price = 1.4

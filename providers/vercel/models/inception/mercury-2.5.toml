@@ -1,25 +1,19 @@
 # Effort: reasoning.effort = none|low|medium|high
 # Native levels: https://docs.inceptionlabs.ai/capabilities/instant
-name = "Mercury 2.5"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "mercury"
-release_date = "2026-09-08"
-last_updated = "2026-09-08"
-attachment = false
-reasoning = true
-tool_call = true
-open_weights = false
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "inception/mercury-2.5"
 
-[cost]
-input = 0.04
-output = 0.15
-cache_read = 0.004
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
-[limit]
-context = 260_000
-output = 65_536
+[cost.text.input]
+price = 0.04
+cache = { read = 0.004 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.15

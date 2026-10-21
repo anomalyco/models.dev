@@ -1,8 +1,12 @@
+# Cost: Perplexity list price (https://docs.perplexity.ai/docs/getting-started/pricing), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+schema = 2
 base_model = "perplexity/sonar-pro"
-
 name = "sonar-pro"
-description = "Advanced Sonar search model for deeper research and cited synthesis"
 
-[cost]
-input = 3.00
-output = 15.00
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

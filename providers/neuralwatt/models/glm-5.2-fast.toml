@@ -1,28 +1,26 @@
 # Deprecated: Neuralwatt retired the GLM-5.2 family from GET /v1/models
 # (checked 2026-09-18); retained for pricing history.
 # Budget: thinking_token_budget (integer reasoning tokens)
+schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 Fast"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2026-06-17"
-last_updated = "2026-06-17"
-structured_output = false
 status = "deprecated"
 
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 1.45
-output = 4.5
-cache_read = 0.145
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"], budget = {} }
+structured_output = false
 
 [limit]
 context = 1_048_560
 output = 1_048_560
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 1.45
+cache = { read = 0.145 }
+
+[cost.text.output]
+price = 4.5

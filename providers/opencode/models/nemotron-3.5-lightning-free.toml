@@ -2,6 +2,7 @@ base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning Free"
 family = "nemotron-free"
 reasoning_options = []
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"
@@ -10,3 +11,6 @@ field = "reasoning_content"
 input = 0
 output = 0
 cache_read = 0
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

@@ -1,23 +1,16 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "morph/morph-v3-large"
 name = "Morph: Morph V3 Large"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "morph"
-release_date = "2025-07-07"
-last_updated = "2025-07-07"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
 structured_output = true
-open_weights = false
+effort_updates = false
 
-[cost]
-input = 0.9
-output = 1.9
+[cost.text.input]
+price = 0.9
 
-[limit]
-context = 262_144
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.9

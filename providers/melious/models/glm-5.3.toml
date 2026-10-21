@@ -17,6 +17,7 @@
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [cost]

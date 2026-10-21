@@ -1,20 +1,32 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Novita, CoreWeave)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
-[interleaved]
-field = "reasoning_details"
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.65
-output = 3.41
-cache_read = 0.15
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 235_929
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.65
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.41

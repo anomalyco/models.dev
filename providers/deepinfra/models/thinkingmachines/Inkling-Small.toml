@@ -1,11 +1,23 @@
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 11776/11915 -> 11904/11931; 11776/11915 -> 11904/11931]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 11520/11627 -> None/11669; 11520/11627 -> None/11669]
+schema = 2
 base_model = "thinkingmachines/inkling-small"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.45
-output = 1.2
-cache_read = 0.1
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+system_updates = true
 
 [limit]
 context = 524_288
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.2

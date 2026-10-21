@@ -1,28 +1,33 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding; video: https://openrouter.ai/docs/guides/overview/multimodal/videos
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Meta)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 name = "Muse Spark 1.2 Contributor"
 description = "Open Llama multimodal model for image understanding and text reasoning"
 family = "muse"
-release_date = "2026-08-21"
-last_updated = "2026-08-21"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-21"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/mpeg", "video/mov", "video/webm", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.002
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

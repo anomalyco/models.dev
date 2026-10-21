@@ -1,0 +1,20 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Output: the schema's output format enum (output_format, response_format or format), else the lab's or the note below. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+# Output: the schema has no format field; the route returns a data:audio/wav URI (live 2026-10-20).
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.8-flash-tts"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav"]
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.125 }
+
+[cost.audio.output]
+price = 9

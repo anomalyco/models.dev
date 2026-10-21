@@ -4,15 +4,28 @@
 # - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-computer-use-preview-10-2025
 # - https://ai.google.dev/gemini-api/docs/computer-use
 #   (model id gemini-2.5-computer-use-preview-10-2025; thinking-level controls documented for Gemini 3.x only)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
 base_model = "google/gemini-2.5-computer-use-preview-10-2025"
 name = "Gemini 2.5 Computer Use Preview 10-2025"
-reasoning_options = []
 
-[cost]
-input = 1.25
-output = 10
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+system_updates = false
+effort_updates = false
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2.5
-output = 15
+[cost.text.input]
+price = 1.25
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 15

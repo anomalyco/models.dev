@@ -1,16 +1,25 @@
+# Modalities: Nemotron Nano 12B v2 VL image formats png, jpg, jpeg, webp, https://build.nvidia.com/nvidia/nemotron-nano-12b-v2-vl/modelcard
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
 name = "Nvidia Nemotron Nano 12B V2 VL"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
 
-[cost]
-input = 0.2
-output = 0.6
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6

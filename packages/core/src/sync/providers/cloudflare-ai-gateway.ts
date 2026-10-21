@@ -2,7 +2,9 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
-import { ReasoningOption } from "../../schema.js";
+import { AuthoredModelShape, ReasoningOption } from "../../schema.js";
+import type { CostV2, CostWhenV2 } from "../../schema-v2.js";
+import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 
@@ -42,10 +44,40 @@ const CatalogEntry = z.object({
   context_length: z.number().int().positive().nullish(),
   provider_details: z.array(ProviderDetail).nullish(),
 }).passthrough();
+// Some proxied rows (e.g. reflection-ai/beam-1.0-501b-a23b at launch) ship with
+// provider_details = null. Those need a curated cost; see catalogCost.
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  provider_details: z.array(ProviderDetail).length(1),
+  provider_details: z.array(ProviderDetail).length(1).nullish(),
+});
+
+export type MediaType = "speech" | "transcription" | "image" | "video";
+
+// Non-text catalog tasks synced as v2-only files, by the model type each one serves.
+const MEDIA_TASKS: Record<string, MediaType> = {
+  "Text-to-Speech": "speech",
+  "Automatic Speech Recognition": "transcription",
+  "Text-to-Image": "image",
+  "Image-to-Image": "image",
+  "Text-to-Video": "video",
+  "Image-to-Video": "video",
+  "video-to-video": "video",
+};
+// Catalog tasks left out on purpose. Music generation has no model type in the schema;
+// Image-to-Document returns a JSON layer document; `websocket` is a realtime voice
+// session billed per total audio minute and per text message, which no cost unit
+// expresses.
+const UNSYNCED_TASKS = new Set([
+  "Image-to-Document",
+  "Music Generation",
+  "websocket",
+]);
+
+const MediaCatalogModel = CatalogEntry.extend({
+  task: z.string().refine((task) => MEDIA_TASKS[task] !== undefined, "task must be a synced media task"),
+  name: z.string().min(1).optional(),
+  provider_details: z.array(ProviderDetail).length(1).nullish(),
 });
 
 const FlatPricing = z.object({
@@ -98,13 +130,17 @@ const CloudflareResponse = z.object({
 }).passthrough();
 
 const SourceModel = z.object({
-  catalog: CatalogModel,
+  catalog: z.union([CatalogModel, MediaCatalogModel]),
   schemaInput: z.unknown().optional(),
 });
+
+const NoteLines = z.array(z.string().refine((value) => !/[\r\n]/.test(value)));
 
 const CuratedModel = z.object({
   base_model: z.string().refine(isSafeModelID, "base_model must be a safe relative provider/model path").optional(),
   structured_output: z.boolean().optional(),
+  // Only for rows without structured provider_details; see catalogCost.
+  cost: AuthoredModelShape.shape.cost,
   reasoning_options: z.array(ReasoningOption).optional(),
   limit: z.object({
     context: z.number().optional(),
@@ -115,15 +151,28 @@ const CuratedModel = z.object({
     z.literal(true),
     z.object({ field: z.enum(["reasoning_content", "reasoning_details"]) }).strict(),
   ]).optional(),
-  note: z.array(z.string().refine((value) => !/[\r\n]/.test(value))).optional(),
+  // Media models only: what the /ai/run route accepts and returns, when its request
+  // schema doesn't list it (e.g. a TTS model with no output format field).
+  modalities: z.object({
+    input: z.array(z.string().min(1)).min(1),
+    output: z.array(z.string().min(1)).min(1),
+  }).strict().optional(),
+  // Image and video models only: which output modality a bare `output_tokens` price
+  // bills (Gemini image models bill image tokens there, OpenAI's text tokens).
+  output_tokens: z.enum(["text", "image", "video"]).optional(),
+  note: NoteLines.optional(),
 }).strict();
 
 const Curation = z.object({
   skip: z.array(z.string()).default([]),
+  // Leading comment lines for every model whose id starts with the key (route and
+  // source notes shared by a family), written before the model's own note.
+  prefix_notes: z.record(NoteLines).default({}),
   models: z.record(CuratedModel).default({}),
 }).strict();
 
 type CatalogModel = z.infer<typeof CatalogModel>;
+type MediaCatalogModel = z.infer<typeof MediaCatalogModel>;
 type CatalogEntry = z.infer<typeof CatalogEntry>;
 type SourceModel = z.infer<typeof SourceModel>;
 type CuratedModel = z.infer<typeof CuratedModel>;
@@ -148,18 +197,32 @@ export const cloudflareAiGateway = {
       throw new Error("Cloudflare AI Gateway catalog returned no Text Generation models");
     }
 
-    const emittedModels = textModels.filter(
-      (model) => !model.model_id.startsWith("@cf/") && !skippedModels.has(model.model_id),
-    ).map((model) => CatalogModel.parse(model));
+    const eligible = (model: CatalogEntry) => !model.model_id.startsWith("@cf/") && !skippedModels.has(model.model_id);
+    const emittedModels = textModels.filter(eligible).map((model) => {
+      const parsed = CatalogModel.safeParse(model);
+      if (!parsed.success) throw new Error(`${model.model_id}: invalid catalog entry: ${parsed.error.message}`);
+      return parsed.data;
+    });
     if (emittedModels.length === 0) {
       throw new Error("Cloudflare AI Gateway catalog returned no eligible proxied models");
     }
-    const sources = await mapLimit(emittedModels, 6, async (model) => ({
+    const mediaModels = catalog.filter((model) => MEDIA_TASKS[model.task] !== undefined);
+    const emittedMedia = mediaModels.filter(eligible).map((model) => {
+      const parsed = MediaCatalogModel.safeParse(model);
+      if (!parsed.success) throw new Error(`${model.model_id}: invalid catalog entry: ${parsed.error.message}`);
+      return parsed.data;
+    });
+    for (const task of new Set(catalog.map((model) => model.task))) {
+      if (task !== TEXT_GENERATION && MEDIA_TASKS[task] === undefined && !UNSYNCED_TASKS.has(task)) {
+        console.warn(`warning: unknown Cloudflare AI Gateway catalog task: ${task}`);
+      }
+    }
+    const sources = await mapLimit([...emittedModels, ...emittedMedia], 6, async (model) => ({
       catalog: model,
       schemaInput: await loadCatalogSchemaInput(model.model_id),
     }));
 
-    const liveIDs = new Set(textModels.map((model) => model.model_id));
+    const liveIDs = new Set([...textModels, ...mediaModels].map((model) => model.model_id));
     for (const id of Object.keys(curation.models)) {
       if (!liveIDs.has(id)) console.warn(`warning: curation id not in live feed: ${id}`);
     }
@@ -172,15 +235,30 @@ export const cloudflareAiGateway = {
   translateModel(source, context) {
     const id = source.catalog.model_id;
     const curated = curation.models[id] ?? {};
+    if (source.catalog.task !== TEXT_GENERATION) {
+      const catalog = source.catalog as MediaCatalogModel;
+      const type = MEDIA_TASKS[catalog.task]!;
+      const { doc, unpriced } = buildCloudflareAiGatewayMediaModel(catalog, source.schemaInput, curated);
+      if (unpriced !== undefined) console.warn(`warning: ${id}: no [cost], catalog pricing can't be expressed: ${unpriced.join(", ")}`);
+      return {
+        id,
+        v2: doc,
+        header: noteHeader([
+          ...MEDIA_NOTES[type],
+          ...(unpriced === undefined ? [] : [`No [cost]: catalog pricing keys ${unpriced.join(", ")} have no cost unit or condition to express them.`]),
+          ...curated.note ?? [],
+        ]),
+      };
+    }
     return {
       id,
       model: buildCloudflareAiGatewayModel(
-        source.catalog,
+        source.catalog as CatalogModel,
         source.schemaInput,
         curated,
         context.authored(id),
       ),
-      header: noteHeader(curated.note),
+      header: noteHeader([...prefixNotes(id), ...curated.note ?? []]),
     };
   },
 } satisfies SyncProvider<SourceModel>;
@@ -193,7 +271,7 @@ export function buildCloudflareAiGatewayModel(
 ): SyncedBaseModel {
   const id = catalog.model_id;
   // Pricing failures must not be hidden by missing reasoning controls.
-  const cost = proxiedCost(catalog.provider_details[0]!.pricing, id);
+  const cost = catalogCost(catalog, curated);
   const baseModel = curated.base_model ?? resolveBaseModel(id);
   if (baseModel === undefined) {
     throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
@@ -232,10 +310,472 @@ export function buildCloudflareAiGatewayModel(
   return model;
 }
 
+// ---------------------------------------------------------------------------
+// Speech, transcription, image and video models (v2-only files)
+// ---------------------------------------------------------------------------
+
+// Third-party media models run on the REST API's universal endpoint: POST
+// `{base_url}/run` with `{ model, input }`, where `input` follows the model's catalog
+// schema. Generated media comes back as a URL (or a data URI), transcripts as text.
+const RUN_API = {
+  "workers-ai-run": { base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" },
+};
+
+const MEDIA_NOTES: Record<MediaType, string[]> = {
+  speech: [
+    "Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/",
+    "Output: the schema's output format enum (output_format, response_format or format), else the lab's or the note below. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).",
+  ],
+  transcription: [
+    "Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/",
+    "Input: the formats the schema's file field documents, else the lab's. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).",
+  ],
+  image: [
+    "Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/",
+    "Modalities: the schema's prompt/image fields (the lab's MIME types) and output_format enum, else the lab's outputs. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).",
+  ],
+  video: [
+    "Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/",
+    "Modalities: the schema's prompt/image/video/audio fields (the lab's MIME types) and output_format enum, else the lab's video outputs. Prices: catalog provider_details per second of output video, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).",
+  ],
+};
+
+const IMAGE_FORMATS: Record<string, string> = {
+  jpeg: "image/jpeg",
+  jpg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+  svg: "image/svg+xml",
+};
+const VIDEO_FORMATS: Record<string, string> = {
+  mp4: "video/mp4",
+  mov: "video/quicktime",
+  webm: "video/webm",
+};
+// Request fields that carry each input kind in the catalog's image and video schemas.
+const TEXT_FIELD = /^(prompt|instruction|structured_instruction|voice_script)$/;
+const IMAGE_FIELD = /^(image|images|image_input|image_uri|image_urls|input_image|input_images|person_image|garment_images|reference_images|prompt_images|image_style_references|start_image|end_image|first_frame_image|last_frame_image)$/;
+const VIDEO_FIELD = /^(video|video_uri|input_video|reference_video|reference_videos)$/;
+const AUDIO_FIELD = /^(audio|reference_audio|reference_audios)$/;
+
+// Format names in the request schemas → MIME candidates. The lab's spelling wins when
+// it lists one of them (Ogg Opus is audio/ogg for some labs, audio/opus for others).
+const AUDIO_FORMATS: Record<string, string[]> = {
+  mp3: ["audio/mpeg", "audio/mp3"],
+  mpeg: ["audio/mpeg"],
+  mpga: ["audio/mpeg"],
+  opus: ["audio/opus", "audio/ogg"],
+  ogg: ["audio/ogg"],
+  wav: ["audio/wav"],
+  aac: ["audio/aac"],
+  flac: ["audio/flac"],
+  mp4: ["audio/mp4"],
+  m4a: ["audio/mp4"],
+  webm: ["audio/webm"],
+  mkv: ["audio/x-matroska"],
+  pcm: ["audio/pcm", "audio/l16"],
+  mulaw: ["audio/basic", "audio/mulaw", "audio/pcmu"],
+  ulaw: ["audio/basic", "audio/mulaw", "audio/pcmu"],
+  alaw: ["audio/alaw", "audio/pcma"],
+};
+
+type LabFile = {
+  type?: string;
+  name?: string;
+  modalities?: { input: string[]; output: string[] };
+  capabilities?: { tools?: { supported?: boolean }; reasoning?: { supported?: boolean } };
+};
+
+export function buildCloudflareAiGatewayMediaModel(
+  catalog: MediaCatalogModel,
+  schemaInput: unknown,
+  curated: CuratedModel = {},
+): { doc: Record<string, unknown>; unpriced?: string[] } {
+  const id = catalog.model_id;
+  const type = MEDIA_TASKS[catalog.task]!;
+  const base = curated.base_model ?? resolveMediaBaseModel(id);
+  if (base === undefined) {
+    throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
+  }
+  const lab = Bun.TOML.parse(readFileSync(path.join(MODELS_ROOT, `${base}.toml`), "utf8")) as LabFile;
+  if ((lab.type ?? "chat") !== type) {
+    throw new Error(`${id}: lab ${base} is a ${lab.type ?? "chat"} model, not ${type}; map it to a ${type} lab`);
+  }
+
+  const doc: Record<string, unknown> = { schema: 2, v2_only: true, base_model: base };
+  // Cloudflare's name for an alias, unless it's just the lab's name with a vendor prefix
+  // ("MiniMax Hailuo 2.3" for "Hailuo 2.3").
+  if (
+    catalog.name !== undefined
+    && !normalizeSlug(catalog.name).endsWith(normalizeSlug(lab.name ?? ""))
+    && normalizeSlug(id.split("/").slice(1).join("/")) !== normalizeSlug(base.split("/").slice(1).join("/"))
+  ) {
+    doc.name = catalog.name;
+  }
+  const modalities = curated.modalities ?? routeModalities(type, schemaInput, lab);
+  if (modalities !== undefined && !sameModalities(modalities, lab.modalities)) doc.modalities = modalities;
+  // The /ai/run input schema has no tools field and no reasoning control: a model that
+  // reasons does so with no caller control (an empty reasoning_options in v1).
+  const capabilities: Record<string, unknown> = {};
+  if (lab.capabilities?.tools?.supported === true) capabilities.tools = { supported: false };
+  if (lab.capabilities?.reasoning?.supported === true) capabilities.reasoning = { supported: true };
+  if (Object.keys(capabilities).length > 0) doc.capabilities = capabilities;
+  doc.api = RUN_API;
+
+  const pricing = catalog.provider_details?.[0]?.pricing;
+  if (pricing === undefined) return { doc, unpriced: ["(no provider_details)"] };
+  const { cost, unpriced } = mediaCost(pricing, type, curated.output_tokens, schemaInput);
+  if (cost !== undefined) doc.cost = cost;
+  return { doc, unpriced };
+}
+
+// What the route accepts and returns, read from the model's request schema. Undefined
+// when the schema doesn't say, so the lab's modalities apply.
+export function routeModalities(
+  type: MediaType,
+  schemaInput: unknown,
+  lab: LabFile,
+): { input: string[]; output: string[] } | undefined {
+  const properties = schemaProperties(schemaInput);
+  const labInput = lab.modalities?.input ?? [];
+  const labOutput = lab.modalities?.output ?? [];
+  if (type === "image" || type === "video") {
+    const fields = Object.keys(properties);
+    if (fields.length === 0) return undefined;
+    const kinds = [
+      ["image", IMAGE_FIELD],
+      ["video", VIDEO_FIELD],
+      ["audio", AUDIO_FIELD],
+    ] as const;
+    const input = [
+      ...(fields.some((field) => TEXT_FIELD.test(field)) ? ["text"] : []),
+      ...kinds.flatMap(([kind, pattern]) => {
+        if (!fields.some((field) => pattern.test(field))) return [];
+        const mimes = labInput.filter((mime) => mime.startsWith(`${kind}/`));
+        if (mimes.length === 0) throw new Error(`the route takes ${kind} input but the lab lists no ${kind} MIME types; curate modalities`);
+        return mimes;
+      }),
+    ];
+    const formats = enumValues(properties.output_format);
+    const table = type === "image" ? IMAGE_FORMATS : VIDEO_FORMATS;
+    const output = formats === undefined
+      ? labOutput.filter((mime) => mime.startsWith(`${type}/`))
+      : [...new Set(formats.map((format) => {
+          const mime = table[format.toLowerCase()];
+          if (mime === undefined) throw new Error(`unknown ${type} output format "${format}"; add it to ${type === "image" ? "IMAGE" : "VIDEO"}_FORMATS`);
+          return mime;
+        }))];
+    if (input.length === 0 || output.length === 0) return undefined;
+    return { input, output };
+  }
+  if (type === "speech") {
+    const field = properties.output_format ?? properties.response_format ?? properties.format;
+    const codec = schemaProperties(field).codec;
+    const values = enumValues(codec) ?? enumValues(field);
+    if (values === undefined) return undefined;
+    const output = audioMimes(values.map((value) => value.split("_")[0]!).filter((value) => value !== "auto"), labOutput, "output format");
+    return { input: ["text"], output };
+  }
+
+  const file = (properties.file ?? properties.audio_url) as { description?: unknown } | undefined;
+  const description = typeof file?.description === "string" ? file.description : "";
+  const listed = /Supported (?:container )?formats: ([^.]+)\./i.exec(description)?.[1];
+  if (listed === undefined) return undefined;
+  const raw = /Raw formats \(([^)]+)\)/i.exec(description)?.[1];
+  const formats = [listed, raw].filter((value) => value !== undefined).flatMap((value) => value.split(","));
+  const audio = audioMimes(formats.map((value) => value.trim().toLowerCase()), labInput, "input format");
+  return {
+    input: [...(labInput.includes("text") && properties.prompt !== undefined ? ["text"] : []), ...audio],
+    output: ["text"],
+  };
+}
+
+function audioMimes(formats: string[], labMimes: string[], label: string) {
+  const mimes = formats.map((format) => {
+    const candidates = AUDIO_FORMATS[format];
+    if (candidates === undefined) throw new Error(`unknown audio ${label} "${format}"; add it to AUDIO_FORMATS`);
+    return candidates.find((mime) => labMimes.includes(mime)) ?? candidates[0]!;
+  });
+  return [...new Set(mimes)];
+}
+
+function schemaProperties(schema: unknown): Record<string, unknown> {
+  if (schema === null || typeof schema !== "object") return {};
+  const properties = (schema as { properties?: unknown }).properties;
+  return properties !== null && typeof properties === "object" ? properties as Record<string, unknown> : {};
+}
+
+function enumValues(schema: unknown) {
+  const parsed = z.object({ enum: z.array(z.string()).min(1) }).passthrough().safeParse(schema);
+  return parsed.success ? parsed.data.enum : undefined;
+}
+
+function sameModalities(a: { input: string[]; output: string[] }, b: LabFile["modalities"]) {
+  const key = (values: string[] | undefined) => JSON.stringify([...values ?? []].sort());
+  return b !== undefined && key(a.input) === key(b.input) && key(a.output) === key(b.output);
+}
+
+// Per-feature transcription surcharges, added to the base per-minute price when the
+// request sets the field. Keyed by the catalog's `input_audio_minutes_<feature>` suffix.
+// AssemblyAI sells these as add-on features on top of the model's hourly rate
+// (https://www.assemblyai.com/pricing: keyterms $0.05/hr, diarization $0.02/hr, medical
+// $0.15/hr, the catalog's per-minute values), so they stack.
+const ADDITIVE_MINUTE_PRICES: Record<string, CostWhenV2> = {
+  speaker_diarization: { speaker_labels: { equals: true } },
+  keyterms: { keyterms_prompt: { min_items: 1 } },
+  medical: { domain: { equals: "medical-v1" } },
+};
+// Per-mode transcription prices that replace the base price.
+const MODE_MINUTE_PRICES: Record<string, CostWhenV2> = {
+  streaming: { websocket: { equals: true } },
+};
+
+type PriceEntry = { unit?: string; price?: number; cache?: { read?: number; write?: number }; reasoning?: number; overrides?: Array<Record<string, unknown>> };
+
+// Maps a catalog provider_details pricing object to a v2 cost. Token prices are already
+// per 1M tokens; character prices are per character; video prices are per second of
+// output. Every key must map, or no cost is written and the keys are returned, so no
+// price is dropped silently.
+export function mediaCost(
+  pricing: Record<string, number>,
+  type: MediaType = "speech",
+  bareOutputTokens?: "text" | "image" | "video",
+  schemaInput?: unknown,
+): { cost?: CostV2; unpriced?: string[] } {
+  const sides: Record<string, PriceEntry> = {};
+  const side = (modality: string, direction: "input" | "output") => (sides[`${modality}.${direction}`] ??= {});
+  const unpriced: string[] = [];
+  const additive: Array<[CostWhenV2, number]> = [];
+  const modes: Array<[CostWhenV2, number]> = [];
+  const imageSizes: Array<[string, number]> = [];
+  const megapixelBuckets: Array<[number, number, string]> = [];
+  const megapixels: Record<string, number> = {};
+  const videoOverrides: Array<{ when: CostWhenV2[]; price: number; key: string }> = [];
+  const set = (entry: PriceEntry, unit: string | undefined, value: number, key: string) => {
+    if (entry.price !== undefined || (entry.unit !== undefined && entry.unit !== unit)) return unpriced.push(key);
+    if (unit !== undefined) entry.unit = unit;
+    entry.price = value;
+  };
+  const resolution = requestValue(schemaInput, ["resolution", "quality"]);
+
+  for (const [key, value] of Object.entries(pricing)) {
+    const minuteFeature = /^input_audio_minutes_(\w+)$/.exec(key)?.[1];
+    const token = /^(input|output)_(?:(cached|cache_creation)_)?(?:(text|audio|image|video|reasoning)_)?tokens$/.exec(key);
+    const size = /^output_size_(\w+)$/.exec(key)?.[1];
+    const bucket = /^mp_(\d+)_(\d+)$/.exec(key);
+    const clip = type === "video"
+      ? /^(\d+p|\d+k)(?:_(\d+)s)?(?:_(audio|draft|video_in|non_video_in))?$/.exec(key)
+      : null;
+    if (key === "input_characters") {
+      set(side("text", "input"), "character", perMillion(value), key);
+    } else if (key === "input_audio_minutes") {
+      set(side("audio", "input"), "minute", value, key);
+    } else if (minuteFeature !== undefined && ADDITIVE_MINUTE_PRICES[minuteFeature] !== undefined) {
+      additive.push([ADDITIVE_MINUTE_PRICES[minuteFeature]!, value]);
+    } else if (minuteFeature !== undefined && MODE_MINUTE_PRICES[minuteFeature] !== undefined) {
+      modes.push([MODE_MINUTE_PRICES[minuteFeature]!, value]);
+    } else if (key === "output_image_count") {
+      set(side("image", "output"), "image", value, key);
+    } else if (key === "input_image_count") {
+      set(side("image", "input"), "image", value, key);
+    } else if (size !== undefined) {
+      imageSizes.push([size, value]);
+    } else if (bucket !== null) {
+      megapixelBuckets.push([Number(bucket[1]), value, key]);
+    } else if (key === "first_output_megapixel" || key === "subsequent_output_megapixel") {
+      megapixels[key] = value;
+    } else if (key === "input_megapixel") {
+      set(side("image", "input"), "megapixel", value, key);
+    } else if (type === "video" && key === "default") {
+      set(side("video", "output"), "second", value, key);
+    } else if (clip !== null) {
+      const [, res, seconds, flag] = clip;
+      const when: CostWhenV2[] = [{ resolution: { equals: resolution(res!) } }];
+      if (seconds !== undefined) when.push({ duration: { equals: Number(seconds) } });
+      if (flag === "audio") when.push({ generate_audio: { equals: true } });
+      // A silent price next to an audio one applies only when audio is turned off, so an
+      // unset flag (audio is often on by default) never gets the cheaper rate.
+      if (flag === undefined && pricing[`${key}_audio`] !== undefined) when.push({ generate_audio: { equals: false } });
+      if (flag === "draft") when.push({ mode: { equals: "draft" } });
+      if (flag === "video_in" || flag === "non_video_in") when.push({ input_video: { equals: flag === "video_in" } });
+      // Clip prices for a fixed length become a per-second price for that length.
+      videoOverrides.push({ when, price: seconds === undefined ? value : roundPrice(value / Number(seconds)), key });
+    } else if (token !== null) {
+      const [, direction, cache, rawModality] = token as unknown as [string, "input" | "output", string | undefined, string | undefined];
+      const reasoning = rawModality === "reasoning";
+      // A bare output_tokens price on an image or video model may bill text or media
+      // tokens, depending on the lab, so it needs curation.
+      const modality = reasoning
+        ? "text"
+        : rawModality ?? (direction === "output" && (type === "image" || type === "video") ? bareOutputTokens : "text");
+      if (modality === undefined) {
+        unpriced.push(key);
+        continue;
+      }
+      const entry = side(modality, direction);
+      if (entry.unit !== undefined) {
+        unpriced.push(key);
+      } else if (direction === "output" && reasoning && cache === undefined) {
+        entry.reasoning = value;
+      } else if (direction === "input" && !reasoning && cache !== undefined) {
+        entry.cache = { ...entry.cache, [cache === "cached" ? "read" : "write"]: value };
+      } else if (!reasoning && cache === undefined) {
+        set(entry, undefined, value, key);
+      } else {
+        unpriced.push(key);
+      }
+    } else {
+      unpriced.push(key);
+    }
+  }
+
+  const minutes = sides["audio.input"];
+  if (additive.length > 0 || modes.length > 0) {
+    if (minutes?.unit !== "minute" || minutes.price === undefined) {
+      unpriced.push(...Object.keys(pricing).filter((key) => key.startsWith("input_audio_minutes_")));
+    } else {
+      minutes.overrides = [
+        ...modes.map(([when, price]) => ({ when, price })),
+        // Surcharges add up, so every combination of features gets its own total.
+        ...subsets(additive).map((features) => ({
+          when: features.length === 1 ? features[0]![0] : { all: features.map(([when]) => when) },
+          price: roundPrice(minutes.price! + features.reduce((sum, [, price]) => sum + price, 0)),
+        })),
+      ];
+    }
+  }
+
+  // A flat per-megapixel price; a first megapixel priced apart from the rest has no unit.
+  const { first_output_megapixel: first, subsequent_output_megapixel: subsequent } = megapixels;
+  if (first !== undefined && subsequent !== undefined && first === subsequent) {
+    set(side("image", "output"), "megapixel", first, "first_output_megapixel");
+  } else {
+    unpriced.push(...Object.keys(megapixels));
+  }
+
+  const images = sides["image.output"];
+  if (imageSizes.length > 0) {
+    if (images?.unit !== "image" || images.price === undefined) {
+      unpriced.push(...imageSizes.map(([size]) => `output_size_${size}`));
+    } else {
+      const resolutionOf = requestValue(schemaInput, ["resolution", "size", "image_size"]);
+      images.overrides = imageSizes
+        .filter(([, price]) => price !== images.price)
+        .map(([size, price]) => ({ when: { resolution: { equals: resolutionOf(size) } }, price }));
+      if (images.overrides.length === 0) delete images.overrides;
+    }
+  }
+  if (megapixelBuckets.length > 0) {
+    // Per-image prices by output size: the smallest band is the base price.
+    const sorted = [...megapixelBuckets].sort(([a], [b]) => a - b);
+    const entry = side("image", "output");
+    if (entry.price !== undefined) {
+      unpriced.push(...sorted.map(([, , key]) => key));
+    } else {
+      entry.unit = "image";
+      entry.price = sorted[0]![1];
+      entry.overrides = sorted.slice(1).map(([from, price]) => ({ when: { megapixels: { gte: from } }, price }));
+    }
+  }
+
+  const video = sides["video.output"];
+  if (videoOverrides.length > 0) {
+    if (video?.unit !== "second" || video.price === undefined) {
+      unpriced.push(...videoOverrides.map(({ key }) => key));
+    } else {
+      // Broader conditions first, so the most specific matching override wins. An override
+      // at the base price is dropped unless a broader one it narrows would apply instead.
+      const key = (condition: CostWhenV2) => JSON.stringify(condition);
+      const sorted = [...videoOverrides].sort((a, b) => a.when.length - b.when.length);
+      const kept = sorted.filter((override) => override.price !== video.price || sorted.some((other) =>
+        other !== override
+        && other.when.length < override.when.length
+        && other.price !== video.price
+        && other.when.every((condition) => override.when.some((own) => key(own) === key(condition)))));
+      if (kept.length > 0) {
+        video.overrides = kept.map(({ when, price }) => ({ when: when.length === 1 ? when[0]! : { all: when }, price }));
+      }
+    }
+  }
+
+  for (const [name, entry] of Object.entries(sides)) {
+    if (entry.price === undefined) unpriced.push(...Object.keys(pricing).filter((key) => keyTargets(key, name)));
+  }
+  if (unpriced.length > 0) return { unpriced: [...new Set(unpriced)] };
+
+  const cost: Record<string, Record<string, PriceEntry>> = {};
+  for (const modality of ["text", "image", "audio", "video"]) {
+    for (const direction of ["input", "output"] as const) {
+      const entry = sides[`${modality}.${direction}`];
+      if (entry === undefined) continue;
+      const { unit, price, cache, reasoning, overrides } = entry;
+      (cost[modality] ??= {})[direction] = {
+        ...(unit === undefined ? {} : { unit }),
+        price,
+        ...(cache === undefined ? {} : { cache }),
+        ...(reasoning === undefined ? {} : { reasoning }),
+        ...(overrides === undefined ? {} : { overrides }),
+      };
+    }
+  }
+  return { cost: cost as CostV2 };
+}
+
+// The request's own spelling of a catalog pricing label (720p → "720P"), from the
+// first listed field whose enum has it; otherwise the label itself.
+function requestValue(schemaInput: unknown, fields: string[]) {
+  const properties = schemaProperties(schemaInput);
+  return (label: string) => {
+    for (const field of fields) {
+      const match = enumValues(properties[field])?.find((value) => value.toLowerCase() === label.toLowerCase());
+      if (match !== undefined) return match;
+    }
+    return label;
+  };
+}
+
+function keyTargets(key: string, side: string) {
+  const [modality, direction] = side.split(".");
+  return key.startsWith(`${direction}_`) && (modality === "text" ? !/_(audio|image|video)_/.test(key) : key.includes(`_${modality}_`));
+}
+
+// Non-empty subsets, smallest first, keeping the input order within each.
+function subsets<T>(items: T[]): T[][] {
+  const result: T[][] = [];
+  for (let mask = 1; mask < 1 << items.length; mask++) {
+    result.push(items.filter((_, index) => (mask & (1 << index)) !== 0));
+  }
+  return result.sort((a, b) => a.length - b.length);
+}
+
+function perMillion(value: number) {
+  return Math.round(value * 1e12) / 1e6;
+}
+
+function roundPrice(value: number) {
+  return Math.round(value * 1e10) / 1e10;
+}
+
+function normalizeSlug(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+}
+
+// The catalog id's lab file: the same path, dots as dashes, or the one file in the
+// lab directory whose name matches without punctuation (eleven-v3 ↔ eleven_v3).
+function resolveMediaBaseModel(id: string) {
+  const direct = resolveBaseModel(id);
+  if (direct !== undefined) return direct;
+  const [lab, ...rest] = id.split("/");
+  const slug = normalizeSlug(rest.join("/"));
+  const dir = path.join(MODELS_ROOT, lab!);
+  if (!existsSync(dir)) return undefined;
+  const matches = readdirSync(dir).filter((file) => file.endsWith(".toml") && normalizeSlug(file.slice(0, -5)) === slug);
+  return matches.length === 1 ? `${lab}/${matches[0]!.slice(0, -5)}` : undefined;
+}
+
 export function deriveReasoningOptions(
   schemaInput: unknown,
 ): NonNullable<SyncedBaseModel["reasoning_options"]> {
-  let hasToggle = false;
   let effortValues: Array<"none" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max" | "default">
     | undefined;
 
@@ -265,7 +805,6 @@ export function deriveReasoningOptions(
 
       for (const [property, rawSchema] of Object.entries(value)) {
         const propertySchema = rawSchema as Record<string, unknown>;
-        if (property === "enable_thinking" || property === "thinking") hasToggle = true;
         if (property === "effort" || property === "reasoning_effort") {
           const candidates = [propertySchema, ...arrayValue(propertySchema.anyOf), ...arrayValue(propertySchema.oneOf)];
           for (const candidate of candidates) {
@@ -279,10 +818,9 @@ export function deriveReasoningOptions(
   };
   visit(schemaInput);
 
-  const options: NonNullable<SyncedBaseModel["reasoning_options"]> = [];
-  if (hasToggle) options.push({ type: "toggle" });
-  if (effortValues !== undefined) options.push({ type: "effort", values: effortValues });
-  return options;
+  // A thinking field describes an accepted input shape, not proof that this route
+  // supports disabling thinking. Toggle support is curated per model instead.
+  return effortValues === undefined ? [] : [{ type: "effort", values: effortValues }];
 }
 
 function arrayValue(value: unknown): Array<Record<string, unknown>> {
@@ -484,6 +1022,23 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
   return results;
 }
 
+// Structured provider_details is the source of truth. A curated cost is only allowed
+// (and then required) when Cloudflare omits it, so a stale override can't outlive it.
+function catalogCost(catalog: CatalogModel, curated: CuratedModel): NonNullable<SyncedBaseModel["cost"]> {
+  const id = catalog.model_id;
+  const detail = catalog.provider_details?.[0];
+  if (detail !== undefined) {
+    if (curated.cost !== undefined) {
+      throw new Error(`${id}: catalog now has provider_details pricing; remove the curated cost`);
+    }
+    return proxiedCost(detail.pricing, id);
+  }
+  if (curated.cost === undefined) {
+    throw new Error(`${id}: catalog has no provider_details pricing; add a curated cost`);
+  }
+  return curated.cost;
+}
+
 function proxiedCost(pricing: Record<string, number>, id: string): NonNullable<SyncedBaseModel["cost"]> {
   try {
     if ("long_context_threshold_tokens" in pricing) {
@@ -565,6 +1120,8 @@ function contextCost(
   short: ReturnType<typeof tokenCost>,
   long: ReturnType<typeof tokenCost>,
 ): NonNullable<SyncedBaseModel["cost"]> {
+  // Some rows repeat the same prices above the threshold; that isn't a tier.
+  if (JSON.stringify(short) === JSON.stringify(long)) return short;
   return {
     ...short,
     tiers: [{ ...long, tier: { type: "context", size } }],
@@ -591,7 +1148,14 @@ function labFileExists(id: string) {
 function baseReasoning(id: string) {
   const file = path.join(MODELS_ROOT, `${id}.toml`);
   return existsSync(file) && z.object({ reasoning: z.boolean().optional() }).passthrough()
-    .parse(Bun.TOML.parse(readFileSync(file, "utf8"))).reasoning === true;
+    .parse(readLabModel(file, id)).reasoning === true;
+}
+
+function prefixNotes(id: string) {
+  return Object.entries(curation.prefix_notes)
+    .filter(([prefix]) => id.startsWith(prefix))
+    .sort(([a], [b]) => a.length - b.length)
+    .flatMap(([, lines]) => lines);
 }
 
 function noteHeader(note: string[] | undefined) {

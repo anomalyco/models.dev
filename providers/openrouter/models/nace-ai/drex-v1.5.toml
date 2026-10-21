@@ -1,0 +1,14 @@
+schema = 2
+base_model = "nace-ai/drex-v1.5"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0

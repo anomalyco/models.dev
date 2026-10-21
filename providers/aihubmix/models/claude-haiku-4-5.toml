@@ -6,14 +6,21 @@
 # Canon export SHA: 00fb309c0dba28a9e4c9a3a6569d418db947cafc
 # Toggle: $.thinking.type = "enabled"|"disabled" on /v1/messages.
 # Budget: integer $.thinking.budget_tokens on /v1/messages.
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
-interleaved = true
-[[reasoning_options]]
-type = "toggle"
-[[reasoning_options]]
-type = "budget_tokens"
-[cost]
-input = 1.1
-output = 5.5
-cache_read = 0.11
-cache_write = 1.375
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.11, write = { "5m" = 1.375, "1h" = 2.2 } }
+
+[cost.text.output]
+price = 5.5

@@ -2,20 +2,28 @@
 # medium (default) | high | xhigh | max for DeepSeek V4 Pro; no toggle or
 # reasoning-token budget field is documented.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Retired: absent from GET /v1/models; chat completions return 410 "the model version you are trying to access has been deprecated" (live, 2026-10-21).
+# Distinct levels: none | low | high | max. The guide no longer lists this retired slug;
+# Baseten runs minimal at low, medium at high and xhigh at max on DeepSeek V4 Flash 0731.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.145
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_048_576
 output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.145 }
+
+[cost.text.output]
+price = 3.48

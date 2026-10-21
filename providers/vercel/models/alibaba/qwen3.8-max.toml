@@ -1,28 +1,27 @@
 # Toggle: reasoning.enabled = true|false
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "alibaba/qwen3.8-max-preview"
 name = "Qwen 3.8 Max"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 0
-max = 262_144
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

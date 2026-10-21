@@ -1,5 +1,6 @@
 # Pricing and controls: https://developers.openai.com/api/docs/models/gpt-6-luna
 base_model = "openai/gpt-6-luna"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
@@ -17,3 +18,4 @@ cache_write = 0.25
 
 [provider]
 npm = "@ai-sdk/openai"
+api = "https://opencode.ai/inference/go/openai/v1"

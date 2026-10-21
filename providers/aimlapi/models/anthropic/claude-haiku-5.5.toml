@@ -1,0 +1,18 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=anthropic%2Fclaude-haiku-5.5&endpoint=openai%2Fchat-completions
+# Cache: the chat-completions catalog row prices cache writes at 5m (cache_write) and 1h (cache_write_1h), and the request schema takes cache_control { type: ephemeral, ttl: 5m | 1h }. https://api.aimlapi.com/v1/models?include=pricing,modalities
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 0.13
+cache = { read = 0.013, write = { "5m" = 0.1625, "1h" = 0.26 } }
+
+[cost.text.output]
+price = 0.65

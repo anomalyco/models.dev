@@ -1,14 +1,36 @@
 # Model ID: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/sonnet-5-5
 # Pricing and reasoning: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
+# v2 capabilities and prices:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/prompt-caching (5m and 1h TTLs; 1h writes cost 2x input)
+# - https://platform.claude.com/docs/en/build-with-claude/prompt-caching (4 breakpoints; minimum cacheable length on Google Cloud)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/structured-outputs (Claude 4.5 and later)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Regional and multi-region (us, eu) endpoints cost 10% more than the global endpoint.
+# Mid-conversation updates follow the per-model lists in Anthropic's docs, which cover Google Cloud:
+# - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
+# - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
+# Cache hit is $0.10 per 1M on the Vertex pricing page (global; $0.11 non-global), matching Anthropic's first-party price.
+schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+system_updates = true
+effort_updates = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+[api.messages]
+sdk = { aisdk = "@ai-sdk/google-vertex/anthropic" }
 
-[provider]
-npm = "@ai-sdk/google-vertex/anthropic"
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1

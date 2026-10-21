@@ -1,0 +1,46 @@
+# Modalities: FLUX 3 Image Klein output_format jpeg | png, https://api.bfl.ai/openapi.json
+schema = 2
+type = "image"
+name = "FLUX 3 Image Klein"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "flux"
+open_weights = false
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text"]
+output = ["image/jpeg", "image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[api.images]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.image.output]
+unit = "image"
+price = 0.009
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "768x768" } }
+price = 0.008
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "1536x1536" } }
+price = 0.011
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "2048x2048" } }
+price = 0.014
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "4096x4096" } }
+price = 0.036

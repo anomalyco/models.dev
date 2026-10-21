@@ -1,16 +1,18 @@
+schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
-
-[limit]
-context = 1_000_000
+[cost.text.output]
+price = 15

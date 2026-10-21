@@ -1,18 +1,26 @@
+# Route: provider-native passthrough /anthropic (Messages body and anthropic-beta headers forwarded): https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/
+# v2 capabilities and cache follow Anthropic's own API (providers/anthropic). Live via the gateway 2026-10-19: mid-conversation system text, per-message output_config.effort and tool_addition/tool_removal keep the cache on Sonnet 5.5; Haiku 4.5 rejects them upstream; cache_control ttl 1h is accepted; output_config.format json_schema is enforced on Sonnet 5.5 and Opus 5.5.
+# 1h cache writes: unified billing passes provider prices through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/), i.e. Anthropic's 2x input rate.
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = { min = 1_024 } }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 200_000
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
+
+[cost.text.output]
+price = 5

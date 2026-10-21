@@ -1,23 +1,13 @@
-name = "GPT OSS 120B"
+# Prices: https://submodel.gitbook.io/docs/instagen/overview-1/available-models (USD per 1M tokens, checked 2026-10-21).
+schema = 2
+base_model = "openai/gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-23"
-last_updated = "2025-08-23"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0.10
-output = 0.50
+[capabilities]
+reasoning = { supported = true }
 
-[limit]
-context = 131_072
-output = 32_768
+[cost.text.input]
+price = 0.1
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.5

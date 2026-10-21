@@ -1,22 +1,22 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type speech)
+# https://vercel.com/docs/ai-gateway/modalities/text-to-speech
+schema = 2
+base_model = "google/gemini-3.8-flash-lite-tts"
 name = "Gemini 3.8 Flash-Lite TTS"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "gemini"
-release_date = "2026-09-23"
-last_updated = "2026-09-23"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = false
 
-[cost]
-input = 0.5
-output = 6
-cache_read = 0.125
+[capabilities]
+temperature = false
+top_p = false
+top_k = false
 
-[limit]
-context = 0
-output = 0
+[api.speech]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
 
-[modalities]
-input = ["text"]
-output = ["audio"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 6
+
+[cost.audio.output]
+price = 6

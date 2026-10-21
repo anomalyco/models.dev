@@ -1,0 +1,17 @@
+schema = 2
+base_model = "google/gemini-nano-banana-2.1"
+name = "Nano Banana 2.1 (Vertex AI)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "medium", "high"] }
+structured_output = false
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

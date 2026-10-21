@@ -1,6 +1,7 @@
 # Toggle: chat_template_kwargs: enable_thinking true|false
 # Effort: reasoning_effort = high|max
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 

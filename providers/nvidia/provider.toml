@@ -7,5 +7,18 @@ npm = "@ai-sdk/openai-compatible"
 # `reasoning_effort`, `chat_template_kwargs.enable_thinking`, prompt `/think`
 # and `/no_think`, and top-level `reasoning_budget`. Check the exact model NIM.
 # https://docs.api.nvidia.com/nim/reference/llm-apis
+# Price: NVIDIA publishes no per-token rate for the hosted API. Every model is a free trial ("All models offer a
+# free trial tier", https://build.nvidia.com/llms.txt; model cards cite the NVIDIA API Trial Terms of Service), so
+# every price is 0 (accessed 2026-10-21).
+# Catalog: https://build.nvidia.com/models.md (106 models, accessed 2026-10-21). GET /v1/models still lists many
+# retired ids and omits live ones, so it isn't used for lifecycle. A retired id returns 410 Gone with its end-of-life
+# date; an id that is gone from the catalog and returns 404 ("Function ... Not found for account" or "page not
+# found") is also marked deprecated (probed 2026-10-21).
+# APIs: Chat Completions on integrate.api.nvidia.com (also /v1/embeddings); retrieval, genai, cosmos and biology
+# models on ai.api.nvidia.com / health.api.nvidia.com; speech through Riva. /v1/responses and /v1/messages return 404.
+# Mid-conversation probes (live 2026-10-21): warm a ~8k-token prefix, send a control turn with the same settings,
+# then the changed turn (a late system message asking for a marker word, reasoning_effort low → high, or one added
+# tool) and compare usage.prompt_tokens_details.cached_tokens. Set only where every conclusive trial agreed; unset
+# where the route reports no cached tokens, trials disagreed, or the route was overloaded (503).
 doc = "https://docs.api.nvidia.com/nim/"
 api = "https://integrate.api.nvidia.com/v1"

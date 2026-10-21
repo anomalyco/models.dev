@@ -1,24 +1,15 @@
+# Deprecated: removed from serverless on 2026-05-14 (https://docs.together.ai/docs/deprecations,
+# accessed 2026-10-21); requests return 400 "Unable to access non-serverless model".
+schema = 2
+base_model = "alibaba/qwen3-coder-next"
 name = "Qwen3 Coder Next FP8"
-description = "Legacy model retained for compatibility with older integrations"
-family = "qwen"
-release_date = "2026-02-03"
-last_updated = "2026-02-03"
-attachment = false
-reasoning = false
 status = "deprecated"
-temperature = true
-knowledge = "2026-02-03"
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.50
-output = 1.20
 
 [limit]
-context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.2

@@ -1,17 +1,35 @@
+# Deprecated: retired from Copilot on 2026-10-02 (https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history).
+# Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-opus-4-7.toml.
+schema = 2
 base_model = "anthropic/claude-opus-4-7"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+status = "deprecated"
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 200_000
 input = 168_000
 output = 32_000
 
+[api.messages]
+base_url = "https://api.githubcopilot.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 6
+
 [experimental.modes.fast]
-cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
-provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }
+body = { speed = "fast" }
+headers = { anthropic-beta = "fast-mode-2026-02-01" }

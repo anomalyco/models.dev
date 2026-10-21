@@ -5,6 +5,14 @@ name = "GitHub Copilot"
 # document this private request schema or static mappings.
 # https://api.githubcopilot.com/models
 # https://docs.github.com/en/copilot/reference/ai-models/model-comparison
+# APIs (authenticated GET /models `supported_endpoints`, 2026-10-21): POST /chat/completions (Gemini, Kimi),
+# /responses and ws:/responses (GPT, Grok, MAI), /v1/messages and /chat/completions (Claude), plus /embeddings.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates): Claude models served on /v1/messages
+# (Anthropic Messages) copy them from the first-party file in providers/anthropic/models for the same model.
+# They are unset on every other model: GitHub documents none of them and they were not tested live.
+# Cost: USD per 1M tokens billed in AI credits ($0.01 each) beyond the plan allowance:
+# https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. Legacy annual plans bill
+# per-request multipliers instead, which these files don't carry.
 env = ["GITHUB_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
 doc = "https://docs.github.com/en/copilot"

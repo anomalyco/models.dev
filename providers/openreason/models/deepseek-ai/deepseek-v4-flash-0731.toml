@@ -5,15 +5,18 @@
 # Baseten's documented surface. Reasoning output is returned in the
 # `reasoning_content` field.
 # https://openreason.app · https://docs.baseten.co/inference/model-apis/reasoning
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[cost]
-input = 0.1371
-output = 0.2743
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.1371
+
+[cost.text.output]
+price = 0.2743

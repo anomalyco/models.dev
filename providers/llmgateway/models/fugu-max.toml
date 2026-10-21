@@ -1,28 +1,25 @@
-name = "Fugu Max"
-description = "Multi-agent model for routing expert agents across complex analytical tasks"
-family = "fugu"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
-
-[limit]
-context = 1_000_000
-output = 1_000_000
+# Modalities: image formats JPEG, PNG, WebP, GIF (https://docs.llmgateway.io/features/vision)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
+base_model = "sakana/fugu-max"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+structured_output = true
+temperature = true
+effort_updates = false
+
+[limit]
+output = 1_000_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

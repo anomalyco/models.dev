@@ -1,15 +1,35 @@
+# Deprecated: scheduled for removal from serverless on 2026-10-22, replaced by
+# deepseek-ai/DeepSeek-V4.1-Flash (https://docs.together.ai/docs/deprecations, accessed 2026-10-21).
 # Served context_length=1048576 for this ID in GET https://api.together.xyz/v1/models
-# (checked 2026-09-23).
+# (checked 2026-09-23 and 2026-10-21).
+# Toggle: reasoning.enabled = false (or reasoning_effort = none) turns thinking off (live 2026-10-21).
+# Effort: reasoning_effort = high|max. Live, minimal/low render the default prompt, medium/high
+# the high prompt and xhigh/max the max prompt.
+# Inputs: text only ("Multimodal not supported for model", live 2026-10-21).
+# Mid-conversation (live 2026-10-21): a late system message was followed and kept the cache;
+# adding a tool dropped the cache to 0.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.03
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+cache = { supported = true, implicit = true, explicit = false }
+structured_output = true
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.28

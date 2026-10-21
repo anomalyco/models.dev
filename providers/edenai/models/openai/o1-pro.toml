@@ -1,12 +1,20 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
+schema = 2
 base_model = "openai/o1-pro"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 150
-output = 600
-
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 150
+
+[cost.text.output]
+price = 600

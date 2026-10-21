@@ -1,24 +1,12 @@
-name = "GLM-4.5"
+schema = 2
+base_model = "zhipuai/glm-4.5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2025-07-28"
-last_updated = "2025-07-28"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2025-04"
-open_weights = true
 
-[cost]
-input = 0.00
-output = 0.00
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[limit]
-context = 131_072
-output = 98_304
+[cost.text.input]
+price = 0
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0

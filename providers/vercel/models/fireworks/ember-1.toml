@@ -1,34 +1,22 @@
 # Toggle: reasoning.enabled = true|false
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
-name = "Ember-1"
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "fireworks/ember-1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-09-23"
-last_updated = "2026-09-23"
-attachment = true
-reasoning = true
-tool_call = true
-open_weights = false
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
+system_updates = true
+effort_updates = false
 
 [limit]
-context = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

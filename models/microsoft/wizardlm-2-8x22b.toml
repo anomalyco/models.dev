@@ -1,0 +1,28 @@
+# https://wizardlm.github.io/WizardLM2/
+# https://huggingface.co/alpindale/WizardLM-2-8x22B (archived original weights)
+# Sampling: open weights; temperature, top_p and top_k are standard sampling controls for this checkpoint.
+schema = 2
+name = "WizardLM 2 8x22B"
+description = "Microsoft WizardLM instruction-tuned Mixtral MoE for multilingual dialogue and complex tasks"
+open_weights = true
+release_date = "2024-04-15"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 65_536
+output = 8_000
+
+[[weights]]
+label = "Hugging Face archive"
+url = "https://huggingface.co/alpindale/WizardLM-2-8x22B"

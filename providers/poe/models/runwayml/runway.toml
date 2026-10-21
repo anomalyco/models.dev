@@ -1,18 +1,22 @@
+# Status: https://poe.com/Runway is titled "Runway_DEPRECATED" (2026-10-21).
+schema = 2
+type = "video"
 name = "Runway"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "runway"
-release_date = "2024-10-11"
-last_updated = "2024-10-11"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
-
-[limit]
-context = 256
-output = 0
+release_date = "2024-10-11"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
 output = ["video"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 256
+output = 0

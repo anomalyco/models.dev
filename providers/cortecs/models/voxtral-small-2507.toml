@@ -1,23 +1,24 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: automatic prefix caching on every routed provider (mistral). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
+base_model = "mistral/voxtral-small-24b-2507"
 name = "voxtral-small-2507"
 description = "Voxtral Small is a multimodal model with audio input, combining advanced speech capabilities with strong text performance for transcription, translation, and audio understanding."
-release_date = "2026-02-02"
-last_updated = "2026-02-02"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.123
-output = 0.368
-cache_read = 0.012
+[capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
+structured_output = true
+temperature = false
+effort_updates = false
 
 [limit]
 context = 32_000
 output = 32_000
 
-[modalities]
-input = ["text", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.123
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.368

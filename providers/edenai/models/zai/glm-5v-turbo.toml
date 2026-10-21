@@ -1,14 +1,24 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
+schema = 2
 base_model = "zhipuai/glm-5v-turbo"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 1.2
-output = 4
-cache_read = 0.24
+[modalities]
+input = ["image/jpeg", "image/png", "text", "video/mp4", "video/quicktime", "video/x-matroska"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 202_752
 
-[modalities]
-input = ["image", "text", "video"]
+[cost.text.input]
+price = 1.2
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 4

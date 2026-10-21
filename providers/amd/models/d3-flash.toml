@@ -1,0 +1,19 @@
+# AMD Token Factory catalog (accessed 2026-10-21): https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3Ad3-flash
+# Section "Public Free Model APIs"; pricing note "Free to use. Points show relative usage, not a charge.", so every price is 0.
+# Decision model: POST /v1/systemone with a state and typed questions (choice, noul or score).
+# Tags: Decision, Vision input, Video input; "Inputs up to 32,768 tokens, with images and videos."
+schema = 2
+v2_only = true
+base_model = "vllm-sr/d3-flash"
+
+[limit]
+context = 32_768
+
+[api.systemone]
+base_url = "https://developer.amd.com.cn/radeon/api/v1"
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

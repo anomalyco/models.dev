@@ -1,0 +1,12 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image/video/audio fields (the lab's MIME types) and output_format enum, else the lab's video outputs. Prices: catalog provider_details per second of output video, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+schema = 2
+v2_only = true
+base_model = "runwayml/gen-4.5"
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+
+[cost.video.output]
+unit = "second"
+price = 0.12

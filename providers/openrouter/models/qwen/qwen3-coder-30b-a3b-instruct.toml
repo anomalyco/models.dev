@@ -1,9 +1,20 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on SiliconFlow)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
-structured_output = true
 
-[cost]
-input = 0.07
-output = 0.28
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 235_929
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.28

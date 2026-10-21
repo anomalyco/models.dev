@@ -6,22 +6,31 @@
 # compare against, and first-party xAI does not treat this model as disableable.
 # Do not advertise an off switch we cannot verify.
 # Cost: https://neon.com/models.json grok-4-6 (USD / 1M tokens).
-base_model = "xai/grok-4.6"
-reasoning_options = [
-  { type = "effort", values = ["low", "medium", "high", "xhigh"] },
-]
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
-
 # Lab output is 500_000. The gateway names 524_288:
 # 'max_tokens' (100000000) exceeds model maximum (524288). Measured 2026-09-04.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+schema = 2
+base_model = "xai/grok-4.6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+
 [limit]
 output = 524_288
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
-shape = "responses"
+[api.responses]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
+legacy_shape = "responses"
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 6

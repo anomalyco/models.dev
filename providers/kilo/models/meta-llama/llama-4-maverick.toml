@@ -1,23 +1,22 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "meta/llama-4-maverick-17b-instruct"
 name = "Meta: Llama 4 Maverick"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
-family = "llama"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.1875
-output = 0.6525
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 128_000
-output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1875
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.6525

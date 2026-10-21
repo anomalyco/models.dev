@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
+name = "DeepSeek R1 (0528)"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 1.35
+cache = { read = 0.945 }
+
+[cost.text.output]
+price = 5.4

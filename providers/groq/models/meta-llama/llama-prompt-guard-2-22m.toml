@@ -1,23 +1,18 @@
-name = "Llama Prompt Guard 2 22M"
+# Chat Completions returns the attack probability as the message content (e.g. "0.9989951252937317"; tested 2026-10-21).
+# Price: $0.03 input and output per 1M tokens (https://console.groq.com/docs/model/meta-llama/llama-prompt-guard-2-22m,
+# GET /openai/v1/models). Limits: 512 / 512, same as the lab.
+# Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
+# Flex: https://console.groq.com/docs/flex-processing (all models, paid customers, on-demand pricing).
+schema = 2
+base_model = "meta/llama-prompt-guard-2-22m"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
-family = "llama"
-release_date = "2025-05-29"
-last_updated = "2025-05-29"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
 status = "beta"
 
-[cost]
-input = 0.03
-output = 0.03
+[capabilities]
+service_tier = ["flex"]
 
-[limit]
-context = 512
-output = 512
+[cost.text.input]
+price = 0.03
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.03

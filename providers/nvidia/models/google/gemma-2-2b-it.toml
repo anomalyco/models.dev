@@ -1,24 +1,16 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
+# Limits and tools from NVIDIA's card ("Context Length: 8,192 tokens", "Function Calling: Not supported"),
+# as in the lab.
+schema = 2
+base_model = "google/gemma-2-2b-it"
 name = "Gemma 2 2b It"
 status = "deprecated"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
 structured_output = true
-release_date = "2024-07-16"
-last_updated = "2024-07-16"
-open_weights = true
 
-[cost]
-input = 0.00
-output = 0.00
+[cost.text.input]
+price = 0
 
-[limit]
-context = 128000
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0

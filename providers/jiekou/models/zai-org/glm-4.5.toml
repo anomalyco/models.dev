@@ -1,24 +1,14 @@
-name = "GLM-4.5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Toggle: enable_thinking true|false (chat reference lists it for zai-org/glm-4.5; https://docs.jiekou.ai/docs/models/reference-llm-create-chat-completion).
+schema = 2
+base_model = "zhipuai/glm-4.5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-open_weights = true
 
-[cost]
-input = 0.6
-output = 2.2
+[cost.text.input]
+price = 0.6
 
-[limit]
-context = 131072
-output = 98304
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 2.2

@@ -1,12 +1,22 @@
 # Pricing per https://docs.vivgrid.com/models (accessed 2026-08-27):
 # input $0.15 / cached input $0.04 / output $0.50 per 1M tokens.
+# Served on Chat Completions only: every API surface listed for this model uses
+# /chat/completions, so it needs the openai-compatible SDK rather than the
+# provider default (Responses). https://docs.vivgrid.com/models/glm-5.3-flash (accessed 2026-10-21)
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.04
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.5

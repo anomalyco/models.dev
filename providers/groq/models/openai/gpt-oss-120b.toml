@@ -1,15 +1,32 @@
+# Reasoning: Chat Completions `reasoning_effort` = low | medium | high
+# (https://console.groq.com/docs/reasoning#options-for-reasoning-effort-gptoss); Responses `reasoning.effort`.
+# Price: $0.15 input, $0.075 cached input, $0.60 output per 1M tokens (https://console.groq.com/docs/model/openai/gpt-oss-120b,
+# GET /openai/v1/models). Output cap 65,536 (same pages); context 131,072 is the lab's.
+# Cache: implicit prefix caching, on by default, 50% off cached input, expires after 2 hours without use
+# (https://console.groq.com/docs/prompt-caching). Usage reports prompt_tokens_details.cached_tokens.
+# Mid-conversation flags, live probes on Chat Completions (2026-10-21, ~1,550-token prefix in the first user message,
+# notes/neon-groq-v2-2026-10-21/groq-probe-loop.ts). Hits are sparse on the free tier, so only misses between control hits count:
+#   system_updates = false: a system message appended after the history read 0 cached tokens between two controls that read 1,536.
+#   effort_updates = false: changing reasoning_effort low -> high read 0, between controls that read 1,536 (2 trials).
+#   tools.updates is unset: adding a tool read 0 twice after a control hit, but the next control also missed.
+# Flex: https://console.groq.com/docs/flex-processing (all models, paid customers, on-demand pricing).
+schema = 2
 base_model = "openai/gpt-oss-120b"
-last_updated = "2025-10-21"
-# Reasoning HTTP format (accessed 2026-06-25):
-# POST https://api.groq.com/openai/v1/chat/completions
-# JSON reasoning_effort: "low" | "medium" | "high".
-# Sources: https://console.groq.com/docs/reasoning#options-for-reasoning-effort-gptoss
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.15
-output = 0.60
-cache_read = 0.075
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { supported = true, implicit = { ttl = ["2h"] } }
+system_updates = false
+effort_updates = false
+service_tier = ["flex"]
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.6

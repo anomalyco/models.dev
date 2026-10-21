@@ -1,11 +1,16 @@
+schema = 2
 base_model = "openai/gpt-oss-safeguard-20b"
 name = "GPT OSS Safeguard 20B (Groq)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+effort_updates = false
 
-[cost]
-input = 0.075
-output = 0.3
-cache_read = 0.0375
+[cost.text.input]
+price = 0.075
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 0.3

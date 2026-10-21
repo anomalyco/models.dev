@@ -1,25 +1,20 @@
+# Status: https://poe.com/Claude-Sonnet-3.7 is titled "Claude-Sonnet-3.7_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "anthropic/claude-3-7-sonnet-20250219"
 name = "Claude-Sonnet-3.7"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-release_date = "2025-02-19"
-last_updated = "2025-02-19"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-open_weights = false
-tool_call = true
+status = "deprecated"
 
-[cost]
-input = 2.6
-output = 13
-cache_read = 0.26
-cache_write = 3.2
+[capabilities]
+reasoning = { supported = true }
+temperature = false
 
 [limit]
 context = 196_608
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.6
+cache = { read = 0.26, write = 3.2 }
+
+[cost.text.output]
+price = 13

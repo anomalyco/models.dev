@@ -1,0 +1,21 @@
+# Effort: OpenAI reasoning_effort, mapped by Cortecs to Claude output_config.effort.
+# Matches the other Cortecs Claude 5.5 entries; Haiku 5.5 has adaptive thinking only,
+# so no manual budget_tokens control.
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: explicit `cache_control` breakpoints (Claude on Amazon Bedrock / Google Vertex). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, explicit = true }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 0.113
+cache = { read = 0.011, write = 0.14 }
+
+[cost.text.output]
+price = 0.563

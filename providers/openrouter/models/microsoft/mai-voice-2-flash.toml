@@ -1,0 +1,15 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=speech
+# Output: response_format mp3 (audio/mpeg) or pcm (audio/pcm). Priced per input character, or
+# per second of output audio when only pricing.completion is set, or per token when both are.
+# https://openrouter.ai/docs/guides/overview/multimodal/tts
+schema = 2
+v2_only = true
+base_model = "microsoft/mai-voice-2-flash"
+
+[api.speech]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+unit = "character"
+price = 15

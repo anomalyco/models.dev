@@ -1,0 +1,17 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=anthracite-org%2Fmagnum-v4-72b&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "anthracite-org/magnum-v4-72b"
+
+[capabilities]
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 32_000
+output = 16_384
+
+[cost.text.input]
+price = 4.1262
+
+[cost.text.output]
+price = 6.877

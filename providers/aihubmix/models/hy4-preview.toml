@@ -9,20 +9,22 @@
 # integer $.generationConfig.thinkingConfig.thinkingBudget on the Gemini path (-1 dynamic, 0 off where supported);
 # the Responses path carries effort but has no reasoning-token budget field.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "tencent/hy4-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"], budget = {} }
 structured_output = true
+cache = { supported = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 0.845
+cache = { read = 0.04225 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.845
-output = 2.535
-cache_read = 0.04225
+[cost.text.output]
+price = 2.535

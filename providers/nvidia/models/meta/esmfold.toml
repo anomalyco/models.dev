@@ -1,21 +1,30 @@
+# NVIDIA API: HTTP 410 Gone on POST https://health.api.nvidia.com/v1/biology/meta/esmfold — end of life
+# 2026-08-25T09:00:00Z (probed 2026-10-21)
+# Description: ESMFold predicts protein structure from sequence (https://huggingface.co/facebook/esmfold_v1); the old
+# text described a Llama chat model.
+schema = 2
 name = "esmfold"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+description = "Protein structure prediction from a single amino-acid sequence"
+open_weights = true
 release_date = "2024-03-15"
 last_updated = "2025-06-12"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,23 +1,16 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Limit: the catalog's max_output_tokens equals context_size (2000000), a placeholder; the output limit is the lab's 30000.
+# Reasoning: no caller control documented. The chat reference lists enable_thinking only for zai-org/glm-4.5 and separate_reasoning only for deepseek-r1-turbo (https://docs.jiekou.ai/docs/models/reference-llm-create-chat-completion).
+schema = 2
+base_model = "xai/grok-4.1-fast-reasoning"
 name = "grok-4-1-fast-reasoning"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-open_weights = false
 
-[cost]
-input = 0.18
-output = 0.45
+[cost.text.input]
+price = 0.19
 
-[limit]
-context = 2000000
-output = 2000000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 0.475

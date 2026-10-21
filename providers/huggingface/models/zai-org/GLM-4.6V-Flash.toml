@@ -1,13 +1,23 @@
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (zhipuai/glm-4.6v-flash).
+# No toggle: the router documents no on/off field (see provider.toml), and the toggle had no wire source.
+schema = 2
 base_model = "zhipuai/glm-4.6v-flash"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.3
-output = 0.9
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 context = 131_072
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.9

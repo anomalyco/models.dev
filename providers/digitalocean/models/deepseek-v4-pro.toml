@@ -1,32 +1,32 @@
+# Effort: reasoning_effort = none|low|high|max (DeepSeek V4's levels; DigitalOcean accepts none..max, provider.toml).
+# Live 2026-10-20: omitted or none returns no reasoning_content; any other level reasons. Off is effort none, so no toggle.
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
 name = "Deepseek V4 Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { supported = true, implicit = true }
 structured_output = true
-knowledge = "2025-05"
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.348
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
 context = 1_048_576
-output = 384_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.348 }
+
+[cost.text.output]
+price = 3.48

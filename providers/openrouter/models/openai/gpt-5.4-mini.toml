@@ -1,14 +1,27 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live: cache prefix kept on gpt-4.1, gpt-5.4, gpt-6-sol)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Cache: automatic from 1,024 tokens (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
+schema = 2
 base_model = "openai/gpt-5.4-mini"
-temperature = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.75
-output = 4.5
-cache_read = 0.075
 
 [modalities]
-input = ["pdf", "image", "text"]
+input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = false
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 4.5

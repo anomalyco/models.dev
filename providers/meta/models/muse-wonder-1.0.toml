@@ -1,0 +1,28 @@
+# Sources:
+# https://research.meta.ai/blog/muse-wonder
+# GET https://api.meta.ai/v1/models lists muse-wonder-1.0 (verified 2026-10-12)
+# Effort values from the API's own validation error for reasoning_effort = "none":
+# "Supported values: [minimal, low, medium, high, xhigh, max]" (verified 2026-10-12)
+# https://dev.meta.ai/docs/pricing-rate-limits (Standard mode token pricing; Contributor mode not on Model API)
+# v2 capabilities: https://dev.meta.ai/docs/structured-output, https://dev.meta.ai/docs/prompt-caching,
+# https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/api-reference/chat-completions/schemas
+schema = 2
+base_model = "meta/muse-wonder-1.0"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+store = true
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20

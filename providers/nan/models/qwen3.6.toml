@@ -8,12 +8,19 @@
 # minimal) skips reasoning; low/medium/high/max cap it at 2,048 / 8,192 /
 # 16,384 / 32,768 tokens. Default is on with a 16,384-token budget. Off is
 # effort=none, so no toggle.
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-
-[cost]
-input = 0
-output = 0
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

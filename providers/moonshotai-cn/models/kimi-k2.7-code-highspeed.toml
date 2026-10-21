@@ -1,1 +1,27 @@
-../../moonshotai/models/kimi-k2.7-code-highspeed.toml
+# China platform (api.moonshot.cn). Prices are published in CNY at https://platform.kimi.com/docs/pricing/chat
+# (accessed 2026-10-19): input ¥13.00, cache hit ¥2.60, output ¥54.00.
+# CNY→USD rate: 6.693661, 2026-10-20, source: https://open.er-api.com/v6/latest/USD
+# Capabilities match the global platform (same docs at https://platform.kimi.com/docs); see
+# providers/moonshotai/models/kimi-k2.7-code-highspeed.toml for the live checks.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi K2.7 Code HighSpeed"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"], updates = false }
+reasoning = { supported = true }
+structured_output = true
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.9421
+cache = { read = 0.3884 }
+
+[cost.text.output]
+price = 8.0673

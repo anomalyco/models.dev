@@ -1,0 +1,11 @@
+# Sources (accessed 2026-10-19):
+# - Pricing (CNY): https://docs.bigmodel.cn/cn/guide/start/pricing (audio input CNY 16/MTok, about
+#   CNY 0.0002 per second; text output not billed)
+# - Model: https://docs.bigmodel.cn/cn/guide/models/sound-and-video/glm-asr-2512
+# CNY→USD rate: 6.693661, 2026-10-19, source: https://open.er-api.com/v6/latest/USD
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-asr-2512"
+
+[cost.audio.input]
+price = 2.39032

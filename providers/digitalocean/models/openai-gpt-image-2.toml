@@ -1,22 +1,20 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/images/generations)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/
+schema = 2
+base_model = "openai/gpt-image-2"
 name = "OpenAI GPT Image 2"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "gpt-image"
-release_date = "2025-04-24"
-last_updated = "2025-04-24"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = false
-
-[cost]
-input = 8
-output = 30
-
-[limit]
-context = 0
-output = 16_384
 
 [modalities]
-input = ["text", "image"]
-output = ["image", "text"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["image/png", "image/jpeg", "image/webp", "text"]
+
+[limit]
+output = 16_384
+
+[api.images]
+
+[cost.text.input]
+price = 8
+
+[cost.text.output]
+price = 30

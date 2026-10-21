@@ -1,8 +1,16 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
+schema = 2
 base_model = "anthropic/claude-sonnet-4-20250514"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 63_999 } }
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

@@ -1,0 +1,36 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
+# Effort: reasoning.effort = low|medium|high|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = low|medium|high|xhigh
+# /v1/responses: reasoning.effort = low|medium|high|xhigh
+# Input: JPEG and PNG images and PDF, as on xAI (https://docs.x.ai/developers/models).
+# Prompt caching (https://temprhq.io/docs/gateway-reference#prompt-caching): the provider caches long
+# prompts automatically, with no request changes.
+schema = 2
+base_model = "xai/grok-4.5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.3 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12

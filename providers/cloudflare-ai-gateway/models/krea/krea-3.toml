@@ -1,0 +1,20 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image fields (the lab's MIME types) and output_format enum, else the lab's outputs. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+schema = 2
+v2_only = true
+base_model = "krea/krea-3"
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+
+[cost.image.input]
+unit = "image"
+price = 0.07
+
+[cost.image.output]
+unit = "image"
+price = 0.03
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "2K" } }
+price = 0.06

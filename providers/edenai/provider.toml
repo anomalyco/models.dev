@@ -1,6 +1,10 @@
 # Catalog: https://api.edenai.run/v3/models
 # Reasoning: reasoning_effort = none|minimal|low|medium|high|xhigh|max 
 # Pricing: list_pricing, USD per token; the sibling `pricing` field is discounted
+# Mid-conversation: models are served on Chat Completions (https://www.edenai.co/docs/v3/llms/chat-completions),
+# which has no per-turn effort or tool-change mechanism, so chat models set effort_updates and
+# tools.updates to false. system_updates is unset: the docs don't say how a mid-conversation
+# system message is forwarded.
 name = "Eden AI"
 env = ["EDENAI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,27 +1,15 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-08-26T09:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
+# Toggle: system message `/think` | `/no_think` (https://build.nvidia.com/nvidia/nvidia-nemotron-nano-9b-v2).
+schema = 2
+base_model = "nvidia/nemotron-nano-9b-v2"
 name = "nvidia-nemotron-nano-9b-v2"
 status = "deprecated"
-base_model = "nvidia/nemotron-nano-9b-v2"
-family = "nemotron"
 
-release_date = "2025-08-18"
-last_updated = "2025-08-18"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-knowledge = "2024-09"
-tool_call = true
-open_weights = true
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
 
-[limit]
-context = 131_072
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0

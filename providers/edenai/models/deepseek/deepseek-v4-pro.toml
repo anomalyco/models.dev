@@ -1,10 +1,17 @@
+# Cache: DeepSeek caches automatically, no marker required (https://www.edenai.co/docs/v3/llms/prompt-caching).
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+effort_updates = false
 
-[cost]
-input = 0.66
-output = 1.98
-cache_read = 0.022
+[cost.text.input]
+price = 0.66
+cache = { read = 0.022 }
+
+[cost.text.output]
+price = 1.98

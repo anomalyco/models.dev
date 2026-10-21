@@ -1,29 +1,29 @@
-name = "GPT-6 Astra"
+# Modalities: image formats from models/openai/gpt-6-astra.toml (same model)
+# system_updates = true: the gateway keeps later system messages in place on openai, azure, aws-mantle (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts: Claude native or <system-reminder> user turn, Gemini user turn, OpenAI/xAI forwarded)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+# Cache: automatic, plus prompt_cache_options explicit mode with prompt_cache_breakpoint and optional 30m TTL on GPT-5.6+ (https://docs.llmgateway.io/features/caching/provider-cache-control)
+schema = 2
+base_model = "openai/gpt-6-astra"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2026-09-03"
-last_updated = "2026-09-03"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
-
-[limit]
-context = 1_050_000
-output = 1_050_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = { ttl = ["30m"] } }
+
+[limit]
+output = 1_050_000
+
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[cost.text.output]
+price = 50

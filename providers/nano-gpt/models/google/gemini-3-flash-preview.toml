@@ -1,17 +1,30 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# system_updates = false: Gemini places every system message, even one after the history, in its system instruction (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching#gemini-implicit-caching)
+# Cache: implicit (automatic) for Gemini models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+# Modalities (image: the lab's formats that NanoGPT Chat Completions accepts; video: the lab's formats; audio: the lab's formats): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 base_model = "google/gemini-3-flash-preview"
 name = "Gemini 3 Flash (Preview)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+tools = { supported = true, updates = false }
+effort_updates = false
+system_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 input = 1_048_576
 
-[modalities]
-input = ["text", "image", "video", "audio"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3

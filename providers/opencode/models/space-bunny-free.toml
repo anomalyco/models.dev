@@ -10,6 +10,7 @@ reasoning_options = [
 ]
 tool_call = true
 open_weights = false
+status = "deprecated"
 
 [interleaved]
 field = "reasoning_content"
@@ -28,3 +29,6 @@ output = 524_288
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

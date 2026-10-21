@@ -2,19 +2,29 @@
 # - https://ofox.ai/en/models/google/gemini-3.6-flash
 # - https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
 # - https://ai.google.dev/gemini-api/docs/pricing (lab parity for effort levels)
+# Mid-conversation (Ofox Gemini native API, https://ofox.ai/docs/api/gemini/generate-content): systemInstruction, thinkingConfig and tools are request-level and content roles are user/model, so system_updates, effort_updates and tools.updates are false.
+# Cache: implicit, plus explicit cachedContents on the Gemini native API (https://ofox.ai/docs/develop/models/gemini#caching, https://ofox.ai/docs/develop/advanced/gemini-explicit-cache).
+schema = 2
 base_model = "google/gemini-3.6-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = true }
 
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
-cache_write = 0.0415
-input_audio = 1.5
+[api.generate-content]
+base_url = "https://api.ofox.ai/gemini/v1beta"
+sdk = { aisdk = "@ai-sdk/google" }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://api.ofox.ai/gemini/v1beta"
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075, write = 0.0415 }
+
+[cost.text.output]
+price = 3.75
+
+[cost.audio.input]
+price = 0.75

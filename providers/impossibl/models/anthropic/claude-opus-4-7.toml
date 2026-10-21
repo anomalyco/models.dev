@@ -1,15 +1,22 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Toggle: {"thinking":{"type":"disabled"}}
+# Effort: {"output_config":{"effort":"high"}}
+# Prompt caching (https://impossibl.com/docs/prompt-caching): cache_control breakpoints (or the request-level
+# marker), ttl "5m" (default) or "1h"; 1h write = catalog cache_write_1h_per_mtok_usd.
+schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
 
-[[reasoning_options]]
-type = "toggle" # API: {"thinking":{"type":"disabled"}}
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
-[[reasoning_options]]
-type = "effort" # API: {"output_config":{"effort":"high"}}
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.output]
+price = 25

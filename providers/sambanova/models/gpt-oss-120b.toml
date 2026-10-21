@@ -1,0 +1,19 @@
+# Effort: reasoning_effort = low|medium|high
+# SambaNova chat-completions OpenAPI defines reasoning_effort (gpt-oss-120b example); matches openrouter/togetherai/fireworks-ai peers.
+# https://docs.sambanova.ai/docs/api-reference/chat-completions/create-chat-based-completion
+# Limits/pricing: GET https://api.sambanova.ai/v1/models (gpt-oss-120b context_length 131072, max_completion_tokens 131072; USD 0.22/0.59 per MTok).
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.22
+
+[cost.text.output]
+price = 0.59

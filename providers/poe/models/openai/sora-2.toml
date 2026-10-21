@@ -1,18 +1,22 @@
+# Status: https://poe.com/Sora-2 is titled "Sora-2_DEPRECATED" (2026-10-21).
+schema = 2
+type = "video"
 name = "Sora-2"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "sora"
-release_date = "2025-10-06"
-last_updated = "2025-10-06"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
-
-[limit]
-context = 0
-output = 0
+release_date = "2025-10-06"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
 output = ["video"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0

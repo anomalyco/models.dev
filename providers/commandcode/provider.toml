@@ -1,0 +1,17 @@
+# Docs: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Pricing: https://commandcode.ai/models (accessed 2026-10-14)
+# Catalog: https://api.commandcode.ai/provider/v1/models
+# Claude requires /messages via per-model @ai-sdk/anthropic overrides;
+# other models use /chat/completions on the same base URL.
+# DeepSeek time-of-day prices use the published off-peak rate; peak is 2x.
+# API access needs a plan: the pay-as-you-go Provider plan is $15/month + $1.01 processing fee
+# (credited as API usage); GOAT/Pro/Max/Team meter API calls against plan credits. Per-token
+# prices are the published model rates (https://commandcode.ai/docs/provider, accessed 2026-10-21).
+# Chat controls: normalized reasoning_effort; none/minimal are rejected.
+# Toggle paths are model-specific: DeepSeek uses off; MiniMax/NVIDIA use omission versus low.
+# Live SDK checks on Linux: Qwen/Claude generation and streaming (2026-10-14).
+name = "CommandCode"
+npm = "@ai-sdk/openai-compatible"
+env = ["CMD_API_KEY"]
+api = "https://api.commandcode.ai/provider/v1"
+doc = "https://commandcode.ai/docs/provider"

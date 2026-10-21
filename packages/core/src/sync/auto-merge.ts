@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { isDeepStrictEqual } from "node:util";
 
+import { isSchemaV2, labModelV2ToV1 } from "../translate.js";
+
 export const MAX_CREATED_MODELS = 10;
 export const MAX_DELETED_MODELS = 10;
 export const MAX_MODEL_CHURN = 15;
@@ -17,6 +19,7 @@ const REVIEWED_REASONING_PROVIDERS = new Set([
   "nano-gpt",
   "openrouter",
   "venice",
+  "vercel",
 ]);
 
 export interface CatalogChange {
@@ -70,7 +73,9 @@ export async function classifyAutoMerge(
     let reasoning = model.reasoning;
     if (reasoning === undefined && typeof model.base_model === "string") {
       const base = Bun.TOML.parse(await loader(`models/${model.base_model}.toml`)) as Record<string, unknown>;
-      reasoning = base.reasoning;
+      reasoning = isSchemaV2(base)
+        ? labModelV2ToV1({ ...base, id: model.base_model }).reasoning
+        : base.reasoning;
     }
 
     return {

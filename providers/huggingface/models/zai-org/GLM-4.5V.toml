@@ -1,12 +1,21 @@
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (zhipuai/glm-4.5v).
+schema = 2
 base_model = "zhipuai/glm-4.5v"
-reasoning_options = []
 
-[cost]
-input = 0.6
-output = 1.8
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 context = 65_536
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 1.8

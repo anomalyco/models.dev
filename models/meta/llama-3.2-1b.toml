@@ -1,23 +1,26 @@
+schema = 2
 name = "Llama-3.2-1B"
 description = "Compact open Llama base model for lightweight and on-device use"
 family = "llama"
-release_date = "2024-09-25"
-last_updated = "2024-09-25"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-knowledge = "2023-12"
 open_weights = true
+knowledge = "2023-12"
+release_date = "2024-09-25"
 license = "Llama 3.2 Community License"
-
-[limit]
-context = 131_072
-output = 8_192
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 8_192
 
 [[weights]]
 label = "Hugging Face"

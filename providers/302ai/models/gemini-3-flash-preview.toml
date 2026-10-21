@@ -1,22 +1,20 @@
+schema = 2
+base_model = "google/gemini-3-flash-preview"
 name = "gemini-3-flash-preview"
-description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-release_date = "2025-12-18"
-last_updated = "2025-12-18"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
 knowledge = "2025-06"
 
-[cost]
-input = 0.500
-output = 3.000
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 1_000_000
-output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3

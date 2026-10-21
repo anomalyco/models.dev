@@ -1,16 +1,25 @@
+# Route: provider-native passthrough /openai (Responses body forwarded unchanged): https://developers.cloudflare.com/ai-gateway/usage/providers/openai/
+# v2 capabilities and cache follow OpenAI's own API (providers/openai). Live via the gateway 2026-10-19: mid-conversation developer messages and additional_tools keep the cached prefix (gpt-4.1-nano, gpt-5-nano, gpt-5.4-nano), configuration_update is accepted on gpt-6-luna and gpt-5.6-luna, json_schema output is enforced.
+schema = 2
 base_model = "openai/gpt-5.4-nano"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.2
-output = 1.25
-cache_read = 0.02
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 128_000
 
-[provider]
-npm = "@ai-sdk/openai"
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 1.25

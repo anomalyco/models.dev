@@ -1,23 +1,15 @@
+# Live 2026-10-21: POST https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-dev validates the request (422
+# on an
+# unsupported height). The genai endpoint takes prompt, steps, cfg_scale and seed, no temperature; context and
+# output come from the lab (0: prompts aren't chat tokens).
+# Knowledge 2024-08: kept from NVIDIA's earlier entry; unsourced (the lab publishes no cutoff).
+schema = 2
+base_model = "black-forest-labs/flux-1-dev"
 name = "FLUX.1-dev"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "flux"
-release_date = "2024-08-01"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = false
-temperature = true
 knowledge = "2024-08"
-tool_call = false
-open_weights = false
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
 
-[limit]
-context = 4096
-output = 0
-
-[modalities]
-input = ["text"]
-output = ["image"]
+[cost.text.output]
+price = 0

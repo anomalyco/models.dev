@@ -1,0 +1,35 @@
+# Sources:
+# - https://agnes-ai.com/en/docs/agnes-30-flash — model ID agnes-3.0-flash, text + image-URL input, text output,
+#   512K context, 65,536 max output, temperature/tools/chat_template_kwargs.enable_thinking support,
+#   list pricing $0.005 cached / $0.05 input / $0.15 output currently $0
+# - https://wiki.agnes-ai.com/en/docs/pricing.md — confirms agnes-3.0-flash cached/input/output currently $0/M
+# Release month uses 2026-09 (secondary catalogs report September 2026; no first-party date published).
+# toggle: API: {"chat_template_kwargs": {"enable_thinking": true}}
+schema = 2
+name = "Agnes 3.0 Flash"
+description = "A new-generation Agnes AI text model with stronger Agnes Code task execution, tool orchestration, and trustworthy delivery."
+open_weights = false
+release_date = "2026-09"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 512_000
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

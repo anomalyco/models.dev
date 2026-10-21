@@ -1,24 +1,23 @@
-name = "Magnum v4 72B"
-description = "Open Llama multimodal model for image understanding and text reasoning"
-family = "llama"
-release_date = "2024-01-01"
-last_updated = "2025-01-01"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = true
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "anthracite-org/magnum-v4-72b"
 
-[cost]
-input = 2.006
-output = 2.992
-cache_read = 1.003
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 16_384
 input = 16_384
 output = 8_192
 
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.006
+cache = { read = 1.003 }
+
+[cost.text.output]
+price = 2.992

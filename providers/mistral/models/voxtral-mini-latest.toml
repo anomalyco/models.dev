@@ -1,33 +1,39 @@
-# Sources :
-#   GET https://api.mistral.ai/v1/models  (source d'autorite pour l'id courant)
-#   https://docs.mistral.ai/models/model-cards/voxtral-mini-transcribe-25-07
-#   https://mistral.ai/news/voxtral-transcribe-2/  ($0.003 per minute)
+# Sources:
+#   GET https://api.mistral.ai/v1/models (voxtral-mini-latest -> voxtral-mini-2602, capability audio_transcription only)
+#   https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02 (Voxtral Mini Transcribe 2, API IDs voxtral-mini-2602
+#     and voxtral-mini-latest, released 2026-02-04, $0.003 per minute, no open weights)
+#   https://docs.mistral.ai/studio/audio/speech_to_text/offline_transcription (POST /v1/audio/transcriptions, up to ~3 hours
+#     of audio per request; the audio file is the input, so v1 attachment is true)
+#   https://docs.mistral.ai/resources/known-limitations ("Supported formats: WAV, MP3, FLAC, OGG, WEBM")
+#   https://mistral.ai/news/voxtral-transcribe-2
 #
-# `voxtral-mini-latest` resout vers `voxtral-mini-2602` et n'expose que la
-# capacite `audio_transcription`. A ne PAS confondre avec les poids ouverts
-# Voxtral Mini 3B, servis en instruct par d'autres providers (cf.
-# providers/amazon-bedrock/models/mistral.voxtral-mini-3b-2507.toml) : meme
-# lignee, surface produit differente. La fiche liee ci-dessus documente la
-# lignee Transcribe, Mistral n'en publiant pas pour la revision 2602.
+# Not the open-weight Voxtral Mini 3B instruct model that other providers serve (see
+# providers/amazon-bedrock/models/mistral.voxtral-mini-3b-2507.toml): same family, different product.
+# Same model as models/mistral/voxtral-mini-2602.toml (v2-only). Not linked with base_model, which would add a v1
+# canonical_model_id pointing at a model v1 doesn't publish.
 #
-# Le bloc [cost] est volontairement absent : la transcription se facture à la
-# MINUTE d'audio ($0.003/min) et non au token, comme les entrées Whisper déjà
-# présentes au catalogue (cf. providers/groq/models/whisper-large-v3-turbo.toml).
+# Billed per minute of audio, which v1 can't express, so v1 shows no cost.
+schema = 2
+type = "transcription"
 name = "Voxtral Mini (latest)"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "voxtral"
-release_date = "2026-02-01"
-last_updated = "2026-02-01"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = false
+release_date = "2026-02-04"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/ogg", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[cost.audio.input]
+unit = "minute"
+price = 0.003

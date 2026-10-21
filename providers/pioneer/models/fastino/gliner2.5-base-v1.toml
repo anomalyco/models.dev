@@ -1,0 +1,35 @@
+# Sources:
+# - Pioneer/Fastino live catalog GET https://api.fastino.ai/v1/base-models (id fastino/gliner2.5-base-v1: label "GLiNER 2.5 Base", description "English boundary NER and structured extraction with LoRA fine-tuning.", context_window 4096, input $0.03 / output $0.0 / cache $0.03, license Apache-2.0, release Aug 2026, is_chat_model true, supports_training true)
+# - Model card https://huggingface.co/fastino/gliner2.5-base-v1 (194M DeBERTa-v3-base English boundary checkpoint, max_len 4096, Apache-2.0)
+# - Release announcement https://fastino.ai/blog/gliner2-5-span-free-information-extraction (released Aug 24, 2026; three Apache-2.0 variants)
+# Pioneer is the first-party Fastino inference API (api https://api.fastino.ai/v1 in provider.toml; docs https://agent.pioneer.ai/llms.txt); full inline entry follows existing providers/pioneer/models/fastino/* pattern.
+# Encoder: GET https://api.fastino.ai/v1/base-models (2026-10-20) task_type = "encoder", license Apache-2.0, tier open. GLiNER models extract and classify
+# through /v1/chat/completions with a top-level `schema` (https://docs.fastino.ai/inference/chat-completions); they don't generate text, reason or call tools.
+# Cost: GET https://api.fastino.ai/v1/base-models and https://docs.fastino.ai/pricing (2026-10-20): input $0.03, output $0, cache read/write $0.03 per 1M tokens.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): no reasoning or tools, so no effort or tool updates.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
+name = "GLiNER 2.5 Base"
+description = "English boundary NER and structured extraction with LoRA fine-tuning."
+open_weights = true
+release_date = "2026-08-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 4_096
+output = 4_096
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03, write = 0.03 }
+
+[cost.text.output]
+price = 0

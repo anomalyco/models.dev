@@ -1,4 +1,5 @@
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
@@ -8,3 +9,6 @@ field = "reasoning_content"
 input = 1.4
 output = 4.4
 cache_read = 0.26
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

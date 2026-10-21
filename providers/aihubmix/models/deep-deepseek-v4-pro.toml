@@ -1,29 +1,23 @@
+# Retired: absent from GET https://aihubmix.com/api/v1/models and https://aihubmix.com/model/deep-deepseek-v4-pro returns 410 (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro (DeepSeek)"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-knowledge = "2025-05"
-open_weights = true
+cache = { supported = true, implicit = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.478
-output = 0.956
-cache_read = 0.004302
+[cost.text.input]
+price = 0.478
+cache = { read = 0.004302 }
 
-[limit]
-context = 1_000_000
-output = 384_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.956

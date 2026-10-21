@@ -1,22 +1,45 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-3.html
 # Mantle Responses only for this catalog route; US Standard pricing.
 # Effort: reasoning.effort = none|low|medium|high.
+# v2 cache: implicit per the model card (Mantle).
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted.
+# Modalities: image formats are xAI's (jpeg, png; the base model); the Bedrock model card lists image input but no file/document input, so no application/pdf.
+schema = 2
 base_model = "xai/grok-4.3"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 last_updated = "2026-06-28"
 
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.20
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
+service_tier = ["flex", "priority"]
 
 [limit]
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

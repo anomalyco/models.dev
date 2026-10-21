@@ -1,0 +1,29 @@
+# Lab metadata carried over from providers/openrouter/models/baidu/ernie-4.5-vl-424b-a47b.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Weights: https://huggingface.co/baidu/ERNIE-4.5-VL-424B-A47B-PT (Apache-2.0, text and vision)
+# Image formats: Baidu Qianfan's vision guide lists JPEG (image/jpeg), PNG (image/png) and BMP (image/bmp)
+# (https://cloud.baidu.com/doc/qianfan-docs/s/fm8r1ndsm).
+# Sampling: open weights; generation_config.json sets temperature 0.2 and top_p 0.8
+# (https://huggingface.co/baidu/ERNIE-4.5-VL-424B-A47B-PT/blob/main/generation_config.json).
+schema = 2
+name = "ERNIE 4.5 VL 424B A47B "
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+family = "ernie"
+open_weights = true
+knowledge = "2025-03-31"
+release_date = "2025-06-30"
+
+[modalities]
+input = ["image/jpeg", "image/png", "image/bmp", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 123_000
+output = 16_000

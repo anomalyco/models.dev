@@ -1,0 +1,16 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=mistralai%2Fmistral-large-2407&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "mistral/mistral-large-2407"
+name = "Large 2407"
+
+[capabilities]
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 2.7508
+cache = { read = 0.27508 }
+
+[cost.text.output]
+price = 8.2524

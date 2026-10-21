@@ -1,18 +1,29 @@
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-07-08 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
 name = "Qwen VL-MAX-2025-01-25"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = true
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
 open_weights = false
+release_date = "2025-08-05"
+status = "deprecated"
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 4_096
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.43478261
+
+[cost.text.output]
+price = 1.30434783

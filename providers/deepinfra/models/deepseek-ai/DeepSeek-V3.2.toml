@@ -1,30 +1,35 @@
+# Lab identity: https://deepinfra.com/deepseek-ai/DeepSeek-V3.2 (Hugging Face repo deepseek-ai/DeepSeek-V3.2)
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 14336/14457 -> 0/14471; 14336/14457 -> 0/14471]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 14272/14416 -> 192/14467; 14272/14416 -> 256/14467]
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
 name = "DeepSeek-V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-knowledge = "2024-12"
-open_weights = false
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.26
-output = 0.38
-cache_read = 0.13
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
+system_updates = false
 
 [limit]
 context = 163_840
-output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.26
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 0.38
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

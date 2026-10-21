@@ -1,0 +1,24 @@
+# Lab metadata carried over from providers/openrouter/models/google/gemma-2-27b-it.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
+name = "Gemma 2 27B"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
+open_weights = true
+knowledge = "2024-06-30"
+release_date = "2024-07-13"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8_192
+output = 2_048

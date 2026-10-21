@@ -1,18 +1,29 @@
 # Included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Toggle: reasoning_effort = "none" turns reasoning off and any other accepted value turns it on; NanoGPT's catalog lists no effort levels for this model (https://docs.nano-gpt.com/api-reference/miscellaneous/extended-thinking)
+# Modalities (image: the lab's formats that NanoGPT Chat Completions accepts): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video"]
+output = ["text"]
 
-[cost]
-input = 0.1
-output = 0.45
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+tools = { supported = true, updates = false }
+effort_updates = false
 
 [limit]
 input = 262_144
 output = 131_072
 
-[modalities]
-input = ["text", "image", "video"]
+[cost.text.input]
+price = 0.14
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.4

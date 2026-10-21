@@ -1,30 +1,22 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-name = "Solar Pro 4"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Upstage (live)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "upstage/solar-pro4"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "solar"
-release_date = "2026-08-10"
-last_updated = "2026-08-10"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-open_weights = false
+system_updates = false
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
 
-[cost]
-input = 0.09
-output = 0.36
-cache_read = 0.018
-
-[limit]
-context = 524_288
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.6

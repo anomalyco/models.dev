@@ -1,23 +1,32 @@
+# Type image: image output (https://build.nvidia.com/qwen/qwen-image). Not linked: NVIDIA's card lists several
+# Qwen-Image
+# releases (2025-08 and later versions) without saying which one the endpoint serves.
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
+# image generation takes steps and guidance, not sampling temperature.
+schema = 2
+type = "image"
 name = "Qwen Image"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
+description = "Text-to-image foundation model with multilingual text rendering"
 family = "qwen"
-release_date = "2025-08-07"
-last_updated = "2025-08-07"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-08-07"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["text", "image"]
-output = ["image"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

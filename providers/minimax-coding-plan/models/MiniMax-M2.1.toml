@@ -1,25 +1,35 @@
+# Listed as retired; the plans now include only MiniMax-M3.1-Flash
+#   (https://platform.minimax.io/docs/faq/models, https://platform.minimax.io/docs/m-plan/intro).
+# Thinking is always on; thinking.type = disabled is accepted and ignored.
+# Caching: same endpoint as pay-as-you-go, where M2.1 caches implicitly (≥512 tokens) and
+#   with cache_control (checked live 2026-10-19 with a pay-as-you-go key).
+schema = 2
 name = "MiniMax-M2.1"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
-release_date = "2025-12-23"
-last_updated = "2025-12-23"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-12-23"
+status = "deprecated"
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+cache = { supported = true, implicit = { min_tokens = 512 }, explicit = true }
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

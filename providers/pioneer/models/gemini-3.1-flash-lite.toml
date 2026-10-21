@@ -1,18 +1,29 @@
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Reasoning: the underlying model's controls from providers/google/models/gemini-3.1-flash-lite.toml; Pioneer's catalog listed the same boilerplate levels on every model.
+# Effort: reasoning.effort = minimal|low|medium|high in the same object, rendered to the upstream's native field.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
+# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 base_model = "google/gemini-3.1-flash-lite"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.25
-output = 1.5
-cache_read = 0.03
-cache_write = 0.25
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_000_000
 output = 65_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.03, write = 0.25 }
+
+[cost.text.output]
+price = 1.5

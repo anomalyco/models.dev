@@ -1,37 +1,21 @@
-name = "Claude Opus 4.7"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-release_date = "2026-04-16"
-last_updated = "2026-04-16"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 # Native Messages uses $.thinking.type = "adaptive" and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"; manual budget_tokens is rejected. https://docs.aihubmix.com/cn/blogs/Claude-Opus4.7 (accessed 2026-06-25)
-temperature = false
-tool_call = true
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
+base_model = "anthropic/claude-opus-4-7"
+description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-knowledge = "2026-01-31"
-open_weights = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
 
-interleaved = true
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 10
-output = 37.5
-cache_read = 1.0
-cache_write = 12.5
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 25

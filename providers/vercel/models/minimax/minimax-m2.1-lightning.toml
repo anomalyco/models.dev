@@ -1,28 +1,30 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+schema = 2
 name = "MiniMax M2.1 Lightning"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
 family = "minimax"
+open_weights = false
+knowledge = "2024-10"
 release_date = "2025-12-23"
 last_updated = "2025-10-27"
-attachment = false
-reasoning = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = {} }
 temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = false
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.3
-output = 2.4
-cache_read = 0.03
-cache_write = 0.375
+effort_updates = false
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 2.4

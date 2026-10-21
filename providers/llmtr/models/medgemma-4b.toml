@@ -1,24 +1,28 @@
 # Limits and pricing from https://llmtr.com/api/models (accessed 2026-08-16),
 # where LLMTR marks this route as being retired.
+schema = 2
 name = "MedGemma 4B"
 description = "Multimodal medical-domain Gemma variant for text and image analysis"
+open_weights = true
 release_date = "2026-04-26"
 last_updated = "2026-08-16"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
 status = "deprecated"
 
-[cost]
-input = 3.0
-output = 5.0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 8_192
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 5

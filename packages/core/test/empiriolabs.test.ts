@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { buildEmpiriolabsModel, resolveEmpiriolabsBaseModel } from "../src/sync/providers/empiriolabs.js";
+import { buildEmpiriolabsModel, empiriolabs, resolveEmpiriolabsBaseModel } from "../src/sync/providers/empiriolabs.js";
 
 test.each([
   {
@@ -76,4 +76,60 @@ test("resolves a non-alias Mistral id through the mistralai prefix", () => {
 test("does not invent lab metadata when none exists", () => {
   expect(resolveEmpiriolabsBaseModel("deepreasoning")).toBeUndefined();
   expect(resolveEmpiriolabsBaseModel("nova-pro-1-0")).toBeUndefined();
+});
+
+test("keeps model facts off base_model files", () => {
+  const model = buildEmpiriolabsModel({
+    id: "kimi-k2-6",
+    context_length: 256_000,
+    model_released_at: "2026-06-12",
+    capabilities: { reasoning: true },
+  }, {
+    base_model: "moonshotai/kimi-k2.6",
+    last_updated: "2026-06-12",
+    family: "kimi",
+    knowledge: "2020-01",
+    open_weights: false,
+  });
+
+  expect(model).toMatchObject({ base_model: "moonshotai/kimi-k2.6" });
+  for (const key of ["release_date", "last_updated", "family", "knowledge", "open_weights"]) {
+    expect(model).not.toHaveProperty(key);
+  }
+});
+
+test("syncs structured output, deprecation and effort order from the catalog", () => {
+  const model = buildEmpiriolabsModel({
+    id: "minimax-m3",
+    context_length: 1_000_000,
+    structured_output: "none",
+    deprecated: true,
+    capabilities: { reasoning: true },
+    supported_parameters: [{ name: "reasoning_effort", options: ["high", "none", "low"] }],
+  }, { base_model: "minimax/MiniMax-M3", structured_output: true });
+  const jsonMode = buildEmpiriolabsModel({
+    id: "glm-5-2",
+    context_length: 1_000_000,
+    structured_output: "json_object",
+  }, { base_model: "zhipuai/glm-5.2" });
+
+  expect(model).toMatchObject({
+    structured_output: false,
+    status: "deprecated",
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
+  });
+  expect(jsonMode).toMatchObject({ structured_output: true });
+});
+
+test("syncs the catalog's cache feature into v2 files only", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const cached = empiriolabs.translateModel({
+    id: "glm-5-1",
+    context_length: 202_752,
+    features: ["prompt_cache"],
+  }, context);
+  const uncached = empiriolabs.translateModel({ id: "glm-5-1", context_length: 202_752 }, context);
+
+  expect(cached).toMatchObject({ v2Set: { "capabilities.cache.supported": true } });
+  expect(uncached && "v2Set" in uncached ? uncached.v2Set : undefined).toBeUndefined();
 });

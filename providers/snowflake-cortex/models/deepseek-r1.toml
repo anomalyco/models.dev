@@ -1,3 +1,15 @@
+# Cortex REST API (accessed 2026-10-20): https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api (model availability, features, Chat Completions compatibility chart).
+# Other model families (compatibility chart): `tools` and `image_url` return an error, `response_format`, `reasoning_effort` and `cache_control` are ignored, and cached_tokens is not reported.
+# Pricing: not listed in the Snowflake Service Consumption Table effective 2026-10-15 (Table 6(c) has no deepseek-r1 row), so no cost.
+# Reasoning: always on; no request control applies to this family.
+# Compatibility chart: `store` and `service_tier` return an error for every model family, so store = false and no service tier.
+# Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
+schema = 2
 base_model = "deepseek/deepseek-r1"
 
-reasoning_options = []
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+store = false
+cache = { supported = false }

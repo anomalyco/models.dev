@@ -6,13 +6,18 @@
 # - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.3-nemotron-super-49b-v1
 # Toggle: system message `detailed thinking on` | `detailed thinking off`.
 # Infer OpenAPI: max_tokens 1..65536.
-status = "deprecated"
+schema = 2
 base_model = "nvidia/llama-3.3-nemotron-super-49b-v1"
-reasoning_options = [{ type = "toggle" }] # API: system "detailed thinking on|off"
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

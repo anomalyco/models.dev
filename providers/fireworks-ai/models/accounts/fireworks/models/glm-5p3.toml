@@ -15,26 +15,44 @@
 # documented generation ceiling for the same weights. The Z.ai lab default
 # (1M / 128K, https://docs.z.ai/guides/llm/glm-5.3) understates Fireworks
 # serving.
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = true: after a system message sent after the first turn, 8717 of 8739 prompt tokens still came from the cache, so it stays in place.
+#   effort_updates = false: changing reasoning_effort low → high on the last turn left 10/10 cached tokens in 2 trials.
+#   tools.updates = false: adding a second tool on the last turn left 93/68 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
-last_updated = "2026-09-07"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_048_573
 output = 262_144
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
 [experimental.modes.priority]
-cost = { input = 1.75, output = 5.5, cache_read = 0.325 }
-provider = { body = { service_tier = "priority" } }
+body = { service_tier = "priority" }

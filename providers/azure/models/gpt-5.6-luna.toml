@@ -1,16 +1,41 @@
 # Pricing: https://developers.openai.com/api/docs/pricing
+# Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
+# system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
+# `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
+schema = 2
 base_model = "openai/gpt-5.6-luna"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 0.20
-output = 1.20
-cache_read = 0.02
-cache_write = 0.25
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex"]
+system_updates = true
+effort_updates = false
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.40
-output = 1.80
-cache_read = 0.04
-cache_write = 0.50
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.4
+cache = { read = 0.04, write = 0.5 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1

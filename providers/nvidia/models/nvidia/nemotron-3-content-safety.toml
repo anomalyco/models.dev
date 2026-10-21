@@ -1,23 +1,11 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-15T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
+schema = 2
+base_model = "nvidia/nemotron-3-content-safety"
 name = "nemotron-3-content-safety"
 status = "deprecated"
-base_model = "nvidia/nemotron-3-content-safety"
-release_date = "2026-04-16"
-last_updated = "2026-04-16"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
 
-[limit]
-context = 128_000
-output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0

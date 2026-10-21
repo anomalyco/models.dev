@@ -1,31 +1,44 @@
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-lite-preview
+# - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
 name = "Gemini 3.1 Flash Lite Preview"
 description = "Legacy model retained for compatibility with older integrations"
 family = "gemini-flash-lite"
-release_date = "2026-03-03"
-last_updated = "2026-03-03"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-03-03"
 status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.25
-output = 1.50
-cache_read = 0.025
-input_audio = 0.50
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
+cache = { supported = true, implicit = true, explicit = true }
+service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
 
 [limit]
-context = 1048576
-output = 65536
+context = 1_048_576
+output = 65_536
 
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 1.5
+
+[cost.audio.input]
+price = 0.5

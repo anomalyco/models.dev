@@ -1,0 +1,28 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-realtime-2
+# https://developers.openai.com/api/docs/pricing
+schema = 2
+v2_only = true
+base_model = "openai/gpt-realtime-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = false
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 24
+
+[cost.audio.input]
+price = 32
+cache = { read = 0.4 }
+
+[cost.audio.output]
+price = 64
+
+[cost.image.input]
+price = 5
+cache = { read = 0.5 }

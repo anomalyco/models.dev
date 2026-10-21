@@ -1,18 +1,16 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
+base_model = "google/gemini-2.5-flash-image"
 name = "Gemini 2.5 Flash Image"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-release_date = "2025-10-22"
-last_updated = "2025-10-22"
-attachment = true
-reasoning = false
-tool_call = false
-temperature = true
-structured_output = false
-open_weights = false
-
-[limit]
-context = 32_768
-output = 8_192
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
-output = ["image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["image/png", "image/jpeg"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+output = 8_192

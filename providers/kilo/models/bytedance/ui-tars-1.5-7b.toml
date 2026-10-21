@@ -1,23 +1,30 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 name = "ByteDance: UI-TARS 7B "
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2025-07-22"
-last_updated = "2025-07-22"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2025-07-22"
 
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.1
+[modalities]
+input = ["image", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 2_048
 
-[modalities]
-input = ["image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 0.2

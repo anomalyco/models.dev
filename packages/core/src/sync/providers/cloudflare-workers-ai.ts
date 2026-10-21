@@ -18,6 +18,22 @@ const ENABLE_THINKING_MODELS = new Set([
   "@cf/zai-org/glm-4.7-flash",
   "@cf/zai-org/glm-5.2",
 ]);
+// Workers AI search reports these as text generation, but their served API takes
+// state + typed questions (or fields, for Clairic) and returns typed answers rather
+// than chat completions.
+const DECISION_MODELS = new Set([
+  "@cf/cloudflare/clairic",
+  "@cf/cloudflare/clef",
+  "@cf/cloudflare/clef-flash",
+  "@cf/cloudflare/clef-omni",
+]);
+// Search and the model pages report 1,310,720 for these, but the serving backend rejects any request over 1,048,576
+// tokens. The sync re-derives context from search, so the served window is pinned here. It only ever lowers a window.
+const SERVED_CONTEXT = new Map([
+  ["@cf/zai-org/glm-5.3", 1_048_576],
+  ["@cf/zai-org/glm-5.3-flash", 1_048_576],
+  ["@cf/deepseek-ai/deepseek-v4-flash-0731", 1_048_576],
+]);
 const ROOT_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 const MODELS_DIR = path.join(ROOT_DIR, "models");
 const metadataFilesByPublisher = new Map<string, string[]>();
@@ -172,8 +188,10 @@ export function buildWorkersAiModel(
   const reasoning = reasoningOptions !== undefined
     ? true
     : existing?.reasoning ?? hasReasoning(model);
+  const context = Math.min(model.context_length, SERVED_CONTEXT.get(model.id) ?? model.context_length);
   const source = {
     ...model,
+    context_length: context,
     reasoning: undefined,
     supported_parameters: [
       ...model.supported_parameters.filter((parameter) => !["reasoning", "include_reasoning"].includes(parameter)),
@@ -182,6 +200,7 @@ export function buildWorkersAiModel(
     name: existing?.name ?? model.name,
     top_provider: {
       ...model.top_provider,
+      context_length: context,
       max_completion_tokens: existing?.limit?.output ?? model.top_provider.max_completion_tokens,
     },
   };
@@ -194,15 +213,17 @@ export function buildWorkersAiModel(
     existingWithReasoningOptions,
     existing?.base_model ?? resolveCloudflareBaseModel(model),
   );
-  if ("base_model" in synced) return synced;
+  const type = DECISION_MODELS.has(model.id) ? "decision" : existing?.type;
+  const typed = type === undefined ? synced : { ...synced, type: "decision" as const };
+  if ("base_model" in typed) return typed;
   return {
-    ...synced,
-    name: existing?.name ?? synced.name,
-    release_date: existing?.release_date ?? synced.release_date,
-    last_updated: existing?.last_updated ?? synced.last_updated,
+    ...typed,
+    name: existing?.name ?? typed.name,
+    release_date: existing?.release_date ?? typed.release_date,
+    last_updated: existing?.last_updated ?? typed.last_updated,
     limit: {
-      ...synced.limit,
-      output: existing?.limit?.output ?? synced.limit.output,
+      ...typed.limit,
+      output: existing?.limit?.output ?? typed.limit.output,
     },
   };
 }
@@ -233,7 +254,9 @@ function workersAiReasoningOptions({ id, reasoning }: WorkersAiModel): SyncedFul
     options.push({ type: "toggle" });
   }
 
-  const values = reasoning.mandatory ? efforts?.filter((value) => value !== "none") : efforts;
+  // Search lists efforts strongest first; v2 files keep them weakest first.
+  const values = (reasoning.mandatory ? efforts?.filter((value) => value !== "none") : efforts)
+    ?.toSorted((a, b) => effortRank(a) - effortRank(b));
   // One mandatory effective effort offers no caller choice. Unlike missing or
   // empty metadata, a concrete singleton establishes this explicitly.
   const fixedEffort = reasoning.mandatory === true && values?.length === 1;
@@ -248,6 +271,12 @@ function workersAiReasoningOptions({ id, reasoning }: WorkersAiModel): SyncedFul
 
   // Empty control metadata never clears authored controls; a known fixed effort can.
   return options.length > 0 || fixedEffort ? options : undefined;
+}
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
+
+function effortRank(effort: string) {
+  return EFFORT_ORDER.indexOf(effort);
 }
 
 export function resolveCloudflareBaseModel(model: WorkersAiModel) {

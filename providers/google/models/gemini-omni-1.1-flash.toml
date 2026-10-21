@@ -1,0 +1,25 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+# - Output: $9.00 text, $17.50 video. v1 output carries the video rate, like gemini-omni-flash-preview.
+schema = 2
+v2_only = true
+base_model = "google/gemini-omni-1.1-flash"
+
+[capabilities]
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 17.5
+
+[cost.video.output]
+price = 17.5

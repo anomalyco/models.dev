@@ -1,18 +1,21 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
 name = "Z-Ai/Autoglm Phone 9b"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-release_date = "2025-12-23"
-last_updated = "2025-12-23"
-attachment = true
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
 open_weights = false
-
-[limit]
-context = 12_800
-output = 4_096
+release_date = "2025-12-23"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+
+[limit]
+context = 12_800
+output = 4_096

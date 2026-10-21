@@ -1,28 +1,30 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 6.5, output 27, cache read 1.1
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
 name = "Pro/moonshotai/Kimi-K2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.95
-output = 4.0
-cache_read = 0.16
 
 [limit]
 context = 262_000
 output = 262_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.97140861
+cache = { read = 0.16439223 }
+
+[cost.text.output]
+price = 4.0350819

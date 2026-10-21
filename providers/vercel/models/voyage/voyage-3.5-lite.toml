@@ -1,18 +1,31 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
+# Context length: 32,000 tokens, https://docs.voyageai.com/docs/embeddings
+schema = 2
+type = "embedding"
 name = "voyage-3.5-lite"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "voyage"
-release_date = "2025-05-20"
-last_updated = "2025-05-20"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
 open_weights = false
-
-[limit]
-context = 8_192
-output = 1_536
+release_date = "2025-05-20"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.02

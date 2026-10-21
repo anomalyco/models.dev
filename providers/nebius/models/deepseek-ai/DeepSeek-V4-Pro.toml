@@ -10,17 +10,26 @@
 # but inert here (type=enabled does not turn thinking on), so reasoning_effort expresses off.
 # Served window: models_info max_model_len = 1_048_576 for this model with no separate
 # output cap, so context and output both take the full served window.
+# Cache: models_info / model-catalog.md (rechecked 2026-10-20) publish no
+# input_cached_price_per_million_tokens for this model, so cached input bills at the $1.75 input rate
+# (cache_read = input, as on the other V4 entries). The earlier 0.15 had no source on this host.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.75
-output = 3.5
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.75
+cache = { read = 1.75 }
+
+[cost.text.output]
+price = 3.5

@@ -1,22 +1,28 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Venice (live)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh"]
-
-[cost]
-input = 0.05614
-output = 0.11228
-cache_read = 0.011228
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_048_576
-output = 131_072
+output = 943_717
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.091
+cache = { read = 0.0182 }
+
+[cost.text.output]
+price = 0.182

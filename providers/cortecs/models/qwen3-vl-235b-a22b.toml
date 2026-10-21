@@ -1,24 +1,25 @@
+# Reasoning: inherits the lab's supported = false. The /v1/models "reasoning" feature tag is not model evidence (it is also set on gpt-4o and gpt-4.1).
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (amazon_ireland). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 name = "qwen3-vl-235b-a22b"
 description = "Qwen3 VL 235B A22B is a 235B-parameter MoE vision-language flagship model (≈22B active) designed for frontier-level multimodal understanding across text, images, documents, and long videos."
-release_date = "2026-01-13"
-last_updated = "2026-01-13"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = []
 
-[cost]
-input = 0.617
-output = 3.119
-cache_read = 0.052
+[capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = false }
+structured_output = true
+temperature = false
+effort_updates = false
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.617
+cache = { read = 0.052 }
+
+[cost.text.output]
+price = 3.119

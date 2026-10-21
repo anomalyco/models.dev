@@ -1,27 +1,23 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "fireworks/ember-1"
 name = "Fireworks: Ember-1"
 description = "Ember-1 is a specialized reasoning model from Fireworks Research, built on [Kimi K3](https://openrouter.ai/moonshotai/kimi-k3). It is designed to make every token go further: it produces shorter reasoning traces, using roughly 40%..."
-release_date = "2026-09-24"
-last_updated = "2026-09-24"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+effort_updates = false
 
 [limit]
-context = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

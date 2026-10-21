@@ -1,29 +1,31 @@
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Cache: implicit (automatic) for OpenAI models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "GPT Astra Latest"
 description = "Compatibility alias that routes to GPT 6 Astra, the latest supported GPT Astra model."
 family = "gpt-astra"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-11"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_050_000
 input = 1_050_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[cost.text.output]
+price = 50

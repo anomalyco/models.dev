@@ -1,23 +1,20 @@
-name = "Llama 4 Maverick 17B Instruct"
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
+base_model = "meta/llama-4-maverick-17b-instruct"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
-family = "llama"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.27
-output = 0.85
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 2_048
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 0.85

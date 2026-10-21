@@ -1,13 +1,16 @@
+schema = 2
 base_model = "google/gemini-3.1-flash-image"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
-
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3

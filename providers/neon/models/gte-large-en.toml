@@ -1,0 +1,11 @@
+# New in v2 only: an embedding model on POST /v1/embeddings (https://neon.com/docs/ai-gateway/embeddings).
+# Catalog: https://neon.com/models.json gte-large-en (type embedding, 1024 dimensions, cost.input 0.13 USD / 1M tokens) and
+# https://neon.com/docs/ai-gateway/overview#embedding-models (accessed 2026-10-21).
+# Identity: Databricks endpoint databricks-gte-large-en, https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models#gte-large-en
+schema = 2
+v2_only = true
+base_model = "alibaba/gte-large-en-v1.5"
+name = "GTE Large (En)"
+
+[cost.text.input]
+price = 0.13

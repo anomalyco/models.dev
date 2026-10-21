@@ -1,28 +1,28 @@
-name = "GLM-4.5-Air"
-description = "Lighter GLM-4.5 variant for fast coding assistance and cheaper agents"
-family = "glm-air"
-release_date = "2025-07-28"
-last_updated = "2025-07-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-04"
-open_weights = true
+# Sources (accessed 2026-10-19):
+# - Pricing (USD): https://docs.z.ai/guides/overview/pricing
+# - Model: https://docs.z.ai/guides/llm/glm-4.5
+# - Thinking: https://docs.z.ai/guides/capabilities/thinking-mode, https://docs.z.ai/guides/capabilities/thinking
+# - Caching (automatic, no write price): https://docs.z.ai/guides/capabilities/cache
+# - Chat API (temperature and top_p, no top_k; images jpg/png; video mp4/mkv/mov): https://docs.z.ai/api-reference/llm/chat-completion
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Mid-conversation (checked live 2026-10-19 on api.z.ai and open.bigmodel.cn): a late system message
+# is accepted and keeps the cache; adding or removing tools between turns drops it.
+schema = 2
+base_model = "zhipuai/glm-4.5-air"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+top_k = false
+system_updates = true
+cache = { supported = true, implicit = true, explicit = false }
 
-[cost]
-input = 0.2
-output = 1.1
-cache_read = 0.03
-cache_write = 0
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 131_072
-output = 98_304
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03, write = 0 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.1

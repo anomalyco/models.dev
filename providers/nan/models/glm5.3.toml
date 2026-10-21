@@ -1,15 +1,22 @@
 # Source: https://nan.builders/docs/models (accessed 2026-09-11)
-# ~753B MoE, FP8, sparse attention, text only: it does not take images.
+# ~753B MoE, sparse attention. The 2026-10-21 docs list NVFP4 and text, image, audio and video
+# input; modalities stay text-only like the lab until the host confirms them.
 # Premium tier: callable only with a key on the GLM 5.3 premium membership.
 # 1M token context, 3,000M token quota per billing period, capped at 400M tokens
 # per rolling 4h window, 5 concurrent requests. Included in the tier, so no
 # per-token price.
-# Effort: reasoning_effort = low|medium|high|max. NaN's reasoning table ("the
-# table is the contract", accessed 2026-09-28) lists glm5.3 and glm5.3-flash as
-# "Fully controllable"; max is the deepest. No off value, so no toggle.
+# NaN reasoning table (checked 2026-10-21): reasoning_effort values none, minimal, low, medium,
+# high, xhigh, max; https://nan.builders/docs/models#controlling-reasoning
+# Update: GLM always reasons; none is applied as minimal, its shortest level, so no toggle.
+schema = 2
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

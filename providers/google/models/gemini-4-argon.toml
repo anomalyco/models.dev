@@ -1,0 +1,52 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing#gemini-4-argon
+# - https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
+# Introductory Standard pricing (50% off) applies through 2026-11-30. From
+# 2026-12-01 the published rates are $4.00 input, $20.00 output, and $0.20
+# cache read. Only implicit caching is supported (explicit caching is not).
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# - https://ai.google.dev/gemini-api/docs/thinking
+# Flex is 0.5x and Priority 1.8x Standard. Rates double from 2026-12-01.
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+cache = { supported = true, implicit = { min_tokens = 4_096 }, explicit = false }
+service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 2
+cache = { read = 0.1 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
+
+[[cost.multipliers]]
+when = { date = { gte = "2026-12-01" } }
+factor = 2

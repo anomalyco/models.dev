@@ -1,0 +1,23 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+system_updates = false
+effort_updates = false
+
+[limit]
+output = 524_288
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

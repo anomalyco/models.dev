@@ -1,16 +1,25 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemini-3.5-flash (accessed 2026-07-21)
-
+# Cache: default route google is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "google/gemini-3.5-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
-
-[cost]
-input = 1.5
-output = 9
-cache_read = 0.15
-input_audio = 1.5
-
 [modalities]
-input = ["text", "image", "audio", "pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 9
+
+[cost.audio.input]
+price = 1.5

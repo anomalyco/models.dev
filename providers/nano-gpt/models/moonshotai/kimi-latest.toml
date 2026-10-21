@@ -1,29 +1,32 @@
 # Included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "Kimi Latest"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi"
-release_date = "2026-05-03"
-last_updated = "2026-05-03"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-05-03"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video"]
+output = ["text"]
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 input = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 1.2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 5.5

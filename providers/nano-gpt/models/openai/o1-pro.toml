@@ -1,16 +1,27 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# Cache: implicit (automatic) for OpenAI models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+# Modalities (image: the lab's formats that NanoGPT Chat Completions accepts): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 base_model = "openai/o1-pro"
 name = "OpenAI o1 Pro"
-reasoning = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 150
-output = 600
-cache_read = 75
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 input = 200_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 150
+cache = { read = 75 }
+
+[cost.text.output]
+price = 600

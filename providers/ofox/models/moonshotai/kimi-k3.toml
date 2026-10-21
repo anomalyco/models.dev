@@ -6,10 +6,22 @@
 # Sources:
 # https://ofox.ai/models/moonshotai/kimi-k3 (pricing; accessed 2026-08-06)
 # https://platform.kimi.ai/docs/pricing/chat-k3 (official $3/$15/$0.30)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/kimi).
+schema = 2
 base_model = "moonshotai/kimi-k3"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

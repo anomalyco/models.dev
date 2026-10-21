@@ -1,7 +1,23 @@
 # Toggle: thinking.type = enabled|disabled
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.72
-output = 2.88
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.72
+cache = { read = 0.144, write = 0.9 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 1.44
+cache = { read = 0.144, write = 0.9 }
+
+[cost.text.output]
+price = 2.88
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 5.76

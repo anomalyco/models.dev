@@ -1,11 +1,28 @@
+# Input MIME types: capabilities.limits.vision.supported_media_types from authenticated GET https://api.githubcopilot.com/models (2026-10-21).
+# Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-haiku-4-5.toml.
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 32_000 }]
 
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = { min = 1_024, max = 32_000 } }
+system_updates = false
+effort_updates = false
 
 [limit]
 input = 136_000
+
+[api.messages]
+base_url = "https://api.githubcopilot.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

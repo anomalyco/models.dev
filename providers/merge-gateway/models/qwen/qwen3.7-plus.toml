@@ -1,14 +1,22 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.7-plus (accessed 2026-07-21)
+schema = 2
 base_model = "alibaba/qwen3.7-plus"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.4
-output = 1.6
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 1.6

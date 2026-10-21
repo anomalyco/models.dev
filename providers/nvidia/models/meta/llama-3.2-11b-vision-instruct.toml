@@ -1,23 +1,12 @@
+schema = 2
+base_model = "meta/llama-3.2-11b-vision-instruct"
 name = "Llama 3.2 11b Vision Instruct"
-description = "Open Llama multimodal model for image understanding and text reasoning"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-12"
-tool_call = true
+
+[capabilities]
 structured_output = true
-release_date = "2024-09-18"
-last_updated = "2024-09-18"
-open_weights = true
 
-[cost]
-input = 0.00
-output = 0.00
+[cost.text.input]
+price = 0
 
-[limit]
-context = 128000
-output = 4096
-
-[modalities]
-input = ["text","image"]
-output = ["text"]
+[cost.text.output]
+price = 0

@@ -10,16 +10,18 @@
 #   "none" also disables reasoning (equivalent to enabled=false)
 #
 # Not supported on this route: Xiaomi-native thinking.type
+# Listed as effort with "none" and no separate toggle, since "none" turns reasoning off.
+schema = 2
 base_model = "xiaomi/mimo-v2.5-pro"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1
-output = 3
+[cost.text.output]
+price = 3

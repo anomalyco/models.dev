@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3-30b-a3b"
+name = "Qwen3 30B A3B (greenference)"
+reasoning = false
+tool_call = false
+structured_output = true
+
+[cost]
+input = 0.095
+output = 0.285
+
+[limit]
+context = 8_192
+output = 4_096

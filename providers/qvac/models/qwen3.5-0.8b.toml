@@ -1,22 +1,22 @@
-name = "Qwen3.5 0.8B"
+# Identity: @qvac/ai-sdk-provider 0.10.0 (dist/models/catalog.js, checked 2026-10-21) maps qwen3.5-0.8b to a Q4_K_M GGUF of
+# Qwen/Qwen3.5-0.8B, so the file links to that lab. Context, output and reasoning stay the host's values.
+schema = 2
+base_model = "alibaba/qwen3.5-0.8b"
 description = "Qwen instruction model for multilingual chat and tool use"
-family = "qwen"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-open_weights = true
-release_date = "2025-11-01"
-last_updated = "2025-11-01"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 32_768
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

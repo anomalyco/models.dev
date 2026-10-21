@@ -1,0 +1,16 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=sakana%2Ffugu-ultra-v2&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "sakana/fugu-ultra-v2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 6.877
+cache = { read = 0.6877 }
+
+[cost.text.output]
+price = 41.262

@@ -1,22 +1,33 @@
-# Effort: reasoning_effort = low|high|max; reasoning cannot be disabled.
+# Effort: reasoning_effort = low|high|max (default high). Baseten also accepts
+# none but runs it at low, so reasoning cannot be disabled.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12800/12945 -> 0/12959; 0/13265 -> 0/13279; 13056/13265 -> 0/13279]
+# Image formats (live, 2026-10-21, notes/deepinfra-baseten-v2-2026-10-21/imgprobe.ts): PNG, JPEG, GIF, WebP, BMP and TIFF are read; HEIC rejected (400). Baseten lists no video for GLM 5.3 Flash (vision guide, "Max videos per request: Not supported").
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "image/bmp", "image/tiff"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.15
-output = 0.5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+system_updates = false
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

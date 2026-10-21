@@ -1,27 +1,43 @@
+# Synced from CrossModel's catalog, https://www.crossmodel.ai/api/models (accessed 2026-10-21):
+# prices (USD micro/1M, threshold tiers -> context overrides), limits, modalities,
+# reasoning controls, structured_output.json_schema, context.caching, release_stage.
+# Toggle: thinking.type = enabled|disabled on /v1/messages
+# (https://www.crossmodel.ai/docs/api-reference/messages.md)
+# Cache: catalog context.caching = true; CrossModel documents no mechanism (implicit/explicit, TTL).
+# Mid-conversation flags unset: CrossModel documents none and nothing was tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages (https://www.crossmodel.ai/docs/models-and-capabilities.md).
+schema = 2
 base_model = "alibaba/qwen3.7-flash"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.04
-output = 0.13
-cache_read = 0.01
-cache_write = 0.04
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.1
-output = 0.37
-cache_read = 0.02
-cache_write = 0.12
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.19
-output = 0.74
-cache_read = 0.04
-cache_write = 0.24
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { supported = true }
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.01, write = 0.04 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1
+cache = { read = 0.02, write = 0.12 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.19
+cache = { read = 0.04, write = 0.24 }
+
+[cost.text.output]
+price = 0.13
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.37
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.74

@@ -1,20 +1,53 @@
-# Sources: https://docs.x.ai/developers/models/grok-4.6, https://docs.x.ai/developers/pricing, and https://docs.x.ai/developers/model-capabilities/text/reasoning
+# Sources (docs.x.ai):
+# - Model page: https://docs.x.ai/developers/models/grok-4.6
+# - Models/pricing: https://docs.x.ai/developers/models, https://docs.x.ai/developers/pricing (long context: prompts ≥ 200k tokens)
+# - Reasoning: https://docs.x.ai/developers/model-capabilities/text/reasoning
+# - Caching (automatic prefix cache, prompt_cache_key): https://docs.x.ai/developers/advanced-api-usage/prompt-caching
+# - Priority (service_tier = priority, 2x): https://docs.x.ai/developers/advanced-api-usage/priority-processing
+# - API params (store, stream_options.include_usage, top_k): https://docs.x.ai/developers/rest-api-reference/inference/responses, https://docs.x.ai/developers/rest-api-reference/inference/chat-completions
+# - US regional endpoint (1.1x): https://docs.x.ai/developers/advanced-api-usage/regions
+# Mid-conversation: system/developer messages are accepted in any order (docs.x.ai/developers/models);
+# changing reasoning effort or tools between turns drops the prompt cache, and there is no per-turn
+# mechanism (configuration_update/additional_tools return 422), checked live 2026-10-19.
+schema = 2
 base_model = "xai/grok-4.6"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4
-output = 12
-cache_read = 1
-
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+store = true
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
+service_tier = ["priority"]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 12
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = 1.1

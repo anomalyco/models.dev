@@ -1,28 +1,32 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
 name = "Sonar Reasoning Pro"
 description = "Web-grounded reasoning model for multi-step research and cited answers"
 family = "sonar-reasoning"
-release_date = "2025-03-07"
-last_updated = "2025-03-07"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-03-07"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
 
-[cost]
-input = 2
-output = 8
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+structured_output = false
+temperature = true
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 115_200
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 8

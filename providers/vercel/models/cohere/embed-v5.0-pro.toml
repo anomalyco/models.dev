@@ -1,0 +1,14 @@
+# Modalities: Vercel's catalog (https://ai-gateway.vercel.sh/v1/models) lists input ["text"] only for this route, so the
+#   lab's image inputs are not inherited; v2 modalities replace the base as a whole, so output restates the lab's embedding.
+schema = 2
+base_model = "cohere/embed-v5.0-pro"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.12

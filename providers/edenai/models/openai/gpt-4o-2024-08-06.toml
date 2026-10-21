@@ -1,9 +1,25 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
+# Cache: OpenAI caches eligible prefixes automatically; Eden AI forwards prompt_cache_key,
+# prompt_cache_retention, and (GPT-5.6+) prompt_cache_breakpoint / prompt_cache_options
+# (https://www.edenai.co/docs/v3/llms/prompt-caching). Limits follow OpenAI's own API.
+schema = 2
 base_model = "openai/gpt-4o-2024-08-06"
 
-[cost]
-input = 2.5
-output = 10
-cache_read = 1.25
-
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+structured_output = true
+effort_updates = false
+prompt_cache_key = true
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

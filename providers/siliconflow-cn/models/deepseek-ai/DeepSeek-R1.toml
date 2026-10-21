@@ -1,24 +1,25 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 4, output 16, cache read 0.4
+# Budget: thinking_budget = 128..32768 (top-level request field)
+# https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
 name = "deepseek-ai/DeepSeek-R1"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek-thinking"
-release_date = "2025-05-28"
-last_updated = "2025-11-25"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.5
-output = 2.18
+[capabilities]
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
+structured_output = true
 
 [limit]
 context = 164_000
 output = 164_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.59778991
+cache = { read = 0.05977899 }
+
+[cost.text.output]
+price = 2.39115964

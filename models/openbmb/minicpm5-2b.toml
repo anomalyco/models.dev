@@ -2,24 +2,30 @@
 # https://huggingface.co/openbmb/MiniCPM5-2B (model card, config.json)
 # Hub createdAt 2026-09-06, lastModified 2026-09-12; open-weights drop of
 # MiniCPM5-2B with BF16 final release (RL + OPD post-training).
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the model card
+#   recommends temperature 1.0, top_p 0.95, min_p 0.0.
+schema = 2
 name = "MiniCPM5-2B"
 description = "Dense 2B-class open-source model for on-device and resource-constrained use, with native long-context support, tool calling, and agentic tasks"
+open_weights = true
 release_date = "2026-09-06"
 last_updated = "2026-09-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
 license = "apache-2.0"
-
-[limit]
-context = 131_072
-output = 131_072
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

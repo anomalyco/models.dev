@@ -1,0 +1,18 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# /v1/messages: thinking.type = enabled|disabled
+# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.435
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.87

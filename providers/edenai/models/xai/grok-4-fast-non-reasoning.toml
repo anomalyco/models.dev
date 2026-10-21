@@ -1,0 +1,26 @@
+schema = 2
+base_model = "xai/grok-4-fast-non-reasoning"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = false
+effort_updates = false
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.4
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1

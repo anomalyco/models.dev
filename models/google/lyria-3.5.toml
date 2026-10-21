@@ -1,0 +1,29 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/lyria-3.5
+# - https://ai.google.dev/gemini-api/docs/music-generation
+# - https://ai.google.dev/gemini-api/docs/changelog (GA 2026-09-03)
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+# Image MIME types: Gemini API supported formats, which Lyria takes as Interactions image inputs
+# (https://ai.google.dev/gemini-api/docs/music-generation): https://ai.google.dev/gemini-api/docs/image-understanding (Supported image formats: image/png, image/jpeg, image/webp, image/heic, image/heif)
+schema = 2
+v2_only = true
+name = "Lyria 3.5"
+description = "Music generation model for full-length songs with vocals and structure from text or image prompts"
+family = "lyria"
+open_weights = false
+release_date = "2026-09-03"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text", "audio/mp3", "audio/wav"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 65_536

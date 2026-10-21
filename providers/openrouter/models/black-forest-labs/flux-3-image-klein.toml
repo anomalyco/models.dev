@@ -1,0 +1,33 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=image. Prices are the Images API
+# endpoint pricing lines (/api/v1/images/models/{id}/endpoints): per image, per megapixel or per token.
+# Resolution and quality tiers are overrides on the first line; a request that omits them is billed at
+# the provider's default tier. No [cost] when a price has no CostV2 form (per-request or font fees,
+# unlisted or per-job pricing).
+# https://openrouter.ai/docs/guides/overview/multimodal/image-generation
+schema = 2
+v2_only = true
+base_model = "black-forest-labs/flux-3-image-klein"
+
+[api.images]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+
+[cost.image.output]
+unit = "image"
+price = 0.008
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "1K" } }
+price = 0.009
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "1.5K" } }
+price = 0.011
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "2K" } }
+price = 0.014
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "4K" } }
+price = 0.036

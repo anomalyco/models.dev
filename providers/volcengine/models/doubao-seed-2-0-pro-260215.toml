@@ -5,6 +5,7 @@
 # none/minimal disable thinking, so no separate toggle: sending effort alone
 # already enables it, and thinking.type=disabled + a graded effort is rejected.
 base_model = "bytedance-seed/seed-2.0-pro"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

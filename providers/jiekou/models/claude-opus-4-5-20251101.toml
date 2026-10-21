@@ -1,23 +1,26 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: explicit cache_control {"type":"ephemeral"} on chat/completions and /anthropic/v1/messages; minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Budget: thinking.type = "enabled" + thinking.budget_tokens on /anthropic/v1/messages, the only route with thinking control (https://docs.jiekou.ai/docs/providers/anthropic); minimum 1024, as providers/anthropic.
+# Effort: output_config.effort on the same native route, as providers/anthropic.
+schema = 2
+base_model = "anthropic/claude-opus-4-5-20251101"
 name = "claude-opus-4-5-20251101"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 4.5
-output = 22.5
-
-[limit]
-context = 200000
-output = 65536
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+structured_output = true
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 4.75
+cache = { read = 0.475, write = { "5m" = 5.9375, "1h" = 9.5 } }
+
+[cost.text.output]
+price = 23.75

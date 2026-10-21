@@ -6,18 +6,22 @@
 # reasoning_content length within run variance). Aligned to the lab-effective
 # level (DeepSeek lab maps low/medium -> high); no toggle and no max on this
 # host.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [
-  { type = "effort", values = ["none", "high"] },
-]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 output = 65_536
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

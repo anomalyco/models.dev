@@ -1,19 +1,16 @@
+# Lab identity: minimax/MiniMax-M2.5 (Ollama library page https://ollama.com/library/minimax-m2.5).
+# Retired: POST https://ollama.com/api/show returns "minimax-m2.5 was retired on July 31, 2026" (2026-10-21); it is no longer in https://ollama.com/v1/models.
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+# Knowledge: unsourced. "2025-01" is kept from the earlier Ollama file; the MiniMax model card and lab file state no cutoff.
+schema = 2
+base_model = "minimax/MiniMax-M2.5"
 name = "minimax-m2.5"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-open_weights = true
 knowledge = "2025-01"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
+status = "deprecated"
 
-[limit]
-context = 204800
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[capabilities]
+reasoning = { supported = true }
+structured_output = false

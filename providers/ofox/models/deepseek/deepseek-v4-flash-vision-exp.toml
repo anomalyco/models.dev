@@ -3,17 +3,24 @@
 # https://api-docs.deepseek.com/guides/vision
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max (Flash-class; lab maps xhigh→high)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/deepseek).
+# Status: not in the Ofox catalog or /v1/models, and GET https://api.ofox.ai/v1/models/deepseek/deepseek-v4-flash-vision-exp returns 404 model not found, checked 2026-10-20.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
-status = "beta"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 0.44
+cache = { read = 0.014 }
 
-[cost]
-input = 0.44
-output = 1.32
-cache_read = 0.014
+[cost.text.output]
+price = 1.32

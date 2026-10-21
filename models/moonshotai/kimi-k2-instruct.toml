@@ -1,0 +1,27 @@
+# https://huggingface.co/moonshotai/Kimi-K2-Instruct
+schema = 2
+name = "Kimi K2 Instruct"
+description = "Non-thinking Kimi K2 MoE instruction model for coding and tool-using agents"
+family = "kimi-k2"
+open_weights = true
+release_date = "2025-07-11"
+license = "Modified MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/moonshotai/Kimi-K2-Instruct"

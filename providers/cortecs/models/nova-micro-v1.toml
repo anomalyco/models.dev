@@ -1,23 +1,26 @@
-name = "nova-micro-v1"
+# Reasoning: inherits the lab's supported = false. The /v1/models "reasoning" feature tag is not model evidence (it is also set on gpt-4o and gpt-4.1).
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (amazon_ireland, amazon_paris). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
+base_model = "amazon/nova-micro-v1"
 description = "Nova Micro is a multilingual text-to-text foundation model with strong reasoning capabilities and broad language coverage across 200+ languages."
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = []
-
-[cost]
-input = 0.04
-output = 0.159
-
-[limit]
-context = 128_000
-output = 10_000
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = false }
+structured_output = true
+temperature = false
+effort_updates = false
+
+[limit]
+output = 10_000
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.159

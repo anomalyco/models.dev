@@ -1,10 +1,18 @@
-reasoning_options = []
+# Deprecated: missing from the live price list https://panel.dinference.com/api/v1/pricing and from
+# the model list on https://dinference.com (checked 2026-10-21).
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
+status = "deprecated"
 
-[cost]
-input = 0.22
-output = 0.88
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 200_000
 output = 32_000
+
+[cost.text.input]
+price = 0.22
+
+[cost.text.output]
+price = 0.88

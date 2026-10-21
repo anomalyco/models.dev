@@ -1,0 +1,25 @@
+# Model ID deepseek/deepseek-v4-flash-0731. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
+# of the endpoint Standard Compute routes this model to, as charged against the budget
+# (price listing: https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-flash-0731/endpoints, accessed 2026-10-16).
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+input = 850_000
+output = 50_000
+
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.44
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 1.32

@@ -1,18 +1,27 @@
+# Modalities: BFL output_format jpeg | png | webp (OutputFormat in https://api.bfl.ai/openapi.json)
+schema = 2
+type = "image"
 name = "FLUX.2 [klein] 4B"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "flux"
+open_weights = false
 release_date = "2026-01-15"
 last_updated = "2026-06-08"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
+
+[modalities]
+input = ["text"]
+output = ["image/jpeg", "image/png", "image/webp"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["text"]
-output = ["image"]
+[api.images]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"

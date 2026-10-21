@@ -1,33 +1,40 @@
 # Live probes against the AMD Radeon Cloud Model API (accessed 2026-09-14):
-# GET /v1/models reports 131072 context, text-only input (no vision on this
-# host), tools, reasoning, and free pricing (free: true).
 # reasoning_effort: the gateway validates the enum low|medium|high and rejects
 # none / minimal / xhigh / max with 422, but the routing backend only supports
 # xhigh (default) | medium | low and rejects "high" with 400. Usable
 # end-to-end values are therefore low and medium. With reasoning_effort
 # omitted the model thinks anyway (backend default tier).
+# Thinking is returned on choices[0].message.reasoning, a non-content field.
+# The v1 interleaved field enum only covers reasoning_content /
+# reasoning_details, so it is set bare (replay_reasoning).
+# Token Factory catalog (accessed 2026-10-21):
+# https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3AQwen3.8-27B
+# - capability "VLM (Vision)", vision: true, context_length 262144 (the lab's). The 2026-09-14 deployment was
+#   text-only with 131072 context and refused images with 400; the catalog now lists a vision deployment with the
+#   full context. Video is not listed, so input is text and the lab's image types (formats undocumented here).
+# - Section "Public Free Model APIs", badge "Free"; pricing note "Free to use. Points show relative usage, not a
+#   charge." (listed 0.035 / 0.07 / 0.0007 points per MTok), so every price is 0.
+# - supported_parameters temperature, max_tokens, top_p, stream, response_format, tools, tool_choice (no top_k).
+# APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
-# AMD hosts a text-only deployment of this model: an image content part is
-# refused with 400 "does not support image input", so the multimodal base
-# entry (text + image + video) is narrowed here.
-attachment = false
-
-reasoning_options = [
-  { type = "effort", values = ["low", "medium"] },
-]
-
-# Thinking is returned on choices[0].message.reasoning, a non-content field.
-# The schema's interleaved field enum only covers reasoning_content /
-# reasoning_details, so it is set bare.
-interleaved = true
-
-[cost]
-input = 0
-output = 0
-
-[limit]
-context = 131_072
-
 [modalities]
-input = ["text"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium"] }
+structured_output = true
+top_k = false
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

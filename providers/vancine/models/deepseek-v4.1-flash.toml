@@ -17,19 +17,19 @@
 # CacheRatio 0.02 converted to USD/1M tokens as input = model_ratio * 2 =
 # 0.24, output = input * completion_ratio = 0.96, cacheRead = input *
 # cache_ratio = 0.0048.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.24
+cache = { read = 0.0048 }
 
-[cost]
-input = 0.24
-output = 0.96
-cache_read = 0.0048
+[cost.text.output]
+price = 0.96

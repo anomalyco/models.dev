@@ -1,21 +1,26 @@
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
+# a detection model with no sampling parameters.
+schema = 2
 name = "streampetr"
-description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
-release_date = "2025-11-13"
-last_updated = "2025-11-13"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
+description = "Temporal 3D object detection model for autonomous driving"
 open_weights = true
+release_date = "2025-11-13"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["video"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

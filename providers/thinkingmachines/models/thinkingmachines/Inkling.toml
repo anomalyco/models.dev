@@ -1,20 +1,40 @@
-# Sources (accessed 2026-07-22):
-# - API and exact model ID: https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/
-# - Pricing and served context: https://tinker-docs.thinkingmachines.ai/tinker/models/
-# API: {"output_config":{"effort":"low"|"medium"|"high"|"xhigh"|"max"}}
-# Disable reasoning with {"thinking":{"type":"disabled"}}.
+# Toggle: thinking.type = disabled
+# Effort: output_config.effort = low|medium|high|xhigh|max
+# Tinker Anthropic-compatible API (accessed 2026-10-21):
+#   https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/
+# - Effort: output_config.effort = low|medium|high|xhigh|max ("max" behaves the same as "xhigh"); a default level is
+#   applied when omitted. Toggle: thinking.type = disabled forces reasoning off. thinking.budget_tokens is accepted but
+#   not applied.
+# - tool_choice: auto, any, a named tool, none. Image input via base64 or URL sources; audio content blocks are not part
+#   of the Messages API, so input is text plus the lab's image types (PNG, JPEG).
+# - "Prompt caching: cache_control is ignored" and the cache usage fields are always null, so there is no explicit
+#   cache; the pricing page bills prefill tokens "that hit the prompt cache" at 80% off.
+# Pricing (https://tinker-docs.thinkingmachines.ai/tinker/models/ and its machine-readable models.json, accessed
+#   2026-10-21): prefill / cached prefill / sample per MTok under a "Limited-time 50% discount" with no end date;
+#   original prices $3.74 / $0.748 / $9.36. ":peft:" models cost more for training only; "prefill and sampling prices
+#   are the same as the standard context."
+# APIs on this host: Anthropic Messages (/v1/messages, /v1/messages/count_tokens); an OpenAI-compatible API for
+#   tinker:// sampler checkpoints; serverless beta IDs (...:sampling-nvfp4) with their own prices are not listed here.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+schema = 2
 base_model = "thinkingmachines/inkling"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 1.87
-output = 4.68
-cache_read = 0.374
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.87
+cache = { read = 0.374 }
+
+[cost.text.output]
+price = 4.68

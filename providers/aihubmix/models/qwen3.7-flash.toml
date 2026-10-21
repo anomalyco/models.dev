@@ -1,22 +1,42 @@
 # Toggle: enable_thinking = true|false
 # Budget: thinking_budget = integer reasoning tokens
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "alibaba/qwen3.7-flash"
-attachment = false
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.0282
-output = 0.1128
-cache_read = 0.00564
-cache_write = 0.03525
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
+structured_output = true
+cache = { supported = true }
 
 [limit]
 context = 991_000
-output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.0282
+cache = { read = 0.00564, write = 0.03525 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.0845
+cache = { read = 0.0169, write = 0.105625 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.169
+cache = { read = 0.0338, write = 0.21125 }
+
+[cost.text.output]
+price = 0.1128
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.338
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.676

@@ -1,10 +1,17 @@
+schema = 2
 base_model = "deepseek/deepseek-r1"
-reasoning_options = []
-structured_output = true
 
-[cost]
-input = 0.7
-output = 2.5
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 64_000
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 2.5

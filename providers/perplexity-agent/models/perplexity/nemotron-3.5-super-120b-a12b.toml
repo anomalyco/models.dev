@@ -1,0 +1,15 @@
+# Perplexity Agent API (accessed 2026-10-21): https://docs.perplexity.ai/docs/agent-api/models.md (USD per MTok: input,
+#   output, cache read). reasoning.effort = minimal|low|medium|high|xhigh|max (https://docs.perplexity.ai/api-reference/agent-post.md);
+#   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
+# Effort follows the same-host Nemotron 3 Super file.
+base_model = "nvidia/nemotron-3.5-super-120b-a12b"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.2
+output = 0.5
+cache_read = 0.04

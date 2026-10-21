@@ -1,0 +1,15 @@
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+name = "Nemotron 3 Super 120B A12B (Deep Infra)"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 0.085
+
+[cost.text.output]
+price = 0.4

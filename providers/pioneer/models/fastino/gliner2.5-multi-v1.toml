@@ -3,33 +3,33 @@
 # - Model card https://huggingface.co/fastino/gliner2.5-multi-v1 (287M mDeBERTa-v3-base multilingual boundary checkpoint, max_len 4096, Apache-2.0)
 # - Release announcement https://fastino.ai/blog/gliner2-5-span-free-information-extraction (released Aug 24, 2026; three Apache-2.0 variants)
 # Pioneer is the first-party Fastino inference API (https://pioneer.ai/, https://www.prnewswire.com/news-releases/fastino-launches-pioneer-the-first-agent-for-fine-tuning-and-inference-of-llms-302748105.html); full inline entry follows existing providers/pioneer/models/fastino/* pattern.
+# Encoder: GET https://api.fastino.ai/v1/base-models (2026-10-20) task_type = "encoder", license Apache-2.0, tier open. GLiNER models extract and classify
+# through /v1/chat/completions with a top-level `schema` (https://docs.fastino.ai/inference/chat-completions); they don't generate text, reason or call tools.
+# Cost: GET https://api.fastino.ai/v1/base-models and https://docs.fastino.ai/pricing (2026-10-20): input $0.03, output $0, cache read/write $0.03 per 1M tokens.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): no reasoning or tools, so no effort or tool updates.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 name = "GLiNER 2.5 Multi"
 description = "Multilingual boundary NER and span extraction; non-trainable encoder."
-release_date = "2026-08-24"
-last_updated = "2026-08-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-08-24"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.15
-output = 0.15
-cache_read = 0.15
-cache_write = 0.15
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 4_096
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03, write = 0.03 }
+
+[cost.text.output]
+price = 0

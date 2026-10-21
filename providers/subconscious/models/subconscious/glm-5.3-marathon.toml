@@ -1,0 +1,30 @@
+# Subconscious serves GLM-5.3 Marathon as subconscious/glm-5.3-marathon.
+# Pricing (USD per 1M tokens): cached $0.26, input $1.40, output $4.40.
+# Context: 5M tokens via TIMRUN auto compaction (Marathon), vs. 1M on the base model.
+# Toggle: unlike first-party GLM-5.3 (always reasons), Subconscious makes thinking
+# opt-in on this model ID. Anthropic Messages thinking.type = "enabled" turns it
+# on; omit thinking to disable. The thinking docs use subconscious/glm-5.3-marathon
+# in every example and state: "For simple tasks, leaving thinking mode off will be
+# faster and more cost-effective."
+# Effort: output_config.effort = low|high|max, matching lab and peer controls.
+# Sources (accessed 2026-09-30):
+#   https://api.subconscious.dev/v1/models
+#   https://www.subconscious.dev/pricing
+#   https://docs.subconscious.dev/features/thinking
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Marathon"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 5_000_000
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

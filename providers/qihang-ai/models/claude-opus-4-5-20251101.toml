@@ -1,24 +1,22 @@
-name = "Claude Opus 4.5"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-release_date = "2025-11-01"
-last_updated = "2025-11-01"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+# Deprecated: no longer listed by QiHang's public pricing endpoint https://www.qhaigc.net/api/pricing (checked 2026-10-21).
+schema = 2
+base_model = "anthropic/claude-opus-4-5-20251101"
 knowledge = "2025-03"
-open_weights = false
-
-[cost]
-input = 0.71
-output = 3.57
-
-[limit]
-context = 200_000
-output = 32_000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 32_000
+
+[cost.text.input]
+price = 0.71
+
+[cost.text.output]
+price = 3.57

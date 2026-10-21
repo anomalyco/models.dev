@@ -1,14 +1,23 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/step-3-7-flash.md
+# Effort: reasoning_effort = low|medium|high
+# Cache: model page prices an "Implicit cache read" row.
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/step-3-7-flash:generateContent
+schema = 2
 base_model = "stepfun/step-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.2
-output = 1.15
-cache_read = 0.04
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 131_072
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.15

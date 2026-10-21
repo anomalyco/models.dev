@@ -1,10 +1,17 @@
+schema = 2
 base_model = "nvidia/llama-3.1-nemotron-70b-instruct"
 name = "Llama 3.1 Nemotron 70B Instruct (Deep Infra)"
-structured_output = false
 
-[cost]
-input = 0.6
-output = 0.6
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 0.6

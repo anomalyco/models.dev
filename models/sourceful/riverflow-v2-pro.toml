@@ -1,0 +1,25 @@
+# Released 2026-02-02: https://www.riverflow.ai/research/introducing-riverflow-2-0 (a reasoning model reviews
+#   and corrects candidates). Output image/webp, as Riverflow 2.0 Fast returned through OpenRouter (2026-10-20).
+# Reasoning: the planner and judge run inside the service; no reasoning output is returned.
+schema = 2
+v2_only = true
+type = "image"
+name = "Riverflow 2.0 Pro"
+description = "Most capable Riverflow 2.0 image generation and editing model with a reasoning judge"
+open_weights = false
+release_date = "2026-02-02"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/webp"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

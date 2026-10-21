@@ -1,25 +1,20 @@
+# Budget: extra_body.thinking_budget = number (default 0)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
 name = "Claude-Haiku-4.5"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-family = "claude-haiku"
-release_date = "2025-10-15"
-last_updated = "2025-10-15"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 0, max = 63_999 }]
-temperature = false
-open_weights = false
-tool_call = true
 
-[cost]
-input = 0.85
-output = 4.3
-cache_read = 0.085
-cache_write = 1.1
+[capabilities]
+reasoning = { supported = true, budget = { min = 0, max = 63_999 } }
+temperature = false
 
 [limit]
 context = 192_000
-output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.8586
+cache = { read = 0.0859, write = 1.0732 }
+
+[cost.text.output]
+price = 4.2929

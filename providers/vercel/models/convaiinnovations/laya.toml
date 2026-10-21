@@ -1,0 +1,24 @@
+schema = 2
+type = "decision"
+name = "Laya"
+description = "General-purpose chat model for instruction following, writing, and analysis"
+open_weights = false
+release_date = "2026-10-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 8_192
+output = 0
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

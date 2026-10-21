@@ -1,6 +1,10 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
+schema = 2
 base_model = "google/gemini-embedding-001"
-temperature = true
 
-[limit]
-context = 8_192
-output = 1_536
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.15

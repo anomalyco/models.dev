@@ -1,21 +1,19 @@
-name = "text-embedding-3-small"
-description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-release_date = "2024-01-25"
-last_updated = "2024-01-25"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = false
+# Cost: Azure OpenAI list price (https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/, as in providers/azure), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+schema = 2
+base_model = "openai/text-embedding-3-small"
 
-[cost]
-input = 0.02
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
 
 [limit]
 context = 8_191
 output = 1_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

@@ -1,11 +1,23 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
 status = "deprecated"
-reasoning_options = []
 
-[cost]
-input = 0.25
-output = 1
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 196_608
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

@@ -52,6 +52,7 @@ const EmpiriolabsModel = z
     context_window: z.number().nullable().optional(),
     max_output_tokens: z.number().nullable().optional(),
     model_released_at: z.string().nullable().optional(),
+    deprecated: z.boolean().nullable().optional(),
     pricing: EmpiriolabsPricing.optional(),
     capabilities: z.record(z.unknown()).optional(),
     features: z.array(z.string()).optional(),
@@ -107,9 +108,16 @@ export const empiriolabs = {
     // A model with no resolvable context window cannot produce a valid TOML
     // (limit.context is required), so skip it rather than fail the whole sync.
     if (built === undefined) return undefined;
+    // The catalog flags prompt caching per model but not the mechanism
+    // (implicit or explicit, TTLs), so only `supported` is synced.
+    const features = new Set(model.features ?? []);
+    const v2Set = features.has("cache") || features.has("prompt_cache")
+      ? { "capabilities.cache.supported": true }
+      : undefined;
     return {
       id: model.id,
       model: built,
+      v2Set,
     };
   },
 } satisfies SyncProvider<EmpiriolabsModel>;
@@ -178,9 +186,9 @@ function reasoningOptions(model: EmpiriolabsModel): SyncedModel["reasoning_optio
 
   const effort = params.find((parameter) => parameter.name === "reasoning_effort");
   if (effort?.options?.length) {
-    const values = effort.options.filter((value): value is EffortValue =>
-      (EFFORT_VALUES as string[]).includes(value),
-    );
+    const values = effort.options
+      .filter((value): value is EffortValue => (EFFORT_VALUES as string[]).includes(value))
+      .sort((a, b) => EFFORT_VALUES.indexOf(a) - EFFORT_VALUES.indexOf(b));
     if (values.length > 0) options.push({ type: "effort", values });
   }
 
@@ -323,12 +331,15 @@ export function buildEmpiriolabsModel(
   // No usable context window: cannot build a valid model TOML, so skip.
   if (context === undefined || context === null) return undefined;
 
-  const releaseDate = baseModel === undefined
+  // Model facts (dates, family, knowledge, open weights) come from the lab
+  // file when the model has one; only standalone files carry them.
+  const standalone = baseModel === undefined;
+  const releaseDate = standalone
     ? model.model_released_at ?? existing?.release_date
     : undefined;
-  const lastUpdated = baseModel === undefined
+  const lastUpdated = standalone
     ? model.model_released_at ?? existing?.last_updated ?? releaseDate
-    : existing?.last_updated ?? releaseDate;
+    : undefined;
   const outputTokens = model.max_output_tokens
     ?? parameterOutputLimit(model)
     ?? existing?.limit?.output
@@ -340,8 +351,8 @@ export function buildEmpiriolabsModel(
   };
   const values: Partial<SyncedFullModel> = {
     name: model.display_name ?? model.name ?? model.id,
-    description: baseModel === undefined ? existing?.description ?? model.description : existing?.description,
-    family: existing?.family,
+    description: standalone ? existing?.description ?? model.description : existing?.description,
+    family: standalone ? existing?.family : undefined,
     release_date: releaseDate,
     last_updated: lastUpdated,
     attachment,
@@ -349,13 +360,16 @@ export function buildEmpiriolabsModel(
     reasoning_options: reasoning ? reasoningOptions(model) : undefined,
     temperature: temperature || undefined,
     tool_call: toolCall,
-    structured_output:
-      (model.structured_output !== undefined && model.structured_output !== null)
-      || structuredOutput
-      || undefined,
-    knowledge: existing?.knowledge,
-    open_weights: existing?.open_weights,
-    status: existing?.status,
+    // `structured_output` is "json_schema", "json_object" or "none"
+    // (https://docs.empiriolabs.ai/compatibility.md#structured-outputs).
+    structured_output: model.structured_output === "none"
+      ? false
+      : (model.structured_output !== undefined && model.structured_output !== null)
+        || structuredOutput
+        || undefined,
+    knowledge: standalone ? existing?.knowledge : undefined,
+    open_weights: standalone ? existing?.open_weights : undefined,
+    status: model.deprecated === true ? "deprecated" : existing?.status,
     interleaved: existing?.interleaved,
     cost,
     limit,

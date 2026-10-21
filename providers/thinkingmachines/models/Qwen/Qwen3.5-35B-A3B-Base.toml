@@ -1,0 +1,25 @@
+# Tinker models.json https://tinker-docs.thinkingmachines.ai/tinker/models.json (accessed 2026-10-21): type Base, context 64K.
+# Tinker Anthropic-compatible API (https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/, accessed
+#   2026-10-21) serves any Tinker model: thinking.type = disabled turns reasoning off; output_config.effort (low|medium|high|
+#   xhigh|max) is documented for Thinking Machines models and "Not all models support effort" (400), so it is listed only
+#   for those; images via base64 or URL; no audio blocks;
+#   cache_control is ignored, prefill tokens that hit the prompt cache bill at 80% off.
+schema = 2
+base_model = "alibaba/qwen3.5-35b-a3b-base"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+cache = { supported = true, implicit = true, explicit = false }
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 0.54
+cache = { read = 0.108 }
+
+[cost.text.output]
+price = 1.335

@@ -5,20 +5,24 @@
 # and "none" is rejected with a 400 — verified live 2026-08-30). Image input
 # verified; video/pdf are not supported on this host. Costs are the Fireworks
 # rate ($0.15/$0.029/$0.50) plus a flat 10%.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
-[cost]
-input = 0.165
-output = 0.55
-cache_read = 0.0319
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.165
+cache = { read = 0.0319 }
+
+[cost.text.output]
+price = 0.55

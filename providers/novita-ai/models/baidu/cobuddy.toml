@@ -1,0 +1,20 @@
+# https://novita.ai/models/model-detail/baidu-cobuddy
+# Toggle: thinking.type = enabled|disabled (Novita/relay baseline; live checks returned server_overload).
+schema = 2
+base_model = "baidu/cobuddy"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.28
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 1.13

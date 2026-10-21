@@ -1,18 +1,28 @@
 # Source: https://api.pioneer.ai/v1/models (accessed 2026-09-11)
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Reasoning: the underlying model's controls from providers/mistral/models/magistral-medium-latest.toml; Pioneer's catalog listed the same boilerplate levels on every model.
+# Effort: reasoning.effort = none|high in the same object, rendered to the upstream's native field.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
+# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 base_model = "mistral/magistral-medium-latest"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 2
-output = 5
-cache_read = 2
-cache_write = 2
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+effort_updates = false
 
 [limit]
 output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 2, write = 2 }
+
+[cost.text.output]
+price = 5

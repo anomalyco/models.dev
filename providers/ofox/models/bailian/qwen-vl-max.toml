@@ -4,9 +4,20 @@
 # Pricing from Ofox catalog API (USD per token × 1e6 → USD/MTok):
 #   input 0.00000023 → 0.23, output 0.00000058 → 0.58,
 #   input_cache_read 0.000000046 → 0.046
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+schema = 2
 base_model = "alibaba/qwen-vl-max"
 
-[cost]
-input = 0.23
-output = 0.58
-cache_read = 0.046
+[capabilities]
+tools = { supported = true, updates = false }
+effort_updates = false
+cache = { supported = true, implicit = true }
+
+[cost.text.input]
+price = 0.23
+cache = { read = 0.046 }
+
+[cost.text.output]
+price = 0.58

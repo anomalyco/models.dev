@@ -1,0 +1,25 @@
+# Sources:
+# https://ofox.ai/models/anthropic/claude-sonnet-5.5 (model id anthropic/claude-sonnet-5.5, $2/$10 MTok, $0.2/$2.5 cache, 1M/128K, 2026-09-28)
+# https://platform.claude.com/docs/en/models/sonnet-5-5/overview (first-party $2/$10, $0.20/$2.50/$4 cache, 1M/128K, Adaptive, default effort high)
+# Lab: models/anthropic/claude-sonnet-5-5.toml; first-party effort: providers/anthropic/models/claude-sonnet-5-5.toml
+# Mid-conversation (Ofox Anthropic Messages, https://ofox.ai/docs/api/anthropic/messages): system_updates, effort_updates, tools.updates unset: Anthropic supports them, but Ofox's reference doesn't document passing them through.
+# Cache: explicit cache_control only (neither endpoint caches automatically), 5m TTL or 1h with ttl = "1h"; minimum length per Anthropic (https://ofox.ai/docs/develop/models/claude/caching). 1h write price: catalog input_cache_write_1h.
+# structured_output: JSON Schema supported (https://ofox.ai/docs/develop/guides/structured-output, Supported Models).
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 512 } }
+
+[api.messages]
+base_url = "https://api.ofox.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

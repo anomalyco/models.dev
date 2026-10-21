@@ -1,23 +1,23 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Limit: the catalog's context_size 20000 is a typo for the model's 200000 (lab, providers/anthropic); the lab value is inherited.
+# Cache: explicit cache_control {"type":"ephemeral"} on chat/completions and /anthropic/v1/messages; minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Budget: thinking.type = "enabled" + thinking.budget_tokens on /anthropic/v1/messages, the only route with thinking control (https://docs.jiekou.ai/docs/providers/anthropic); minimum 1024, as providers/anthropic.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5-20251001"
 name = "claude-haiku-4-5-20251001"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-family = "claude-haiku"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 0.9
-output = 4.5
-
-[limit]
-context = 20000
-output = 64000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 2_048 } }
+structured_output = true
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
+
+[cost.text.output]
+price = 5

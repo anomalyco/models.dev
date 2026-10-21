@@ -1,7 +1,6 @@
 base_model = "alibaba/qwen3.5-9b"
 name = "Qwen3.5 9B (DeepInfra)"
-attachment = false
-structured_output = false
+structured_output = true
 reasoning_options = []
 
 [cost]
@@ -10,6 +9,3 @@ output = 0.15
 
 [limit]
 output = 32_768
-
-[modalities]
-input = ["text"]

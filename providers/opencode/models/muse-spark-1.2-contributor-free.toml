@@ -1,4 +1,5 @@
 base_model = "meta/muse-spark-1.2"
+structured_output = true
 name = "Muse Spark 1.2 Free"
 family = "muse-free"
 
@@ -12,3 +13,4 @@ cache_read = 0
 
 [provider]
 npm = "@ai-sdk/openai"
+api = "https://opencode.ai/inference/openai/v1"

@@ -1,0 +1,14 @@
+schema = 2
+base_model = "alibaba/qwen3.6-27b"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 16_384
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.35

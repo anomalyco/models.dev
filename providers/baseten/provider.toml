@@ -9,6 +9,9 @@ npm = "@ai-sdk/openai-compatible"
 # model support is established by the model-specific reasoning guide, not schema.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # https://docs.baseten.co/reference/inference-api/chat-completions
+# Baseten also serves the Anthropic Messages API (beta) at
+# POST https://inference.baseten.co/v1/messages; no Responses API is documented.
+# https://docs.baseten.co/inference/model-apis/overview (accessed 2026-10-21)
 doc = "https://docs.baseten.co/inference/model-apis/overview"
 api = "https://inference.baseten.co/v1"
 env = ["BASETEN_API_KEY"]

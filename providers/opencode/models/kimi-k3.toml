@@ -1,5 +1,6 @@
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -12,3 +13,6 @@ field = "reasoning_content"
 input = 3
 output = 15
 cache_read = 0.3
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

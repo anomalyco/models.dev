@@ -1,18 +1,24 @@
+# Effort: Cortecs "accepts: 'reasoning_effort': 'low' | 'medium' | 'high'" (https://docs.cortecs.ai/routing/reasoning, "Controlling Reasoning").
+# Open: Cortecs documents no reasoning_effort mapping or native thinking/max control for its only route, Arkane (same page); left as is, see PR.
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: automatic prefix caching on every routed provider (arkane). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 base_model_omit = ["structured_output"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 1.7
-output = 3.4
-cache_read = 0.15
+[cost.text.input]
+price = 1.7
+cache = { read = 0.15 }
 
-[limit]
-context = 1_048_576
-output = 1_048_576
+[cost.text.output]
+price = 3.4

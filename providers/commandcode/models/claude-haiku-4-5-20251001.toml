@@ -1,0 +1,22 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Mid-conversation flags follow Anthropic's own API for this model: Command Code serves it via @ai-sdk/anthropic. See providers/anthropic/models/claude-haiku-4-5-20251001.toml.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5-20251001"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = {} }
+system_updates = false
+effort_updates = false
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

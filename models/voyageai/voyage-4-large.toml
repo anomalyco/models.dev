@@ -1,0 +1,25 @@
+# Released 2026-01-15: https://blog.voyageai.com/2026/01/15/voyage-4/
+# Context length: https://docs.voyageai.com/docs/embeddings
+schema = 2
+v2_only = true
+type = "embedding"
+name = "voyage-4-large"
+description = "General-purpose and multilingual embedding model optimized for retrieval quality"
+family = "voyage"
+open_weights = false
+release_date = "2026-01-15"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0

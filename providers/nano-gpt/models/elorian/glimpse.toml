@@ -1,0 +1,30 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
+name = "Elorian Glimpse"
+description = "Glimpse is Elorian's visual reasoning model for understanding images and video and answering in text. It can analyze charts, count objects, follow events over time, and reason about spatial relationships and physical cause and effect. It supports tool calling and structured output across a shared 262,144-token context window, with up to 256,000 output tokens within the remaining context."
+open_weights = false
+release_date = "2026-10-17"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 262_144
+input = 262_144
+output = 256_000
+
+[cost.text.input]
+price = 0.63
+cache = { read = 0.063 }
+
+[cost.text.output]
+price = 3.15

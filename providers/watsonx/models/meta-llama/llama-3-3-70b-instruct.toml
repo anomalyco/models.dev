@@ -1,10 +1,13 @@
 # Source: https://www.ibm.com/products/watsonx-ai/pricing (accessed 2026-08-08)
 # Model details: https://www.ibm.com/docs/en/watsonx/saas?topic=solutions-supported-foundation-models (accessed 2026-08-08)
+schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
-
-[cost]
-input = 0.7526
-output = 0.7526
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 0.7526
+
+[cost.text.output]
+price = 0.7526

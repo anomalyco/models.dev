@@ -1,23 +1,30 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 name = "OpenAI: GPT-3.5 Turbo 16k"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
-release_date = "2023-08-28"
-last_updated = "2023-08-28"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2023-08-28"
 
-[cost]
-input = 3
-output = 4
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+effort_updates = false
 
 [limit]
 context = 16_385
 output = 4_096
 
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 4

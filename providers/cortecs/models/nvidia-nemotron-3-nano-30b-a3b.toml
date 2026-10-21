@@ -1,23 +1,24 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (nebius, amazon_ireland). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
 name = "nvidia-nemotron-3-nano-30b-a3b"
 description = "Nemotron-Nano-3-30B-A3B is a compact Mixture-of-Experts model optimized for efficient reasoning, chat, and coding, with strong multilingual support and long-context RAG and agent workflows."
-release_date = "2026-01-12"
-last_updated = "2026-01-12"
-attachment = false
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = []
 
-[cost]
-input = 0.06
-output = 0.24
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+cache = { supported = false }
+structured_output = true
+temperature = false
+effort_updates = false
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.24

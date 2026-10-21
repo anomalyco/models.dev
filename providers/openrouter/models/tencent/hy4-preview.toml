@@ -1,15 +1,41 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Tencent, DeepInfra)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "tencent/hy4-preview"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
-
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[[cost.text.input.overrides]]
+when = { utc_hours = { lt = "16:00" } }
+price = 0.834
+cache = { read = 0.042 }
+
+[[cost.text.input.overrides]]
+when = { utc_hours = { gte = "16:00" } }
+price = 0.7506
+cache = { read = 0.0378 }
+
+[cost.text.output]
+price = 2.501
+
+[[cost.text.output.overrides]]
+when = { utc_hours = { lt = "16:00" } }
+price = 2.501
+
+[[cost.text.output.overrides]]
+when = { utc_hours = { gte = "16:00" } }
+price = 2.2509

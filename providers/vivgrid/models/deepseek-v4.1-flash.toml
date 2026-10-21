@@ -1,20 +1,24 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/deepseek-v4.1-flash (accessed 2026-09-21)
-base_model = "deepseek/deepseek-v4.1-flash"
-
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
-[[reasoning_options]]
-type = "toggle"
+# Served on Chat Completions only: every API surface listed for this model uses
+# /chat/completions, so it needs the openai-compatible SDK rather than the
+# provider default (Responses). https://docs.vivgrid.com/models/deepseek-v4.1-flash (accessed 2026-10-21)
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.31
-output = 1.23
-cache_read = 0.01
+[cost.text.input]
+price = 0.31
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 1.23

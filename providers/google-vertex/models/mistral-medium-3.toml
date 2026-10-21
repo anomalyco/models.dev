@@ -1,0 +1,26 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/mistral
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# POST .../publishers/mistralai/models/mistral-medium-3:streamRawPredict with the Mistral chat body.
+# Regional endpoints only (us-central1, europe-west4); the global endpoint returns 404. Live test 2026-10-08.
+# The docs say 128,000 tokens; the endpoint enforces 131,072 ("too large for model with 131072 maximum context
+# length"), matching the lab entry, so limits are inherited.
+# Mid-conversation updates: false. Mistral on Vertex (rawPredict with the Mistral chat body) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/mistral
+schema = 2
+base_model = "mistral/mistral-medium-2505"
+
+[capabilities]
+tools = { supported = true, updates = false }
+system_updates = false
+effort_updates = false
+
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/mistralai/models"
+sdk = { aisdk = "@ai-sdk/mistral" }
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 2

@@ -1,0 +1,21 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=google%2Fgemini-flash-latest&endpoint=openai%2Fchat-completions
+# system_updates = false: the lab's own API keeps no mid-conversation system message for this closed-weight model (system_updates = false in its first-party file here), so a relay can't keep one in place.
+schema = 2
+base_model = "google/gemini-flash-latest"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 2.0631
+cache = { read = 0.20631, write = 0.114617 }
+
+[cost.text.output]
+price = 12.3786

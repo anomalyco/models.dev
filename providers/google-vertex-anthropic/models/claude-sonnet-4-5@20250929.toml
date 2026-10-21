@@ -1,8 +1,33 @@
+# v2 capabilities and prices:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/prompt-caching (5m and 1h TTLs; 1h writes cost 2x input)
+# - https://platform.claude.com/docs/en/build-with-claude/prompt-caching (4 breakpoints; minimum cacheable length on Google Cloud)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/structured-outputs (Claude 4.5 and later)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Regional and multi-region (us, eu) endpoints cost 10% more than the global endpoint.
+# Mid-conversation updates follow the per-model lists in Anthropic's docs, which cover Google Cloud:
+# - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
+# - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
+# status = "deprecated": Vertex publishes a retirement date of "not sooner than September 29, 2026", which has passed
+# (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/sonnet-4-5).
+schema = 2
 base_model = "anthropic/claude-sonnet-4-5-20250929"
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+status = "deprecated"
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = { min = 1_024 } }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
+
+[cost.text.output]
+price = 15
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1

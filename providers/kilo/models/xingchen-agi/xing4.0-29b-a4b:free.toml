@@ -1,0 +1,30 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+name = "XingChen: Xing4.0 29B A4B (free)"
+description = "Xing4.0-29B-A4B is an open-weight mixture-of-experts language model from China Telecom's AI team (TeleAI) and the successor to the TeleChat series. It has 29B total parameters with 4B active per token..."
+family = "agi"
+open_weights = false
+release_date = "2026-10-16"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
+effort_updates = false
+
+[limit]
+context = 262_144
+output = 235_929
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

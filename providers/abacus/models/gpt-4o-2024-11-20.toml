@@ -1,23 +1,17 @@
-name = "GPT-4o (2024-11-20)"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2024-11-20"
-last_updated = "2024-11-20"
-attachment = true
-reasoning = false
-temperature = true
+# Linked to models/openai/gpt-4o-2024-11-20.toml (same model).
+# knowledge: unsourced host value kept as an override (lab: 2023-09).
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+schema = 2
+base_model = "openai/gpt-4o-2024-11-20"
 knowledge = "2024-10"
-tool_call = true
-open_weights = false
-
-[cost]
-input = 2.50
-output = 10.00
-
-[limit]
-context = 128_000
-output = 16_384
+status = "deprecated"
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "audio"]
 output = ["text"]
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10

@@ -1,24 +1,54 @@
 # Pricing: https://developers.openai.com/api/docs/models/gpt-6-astra
 # Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra
+# Ultrafast mode: https://developers.openai.com/api/docs/guides/ultrafast-mode
+schema = 2
 base_model = "openai/gpt-6-astra"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 10.00
-output = 50.00
-cache_read = 1.00
-cache_write = 12.50
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority", "ultrafast"]
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 20.00
-output = 75.00
-cache_read = 2.00
-cache_write = 25.00
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" } }
+factor = 6
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
 
 [experimental.modes.fast]
-cost = { input = 20.00, output = 100.00, cache_read = 2.00, cache_write = 25.00 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }
 
 [experimental.modes.pro]
-provider = { body = { reasoning = { mode = "pro" } } }
+body = { reasoning = { mode = "pro" } }
+
+[experimental.modes.ultrafast]
+body = { service_tier = "ultrafast" }

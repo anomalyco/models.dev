@@ -1,1 +1,34 @@
-../../../mistral/models/ministral-3b-latest.toml
+# Previously a symlink to providers/mistral/models/ministral-3b-latest.toml. Copied from origin/dev 67bc657a5 so Vercel's data
+# stays as it was when the Mistral file moved to schema 2 with Mistral-API-specific values.
+# Modalities: Mistral vision formats PNG, JPEG, WEBP, non-animated GIF, https://docs.mistral.ai/studio/conversations/vision
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+name = "Ministral 3B (latest)"
+description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
+family = "ministral"
+open_weights = true
+knowledge = "2024-10"
+release_date = "2024-10-16"
+last_updated = "2024-10-04"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+temperature = true
+system_updates = true
+effort_updates = false
+
+[limit]
+context = 131_072
+output = 4_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.1

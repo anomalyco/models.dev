@@ -1,21 +1,28 @@
 # Reasoning effort: reasoning.effort = none|low|medium|xhigh
 # Source: https://huggingface.co/Qwen/Qwen3.8-27B
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "xhigh"]
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.1
-cache_write = 0.625
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_000_000
 output = 131_072
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1, write = 0.625 }
+
+[cost.text.output]
+price = 3

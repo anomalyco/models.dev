@@ -1,0 +1,18 @@
+schema = 2
+base_model = "google/gemini-embedding-2"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
+
+[limit]
+output = 8_192
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0

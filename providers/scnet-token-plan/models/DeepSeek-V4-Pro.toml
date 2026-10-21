@@ -2,6 +2,7 @@
 # Effort: reasoning_effort = high|max
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html (accessed 2026-08-20)
 base_model = "deepseek/deepseek-v4-pro"
+structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [interleaved]

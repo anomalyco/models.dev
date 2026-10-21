@@ -1,0 +1,20 @@
+# Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-10-19)
+# slug minimax/minimax-m3.1-flash: prompt 0.15, completion 0.6, input_cache_read 0.015
+# USD/MTok; context 1,000,000; max_completion_tokens 512,000; supports_reasoning = 2
+# (always-on, same class as minimax-m3 and gpt-5). Upstream thinking cannot be
+# disabled; depth is set by effort = low|medium|high|xhigh|max.
+# https://platform.minimax.io/docs/api-reference/text-anthropic-api
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

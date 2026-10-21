@@ -1,17 +1,32 @@
 # Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
 # Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
 # A live reasoning_effort request is rejected; reasoning is always on.
+# Arcee pricing page (accessed 2026-10-21; "pricing information for all models on Arcee Platform", USD per MTok,
+#   input / output / cached input): https://docs.arcee.ai/get-started/pricing.md
+# APIs on this host: OpenAI Chat Completions (https://api.arcee.ai/api/v1/chat/completions) and /api/v1/models. Reasoning
+#   is returned in reasoning_content, which the API also accepts back on assistant messages
+#   (https://docs.arcee.ai/capabilities/reasoning-traces.md).
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+# Max output 80,000: Arcee's endpoint on OpenRouter (https://openrouter.ai/api/v1/models/arcee-ai/trinity-large-thinking/endpoints,
+#   accessed 2026-10-21; Arcee publishes its catalog "according to OpenRouter provider spec",
+#   https://docs.arcee.ai/api-reference/models.md) reports context_length 262144 and max_completion_tokens 80000.
+schema = 2
 base_model = "arcee-ai/trinity-large-thinking"
 status = "beta"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.25
-output = 0.80
-cache_read = 0.06
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 262_144
+output = 80_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.8

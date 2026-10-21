@@ -1,21 +1,28 @@
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
+# a perception model that takes
+# camera images and vehicle state, with no sampling parameters (https://build.nvidia.com/nvidia/bevformer).
+schema = 2
 name = "bevformer"
-description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
+description = "Multi-frame bird's-eye-view 3D perception transformer for autonomous driving"
+open_weights = true
 release_date = "2025-03-18"
 last_updated = "2025-07-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["video"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

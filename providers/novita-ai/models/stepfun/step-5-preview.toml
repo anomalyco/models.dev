@@ -1,0 +1,29 @@
+# https://novita.ai/models/model-detail/stepfun-step-5-preview
+# Pricing/limits: Input $1, Cache Read $0.1, Output $2.7 per 1M tokens; 977K context, 63K max output.
+# https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
+# Native: 1M context, 64k max output; reasoning_effort = low|medium|high.
+# Effort: reasoning_effort = low|medium|high (native baseline)
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
+base_model = "stepfun/step-5-preview"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = true
+effort_updates = false
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.7

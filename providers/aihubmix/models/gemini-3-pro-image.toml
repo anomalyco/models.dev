@@ -6,11 +6,18 @@
 # Canon export SHA: 57eb3891b84952af68f641424825333190adf7d7
 # Image output uses billing_config output_image_tokens=120 USD/MTok; completion_tokens=12 is text/thinking output and is not substituted.
 # Effort: $.generationConfig.thinkingConfig.thinkingLevel = low|high.
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+schema = 2
 base_model = "google/gemini-3-pro-image"
-interleaved = true
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
-[cost]
-input = 2
-output = 120
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 120

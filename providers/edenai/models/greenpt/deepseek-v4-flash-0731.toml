@@ -1,0 +1,16 @@
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 (Greenpt)"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 0.157276
+cache = { read = 0.044936 }
+
+[cost.text.output]
+price = 0.39319

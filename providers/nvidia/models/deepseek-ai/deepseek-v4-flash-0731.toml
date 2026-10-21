@@ -6,14 +6,19 @@
 # list rate is published for this ID. Source: this model's catalog card,
 # https://build.nvidia.com/deepseek-ai/deepseek-v4-flash-0731 (governed by the
 # NVIDIA API Trial Terms of Service).
-status = "deprecated"
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
+status = "deprecated"
 
-reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,27 +1,26 @@
+# Deprecated: retired 2026-06-11; requests now go to Pro/zai-org/GLM-5.1 and are billed as GLM-5.1 (release notes 2026.06.05),
+# https://docs.siliconflow.cn/docs/release-notes/overview. Prices are the last values on file.
+# Toggle: enable_thinking = true|false (top-level request field)
+# https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions
+schema = 2
+base_model = "zhipuai/glm-5"
+status = "deprecated"
 name = "Pro/zai-org/GLM-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1
-output = 3.20
 
 [limit]
 context = 205_000
 output = 205_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3.2

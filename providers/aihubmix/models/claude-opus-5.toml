@@ -1,15 +1,20 @@
 # AIHubMix Anthropic-compatible /v1/messages: $.thinking.type = "disabled"|"adaptive" (toggle) and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"; verified live 2026-08-11. https://docs.aihubmix.com/cn/api-reference/anthropic-compatible/create-a-message
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "anthropic/claude-opus-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-interleaved = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
+
+[cost.text.output]
+price = 25

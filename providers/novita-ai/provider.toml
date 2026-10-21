@@ -1,11 +1,19 @@
-name = "NovitaAI"
+# Public catalog: https://novita.ai/models
+# Inventory: https://api.novita.ai/openai/v1/models (account-scoped; absence is not retirement evidence).
+# Chat reasoning controls are model-specific; see each route's leading wire comments.
+# https://novita.ai/docs/api-reference/model-apis-llm-create-chat-completion
+# effort_updates = false, tools.updates = false on chat models: reasoning controls and `tools`
+# are per request on Chat Completions; there is no per-turn effort or tool-change message.
+# Cache: implicit prefix cache with no request changes, on models with a cache-read price.
+# https://docs.novita.ai/guides/llm-prompt-cache
+# system_updates: live probe 2026-10-20. Warm a ~8k-token prefix, confirm a plain follow-up hits
+# the cache, then send [assistant, system, user]. A hit right after the system message means it
+# stayed in place (true). Misses in two trials while control turns hit, or a 400, mean false.
+# The probe reads usage.prompt_tokens_details.cached_tokens, which some routes without a
+# cache-read price also report; those keep no `cache` capability (billing is undocumented).
+# Unset where trials disagreed, the route reports no cached tokens, or it was overloaded.
+name = "Novita AI"
 env = ["NOVITA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Raw HTTP reasoning controls (sources accessed 2026-06-25):
-# POST `/openai/v1/chat/completions` accepts top-level `enable_thinking =
-# true|false` (default true), but documents it only for zai-org/glm-4.5 and
-# deepseek/deepseek-v3.1, -v3.1-terminus, and -v3.2-exp. `separate_reasoning`
-# is a distinct boolean documented only for deepseek/deepseek-r1-turbo.
-# https://novita.ai/docs/api-reference/model-apis-llm-create-chat-completion
 doc = "https://novita.ai/docs/guides/introduction"
 api = "https://api.novita.ai/openai"

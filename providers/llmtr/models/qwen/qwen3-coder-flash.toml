@@ -3,8 +3,13 @@
 # No caller-facing thinking control on this route, and no reasoning emitted. Measured 2026-08-16:
 #   reasoning_effort -> 400 "does not expose a thinking mode"; default, enable_thinking=true and
 #   enable_thinking=false all return no reasoning_content and no reasoning tokens.
+# Cache read price: GET https://llmtr.com/v1/models pricing.input_cache_read (accessed 2026-10-21).
+schema = 2
 base_model = "alibaba/qwen3-coder-flash"
 
-[cost]
-input = 0.3
-output = 1.5
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.5

@@ -1,23 +1,23 @@
-name = "ministral-3b-2512"
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: automatic prefix caching on every routed provider (mistral). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
+base_model = "mistral/ministral-3b-2512"
 description = "Ministral 3 3B is a compact, efficient multimodal model with strong language, vision capabilities, and ideal for custom fine-tuning."
-release_date = "2025-12-03"
-last_updated = "2025-12-03"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.123
-output = 0.123
-cache_read = 0.012
+[capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
+structured_output = true
+temperature = false
+effort_updates = false
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.123
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.123

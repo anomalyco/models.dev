@@ -1,19 +1,23 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=zai%2Fglm-5.2 (accessed 2026-07-21)
+# Cache: default route zai is in the explicit caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1, max = 50_000 } }
 structured_output = false
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true, explicit = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1.05
+cache = { read = 0.195 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 50_000
-
-[cost]
-input = 1.05
-output = 3.3
-cache_read = 0.195
+[cost.text.output]
+price = 3.3

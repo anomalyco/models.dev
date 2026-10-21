@@ -6,29 +6,39 @@
 # Canon export SHA: 00fb309c0dba28a9e4c9a3a6569d418db947cafc
 # Toggle: $.enable_thinking = true|false on /v1/chat/completions.
 # Budget: integer $.reasoning.max_tokens on /v1/chat/completions.
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "alibaba/qwen3.5-plus"
-[interleaved]
-field = "reasoning_content"
-[[reasoning_options]]
-type = "toggle"
-[[reasoning_options]]
-type = "budget_tokens"
-[cost]
-input = 0.1096
-output = 0.6576
-cache_read = 0.01096
-cache_write = 0.137
 
-[[cost.tiers]]
-tier = { type = "context", size = 128000 }
-input = 0.274
-output = 1.644
-cache_read = 0.0274
-cache_write = 0.3425
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+cache = { supported = true }
 
-[[cost.tiers]]
-tier = { type = "context", size = 256000 }
-input = 0.548
-output = 3.288
-cache_read = 0.0548
-cache_write = 0.685
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1096
+cache = { read = 0.01096, write = 0.137 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.274
+cache = { read = 0.0274, write = 0.3425 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.548
+cache = { read = 0.0548, write = 0.685 }
+
+[cost.text.output]
+price = 0.6576
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.644
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 3.288

@@ -16,21 +16,29 @@
 #   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+# Toggle: reasoning_effort = "none" (off) | "low"|"medium"|"high" (on), e.g. {"reasoning_effort": "none"}
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-last_updated = "2026-08-01"
 status = "beta"
-reasoning_options = [{ type = "toggle" }] # API: {"reasoning_effort": "none"} off | "low"|"medium"|"high" on
-interleaved = true
 
-[cost]
-input = 0.74
-output = 3.72
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 256_000
 input = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.74
+
+[cost.text.output]
+price = 3.72

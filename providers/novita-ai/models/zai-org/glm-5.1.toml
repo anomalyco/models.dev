@@ -1,28 +1,26 @@
-name = "GLM-5.1"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-03-27"
-last_updated = "2026-03-27"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+# https://novita.ai/models/model-detail/zai-org-glm-5.1
+# Toggle: thinking.type = enabled|disabled
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
+base_model = "zhipuai/glm-5.1"
 
-[cost]
-input = 1.38
-output = 4.4
-cache_read = 0.26
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 204_800
-output = 131_072
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.38
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

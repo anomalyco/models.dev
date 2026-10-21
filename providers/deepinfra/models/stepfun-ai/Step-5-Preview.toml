@@ -1,0 +1,26 @@
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 13376/13527 -> 0/13546; 13376/13527 -> 0/13546]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 13696/13827 -> 0/13827 (reasoning tokens 46 -> 72); 13056/13187 -> 0/13187 (reasoning tokens 57 -> 69)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 13248/13390 -> 0/13451; 13248/13390 -> 0/13451]
+schema = 2
+base_model = "stepfun/step-5-preview"
+base_model_omit = ["limit.input"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+system_updates = false
+effort_updates = false
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.7

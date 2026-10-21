@@ -53,3 +53,36 @@ test("OVHcloud replaces prior costs with zeros when pricing is absent", () => {
 
   expect(Bun.TOML.parse(content).cost).toEqual({ input: 0, output: 0 });
 });
+
+test("OVHcloud factors a base_model file and leaves model facts to the lab", () => {
+  const result = buildOvhcloudModel(
+    {
+      ...model({ prompt: "0.00000047", completion: "0.00000319" }),
+      id: "Qwen3.8-27B",
+      name: "Qwen3.8-27B",
+      hugging_face_id: "Qwen/Qwen3.8-27B",
+      input_modalities: ["text", "image"],
+      supported_features: ["reasoning", "tools", "structured_outputs"],
+      supported_sampling_parameters: ["temperature"],
+    },
+    {
+      base_model: "alibaba/qwen3.8-27b",
+      family: "qwen",
+      open_weights: true,
+      release_date: "2026-08-14",
+      last_updated: "2026-08-14",
+      reasoning_options: [{ type: "effort", values: ["none", "minimal", "low", "medium", "high"] }],
+    },
+  );
+
+  expect(result).toMatchObject({
+    base_model: "alibaba/qwen3.8-27b",
+    name: "Qwen3.8-27B",
+    structured_output: true,
+    cost: { input: 0.47, output: 3.19 },
+    modalities: { input: ["text", "image"] },
+  });
+  for (const key of ["family", "open_weights", "release_date", "last_updated", "knowledge", "tool_call", "temperature"]) {
+    expect(result).not.toHaveProperty(key);
+  }
+});

@@ -1,0 +1,31 @@
+# Released August 2026: https://huggingface.co/blog/nvidia/fine-tuning-nemotron-35-asr
+# https://huggingface.co/nvidia/Nemotron-3.5-ASR-Streaming-Multilingual-0.6b
+# Input formats: the common list in OpenRouter's speech-to-text docs (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/stt
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Nemotron 3.5 ASR Streaming Multilingual 0.6B"
+description = "Open streaming speech recognition model for 40 language-locales"
+family = "nemotron"
+open_weights = true
+release_date = "2026-08"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/Nemotron-3.5-ASR-Streaming-Multilingual-0.6b"

@@ -1,24 +1,18 @@
-name = "Mistral Small 3.1 24B"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: rejected on upstream (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "mistral/mistral-small-3.1-24b-instruct"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral-small"
-release_date = "2025-03-17"
-last_updated = "2025-03-17"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
-knowledge = "2023-10-31"
-open_weights = true
 
-[cost]
-input = 0.351
-output = 0.555
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+system_updates = false
+effort_updates = false
 
-[limit]
-context = 128_000
-output = 102_400
+[cost.text.input]
+price = 0.351
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 0.555

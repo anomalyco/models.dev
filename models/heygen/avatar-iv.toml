@@ -1,0 +1,26 @@
+# Launched in the HeyGen app in May 2025 (https://www.producthunt.com/products/avatar-iv-ai-video-creation/launches,
+#   May 10, 2025); API: https://www.heygen.com/blog/announcing-the-avatar-iv-api, https://developers.heygen.com/avatar-iv
+# Inputs: a PNG or JPEG photo, a script or an MP3 track: https://developers.heygen.com/image-to-video
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "Avatar IV"
+description = "Image-to-video avatar model that turns one photo and a script or audio track into a lip-synced talking video"
+open_weights = false
+release_date = "2025-05"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "audio/mpeg"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,27 +1,26 @@
-name = "GLM-4.7-Flash"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-family = "glm-flash"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-04"
-open_weights = true
+# https://novita.ai/models/model-detail/zai-org-glm-4.7-flash
+# Toggle: thinking.type = enabled|disabled
+# system_updates = false: the turn after a mid-conversation system message missed the cache in two trials while control turns hit (live 2026-10-20).
+schema = 2
+base_model = "zhipuai/glm-4.7-flash"
 
-[cost]
-input = 0.07
-output = 0.4
-cache_read = 0.01
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
-context = 200_000
 output = 128_000
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.07
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4

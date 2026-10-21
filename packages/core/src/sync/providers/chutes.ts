@@ -151,9 +151,10 @@ export function buildChutesModel(
     modalities: { input, output },
   };
 
-  return baseModel == null
-    ? values
-    : factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+  if (baseModel == null) return values;
+  // Model facts belong to the lab file; a base_model file only carries host fields.
+  const { family: _family, release_date: _release, last_updated: _updated, knowledge: _knowledge, open_weights: _open, ...host } = values;
+  return factorBaseModel(baseModel, host, limit, existing?.base_model_omit);
 }
 
 function resolveBaseModel(modelId: string): string | undefined {

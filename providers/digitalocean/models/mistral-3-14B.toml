@@ -1,23 +1,30 @@
-name = "Ministral 3 14B"
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates = false: live 2026-10-20, a system message after an assistant turn returns 400 ("Unexpected role 'system' after role 'assistant'").
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "mistral/ministral-3-14b-instruct-2512"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "ministral"
-release_date = "2025-12-15"
-last_updated = "2026-04-30"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
-
-[cost]
-input = 0.2
-output = 0.2
-
-[limit]
-context = 262_144
-output = 128_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = false
+effort_updates = false
+prompt_cache_key = true
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.2

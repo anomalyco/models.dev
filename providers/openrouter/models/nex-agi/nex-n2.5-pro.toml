@@ -1,28 +1,33 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Nex AGI)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 name = "Nex-N2.5-Pro"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "agi"
-release_date = "2026-09-08"
-last_updated = "2026-09-08"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-09-08"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
 
-[cost]
-input = 0.075
-output = 0.25
-cache_read = 0.015
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+structured_output = true
+temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 235_929
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25

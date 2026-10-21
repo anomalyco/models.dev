@@ -5,24 +5,24 @@
 # efforts; minimal, medium and xhigh are accepted as aliases onto them.
 # Budget: thinking_token_budget (integer reasoning tokens)
 # https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], budget = {} }
 structured_output = false
-
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 1.45
-output = 4.5
-cache_read = 0.145
 
 [limit]
 context = 1_048_560
 output = 1_048_560
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 1.45
+cache = { read = 0.145 }
+
+[cost.text.output]
+price = 4.5

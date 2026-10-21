@@ -1,17 +1,24 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: Gemini has one systemInstruction, so it is hoisted (live: cache prefix lost; https://openrouter.ai/docs/guides/best-practices/prompt-caching#google-gemini)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-tool_call = false
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
-
-[cost]
-input = 0.25
-output = 1.5
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
+structured_output = false
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 58_982
+
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 1.5
+
+[cost.image.output]
+price = 30

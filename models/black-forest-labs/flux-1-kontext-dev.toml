@@ -1,0 +1,33 @@
+# Model card (https://huggingface.co/black-forest-labs/FLUX.1-Kontext-dev, mirrored at
+# https://build.nvidia.com/black-forest-labs/flux_1-kontext-dev): 12B rectified-flow image editing model that
+# takes a text instruction and an input image; released on Hugging Face May 29, 2025 (NVIDIA card);
+# FLUX.1 [dev] Non-Commercial License.
+# Image types stay generic: the open weights take decoded pixels, so formats depend on the host.
+# No sampling temperature; prompts are not chat tokens, so context and output are 0.
+schema = 2
+type = "image"
+name = "FLUX.1 Kontext [dev]"
+description = "Open-weight FLUX.1 Kontext model for instruction-based image editing"
+family = "flux"
+open_weights = true
+release_date = "2025-05-29"
+license = "FLUX.1 [dev] Non-Commercial License"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/black-forest-labs/FLUX.1-Kontext-dev"

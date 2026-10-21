@@ -1,6 +1,17 @@
+# system_updates = true: the gateway keeps later system messages in place on openai (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts: Claude native or <system-reminder> user turn, Gemini user turn, OpenAI/xAI forwarded)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "openai/gpt-5-pro"
-reasoning_options = [{ type = "effort", values = ["high"] }]
 
-[cost]
-input = 15
-output = 120
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+
+[cost.text.input]
+price = 15
+
+[cost.text.output]
+price = 120

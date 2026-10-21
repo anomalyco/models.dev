@@ -1,23 +1,18 @@
-name = "DeepSeek V3.2"
+# Linked to models/deepseek/deepseek-v3.2.toml (same model).
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-release_date = "2025-06-15"
-last_updated = "2025-06-15"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
+status = "deprecated"
 
-[cost]
-input = 0.27
-output = 0.40
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
-context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 0.4

@@ -1,25 +1,34 @@
+# Plan requests for M2.5/M2.7 are routed to MiniMax-M3.1-Flash from 2026-10-19
+#   (https://platform.minimax.io/docs/faq/models, https://platform.minimax.io/docs/m-plan/intro).
+# Caching: requests are served by MiniMax-M3.1-Flash, so they get its automatic prefix cache
+#   (≥512 tokens, no cache_control; https://platform.minimax.io/docs/api-reference/text-prompt-caching).
+schema = 2
 name = "MiniMax-M2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-03-18"
+status = "deprecated"
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+cache = { supported = true, implicit = { min_tokens = 512 }, explicit = false }
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

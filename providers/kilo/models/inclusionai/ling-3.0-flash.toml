@@ -1,28 +1,20 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "inclusionai/ling-3.0-flash"
 name = "inclusionAI: Ling 3.0 Flash"
 description = "*Ling-3.0-flash* is a *124B-parameter Mixture-of-Experts (MoE) model*, with approximately *5.1B parameters activated per token*. The model is designed with *token efficiency and production-scale agentic inference* as key priorities, enabling developers..."
-family = "ling"
-release_date = "2026-07-23"
-last_updated = "2026-07-23"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-open_weights = false
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 0.06
+cache = { read = 0.012 }
 
-[cost]
-input = 0.06
-output = 0.18
-cache_read = 0.012
-
-[limit]
-context = 262_144
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.18

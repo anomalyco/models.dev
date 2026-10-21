@@ -1,19 +1,37 @@
-# Sources (accessed 2026-09-15):
-# https://api.iteracompute.com/v1/models (model ID, availability, capabilities, limits, and pricing)
-# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
-# Prices are in USD per million tokens.
+# Sources (accessed 2026-10-10):
+# https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
+# https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
+# https://iteracompute.com/models/qwen3-8-2-4t-a95b/ (retail USD/MTok prices, context, and vision)
+# Effort wire path: reasoning_effort = low|medium|xhigh; reasoning.effort is also accepted.
+# Toggle wire path: reasoning = true|false; reasoning.enabled = true|false is also accepted.
+# Host capability recheck (2026-10-15), exact record id = "qwen/qwen3.8-2.4t-a95b":
+# /v1/models data[id].reasoning: mandatory=false, supports_enable_disable=true,
+# supported_efforts=["low","medium","xhigh"]; the on/off control is separate.
+# /openrouter/v1/models data[id].output_modalities[0].supported_parameters.reasoning has type="boolean".
+# That supported_parameters object has no thinking_budget entry; no budget control is advertised.
+# Local adapter mapping checks confirm the boolean toggle forwards enable_thinking=true|false.
+# /openrouter/v1/models data[id].input_modalities contains {type="image"};
+# https://iteracompute.com/models/qwen3-8-2-4t-a95b/ also marks Vision as supported
+# in its pricing/capabilities header (beside Tool Calling, Reasoning, and Streaming).
+# These are host declarations of support; image quality remains unverified.
+# Prices updated 2026-10-21 from the public GET https://api.iteracompute.com/v1/models pricing object (USD per 1M tokens).
+schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
-attachment = true
-reasoning_options = [{ type = "toggle" }]
-
-[cost]
-input = 1.95
-output = 5.95
-cache_read = 0.20
-
-[limit]
-context = 970_000
-output = 131_072
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 1.95
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 5.7

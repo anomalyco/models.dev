@@ -1,24 +1,25 @@
+# Status: absent from GET https://api.jiekou.ai/openai/models and GET /openai/models/gemini-2.5-flash-lite-preview-06-17 returns 404 MODEL_NOT_FOUND (2026-10-21). Price, limits and capabilities are the last listed values.
+# Cache: Gemini is implicit-only (no cache_control); minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Effort: top-level reasoning_effort, converted to a Gemini thinking budget (none/disable 0, low 1024, medium 2048, high 4096); https://docs.jiekou.ai/docs/providers/gemini.
+schema = 2
+base_model = "google/gemini-2.5-flash-lite-preview-06-17"
 name = "gemini-2.5-flash-lite-preview-06-17"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-family = "gemini-flash-lite"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 0.09
-output = 0.36
-
-[limit]
-context = 1048576
-output = 65535
+status = "deprecated"
 
 [modalities]
-input = ["text", "video", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+
+[limit]
+output = 65_535
+
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 0.36

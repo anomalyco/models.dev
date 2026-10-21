@@ -1,25 +1,33 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted into the system prompt for this Claude model (live: cache prefix lost)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Cache: cache_control (top-level or per block), 4 breakpoints, 5m/1h TTL, 1h write = 2x input; min tokens per model (https://openrouter.ai/docs/guides/best-practices/prompt-caching#anthropic-claude)
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 6
-output = 22.5
-cache_read = 0.6
-cache_write = 7.5
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 1_024 } }
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 6
+cache = { read = 0.6, write = { "5m" = 7.5, "1h" = 12 } }
+
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 22.5

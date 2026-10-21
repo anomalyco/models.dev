@@ -7,38 +7,32 @@
 # Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
 # Effort: reasoning_effort = low|medium|high|max; medium promotes to high, xhigh promotes to max
 # Budget: thinking.budget_tokens >= 1024 (integer reasoning-token cap)
-name = "Ember-1"
-description = "Specialized model from Fireworks built on Kimi K3, producing shorter reasoning traces with approximately 40% fewer tokens while maintaining comparable quality"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
-tool_call = true
-open_weights = false
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = true: after a system message sent after the first turn, 4096 of 8110 prompt tokens still came from the cache, so it stays in place.
+#   effort_updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
+#   tools.updates = false: adding a second tool on the last turn left 0/0 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
+base_model = "fireworks/ember-1"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-
-[limit]
-context = 1_048_576
-output = 131_072
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 15

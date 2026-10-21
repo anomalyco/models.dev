@@ -1,0 +1,32 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type speech)
+# https://vercel.com/docs/ai-gateway/modalities/text-to-speech
+# Output formats (response_format pcm, wav, mp3, flac, opus): https://docs.mistral.ai/studio/audio/text_to_speech/speech
+schema = 2
+type = "speech"
+name = "Voxtral TTS 3"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "mistral"
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["audio/pcm", "audio/wav", "audio/mpeg", "audio/flac", "audio/opus"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[api.speech]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+unit = "character"
+price = 16

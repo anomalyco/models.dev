@@ -1,6 +1,14 @@
+schema = 2
 base_model = "mistral/mistral-medium-latest"
-reasoning_options = []
 
-[cost]
-input = 0.4
-output = 2.0
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 2

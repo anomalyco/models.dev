@@ -1,0 +1,30 @@
+# Pricing, context window and max output:
+# https://docs.vivgrid.com/models/claude-haiku-5-5 (accessed 2026-10-08)
+# Toggle: thinking.type = adaptive|disabled (disabled is accepted at effort high or below)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+# https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

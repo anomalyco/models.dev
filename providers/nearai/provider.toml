@@ -6,6 +6,11 @@ npm = "@ai-sdk/openai-compatible"
 # Third-party routes pass through their provider-native reasoning controls.
 # https://docs.near.ai/cloud/guides/openai-compatibility
 # https://docs.near.ai/cloud/reasoning-models (accessed 2026-06-25)
+# APIs (https://docs.near.ai/cloud/guides/openai-compatibility, accessed 2026-10-21): /v1/chat/completions,
+# /v1/completions, stateless /v1/responses (store: false), /v1/embeddings, /v1/rerank, /v1/images/generations
+# and /edits, /v1/audio/transcriptions, /v1/privacy/classify and /redact. No Anthropic Messages endpoint.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) are unset on every model: NEAR documents
+# none of them and no NEARAI_API_KEY was available to test them.
 api = "https://cloud-api.near.ai/v1"
 env = ["NEARAI_API_KEY"]
 doc = "https://docs.near.ai/"

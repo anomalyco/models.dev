@@ -3,11 +3,25 @@
 # - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 # - https://www.anthropic.com/claude-opus-5-5
 # - https://platform.claude.com/docs/en/models/opus-5-5/overview
+# structured_output: capabilities.supports.structured_outputs = true (authenticated GET https://api.githubcopilot.com/models (2026-10-21)).
+# Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-opus-5-5.toml.
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 5
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+
+[api.messages]
+base_url = "https://api.githubcopilot.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

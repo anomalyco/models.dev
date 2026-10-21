@@ -1,0 +1,30 @@
+# Model card: https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3 ("Supports function calling"; Apache 2.0).
+# Published 2024-05-22 (Hugging Face createdAt). Context 32,768: config.json max_position_embeddings. No separate output
+# cap is published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Mistral 7B Instruct v0.3"
+description = "Open 7B Mistral instruction model with function calling"
+family = "mistral"
+open_weights = true
+release_date = "2024-05-22"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3"

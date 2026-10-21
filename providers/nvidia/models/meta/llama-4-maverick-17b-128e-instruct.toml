@@ -1,25 +1,18 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
+schema = 2
+base_model = "meta/llama-4-maverick-17b-instruct"
 name = "Llama 4 Maverick 17b 128e Instruct"
 status = "deprecated"
-description = "Open multimodal Llama model for strong reasoning and fast responses"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-02"
-tool_call = true
-structured_output = true
-release_date = "2025-04-01"
-last_updated = "2025-04-01"
-open_weights = true
 
-[cost]
-input = 0.00
-output = 0.00
+[capabilities]
+structured_output = true
 
 [limit]
-context = 128000
-output = 4096
+context = 128_000
+output = 4_096
 
-[modalities]
-input = ["text","image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

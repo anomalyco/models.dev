@@ -1,23 +1,18 @@
+# Deprecated: Meta retired the Llama API Public Preview, including api.llama.com, on 2026-07-06.
+# https://www.promptfoo.dev/docs/providers/llamaApi/ and https://haystack.deepset.ai/integrations/meta_llama
+# (Meta's own deprecation page now returns 404; llama.developer.meta.com redirects to dev.meta.ai).
+schema = 2
+base_model = "meta/llama-4-maverick-17b-instruct"
 name = "Llama-4-Maverick-17B-128E-Instruct-FP8"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
-family = "llama"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-08"
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.00
-output = 0.00
+status = "deprecated"
 
 [limit]
 context = 128_000
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

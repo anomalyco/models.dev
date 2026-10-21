@@ -1,35 +1,43 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding; video: https://openrouter.ai/docs/guides/overview/multimodal/videos
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 name = "Qwen3.5 Plus 2026-04-20"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen3.5"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-04-27"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 1.8
-cache_write = 0.375
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.375
-output = 2.25
-cache_write = 0.46875
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
+effort_updates = false
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { write = 0.375 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.375
+cache = { write = 0.46875 }
+
+[cost.text.output]
+price = 1.8
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2.25

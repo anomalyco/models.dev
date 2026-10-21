@@ -1,8 +1,20 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Prompt caching (https://impossibl.com/docs/prompt-caching): OpenAI, xAI, DeepSeek and Google routes cache implicitly.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = []
 
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.145
+[capabilities]
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.145 }
+
+[cost.text.output]
+price = 3.48

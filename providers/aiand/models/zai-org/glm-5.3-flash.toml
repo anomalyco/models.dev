@@ -1,0 +1,29 @@
+# Pricing: GET https://api.aiand.com/v1/api.json (synced hourly by the aiand module)
+# Docs: https://docs.aiand.com/models/catalog/
+# Effort: reasoning_effort = "low" | "high" | "max"
+# Controls: reasoning_effort only (`reasoning_effort` on /v1/chat/completions, `reasoning.effort` on /v1/responses; "none" = off) — no separate toggle or token-budget field on this host.
+# Reasoning side channel: message.reasoning_content
+# Mid-conversation: ai& serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.aiand.com/api/chat-completions/
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers (https://docs.aiand.com/models/pricing/#prompt-caching).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 1_048_550
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

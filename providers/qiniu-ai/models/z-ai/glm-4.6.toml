@@ -1,18 +1,23 @@
+# Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
+# Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-06-30 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
+base_model = "zhipuai/glm-4.6"
 name = "Z-AI/GLM 4.6"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-release_date = "2025-10-11"
-last_updated = "2025-10-11"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
-open_weights = false
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 200_000
 output = 200_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.04347826
+
+[cost.text.output]
+price = 1.82608696

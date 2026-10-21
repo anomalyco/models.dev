@@ -1,24 +1,20 @@
+# Limits: max output 66K on the model page (https://www.siliconflow.com/models/step-3-5-flash, 2026-10-21).
+schema = 2
+base_model = "stepfun/step-3.5-flash"
+base_model_omit = ["limit.input"]
 name = "stepfun-ai/Step-3.5-Flash"
 description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
-family = "step"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.1
-output = 0.3
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 262_000
-output = 262_000
+output = 66_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.3

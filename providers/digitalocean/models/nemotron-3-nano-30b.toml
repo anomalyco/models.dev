@@ -1,19 +1,9 @@
-name = "Nemotron 3 Nano 30B A3B"
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
-family = "nemotron"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-temperature = true
-tool_call = true
-open_weights = true
 
-[limit]
-context = 262_144
-output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+effort_updates = false

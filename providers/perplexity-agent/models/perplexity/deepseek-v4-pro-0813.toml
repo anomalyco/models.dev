@@ -1,0 +1,15 @@
+# Perplexity Agent API (accessed 2026-10-21): https://docs.perplexity.ai/docs/agent-api/models.md (USD per MTok: input,
+#   output, cache read). reasoning.effort = minimal|low|medium|high|xhigh|max (https://docs.perplexity.ai/api-reference/agent-post.md);
+#   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
+# Perplexity-hosted; also on the Orchestrator API (private preview) under the same id and price.
+base_model = "deepseek/deepseek-v4-pro-0813"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.044

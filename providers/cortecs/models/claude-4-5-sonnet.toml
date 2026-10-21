@@ -1,17 +1,20 @@
+# Effort: reasoning_effort = low|medium|high; Cortecs maps it to thinking.budget_tokens 1024|2048|4096 (or output_config.effort where the model has it).
+# Budget: thinking = { type = "enabled", budget_tokens } (https://docs.cortecs.ai/routing/reasoning).
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: explicit `cache_control` breakpoints (Claude on Amazon Bedrock / Google Vertex). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
+cache = { supported = true, explicit = true }
 structured_output = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 2.989
+cache = { read = 0.326, write = 4.078 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 2.989
-output = 14.945
-cache_read = 0.326
-cache_write = 4.078
+[cost.text.output]
+price = 14.945

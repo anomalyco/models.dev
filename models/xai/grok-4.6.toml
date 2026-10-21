@@ -1,24 +1,26 @@
 # Benchmarks use the "Grok 4.6 High" comparison column and Grok 4.6 (high) GDPval chart in the Grok 4.7 announcement.
+schema = 2
 name = "Grok 4.6"
 description = "xAI's frontier model for long-running agents, coding, knowledge work, and visual projects"
 family = "grok"
+open_weights = false
 knowledge = "2026-02-01"
 release_date = "2026-08-12"
-last_updated = "2026-08-12"
-attachment = true
-reasoning = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
+top_p = true
+top_k = true
 
 [limit]
 context = 500_000
 output = 500_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[benchmarks]]
 name = "CursorBench"

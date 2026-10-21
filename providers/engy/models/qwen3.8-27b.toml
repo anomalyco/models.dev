@@ -1,0 +1,35 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Prices: https://api.engy.ai/v1/models (2026-08-28/30); limits: authed https://engy.ai/api/v1/models (2026-09-13).
+# engy serves this deployment text+image only, so modalities.input is narrowed.
+# Live probe 2026-08-30, n=60/level at 32k: xhigh separates from low and medium (paired p<0.01), high
+# and max behave as xhigh (p>=0.87), medium vs low unsettled (p=0.44); toggle and none suppress 20/20.
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
+# Input MIME types: the lab's image list; engy's catalog reports image input without formats (https://api.engy.ai/v1/models).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 1_001_536
+input = 936_000
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.045
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.32

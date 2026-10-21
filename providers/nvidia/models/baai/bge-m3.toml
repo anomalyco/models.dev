@@ -1,22 +1,13 @@
-name = "BGE M3"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "bge"
-release_date = "2024-01-30"
-last_updated = "2026-04-30"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
+# Embedding model: modalities and limits come from the lab (vector output, output 0); the old text output and
+# 1,024-token output limit were chat boilerplate.
+# NVIDIA API: HTTP 410 Gone on POST /v1/embeddings — end of life 2026-08-25T09:00:00Z (probed 2026-10-21 against
+# integrate.api.nvidia.com)
+schema = 2
+base_model = "baai/bge-m3"
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
 
-[limit]
-context = 8_192
-output = 1_024
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0

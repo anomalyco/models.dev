@@ -1,0 +1,13 @@
+schema = 2
+base_model = "openai/gpt-5.4-image-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 11.0032
+cache = { read = 2.7508 }
+
+[cost.text.output]
+price = 20.631

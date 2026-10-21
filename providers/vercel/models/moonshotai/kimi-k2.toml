@@ -1,22 +1,20 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "moonshotai/kimi-k2"
 name = "Kimi K2 Instruct"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-release_date = "2025-07-11"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
 
-[cost]
-input = 0.57
-output = 2.3
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = false
+system_updates = true
+effort_updates = false
 
 [limit]
-context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.57
+
+[cost.text.output]
+price = 2.3

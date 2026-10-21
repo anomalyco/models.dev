@@ -1,23 +1,29 @@
 # Verified 2026-09-18 against https://api.kimi.ai/coding/v1/chat/completions
 # with kimi-code OAuth credentials; reasoning returned via reasoning_content.
-# reasoning_options mirror the Moonshot AI platform API surface:
-#   thinking.type = "enabled" | "disabled" | "adaptive"
-#   output_config.effort = "low" | "high" | "max"
-# Cost is zeroed per this provider's subscription convention.
+# Kimi Code docs (accessed 2026-10-19): https://www.kimi.com/code/docs/en/kimi-code/models.html
+# Effort: reasoning_effort = "none" | "low" | "high" | "max" (default "high"); unknown values return 400.
+# Off is effort "none" (the docs map it to thinking.type = "disabled"; with thinking off, K3 and K2.8 Preview requests are
+# served by K2.8 Preview without thinking). The OpenAI-compatible endpoint documents only reasoning_effort, so no
+# separate toggle is authored.
+# Switching reasoning effort invalidates the context cache (same page); prompt_cache_key is required for good cache
+# hit rates on Kimi Code Plan (https://platform.kimi.ai/docs/api/chat). Cost is zeroed per this provider's
+# subscription convention.
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
+structured_output = true
+effort_updates = false
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 0

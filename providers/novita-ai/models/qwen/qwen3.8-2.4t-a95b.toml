@@ -1,0 +1,27 @@
+# https://novita.ai/models/model-detail/qwen-qwen3.8-2.4t-a95b
+# Effort: reasoning_effort = low|medium|xhigh; thinking.type=disabled is rejected.
+# Budget: thinking_budget (reasoning tokens); cannot be combined with effort.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"], budget = {} }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = true
+effort_updates = false
+
+[limit]
+context = 1_000_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

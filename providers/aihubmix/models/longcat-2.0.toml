@@ -3,15 +3,21 @@
 # https://github.com/meituan-longcat/LongCat-2.0
 # Toggle: enable_thinking = true|false on /v1/chat/completions.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "meituan/longcat-2.0"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { supported = true }
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.7746
-output = 3.0984
-cache_read = 0.015492
+[cost.text.input]
+price = 0.7746
+cache = { read = 0.015492 }
+
+[cost.text.output]
+price = 3.0984

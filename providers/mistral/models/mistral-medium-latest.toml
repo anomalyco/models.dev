@@ -1,12 +1,45 @@
-# mistral-medium-latest is Mistral's alias for Mistral Medium 3.5 (mistral-medium-2604).
-# Medium 3.1 (mistral-medium-2508) was deprecated 2026-05-22, retiring 2026-08-31.
+# mistral-medium-latest is Mistral's alias for Mistral Medium 3.5 (https://docs.mistral.ai/models/mistral-medium-3-5-26-04;
+# /v1/models lists mistral-medium-2604 and mistral-medium-3-5 as aliases). Medium 3.1 (mistral-medium-2508)
+# was deprecated 2026-05-22 and retired 2026-08-31.
+# Default: reasoning is off when reasoning_effort is omitted (live: no thinking chunk, 0 reasoning tokens).
+# Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
+# - Pricing: https://docs.mistral.ai/inference/pricing (cached input is billed at 10% of input).
+# - Prompt caching: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic prefix
+#   cache in 64-token blocks, no write price, optional prompt_cache_key). Usage is reported when streaming.
+# - Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named
+#   function; function.strict). All five tool_choice forms worked live.
+# - Structured output: https://docs.mistral.ai/studio/conversations/structured-output (json_schema
+#   response_format returned schema-valid JSON live).
+# - PDF: chat takes document_url PDFs (https://docs.mistral.ai/studio/document-processing/document_qna);
+#   a base64 PDF was read correctly live.
+# - Sampling: temperature and top_p; no top_k (live 400 "top_k sampling is not enabled for this model").
+# - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests keeps the cached
+#   prefix (Mistral renders tools after it).
+# - Reasoning: https://docs.mistral.ai/studio/conversations/reasoning. Effort: reasoning_effort = none|high
+#   (other values return 400 with "supported values: high, none"). Switching effort between turns keeps
+#   the cached prefix (live).
+schema = 2
 base_model = "mistral/mistral-medium-latest"
-name = "Mistral Medium (latest)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 1.50
-output = 7.50
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high"] }
+structured_output = true
+top_k = false
+system_updates = true
+effort_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 64 }, explicit = false }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

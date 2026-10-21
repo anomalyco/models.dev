@@ -1,28 +1,31 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "MiMo V2.6 Flash Uncensored"
 description = "A text-only, lower-refusal MiMo V2.6 Flash finetune served by Heabsy with a 1M-token context window, separate reasoning output, and tool calling."
 family = "mimo"
-release_date = "2026-09-25"
-last_updated = "2026-09-25"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-09-25"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
 
-[cost]
-input = 0.5
-output = 1.5
-cache_read = 0.1995
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 1_048_576
 input = 1_048_576
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1995 }
+
+[cost.text.output]
+price = 1.5

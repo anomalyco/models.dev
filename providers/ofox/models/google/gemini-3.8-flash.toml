@@ -2,25 +2,38 @@
 # https://ofox.ai/models/google/gemini-3.8-flash
 # https://api.ofox.ai/v1/models/google/gemini-3.8-flash
 # https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
+# Mid-conversation (Ofox Gemini native API, https://ofox.ai/docs/api/gemini/generate-content): systemInstruction, thinkingConfig and tools are request-level and content roles are user/model, so system_updates, effort_updates and tools.updates are false.
+# Cache: implicit, plus explicit cachedContents on the Gemini native API (https://ofox.ai/docs/develop/models/gemini#caching, https://ofox.ai/docs/develop/advanced/gemini-explicit-cache).
+# Input MIME types: the lab's (models/google/gemini-3.8-flash.toml) for each kind Ofox serves.
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (https://ofox.ai/docs/develop/models/gemini/thinking)
+schema = 2
 base_model = "google/gemini-3.8-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
-cache_write = 0.0415
-input_audio = 0.75
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = true }
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image", "audio", "pdf"]
+[api.generate-content]
+base_url = "https://api.ofox.ai/gemini/v1beta"
+sdk = { aisdk = "@ai-sdk/google" }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://api.ofox.ai/gemini/v1beta"
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075, write = 0.0415 }
+
+[cost.text.output]
+price = 3.75
+
+[cost.audio.input]
+price = 0.75

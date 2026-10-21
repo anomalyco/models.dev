@@ -1,23 +1,22 @@
+# Status: absent from GET https://api.jiekou.ai/openai/models and GET /openai/models/gemini-3-pro-preview returns 404 MODEL_NOT_FOUND (2026-10-21). Price, limits and capabilities are the last listed values.
+# Cache: Gemini is implicit-only (no cache_control); minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Effort: top-level reasoning_effort, converted to a Gemini thinking budget (low 1024, medium 2048, high 4096); https://docs.jiekou.ai/docs/providers/gemini. Gemini 3 can't turn thinking off, so none is not listed.
+schema = 2
+base_model = "google/gemini-3-pro-preview"
 name = "gemini-3-pro-preview"
-description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-family = "gemini-pro"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 1.8
-output = 10.8
-
-[limit]
-context = 1048576
-output = 65536
+status = "deprecated"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.8
+
+[cost.text.output]
+price = 10.8

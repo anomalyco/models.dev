@@ -1,0 +1,13 @@
+schema = 2
+base_model = "gryphe/mythomax-l2-13b"
+name = "MythoMax L2 13B (Deep Infra)"
+
+[capabilities]
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 0.4

@@ -1,0 +1,51 @@
+# Sources:
+# - https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5
+# Token limits are not applicable to this audio-video generation endpoint.
+# Zero follows existing non-token media catalog entries; it is not a measured token limit.
+# Type and formats: Volcengine Ark create video generation task API (images jpeg, png, webp, bmp, tiff, gif, plus
+#   heic/heif on Seedance 2.0 and later; videos mp4 video/mp4 and mov video/quicktime; audio wav and mp3; output mp4):
+#   https://www.volcengine.com/docs/82379/1520757 and https://www.volcengine.com/docs/82379/2298881
+# Output keeps a generic audio entry: the synchronized sound is a track inside the generated MP4, not a
+#   separate file, so no audio MIME type applies.
+# Sampling: the task API has no temperature, top_p or top_k.
+schema = 2
+type = "video"
+name = "Seedance 2.5"
+description = "ByteDance multimodal audio-video model with up to 30-second single-pass generation, multi-round extension, reference inputs and timestamp-level editing."
+family = "seed"
+open_weights = false
+release_date = "2026-07-31"
+last_updated = "2026-10-04"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/gif",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/quicktime",
+  "audio/wav",
+  "audio/mpeg",
+]
+output = ["video/mp4", "audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5"
+type = "announcement"

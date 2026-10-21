@@ -1,26 +1,16 @@
+# Effort: reasoning_effort = minimal|low|medium|high
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
+base_model = "openai/gpt-5-mini"
 name = "gpt-5-mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2025-08-08"
-last_updated = "2025-08-08"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-temperature = false
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-open_weights = false
-knowledge = "2024-05-30"
 
-[cost]
-input = 0.250
-output = 2.000
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
 
-[limit]
-context = 400_000
-input = 272_000
-output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 2

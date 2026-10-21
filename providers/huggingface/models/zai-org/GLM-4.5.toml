@@ -1,6 +1,15 @@
+# Deprecated: absent from https://router.huggingface.co/v1/models, and every inference provider mapping is in error (https://huggingface.co/api/models/zai-org/GLM-4.5?expand[]=inferenceProviderMapping), both checked 2026-10-20.
+schema = 2
 base_model = "zhipuai/glm-4.5"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.6
-output = 2.2
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+effort_updates = false
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.2

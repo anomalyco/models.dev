@@ -1,25 +1,27 @@
-name = "Codestral 2508"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Mistral (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "mistral/codestral-2508"
 description = "Mistral coding model for code completion, generation, and developer workflows"
-family = "codestral"
-release_date = "2025-08-01"
-last_updated = "2025-08-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-03-31"
-open_weights = false
 
-[cost]
-input = 0.3
-output = 0.9
-cache_read = 0.03
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 256_000
 output = 204_800
 
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.9

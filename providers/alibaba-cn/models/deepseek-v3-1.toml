@@ -1,22 +1,28 @@
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
+schema = 2
 name = "DeepSeek V3.1"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
-release_date = "2025-01-01"
-last_updated = "2025-01-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2025-01-01"
+status = "deprecated"
 
-[cost]
-input = 0.574
-output = 1.721
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+temperature = true
+effort_updates = false
 
 [limit]
 context = 131_072
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.574
+
+[cost.text.output]
+price = 1.721

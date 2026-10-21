@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
+name = "DeepSeek R1 0528 (TensorX)"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 164_000
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.165 }
+
+[cost.text.output]
+price = 2.6

@@ -1,15 +1,14 @@
+# Prices: FreeModel's site price table (https://freemodel.dev, bundled cost table, checked 2026-10-21),
+# USD per 1M tokens, including the 5-minute and 1-hour cache-write rates.
+schema = 2
 base_model = "anthropic/claude-opus-4-6"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+[cost.text.output]
+price = 25

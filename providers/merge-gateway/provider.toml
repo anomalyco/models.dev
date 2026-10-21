@@ -12,6 +12,20 @@
 #   `providerOptions.mergeGateway.thinking` to
 #   `thinking = { type = "enabled"|"disabled", budget_tokens = N }`.
 #   https://github.com/merge-api/merge-gateway-ai-sdk-provider/blob/main/src/chat/index.ts
+# Mid-conversation flags (sources accessed 2026-10-20):
+# - effort_updates = false on every chat model: /v1/ai-sdk/chat/completions has no
+#   effort control at all, only `thinking`, and no per-turn configuration update.
+#   https://docs.merge.dev/merge-gateway/capabilities/reasoning (surface table)
+# - tools.updates = false: a Chat Completions `tools` array only; Gateway documents no
+#   tool addition/removal mechanism.
+#   https://docs.merge.dev/merge-gateway/capabilities/tool-calling
+# - system_updates is unset: the AI SDK provider sends later system messages in place,
+#   but Gateway doesn't document how each vendor route handles them.
+# Prompt caching follows the vendor route. `explicit` routes (Anthropic, Claude and Nova on
+# Bedrock, Z.AI) forward cache_control markers and place one themselves on reused prompts;
+# `automatic` routes (OpenAI, Azure, Google Gemini, DeepSeek, Qwen, Mistral, xAI, Fireworks,
+# Baseten) cache on their own. Model files set `capabilities.cache` from their default route.
+#   https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
 name = "Merge Gateway"
 env = ["MERGE_GATEWAY_API_KEY"]
 npm = "merge-gateway-ai-sdk-provider"

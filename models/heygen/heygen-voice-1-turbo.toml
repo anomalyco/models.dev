@@ -1,0 +1,25 @@
+# Launched on OpenRouter 2026-10-13: https://x.com/OpenRouter/status/2110392197946482934
+# Output formats: mp3 and pcm, as documented for OpenRouter's speech API (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/tts
+schema = 2
+v2_only = true
+type = "speech"
+name = "HeyGen Voice Turbo"
+description = "Lower-latency version of HeyGen Voice"
+open_weights = false
+release_date = "2026-10-13"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

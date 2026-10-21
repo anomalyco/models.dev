@@ -1,0 +1,25 @@
+# Released 2026-08-12: https://deepgram.com/learn/text-to-speech-comes-of-age-deepgram-launches-conversation-native-speech
+# Output formats: mp3 and pcm, as documented for OpenRouter's speech API (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/tts
+schema = 2
+v2_only = true
+type = "speech"
+name = "Flux TTS"
+description = "Conversation-native text-to-speech model for real-time voice agents"
+open_weights = false
+release_date = "2026-08-12"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

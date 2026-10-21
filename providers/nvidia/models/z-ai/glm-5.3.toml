@@ -2,13 +2,25 @@
 # (verified 2026-09-16). Thinking is always enabled; reasoning budget controlled
 # with top-level `reasoning_effort`: low|high|max, default max.
 # https://docs.nvidia.com/nim/large-language-models/2.0.11/get-started/advanced/get-started-glm-5.3.html
+# Inputs: text only (images return 400 "Invalid request", live 2026-10-21).
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): a late system message was
+# followed and kept the cache in 2 of 2 trials; changing reasoning_effort (low → high) and adding a tool each
+# dropped the cache to 0.
+schema = 2
 base_model = "zhipuai/glm-5.3"
 
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

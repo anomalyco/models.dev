@@ -1,28 +1,27 @@
-name = "Qwen3.7 Flash"
+# Modalities: image formats from models/alibaba/qwen3.7-flash.toml (same model)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
+base_model = "alibaba/qwen3.7-flash"
+base_model_omit = ["limit.input"]
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-07-27"
-last_updated = "2026-07-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.03
-output = 0.13
-cache_read = 0.006
-cache_write = 0.0375
-
-[limit]
-context = 1_000_000
-output = 1_000_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+effort_updates = false
+
+[limit]
+context = 983_616
+output = 1_000_000
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006, write = 0.0375 }
+
+[cost.text.output]
+price = 0.13

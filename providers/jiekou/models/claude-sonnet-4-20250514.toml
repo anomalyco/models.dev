@@ -1,23 +1,22 @@
+# Status: absent from GET https://api.jiekou.ai/openai/models and GET /openai/models/claude-sonnet-4-20250514 returns 404 MODEL_NOT_FOUND (2026-10-21). Price, limits and capabilities are the last listed values.
+# Cache: explicit cache_control {"type":"ephemeral"} on chat/completions and /anthropic/v1/messages; minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Budget: thinking.type = "enabled" + thinking.budget_tokens on /anthropic/v1/messages, the only route with thinking control (https://docs.jiekou.ai/docs/providers/anthropic); minimum 1024, as providers/anthropic.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-20250514"
 name = "claude-sonnet-4-20250514"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 2.7
-output = 13.5
-
-[limit]
-context = 200000
-output = 64000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+cache = { supported = true, implicit = false, explicit = { min_tokens = 1_024 } }
+structured_output = true
+
+[cost.text.input]
+price = 2.7
+
+[cost.text.output]
+price = 13.5

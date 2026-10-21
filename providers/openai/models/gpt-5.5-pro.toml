@@ -1,31 +1,45 @@
+schema = 2
 name = "GPT-5.5 Pro"
 description = "Highest-accuracy GPT-5.5 tier for slower, precision-heavy reasoning and coding"
 family = "gpt-pro"
-release_date = "2026-04-23"
-last_updated = "2026-04-23"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
-temperature = false
-knowledge = "2025-12-01"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2025-12-01"
+release_date = "2026-04-23"
 
-[cost]
-input = 30.00
-output = 180.00
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 60.00
-output = 270.00
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+structured_output = true
+temperature = false
+system_updates = true
+effort_updates = false
+store = true
+cache = { supported = false }
+service_tier = ["flex"]
 
 [limit]
 context = 1_050_000
 input = 922_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 30
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
+[cost.text.output]
+price = 180
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 270
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

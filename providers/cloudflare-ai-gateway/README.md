@@ -27,9 +27,9 @@ It reads two live Cloudflare sources plus one local curation file:
   canonical (dotted) `model_id` per model, description, context limits, and pricing.
   This is why ids look like `anthropic/claude-haiku-4.5`, not `claude-haiku-4-5`.
 - **Per-model catalog schema** — `GET /accounts/{id}/ai/catalog/models/{id}/schema`. Used to
-  derive `reasoning_options` for providers whose schema is OpenAI-compatible (xAI, Alibaba,
-  OpenAI). Native-format providers (Google, Anthropic, DeepSeek, Moonshot) don't expose the
-  knob here — those fall back to curation (see below).
+  derive effort values when it enumerates them. A `thinking` or `enable_thinking` field does
+  not establish that this route can turn reasoning off; toggles and controls missing from
+  the schema are curated (see below).
 
 Everything the generator can read is derived: `cost`, `limit.context`, and `reasoning_options`.
 `name` and `description` are intentionally **not** written — they inherit from `base_model`
@@ -39,6 +39,37 @@ consumers route to the Messages/Responses endpoint rather than the generic compa
 
 The generator emits override-only `base_model` stubs (see the repo `AGENTS.md`): the lab
 metadata lives under `models/<lab>/`, and each provider file only records real deltas.
+
+### Speech, transcription, image and video models
+
+`Text-to-Speech`, `Automatic Speech Recognition`, `Text-to-Image`, `Image-to-Image`,
+`Text-to-Video`, `Image-to-Video` and `video-to-video` catalog rows are written as complete
+v2-only files (`schema = 2`, `v2_only = true`), so they stay out of the v1 API:
+
+- `base_model` points at a lab file of the same type (`speech`, `transcription`, `image`,
+  `video`). Ids that
+  match a lab file without punctuation (`eleven-v3` → `eleven_v3`) resolve on their own; other
+  aliases are mapped in `curation.toml`. A lab of another type fails the sync.
+- `[api.workers-ai-run]` is the REST API's universal endpoint: `POST {base_url}/run` with
+  `{ model, input }`, where `input` follows the model's catalog schema.
+- `[modalities]` comes from the schema: a TTS model's output format enum, the formats an STT
+  model's file field documents, or an image/video model's prompt, image, video and audio
+  fields (with the lab's MIME types) and `output_format` enum. It is written only when it
+  differs from the lab.
+- `[capabilities]` turns tools off and keeps reasoning without controls when the lab has
+  them, since the `/ai/run` schemas take neither.
+- `[cost]` maps `provider_details` pricing to v2 units: `input_characters` → per 1M
+  characters, `input_audio_minutes` → per minute (feature surcharges and streaming become
+  conditional overrides), `*_tokens` → per 1M tokens by modality, `output_image_count` /
+  `input_image_count` → per image (`output_size_*` and `mp_*` bands become resolution and
+  megapixel overrides), equal first/extra megapixel prices → per megapixel, and video
+  `default` → per second of output, with resolution, audio, clip-length, input-video and
+  draft keys as overrides. If any pricing key has no mapping, the file gets no `[cost]` and
+  its header lists the keys.
+- `name` is written only for aliases whose catalog name is more than the lab name with a vendor prefix.
+
+Music, document and realtime (`websocket`) tasks aren't synced, and image/video ids without
+a lab file are in `skip` until one is added.
 
 ### `--check`
 
@@ -89,6 +120,8 @@ reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 | `reasoning_options` | derived from the per-model `schema.input`; curated for native-format providers and always-on reasoners |
 | `structured_output` | curated — a live-tested judgement (schema acceptance ≠ conformance) |
 | `[provider] npm` | derived — `@ai-sdk/anthropic` / `@ai-sdk/openai` for the native-passthrough families |
+| leading comments | curated — `prefix_notes` (per family, by model id prefix) followed by the model's `note` |
+| v2-only fields (`cache`, `system_updates`, `effort_updates`, `tools.updates`, cache-write TTL prices) | hand-authored in the model files (schema 2); sync keeps them and cites their sources through `prefix_notes` |
 
 `reasoning_options` is only written when the `base_model` declares `reasoning = true`; the
 schema forbids it otherwise. When a reasoning model has no derivable and no curated shape,
@@ -119,8 +152,9 @@ It is hand-authored and not touched by the generator.
 
 ## Known limitations
 
-- `reasoning_options` for native-format providers (Google, Anthropic, DeepSeek, Moonshot)
-  can't be derived from Cloudflare's schema and must be curated. New reasoning models from
-  these providers hard-fail until their knob is added to `curation.toml`.
+- Some native-format provider schemas omit or underspecify reasoning controls, and the
+  presence of a thinking field alone is not reliable toggle evidence. Those controls must
+  be curated; new reasoning models with neither effort enum nor curation hard-fail rather
+  than gaining an inferred toggle or an invented empty control list.
 - `structured_output` requires a live conformance test when adding a model; the schema
   advertises `response_format` even for models that don't honour it.

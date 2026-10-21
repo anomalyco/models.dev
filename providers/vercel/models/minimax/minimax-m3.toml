@@ -1,16 +1,24 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
 
-[[reasoning_options]]
-type = "budget_tokens"
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = {} }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 512_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

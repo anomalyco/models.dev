@@ -54,3 +54,75 @@ test("preserves OpenRouter pricing overrides as context tiers", () => {
     }],
   });
 });
+
+function searchRow(id: string, context: number) {
+  return {
+    id: `workers-ai/${id}`,
+    name: "Served Window",
+    created: 1_782_777_600,
+    hugging_face_id: null,
+    knowledge_cutoff: null,
+    context_length: context,
+    architecture: {
+      input_modalities: ["text"],
+      output_modalities: ["text"],
+    },
+    pricing: { prompt: "0.000001", completion: "0.000002" },
+    top_provider: {
+      context_length: context,
+      max_completion_tokens: context,
+    },
+    supported_parameters: [],
+  };
+}
+
+function translatedContext(id: string, context: number) {
+  const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow(id, context)] } });
+  return cloudflareWorkersAi.translateModel(source!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  }).model.limit?.context;
+}
+
+test("pins the served context window when search reports a larger one", () => {
+  expect(translatedContext("@cf/zai-org/glm-5.3", 1_310_720)).toBe(1_048_576);
+  expect(translatedContext("@cf/zai-org/glm-5.3-flash", 1_310_720)).toBe(1_048_576);
+  expect(translatedContext("@cf/deepseek-ai/deepseek-v4-flash-0731", 1_310_720)).toBe(1_048_576);
+});
+
+test("never raises a context window or pins other models", () => {
+  expect(translatedContext("@cf/zai-org/glm-5.3", 262_144)).toBe(262_144);
+  expect(translatedContext("@cf/test/unpinned", 1_310_720)).toBe(1_310_720);
+});
+
+test("marks Clef and Clairic routes as decisions even when Workers AI search labels them text generation", () => {
+  for (const id of ["@cf/cloudflare/clairic", "@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
+    const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow(id, 65_536)] } });
+    const translated = cloudflareWorkersAi.translateModel(source!, {
+      existing: () => undefined,
+      authored: () => undefined,
+    });
+    expect(translated?.model.type).toBe("decision");
+  }
+  const [other] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow("@cf/test/chat", 65_536)] } });
+  expect(cloudflareWorkersAi.translateModel(other!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.model.type).toBeUndefined();
+});
+
+test("lists search efforts weakest first so v2 files stay unchanged", () => {
+  const [source] = cloudflareWorkersAi.parseModels({
+    result: {
+      data: [{
+        ...searchRow("@cf/test/efforts", 65_536),
+        supported_parameters: ["reasoning"],
+        reasoning: { mandatory: false, supported_efforts: ["max", "high", "low", "none"] },
+      }],
+    },
+  });
+  expect(cloudflareWorkersAi.translateModel(source!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.model.reasoning_options).toEqual([{ type: "effort", values: ["none", "low", "high", "max"] }]);
+});

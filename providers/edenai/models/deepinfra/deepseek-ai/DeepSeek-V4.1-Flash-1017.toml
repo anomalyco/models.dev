@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 (Deep Infra)"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.6

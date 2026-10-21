@@ -1,0 +1,25 @@
+# Released 2025-12-01 (Kling Omni Launch Week, day 1): https://x.com/Kling_ai/status/1995506929461002590
+# Image inputs JPG/JPEG or PNG: https://app.klingai.com/global/dev/document-api/apiReference/model/imageToVideo
+# Output: MP4.
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling VIDEO O1"
+description = "Unified multimodal Kling model for video generation and editing"
+open_weights = false
+release_date = "2025-12-01"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

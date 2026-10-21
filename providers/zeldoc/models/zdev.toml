@@ -1,31 +1,30 @@
 # Zeldoc publishes no API reference or documented toggle, effort, or token budget.
 # https://docs.zeldoc.ai/ (accessed 2026-06-25)
+schema = 2
 name = "ZDev"
 description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
-release_date = "2026-08-26"
-last_updated = "2026-08-26"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-26"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

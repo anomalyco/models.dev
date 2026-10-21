@@ -7,5 +7,11 @@ npm = "@ai-sdk/openai-compatible"
 # selected model and the inference provider chosen by HF routing. No shared
 # toggle field or numeric reasoning-budget field is documented.
 # https://huggingface.co/docs/inference-providers/en/tasks/chat-completion
+# effort_updates = false, tools.updates = false on chat models: `reasoning_effort` and `tools`
+# are per request on Chat Completions; there is no per-turn effort or tool-change message.
+# system_updates is unset: where a mid-conversation system message ends up depends on the
+# inference provider the router picks, and no HF_TOKEN was available to probe (2026-10-20).
+# Exact MIME types: the router catalog lists modality kinds only (text, image); files take the
+# lab's types of each kind. https://router.huggingface.co/v1/models
 api = "https://router.huggingface.co/v1"
 doc = "https://huggingface.co/docs/inference-providers"

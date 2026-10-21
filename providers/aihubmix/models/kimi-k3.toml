@@ -2,25 +2,24 @@
 # (text, vision, video), and a 1M-token context window.
 # Source accessed 2026-07-27:
 # https://aihubmix.com/model/kimi-k3
-
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
+schema = 2
 base_model = "moonshotai/kimi-k3"
 last_updated = "2026-07-27"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.output]
+price = 15

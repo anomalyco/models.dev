@@ -1,15 +1,24 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Z.AI (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "zhipuai/glm-4.7"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
+system_updates = false
+effort_updates = false
 
-[interleaved]
-field = "reasoning_details"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.54
+cache = { read = 0.099 }
 
-[cost]
-input = 0.6
-output = 2.2
-cache_read = 0.11
+[cost.text.output]
+price = 1.98

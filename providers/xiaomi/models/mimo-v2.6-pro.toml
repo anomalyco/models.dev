@@ -1,31 +1,42 @@
-# Toggle: thinking.type = enabled|disabled
-# Sources: https://mimo.mi.com/models/zh-CN/mimo-v2.6-pro and https://mimo.mi.com/docs/zh-CN/api/chat/openai-api
-name = "MiMo-V2.6-Pro"
+# Toggle: thinking.type = enabled|disabled (default enabled; Responses reasoning.effort only maps none -> off,
+#   every other level -> on, so no graded effort is authored)
+# Sources (Xiaomi MiMo docs, accessed 2026-10-21):
+# - Overseas prices, USD per 1M tokens (https://mimo.mi.com/static/docs/price/pay-as-you-go.md). Cache writes are free for a limited
+#   time (no write surcharge). The Batch API (half price, separate base URL) is not modeled.
+# - Models (1M context, 128K max output): https://mimo.mi.com/static/docs/quick-start/summary/model.md
+# - Chat Completions (https://mimo.mi.com/static/docs/api/chat/openai-api.md): thinking.type = enabled|disabled, default enabled;
+#   max_completion_tokens <= 131072; tool_choice only "auto" (other values are dropped); function `strict` is a
+#   documented field; no top_k parameter; response_format json_object
+#   (https://mimo.mi.com/static/docs/quick-start/usage-guide/text-generation/structured-output.md); stream chunks carry `usage`.
+# - Prompt cache: automatic prefix cache billed at the cache-hit price; no cache_control field on any protocol.
+# Live (api.xiaomimimo.com, pay-as-you-go key, 2026-10-21): thinking on when omitted and off with "disabled";
+#   tool_choice "required"/named/"none" behave as "auto"; usage arrives in the last stream chunk even without
+#   stream_options; a repeated 18.7k-token prompt read 18,688 cached tokens, and Messages cache_control wrote nothing.
+# Mid-conversation (live 2026-10-21, Chat Completions, ~18k-token conversation, same result on mimo-v2.6-flash,
+#   mimo-v2.6-pro and mimo-v2.6-pro-ultraspeed): a system message before the last user turn stays in place
+#   (+23 input tokens), is followed, and keeps the cache -> system_updates; switching thinking.type between turns
+#   (either direction) keeps the cache -> effort_updates; adding a tool drops the cache to 0-64 tokens while the
+#   same request with the old tool list keeps it -> tools.updates = false.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
 description = "MiMo Pro model for multimodal coding agents and long-context automation"
-family = "mimo"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+top_k = false
+system_updates = true
+effort_updates = true
+stream_usage = true
+cache = { supported = true, implicit = true, explicit = false }
 
-[cost]
-input = 0.435
-output = 0.87
-cache_read = 0.0036
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 1_048_576
-output = 131_072
+[cost.text.input]
+price = 0.435
+cache = { read = 0.0036 }
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
-
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 0.87

@@ -1,0 +1,20 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=video. Prices are the pricing_skus of
+# https://openrouter.ai/api/v1/videos/models: per second of output (cents_per_* / 100, duration_seconds_* in USD)
+# or per video token (video_tokens_*). SKU qualifiers are overrides on the plain or first SKU: resolution,
+# generate_audio (true by default for models with audio), mode (text-to-video, image-to-video, reference-to-video)
+# and input_video. No [cost] when a SKU has no CostV2 form (minimum charge per generation, per megapixel-second).
+# https://openrouter.ai/docs/guides/overview/multimodal/video-generation
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedance-2.0-fast"
+
+[api.videos]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+
+[cost.video.output]
+price = 4.2
+
+[[cost.video.output.overrides]]
+when = { input_video = { equals = true } }
+price = 2.475

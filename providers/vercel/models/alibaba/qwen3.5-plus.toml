@@ -1,31 +1,33 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "alibaba/qwen3.5-plus"
 name = "Qwen 3.5 Plus"
-attachment = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 81_920
-
-[cost]
-input = 0.4
-output = 2.4
-cache_read = 0.04
-cache_write = 0.5
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_001 }
-input = 0.5
-output = 3
-cache_read = 0.05
-cache_write = 0.625
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"], budget = { min = 1, max = 81_920 } }
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04, write = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_001 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 2.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_001 } }
+price = 3

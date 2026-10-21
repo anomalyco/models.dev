@@ -1,16 +1,27 @@
 # Model ID and pricing: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
 # Foundry catalog: https://ai.azure.com/catalog/models/claude-sonnet-5-5
 # between_tools is not a full thinking-off toggle; disabled is rejected.
+# Mid-conversation: Foundry lists "Mid-conversation role: system" (haiku-5-5, opus-5-5, opus-5, sonnet-5-5, sonnet-5) and "Per-turn effort controls" (opus-5-5, opus-5) as Beta:
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#available-claude-models. Anthropic lists mid-conversation system messages, per-message effort and
+# the tool-change beta (tool_addition/tool_removal) for the Claude API, Bedrock and Google Cloud only, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
+schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+system_updates = true
+effort_updates = false
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10

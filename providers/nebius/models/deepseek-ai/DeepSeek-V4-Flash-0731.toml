@@ -10,17 +10,25 @@
 # Context/output use this model's exact models_info max_model_len (1_024_000), which
 # intentionally differs from other "1M" IDs on this host (DeepSeek-V4-Pro, GLM-5.2,
 # Nemotron entries serve max_model_len = 1_048_576).
+# Rechecked 2026-10-20 against models_info: price, max_model_len and model type unchanged; no
+# input_cached_price_per_million_tokens listed.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.14
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_024_000
 output = 1_024_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 0.28

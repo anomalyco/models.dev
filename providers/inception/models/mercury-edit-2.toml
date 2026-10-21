@@ -1,34 +1,27 @@
-# Sources (accessed 2026-09-10): Mercury Edit 2 is served only on
+# Sources (accessed 2026-10-21): Mercury Edit 2 is served only on
 # /v1/edit/completions and /v1/fim/completions, which cap context at 32K and
 # output at 8,192 tokens; it is not offered on chat completions. Neither the
 # edit nor the FIM request/response schema exposes a reasoning field, and
-# `reasoning_effort` is documented as applying to mercury-2.5 and mercury-2 on
-# chat completions only. The docs model table lists no tool-calling or
-# structured-output support for this model.
-# https://docs.inceptionlabs.ai/get-started/models
+# `reasoning_effort` applies to chat models only. The docs model table lists no
+# tool-calling or structured-output support for this model.
+# https://docs.inceptionlabs.ai/get-started/models ($0.25 input, $0.025 cached input, $0.75 output per MTok)
 # https://docs.inceptionlabs.ai/capabilities/reasoning-efforts
 # https://api.inceptionlabs.ai/openapi.json
-name = "Mercury Edit 2"
-description = "Code editing dLLM for autocomplete (FIM) and next-edit suggestions"
-family = "mercury"
-release_date = "2026-03-30"
-last_updated = "2026-03-30"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+# GET https://api.inceptionlabs.ai/v1/edit/completions/models reports context_length 128000 and max_output_length
+#   32000, which disagrees with the docs table (32K / 8,192); the docs values are kept.
+# Cache: https://docs.inceptionlabs.ai/resources/faq ("Prefix caching is automatic and requires no request parameter";
+#   cached tokens billed at each model's input_cache_reads rate).
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+schema = 2
+base_model = "inception/mercury-edit-2"
+
+[capabilities]
 structured_output = false
-open_weights = false
+cache = { supported = true, implicit = true }
 
-[cost]
-input = 0.25
-output = 0.75
-cache_read = 0.025
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
 
-[limit]
-context = 32_000
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.75

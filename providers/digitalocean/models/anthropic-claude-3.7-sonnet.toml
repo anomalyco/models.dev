@@ -1,27 +1,23 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+schema = 2
+base_model = "anthropic/claude-3-7-sonnet-20250219"
 name = "Claude 3.7 Sonnet"
 description = "Legacy model retained for compatibility with older integrations"
-family = "claude-sonnet"
-release_date = "2025-02-24"
-last_updated = "2025-02-24"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-knowledge = "2024-11"
-open_weights = false
 status = "deprecated"
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
-cache_write = 3.75
-
-[limit]
-context = 200_000
-output = 64_000
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+effort_updates = false
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

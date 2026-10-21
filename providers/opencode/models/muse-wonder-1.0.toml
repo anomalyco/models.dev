@@ -1,0 +1,17 @@
+# GET https://opencode.ai/inference/v1/models lists muse-wonder-1.0 (verified 2026-10-20).
+# Zen does not list Muse Wonder pricing yet; Zen sells at cost and matches Meta's Muse Spark
+# pricing, so cost follows Meta's Model API (https://dev.meta.ai/docs/pricing-rate-limits).
+# Effort values match Meta's API: minimal|low|medium|high|xhigh|max.
+base_model = "meta/muse-wonder-1.0"
+structured_output = true
+
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://opencode.ai/inference/openai/v1"

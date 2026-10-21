@@ -1,6 +1,30 @@
+# v2 capabilities and prices:
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/context-cache/context-cache-overview
+# text.output keeps the image output price that v1 `output` carries; cost.image.output is the real image price.
+# Mid-conversation updates: false. Vertex takes system instructions, thinking config and tools only as request-level
+# fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
+# Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-image
+# The documented text/plain document type is covered by `text`.
+# Output keeps the base model's image/png and image/jpeg (a [modalities] override needs both arrays); Vertex documents no other format.
+schema = 2
 base_model = "google/gemini-2.5-flash-image"
-reasoning = false
 
-[cost]
-input = 0.3
-output = 30
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+reasoning = { supported = false }
+system_updates = false
+effort_updates = false
+cache = { supported = false }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 30
+
+[cost.image.output]
+price = 30

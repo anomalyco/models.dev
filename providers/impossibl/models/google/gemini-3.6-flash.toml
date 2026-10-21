@@ -1,11 +1,31 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Effort: {"generationConfig":{"thinkingConfig":{"thinkingLevel":"low"}}}
+# Prompt caching (https://impossibl.com/docs/prompt-caching): OpenAI, xAI, DeepSeek and Google routes cache implicitly.
+# Promotional rate $0.75 / $3.75 through 2026-12-31 UTC (https://impossibl.com/docs/models), then $1.50 / $7.50.
+schema = 2
 base_model = "google/gemini-3.6-flash"
 
-[cost]
-input = 1.50
-output = 7.50
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+cache = { supported = true, implicit = true }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort" # API: {"generationConfig":{"thinkingConfig":{"thinkingLevel":"low"}}}
-values = ["minimal", "low", "medium", "high"]
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[[cost.text.input.overrides]]
+when = { date = { gte = "2027-01-01" } }
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.75
+
+[[cost.text.output.overrides]]
+when = { date = { gte = "2027-01-01" } }
+price = 7.5

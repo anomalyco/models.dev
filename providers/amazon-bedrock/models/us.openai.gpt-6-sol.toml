@@ -1,24 +1,39 @@
-# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [api] override.
 # Profile ID verified via ListInferenceProfiles (ACTIVE) on 2026-09-22; AWS has not published a GPT-6 Sol model card yet.
 # Geo CRIS pricing = OpenAI API list rates + AWS's 10% fee (as stated on the GPT-6 Astra card): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
 # Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max (Bedrock's validation error on the Luna twin lists these; matches OpenAI-native Sol).
 # Live Converse check 2026-09-22 (eu-west-1, global profile): tool call + tool-result round trip; effort low/xhigh/max accepted.
+# v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card says Converse rejects document blocks, so no application/pdf here.
+schema = 2
 base_model = "openai/gpt-6-sol"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 name = "GPT-6 Sol (US)"
 
-[cost]
-input = 2.20
-output = 11.00
-cache_read = 0.22
-cache_write = 2.75
-
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 4.40
-output = 16.50
-cache_read = 0.44
-cache_write = 5.50
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+
+[cost.text.input]
+price = 2.2
+cache = { read = 0.22, write = { "30m" = 2.75 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.4
+cache = { read = 0.44, write = { "30m" = 5.5 } }
+
+[cost.text.output]
+price = 11
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16.5

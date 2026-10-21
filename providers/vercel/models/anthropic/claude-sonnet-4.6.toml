@@ -1,26 +1,31 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): a plain mid-conversation system message is hoisted into the leading system prompt (the next request misses the cache), so system_updates = false. Per-turn effort and tool changes reach Anthropic as providerOptions.anthropic.effort / toolChanges on a mid-conversation system message (https://ai-sdk.dev/providers/ai-sdk-providers/anthropic); true only where Anthropic accepted them and the cache was kept.
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 6
-output = 22.5
-cache_read = 0.6
-cache_write = 7.5
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = {} }
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 6
+cache = { read = 0.6, write = 7.5 }
+
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 22.5

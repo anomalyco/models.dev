@@ -3,10 +3,15 @@
 # - https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-nano-12b-v2-vl-infer
 # - https://integrate.api.nvidia.com/v1/models id: nvidia/nemotron-nano-12b-v2-vl
 # No first-party NIM reasoning ON/OFF control found (unlike Super/Ultra prompt toggles).
-status = "deprecated"
+schema = 2
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

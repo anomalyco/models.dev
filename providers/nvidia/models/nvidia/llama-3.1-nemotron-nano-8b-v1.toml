@@ -6,27 +6,29 @@
 # - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.1-nemotron-nano-8b-v1
 # Toggle: system message `detailed thinking on` | `detailed thinking off`.
 # Infer OpenAPI: max_tokens 1..16384.
+schema = 2
 name = "Llama 3.1 Nemotron Nano 8B v1"
-status = "deprecated"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 family = "nemotron"
-release_date = "2025-03-18"
-last_updated = "2025-03-18"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }] # API: system "detailed thinking on|off"
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-03-18"
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
 
 [limit]
 context = 131_072
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

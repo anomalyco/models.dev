@@ -2,28 +2,32 @@
 # https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model
 # https://huggingface.co/meta-models/Muse-Glimmer-30B
 # https://developer.meta.com/ai/models/muse-glimmer/
-
+# Sampling (temperature 1.0, top_p 0.95, top_k 64): https://dev.meta.ai/docs/muse-glimmer/prompting
+# `image` stays generic: Muse Glimmer is self-hosted only, not on Model API (https://dev.meta.ai/docs/models), and its
+# deploy guide (https://dev.meta.ai/docs/muse-glimmer/deploy) takes a URL, data URI or local path without naming formats.
+schema = 2
 name = "Muse Glimmer 30B"
 description = "Muse Glimmer is a 30-billion-parameter open-weight multimodal model from Meta Superintelligence Labs, distilled from Muse Spark for always-on local agents, tool use, coding, and image understanding."
 family = "muse"
-release_date = "2026-08-10"
-last_updated = "2026-08-10"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2026-01-04"
 open_weights = true
+knowledge = "2026-01-04"
+release_date = "2026-08-10"
 license = "Apache 2.0"
-
-[limit]
-context = 131_072
-output = 131_072
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

@@ -1,20 +1,32 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
+schema = 2
 base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.282
-output = 1.128
-cache_read = 0.0564
-cache_write = 0.3525
+cache = { supported = true }
 
 [limit]
 context = 991_000
-output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.282
+cache = { read = 0.0564, write = 0.3525 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.845
+cache = { read = 0.169, write = 1.05625 }
+
+[cost.text.output]
+price = 1.128
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 3.38

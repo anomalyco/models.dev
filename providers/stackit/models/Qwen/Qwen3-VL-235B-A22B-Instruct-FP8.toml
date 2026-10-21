@@ -1,23 +1,19 @@
+# Prices: STACKIT lists EUR per 1M tokens (net): https://stackit.com/en/products/data-ai/stackit-ai-model-serving
+# Existing USD values were converted at about 1.17 USD/EUR (original rate and date not recorded).
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 name = "Qwen3-VL 235B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2024-11-01"
-last_updated = "2024-11-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = true
 
-[cost]
-input = 1.76
-output = 2.05
+[capabilities]
+structured_output = false
 
 [limit]
 context = 218_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.76
+
+[cost.text.output]
+price = 2.05

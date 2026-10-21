@@ -1,19 +1,13 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
+base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
-description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-release_date = "2025-08-06"
-last_updated = "2025-08-06"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = false
-open_weights = false
 
 [limit]
 context = 128_000
 output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]
