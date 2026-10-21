@@ -1,5 +1,6 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/jev
+# Pricing: USD 0.084 per 1M input tokens, no output charge (accessed 2026-10-21).
 schema = 2
 base_model = "typesafe/jev-latest"
 
@@ -7,7 +8,7 @@ base_model = "typesafe/jev-latest"
 structured_output = true
 
 [cost.text.input]
-price = 0.042
+price = 0.084
 
 [cost.text.output]
 price = 0
