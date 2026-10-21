@@ -15,6 +15,7 @@ import {
 } from "../src/model-file-v2.js";
 import { resolveProtocol } from "../src/generate-v2.js";
 import { ModelMetadata, type Model, type Provider } from "../src/schema.js";
+import { findComments } from "../src/toml-comments.js";
 import { isSchemaV2, labModelV2ToV1, modelV2ToV1, readLabModel } from "../src/translate.js";
 
 const root = path.join(import.meta.dirname, "..", "..", "..");
@@ -65,9 +66,9 @@ function migrateLab(text: string, toml: Record<string, unknown>, modelID: string
 }
 
 function migrateProvider(text: string, toml: Record<string, unknown>, modelID: string) {
-  const { header, body, tail } = splitFile(text);
-  if (body.some((line) => line.trim().startsWith("#")) || tail.length > 0) {
-    throw new Error(`${modelID}: comments or raw tables outside the header would be lost`);
+  const { header, tail } = splitFile(text, modelID);
+  if (tail.length > 0) {
+    throw new Error(`${modelID}: raw tables outside the header would be lost`);
   }
   // v2 modalities replace the base's as a whole, so a v1 file that overrides only
   // `input` or `output` takes the other side from its base model.
@@ -108,10 +109,7 @@ function migrateProvider(text: string, toml: Record<string, unknown>, modelID: s
 }
 
 function formatLabModel(text: string, model: ModelMetadata) {
-  const { header, body, tail } = splitFile(text);
-  if (body.some((line) => line.trim().startsWith("#"))) {
-    throw new Error(`${model.id}: comments outside the header would be lost`);
-  }
+  const { header, tail } = splitFile(text, model.id);
   for (const field of ["release_date", "open_weights", "modalities", "limit"] as const) {
     if (model[field] === undefined) throw new Error(`${model.id}: missing ${field}`);
   }
@@ -180,7 +178,7 @@ function limitLines(limit: { context?: number; input?: number; output?: number }
   return out;
 }
 
-function splitFile(text: string) {
+function splitFile(text: string, modelID: string) {
   const lines = text.split("\n");
   const header: string[] = [];
   for (const line of lines) {
@@ -194,7 +192,13 @@ function splitFile(text: string) {
   if (tail.some((line) => /^\[[^[]/.test(line))) {
     throw new Error("tables after [[benchmarks]], [[links]], or [[weights]]");
   }
-  return { header, body, tail };
+  // The body is rewritten from parsed data, so its comments move into the header.
+  const comments = findComments(body, header.length + 1).filter((comment) => comment.text !== "");
+  if (comments.length > 0) {
+    header.push(...comments.map((comment) => `# ${comment.key}: ${comment.text}`));
+    console.log(`${modelID}: moved ${comments.length} comment(s) into the header`);
+  }
+  return { header, tail };
 }
 
 const inline = formatTomlValue;
