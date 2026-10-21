@@ -1,23 +1,12 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-04-30).
 schema = 2
+base_model = "anthropic/claude-3-5-sonnet-20241022"
 name = "Anthropic: Claude 3.5 Sonnet v2"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-open_weights = false
 knowledge = "2024-10"
-release_date = "2024-10-22"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 200_000
-output = 8_192
 
 [cost.text.input]
 price = 3

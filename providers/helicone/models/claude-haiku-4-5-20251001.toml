@@ -1,22 +1,17 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2025-02-28).
 schema = 2
+base_model = "anthropic/claude-haiku-4-5-20251001"
 name = "Anthropic: Claude 4.5 Haiku (20251001)"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-family = "claude-haiku"
-open_weights = false
 knowledge = "2025-10"
-release_date = "2025-10-01"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 200_000
 output = 8_192
 
 [cost.text.input]

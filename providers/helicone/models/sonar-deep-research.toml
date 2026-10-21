@@ -2,19 +2,10 @@
 # medium, or high; no numeric reasoning-token budget is documented.
 # https://docs.perplexity.ai/api-reference/sonar-post
 schema = 2
+base_model = "perplexity/sonar-deep-research"
 name = "Perplexity Sonar Deep Research"
-description = "Sonar search model for current answers, retrieval, and citation-backed chat"
-family = "sonar-deep-research"
-open_weights = false
-knowledge = "2025-01"
-release_date = "2025-01-27"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 temperature = true
 

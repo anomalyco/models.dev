@@ -1,22 +1,13 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: none).
 schema = 2
+base_model = "meta/llama-prompt-guard-2-86m"
 name = "Meta Llama Prompt Guard 2 86M"
-description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
-family = "llama"
-open_weights = false
 knowledge = "2024-10"
-release_date = "2024-10-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 temperature = true
 
 [limit]
-context = 512
 output = 2
 
 [cost.text.input]

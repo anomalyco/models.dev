@@ -1,22 +1,10 @@
 schema = 2
-name = "Mistral Nemo"
-description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-family = "mistral-nemo"
-open_weights = false
-knowledge = "2024-07"
-release_date = "2024-07-18"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "mistral/mistral-nemo"
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 128_000
 output = 16_400
 
 [cost.text.input]

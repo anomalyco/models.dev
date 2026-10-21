@@ -1,26 +1,18 @@
 # Native exception (accessed 2026-06-25): `thinkingLevel` supports low and high
 # for Gemini 3 Pro; numeric `thinkingBudget` is a Gemini 2.5 control.
 # https://ai.google.dev/gemini-api/docs/thinking
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2025-01).
 schema = 2
+base_model = "google/gemini-3-pro-preview"
 name = "Google Gemini 3 Pro Preview"
-description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-family = "gemini-pro"
-open_weights = false
 knowledge = "2025-11"
-release_date = "2025-11-18"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high"] }
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 2

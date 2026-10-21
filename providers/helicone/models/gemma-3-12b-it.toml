@@ -1,22 +1,13 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-08).
 schema = 2
+base_model = "google/gemma-3-12b-it"
 name = "Google Gemma 3 12B"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-open_weights = false
 knowledge = "2024-12"
-release_date = "2024-12-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 131_072
 output = 8_192
 
 [cost.text.input]

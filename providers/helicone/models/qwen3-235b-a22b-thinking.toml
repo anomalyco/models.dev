@@ -1,23 +1,12 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: none).
 schema = 2
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
 name = "Qwen3 235B A22B Thinking"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = false
 knowledge = "2025-07"
-release_date = "2025-07-25"
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 262_144
-output = 81_920
 
 [cost.text.input]
 price = 0.3

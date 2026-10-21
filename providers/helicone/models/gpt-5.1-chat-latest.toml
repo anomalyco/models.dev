@@ -1,23 +1,11 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-09-30).
 schema = 2
+base_model = "openai/gpt-5.1-chat-latest"
 name = "OpenAI GPT-5.1 Chat"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "gpt-codex"
-open_weights = false
 knowledge = "2025-01"
-release_date = "2025-01-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text", "image"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = false
-
-[limit]
-context = 128_000
-output = 16_384
 
 [cost.text.input]
 price = 1.25

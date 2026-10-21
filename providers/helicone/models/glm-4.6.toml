@@ -1,23 +1,11 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2025-04).
 schema = 2
+base_model = "zhipuai/glm-4.6"
 name = "Zai GLM-4.6"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-open_weights = false
 knowledge = "2024-07"
-release_date = "2024-07-18"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 204_800
-output = 131_072
 
 [cost.text.input]
 price = 0.44999999999999996

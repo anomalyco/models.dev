@@ -1,19 +1,10 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: none).
 schema = 2
-name = "Qwen3 30B A3B"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = false
+base_model = "alibaba/qwen3-30b-a3b"
 knowledge = "2025-06"
-release_date = "2025-06-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 41_000

@@ -1,19 +1,13 @@
+# Video: the Helicone registry lists video input, and the lab's own header cites Model Studio video support
+# (its MIME list has no video types yet), so the generic kind is kept.
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2025-03-31).
 schema = 2
-name = "Qwen3 VL 235B A22B Instruct"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = false
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 knowledge = "2025-09"
-release_date = "2025-09-23"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video"]
 output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 256_000

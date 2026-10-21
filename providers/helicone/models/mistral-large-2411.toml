@@ -1,19 +1,8 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-11).
 schema = 2
+base_model = "mistral/mistral-large-2411"
 name = "Mistral-Large"
-description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
-family = "mistral-large"
-open_weights = false
 knowledge = "2024-07"
-release_date = "2024-07-24"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 128_000

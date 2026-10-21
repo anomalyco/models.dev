@@ -1,26 +1,18 @@
 # Native exception (accessed 2026-06-25): `thinking.type` is enabled or disabled;
 # manual `budget_tokens` is >=1024 and below max_tokens, hence this 63,999 cap.
 # https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2025-03-31).
 schema = 2
+base_model = "anthropic/claude-sonnet-4-0"
 name = "Anthropic: Claude Sonnet 4"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-open_weights = false
 knowledge = "2025-05"
-release_date = "2025-05-14"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 63_999 } }
-temperature = true
-
-[limit]
-context = 200_000
-output = 64_000
 
 [cost.text.input]
 price = 3

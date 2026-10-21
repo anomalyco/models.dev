@@ -1,19 +1,8 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-08).
 schema = 2
+base_model = "meta/llama-4-maverick-17b-instruct"
 name = "Meta Llama 4 Maverick 17B 128E"
-description = "Open multimodal Llama model for strong reasoning and fast responses"
-family = "llama"
-open_weights = false
 knowledge = "2025-01"
-release_date = "2025-01-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 131_072
