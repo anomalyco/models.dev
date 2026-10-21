@@ -3,8 +3,10 @@
 import { z } from "zod";
 import path from "node:path";
 import { readdir, mkdir, unlink, rmdir } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import { ModelFamilyValues } from "../../../packages/core/src/family.js";
 import { formatModelV2, providerModelToV2 } from "../../../packages/core/src/model-file-v2.js";
+import { readLabModel } from "../../../packages/core/src/translate.js";
 
 // Jiekou.AI API endpoint
 const API_ENDPOINT = "https://api.jiekou.ai/openai/models";
@@ -225,8 +227,69 @@ function processModel(apiModel: z.infer<typeof JiekouModel>): ProcessedModel {
 }
 
 // New files are written in the v2 format (schema = 2), like the rest of the provider.
-function formatToml(model: ProcessedModel): string {
-  return formatModelV2(providerModelToV2(model));
+// A model whose ID matches exactly one lab file (by its last path segment) becomes an
+// override-only base_model file; anything else stays a standalone file.
+function formatToml(model: ProcessedModel, lab?: { id: string; model: Record<string, any> }): string {
+  if (lab === undefined) return formatModelV2(providerModelToV2(model));
+  return formatModelV2(providerModelToV2(baseModelOverrides(model, lab.id, lab.model, lab.mime)));
+}
+
+// Catalog kinds ("image", "pdf"…) as the lab's exact MIME types, in lab order.
+function toLabMime(kinds: string[], labInput: string[]) {
+  const kindOf = (mime: string) => (mime === "application/pdf" ? "pdf" : mime.split("/")[0]!);
+  const out = labInput.filter((mime) => kinds.includes(kindOf(mime)));
+  for (const kind of kinds) if (!out.some((mime) => kindOf(mime) === kind)) out.push(kind);
+  return out;
+}
+
+function baseModelOverrides(
+  model: ProcessedModel,
+  baseModel: string,
+  lab: Record<string, any>,
+  labMime: string[],
+) {
+  const override: Record<string, any> = { base_model: baseModel };
+  if (model.tool_call !== lab.tool_call) override.tool_call = model.tool_call;
+  if (model.reasoning !== lab.reasoning) override.reasoning = model.reasoning;
+  override.structured_output = model.structured_output;
+  const limit: Record<string, number> = {};
+  if (model.limit.context !== lab.limit?.context) limit.context = model.limit.context;
+  if (model.limit.output !== lab.limit?.output) limit.output = model.limit.output;
+  if (Object.keys(limit).length > 0) override.limit = limit;
+  const sameKinds = (a: string[], b: string[] = []) =>
+    a.length === b.length && a.every((kind) => b.includes(kind));
+  if (
+    !sameKinds(model.modalities.input, lab.modalities?.input) ||
+    !sameKinds(model.modalities.output, lab.modalities?.output)
+  ) {
+    override.modalities = { ...model.modalities, input: toLabMime(model.modalities.input, labMime) };
+  }
+  override.cost = model.cost;
+  return override;
+}
+
+// Lab model IDs keyed by their last path segment (lowercase), e.g. "glm-5.3" -> ["zhipuai/glm-5.3"].
+async function getLabIndex(labsDir: string): Promise<Map<string, string[]>> {
+  const index = new Map<string, string[]>();
+  for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: labsDir })) {
+    const id = file.slice(0, -".toml".length);
+    const key = id.split("/").pop()!.toLowerCase();
+    index.set(key, [...(index.get(key) ?? []), id]);
+  }
+  return index;
+}
+
+function findLab(index: Map<string, string[]>, labsDir: string, modelId: string) {
+  const matches = index.get(modelId.split("/").pop()!.toLowerCase()) ?? [];
+  if (matches.length !== 1) return undefined;
+  const id = matches[0]!;
+  const file = path.join(labsDir, `${id}.toml`);
+  const raw = Bun.TOML.parse(readFileSync(file, "utf8")) as { modalities?: { input?: string[] } };
+  return {
+    id,
+    model: readLabModel(file, id) as Record<string, any>,
+    mime: raw.modalities?.input ?? [],
+  };
 }
 
 function getFilePath(
@@ -334,6 +397,8 @@ async function main() {
   const dryRun = args.includes("--dry-run");
 
   const modelsDir = path.join(import.meta.dirname, "..", "models");
+  const labsDir = path.join(import.meta.dirname, "..", "..", "..", "models");
+  const labIndex = await getLabIndex(labsDir);
 
   if (dryRun) {
     console.log("[DRY RUN] Fetching Jiekou.AI models from API...");
@@ -409,12 +474,14 @@ async function main() {
     }
 
     // Create new file
-    const tomlContent = formatToml(processed);
+    const lab = findLab(labIndex, labsDir, apiModel.id);
+    const tomlContent = formatToml(processed, lab);
     created++;
     if (dryRun) {
       console.log(`[DRY RUN] Would create: ${relativePath}`);
-      console.log(`  name = "${processed.name}"`);
-      if (processed.family) {
+      if (lab) console.log(`  base_model = "${lab.id}"`);
+      else console.log(`  name = "${processed.name}"`);
+      if (!lab && processed.family) {
         console.log(`  family = "${processed.family}" (inferred)`);
       }
       console.log("");
