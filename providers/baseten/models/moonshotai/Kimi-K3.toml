@@ -15,6 +15,7 @@ output = ["text"]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 temperature = true
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 262_144
@@ -24,6 +25,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 3
+cache = { read = 0.3 }
 
 [cost.text.output]
 price = 15

@@ -20,6 +20,7 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 128_072
@@ -30,6 +31,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.1
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 0.5

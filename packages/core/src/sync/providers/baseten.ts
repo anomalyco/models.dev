@@ -24,6 +24,7 @@ export const BasetenModel = z.object({
   pricing: z.object({
     prompt: Price,
     completion: Price,
+    input_cache_read: Price.optional(),
   }).passthrough(),
   supported_features: z.array(z.string()),
   supported_sampling_parameters: z.array(z.string()),
@@ -77,12 +78,26 @@ export const baseten = {
       && (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined)
     ) return undefined;
 
+    const built = buildBasetenModel(model, existing, baseModel, authored);
     return {
       id: model.id,
-      model: buildBasetenModel(model, existing, baseModel, authored),
+      model: built,
+      // Model APIs cache prompt prefixes automatically and bill cached input
+      // at the catalog's input_cache_read price.
+      v2Set: basetenV2Set(built.cost?.cache_read, context.v2?.(model.id)),
     };
   },
 } satisfies SyncProvider<BasetenModel>;
+
+// Model APIs cache prompt prefixes automatically ("Caching is automatic and
+// requires no request flags") and bill cached input at input_cache_read.
+export function basetenV2Set(cacheRead: number | undefined, current: Record<string, unknown> | undefined) {
+  const capabilities = current?.capabilities as Record<string, unknown> | undefined;
+  if (cacheRead === undefined && capabilities?.cache === undefined) return undefined;
+  return {
+    "capabilities.cache": cacheRead === undefined ? undefined : { supported: true, implicit: true },
+  };
+}
 
 export async function fetchBasetenModels(
   key: string,
@@ -122,7 +137,7 @@ export function buildBasetenModel(
         input: inputCost,
         output: outputCost,
         reasoning: existing?.cost?.reasoning,
-        cache_read: existing?.cost?.cache_read,
+        cache_read: price(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
         cache_write: existing?.cost?.cache_write,
         tiers: existing?.cost?.tiers,
       }
@@ -134,9 +149,13 @@ export function buildBasetenModel(
     // catalog has returned a model's context window as its completion limit.
     output: authored?.limit?.output ?? model.max_completion_tokens,
   };
+  // Model facts (family, dates, knowledge, open weights) belong to the lab file
+  // that a base_model entry inherits; only standalone definitions carry them,
+  // and only standalone definitions get a generated description.
+  const facts = baseModel === undefined ? existing : undefined;
   const values: Partial<SyncedFullModel> = {
     name: model.name ?? existing?.name,
-    description: existing?.description ?? describeModel({
+    description: existing?.description ?? (baseModel !== undefined ? undefined : describeModel({
       id: model.id,
       name: model.name ?? existing?.name,
       family: existing?.family,
@@ -146,18 +165,18 @@ export function buildBasetenModel(
       open_weights: existing?.open_weights,
       limit,
       modalities: { input, output },
-    }),
-    family: existing?.family,
-    release_date: existing?.release_date,
-    last_updated: existing?.last_updated,
+    })),
+    family: facts?.family,
+    release_date: facts?.release_date,
+    last_updated: facts?.last_updated,
     attachment: input.some((value) => value !== "text"),
     reasoning: features.has("reasoning") || existing?.reasoning,
     reasoning_options: existing?.reasoning_options,
     temperature: samplingParameters.has("temperature"),
     tool_call: features.has("tools") || existing?.tool_call,
     structured_output: features.has("structured_outputs") || existing?.structured_output,
-    knowledge: existing?.knowledge,
-    open_weights: existing?.open_weights,
+    knowledge: facts?.knowledge,
+    open_weights: facts?.open_weights,
     status: existing?.status,
     interleaved: existing?.interleaved,
     cost,

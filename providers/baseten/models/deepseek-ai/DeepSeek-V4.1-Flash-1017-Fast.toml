@@ -12,6 +12,7 @@ description = "Fast DeepSeek model for efficient chat, coding help, and agent lo
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_048_576
@@ -22,6 +23,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.6
+cache = { read = 0.014 }
 
 [cost.text.output]
 price = 2.4
