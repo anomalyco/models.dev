@@ -1,14 +1,13 @@
 # Linked to models/openai/gpt-4o-2024-11-20.toml (same model).
 # knowledge: unsourced host value kept as an override (lab: 2023-09).
 # Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+# Input: inherited from the lab (text and image). OpenAI lists GPT-4o audio as "Not supported"
+#   (https://developers.openai.com/api/docs/models/gpt-4o); audio input belongs to the gpt-4o-audio-preview models.
 schema = 2
 base_model = "openai/gpt-4o-2024-11-20"
 knowledge = "2024-10"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "audio"]
-output = ["text"]
 
 [cost.text.input]
 price = 2.5
