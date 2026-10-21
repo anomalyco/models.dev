@@ -1,29 +1,28 @@
+schema = 2
 name = "GPT-5.5"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 family = "gpt"
-release_date = "2026-04-23"
-last_updated = "2026-04-23"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-knowledge = "2025-12-01"
 open_weights = false
+knowledge = "2025-12-01"
+release_date = "2026-04-23"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 5.00
-output = 30.00
-cache_read = 0.50
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+temperature = false
 
 [limit]
 context = 1_050_000
 input = 922_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 30

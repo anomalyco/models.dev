@@ -2,14 +2,16 @@
 #   output, cache read). reasoning.effort = minimal|low|medium|high|xhigh|max (https://docs.perplexity.ai/api-reference/agent-post.md);
 #   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
 # Perplexity-hosted; also on the Orchestrator API (private preview) under the same id and price.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
 
-[cost]
-input = 1.32
-output = 3.96
-cache_read = 0.044
+[cost.text.output]
+price = 3.96

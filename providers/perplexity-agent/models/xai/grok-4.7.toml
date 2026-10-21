@@ -2,20 +2,25 @@
 #   output, cache read). reasoning.effort = minimal|low|medium|high|xhigh|max (https://docs.perplexity.ai/api-reference/agent-post.md);
 #   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
 # Context tier at 200K and above.
+schema = 2
 base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4
-output = 12
-cache_read = 1
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12

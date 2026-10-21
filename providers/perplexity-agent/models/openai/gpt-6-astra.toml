@@ -3,20 +3,25 @@
 #   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
 # Context tier above 272K; cache read 90% off input. Service tiers flex (0.5x) and priority (2x)
 #   are not expressible in this v1 file.
+schema = 2
 base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 10
+cache = { read = 1 }
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 20
-output = 75
-cache_read = 2
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

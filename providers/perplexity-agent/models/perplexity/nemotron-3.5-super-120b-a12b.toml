@@ -2,14 +2,16 @@
 #   output, cache read). reasoning.effort = minimal|low|medium|high|xhigh|max (https://docs.perplexity.ai/api-reference/agent-post.md);
 #   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
 # Effort follows the same-host Nemotron 3 Super file.
+schema = 2
 base_model = "nvidia/nemotron-3.5-super-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
 
-[cost]
-input = 0.2
-output = 0.5
-cache_read = 0.04
+[cost.text.output]
+price = 0.5

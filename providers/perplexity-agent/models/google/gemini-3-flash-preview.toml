@@ -1,34 +1,36 @@
+schema = 2
 name = "Gemini 3 Flash Preview"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 family = "gemini-flash"
-release_date = "2025-12-17"
-last_updated = "2025-12-17"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2025-12-17"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image", "video", "audio", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.50
-output = 3.00
-cache_read = 0.05
-
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 0.50
-output = 3.00
-cache_read = 0.05
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 3
