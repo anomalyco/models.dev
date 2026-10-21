@@ -1,27 +1,29 @@
-name = "OpenAI GPT-OSS 120b"
-description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 # Native exception (accessed 2026-06-25): top-level `reasoning_effort` is low,
 # medium, or high; there is no per-request numeric reasoning-token budget.
 # https://huggingface.co/openai/gpt-oss-120b
+schema = 2
+name = "OpenAI GPT-OSS 120b"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
-release_date = "2024-06-01"
-last_updated = "2024-06-01"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-knowledge = "2024-06"
 open_weights = false
-
-[cost]
-input = 0.04
-output = 0.16
-
-[limit]
-context = 131072
-output = 131072
+knowledge = "2024-06"
+release_date = "2024-06-01"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.16

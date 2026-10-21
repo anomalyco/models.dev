@@ -1,24 +1,27 @@
+schema = 2
 name = "OpenAI: o1-mini"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 family = "o-mini"
-release_date = "2025-01-01"
-last_updated = "2025-01-01"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
-
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.55
-
-[limit]
-context = 128000
-output = 65536
+knowledge = "2025-01"
+release_date = "2025-01-01"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 128_000
+output = 65_536
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4

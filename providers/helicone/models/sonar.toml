@@ -1,23 +1,26 @@
+schema = 2
 name = "Perplexity Sonar"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
 family = "sonar"
-release_date = "2025-01-27"
-last_updated = "2025-01-27"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
-
-[cost]
-input = 1
-output = 1
-
-[limit]
-context = 127000
-output = 4096
+knowledge = "2025-01"
+release_date = "2025-01-27"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 127_000
+output = 4_096
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 1

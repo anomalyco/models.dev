@@ -1,27 +1,29 @@
-name = "Perplexity Sonar Reasoning Pro"
-description = "Web-grounded reasoning model for multi-step research and cited answers"
 # Native exception (accessed 2026-06-25): `reasoning_effort` is minimal, low,
 # medium, or high; no numeric reasoning-token budget is documented.
 # https://docs.perplexity.ai/api-reference/sonar-post
+schema = 2
+name = "Perplexity Sonar Reasoning Pro"
+description = "Web-grounded reasoning model for multi-step research and cited answers"
 family = "sonar-reasoning"
-release_date = "2025-01-27"
-last_updated = "2025-01-27"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-temperature = true
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
-
-[cost]
-input = 2
-output = 8
-
-[limit]
-context = 127000
-output = 4096
+knowledge = "2025-01"
+release_date = "2025-01-27"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+temperature = true
+
+[limit]
+context = 127_000
+output = 4_096
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 8

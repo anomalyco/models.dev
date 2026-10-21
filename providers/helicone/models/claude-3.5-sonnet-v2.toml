@@ -1,25 +1,27 @@
+schema = 2
 name = "Anthropic: Claude 3.5 Sonnet v2"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
-release_date = "2024-10-22"
-last_updated = "2024-10-22"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-10"
 open_weights = false
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.30000000000000004
-cache_write = 3.75
-
-[limit]
-context = 200000
-output = 8192
+knowledge = "2024-10"
+release_date = "2024-10-22"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 200_000
+output = 8_192
+
+[cost.text.input]
+price = 3
+cache = { read = 0.30000000000000004, write = 3.75 }
+
+[cost.text.output]
+price = 15

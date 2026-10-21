@@ -1,24 +1,26 @@
+schema = 2
 name = "Qwen3 32B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-04-28"
-last_updated = "2025-04-28"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2025-04"
 open_weights = false
-
-[cost]
-input = 0.29
-output = 0.59
-
-[limit]
-context = 131072
-output = 40960
+knowledge = "2025-04"
+release_date = "2025-04-28"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 131_072
+output = 40_960
+
+[cost.text.input]
+price = 0.29
+
+[cost.text.output]
+price = 0.59

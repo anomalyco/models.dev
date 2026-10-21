@@ -1,23 +1,26 @@
+schema = 2
 name = "OpenAI: GPT-5 Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 family = "gpt-pro"
-release_date = "2025-01-01"
-last_updated = "2025-01-01"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
-
-[cost]
-input = 15
-output = 120
-
-[limit]
-context = 128000
-output = 32768
+knowledge = "2025-01"
+release_date = "2025-01-01"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 128_000
+output = 32_768
+
+[cost.text.input]
+price = 15
+
+[cost.text.output]
+price = 120

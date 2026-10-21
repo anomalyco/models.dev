@@ -1,23 +1,26 @@
+schema = 2
 name = "Meta Llama 3.1 8B Instant"
 description = "Compact Llama instruction model for fast chat and local deployment"
 family = "llama"
-release_date = "2024-07-01"
-last_updated = "2024-07-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-07"
 open_weights = false
-
-[cost]
-input = 0.049999999999999996
-output = 0.08
-
-[limit]
-context = 131072
-output = 32678
+knowledge = "2024-07"
+release_date = "2024-07-01"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 131_072
+output = 32_678
+
+[cost.text.input]
+price = 0.049999999999999996
+
+[cost.text.output]
+price = 0.08

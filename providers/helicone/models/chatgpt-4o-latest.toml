@@ -1,24 +1,27 @@
+schema = 2
 name = "OpenAI ChatGPT-4o"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
-release_date = "2024-08-14"
-last_updated = "2024-08-14"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-08"
 open_weights = false
-
-[cost]
-input = 5
-output = 20
-cache_read = 2.5
-
-[limit]
-context = 128000
-output = 16384
+knowledge = "2024-08"
+release_date = "2024-08-14"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 128_000
+output = 16_384
+
+[cost.text.input]
+price = 5
+cache = { read = 2.5 }
+
+[cost.text.output]
+price = 20

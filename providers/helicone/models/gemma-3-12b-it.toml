@@ -1,23 +1,26 @@
+schema = 2
 name = "Google Gemma 3 12B"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 family = "gemma"
-release_date = "2024-12-01"
-last_updated = "2024-12-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-knowledge = "2024-12"
 open_weights = false
-
-[cost]
-input = 0.049999999999999996
-output = 0.09999999999999999
-
-[limit]
-context = 131072
-output = 8192
+knowledge = "2024-12"
+release_date = "2024-12-01"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[cost.text.input]
+price = 0.049999999999999996
+
+[cost.text.output]
+price = 0.09999999999999999

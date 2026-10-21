@@ -1,25 +1,27 @@
+schema = 2
 name = "Anthropic: Claude 4.5 Haiku"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
 family = "claude-haiku"
-release_date = "2025-10-01"
-last_updated = "2025-10-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-10"
 open_weights = false
-
-[cost]
-input = 1
-output = 5
-cache_read = 0.09999999999999999
-cache_write = 1.25
-
-[limit]
-context = 200000
-output = 8192
+knowledge = "2025-10"
+release_date = "2025-10-01"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 200_000
+output = 8_192
+
+[cost.text.input]
+price = 1
+cache = { read = 0.09999999999999999, write = 1.25 }
+
+[cost.text.output]
+price = 5
