@@ -1,5 +1,12 @@
-# Chat `reasoning_effort = low|medium|high`; `medium` is the default.
-# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
+# Models, inputs and lifecycle (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Reasoning (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Chat `reasoning_effort` = low|medium|high; `medium` is the default, `minimal` maps to `low`, `xhigh`/`max` map to `high`, and `none` is treated as unset.
+# Pricing (accessed 2026-10-20): DBU rates from https://www.databricks.com/product/pricing/foundation-model-serving x USD 0.070/DBU (`foundation_model_apis` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json, AWS US East (N. Virginia); other regions are USD 0.070-0.112/DBU, not modeled). Pay-per-token is 2.143/8.571 DBU per 1M input/output tokens.
+# Provisioned throughput and batch inference (per DBU-hour) are not modeled.
+# Output limit: 25,000 tokens (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/limits, "Maximum output tokens for open models").
+# description: kept from the earlier file so v1 doesn't change.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
@@ -7,9 +14,13 @@ description = "Open-weight GPT model for self-hosted reasoning and instruction-f
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+system_updates = false
+
+[limit]
+output = 25_000
 
 [cost.text.input]
-price = 0.072
+price = 0.15
 
 [cost.text.output]
-price = 0.28
+price = 0.6

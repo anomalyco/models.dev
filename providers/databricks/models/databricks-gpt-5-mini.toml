@@ -1,11 +1,28 @@
-# Chat `reasoning_effort = minimal|low|medium|high`; Responses uses `reasoning.effort`.
-# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
+# Models, inputs and lifecycle (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Reasoning (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Chat `reasoning_effort` / Responses `reasoning.effort` = minimal|low|medium|high; `minimal` is the default. Values outside the docs are kept from the earlier file and untested.
+# Pricing (accessed 2026-10-20): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google and OpenAI on AWS Premium/Enterprise, every region).
+# The pricing page marks this model with a 10% DBU uplift when regional processing (data residency) is enabled: the 1.1x multiplier when region is not global.
+# Priority: request `service_tier = "priority"` (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/priority-mode); priority DBU rates are 1.8x standard.
+# Batch inference is billed per DBU-hour, not per token; not modeled.
+# Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
+# Images: JPEG, PNG, WebP, non-animated GIF, up to 500 per request (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-vision-models); formats match the lab.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# store = false: "Stored responses is not supported" (Responses API reference above).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
 schema = 2
 base_model = "openai/gpt-5-mini"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+system_updates = false
+store = false
+cache = { supported = true, implicit = true }
+service_tier = ["priority"]
+
+[limit]
+image = { max_per_request = 500 }
 
 [cost.text.input]
 price = 0.25
@@ -13,3 +30,15 @@ cache = { read = 0.025 }
 
 [cost.text.output]
 price = 2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.8
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }

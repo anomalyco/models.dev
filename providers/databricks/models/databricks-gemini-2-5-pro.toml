@@ -1,12 +1,20 @@
-# Chat uses `thinking.budget_tokens` 128..32768; reasoning cannot be disabled;
-# native Gemini -1 requests dynamic thinking but is not a numeric budget.
-# https://ai.google.dev/gemini-api/docs/thinking (accessed 2026-06-25)
+# Models, inputs and lifecycle (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Deprecated: Gemini 2.5 Pro provisioned throughput retired 2026-10-02 and supported-models no longer lists a pay-per-token endpoint (retired-models-policy).
+# Reasoning (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Budget: Chat `thinking.budget_tokens` 128..32768; reasoning cannot be disabled, and native Gemini -1 (dynamic) is a sentinel, not a budget (https://ai.google.dev/gemini-api/docs/thinking).
+# Prices are the last published rates; the current pricing page no longer lists this model.
+# Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
 schema = 2
 base_model = "google/gemini-2.5-pro"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
 structured_output = true
+system_updates = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 1.25
