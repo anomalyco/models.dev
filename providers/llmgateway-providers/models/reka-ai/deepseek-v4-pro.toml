@@ -1,19 +1,21 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-structured_output = true
 name = "DeepSeek V4 Pro (reka-ai)"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 1.2
-output = 3.3
-cache_read = 0.13
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 3.3

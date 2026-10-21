@@ -1,11 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen3.5-9b"
 name = "Qwen3.5 9B (DeepInfra)"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.1
-output = 0.15
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.15

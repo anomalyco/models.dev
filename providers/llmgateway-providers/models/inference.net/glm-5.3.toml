@@ -1,15 +1,17 @@
+schema = 2
 base_model = "zhipuai/glm-5.3"
-structured_output = true
 name = "GLM-5.3 (Inference.net)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.9
-output = 3
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3

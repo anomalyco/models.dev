@@ -1,7 +1,12 @@
+schema = 2
 base_model = "alibaba/qwen3-max"
 name = "Qwen3 Max (NovitaAI)"
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 0.845
-output = 3.38
+[cost.text.input]
+price = 0.845
+
+[cost.text.output]
+price = 3.38

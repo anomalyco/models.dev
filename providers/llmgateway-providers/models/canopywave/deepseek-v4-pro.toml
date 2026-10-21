@@ -1,18 +1,20 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro (CanopyWave)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.01
 
 [limit]
 output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 3.48

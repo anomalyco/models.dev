@@ -1,28 +1,27 @@
+schema = 2
 name = "DeepSeek V4.1 Flash 1017 (Inference.net)"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 family = "deepseek"
-release_date = "2026-10-17"
-last_updated = "2026-10-17"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-10-17"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 1
-cache_read = 0.007
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1

@@ -1,7 +1,12 @@
+schema = 2
 base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 name = "Qwen3 VL 235B A22B Instruct (NovitaAI)"
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 0.3
-output = 1.5
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.5

@@ -1,23 +1,26 @@
+schema = 2
 name = "Llama 3.2 11B Instruct (Inference.net)"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
-release_date = "2024-09-25"
-last_updated = "2024-09-25"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2024-09-25"
 
-[cost]
-input = 0.07
-output = 0.33
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.33

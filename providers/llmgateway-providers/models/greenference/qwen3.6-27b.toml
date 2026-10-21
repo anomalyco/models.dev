@@ -1,16 +1,21 @@
+schema = 2
 base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6 27B (greenference)"
-attachment = false
-reasoning = false
-structured_output = true
 
-[cost]
-input = 0.15
-output = 1.35
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 16_384
 output = 8_192
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.35

@@ -1,12 +1,17 @@
+schema = 2
 base_model = "meta/llama-4-maverick-17b-instruct"
 name = "Llama 4 Maverick 17B Instruct (AWS Bedrock)"
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.24
-output = 0.97
+[capabilities]
+tools = { supported = false }
+structured_output = false
 
 [limit]
 context = 8_192
 output = 2_048
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0.97

@@ -1,7 +1,12 @@
+schema = 2
 base_model = "openai/gpt-4"
 name = "GPT-4 (OpenAI)"
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 30
-output = 60
+[cost.text.input]
+price = 30
+
+[cost.text.output]
+price = 60

@@ -1,24 +1,27 @@
+schema = 2
 name = "Nemotron 3 Ultra 550B (DeepInfra)"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 family = "nemotron"
-release_date = "2026-06-01"
-last_updated = "2026-06-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-06-01"
 
-[cost]
-input = 0.5
-output = 2.2
-cache_read = 0.1
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.2

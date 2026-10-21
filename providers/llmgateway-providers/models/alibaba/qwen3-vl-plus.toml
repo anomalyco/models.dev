@@ -1,11 +1,15 @@
+schema = 2
 base_model = "alibaba/qwen3-vl-plus"
 name = "Qwen3 VL Plus (Alibaba Cloud)"
-reasoning = false
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = false
 
-[cost]
-input = 0.2
-output = 1.6
-cache_read = 0.04
-cache_write = 0.25
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04, write = 0.25 }
+
+[cost.text.output]
+price = 1.6

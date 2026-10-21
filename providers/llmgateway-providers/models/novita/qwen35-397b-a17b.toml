@@ -1,27 +1,26 @@
+schema = 2
 name = "Qwen3.5 397B A17B (NovitaAI)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "qwen3.5"
-release_date = "2026-02-16"
-last_updated = "2026-02-16"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-02-16"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.6
-output = 3.6
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+temperature = true
 
 [limit]
 context = 262_144
 output = 64_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3.6

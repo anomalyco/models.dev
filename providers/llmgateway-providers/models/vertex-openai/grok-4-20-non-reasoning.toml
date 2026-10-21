@@ -1,30 +1,36 @@
+schema = 2
 name = "Grok 4.20 Non-Reasoning (Vertex AI (OpenAI-compatible))"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 family = "grok"
-release_date = "2026-03-09"
-last_updated = "2026-03-09"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-03-09"
 
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2.5
-output = 5
-cache_read = 0.4
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 2_000_000
 output = 30_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5

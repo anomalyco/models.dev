@@ -1,15 +1,17 @@
+schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (SCX.ai)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.924
-output = 2.904
-cache_read = 0.1716
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 0.924
+cache = { read = 0.1716 }
+
+[cost.text.output]
+price = 2.904

@@ -1,11 +1,16 @@
+schema = 2
 base_model = "mistral/mistral-small-2603"
 name = "Mistral Small 4 (Mistral AI)"
-reasoning = false
-structured_output = true
 
-[cost]
-input = 0.15
-output = 0.6
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

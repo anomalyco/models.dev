@@ -2,30 +2,30 @@
 # value (or omitting the field) leaves it on. The gateway maps it to the
 # deployment's thinking switch.
 # https://docs.llmgateway.io/features/reasoning
+schema = 2
 name = "GLM-4.5 X (Z AI)"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
-release_date = "2025-07-28"
-last_updated = "2025-07-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-07-28"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 2.2
-output = 8.9
-cache_read = 0.45
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = false
+temperature = true
 
 [limit]
 context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 2.2
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 8.9
