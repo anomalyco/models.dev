@@ -346,10 +346,11 @@ export function sameV1Model(a: Record<string, any>, b: Record<string, any>) {
 export function normalizeV1(model: Record<string, any>) {
   const { id: _id, ...copy } = structuredClone(model) as Doc;
   for (const tier of copy.cost?.tiers ?? []) tier.tier = { type: "context", ...tier.tier };
+  // v2 files don't keep the order of reasoning options.
   if (copy.reasoning_options !== undefined) {
-    copy.reasoning_options = copy.reasoning_options.map((option: unknown) =>
-      ReasoningOption.parse(option),
-    );
+    copy.reasoning_options = copy.reasoning_options
+      .map((option: unknown) => ReasoningOption.parse(option))
+      .sort((a: { type: string }, b: { type: string }) => a.type.localeCompare(b.type));
   }
   return copy;
 }
