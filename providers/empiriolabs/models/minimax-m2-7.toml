@@ -1,3 +1,9 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/minimax-m2-7.md
+# Cache: model page prices an "Implicit cache read" row.
+# Deprecated: catalog deprecated = true, deprecation_date = 2026-11-17.
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/minimax-m2-7:generateContent
 schema = 2
 base_model = "minimax/MiniMax-M2.7"
 name = "MiniMax M2.7"
@@ -6,7 +12,7 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true }
 structured_output = false
-cache = { supported = true }
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 200_000

@@ -1,3 +1,9 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/fugu-ultra-v1-1.md
+# Effort: reasoning_effort = high|xhigh|max
+# Cache: model page prices an "Implicit cache read" row.
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/fugu-ultra-v1-1:generateContent
 schema = 2
 base_model = "sakana/fugu-ultra"
 name = "Fugu Ultra v1.1"
@@ -5,7 +11,7 @@ name = "Fugu Ultra v1.1"
 [capabilities]
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
-cache = { supported = true }
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 131_072

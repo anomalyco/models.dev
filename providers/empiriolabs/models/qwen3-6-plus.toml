@@ -1,3 +1,8 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/qwen3-6-plus.md
+# Toggle: enable_thinking = true|false
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/qwen3-6-plus:generateContent
 schema = 2
 base_model = "alibaba/qwen3.6-plus"
 
