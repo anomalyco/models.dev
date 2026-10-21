@@ -1,29 +1,31 @@
-name = "Mercury 2"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 # Model exception (accessed 2026-06-25): `reasoning_effort = "instant"` is also
 # accepted for near-realtime responses, but it is not a models.dev effort enum.
 # https://docs.inceptionlabs.ai/capabilities/instant
+schema = 2
+name = "Mercury 2"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "mercury"
-release_date = "2026-02-24"
-last_updated = "2026-02-24"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-knowledge = "2025-01-01"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2025-01-01"
+release_date = "2026-02-24"
 
-[cost]
-input = 0.25
-output = 0.75
-cache_read = 0.025
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 50_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.75

@@ -2,17 +2,22 @@
 # image, and audio inputs.
 # https://modal.com/blog/inkling-by-thinking-machines-labs-now-available-on-modal
 # https://modal.com/docs/guide/endpoints
+schema = 2
 base_model = "thinkingmachines/inkling"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = false
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.2
-output = 5
-cache_read = 0.27
 
 [limit]
 output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.27 }
+
+[cost.text.output]
+price = 5

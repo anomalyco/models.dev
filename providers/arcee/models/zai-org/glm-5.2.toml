@@ -1,18 +1,23 @@
 # Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
 # Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
 # Effort: reasoning_effort = high|max
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 status = "beta"
-reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.40
-output = 4.40
-cache_read = 0.26
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
 context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

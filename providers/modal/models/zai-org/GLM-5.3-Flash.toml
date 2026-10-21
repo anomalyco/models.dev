@@ -5,21 +5,24 @@
 # Effort: reasoning_effort = low|high|max; defaults to max.
 # https://modal.com/library/zai/glm-5-3-flash
 # https://huggingface.co/zai-org/GLM-5.3-Flash
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 name = "GLM 5.3 Flash"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.45
-output = 1.5
-cache_read = 0.09
 
 [modalities]
 input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.09 }
+
+[cost.text.output]
+price = 1.5

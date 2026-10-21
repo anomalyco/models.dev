@@ -2,18 +2,23 @@
 # Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
 # No toggle: thinking.type=enabled|disabled is rejected by the live API.
 # Effort: reasoning_effort = high|max
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-structured_output = true
 status = "beta"
-reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.20
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
 context = 512_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.48

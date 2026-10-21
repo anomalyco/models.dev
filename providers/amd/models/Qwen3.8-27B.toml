@@ -6,29 +6,31 @@
 # xhigh (default) | medium | low and rejects "high" with 400. Usable
 # end-to-end values are therefore low and medium. With reasoning_effort
 # omitted the model thinks anyway (backend default tier).
-base_model = "alibaba/qwen3.8-27b"
-
 # AMD hosts a text-only deployment of this model: an image content part is
 # refused with 400 "does not support image input", so the multimodal base
 # entry (text + image + video) is narrowed here.
-attachment = false
-structured_output = true
-
-reasoning_options = [
-  { type = "effort", values = ["low", "medium"] },
-]
-
 # Thinking is returned on choices[0].message.reasoning, a non-content field.
 # The schema's interleaved field enum only covers reasoning_content /
 # reasoning_details, so it is set bare.
-interleaved = true
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium"] }
+structured_output = true
 
 [limit]
 context = 131_072
 
-[modalities]
-input = ["text"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

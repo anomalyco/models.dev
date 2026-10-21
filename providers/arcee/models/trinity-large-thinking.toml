@@ -1,17 +1,22 @@
 # Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
 # Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
 # A live reasoning_effort request is rejected; reasoning is always on.
+schema = 2
 base_model = "arcee-ai/trinity-large-thinking"
 status = "beta"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.25
-output = 0.80
-cache_read = 0.06
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.8

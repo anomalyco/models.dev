@@ -1,14 +1,17 @@
+# API: {"chat_template_kwargs": {"enable_thinking": false}}
+schema = 2
 base_model = "poolside/laguna-xs-2.1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = false
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
 
-[cost]
-input = 0.0
-output = 0.0
-cache_read = 0.0
-cache_write = 0.0
+[cost.text.output]
+price = 0

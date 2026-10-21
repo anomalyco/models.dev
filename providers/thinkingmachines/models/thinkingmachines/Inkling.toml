@@ -3,18 +3,23 @@
 # - Pricing and served context: https://tinker-docs.thinkingmachines.ai/tinker/models/
 # API: {"output_config":{"effort":"low"|"medium"|"high"|"xhigh"|"max"}}
 # Disable reasoning with {"thinking":{"type":"disabled"}}.
+schema = 2
 base_model = "thinkingmachines/inkling"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 1.87
-output = 4.68
-cache_read = 0.374
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.87
+cache = { read = 0.374 }
+
+[cost.text.output]
+price = 4.68

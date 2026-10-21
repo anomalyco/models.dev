@@ -1,11 +1,16 @@
 # API: {"thinking": {"type": "enabled"}} / {"thinking": {"type": "disabled"}}
+schema = 2
 base_model = "meituan/longcat-2.0"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.75
-output = 2.95
-cache_read = 0.015
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 2.95

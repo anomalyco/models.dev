@@ -6,17 +6,19 @@
 # 503 no_available_workers. The enum below is taken from the sibling
 # DeepSeek-V4-Flash deployment on the same host, which was verified live on
 # 2026-08 as none|minimal|low|medium|high|xhigh|max with no reasoning_content.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-
-reasoning_options = [
-  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
-]
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28
