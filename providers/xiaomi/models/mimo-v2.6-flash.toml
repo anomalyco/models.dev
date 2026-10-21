@@ -1,24 +1,10 @@
 # Toggle: thinking.type = enabled|disabled
 # Sources: https://mimo.mi.com/models/zh-CN/mimo-v2.6-flash and https://mimo.mi.com/docs/zh-CN/api/chat/openai-api
 schema = 2
-name = "MiMo-V2.6-Flash"
-description = "MiMo Flash model for multimodal coding agents and long-context automation"
-family = "mimo"
-open_weights = true
-release_date = "2026-09-22"
-
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
+base_model = "xiaomi/mimo-v2.6-flash"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

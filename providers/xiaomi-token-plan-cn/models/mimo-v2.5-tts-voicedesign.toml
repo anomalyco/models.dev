@@ -1,21 +1,5 @@
 schema = 2
-name = "MiMo-V2.5-TTS-VoiceDesign"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "mimo"
-open_weights = true
-release_date = "2026-04-22"
-
-[modalities]
-input = ["text"]
-output = ["audio"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-
-[limit]
-context = 8_192
-output = 8_192
+base_model = "xiaomi/mimo-v2.5-tts-voicedesign"
 
 [cost.text.input]
 price = 0

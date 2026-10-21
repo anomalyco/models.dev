@@ -1,25 +1,10 @@
 schema = 2
-name = "MiMo-V2-Omni"
+base_model = "xiaomi/mimo-v2-omni"
 description = "Legacy model retained for compatibility with older integrations"
-family = "mimo"
-open_weights = false
-knowledge = "2024-12"
-release_date = "2026-03-18"
-last_updated = "2026-06-24"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image", "audio", "video", "application/pdf"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
-
-[limit]
-context = 262_144
-output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
