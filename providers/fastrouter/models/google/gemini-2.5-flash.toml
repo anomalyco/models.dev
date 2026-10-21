@@ -3,6 +3,7 @@
 # Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices.
 # Not represented: cache storage $1.0/MTok per hour isn't representable.
 # Not represented: web search $35 per 1K requests (no v2 per-request field).
+# Reasoning: the catalog lists no reasoning parameter for this route; the control set is unchanged from v1 (not re-tested, no API key).
 schema = 2
 base_model = "google/gemini-2.5-flash"
 

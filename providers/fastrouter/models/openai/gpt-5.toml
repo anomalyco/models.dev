@@ -1,12 +1,12 @@
 # Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
 # knowledge is the v1 host value (unsourced), kept as an override.
+# temperature inherits the lab (false): the catalog lists no temperature parameter for this route.
 schema = 2
 base_model = "openai/gpt-5"
 knowledge = "2024-10-01"
 
 [capabilities]
 reasoning = { supported = true }
-temperature = true
 
 [cost.text.input]
 price = 1.25

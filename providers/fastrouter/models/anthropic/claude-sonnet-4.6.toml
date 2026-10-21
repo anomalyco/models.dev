@@ -1,5 +1,6 @@
 # Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
 # Not represented: web search $0.01 per request (no v2 per-request field).
+# Reasoning: the catalog lists `reasoning` in supported_parameters; the control set is unchanged from v1 (not re-tested, no API key).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
