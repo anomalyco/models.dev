@@ -1,20 +1,11 @@
 schema = 2
+base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-open_weights = true
-release_date = "2026-04-08"
-last_updated = "2026-06-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 
 [limit]
 context = 202_000
