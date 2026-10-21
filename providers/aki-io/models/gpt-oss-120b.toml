@@ -1,4 +1,6 @@
 # attachment are not supported on AKI.IO for security reasons and therefore are disabled
+# Prices: https://aki.io/#pricing lists EUR per 1M tokens (net); converted to USD at the ECB
+# reference rate of 1.1215 USD/EUR (2026-10-20). They were stored as unconverted EUR values.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
@@ -11,7 +13,7 @@ context = 128_000
 output = 32_768
 
 [cost.text.input]
-price = 0.15
+price = 0.168225
 
 [cost.text.output]
-price = 0.55
+price = 0.616825
