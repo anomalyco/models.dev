@@ -10,10 +10,15 @@
 # Reasoning: this route (Bedrock) takes no reasoning parameter; every reasoning_effort value sent on
 # 2026-10-12 was disclosed as unsupported_on_this_path and the request served without it, so there is
 # no caller control (https://lowrouter.ai/docs/guides/request-parameters).
+schema = 2
 base_model = "openai/gpt-oss-safeguard-20b"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.08
-output = 0.24
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.24

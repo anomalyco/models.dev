@@ -7,18 +7,20 @@
 # providers/mistral for this model.
 # Limit: Mistral rejects prompts above 524288 tokens on this model, as
 # recorded in providers/mistral/models/mistral-large-4.toml.
+schema = 2
 base_model = "mistral/mistral-large-4"
-structured_output = true
 status = "beta"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.7112
-output = 2.1859
-cache_read = 0.0732
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 context = 524_288
+
+[cost.text.input]
+price = 0.7112
+cache = { read = 0.0732 }
+
+[cost.text.output]
+price = 2.1859
