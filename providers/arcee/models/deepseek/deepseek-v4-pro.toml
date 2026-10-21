@@ -2,9 +2,17 @@
 # Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
 # No toggle: thinking.type=enabled|disabled is rejected by the live API.
 # Effort: reasoning_effort = high|max
+# Arcee pricing page (accessed 2026-10-21; "pricing information for all models on Arcee Platform", USD per MTok,
+#   input / output / cached input): https://docs.arcee.ai/get-started/pricing.md
+# APIs on this host: OpenAI Chat Completions (https://api.arcee.ai/api/v1/chat/completions) and /api/v1/models. Reasoning
+#   is returned in reasoning_content, which the API also accepts back on assistant messages
+#   (https://docs.arcee.ai/capabilities/reasoning-traces.md).
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+# Deprecated: listed in the beta launch post (as DeepSeek-V4-Pro (Preview)) but no longer on the pricing page that
+#   lists every Arcee Platform model; the page lists deepseek/deepseek-v4-pro-0813 instead.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-status = "beta"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["high", "max"] }
