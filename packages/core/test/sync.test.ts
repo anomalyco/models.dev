@@ -3695,6 +3695,16 @@ test("DeepInfra base_model entries carry no model facts", () => {
   }
 });
 
+test("DeepInfra keeps an authored knowledge override on base_model entries", () => {
+  const model = buildDeepInfraModel(
+    deepInfraModel("zai-org/GLM-5", ["reasoning"]),
+    { base_model: "zhipuai/glm-5", knowledge: "2025-12" },
+    "zhipuai/glm-5",
+    { base_model: "zhipuai/glm-5", knowledge: "2025-12" },
+  );
+  expect(model).toMatchObject({ knowledge: "2025-12" });
+});
+
 test("DeepInfra writes service tiers, prompt caching and retention prices as v2 data", () => {
   const model: DeepInfraModel = {
     ...deepInfraModel("zai-org/GLM-5.2", []),

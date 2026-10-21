@@ -106,7 +106,7 @@ export const deepinfra = {
     // existing entries are kept and marked instead.
     if (existing === undefined && isDeprecated(model)) return undefined;
 
-    const built = buildDeepInfraModel(model, existing, baseModel);
+    const built = buildDeepInfraModel(model, existing, baseModel, context.authored(id));
     return {
       id,
       model: built,
@@ -339,6 +339,7 @@ export function buildDeepInfraModel(
   model: DeepInfraModel,
   existing: ExistingModel | undefined,
   baseModel = existing === undefined ? resolveDeepInfraBaseModel(model.model_name) : existing.base_model,
+  authored?: ExistingModel,
 ): SyncedModel {
   const tags = new Set(model.tags ?? []);
 
@@ -421,7 +422,9 @@ export function buildDeepInfraModel(
     temperature: existing?.temperature,
     tool_call: toolCall,
     structured_output: structuredOutput,
-    knowledge: facts?.knowledge,
+    // A base_model file may keep its own knowledge cutoff (e.g. an unsourced
+    // host value where the lab states none); the sync never adds one.
+    knowledge: baseModel === undefined ? existing?.knowledge : authored?.knowledge,
     // open_weights is a model-intrinsic fact: always inherit it from `models/`
     // for base_model entries (so proprietary passthrough models like Claude keep
     // open_weights=false), and only carry it on standalone full definitions.

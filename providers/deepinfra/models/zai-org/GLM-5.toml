@@ -1,8 +1,10 @@
 # Lab identity: https://deepinfra.com/zai-org/GLM-5 (Hugging Face repo zai-org/GLM-5)
 # Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# knowledge: the host's value, unsourced; the lab's model card and docs state no cutoff. Kept so v1 doesn't lose it.
 schema = 2
 base_model = "zhipuai/glm-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+knowledge = "2025-12"
 status = "deprecated"
 
 [capabilities]
