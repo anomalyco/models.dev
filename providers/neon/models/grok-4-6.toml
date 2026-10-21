@@ -8,21 +8,23 @@
 # Cost: https://neon.com/models.json grok-4-6 (USD / 1M tokens).
 # Lab output is 500_000. The gateway names 524_288:
 # 'max_tokens' (100000000) exceeds model maximum (524288). Measured 2026-09-04.
+schema = 2
 base_model = "xai/grok-4.6"
-structured_output = true
-reasoning_options = [
-  { type = "effort", values = ["low", "medium", "high", "xhigh"] },
-]
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
 
 [limit]
 output = 524_288
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
-shape = "responses"
+[api.responses]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 6
