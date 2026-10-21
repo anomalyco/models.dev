@@ -1,21 +1,10 @@
+# Prices: https://submodel.gitbook.io/docs/instagen/overview-1/available-models (USD per 1M tokens, checked 2026-10-21).
 schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B A22B Instruct 2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = true
-release_date = "2025-08-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 262_144
 output = 131_072
 
 [cost.text.input]

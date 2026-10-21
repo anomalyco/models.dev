@@ -1,25 +1,17 @@
+# Prices: https://submodel.gitbook.io/docs/instagen/overview-1/available-models (USD per 1M tokens, checked 2026-10-21).
 schema = 2
-name = "DeepSeek R1 0528"
+base_model = "deepseek/deepseek-r1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek-thinking"
-open_weights = false
-release_date = "2025-08-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
 context = 75_000
 output = 163_840
 
 [cost.text.input]
-price = 0.5
+price = 0.2
 
 [cost.text.output]
-price = 2.15
+price = 0.8
