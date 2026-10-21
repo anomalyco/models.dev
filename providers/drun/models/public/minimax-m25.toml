@@ -1,22 +1,10 @@
 schema = 2
+base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-open_weights = false
-release_date = "2025-03-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 204_800
-output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_details" }

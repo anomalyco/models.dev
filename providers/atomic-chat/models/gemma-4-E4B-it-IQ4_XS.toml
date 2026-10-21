@@ -1,9 +1,6 @@
 schema = 2
+base_model = "google/gemma-4-E4B-it"
 name = "Gemma 4 E4B Instruct (IQ4_XS)"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-open_weights = true
-release_date = "2026-04-02"
 
 [modalities]
 input = ["text"]
@@ -12,11 +9,9 @@ output = ["text"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 32_768
-output = 8_192
 
 [cost.text.input]
 price = 0

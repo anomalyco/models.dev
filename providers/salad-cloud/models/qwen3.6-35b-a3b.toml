@@ -7,7 +7,7 @@ base_model = "alibaba/qwen3.6-35b-a3b"
 description = "Qwen MoE for agentic tasks, complex reasoning, code generation, and instruction following"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

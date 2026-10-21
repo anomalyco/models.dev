@@ -2,24 +2,11 @@
 # this provider's configured /v1 Chat Completions surface; no budget is listed.
 # https://lmstudio.ai/docs/developer/openai-compat/responses (accessed 2026-06-25)
 schema = 2
-name = "GPT OSS 20B"
+base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-open_weights = true
-release_date = "2025-08-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-temperature = true
-
-[limit]
-context = 131_072
-output = 32_768
 
 [cost.text.input]
 price = 0

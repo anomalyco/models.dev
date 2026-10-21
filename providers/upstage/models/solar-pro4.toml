@@ -1,24 +1,9 @@
 schema = 2
-name = "Solar Pro 4"
-description = "Upstage's flagship model, specialized for agentic use"
-family = "solar-pro"
-open_weights = false
-knowledge = "2026-02"
-release_date = "2026-08-06"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "upstage/solar-pro4"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 524_288
-output = 131_072
 
 [cost.text.input]
 price = 0.3

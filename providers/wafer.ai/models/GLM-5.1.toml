@@ -1,25 +1,15 @@
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
-name = "GLM-5.1"
+base_model = "zhipuai/glm-5.1"
 description = "General Language Model 5.1 — high-quality bilingual (EN/ZH) generation with strong coding and reasoning capabilities."
-family = "glm"
-open_weights = true
 knowledge = "2025-04"
-release_date = "2026-04-07"
-last_updated = "2026-06-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 
 [limit]
 context = 202_752
-output = 131_072
 
 [cost.text.input]
 price = 1

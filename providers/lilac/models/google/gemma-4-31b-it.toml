@@ -1,12 +1,13 @@
 # $.chat_template_kwargs.enable_thinking = true|false; default false. The
 # template ignores $.chat_template_kwargs.thinking when sent alone.
 # https://docs.getlilac.com/inference/chat-completions#reasoning (accessed 2026-06-25)
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
 base_model = "google/gemma-4-31b-it"
 knowledge = "2025-01"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video"]
 output = ["text"]
 
 [capabilities]

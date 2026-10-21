@@ -13,7 +13,7 @@ base_model = "alibaba/qwen3.8-27b"
 description = "Dense 27B vision-language model for coding, agent tasks, and image understanding"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

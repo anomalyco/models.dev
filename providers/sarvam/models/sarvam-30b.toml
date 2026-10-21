@@ -1,19 +1,9 @@
 schema = 2
+base_model = "sarvam/sarvam-30b"
 name = "Sarvam-30B"
-description = "Efficient Indian-language reasoning model for chat, coding, and multilingual work"
-family = "sarvam"
-open_weights = true
-release_date = "2026-02-18"
-last_updated = "2026-03-06"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["default", "low", "medium", "high"] }
-temperature = true
 
 [limit]
 context = 65_536
