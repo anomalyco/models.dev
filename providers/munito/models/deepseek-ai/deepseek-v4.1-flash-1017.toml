@@ -1,7 +1,5 @@
 # Source: https://api.munito.ai/inference/v1/models/openrouter (public), standard tier on the global host.
-# Limits: Munito serves this checkpoint with a 262,144-token window, so the feed gives
-# max_context_length 262144 and max_length 235929 (max_tokens.max 235929) for this ID.
-# On 2026-10-21 a 270,000-token prompt got HTTP 400 "maximum context length is 262144 tokens".
+# Limits: the feed gives max_context_length 1048576 and max_length 943718 (max_tokens.max 943718) for this ID.
 # Input: text only. On 2026-10-21 an image part got HTTP 400 "'image' is not supported".
 # Toggle: chat_template_kwargs.enable_thinking = true|false (the only switch that the feed lists for this ID)
 # Effort: reasoning_effort = low|high|max
@@ -25,8 +23,8 @@ output = 1.2
 cache_read = 0.006
 
 [limit]
-context = 262_144
-output = 235_929
+context = 1_048_576
+output = 943_718
 
 [modalities]
 input = ["text"]
