@@ -1,5 +1,6 @@
 # Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
 # Standalone: no lab file. xAI no longer documents grok-4-0709 (https://docs.x.ai/docs/models/grok-4-0709 now shows the model list), so a lab's output limit and knowledge can't be sourced.
+# Limit: the catalog's max_output_tokens equals context_size (256000), a placeholder; the output limit is the file's previous 8192.
 schema = 2
 name = "grok-4-0709"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -19,7 +20,7 @@ temperature = true
 
 [limit]
 context = 256_000
-output = 256_000
+output = 8_192
 
 [cost.text.input]
 price = 2.85

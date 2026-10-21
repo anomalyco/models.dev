@@ -1,5 +1,6 @@
 # Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
 # Modalities: the catalog lists image input, which the model doesn't accept (lab); inherited from the lab.
+# Limit: the catalog's max_output_tokens equals context_size (256000), a placeholder; the output limit is the lab's 10000.
 # Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 # Reasoning: no caller control documented. The chat reference lists enable_thinking only for zai-org/glm-4.5 and separate_reasoning only for deepseek-r1-turbo (https://docs.jiekou.ai/docs/models/reference-llm-create-chat-completion).
 schema = 2
@@ -10,9 +11,6 @@ name = "grok-code-fast-1"
 reasoning = { supported = true }
 cache = { supported = true, implicit = true }
 structured_output = true
-
-[limit]
-output = 256_000
 
 [cost.text.input]
 price = 0.19

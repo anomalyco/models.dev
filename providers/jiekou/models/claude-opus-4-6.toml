@@ -1,5 +1,5 @@
 # Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
-# Tiered billing: tiered_billing_configs (tier prices are list prices; the top-level discounted price is not applied to tiered models).
+# Tiered billing: tiered_billing_configs (tier prices are list prices; the top-level discounted price is not applied to tiered models). Both tiers (<=200K and >200K) have the same prices, so there's no override.
 # Cache: explicit cache_control {"type":"ephemeral"} on chat/completions and /anthropic/v1/messages; minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 # Budget: thinking.type = "enabled" + thinking.budget_tokens on /anthropic/v1/messages, the only route with thinking control (https://docs.jiekou.ai/docs/providers/anthropic); minimum 1024, as providers/anthropic.
 # Effort: output_config.effort on the same native route, as providers/anthropic.
