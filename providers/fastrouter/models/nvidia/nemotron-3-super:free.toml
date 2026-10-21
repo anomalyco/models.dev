@@ -1,5 +1,8 @@
-# Toggle: reasoning true|false
-# FastRouter lists reasoning only. No reasoning_effort or thinking_budget on nvidia/nemotron-3-super:free.
+# Toggle: reasoning.enabled = true|false
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning only (schema empty); no reasoning_effort,
+#   thinking or budget field. providers/openrouter nemotron-3-super-120b-a12b maps effort none|low|medium to
+#   NVIDIA's thinking budget on OpenRouter's own path; this route exposes only the on/off object.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 reasoning_options = [{ type = "toggle" }]
 

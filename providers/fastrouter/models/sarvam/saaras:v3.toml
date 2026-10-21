@@ -1,6 +1,9 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   pricing.audio_input 0.000088 is USD per second of audio = 0.00528 per minute.
+schema = 2
+v2_only = true
 base_model = "sarvam/saaras-v3"
 
-[cost]
-input = 0
-output = 0
-input_audio = 88
+[cost.audio.input]
+unit = "minute"
+price = 0.00528

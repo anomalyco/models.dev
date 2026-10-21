@@ -1,10 +1,16 @@
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
+# Toggle: thinking = true|false
+# Effort: reasoning_effort = low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_params_details.thinking is a bool enum [true, false] and
+#   supported_params_details.reasoning_effort enum is exactly low|medium|high. That is this route's published
+#   control set; DeepSeek's own API takes low|high|max and maps medium to high (providers/deepseek
+#   deepseek-flash), and providers/openrouter deepseek-v4.1-flash is none|low|high|max. max is not in this
+#   route's enum, so it is not listed.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 # Limit: context_length 1048576, max_completion_tokens 943718
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
+  { type = "effort", values = ["low", "medium", "high"] },
 ]
 
 [cost]

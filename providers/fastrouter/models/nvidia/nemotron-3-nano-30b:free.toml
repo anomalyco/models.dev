@@ -1,4 +1,7 @@
-# Toggle: reasoning true|false
+# Toggle: reasoning.enabled = true|false
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning only (schema empty); no reasoning_effort,
+#   thinking or budget field. Peer providers/openrouter nemotron-3-nano-30b-a3b is toggle.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 reasoning_options = [{ type = "toggle" }]
 

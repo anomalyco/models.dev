@@ -1,9 +1,29 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   Token prices (prompt, completion, image, audio_input, audio_output, cache reads) are USD per token, shown per 1M.
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh, the lab set on providers/openai gpt-realtime-2.1;
+#   the live route lists reasoning and include_reasoning (schemas empty, no enum) and FastRouter sends
+#   reasoning_effort for OpenAI models (https://docs.fastrouter.ai/explore-features/reasoning-tokens, accessed 2026-10-21).
+# v2_only: realtime routes stay out of v1 per the v2 migration rule.
+schema = 2
+v2_only = true
 base_model = "openai/gpt-realtime-2.1"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
 
-[cost]
-input = 4
-output = 24
-cache_read = 0.4
-input_audio = 32
-output_audio = 64
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 24
+
+[cost.audio.input]
+price = 32
+cache = { read = 0.4 }
+
+[cost.audio.output]
+price = 64
+
+[cost.image.input]
+price = 5

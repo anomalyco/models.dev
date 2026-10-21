@@ -1,5 +1,11 @@
+# No caller reasoning control on this route (affirmative):
+#   FastRouter sends reasoning_effort only for Grok 4.5 and later; models not in its reasoning table have
+#   the reasoning parameter dropped rather than forwarded (https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)).
+#   xAI's reasoning guide documents reasoning_effort for grok-4.5, grok-4.6 and grok-4.7 only
+#   (https://docs.x.ai/developers/model-capabilities/text/reasoning, accessed 2026-10-21).
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and include_reasoning (schemas empty, no enum).
 base_model = "xai/grok-3-mini-beta"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = []
 
 [cost]
 input = 0.6

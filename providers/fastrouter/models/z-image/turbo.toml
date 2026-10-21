@@ -1,1 +1,9 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   pricing.image is USD per generated image.
+schema = 2
+v2_only = true
 base_model = "alibaba/z-image-turbo"
+
+[cost.image.output]
+unit = "image"
+price = 0.005

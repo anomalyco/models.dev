@@ -1,5 +1,9 @@
+# Toggle: reasoning.enabled = true|false
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and include_reasoning (schemas empty); no
+#   reasoning_effort or thinking field. Same shape as providers/fastrouter deepseek-v3.2 and
+#   providers/openrouter deepseek-v3.2 (toggle).
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 # Limit: context_length 163840
-# Toggle: reasoning true|false
 base_model = "deepseek/deepseek-v3.1"
 reasoning_options = [{ type = "toggle" }]
 

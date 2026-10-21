@@ -1,7 +1,10 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   pricing.audio_input 0.0000075 is USD per second of audio = 0.00045 per minute.
+# v2_only like providers/openrouter whisper-large-v3: transcription routes stay out of v1.
+schema = 2
+v2_only = true
 base_model = "openai/whisper-large-v3"
 
-[cost]
-input = 0
-output = 0
-input_audio = 7.5
-
+[cost.audio.input]
+unit = "minute"
+price = 0.00045

@@ -1,1 +1,9 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   pricing.videoCost default 0.3 per 3s clip = 0.1 per second (lowest listed length; other lengths, resolutions and tiers differ).
+schema = 2
+v2_only = true
 base_model = "kling/kling-video-o1"
+
+[cost.video.output]
+unit = "second"
+price = 0.1

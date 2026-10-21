@@ -1,1 +1,9 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   pricing.videoCost default 0.35 per 1s clip = 0.35 per second (lowest listed length; other lengths, resolutions and tiers differ).
+schema = 2
+v2_only = true
 base_model = "google/veo-2"
+
+[cost.video.output]
+unit = "second"
+price = 0.35

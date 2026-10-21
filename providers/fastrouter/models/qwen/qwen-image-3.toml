@@ -1,1 +1,9 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   pricing.imageCost per generated image by dimension (1k 0.03, 2k 0.03); the 1k price is listed. input 0.003 per reference image is not represented.
+schema = 2
+v2_only = true
 base_model = "alibaba/qwen-image-3.0"
+
+[cost.image.output]
+unit = "image"
+price = 0.03

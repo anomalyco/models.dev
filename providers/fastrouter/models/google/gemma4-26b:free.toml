@@ -1,4 +1,7 @@
-# Toggle: reasoning true|false
+# Toggle: reasoning.enabled = true|false
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning only (schema empty); no effort or budget.
+#   Peers: providers/fastrouter gemma-4-26b-a4b-it and providers/openrouter gemma-4-26b-a4b-it are toggle.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "google/gemma4-26b"
 reasoning_options = [{ type = "toggle" }]
 

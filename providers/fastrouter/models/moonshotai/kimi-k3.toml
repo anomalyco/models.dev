@@ -1,5 +1,9 @@
 # Effort: reasoning_effort = low|high|max
-# Kimi K3 has no on/off field. FastRouter publishes reasoning_effort with an empty schema.
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning_effort (schema empty) and no enable_thinking,
+#   thinking or reasoning object, so there is no on/off control on this route. Moonshot's own API always
+#   thinks with reasoning_effort low|high|max and no toggle (providers/moonshotai kimi-k3); the toggle on
+#   providers/alibaba kimi-k3 and the none level on providers/openrouter kimi-k3 are those hosts' fields.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 # Limit: max_completion_tokens 1048576
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]

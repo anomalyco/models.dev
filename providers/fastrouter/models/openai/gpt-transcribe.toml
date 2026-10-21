@@ -1,6 +1,9 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   pricing.audio_input 0.000075 is USD per second of audio = 0.0045 per minute.
+schema = 2
+v2_only = true
 base_model = "openai/gpt-transcribe"
 
-[cost]
-input = 0
-output = 0
-input_audio = 75
+[cost.audio.input]
+unit = "minute"
+price = 0.0045

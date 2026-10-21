@@ -1,8 +1,23 @@
+# Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
+#   Token prices (prompt, completion, audio_input, audio_output, cache reads) are USD per token, shown per 1M.
+#   pricing.image is USD per image-input token, shown per 1M.
+schema = 2
+v2_only = true
 base_model = "openai/gpt-realtime"
 
-[cost]
-input = 4
-output = 16
-cache_read = 0.4
-input_audio = 32
-output_audio = 64
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 16
+
+[cost.audio.input]
+price = 32
+cache = { read = 0.4 }
+
+[cost.audio.output]
+price = 64
+
+[cost.image.input]
+price = 5
