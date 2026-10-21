@@ -4,6 +4,7 @@ import { z } from "zod";
 import path from "node:path";
 import { readdir, mkdir, unlink, rmdir } from "node:fs/promises";
 import { ModelFamilyValues } from "../../../packages/core/src/family.js";
+import { formatModelV2, providerModelToV2 } from "../../../packages/core/src/model-file-v2.js";
 
 // Jiekou.AI API endpoint
 const API_ENDPOINT = "https://api.jiekou.ai/openai/models";
@@ -143,13 +144,6 @@ function inferFamily(modelId: string): string | undefined {
   return undefined;
 }
 
-function formatNumber(n: number): string {
-  if (n >= 1000) {
-    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "_");
-  }
-  return n.toString();
-}
-
 function getYearMonth(): string {
   const now = new Date();
   const year = now.getFullYear();
@@ -230,46 +224,9 @@ function processModel(apiModel: z.infer<typeof JiekouModel>): ProcessedModel {
   };
 }
 
+// New files are written in the v2 format (schema = 2), like the rest of the provider.
 function formatToml(model: ProcessedModel): string {
-  const lines: string[] = [];
-
-  // Basic fields
-  lines.push(`name = "${model.name.replace(/"/g, '\\"')}"`);
-  if (model.family) {
-    lines.push(`family = "${model.family}"`);
-  }
-  lines.push(`release_date = "${model.release_date}"`);
-  lines.push(`last_updated = "${model.last_updated}"`);
-  lines.push(`attachment = ${model.attachment}`);
-  lines.push(`reasoning = ${model.reasoning}`);
-  lines.push(`temperature = ${model.temperature}`);
-  lines.push(`tool_call = ${model.tool_call}`);
-  lines.push(`structured_output = ${model.structured_output}`);
-  lines.push(`open_weights = ${model.open_weights}`);
-
-  // Cost section
-  lines.push("");
-  lines.push(`[cost]`);
-  lines.push(`input = ${model.cost.input}`);
-  lines.push(`output = ${model.cost.output}`);
-
-  // Limit section
-  lines.push("");
-  lines.push(`[limit]`);
-  lines.push(`context = ${formatNumber(model.limit.context)}`);
-  lines.push(`output = ${formatNumber(model.limit.output)}`);
-
-  // Modalities section
-  lines.push("");
-  lines.push(`[modalities]`);
-  lines.push(
-    `input = [${model.modalities.input.map((m) => `"${m}"`).join(", ")}]`
-  );
-  lines.push(
-    `output = [${model.modalities.output.map((m) => `"${m}"`).join(", ")}]`
-  );
-
-  return lines.join("\n") + "\n";
+  return formatModelV2(providerModelToV2(model));
 }
 
 function getFilePath(
@@ -331,12 +288,6 @@ async function getAllExistingFiles(
   return files;
 }
 
-// Extract model name from TOML file content
-function extractModelName(content: string): string | null {
-  const match = content.match(/^name\s*=\s*"([^"]+)"/m);
-  return match ? match[1] ?? null : null;
-}
-
 // Delete existing TOML files that match SKIP_MODELS
 async function cleanupSkippedModels(
   modelsDir: string,
@@ -348,11 +299,10 @@ async function cleanupSkippedModels(
   for (const relativePath of existingFiles) {
     const filePath = path.join(modelsDir, relativePath);
     try {
-      const file = Bun.file(filePath);
-      const content = await file.text();
-      const modelName = extractModelName(content);
+      // The file path is the model ID; base_model files may not set `name`.
+      const modelId = relativePath.slice(0, -".toml".length);
 
-      if (modelName && shouldSkipModel(modelName)) {
+      if (shouldSkipModel(modelId)) {
         deleted++;
         if (dryRun) {
           console.log(`[DRY RUN] Would delete (matches SKIP_MODELS): ${relativePath}`);
