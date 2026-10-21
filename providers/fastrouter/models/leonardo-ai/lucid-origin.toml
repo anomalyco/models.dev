@@ -1,8 +1,10 @@
 # Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
 # Not represented: no price in the catalog (prompt and completion are 0).
 # Limits: context is the catalog's context_length (4096; max_completion_tokens 4096).
-# Formats left generic: neither FastRouter (https://docs.fastrouter.ai/api-reference/image/image-generation) nor
-# Leonardo (https://docs.leonardo.ai/docs/lucid-origin) documents input or output image formats.
+# Input: text only. FastRouter's catalog (https://go.fastrouter.ai/api/v1/models, 2026-10-21) lists
+# architecture.input_modalities = ["text"] (modality "text->image").
+# Output left generic: neither FastRouter (https://docs.fastrouter.ai/api-reference/image/image-generation) nor
+# Leonardo (https://docs.leonardo.ai/docs/lucid-origin) documents output image formats.
 schema = 2
 name = "Lucid Origin"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -11,7 +13,7 @@ open_weights = false
 release_date = "2025-06-01"
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
 output = ["image"]
 
 [capabilities]
