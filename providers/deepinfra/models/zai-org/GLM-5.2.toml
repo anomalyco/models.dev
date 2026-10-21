@@ -1,5 +1,8 @@
-# Model-specific reasoning HTTP values (accessed 2026-06-28):
-# reasoning.enabled=false disables reasoning; reasoning_effort accepts low/medium/high/xhigh.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables).
+# Effort: reasoning_effort = high|max, GLM 5.2's levels (low|medium map to high,
+# xhigh to max per https://docs.bigmodel.cn/cn/guide/capabilities/thinking-mode).
+# DeepInfra's schema lists the generic none..max enum for every model and
+# documents no per-model mapping, so the lab's levels apply.
 # Sources:
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://deepinfra.com/zai-org/GLM-5.2/api
@@ -13,7 +16,7 @@ base_model = "zhipuai/glm-5.2"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 prompt_cache_key = true
