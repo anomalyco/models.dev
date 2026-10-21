@@ -1,7 +1,7 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Modalities: Zen Chat Completions takes images (live: PNG read correctly) but rejects file parts (live 400), so no PDF or video; image types from the lab.
 # Reasoning on Zen Chat Completions (live): enable_thinking and thinking_budget are rejected (400 "Extra inputs are not permitted"); thinking.type = disabled and reasoning_effort = none turn reasoning off.
-# reasoning_effort accepts Alibaba's low|medium|xhigh (high and max are accepted too; Alibaba documents high as an alias of xhigh); thinking.budget_tokens is accepted from 1024 (1023 returns 400 "must be >= 1024"; 300000 is accepted).
+# reasoning_effort accepts Alibaba's low|medium|xhigh (high and max are accepted too, but over 3 trials their reasoning tokens didn't separate from xhigh, and Alibaba documents high as an alias of xhigh); thinking.budget_tokens is accepted from 1024 (1023 returns 400 "must be >= 1024"; 300000 is accepted).
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|medium|xhigh
 # Budget: thinking.budget_tokens (min 1024) with thinking.type = enabled
