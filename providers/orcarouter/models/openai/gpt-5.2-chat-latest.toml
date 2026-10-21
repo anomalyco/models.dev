@@ -1,8 +1,13 @@
+schema = 2
 base_model = "openai/gpt-5.2-chat-latest"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["medium"] }]
 
-[cost]
-input = 1.75
-output = 14
-cache_read = 0.175
+[capabilities]
+reasoning = { supported = true, effort = ["medium"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

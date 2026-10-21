@@ -1,15 +1,17 @@
 # Toggle: thinking true|false
+schema = 2
 base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 3.3
-output = 16.5
-cache_read = 0.33
+[cost.text.input]
+price = 3.3
+cache = { read = 0.33 }
+
+[cost.text.output]
+price = 16.5

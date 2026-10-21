@@ -1,15 +1,17 @@
 # Toggle: thinking true|false
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.147
-output = 0.295
-cache_read = 0.02
+[cost.text.input]
+price = 0.147
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.295

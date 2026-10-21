@@ -1,11 +1,13 @@
 # Toggle: enable_thinking; budget: thinking_budget
+schema = 2
 base_model = "alibaba/qwen3.5-35b-a3b"
-structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "budget_tokens" },
-]
 
-[cost]
-input = 0.057
-output = 0.459
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+
+[cost.text.input]
+price = 0.057
+
+[cost.text.output]
+price = 0.459

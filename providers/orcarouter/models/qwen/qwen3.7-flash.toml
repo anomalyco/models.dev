@@ -1,13 +1,14 @@
 # Toggle: enable_thinking; budget: thinking_budget
+schema = 2
 base_model = "alibaba/qwen3.7-flash"
-structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "budget_tokens" },
-]
 
-[cost]
-input = 0.03
-output = 0.13
-cache_read = 0.006
-cache_write = 0.038
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006, write = 0.038 }
+
+[cost.text.output]
+price = 0.13

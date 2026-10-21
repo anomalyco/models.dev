@@ -1,12 +1,17 @@
 # Host rate per /v1/models: 0.147/0.295, matching the V4 Flash line.
 # cache_ratio 0.19047619 gives 0.028, not the 0.02 those models use.
+schema = 2
 base_model = "deepseek/deepseek-reasoner"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.147
-output = 0.295
-cache_read = 0.028
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.147
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 0.295
