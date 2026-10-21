@@ -1,19 +1,16 @@
+# Prices: STACKIT lists EUR per 1M tokens (net): https://stackit.com/en/products/data-ai/stackit-ai-model-serving
+# Existing USD values were converted at about 1.17 USD/EUR (original rate and date not recorded).
+# Deprecated: no longer listed on the shared-models page (last updated 2026-10-15, checked 2026-10-21):
+# https://docs.stackit.cloud/products/data-and-ai/ai-model-serving/basics/available-shared-models
 schema = 2
+base_model = "google/gemma-3-27b-it"
 name = "Gemma 3 27B"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-open_weights = true
-release_date = "2025-05-17"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
 context = 37_000
