@@ -1,4 +1,7 @@
 # knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2023-09).
+# Effort: reasoning_effort = low|medium|high. Helicone's gateway schema accepts minimal|low|medium|high
+# and OpenAI routes pass it through, so these are the model's native values within that set.
+# https://docs.helicone.ai/gateway/concepts/reasoning
 schema = 2
 base_model = "openai/o1"
 name = "OpenAI: o1"
@@ -10,7 +13,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
 price = 15

@@ -1,4 +1,5 @@
 # knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-04-30).
+# Cache writes: 5m and 1h prices from the Helicone registry's Anthropic endpoint (cacheMultipliers write5m, write1h).
 schema = 2
 base_model = "anthropic/claude-3-5-sonnet-20241022"
 name = "Anthropic: Claude 3.5 Sonnet v2"
@@ -10,7 +11,7 @@ output = ["text"]
 
 [cost.text.input]
 price = 3
-cache = { read = 0.30000000000000004, write = 3.75 }
+cache = { read = 0.30000000000000004, write = { "5m" = 3.75, "1h" = 6 } }
 
 [cost.text.output]
 price = 15
