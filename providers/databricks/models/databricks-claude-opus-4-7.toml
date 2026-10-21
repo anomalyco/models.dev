@@ -8,7 +8,6 @@
 # Cache: `cache_control` on Databricks-hosted Claude (https://docs.databricks.com/aws/en/machine-learning/model-serving/score-foundation-models#prompt-caching); 5m and 1h write prices from the pricing page.
 # structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
 # system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
-# experimental.modes.fast (Anthropic `speed = "fast"`) is kept from v1, but Databricks docs and pricing don't document it for this endpoint.
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
@@ -29,13 +28,5 @@ cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 price = 25
 
 [[cost.multipliers]]
-when = { service_tier = { equals = "fast" } }
-factor = 6
-
-[[cost.multipliers]]
 when = { not = { region = { equals = "global" } } }
 factor = 1.1
-
-[experimental.modes.fast]
-body = { speed = "fast" }
-headers = { anthropic-beta = "fast-mode-2026-02-01" }
