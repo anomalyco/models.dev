@@ -5,11 +5,6 @@
 schema = 2
 base_model = "mistral/mistral-small-2603"
 name = "mistralai--mistral-small"
-open_weights = true
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }

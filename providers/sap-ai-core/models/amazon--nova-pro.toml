@@ -1,21 +1,12 @@
 schema = 2
+base_model = "amazon/nova-pro"
 name = "amazon--nova-pro"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "nova-pro"
-open_weights = false
-release_date = "2024-12-03"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska", "video/webm", "video/x-flv", "video/mpeg", "video/x-ms-wmv", "video/3gpp"]
 output = ["text"]
 
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
 [limit]
-context = 300_000
 output = 8_192
 
 [cost.text.input]

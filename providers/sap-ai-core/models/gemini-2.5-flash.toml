@@ -2,9 +2,6 @@
 schema = 2
 base_model = "google/gemini-2.5-flash"
 name = "gemini-2.5-flash"
-description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-release_date = "2025-04-17"
-last_updated = "2025-06-05"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }

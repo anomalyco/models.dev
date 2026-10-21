@@ -1,21 +1,8 @@
 schema = 2
+base_model = "amazon/nova-micro"
 name = "amazon--nova-micro"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "nova-micro"
-open_weights = false
-release_date = "2024-12-03"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 128_000
 output = 8_192
 
 [cost.text.input]

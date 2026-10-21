@@ -2,7 +2,6 @@
 schema = 2
 base_model = "google/gemini-2.5-flash-lite"
 name = "gemini-2.5-flash-lite"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 512, max = 24_576 } }
