@@ -1,19 +1,14 @@
+# Status: deprecated. Groq shut llama-3.1-8b-instant down for free and developer-tier usage on 2026-08-16 (replacement:
+# openai/gpt-oss-20b): https://console.groq.com/docs/deprecations. It is gone from GET /openai/v1/models and a
+# developer-tier request returns 404 model_not_found (2026-10-21). https://console.groq.com/docs/models still lists it as
+# "Enterprise" with price "Contact Sales"; the cost below is the last public on-demand price (https://groq.com/pricing,
+# archived 2026-08-04: https://web.archive.org/web/20260804151728/https://groq.com/pricing).
+# Limits: https://console.groq.com/docs/models (context window 131_072, max completion tokens 131_072).
 schema = 2
+base_model = "meta/llama-3.1-8b-instruct"
 name = "Llama 3.1 8B"
 description = "Compact Llama instruction model for fast chat and local deployment"
-family = "llama"
-open_weights = true
-knowledge = "2023-12"
-release_date = "2024-07-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
+status = "deprecated"
 
 [limit]
 context = 131_072

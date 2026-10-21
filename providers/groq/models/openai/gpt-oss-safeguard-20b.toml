@@ -1,36 +1,37 @@
-# Reasoning HTTP format (accessed 2026-06-25):
-# POST https://api.groq.com/openai/v1/chat/completions
-# The model page says Harmony supports low/medium/high effort, but Groq's API
-# reasoning page limits documented GPT-OSS reasoning_effort support to 20B/120B.
-# Raw HTTP acceptance for this safeguard model remains unresolved.
-# Sources:
-# https://console.groq.com/docs/model/openai/gpt-oss-safeguard-20b
-# https://console.groq.com/docs/reasoning#options-for-reasoning-effort-gptoss
+# Reasoning: Groq lists this model on https://console.groq.com/docs/reasoning; the model page says Harmony takes
+# low | medium | high effort (https://console.groq.com/docs/model/openai/gpt-oss-safeguard-20b). reasoning_effort "low" and
+# "high" both return 200 on Chat Completions (2026-10-21).
+# Price: $0.075 input, $0.0375 cached input, $0.30 output per 1M tokens (model page; GET /openai/v1/models
+# pricing.input_cache_read = "0.0000000375"). Limits: 131,072 context, 65,536 max output (model page).
+# Cache: implicit prefix caching, listed under supported models, 50% off cached input, expires after 2 hours without use
+# (https://console.groq.com/docs/prompt-caching).
+# Mid-conversation flags, live probes on Chat Completions (2026-10-21, ~1,050-token prefix in the first user message,
+# notes/neon-groq-v2-2026-10-21/groq-probe-loop.ts and results r3-safeguard.jsonl). Controls read 1,024 cached tokens:
+#   system_updates = false: a system message appended after the history read 0 (2 trials, between control hits).
+#   effort_updates = false: changing reasoning_effort low -> high read 0 (2 trials, between control hits).
+#   tools.updates = false: adding a tool read 0 between control hits (the repeat of that same request later hit its own entry).
+# Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
+# Flex: https://console.groq.com/docs/flex-processing (all models, paid customers, on-demand pricing).
 schema = 2
+base_model = "openai/gpt-oss-safeguard-20b"
 name = "Safety GPT OSS 20B"
-description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
-family = "gpt-oss"
-open_weights = true
-release_date = "2025-10-29"
-last_updated = "2026-06-29"
 status = "beta"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
+cache = { supported = true, implicit = { ttl = ["2h"] } }
+system_updates = false
+effort_updates = false
+service_tier = ["flex"]
 
 [limit]
-context = 131_072
 output = 65_536
 
 [cost.text.input]
 price = 0.075
+cache = { read = 0.0375 }
 
 [cost.text.output]
 price = 0.3

@@ -1,9 +1,13 @@
+# Status: deprecated. Groq decommissioned groq/compound on 2026-09-21 ("requests to these model IDs will return errors");
+# it is gone from GET /openai/v1/models and a request returns 404 model_not_found (2026-10-21).
+# Deprecations: https://console.groq.com/docs/deprecations (accessed 2026-10-21).
 schema = 2
 name = "Compound"
 description = "General-purpose chat model for instruction following, writing, and analysis"
 family = "groq"
 open_weights = false
 release_date = "2025-09-04"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
