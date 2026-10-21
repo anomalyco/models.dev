@@ -1,18 +1,10 @@
 schema = 2
+base_model = "alibaba/qwen3-max"
 name = "Qwen3-Max-Thinking"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-open_weights = false
-knowledge = "2025-01-01"
-release_date = "2026-01-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
 context = 256_000

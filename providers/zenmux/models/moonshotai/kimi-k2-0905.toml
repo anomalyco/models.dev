@@ -1,19 +1,9 @@
 schema = 2
+base_model = "moonshotai/kimi-k2-0905"
 name = "Kimi K2 0905"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
-open_weights = false
 knowledge = "2025-01-01"
-release_date = "2025-09-04"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 262_000

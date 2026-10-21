@@ -1,22 +1,16 @@
 schema = 2
-name = "GPT-5.1 Chat"
+base_model = "openai/gpt-5.1-chat-latest"
 description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-open_weights = false
-knowledge = "2025-01-01"
-release_date = "2025-11-13"
 status = "deprecated"
 
 [modalities]
-input = ["application/pdf", "image", "text"]
+input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 128_000
 output = 64_000
 
 [api.responses]

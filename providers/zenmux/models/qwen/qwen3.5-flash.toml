@@ -1,18 +1,13 @@
 schema = 2
-name = "Qwen3.5 Flash"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-open_weights = false
+base_model = "alibaba/qwen3.5-flash"
 knowledge = "2025-01-01"
-release_date = "2026-03-20"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 1_020_000

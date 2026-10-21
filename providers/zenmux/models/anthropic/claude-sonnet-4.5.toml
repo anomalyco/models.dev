@@ -1,22 +1,12 @@
 schema = 2
+base_model = "anthropic/claude-sonnet-4-5"
 name = "Claude Sonnet 4.5"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-open_weights = false
-knowledge = "2025-01-01"
-release_date = "2025-09-29"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-temperature = true
 
 [limit]
 context = 1_000_000
-output = 64_000
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"

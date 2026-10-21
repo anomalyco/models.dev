@@ -1,18 +1,13 @@
 schema = 2
-name = "Gemini 3 Flash Preview"
+base_model = "google/gemini-3-flash-preview"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-open_weights = false
-knowledge = "2025-01-01"
-release_date = "2025-12-17"
 
 [modalities]
-input = ["text", "image", "application/pdf", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-temperature = true
 
 [limit]
 context = 1_048_000

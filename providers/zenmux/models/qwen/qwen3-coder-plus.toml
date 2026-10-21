@@ -1,18 +1,7 @@
 schema = 2
+base_model = "alibaba/qwen3-coder-plus"
 name = "Qwen3-Coder-Plus"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-open_weights = false
-knowledge = "2025-01-01"
-release_date = "2025-07-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 1_000_000

@@ -1,22 +1,10 @@
 schema = 2
+base_model = "minimax/MiniMax-M2.5-highspeed"
 name = "MiniMax M2.5 highspeed"
-description = "High-speed MiniMax model for low-latency coding and agent workflows"
-open_weights = false
 knowledge = "2025-01-01"
-release_date = "2026-02-13"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 204_800
-output = 131_072
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"
