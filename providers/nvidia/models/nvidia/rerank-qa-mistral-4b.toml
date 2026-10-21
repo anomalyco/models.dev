@@ -1,6 +1,7 @@
 # Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
 # and POST https://ai.api.nvidia.com/v1/retrieval/nvidia/reranking returns 404 "Function ...: Not found for
 # account" (probed 2026-10-21).
+# API: invoke_url https://ai.api.nvidia.com/v1/retrieval/nvidia/reranking (https://build.nvidia.com/nvidia/rerank-qa-mistral-4b.md).
 schema = 2
 type = "reranking"
 name = "rerank-qa-mistral-4b"
@@ -22,6 +23,10 @@ temperature = false
 [limit]
 context = 128_000
 output = 4_096
+
+[api.rerank]
+base_url = "https://ai.api.nvidia.com/v1/retrieval/nvidia/reranking"
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 0

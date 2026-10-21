@@ -5,6 +5,10 @@ schema = 2
 base_model = "nvidia/llama-nemotron-rerank-vl-1b-v2"
 name = "llama-nemotron-rerank-vl-1b-v2"
 
+[api.rerank]
+base_url = "https://ai.api.nvidia.com/v1/retrieval/nvidia/llama-nemotron-rerank-vl-1b-v2/reranking"
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 price = 0
 

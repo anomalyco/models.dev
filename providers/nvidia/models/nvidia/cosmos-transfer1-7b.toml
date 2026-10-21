@@ -24,6 +24,10 @@ temperature = false
 context = 0
 output = 4_096
 
+[api.videos]
+base_url = "https://ai.api.nvidia.com/v1/cosmos/nvidia/cosmos-transfer1-7b"
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 price = 0
 
