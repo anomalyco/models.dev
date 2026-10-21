@@ -1,25 +1,18 @@
 # Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# Deprecated: end of life 2 August 2026; requests return 400 Unsupported model (https://docs.greenpt.ai/model-cards, accessed 2026-10-21).
+# knowledge: unsourced value kept from the previous standalone file (differs from the lab).
 schema = 2
+base_model = "mistral/voxtral-small-24b-2507"
 name = "Voxtral Small 24B"
 description = "Mistral Voxtral audio-understanding model for speech and transcription tasks"
-family = "mistral"
-open_weights = true
 knowledge = "2025-07"
-release_date = "2025-07-15"
-
-[modalities]
-input = ["text", "audio"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
-context = 32_768
 output = 16_384
 
 [cost.text.input]

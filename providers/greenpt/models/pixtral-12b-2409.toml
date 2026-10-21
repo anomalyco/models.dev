@@ -1,7 +1,9 @@
 # Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# Deprecated: end of life 24 September 2026; requests return 400 Unsupported model (https://docs.greenpt.ai/model-cards, accessed 2026-10-21).
 schema = 2
 base_model = "mistral/pixtral-12b"
+status = "deprecated"
 
 [limit]
 output = 4_096
