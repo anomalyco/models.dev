@@ -4,24 +4,23 @@
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://deepinfra.com/zai-org/GLM-5.2/api
 # https://deepinfra.com/docs/advanced/max_tokens_limit
+schema = 2
 base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.75
-output = 2.4
-cache_read = 0.14
 
 [limit]
 context = 1_048_576
 output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 2.4

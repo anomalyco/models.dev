@@ -1,10 +1,13 @@
+schema = 2
 base_model = "google/gemma-4-E4B-it"
-structured_output = true
 status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
-[cost]
-input = 0.02
-output = 0.1
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0.1

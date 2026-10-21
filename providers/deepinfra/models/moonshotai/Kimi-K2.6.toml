@@ -1,30 +1,32 @@
 # https://deepinfra.com/docs/advanced/max_tokens_limit
+schema = 2
 name = "Kimi K2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi-k2"
+open_weights = true
+knowledge = "2024-04"
 release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
-tool_call = true
-knowledge = "2024-04"
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.75
-output = 3.50
-cache_read = 0.15
 
 [limit]
 context = 262_144
 output = 16_384
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.5

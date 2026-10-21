@@ -1,11 +1,16 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
 status = "deprecated"
-reasoning_options = []
 
-[cost]
-input = 0.25
-output = 1
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 196_608
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1

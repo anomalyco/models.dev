@@ -1,8 +1,13 @@
+schema = 2
 base_model = "deepseek/deepseek-v3-0324"
-structured_output = true
 status = "deprecated"
 
-[cost]
-input = 0.24
-output = 0.9
-cache_read = 0.135
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.135 }
+
+[cost.text.output]
+price = 0.9

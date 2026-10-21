@@ -1,10 +1,13 @@
+schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0.05
-output = 0.2
-cache_read = 0.025
+[cost.text.input]
+price = 0.05
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.2

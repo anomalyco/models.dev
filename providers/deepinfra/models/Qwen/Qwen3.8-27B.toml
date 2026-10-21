@@ -1,14 +1,13 @@
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[cost]
-input = 0.2
-output = 2.5
-cache_read = 0.05
+[cost.text.output]
+price = 2.5

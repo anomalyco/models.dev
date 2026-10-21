@@ -1,14 +1,17 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-structured_output = true
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.68
-output = 3.4
-cache_read = 0.136
+[cost.text.input]
+price = 0.68
+cache = { read = 0.136 }
+
+[cost.text.output]
+price = 3.4

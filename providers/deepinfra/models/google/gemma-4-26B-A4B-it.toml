@@ -1,7 +1,12 @@
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
-structured_output = true
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.07
-output = 0.34
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.34

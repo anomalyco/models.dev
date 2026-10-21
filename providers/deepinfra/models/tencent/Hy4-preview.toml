@@ -1,14 +1,19 @@
 # Effort: reasoning_effort = none|high; none disables reasoning (no separate toggle).
 # https://docs.deepinfra.com/chat/reasoning
 # https://cloud.tencent.com/document/product/1823/131208
+schema = 2
 base_model = "tencent/hy4-preview"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501
