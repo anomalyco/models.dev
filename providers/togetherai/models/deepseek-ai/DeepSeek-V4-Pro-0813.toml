@@ -1,9 +1,24 @@
+# Serverless: $1.32 input, $0.13 cached input, $3.96 output per 1M; context 1,048,576 (accessed 2026-10-21):
+# https://docs.together.ai/docs/serverless-models, GET https://api.together.xyz/v1/models
+# Toggle: thinking.type = disabled, or chat_template_kwargs.thinking / .enable_thinking = false
+# (live 2026-10-21: 0 reasoning tokens). reasoning.enabled = false is accepted but still reasons.
+# Effort: reasoning_effort = high|max. Together: "accepts only high and max"
+# (https://docs.together.ai/docs/inference/chat/reasoning); live, none..high render the same
+# prompt (65 tokens) and xhigh/max the max prompt (144 tokens).
+# Reasoning is returned in `reasoning_content` (live 2026-10-21).
+# Mid-conversation (live 2026-10-21): a late system message was followed and kept the cache
+# (8,245 cached vs 8,241 on the control turn); adding a tool dropped the cache to 0.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+cache = { supported = true, implicit = true, explicit = false }
 structured_output = true
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
 context = 1_048_576

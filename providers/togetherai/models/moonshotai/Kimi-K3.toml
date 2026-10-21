@@ -1,9 +1,28 @@
+# Serverless: $3.00 input, $0.30 cached input, $15.00 output per 1M; context 1,048,576 (accessed 2026-10-21):
+# https://docs.together.ai/docs/serverless-models
+# Effort: reasoning_effort = none|low|high|max (live 2026-10-21). low, high and max each change the
+# rendered prompt (147/147/146 tokens vs 79 by default); minimal, medium and xhigh render the
+# default. `none` (like reasoning.enabled = false) returns no reasoning.
+# Inputs (live 2026-10-21): PNG, JPEG, GIF and WebP images. A `video_url` part is dropped (the
+# model says no video is attached) and audio is rejected; Together documents video input only for
+# dedicated endpoints (https://docs.together.ai/docs/inference/vision/inputs).
+# Mid-conversation (live 2026-10-21): a late system message was followed and kept the cache;
+# adding a tool dropped the cache to 0.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { supported = true, implicit = true, explicit = false }
 structured_output = true
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -1,20 +1,17 @@
+# Deprecated: scheduled for removal from serverless on 2026-10-22, replaced by
+# meta-models/Muse-Glimmer-30B (https://docs.together.ai/docs/deprecations, accessed 2026-10-21).
+# Context: a larger request fails with "`inputs` tokens + `max_new_tokens` must be <= 131073"
+# (live 2026-10-21); $1.04 input and output per 1M (GET https://api.together.xyz/v1/models).
+# Mid-conversation (live 2026-10-21, rendered prompt): a late system message stays in place after
+# the earlier turns (followed, cache kept); the tool list is rendered before the first user turn.
 schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B"
-description = "Compact Llama instruction model for fast chat and local deployment"
-family = "llama"
-open_weights = true
-knowledge = "2023-12"
-release_date = "2024-12-06"
-last_updated = "2026-07-02"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
+tools = { supported = true, updates = false }
+system_updates = true
 
 [limit]
 context = 131_072

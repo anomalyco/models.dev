@@ -1,9 +1,12 @@
+# Deprecated: no longer in the serverless catalog or GET https://api.together.xyz/v1/models
+# (accessed 2026-10-21); requests return 400 "Unable to access non-serverless model" (live 2026-10-21).
 schema = 2
 name = "LFM2-24B-A2B"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
 family = "liquid"
 open_weights = true
 release_date = "2026-02-25"
+status = "deprecated"
 
 [modalities]
 input = ["text"]

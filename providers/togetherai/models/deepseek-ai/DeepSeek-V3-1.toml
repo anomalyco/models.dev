@@ -2,26 +2,17 @@
 # POST https://api.together.ai/v1/chat/completions (dedicated endpoint model).
 # JSON reasoning.enabled: true | false; function calling requires false.
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#enable-and-disable-reasoning
+# Deprecated: deepseek-ai/DeepSeek-V3.1 was removed from serverless on 2026-05-14
+# (https://docs.together.ai/docs/deprecations, accessed 2026-10-21); this ID returns 404.
 schema = 2
+base_model = "deepseek/deepseek-v3.1"
 name = "DeepSeek V3.1"
-description = "Legacy model retained for compatibility with older integrations"
-family = "deepseek"
-open_weights = true
-knowledge = "2025-08"
-release_date = "2025-08-21"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
 
 [limit]
-context = 131_072
 output = 131_072
 
 [cost.text.input]

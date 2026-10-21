@@ -1,30 +1,25 @@
 # Output limit 131_072 per Alibaba Model Studio qwen3.7-max (Max Output Length 131072):
 # https://www.alibabacloud.com/help/en/model-studio/qwen3-7-max
 # Serverless 1M context per https://www.together.ai/models/qwen37-max
+# Serverless: $2.50 input, $0.50 cached input, $7.50 output per 1M; structured outputs: yes
+# (https://docs.together.ai/docs/serverless-models and GET https://api.together.xyz/v1/models,
+# accessed 2026-10-21).
+# Reasoning: kept false as before. Together's reasoning guide doesn't list it
+# (https://docs.together.ai/docs/inference/chat/reasoning) and the route couldn't be probed.
+# Not probed: the route forwards prompts to a third-party provider and returns 403 unless the
+# organization enables third-party data sharing.
 schema = 2
-name = "Qwen3.7 Max"
-description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
-family = "qwen"
-open_weights = false
-release_date = "2026-05-21"
-last_updated = "2026-07-02"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 1_000_000
-output = 131_072
+cache = { supported = true, implicit = true, explicit = false }
+structured_output = true
+prompt_cache_key = true
 
 [cost.text.input]
-price = 1.25
-cache = { read = 0.125 }
+price = 2.5
+cache = { read = 0.5 }
 
 [cost.text.output]
-price = 3.75
+price = 7.5

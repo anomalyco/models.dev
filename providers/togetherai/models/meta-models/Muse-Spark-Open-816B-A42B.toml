@@ -1,13 +1,28 @@
+# Serverless: $1.25 input, $0.15 cached input, $4.25 output per 1M; context 1,048,576 (accessed 2026-10-21):
+# https://docs.together.ai/docs/serverless-models
+# Effort: reasoning_effort = none|low|medium|high|xhigh (live 2026-10-21). The rendered system
+# prompt sets "Reasoning strength" to 8, 32, 256 and 512 (default 512); `none` drops the line and
+# the model returns no reasoning. The template rejects other names: "Unsupported reasoning_effort:
+# max. Expected one of: low, medium, high, xhigh."
+# Inputs (live 2026-10-21): PNG, JPEG, GIF and WebP images and MP4 video are read; a WAV
+# `input_audio` part is accepted but the model doesn't hear it, so audio is left out.
+# Mid-conversation (live 2026-10-21, rendered prompt): a late system message stays in place after
+# the earlier turns, while reasoning strength and tools are rendered in the leading system block.
 schema = 2
 base_model = "meta/muse-spark-open"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "video/mp4"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { supported = true, implicit = true, explicit = false }
 structured_output = true
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

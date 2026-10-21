@@ -2,26 +2,24 @@
 # POST https://api.together.ai/v1/chat/completions
 # JSON reasoning.enabled: true | false (thinking is on by default).
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#supported-models
+# Toggle confirmed live 2026-10-21 (reasoning.enabled = false: no reasoning).
+# Serverless: $0.17 input, $0.25 output per 1M, no cached-input price; context 262,144
+# (https://docs.together.ai/docs/serverless-models, accessed 2026-10-21).
+# Inputs (live 2026-10-21): PNG, JPEG, GIF and WebP images and MP4 video are read; audio is rejected.
+# Mid-conversation (live 2026-10-21): a system message after the first turn is rejected with
+# 400 "Input validation error". The route reports no cached tokens, so tool changes weren't measured.
 schema = 2
-name = "Qwen3.5 9B"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = true
-release_date = "2026-03-03"
+base_model = "alibaba/qwen3.5-9b"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
-
-[limit]
-context = 262_144
-output = 65_536
+system_updates = false
+effort_updates = false
 
 [cost.text.input]
 price = 0.17

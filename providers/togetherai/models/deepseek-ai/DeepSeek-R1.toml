@@ -2,24 +2,15 @@
 # POST https://api.together.ai/v1/chat/completions (dedicated endpoint model).
 # Reasoning is returned in content within <think> tags; no control is documented.
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#think-tags-in-content
+# Deprecated: removed from serverless on 2026-05-14 (https://docs.together.ai/docs/deprecations,
+# accessed 2026-10-21); requests return 400 "Unable to access non-serverless model".
 schema = 2
-name = "DeepSeek-R1"
-description = "Legacy model retained for compatibility with older integrations"
-family = "deepseek-thinking"
-open_weights = true
-knowledge = "2024-07"
-release_date = "2025-01-20"
-last_updated = "2025-03-24"
+base_model = "deepseek/deepseek-r1"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
 context = 163_839
