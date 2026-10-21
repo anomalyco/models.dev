@@ -1,13 +1,8 @@
 # Effort: reasoning_effort = low|medium|high|xhigh|max|ultracode (catalog enum represents through max)
 # Sources: https://api.bee.heossi.com/openapi.json and https://api.bee.heossi.com/bee/openrouter/models
+schema = 2
 name = "Bee Buzz 1.0"
 description = "Mid-tier production model for tool-using agents, multi-step workflows, and builder/integration work. Bigger context than Comb, deeper planning, faster than Hive on routine tasks."
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-tool_call = true
-structured_output = true
-temperature = true
 open_weights = false
 release_date = "2026-07-10"
 last_updated = "2026-09-28"
@@ -16,12 +11,19 @@ last_updated = "2026-09-28"
 input = ["text", "image", "video"]
 output = ["text"]
 
-[limit]
-context = 262144
-output = 24576
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = true
 
-[cost]
-input = 2.50
-output = 10.00
-cache_read = 0.25
-cache_write = 3.00
+[limit]
+context = 262_144
+output = 24_576
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25, write = 3 }
+
+[cost.text.output]
+price = 10
