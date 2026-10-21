@@ -15,6 +15,8 @@
 # V4 Pro is deliberately unchanged: DeepSeek cancelled its retirement on
 # 2026-09-11 "in response to user demand". Reasoning billed at the output rate.
 # No name override: the base entry is already "DeepSeek V4.1 Flash".
+# Peak pricing: base prices are off-peak; the multiplier doubles them on weekday peak hours
+# (01:00-04:00 and 06:00-10:00 UTC, Monday-Friday), per https://above.dev/llms.txt (checked 2026-10-21).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
@@ -32,3 +34,7 @@ cache = { read = 0.0033 }
 [cost.text.output]
 price = 0.66
 reasoning = 0.66
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
