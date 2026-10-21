@@ -1,11 +1,14 @@
 # Toggle: reasoning.enabled = true|false
 # Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+cache = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

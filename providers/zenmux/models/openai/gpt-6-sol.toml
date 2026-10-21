@@ -1,19 +1,22 @@
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
 # Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "openai/gpt-6-sol"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 2
 cache = { read = 0.2, write = 2.5 }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 272_000 } }
+when = { context = { gte = 272_000 } }
 price = 4
 cache = { read = 0.4, write = 5 }
 
@@ -21,5 +24,5 @@ cache = { read = 0.4, write = 5 }
 price = 10
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 272_000 } }
+when = { context = { gte = 272_000 } }
 price = 15

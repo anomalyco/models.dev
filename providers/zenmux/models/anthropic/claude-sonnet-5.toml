@@ -1,8 +1,14 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
+
+[limit]
+output = 64_000
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"
@@ -10,7 +16,7 @@ sdk = { aisdk = "@ai-sdk/anthropic" }
 
 [cost.text.input]
 price = 2
-cache = { read = 0.2, write = 4 }
+cache = { read = 0.2, write = { "5m" = 2.5, "1h" = 4 } }
 
 [cost.text.output]
 price = 10

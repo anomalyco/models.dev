@@ -1,6 +1,9 @@
 # Toggle: reasoning.enabled = true|false
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# catalog prices also vary by output length (completion_tokens); file keeps the cheapest band as base.
 schema = 2
 base_model = "zhipuai/glm-4.7"
 name = "GLM 4.7"
@@ -8,6 +11,7 @@ name = "GLM 4.7"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 200_000

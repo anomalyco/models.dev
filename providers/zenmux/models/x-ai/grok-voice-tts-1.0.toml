@@ -1,6 +1,12 @@
-# ZenMux pricing is non-token-denominated for this route and is intentionally omitted.
+# Price: catalog prompt $15 (labelled perMTokens); xAI bills grok-tts at $15 per 1M characters
+# (https://docs.x.ai/developers/pricing), so the unit is character. v2 only.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # ZenMux's "Grok Voice TTS 1.0" route is xAI's grok-tts.
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
 schema = 2
 base_model = "xai/grok-tts"
 name = "Grok Voice TTS 1.0"
+
+[cost.text.input]
+unit = "character"
+price = 15

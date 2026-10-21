@@ -1,6 +1,8 @@
 # Effort: reasoning_effort = low|high|max
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
@@ -8,6 +10,7 @@ name = "GLM 5.3 Flash"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 128_000
@@ -16,8 +19,8 @@ output = 128_000
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.03 }
+price = 0.075
+cache = { read = 0.015 }
 
 [cost.text.output]
-price = 0.5
+price = 0.25

@@ -1,0 +1,39 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+schema = 2
+base_model = "bytedance-seed/seed-2.0-mini"
+name = "Doubao-Seed-2.0-mini"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "audio", "video/mp4", "video/x-msvideo", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true }
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.01, storage = 0.0024 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.06
+cache = { read = 0.02, storage = 0.0024 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.12
+cache = { read = 0.03, storage = 0.0024 }
+
+[cost.text.output]
+price = 0.28
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.56
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.12

@@ -1,3 +1,5 @@
+# Retired: absent from GET https://zenmux.ai/api/v1/models and its model page shows Sunset (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "anthropic/claude-3-7-sonnet-20250219"
 name = "Claude 3.7 Sonnet"
@@ -5,6 +7,7 @@ status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"

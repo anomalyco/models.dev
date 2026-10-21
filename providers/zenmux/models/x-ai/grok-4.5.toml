@@ -1,20 +1,23 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "xai/grok-4.5"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 2
 cache = { read = 0.5 }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
+when = { context = { gte = 200_000 } }
 price = 4
 cache = { read = 1 }
 
@@ -22,5 +25,5 @@ cache = { read = 1 }
 price = 6
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
+when = { context = { gte = 200_000 } }
 price = 12

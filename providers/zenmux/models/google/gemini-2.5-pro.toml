@@ -1,19 +1,31 @@
 # Vertex `thinkingBudget`: -1 (dynamic) or 128..32768; thinking cannot be disabled.
 # https://docs.zenmux.ai/api/vertexai/generate-content.html (accessed 2026-06-25)
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "google/gemini-2.5-pro"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true, explicit = true }
 
 [limit]
 context = 1_048_000
-output = 64_000
+output = 65_535
 
 [cost.text.input]
 price = 1.25
-cache = { read = 0.31, write = 4.5 }
+cache = { read = 0.13, storage = 4.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.25, storage = 4.5 }
 
 [cost.text.output]
 price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 15

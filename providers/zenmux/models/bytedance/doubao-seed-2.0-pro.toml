@@ -1,0 +1,38 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+schema = 2
+base_model = "bytedance-seed/seed-2.0-pro"
+name = "Doubao-Seed-2.0-pro"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true }
+
+[limit]
+output = 32_000
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.09, storage = 0.0024 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.67
+cache = { read = 0.14, storage = 0.0024 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.34
+cache = { read = 0.27, storage = 0.0024 }
+
+[cost.text.output]
+price = 2.24
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.36
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 6.71

@@ -1,13 +1,12 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Reasoning: catalog capabilities.reasoning = true; controls as on ZenMux stepfun/step-3.7-flash.
 schema = 2
 base_model = "stepfun/step-3.5-flash"
 base_model_omit = ["limit.input"]
 description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
 
 [capabilities]
-reasoning = { supported = false }
-
-[limit]
-output = 64_000
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
 price = 0.1

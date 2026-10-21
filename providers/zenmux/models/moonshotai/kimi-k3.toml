@@ -1,12 +1,19 @@
 # API: thinking.type = "enabled" | "disabled" | "adaptive"; in adaptive mode the
 # reasoning depth is set by output_config.effort, which only accepts "max".
 # Pricing: https://platform.kimi.ai/docs/pricing/chat-k3 (accessed 2026-07-17).
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
+
+[limit]
+output = 262_144
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

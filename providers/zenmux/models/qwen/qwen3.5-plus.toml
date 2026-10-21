@@ -1,18 +1,27 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "alibaba/qwen3.5-plus"
 
-[modalities]
-input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true, explicit = { min_tokens = 256 } }
 
 [limit]
 output = 64_000
 
 [cost.text.input]
-price = 0.8
+price = 0.4
+cache = { read = 0.08, write = 0.5, explicit = { read = 0.04 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.5
+cache = { read = 0.1, write = 0.625, explicit = { read = 0.05 } }
 
 [cost.text.output]
-price = 4.8
+price = 2.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 3

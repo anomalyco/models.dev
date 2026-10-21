@@ -1,3 +1,5 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 name = "inclusionAI: Ring-2.6-1T"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
@@ -14,14 +16,15 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 262_000
 output = 65_000
 
 [cost.text.input]
-price = 0.3
-cache = { read = 0.06 }
+price = 0.1318155
+cache = { read = 0.0263631 }
 
 [cost.text.output]
-price = 2.5
+price = 1.0984625

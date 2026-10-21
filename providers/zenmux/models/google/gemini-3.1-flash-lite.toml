@@ -1,9 +1,12 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "google/gemini-3.1-flash-lite"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true, explicit = true }
 
 [cost.text.input]
 price = 0.25
@@ -11,3 +14,7 @@ cache = { read = 0.025 }
 
 [cost.text.output]
 price = 1.5
+
+[cost.audio.input]
+price = 0.5
+cache = { read = 0.05 }

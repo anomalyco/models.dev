@@ -3,19 +3,25 @@
 # Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
 # ZenMux's time-of-day promotional rates are intentionally omitted from static token costs.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# prompt lists 0.075 / 0.15 with no condition (model page shows a range); the lowest is the base.
+# completion lists 0.3 / 0.6 with no condition (model page shows a range); the lowest is the base.
+# input_cache_read lists 0.0015 / 0.003 with no condition (model page shows a range); the lowest is the base.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.003 }
+price = 0.075
+cache = { read = 0.0015 }
 
 [cost.text.output]
-price = 0.6
+price = 0.3

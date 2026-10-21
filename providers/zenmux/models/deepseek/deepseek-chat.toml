@@ -1,3 +1,5 @@
+# Retired: absent from GET https://zenmux.ai/api/v1/models and its model page shows Sunset (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 name = "DeepSeek-V3.2 (Non-thinking Mode)"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
@@ -14,6 +16,7 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 128_000

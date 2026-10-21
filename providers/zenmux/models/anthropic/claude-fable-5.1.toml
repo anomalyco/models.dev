@@ -1,11 +1,14 @@
 # Effort: reasoning_effort = low|medium|high|xhigh|max
 # Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
 # https://zenmux.ai/docs/api/anthropic/anthropic-list-models.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"
@@ -13,7 +16,7 @@ sdk = { aisdk = "@ai-sdk/anthropic" }
 
 [cost.text.input]
 price = 10
-cache = { read = 0.25, write = 12.5 }
+cache = { read = 0.25, write = { "5m" = 12.5, "1h" = 20 } }
 
 [cost.text.output]
 price = 50

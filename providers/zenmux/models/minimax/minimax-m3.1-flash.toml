@@ -4,11 +4,14 @@
 # (always-on, same class as minimax-m3 and gpt-5). Upstream thinking cannot be
 # disabled; depth is set by effort = low|medium|high|xhigh|max.
 # https://platform.minimax.io/docs/api-reference/text-anthropic-api
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true }
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"

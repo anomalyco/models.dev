@@ -2,13 +2,18 @@
 # reasoning depth is set by output_config.effort, which only accepts "max".
 # Pricing: free tier via ZenMux (accessed 2026-07-20).
 # https://docs.zenmux.ai
+# Retired: absent from GET https://zenmux.ai/api/v1/models and its model page shows Sunset (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 (Free)"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

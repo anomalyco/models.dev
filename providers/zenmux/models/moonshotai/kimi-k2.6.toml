@@ -1,9 +1,13 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 262_140

@@ -1,16 +1,23 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+# prompt lists 0.66 / 1.32 with no condition (model page shows a range); the lowest is the base.
+# completion lists 1.98 / 3.96 with no condition (model page shows a range); the lowest is the base.
+# input_cache_read lists 0.022 / 0.044 with no condition (model page shows a range); the lowest is the base.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.435
-cache = { read = 0.003625 }
+price = 0.66
+cache = { read = 0.022 }
 
 [cost.text.output]
-price = 0.87
+price = 1.98

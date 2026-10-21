@@ -1,3 +1,4 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
 schema = 2
 name = "ERNIE 5.0"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -21,5 +22,13 @@ output = 64_000
 [cost.text.input]
 price = 0.84
 
+[[cost.text.input.overrides]]
+when = { context = { gte = 32_000 } }
+price = 1.41
+
 [cost.text.output]
 price = 3.37
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 32_000 } }
+price = 5.62

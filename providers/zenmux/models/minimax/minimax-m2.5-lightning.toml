@@ -1,3 +1,5 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "minimax/MiniMax-M2.5-highspeed"
 name = "MiniMax M2.5 highspeed"
@@ -5,6 +7,7 @@ knowledge = "2025-01-01"
 
 [capabilities]
 reasoning = { supported = true }
+cache = { supported = true }
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"
@@ -12,7 +15,7 @@ sdk = { aisdk = "@ai-sdk/anthropic" }
 
 [cost.text.input]
 price = 0.6
-cache = { read = 0.06, write = 0.75 }
+cache = { read = 0.03, write = 0.375 }
 
 [cost.text.output]
-price = 4.8
+price = 2.4
