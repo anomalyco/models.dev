@@ -1,0 +1,29 @@
+# https://huggingface.co/Qwen/Qwen-Image
+schema = 2
+v2_only = true
+type = "image"
+name = "Qwen Image"
+description = "Qwen-Image is an image generation foundation model in the Qwen series that achieves significant advances in complex text rendering and precise image editing."
+family = "qwen"
+open_weights = true
+license = "Apache 2.0"
+release_date = "2025-07-31"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen-Image"

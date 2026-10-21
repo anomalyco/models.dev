@@ -1,0 +1,22 @@
+# https://developers.openai.com/api/docs/models/gpt-3.5-turbo
+schema = 2
+name = "GPT-3.5 Turbo 16k"
+description = "This model offers four times the context length of gpt-3.5-turbo, allowing it to support approximately 20 pages of text in a single request at a higher cost."
+family = "gpt"
+open_weights = false
+release_date = "2023-08-28"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 16_385
+output = 4_096

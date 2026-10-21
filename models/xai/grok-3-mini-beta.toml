@@ -1,0 +1,22 @@
+# https://docs.x.ai/docs/models
+schema = 2
+name = "Grok 3 Mini Beta"
+description = "Grok 3 Mini Beta is xAI's lightweight reasoning model designed specifically for quantitative problem-solving with transparent thinking processes."
+family = "grok"
+open_weights = false
+release_date = "2025-04-09"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 131_072
+output = 32_768

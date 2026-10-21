@@ -1,0 +1,29 @@
+# https://huggingface.co/Qwen/Qwen-Image-2512
+schema = 2
+v2_only = true
+type = "image"
+name = "Qwen Image 2512"
+description = "Qwen Image 2512 is an improved version of Qwen Image with better text rendering, finer natural textures, and more realistic human generation."
+family = "qwen"
+open_weights = true
+license = "Apache 2.0"
+release_date = "2025-12-31"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen-Image-2512"

@@ -1,0 +1,10 @@
+# reasoning_options = []: the model reasons, matching the Google Omni preview entry, which has no effort control.
+base_model = "google/gemini-omni-1.1-flash"
+reasoning_options = []
+
+# FastRouter token price, USD per 1M tokens.
+
+[cost]
+input = 1.5
+output = 9
+input_audio = 1.5

@@ -1,0 +1,24 @@
+# https://docs.sarvam.ai
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Saaras V3"
+description = "Saaras V3 is Sarvam AI's next-generation automatic speech recognition (ASR) model engineered for Indian languages and real-world speech conditions."
+family = "sarvam"
+open_weights = false
+release_date = "2026-02-11"
+
+[modalities]
+input = ["audio/mpeg", "audio/wav", "audio/flac", "audio/ogg", "audio/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

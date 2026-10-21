@@ -1,0 +1,11 @@
+# Toggle: reasoning true|false
+# FastRouter lists reasoning only. No reasoning_effort or thinking_budget on nvidia/nemotron-3-super:free.
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+output = 32_768

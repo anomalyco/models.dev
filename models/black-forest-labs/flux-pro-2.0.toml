@@ -1,0 +1,24 @@
+# https://bfl.ai/models/flux-2
+schema = 2
+v2_only = true
+type = "image"
+name = "FLUX 2 Pro"
+description = "FLUX.2 Pro (also styled as Flux-2-Pro or FLUX.2 [pro]) is a production-grade AI image generation and editing model developed by Black Forest Labs, released in November 2025 as the flagship of the FLUX.2 family."
+family = "flux"
+open_weights = false
+release_date = "2025-11-25"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
