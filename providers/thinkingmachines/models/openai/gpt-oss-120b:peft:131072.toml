@@ -1,4 +1,5 @@
-# Tinker type Reasoning: "Always produce chain-of-thought"; no effort control for non-Thinking Machines models.
+# Toggle: thinking.type = disabled ("forces reasoning off regardless of output_config"). Tinker type Reasoning models
+#   "Always produce chain-of-thought" by default; no effort control for non-Thinking Machines models.
 # Tinker models.json https://tinker-docs.thinkingmachines.ai/tinker/models.json (accessed 2026-10-21): type Reasoning, context 128K.
 # Tinker Anthropic-compatible API (https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/, accessed
 #   2026-10-21) serves any Tinker model: thinking.type = disabled turns reasoning off; output_config.effort (low|medium|high|
@@ -6,12 +7,11 @@
 #   for those; images via base64 or URL; no audio blocks;
 #   cache_control is ignored, prefill tokens that hit the prompt cache bill at 80% off.
 schema = 2
-v2_only = true
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 cache = { supported = true, implicit = true, explicit = false }
 
 [limit]

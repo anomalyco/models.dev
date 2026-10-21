@@ -1,9 +1,8 @@
 # Arcee pricing page (accessed 2026-10-21, USD per MTok, input / output / cached input): https://docs.arcee.ai/get-started/pricing.md
-# Not in the beta launch post; the pricing page is the only listing. Like the other Arcee files, input is text only and
-#   effort follows the same family on this host (reasoning_effort = high|max; unverified, no key).
+# Not in the beta launch post; the pricing page is the only listing. Arcee's docs list no input modalities, so the
+#   lab's are inherited. Effort follows the same families on this host (reasoning_effort = high|max; unverified, no key).
 # APIs on this host: OpenAI Chat Completions (https://api.arcee.ai/api/v1/chat/completions) and /api/v1/models.
 schema = 2
-v2_only = true
 base_model = "zhipuai/glm-5.3"
 status = "beta"
 
