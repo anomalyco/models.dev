@@ -1,32 +1,28 @@
 # Deployed as version "2" (latest) on SAP AI Core; version "1" (context = 300_000, no reasoning) is also available and can be selected at deployment time.
 # Reasoning support: https://help.sap.com/docs/sap-ai-core/generative-ai/reasoning?locale=en-US (accessed 2026-07-14)
 # Nova 2 Lite: reasoning_effort = "low"|"medium"|"high" via additionalModelRequestFields.output_config.effort; toggle via additionalModelRequestFields.thinking.type = "enabled"|"disabled".
+schema = 2
 name = "amazon--nova-lite"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "nova-lite"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2025-12-02"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.30
-output = 2.37
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.37

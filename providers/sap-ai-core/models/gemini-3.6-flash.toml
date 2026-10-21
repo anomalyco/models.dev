@@ -1,5 +1,7 @@
 # Cost information is in CU that are not directly comparable to other providers.
+schema = 2
 base_model = "google/gemini-3.6-flash"
-structured_output = true
 
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true

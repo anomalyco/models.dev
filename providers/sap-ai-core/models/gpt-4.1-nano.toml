@@ -1,12 +1,17 @@
-name = "gpt-4.1-nano"
+schema = 2
 base_model = "openai/gpt-4.1-nano"
-structured_output = true
+name = "gpt-4.1-nano"
 open_weights = false
-
-[cost]
-input = 0.08
-output = 0.26
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.26

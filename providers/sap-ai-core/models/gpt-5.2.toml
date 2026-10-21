@@ -1,15 +1,20 @@
-name = "gpt-5.2"
-base_model = "openai/gpt-5.2"
-structured_output = true
 # Azure OpenAI deployment adapter: raw Chat uses top-level $.reasoning_effort = "none"|"minimal"|"low"|"medium"|"high"; "none" is off. https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/reasoning (accessed 2026-06-25)
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+schema = 2
+base_model = "openai/gpt-5.2"
+name = "gpt-5.2"
 open_weights = false
-
-[cost]
-input = 1.25
-output = 9.44
-cache_read = 0.12
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 9.44

@@ -2,23 +2,24 @@
 # Not all models support the full range of configuration options. Where possible, orchestration maps unsupported values to the closest equivalent.
 # "minimal", "low" and "medium" are mapped to "high" for mistralai--mistral-small because the model only supports "none" or "high".
 # Reasoning support: https://help.sap.com/docs/sap-ai-core/generative-ai/reasoning?locale=en-US (accessed 2026-07-14)
-name = "mistralai--mistral-small"
+schema = 2
 base_model = "mistral/mistral-small-2603"
-attachment = true
+name = "mistralai--mistral-small"
 open_weights = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.07
-output = 0.28
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 
 [limit]
 context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.28

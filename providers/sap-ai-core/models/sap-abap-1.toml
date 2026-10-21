@@ -1,21 +1,24 @@
+schema = 2
 name = "sap-abap-1"
 description = "SAP-hosted model for ABAP code generation and enterprise development tasks"
-release_date = "2025-11-26"
-last_updated = "2025-11-26"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = false
-
-[cost]
-input = 0.48
-output = 1.7
-
-[limit]
-context = 32_768
-output = 4096
+release_date = "2025-11-26"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 32_768
+output = 4_096
+
+[cost.text.input]
+price = 0.48
+
+[cost.text.output]
+price = 1.7

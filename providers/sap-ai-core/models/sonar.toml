@@ -1,8 +1,10 @@
+schema = 2
 base_model = "perplexity/sonar"
-
 name = "sonar"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
 
-[cost]
-input = 1.00
-output = 1.00
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 1

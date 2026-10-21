@@ -1,5 +1,7 @@
 # Cost information is in CU that are not directly comparable to other providers.
+schema = 2
 base_model = "openai/gpt-6-luna"
-structured_output = true
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
