@@ -1,13 +1,17 @@
+schema = 2
 base_model = "openai/gpt-5.4-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
-[cost]
-input = 0.75
-output = 4.50
-cache_read = 0.075
-cache_write = 0.75
+[api.chat-completions]
+base_url = "https://api.freemodel.dev/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
-api = "https://api.freemodel.dev/v1"
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075, write = 0.75 }
+
+[cost.text.output]
+price = 4.5
