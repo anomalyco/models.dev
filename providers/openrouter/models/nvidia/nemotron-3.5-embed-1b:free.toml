@@ -1,0 +1,28 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
+# https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Nemotron 3.5 Embed 1B (free)"
+description = "Multimodal embedding model"
+open_weights = false
+release_date = "2026-10-21"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 32_768
+output = 0
+
+[api.embeddings]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+
+[cost.text.input]
+price = 0
