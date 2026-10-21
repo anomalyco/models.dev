@@ -1,15 +1,18 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
+schema = 2
 base_model = "anthropic/claude-haiku-4-5-20251001"
 
-reasoning_options = [{ type = "budget_tokens" }]
+[capabilities]
+reasoning = { supported = true, budget = {} }
 
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

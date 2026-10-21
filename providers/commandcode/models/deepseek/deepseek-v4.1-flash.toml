@@ -3,12 +3,16 @@
 # https://api.commandcode.ai/provider/v1/models
 # Pricing: off-peak rates; peak 01:00-04:00 and 06:00-10:00 UTC Mon-Fri is 2x.
 # Toggle: reasoning_effort = off|low (verified off yields zero reasoning tokens)
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.003
+[cost.text.output]
+price = 0.6

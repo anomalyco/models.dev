@@ -9,14 +9,18 @@
 # Arithmetic n=3 per level did not establish a graded effect (overlapping counts):
 #   low 2559/2118/1284, medium 2029/2559/1145, high 2028/2559/1289.
 # Native thinking.type enabled/disabled both returned zero without reasoning_effort.
+schema = 2
 base_model = "minimax/MiniMax-M3"
 
-reasoning_options = [{ type = "toggle" }]
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
-context = 1000000
+context = 1_000_000
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

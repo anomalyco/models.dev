@@ -2,15 +2,19 @@
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
 # Live /chat/completions (2026-10-14): reasoning_effort = none -> HTTP 400 invalid option.
+schema = 2
 base_model = "mistral/mistral-large-4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
 structured_output = true
 
-reasoning_options = [{ type = "effort", values = ["high"] }]
-
 [limit]
-context = 524288
+context = 524_288
 
-[cost]
-input = 1.36
-output = 4.18
-cache_read = 0.14
+[cost.text.input]
+price = 1.36
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.18

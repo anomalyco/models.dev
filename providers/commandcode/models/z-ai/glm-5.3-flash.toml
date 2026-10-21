@@ -1,12 +1,16 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[cost.text.output]
+price = 0.5
