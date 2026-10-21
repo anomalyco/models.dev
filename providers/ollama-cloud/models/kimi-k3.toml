@@ -5,18 +5,22 @@
 # Sources accessed 2026-07-27:
 # https://docs.ollama.com/api/tags
 # https://ollama.com/library/kimi-k3:cloud
-
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "kimi-k3"
 last_updated = "2026-07-27"
-structured_output = true
-
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

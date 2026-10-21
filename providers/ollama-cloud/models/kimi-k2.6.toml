@@ -1,24 +1,26 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+schema = 2
 name = "kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi-k2"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
 open_weights = true
-
-[limit]
-context = 262144
-output = 262144
+release_date = "2026-04-20"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.16
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

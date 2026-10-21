@@ -5,8 +5,11 @@
 # https://ollama.com/library/clef — 27B decision model from Cloudflare, cloud input limit
 #   65,536 tokens billed per input token, usage output_tokens 0. Lab identity Cloudflare Clef.
 # Ollama Cloud serves Clef via SystemOne (not chat completions); input-only billing matches lab output 0.
+schema = 2
 base_model = "cloudflare/clef"
 
-[cost]
-input = 0.24
-output = 0
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0

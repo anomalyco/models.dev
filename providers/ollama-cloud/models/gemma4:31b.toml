@@ -1,25 +1,28 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+schema = 2
 name = "gemma4:31b"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 family = "gemma"
-release_date = "2026-04-02"
-knowledge = "2025-01"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-last_updated = "2026-04-08"
 open_weights = true
-
-[limit]
-context = 262144
-output = 262144
+knowledge = "2025-01"
+release_date = "2026-04-02"
+last_updated = "2026-04-08"
 
 [modalities]
-input = ["text","image"]
+input = ["text", "image"]
 output = ["text"]
 
-[cost]
-input = 0.14
-output = 0.4
-cache_read = 0.05
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.4

@@ -1,12 +1,17 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
-name = "nemotron-3-ultra"
+schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-reasoning_options = [{ type = "toggle" }]
+name = "nemotron-3-ultra"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
-context = 262144
+context = 262_144
 
-[cost]
-input = 0.1
-output = 3
-cache_read = 0.1
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3

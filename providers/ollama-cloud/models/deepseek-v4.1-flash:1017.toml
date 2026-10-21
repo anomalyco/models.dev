@@ -5,18 +5,22 @@
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
 # Context/modalities: https://ollama.com/library/deepseek-v4.1-flash:1017-cloud and https://ollama.com/library/deepseek-v4.1-flash/tags (1M context, Text + Image input); API model `deepseek-v4.1-flash:1017`.
 # Lab release: https://api-docs.deepseek.com/news/news261017/ (1017 released 2026-10-17 as minor update to V4.1-Flash).
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
 [limit]
-context = 1048576
+context = 1_048_576
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.003
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6

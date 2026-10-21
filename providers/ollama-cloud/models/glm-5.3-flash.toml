@@ -1,16 +1,18 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 open_weights = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
