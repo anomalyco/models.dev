@@ -18,11 +18,13 @@
 # context and output are what THIS deployment was launched with, both below the lab entry's
 # figures. Input modalities list only text and image because those are the two we serve and
 # proved; the lab entry's video and pdf are not claimed here.
+# Price update (checked 2026-10-21): 0.11 input / 0.03 cached input / 0.45 output on the model page
+# and in https://runinfra.ai/api/providers/openrouter/models.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
@@ -37,8 +39,8 @@ output = 32_768
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]
-price = 0.1
-cache = { read = 0.01 }
+price = 0.11
+cache = { read = 0.03 }
 
 [cost.text.output]
-price = 0.4
+price = 0.45

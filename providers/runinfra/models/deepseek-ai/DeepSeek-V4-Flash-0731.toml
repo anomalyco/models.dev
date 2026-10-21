@@ -8,8 +8,11 @@
 # ceiling. enable_thinking / chat_template_kwargs / thinking_budget are accepted but have no
 # effect.
 # cache_read is the cached input price
+# Deprecated: the model page now redirects to https://runinfra.ai/inference-api and the model is
+# missing from https://runinfra.ai/api/providers/openrouter/models (checked 2026-10-21).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "max"] }
