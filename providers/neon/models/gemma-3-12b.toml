@@ -1,23 +1,17 @@
+# Linked to google/gemma-3-12b-it: Databricks serves "Gemma 3 12B ... multimodal and vision language model" (databricks-gemma-3-12b).
+# Knowledge 2024-08-31 is unsourced (the lab has 2024-08); kept so v1 doesn't change.
+# Output 8_192 is the existing host value; Neon publishes no output cap.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
 schema = 2
+base_model = "google/gemma-3-12b-it"
 name = "Gemma 3 12B"
 description = "Google's open-weight Gemma 3 vision-language model for text and image understanding"
-family = "gemma"
-open_weights = true
 knowledge = "2024-08-31"
-release_date = "2025-03-13"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
-context = 131_072
 output = 8_192
 
 [cost.text.input]

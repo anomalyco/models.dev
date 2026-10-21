@@ -1,3 +1,6 @@
+# Modalities: text only. Neon's docs overview table lists inputs "text"; Databricks lists "Supported inputs: text":
+# https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models#alibaba-cloud-qwen35-122b-a10b
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3.5-122b-a10b"
 
@@ -10,7 +13,6 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [limit]
-context = 262_144
 output = 25_000
 
 [cost.text.input]

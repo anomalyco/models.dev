@@ -4,6 +4,10 @@
 # Effort: {"reasoning_effort": <v>}
 # The Neon gateway caps output below the upstream entry: `max_tokens` one above
 # 65_536 returns 400. Measured at the boundary 2026-08-08. `context` is inherited.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -11,6 +15,7 @@ base_model = "moonshotai/kimi-k3"
 reasoning = { supported = true, toggle = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = true
 temperature = true
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 65_536

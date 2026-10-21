@@ -1,9 +1,17 @@
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Cache: explicit. POST /anthropic/v1/messages forwards `cache_control` unchanged and caching "works exactly as described"
+# in Anthropic's docs (https://neon.com/docs/ai-gateway/anthropic-messages#prompt-caching); breakpoints, targets and
+# min_tokens follow providers/anthropic. Only 5m is listed because Neon publishes a single cache_write price.
+# Toggle: {"thinking": {"type": "adaptive"|"disabled"}}. Neon: this model rejects `thinking.type: "enabled"`; only
+# claude-opus-5-5 and the Fable models also reject "disabled" (https://neon.com/docs/ai-gateway/anthropic-messages#extended-thinking).
+# Effort: {"thinking": {"type": "adaptive"}, "output_config": {"effort": <v>}}
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
 
 [cost.text.input]
 price = 5

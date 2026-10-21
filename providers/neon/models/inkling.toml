@@ -5,12 +5,20 @@
 # Effort: {"reasoning_effort": <v>}
 # The Neon gateway caps output below the upstream entry: `max_tokens` one above
 # 65_536 returns 400. Measured at the boundary 2026-08-08. `context` is inherited.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Status: deprecated. Neon serves Databricks-hosted models (https://neon.com/docs/ai-gateway/models), and Databricks
+# retires this model on 2026-10-30: https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models#thinking-machine-labs-inkling
 schema = 2
 base_model = "thinkingmachines/inkling"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = false
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 65_536

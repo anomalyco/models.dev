@@ -8,12 +8,17 @@
 # Cost: https://neon.com/models.json grok-4-6 (USD / 1M tokens).
 # Lab output is 500_000. The gateway names 524_288:
 # 'max_tokens' (100000000) exceeds model maximum (524288). Measured 2026-09-04.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
 schema = 2
 base_model = "xai/grok-4.6"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 524_288

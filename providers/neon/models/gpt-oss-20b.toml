@@ -1,22 +1,15 @@
+# Linked to openai/gpt-oss-20b (Databricks endpoint databricks-gpt-oss-20b).
+# Output 25_000 is the existing host value (same cap as gpt-oss-120b, measured there 2026-08-08).
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
 schema = 2
-name = "GPT OSS 20B"
+base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-open_weights = true
-release_date = "2025-08-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
-context = 131_072
 output = 25_000
 
 [cost.text.input]

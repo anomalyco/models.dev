@@ -6,12 +6,17 @@
 # [cost] is the neon.com/models list for this id (10 / 50 / cache_read 0.25 /
 # cache_write 12.5). Sibling claude-fable-5 publishes cache_read = 1; do not
 # copy that onto 5.1.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Cache: explicit. POST /anthropic/v1/messages forwards `cache_control` unchanged and caching "works exactly as described"
+# in Anthropic's docs (https://neon.com/docs/ai-gateway/anthropic-messages#prompt-caching); breakpoints, targets and
+# min_tokens follow providers/anthropic. Only 5m is listed because Neon publishes a single cache_write price.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]
 price = 10
