@@ -1,13 +1,15 @@
+schema = 2
 base_model = "tencent/hy4-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
 
-[provider]
-api = "https://opencode.ai/inference/go/openai/v1"
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

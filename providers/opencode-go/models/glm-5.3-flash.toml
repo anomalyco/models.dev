@@ -1,15 +1,18 @@
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 name = "GLM-5.3-Flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-api = "https://opencode.ai/inference/go/openai/v1"
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

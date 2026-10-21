@@ -1,21 +1,27 @@
 # Pricing and controls: https://developers.openai.com/api/docs/models/gpt-6-luna
+schema = 2
 base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[api.responses]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.2
-output = 0.75
-cache_read = 0.02
-cache_write = 0.25
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://opencode.ai/inference/go/openai/v1"
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.75

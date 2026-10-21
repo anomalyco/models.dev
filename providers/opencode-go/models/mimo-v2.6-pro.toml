@@ -1,13 +1,16 @@
+schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.435
-output = 0.87
-cache_read = 0.003625
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-api = "https://opencode.ai/inference/go/openai/v1"
+[cost.text.input]
+price = 0.435
+cache = { read = 0.003625 }
+
+[cost.text.output]
+price = 0.87

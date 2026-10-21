@@ -1,31 +1,31 @@
+schema = 2
 name = "MiMo V2.5"
 description = "MiMo omni model for text, image, video, audio, and agents"
 family = "mimo-v2.5"
-release_date = "2026-04-22"
-last_updated = "2026-04-22"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-12"
 open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
-
-[limit]
-context = 1_000_000
-output = 128_000
+knowledge = "2024-12"
+release_date = "2026-04-22"
 
 [modalities]
 input = ["text", "image", "audio", "video"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/go/openai/v1"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

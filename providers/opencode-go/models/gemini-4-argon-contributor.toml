@@ -1,20 +1,24 @@
 # Sources: https://opencode.ai/docs/go/#endpoints and https://opencode.ai/docs/go/#usage-limits
 # Contributor tier: prompts and completions may be used to train future Google models,
 # so Go requires the workspace's consent to paid endpoints that train on request data.
+schema = 2
 base_model = "google/gemini-4-argon"
-structured_output = true
 name = "Gemini 4 Argon Contributor"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 4.00
-output = 20.00
-cache_read = 0.20
-input_audio = 4.00
+[api.generate-content]
+base_url = "https://opencode.ai/inference/go/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google" }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://opencode.ai/inference/go/google/v1beta"
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20
+
+[cost.audio.input]
+price = 4

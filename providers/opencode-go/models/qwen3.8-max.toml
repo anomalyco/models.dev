@@ -2,25 +2,26 @@
 # https://help.aliyun.com/en/model-studio/anthropic-api-messages
 # Toggle (Messages): thinking.type = enabled|disabled
 # Effort (Messages): output_config.effort = low|medium|xhigh
+schema = 2
 base_model = "alibaba/qwen3.8-max"
 description = "2.4-trillion-parameter multimodal flagship for coding, professional work, and long-horizon agentic workflows"
 family = "qwen3.8-max"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens", max = 262_144 },
-]
-structured_output = true
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
-cache_write = 2.5
 
 [modalities]
 input = ["text", "image", "video"]
+output = ["text"]
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://opencode.ai/inference/go/anthropic/v1"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+
+[api.messages]
+base_url = "https://opencode.ai/inference/go/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25, write = 2.5 }
+
+[cost.text.output]
+price = 6

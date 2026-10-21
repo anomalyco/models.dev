@@ -1,14 +1,17 @@
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
 
-[provider]
-api = "https://opencode.ai/inference/go/openai/v1"
+[cost.text.output]
+price = 4.4
