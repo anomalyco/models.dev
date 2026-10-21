@@ -1,24 +1,11 @@
 schema = 2
+base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash (Alibaba Cloud)"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
-family = "deepseek-flash"
-open_weights = true
-knowledge = "2025-05"
-release_date = "2026-04-24"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_000_000
-output = 384_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

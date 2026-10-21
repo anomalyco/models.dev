@@ -1,22 +1,17 @@
 schema = 2
+base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5 Vision Turbo"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-family = "glmv"
-open_weights = false
-release_date = "2026-05-09"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime", "video/x-matroska"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 
 [limit]
-context = 200_000
 output = 128_000
 
 [api.chat-completions]

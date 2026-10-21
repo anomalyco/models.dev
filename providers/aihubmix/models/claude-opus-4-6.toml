@@ -1,26 +1,11 @@
 # Native Messages prefers $.thinking.type = "adaptive" with $.output_config.effort = "low"|"medium"|"high"|"max"; enabled budget_tokens >= 1024 is deprecated and must be < $.max_tokens. https://docs.aihubmix.com/cn/api/Claude-Native (accessed 2026-06-25)
 schema = 2
-name = "Claude Opus 4.6"
+base_model = "anthropic/claude-opus-4-6"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-open_weights = false
-knowledge = "2025-05-31"
-release_date = "2026-02-05"
-last_updated = "2026-03-13"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_000_000
-output = 128_000
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
