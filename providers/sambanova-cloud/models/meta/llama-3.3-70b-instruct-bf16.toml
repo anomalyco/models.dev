@@ -1,0 +1,11 @@
+# Pricing source: https://sambanova.ai/pricing (2026-10-20)
+# Verified against /proc/self/cmdline runtime args and .opencode/state.json
+# BFloat16 quantization confirmed via API /v1/models response
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[cost.text.input]
+price = 0.60
+
+[cost.text.output]
+price = 0.60
