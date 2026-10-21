@@ -2,13 +2,14 @@
 # Retired: absent from GET /v1/models and /api/public/pricing ("every model that is for sale") on 2026-10-21;
 #   removed before the changes feed's first entry (2026-10-11).
 # Price: :free models cost Rp 0 (https://kenari.id/en/docs/free-models).
+# Reasoning: retired lane of deepseek-v4-flash; effort follows the paid lane's catalog reasoning_options (low|high|max).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash (Free)"
 status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, effort = ["high", "xhigh"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [cost.text.input]
