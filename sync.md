@@ -168,8 +168,11 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 
 - Source endpoint: `https://www.crossmodel.ai/api/models`.
 - Pricing, context/output limits, modalities, and reasoning controls come from CrossModel's public catalog.
-- `structured_output` comes from `capabilities.json`; when that field is absent, the sync preserves an existing authored override.
-- Other intrinsic model facts remain inherited from the canonical `base_model` metadata.
+- `structured_output` comes from `capabilities.json` (documented `/v1/models` shape) or `capabilities.structured_output.json_schema` (the public catalog); when both are absent or null, the sync preserves an existing authored override.
+- `identity.release_stage = "deprecated"` sets `status = "deprecated"`; otherwise an existing status is kept.
+- `capabilities.context.caching = true` sets only `capabilities.cache.supported = true` in v2 files (CrossModel documents no mechanism or TTL). Authored `implicit` / `explicit` details are kept.
+- Effort lists are sorted low to high, because v2 compares them in order.
+- Intrinsic model facts (`knowledge`, dates, `family`, `open_weights`) are never synced; they stay inherited from the canonical `base_model` metadata. Display names are not synced either, so v1 names remain the lab's.
 
 ## Prime Inference Notes
 
