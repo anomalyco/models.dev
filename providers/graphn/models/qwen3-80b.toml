@@ -1,0 +1,19 @@
+# Served as Qwen/Qwen3-Next-80B-A3B-Instruct, instruct-only: no thinking mode and no
+# reasoning_content (live 2026-10-21). This runtime reports no cached-token count, but the
+# cached-input rate below is the published rate it bills at.
+schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+name = "Qwen3 80B"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.6

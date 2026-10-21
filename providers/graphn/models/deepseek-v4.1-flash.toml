@@ -1,0 +1,28 @@
+# Alias and limits: GET https://model.graphn.ai/v1/models (checked 2026-10-21). Served as
+# DeepSeek-V4.1-Flash-1017, with a 1M context and the platform's 32K output cap.
+# Rate card: the platform's published billing rate per 1M tokens. This alias does not have
+# its own row on https://graphn.ai/pricing yet (checked 2026-10-21), so treat the price as
+# pre-release.
+# Toggle: chat_template_kwargs.enable_thinking true|false
+# Effort: reasoning_effort = low|high|max (verified live: reasoning_content grows with the level)
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2
