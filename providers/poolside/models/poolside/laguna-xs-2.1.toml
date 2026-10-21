@@ -1,9 +1,19 @@
-# API: {"chat_template_kwargs": {"enable_thinking": false}}
+# Poolside-hosted inference (https://inference.poolside.ai/v1), docs accessed 2026-10-21:
+# - https://docs.poolside.ai/api/overview.md: endpoints GET /v1/models and POST /v1/chat/completions only. "Poolside-hosted
+#   inference enables thinking by default"; reasoning is returned in reasoning_content.
+# - https://docs.poolside.ai/api/openai-api-examples.md: turn thinking off with chat_template_kwargs.enable_thinking =
+#   false; preserve reasoning_content on assistant messages in follow-up requests; the stream ends with a chunk that
+#   carries the completed usage object; parallel tool calls are on by default.
+# - https://docs.poolside.ai/get-started/supported-models.md: text-to-text, "thinking on or off per request".
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default true). No effort or budget control.
+# Prices: no Poolside price list was found; the existing zero prices are kept.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
 schema = 2
 base_model = "poolside/laguna-xs-2.1"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+stream_usage = true
 structured_output = false
 
 [api.chat-completions]
