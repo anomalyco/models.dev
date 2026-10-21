@@ -16,19 +16,24 @@
 #   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+schema = 2
 base_model = "google/gemma-4-31b-it"
-structured_output = true
 last_updated = "2026-08-01"
-attachment = false
-reasoning_options = []
 
-[cost]
-input = 0.25
-output = 0.50
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 100_000
 input = 100_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 0.5

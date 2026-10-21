@@ -18,15 +18,22 @@
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
 #   https://huggingface.co/mistralai/Mistral-Small-4-119B-2603 (config.json "model_type": "mistral3")
+schema = 2
 base_model = "mistral/mistral-small-2603"
 last_updated = "2026-08-01"
-reasoning_options = []
-interleaved = true
 
-[cost]
-input = 0.25
-output = 0.93
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 256_000
 input = 256_000
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 0.93
