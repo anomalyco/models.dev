@@ -1,6 +1,12 @@
+# Source: Merkium first-party API, https://chat.merkium.nl/api/v1/models (limits, pricing, tools, reasoning)
+# and https://merkium.nl/blog/ganymede-1-1-release (release). Live-tested Oct 20, 2026.
+# Reasoning: always on. reasoning_content is returned on every request; reasoning=false,
+# reasoning={enabled:false} and reasoning_effort are accepted but do not disable or grade it, so there is no caller control.
 name = "Ganymede 1.1"
+description = "Merkium's flagship model for cybersecurity, code and interface work, with a 1M-token context window"
 attachment = false
 reasoning = true
+reasoning_options = []
 tool_call = true
 temperature = true
 release_date = "2026-10-18"
