@@ -2,21 +2,15 @@
 # Toggle: {"thinking":{"type":"disabled"}}
 # Budget: {"thinking":{"type":"enabled","budget_tokens":<n>}}
 # Effort: {"output_config":{"effort":"high"}}
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
-cache_write = 3.75
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 }, effort = ["low", "medium", "high", "max"] }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1024
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
+[cost.text.output]
+price = 15

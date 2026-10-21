@@ -2,21 +2,15 @@
 # Toggle: {"thinking":{"type":"disabled"}}
 # Budget: {"thinking":{"type":"enabled","budget_tokens":<n>}}
 # Effort: {"output_config":{"effort":"high"}}
+schema = 2
 base_model = "anthropic/claude-opus-4-5"
 
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 }, effort = ["low", "medium", "high"] }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1024
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.output]
+price = 25
