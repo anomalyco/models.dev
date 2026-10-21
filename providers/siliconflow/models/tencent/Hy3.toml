@@ -2,6 +2,8 @@
 # Limits below are this host's real deltas vs the lab entry (256K/128K):
 # SiliconFlow advertises 262K total context and 262K max output
 # (https://www.siliconflow.com/models/hy3).
+# Budget: thinking_budget = 128..32768 (top-level request field)
+# https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions
 schema = 2
 base_model = "tencent/hy3"
 
