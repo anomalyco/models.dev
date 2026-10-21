@@ -9,17 +9,20 @@
 # round-tripped; the prefix cache hit on an identical repeated prompt; the
 # 32,768 output cap refuses an over-cap request with 400.
 # cache_read is the cached input price (standing rate; no promotional window).
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.60
-output = 1.90
-cache_read = 0.03
 
 [limit]
 context = 1_048_576
 output = 32_768
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.9

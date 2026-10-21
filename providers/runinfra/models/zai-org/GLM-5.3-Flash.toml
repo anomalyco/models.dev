@@ -18,22 +18,27 @@
 # context and output are what THIS deployment was launched with, both below the lab entry's
 # figures. Input modalities list only text and image because those are the two we serve and
 # proved; the lab entry's video and pdf are not claimed here.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.10
-output = 0.40
-cache_read = 0.01
 
 [limit]
 context = 1_048_576
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4
