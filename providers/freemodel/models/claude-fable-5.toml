@@ -1,3 +1,5 @@
+# Prices: FreeModel's site price table (https://freemodel.dev, bundled cost table, checked 2026-10-21),
+# USD per 1M tokens, including the 5-minute and 1-hour cache-write rates.
 schema = 2
 base_model = "anthropic/claude-fable-5"
 
@@ -6,7 +8,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 
 [cost.text.input]
 price = 10
-cache = { read = 1, write = 12.5 }
+cache = { read = 1, write = { "5m" = 12.5, "1h" = 20 } }
 
 [cost.text.output]
 price = 50
