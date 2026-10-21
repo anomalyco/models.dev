@@ -1,0 +1,26 @@
+# Released 2026-06-16 (happyhorse-1.1-t2v, -i2v, -r2v): https://www.alibabacloud.com/help/en/model-studio/newly-released-models
+# Formats: images JPEG, JPG, PNG, BMP or WEBP; audio WAV or MP3:
+#   https://www.alibabacloud.com/help/en/model-studio/image-to-video-api-reference
+# Output: MP4.
+schema = 2
+v2_only = true
+type = "video"
+name = "HappyHorse-1.1"
+description = "Video model for text, image and reference to video with smoother motion and stronger consistency"
+open_weights = false
+release_date = "2026-06-16"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

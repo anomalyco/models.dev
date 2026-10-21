@@ -6145,6 +6145,179 @@ test("factors OpenRouter image models onto lab files with the Images API protoco
   expect(standalone).not.toHaveProperty("cost");
 });
 
+function openRouterVideoModel(skus: Record<string, string> | undefined, overrides: Partial<OpenRouterModel> = {}): OpenRouterModel {
+  return openRouterMediaModel({
+    id: "examplelab/director-1",
+    name: "Example Lab: Director 1",
+    architecture: { input_modalities: ["text", "image"], output_modalities: ["video"] },
+    pricing: { prompt: "0", completion: "0" },
+    video_pricing_skus: skus,
+    ...overrides,
+  });
+}
+
+const videoCostOf = (skus: Record<string, string>) => mediaCost(openRouterVideoModel(skus), "video");
+
+test("maps OpenRouter video-only models to the video type", () => {
+  const output = (value: string[]) =>
+    mediaType(openRouterMediaModel({ architecture: { input_modalities: ["text"], output_modalities: value } }));
+
+  expect(output(["video"])).toBe("video");
+  expect(output(["video", "text"])).toBeUndefined();
+});
+
+test("prices OpenRouter video models per second with resolution overrides", () => {
+  // Cents per second, with per-image input; the first SKU is the base.
+  expect(videoCostOf({
+    cents_per_image_input: "1",
+    cents_per_video_output_second_480p: "2",
+    cents_per_video_output_second_720p: "3",
+  })).toEqual({
+    image: { input: { unit: "image", price: 0.01 } },
+    video: {
+      output: { unit: "second", price: 0.02, overrides: [{ when: { resolution: { equals: "720p" } }, price: 0.03 }] },
+    },
+  });
+  // Dollars per second; a plain SKU is the base and tiers equal to it are left out.
+  expect(videoCostOf({ duration_seconds: "0.08", duration_seconds_480p: "0.05", duration_seconds_768p: "0.08" })).toEqual({
+    video: {
+      output: { unit: "second", price: 0.08, overrides: [{ when: { resolution: { equals: "480p" } }, price: 0.05 }] },
+    },
+  });
+  // Continuation SKUs add input_video, after the plain resolution tiers.
+  expect(videoCostOf({
+    cents_per_second_output: "17",
+    cents_per_second_output_2k: "28",
+    cents_per_second_video_continuation_2k: "31",
+  })).toEqual({
+    video: {
+      output: {
+        unit: "second",
+        price: 0.17,
+        overrides: [
+          { when: { resolution: { equals: "2K" } }, price: 0.28 },
+          { when: { resolution: { equals: "2K" }, input_video: { equals: true } }, price: 0.31 },
+        ],
+      },
+    },
+  });
+});
+
+test("prices OpenRouter video models with audio and mode overrides", () => {
+  // With and without audio, most specific override last.
+  expect(videoCostOf({
+    duration_seconds_with_audio: "0.40",
+    duration_seconds_with_audio_4k: "0.60",
+    duration_seconds_without_audio: "0.20",
+    duration_seconds_without_audio_4k: "0.40",
+  })).toEqual({
+    video: {
+      output: {
+        unit: "second",
+        price: 0.4,
+        overrides: [
+          { when: { generate_audio: { equals: false } }, price: 0.2 },
+          { when: { resolution: { equals: "4K" }, generate_audio: { equals: true } }, price: 0.6 },
+          { when: { resolution: { equals: "4K" }, generate_audio: { equals: false } }, price: 0.4 },
+        ],
+      },
+    },
+  });
+  // A plain SKU with an audio surcharge; mode SKUs at the base price add nothing.
+  expect(videoCostOf({
+    duration_seconds: "0.112",
+    duration_seconds_with_audio: "0.168",
+    text_to_video_duration_seconds_720p: "0.112",
+    image_to_video_duration_seconds_720p: "0.112",
+  })).toEqual({
+    video: {
+      output: { unit: "second", price: 0.112, overrides: [{ when: { generate_audio: { equals: true } }, price: 0.168 }] },
+    },
+  });
+  // Mode tiers and reference-to-video with per-image reference input.
+  expect(videoCostOf({
+    duration_seconds_480p: "0.02",
+    reference_input_images: "0.04",
+    reference_duration_seconds_480p: "0.07",
+    image_to_video_duration_seconds_720p: "0.10",
+  })).toEqual({
+    image: { input: { unit: "image", price: 0.04 } },
+    video: {
+      output: {
+        unit: "second",
+        price: 0.02,
+        overrides: [
+          { when: { resolution: { equals: "480p" }, mode: { equals: "reference-to-video" } }, price: 0.07 },
+          { when: { resolution: { equals: "720p" }, mode: { equals: "image-to-video" } }, price: 0.1 },
+        ],
+      },
+    },
+  });
+});
+
+test("prices OpenRouter video token SKUs per 1M tokens", () => {
+  expect(videoCostOf({
+    video_tokens: "0.000007",
+    video_tokens_4k: "0.000004",
+    video_tokens_without_audio: "0.000007",
+    video_tokens_with_video_input: "0.0000043",
+    video_tokens_4k_with_video_input: "0.0000024",
+  })).toEqual({
+    video: {
+      output: {
+        price: 7,
+        overrides: [
+          { when: { resolution: { equals: "4K" } }, price: 4 },
+          { when: { input_video: { equals: true } }, price: 4.3 },
+          { when: { resolution: { equals: "4K" }, input_video: { equals: true } }, price: 2.4 },
+        ],
+      },
+    },
+  });
+  expect(videoCostOf({ video_tokens: "0.0000024", video_tokens_without_audio: "0.0000012" })).toEqual({
+    video: { output: { price: 2.4, overrides: [{ when: { generate_audio: { equals: false } }, price: 1.2 }] } },
+  });
+});
+
+test("leaves the cost out of OpenRouter video models with unrepresentable SKUs", () => {
+  // Minimum charge per generation (Runway Aleph 2.0).
+  expect(videoCostOf({ cents_per_second_output: "28", minimum_cents_per_generation: "56" })).toBeUndefined();
+  // Megapixel-seconds (FLUX Video Upscale).
+  expect(videoCostOf({ cents_per_megapixel_second_precise: "3.5" })).toBeUndefined();
+  // Unknown SKU names, mixed units, or no SKUs.
+  expect(videoCostOf({ duration_seconds: "0.1", per_scene_fee: "1" })).toBeUndefined();
+  expect(videoCostOf({ duration_seconds: "0.1", video_tokens: "0.000007" })).toBeUndefined();
+  expect(mediaCost(openRouterVideoModel(undefined), "video")).toBeUndefined();
+});
+
+test("factors OpenRouter video models onto lab files with the videos protocol", () => {
+  const doc = buildOpenRouterMediaModel(openRouterVideoModel(
+    { duration_seconds_with_audio: "0.40", duration_seconds_without_audio: "0.20" },
+    { id: "google/veo-3.1", name: "Google: Veo 3.1" },
+  ), "video");
+
+  expect(doc).toEqual({
+    schema: 2,
+    v2_only: true,
+    base_model: "google/veo-3.1-generate-preview",
+    name: "Veo 3.1",
+    api: { videos: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider" } } },
+    cost: {
+      video: { output: { unit: "second", price: 0.4, overrides: [{ when: { generate_audio: { equals: false } }, price: 0.2 }] } },
+    },
+  });
+
+  const standalone = buildOpenRouterMediaModel(openRouterVideoModel({ duration_seconds: "0.1" }), "video");
+  expect(standalone).toMatchObject({
+    type: "video",
+    name: "Director 1",
+    description: "Video generation model",
+    modalities: { input: ["text", "image/png", "image/jpeg", "image/webp", "image/gif"], output: ["video/mp4"] },
+    limit: { context: 0, output: 0 },
+    api: { videos: { base_url: "https://openrouter.ai/api/v1" } },
+  });
+});
+
 test("OpenRouter text models still sync through v1 fields", () => {
   const translated = openrouter.translateModel(openRouterModel(), {
     existing: () => undefined,
