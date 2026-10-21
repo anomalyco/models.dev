@@ -1,15 +1,20 @@
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.40
-output = 4.40
-cache_read = 0.26
 
 [limit]
 context = 1_048_576
 output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

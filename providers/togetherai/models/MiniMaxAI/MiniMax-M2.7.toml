@@ -4,14 +4,19 @@
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#supported-models
 # Served context_length=196608 for this ID in GET https://api.together.xyz/v1/models
 # (checked 2026-09-23).
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
-reasoning_options = []
-structured_output = true
 
-[cost]
-input = 0.30
-cache_read = 0.06
-output = 1.20
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 196_608
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

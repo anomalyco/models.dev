@@ -5,26 +5,28 @@
 # Output limit 65_536 per Alibaba Model Studio qwen3.6-plus (Max Output Length 65536 normal + thinking):
 # https://www.alibabacloud.com/help/en/model-studio/qwen3-6-plus
 # Weights: proprietary hosted-only (no Plus weights on HF; open releases are Qwen3.6-35B-A3B / Qwen3.6-27B).
+schema = 2
 name = "Qwen3.6 Plus"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2026-04-30"
-last_updated = "2026-04-30"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-04-30"
 
-[cost]
-input = 0.50
-output = 3.00
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3

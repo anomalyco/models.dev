@@ -1,25 +1,27 @@
+schema = 2
 name = "MiniMax-M3"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
 family = "minimax"
-release_date = "2026-06-12"
-last_updated = "2026-06-12"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-06-12"
 
-[cost]
-input = 0.30
-cache_read = 0.06
-output = 1.20
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 524_288
 output = 250_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

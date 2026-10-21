@@ -1,14 +1,19 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.32
-output = 3.96
-cache_read = 0.13
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.32
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 3.96

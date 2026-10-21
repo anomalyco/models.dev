@@ -1,30 +1,32 @@
 # Served context_length=1048575 for this ID in GET https://api.together.xyz/v1/models
 # (checked 2026-09-23).
-name = "GLM-5.2"
+schema = 2
 base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2"
 family = "glm"
-release_date = "2026-06-16"
-last_updated = "2026-06-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
-temperature = true
-structured_output = true
-tool_call = true
 open_weights = true
+release_date = "2026-06-16"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 1.40
-cache_read = 0.26
-output = 4.40
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_575
 output = 164_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

@@ -1,11 +1,16 @@
+schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.40
-output = 1.20
-cache_read = 0.04
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2

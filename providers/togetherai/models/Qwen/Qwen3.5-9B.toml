@@ -2,27 +2,29 @@
 # POST https://api.together.ai/v1/chat/completions
 # JSON reasoning.enabled: true | false (thinking is on by default).
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#supported-models
+schema = 2
 name = "Qwen3.5 9B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
-release_date = "2026-03-03"
-last_updated = "2026-03-03"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-03-03"
 
-[cost]
-input = 0.17
-output = 0.25
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.17
+
+[cost.text.output]
+price = 0.25
