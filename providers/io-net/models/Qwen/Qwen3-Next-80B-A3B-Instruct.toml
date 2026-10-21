@@ -1,27 +1,16 @@
+# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen 3 Next 80B Instruct"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = true
 knowledge = "2024-12"
-release_date = "2025-01-10"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 262_144
 output = 4_096
 
 [cost.text.input]
-price = 0.1
-cache = { read = 0.05, write = 0.2 }
+price = 0.11875
+cache = { read = 0.059375 }
 
 [cost.text.output]
-price = 0.8
+price = 1.2625

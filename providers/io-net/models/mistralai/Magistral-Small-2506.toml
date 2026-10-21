@@ -1,19 +1,14 @@
+# Deprecated: no longer listed by GET https://api.intelligence.io.solutions/api/v1/models (2026-10-21)
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
+base_model = "mistral/magistral-small-2506"
 name = "Magistral Small 2506"
 description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
-family = "magistral-small"
-open_weights = false
 knowledge = "2025-01"
-release_date = "2025-06-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 128_000

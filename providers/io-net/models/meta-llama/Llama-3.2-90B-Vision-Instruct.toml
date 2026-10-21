@@ -1,25 +1,29 @@
+# Deprecated: no longer listed by GET https://api.intelligence.io.solutions/api/v1/models (2026-10-21)
+schema = 2
 name = "Llama 3.2 90B Vision Instruct"
 description = "Open Llama multimodal model for image understanding and text reasoning"
 family = "llama"
-release_date = "2024-09-25"
-last_updated = "2024-09-25"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2023-12"
 open_weights = true
-
-[cost]
-input = 0.35
-output = 0.4
-cache_read = 0.175
-cache_write = 0.7
-
-[limit]
-context = 16000
-output = 4096
+knowledge = "2023-12"
+release_date = "2024-09-25"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 16_000
+output = 4_096
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.175, write = 0.7 }
+
+[cost.text.output]
+price = 0.4

@@ -1,27 +1,18 @@
+# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
+base_model = "moonshotai/kimi-k2-0905"
 name = "Kimi K2 Instruct"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-open_weights = false
 knowledge = "2024-08"
-release_date = "2024-09-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 32_768
 output = 4_096
 
 [cost.text.input]
-price = 0.39
-cache = { read = 0.195, write = 0.78 }
+price = 0.57
+cache = { read = 0.285 }
 
 [cost.text.output]
-price = 1.9
+price = 2.3
