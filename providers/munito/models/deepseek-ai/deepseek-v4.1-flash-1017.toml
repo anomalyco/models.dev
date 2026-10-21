@@ -1,6 +1,8 @@
 # Source: https://api.munito.ai/inference/v1/models/openrouter (public), standard tier on the global host.
 # Limits: Munito serves this checkpoint with a 262,144-token window, so the feed gives
 # max_context_length 262144 and max_length 235929 (max_tokens.max 235929) for this ID.
+# On 2026-10-21 a 270,000-token prompt got HTTP 400 "maximum context length is 262144 tokens".
+# Input: text only. On 2026-10-21 an image part got HTTP 400 "'image' is not supported".
 # Toggle: chat_template_kwargs.enable_thinking = true|false (the only switch that the feed lists for this ID)
 # Effort: reasoning_effort = low|high|max
 base_model = "deepseek/deepseek-v4.1-flash-1017"
