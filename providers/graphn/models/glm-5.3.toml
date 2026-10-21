@@ -1,8 +1,7 @@
 # Alias and limits: GET https://model.graphn.ai/v1/models (checked 2026-10-21); 250K context
 # and the platform's 32K output cap.
-# Rate card: the platform's published billing rate per 1M tokens. This alias does not have
-# its own row on https://graphn.ai/pricing yet (checked 2026-10-21), so treat the price as
-# pre-release.
+# Pricing: https://graphn.ai/pricing — $1.40 input, $0.14 cached input, $4.40 output per 1M
+# tokens (checked 2026-10-21).
 # Effort: reasoning_effort = low|high|max (default max; verified live). Thinking is always on
 # here: chat_template_kwargs.enable_thinking does not suppress reasoning_content.
 schema = 2

@@ -1,8 +1,7 @@
 # Alias and limits: GET https://model.graphn.ai/v1/models (checked 2026-10-21). Served as
 # DeepSeek-V4.1-Flash-1017, with a 1M context and the platform's 32K output cap.
-# Rate card: the platform's published billing rate per 1M tokens. This alias does not have
-# its own row on https://graphn.ai/pricing yet (checked 2026-10-21), so treat the price as
-# pre-release.
+# Pricing: https://graphn.ai/pricing — $0.30 input, $0.03 cached input, $1.20 output per 1M
+# tokens (checked 2026-10-21).
 # Toggle: chat_template_kwargs.enable_thinking true|false
 # Effort: reasoning_effort = low|high|max (verified live: reasoning_content grows with the level)
 schema = 2
