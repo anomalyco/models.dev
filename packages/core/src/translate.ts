@@ -132,25 +132,34 @@ export function modelV2ToV1(
 // `interleaved` its reasoning requirement. With several `[api.<protocol>]`
 // tables, the first one in the file is the default and becomes the v1 API.
 // The protocol only becomes a v1 `shape` where it isn't the SDK's default
-// (OpenAI and Azure default to Responses).
+// (OpenAI and Azure default to Responses), unless `legacy_shape` keeps one.
 function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined) {
   const first = Object.entries(api ?? {})[0];
   if (first === undefined) return {};
-  const [protocol, { base_url, sdk, compatibility }] = first;
+  const [protocol, { base_url, sdk, compatibility, legacy_shape }] = first;
   const npm = sdk?.aisdk;
-  const responsesByDefault = npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure";
-  const shape =
-    protocol === "responses" && !responsesByDefault
-      ? "responses"
-      : protocol === "chat-completions" && responsesByDefault
-        ? "completions"
-        : undefined;
+  if (legacy_shape !== undefined && toProtocol(legacy_shape) !== protocol) {
+    throw new Error(`legacy_shape = "${legacy_shape}" doesn't match [api.${protocol}]`);
+  }
+  const shape = legacy_shape ?? toV1Shape(protocol, npm);
   const provider = withoutUndefined({ npm, api: base_url, shape });
   const field = compatibility?.reasoning_field;
   return withoutUndefined({
     interleaved: field !== undefined ? { field } : compatibility?.replay_reasoning ? true : undefined,
     provider: Object.keys(provider).length > 0 ? provider : undefined,
   });
+}
+
+// The v1 `shape` a protocol gets on an SDK: none where it's the SDK's default.
+export function toV1Shape(protocol: string, npm: string | undefined) {
+  const responsesByDefault = npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure";
+  if (protocol === "responses" && !responsesByDefault) return "responses";
+  if (protocol === "chat-completions" && responsesByDefault) return "completions";
+  return undefined;
+}
+
+function toProtocol(shape: "responses" | "completions") {
+  return shape === "responses" ? "responses" : "chat-completions";
 }
 
 function toReasoningOptions(reasoning: ReasoningSupportV2) {

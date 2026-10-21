@@ -4,7 +4,7 @@
 import { toCostV2 } from "./generate-v2.js";
 import { ReasoningOption } from "./schema.js";
 import type { CostV2, CostWhenV2, InputCostV2, OutputCostV2 } from "./schema-v2.js";
-import { roundPrice } from "./translate.js";
+import { roundPrice, toV1Shape } from "./translate.js";
 
 type Doc = Record<string, any>;
 
@@ -99,6 +99,8 @@ function apiEntry(model: Record<string, any>, fallback: string | undefined) {
   if (provider?.npm !== undefined) entry.sdk = { aisdk: provider.npm };
   if (interleaved === true) entry.compatibility = { replay_reasoning: true };
   else if (interleaved !== undefined) entry.compatibility = { reasoning_field: interleaved.field };
+  // A shape v1 would drop as the SDK's default stays as the legacy field.
+  if (shape !== undefined && toV1Shape(protocol, provider?.npm) === undefined) entry.legacy_shape = shape;
   return { [protocol]: entry };
 }
 

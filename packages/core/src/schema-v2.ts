@@ -745,6 +745,10 @@ export const AuthoredApiEntryV2 = z
     compatibility: CompatibilityV2.pick({ reasoning_field: true, replay_reasoning: true })
       .strict()
       .optional(),
+    // Legacy, v1-only: the v1 `provider.shape` of a file that states its SDK's
+    // default protocol (Responses on `@ai-sdk/openai`). It only keeps that
+    // published v1 field unchanged; the v2 API never emits it.
+    legacy_shape: z.enum(["responses", "completions"]).optional(),
   })
   .strict();
 

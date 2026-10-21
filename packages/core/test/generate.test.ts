@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
-import { generate, generateCatalog } from "../src/index.js";
+import { generate, generateCatalog, generateV2 } from "../src/index.js";
 
 async function withFixture<T>(callback: (root: string) => Promise<T>) {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-test-"));
@@ -382,6 +382,58 @@ env = { TARGET_RESOURCE = "LEGACY_RESOURCE", TARGET_KEY = "LEGACY_KEY" }
     }
 
     expect(qualifiedNames).toEqual([]);
+  });
+
+  test("legacy_shape is published in v1 and never in v2", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        `schema = 2
+name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
+open_weights = true
+release_date = "2026-01-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+
+[limit]
+context = 400_000
+output = 128_000
+
+[api.responses]
+base_url = "https://example.com/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
+legacy_shape = "responses"
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
+`,
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.provider?.models.model?.provider).toEqual({
+        npm: "@ai-sdk/openai",
+        api: "https://example.com/v1",
+        shape: "responses",
+      });
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(providersV2.provider?.models.model?.api).toEqual({
+        responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" , opencodeai: "@opencode/ai/providers/openai/responses" } },
+      });
+      expect(JSON.stringify(providersV2)).not.toContain("legacy_shape");
+    });
   });
 });
 

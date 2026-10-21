@@ -7223,6 +7223,79 @@ test("v2 patches switch tool_call and reasoning between the lab's value and an o
   }
 });
 
+test("v2 sync patches keep legacy_shape", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-v2-legacy-shape-"));
+  const modelsDir = path.join(root, "providers", "example", "models");
+  await mkdir(modelsDir, { recursive: true });
+  await mkdir(path.join(root, "models"), { recursive: true });
+  const file = path.join(modelsDir, "chat.toml");
+  await writeFile(file, [
+    "schema = 2",
+    'name = "Chat"',
+    'description = "Example chat model"',
+    "open_weights = false",
+    'release_date = "2026-01-01"',
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "",
+    "[limit]",
+    "context = 100_000",
+    "output = 10_000",
+    "",
+    "[api.responses]",
+    'base_url = "https://example.com/v1"',
+    'sdk = { aisdk = "@ai-sdk/openai" }',
+    'legacy_shape = "responses"',
+    "",
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
+    "",
+  ].join("\n"));
+  const { id: _id, ...existing } = modelV2ToV1({ ...(Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, unknown>), id: "chat" });
+  let synced = { ...existing, cost: { input: 3, output: 4 } } as SyncedModel;
+  const provider: SyncProvider<string> = {
+    id: "v2-legacy-shape-test",
+    name: "v2 legacy shape test",
+    modelsDir,
+    async fetchModels() {
+      return ["chat"];
+    },
+    parseModels(raw) {
+      return raw as string[];
+    },
+    translateModel(id) {
+      return { id, model: synced };
+    },
+  };
+
+  try {
+    expect(existing.provider).toEqual({ npm: "@ai-sdk/openai", api: "https://example.com/v1", shape: "responses" });
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    let doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
+    expect(doc.cost.text.input.price).toBe(3);
+    expect(doc.api.responses.legacy_shape).toBe("responses");
+
+    // A provider change rewrites the API table from v1 and keeps the shape.
+    synced = { ...synced, provider: { npm: "@ai-sdk/openai", api: "https://example.com/v2", shape: "responses" } } as SyncedModel;
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
+    expect(doc.api).toEqual({
+      responses: { base_url: "https://example.com/v2", sdk: { aisdk: "@ai-sdk/openai" }, legacy_shape: "responses" },
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("syncs OpenRouter decision models with no supported parameters as decision type", () => {
   const decision = openRouterModel({
     id: "cloudflare/clef-omni",
