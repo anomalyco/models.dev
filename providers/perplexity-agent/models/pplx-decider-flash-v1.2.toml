@@ -7,6 +7,7 @@ base_model = "perplexity/pplx-decider-flash-v1.2"
 
 [api.decisions]
 base_url = "https://api.perplexity.ai/v1"
+sdk = { aisdk = "none" }
 
 [cost.text.input]
 price = 0.01

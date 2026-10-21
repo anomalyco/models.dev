@@ -532,6 +532,40 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-im
     });
   });
 
+  test('"none" leaves a package out instead of filling it in', async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/providers/openai-compatible"\n'));
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(`
+[api.systemone]
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[api.images]
+sdk = { opencodeai = "none" }
+`),
+      );
+      await write(root, "providers/silent/provider.toml", providerToml("Silent") + 'opencodeai = "none"\n');
+      await write(root, "providers/silent/models/model.toml", model("\n[api.chat-completions]\n"));
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(providersV2.gateway?.models.model?.api).toEqual({
+        systemone: { base_url: "https://example.com/v1", sdk: { opencodeai: "@opencode/ai/providers/typesafe-ai" } },
+        images: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai-compatible" } },
+      });
+      // A provider-level "none" also stops the guessed package.
+      expect(providersV2.silent?.models.model?.api).toEqual({
+        "chat-completions": { base_url: "https://api.openai.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+      });
+
+      // v1 never sees "none": the model keeps the provider's npm.
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.gateway?.models.model?.provider).toBeUndefined();
+      expect(JSON.stringify(providers)).not.toContain('"none"');
+    });
+  });
+
   test("rejects an opencodeai that isn't an @opencode/ai entry point", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/openai"\n'));

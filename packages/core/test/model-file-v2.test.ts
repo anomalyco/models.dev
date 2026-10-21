@@ -193,3 +193,14 @@ test("patchModelV2 keeps a file's other API tables and OpenCode package", () => 
     ["images", api.images],
   ]);
 });
+
+test('patchModelV2 keeps aisdk = "none" when sync rewrites the first table', () => {
+  const api = { systemone: { base_url: "https://example.com/v1", sdk: { aisdk: "none" } } };
+  const doc = { schema: 2, base_model: "typesafe/jev-1.13", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
+  const before = modelV2ToV1({ ...doc, id: "m" });
+  expect(before.provider).toEqual({ api: "https://example.com/v1" });
+  const { id: _id, ...after } = { ...before, provider: { api: "https://example.com/v2" } };
+  expect(patchModelV2(doc, before, after).api).toEqual({
+    systemone: { base_url: "https://example.com/v2", sdk: { aisdk: "none" } },
+  });
+});

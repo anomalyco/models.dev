@@ -540,8 +540,8 @@ export function resolveProtocol(
 // A model's own `[api.<protocol>]` tables, in order. Whatever a table leaves out
 // comes from the provider's default API: `base_url` from its `api` (or the SDK's
 // default URL), `sdk.aisdk` from its `npm`, `sdk.opencodeai` from its
-// `opencodeai`. Until providers author `opencodeai`, the package is guessed as
-// for the default API.
+// `opencodeai`. `"none"` stops a package from being filled in. Until providers
+// author `opencodeai`, the package is guessed as for the default API.
 function toModelApis(
   tables: Record<string, AuthoredApiEntryV2>,
   model: Model,
@@ -550,16 +550,18 @@ function toModelApis(
 ): ApiV2 {
   return Object.fromEntries(
     Object.entries(tables).map(([protocol, table]) => {
-      const npm = table.sdk?.aisdk ?? provider.npm;
+      const aisdk = table.sdk?.aisdk ?? provider.npm;
+      const npm = aisdk === "none" ? provider.npm : aisdk;
       const base_url = (table.base_url ?? provider.api ?? DEFAULT_NPM_BASE_URLS[npm] ?? "").replace(/\/+$/, "");
       const shape = protocol === "responses" ? "responses" : protocol === "chat-completions" ? "completions" : undefined;
       const sdk = {
-        aisdk: npm,
+        aisdk,
         opencodeai: table.sdk?.opencodeai ?? opencodeai ?? resolveOpencodePackage(model, provider, npm, shape),
       };
       const entry: ApiEntryV2 = {
         base_url,
-        sdk: Object.fromEntries(Object.entries(sdk).filter(([, value]) => value !== undefined)),
+        // `"none"`: no package supports this API, so the key is left out.
+        sdk: Object.fromEntries(Object.entries(sdk).filter(([, value]) => value !== undefined && value !== "none")),
         ...(table.compatibility !== undefined ? { compatibility: table.compatibility } : {}),
       };
       return [protocol, entry];

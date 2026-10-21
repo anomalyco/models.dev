@@ -144,7 +144,8 @@ function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined) {
   const first = Object.entries(api ?? {})[0];
   if (first === undefined) return {};
   const [protocol, { base_url, sdk, compatibility, legacy_shape }] = first;
-  const npm = sdk?.aisdk;
+  // `aisdk = "none"` (no AI SDK package) is v2-only; v1 keeps the provider's npm.
+  const npm = sdk?.aisdk === "none" ? undefined : sdk?.aisdk;
   if (legacy_shape !== undefined && toProtocol(legacy_shape) !== protocol) {
     throw new Error(`legacy_shape = "${legacy_shape}" doesn't match [api.${protocol}]`);
   }

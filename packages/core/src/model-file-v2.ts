@@ -188,17 +188,18 @@ function mergeModalities(current: string[] | undefined, synced: string[]) {
 }
 
 // A synced change to v1's `provider` or `interleaved` rewrites the file's first
-// API table, which is what v1 reads. The table's OpenCode package and the file's
-// other tables are v2-only, so they are kept.
+// API table, which is what v1 reads. The table's OpenCode package, an
+// `aisdk = "none"` and the file's other tables are v2-only, so they are kept.
 function patchApis(first: Doc | undefined, current: Doc) {
   const [protocol, ...rest] = Object.keys(current);
   if (protocol === undefined) return first;
-  const opencodeai = current[protocol]?.sdk?.opencodeai;
+  const { opencodeai, aisdk } = current[protocol]?.sdk ?? {};
+  const v2Only = { ...(opencodeai !== undefined ? { opencodeai } : {}), ...(aisdk === "none" ? { aisdk } : {}) };
   let head = first;
-  if (opencodeai !== undefined || rest.length > 0) {
+  if (Object.keys(v2Only).length > 0 || rest.length > 0) {
     const [key, entry] = Object.entries<Doc>(first ?? { [protocol]: {} })[0]!;
-    const keep = opencodeai !== undefined && key === protocol;
-    head = { [key]: keep ? { ...entry, sdk: { ...entry.sdk, opencodeai } } : entry };
+    const keep = Object.keys(v2Only).length > 0 && key === protocol;
+    head = { [key]: keep ? { ...entry, sdk: { ...v2Only, ...entry.sdk } } : entry };
   }
   if (rest.length === 0) return head;
   return {
