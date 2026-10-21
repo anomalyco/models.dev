@@ -1,20 +1,11 @@
 schema = 2
+base_model = "openai/gpt-oss-20b"
 name = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-open_weights = false
-release_date = "2025-08-13"
-last_updated = "2025-11-25"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 131_000
