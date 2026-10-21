@@ -2,6 +2,8 @@
 #   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning only (schema empty); no reasoning_effort,
 #   thinking or budget field. Peer providers/openrouter nemotron-3-nano-30b-a3b is toggle.
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
+# Limit: Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21) reports context_length 1048576 and max_completion_tokens 32768
+#   for this route (top_provider.context_length 1048576), above the lab's 262144 context.
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 reasoning_options = [{ type = "toggle" }]
 
