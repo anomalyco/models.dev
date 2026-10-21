@@ -180,6 +180,17 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 - Models absent from the API or explicitly lacking tool/text support are removed. Empty, malformed and duplicate-ID inventories fail before writes. Internal/frontier namespaces, deployment-qualified IDs and uppercase namespaces are excluded; exact wire IDs are preserved on case-insensitive filesystems.
 - Cache prices are omitted when unavailable, including removal of stale cache rates. Unpublished input-token limits are omitted; generic `file` input does not imply PDF support. Reasoning options use the published per-model `reasoning_effort` values, including `none` when advertised.
 
+## EmpirioLabs Notes
+
+EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
+
+- Source endpoint: the public `https://api.empiriolabs.ai/v1/models`. Only `category = "text"` models without a `:` lane suffix are synced.
+- Prices, limits, modalities, `supported_parameters` reasoning controls (`enable_thinking`, `reasoning_effort`, `thinking_budget`) and display names come from the catalog. Effort lists are sorted low to high.
+- `structured_output` is `"json_schema"`, `"json_object"` or `"none"` (https://docs.empiriolabs.ai/compatibility.md); `"none"` syncs as false.
+- `deprecated = true` sets `status = "deprecated"`; otherwise an existing status is kept.
+- A `cache` or `prompt_cache` feature sets only `capabilities.cache.supported = true` in v2 files. Authored `implicit` / `explicit` details are kept.
+- `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.

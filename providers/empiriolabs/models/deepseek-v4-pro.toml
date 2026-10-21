@@ -1,5 +1,6 @@
 # Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/deepseek-v4-pro.md
 # Effort: reasoning_effort = none|low|medium|high|max
+#   (model page: each level sets a bounded thinking budget, "translated into enable_thinking and thinking_budget for the model service")
 # Budget: thinking_budget (integer reasoning tokens)
 # Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
 # (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
