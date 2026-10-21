@@ -6,6 +6,7 @@
 #     pcm|wav|mp3|flac|opus, default mp3; a 2-3 second reference audio clip can clone a voice)
 #   https://mistral.ai/news/voxtral-tts
 # No [cost]: speech is billed per output character ($16 per 1M), left out to keep this model's v1 output unchanged.
+# API: POST https://api.mistral.ai/v1/audio/speech (https://docs.mistral.ai/api/endpoint/audio/speech).
 schema = 2
 type = "speech"
 name = "Voxtral Mini TTS (latest)"
@@ -26,3 +27,6 @@ temperature = false
 [limit]
 context = 0
 output = 0
+
+[api.speech]
+sdk = { opencodeai = "none" }

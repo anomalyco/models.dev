@@ -3,9 +3,13 @@
 #     voxtral-mini-realtime-latest; capability audio_transcription_realtime)
 #   https://docs.mistral.ai/models/voxtral-mini-transcribe-realtime-26-02 and https://docs.mistral.ai/inference/pricing
 #     ($0.006 per minute of audio)
+# API: wss://api.mistral.ai/v1/audio/transcriptions/realtime (https://docs.mistral.ai/studio/audio/speech_to_text/realtime_transcription).
 schema = 2
 v2_only = true
 base_model = "mistral/voxtral-mini-transcribe-realtime-2602"
+
+[api.realtime]
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.audio.input]
 unit = "minute"
