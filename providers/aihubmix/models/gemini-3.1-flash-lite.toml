@@ -1,13 +1,23 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# cache write kept from the file; the catalog lists none.
 schema = 2
 base_model = "google/gemini-3.1-flash-lite"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true, explicit = true }
 
 [cost.text.input]
 price = 0.25
-cache = { read = 0.025, write = 1 }
+cache = { read = 0.025, storage = 1, write = 1 }
 
 [cost.text.output]
 price = 1.5
+
+[cost.audio.input]
+price = 0.5
+
+[cost.video.input]
+price = 0.25

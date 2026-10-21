@@ -6,11 +6,19 @@
 # Canon export SHA: 00fb309c0dba28a9e4c9a3a6569d418db947cafc
 # Toggle: $.enable_thinking = true|false on /v1/chat/completions.
 # Budget: integer $.reasoning.max_tokens on /v1/chat/completions.
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# cache read kept from the file; the catalog lists none.
 schema = 2
 base_model = "alibaba/qwen3-vl-plus"
 
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = {} }
+cache = { supported = true }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
@@ -22,12 +30,10 @@ cache = { read = 0 }
 [[cost.text.input.overrides]]
 when = { context = { gt = 32_000 } }
 price = 0.2054
-cache = { read = 0 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128_000 } }
 price = 0.411
-cache = { read = 0 }
 
 [cost.text.output]
 price = 1.37

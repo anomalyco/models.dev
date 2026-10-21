@@ -1,3 +1,6 @@
+# Prices and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# input_audio kept as authored: the catalog lists audio input but no audio price for this model.
+# Left in v1 format: per-tier input_audio prices have no v1 translation from v2 (tiers drop input_audio).
 name = "Doubao Seed 2.0 Mini 260428"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
@@ -15,23 +18,23 @@ open_weights = false
 field = "reasoning_content"
 
 [cost]
-input = 0.03
-output = 0.28
-cache_read = 0.00564
+input = 0.030136
+output = 0.30136
+cache_read = 0.0060272
 input_audio = 0.423
 
 [[cost.tiers]]
 tier = { size = 32_000 }
-input = 0.06
-output = 0.56
-cache_read = 0.01128
+input = 0.060274
+output = 0.60274
+cache_read = 0.0120548
 input_audio = 0.846
 
 [[cost.tiers]]
 tier = { size = 128_000 }
-input = 0.11
-output = 1.13
-cache_read = 0.02256
+input = 0.120548
+output = 1.20548
+cache_read = 0.0241096
 input_audio = 1.692
 
 [limit]
@@ -39,5 +42,5 @@ context = 256_000
 output = 128_000
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]

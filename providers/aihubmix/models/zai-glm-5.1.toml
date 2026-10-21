@@ -1,11 +1,16 @@
+# Retired: absent from GET https://aihubmix.com/api/v1/models and https://aihubmix.com/model/zai-glm-5.1 returns 410 (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "zhipuai/glm-5.1"
 name = "GLM-5.1 (Z.ai)"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 output = 128_000

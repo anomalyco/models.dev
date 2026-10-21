@@ -1,9 +1,12 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "openai/gpt-5.1-codex-mini"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 0.25

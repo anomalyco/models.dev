@@ -6,19 +6,22 @@
 # https://aihubmix.com/api/v1/models?type=llm (accessed 2026-09-18), which lists this
 # model on both faces. Cache read is a quarter of Claude Fable 5's rate; input, output
 # and cache write are unchanged from it, matching the sibling entry in this directory.
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]
 price = 11
-cache = { read = 0.275, write = 13.75 }
+cache = { read = 0.275, write = { "5m" = 13.75, "1h" = 22 } }
 
 [cost.text.output]
 price = 55

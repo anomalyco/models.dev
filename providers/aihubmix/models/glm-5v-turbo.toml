@@ -1,18 +1,15 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5 Vision Turbo"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime", "video/x-matroska"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[limit]
-output = 128_000
+cache = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -21,5 +18,14 @@ compatibility = { reasoning_field = "reasoning_content" }
 price = 0.7042
 cache = { read = 0.169008 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.986
+cache = { read = 0.253402 }
+
 [cost.text.output]
 price = 3.09848
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.662004

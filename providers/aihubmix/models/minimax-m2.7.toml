@@ -1,3 +1,5 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "minimax/MiniMax-M2.7"
 name = "MiniMax M2.7"
@@ -6,6 +8,7 @@ description = "MiniMax model for chat, coding, office work, and agentic tasks"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 output = 128_000

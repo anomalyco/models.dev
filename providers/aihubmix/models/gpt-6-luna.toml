@@ -5,12 +5,15 @@
 # Catalog: https://aihubmix.com/api/v1/models?type=llm&sort_by=order
 # Currency proof: https://aihubmix.com/models/gpt-6-luna
 # Canon export SHA: 826aa9e2dab1b2920959957c5a0222873f3f5f38
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 0.1

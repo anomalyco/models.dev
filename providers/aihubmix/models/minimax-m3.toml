@@ -3,12 +3,17 @@
 # https://platform.minimaxi.com/docs/api-reference/text-chat-openai.md
 # Toggle: enable_thinking = true|false on /v1/chat/completions.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+
+[limit]
+context = 1_000_000
+output = 524_288
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

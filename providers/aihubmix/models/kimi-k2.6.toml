@@ -1,3 +1,6 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -5,6 +8,7 @@ description = "Kimi multimodal agent model for visual understanding, coding, and
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 output = 32_768

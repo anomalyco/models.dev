@@ -7,24 +7,27 @@
 # billing_config context tier at 100000 tokens (USD/MTok): input=0.5, output=2.5, cache_read=0.05, cache_write=0.625
 # Toggle: $.thinking.type = "enabled"|"disabled" on /v1/messages.
 # Effort: $.output_config.effort = low|medium|high|xhigh|max on /v1/messages.
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.01, write = 0.125 }
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 100_000 } }
 price = 0.5
-cache = { read = 0.05, write = 0.625 }
+cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
 
 [cost.text.output]
 price = 0.5

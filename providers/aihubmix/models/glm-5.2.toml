@@ -1,17 +1,12 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "zhipuai/glm-5.2"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["high", "max"] }
 structured_output = true
-
-[limit]
-context = 1_000_000
-output = 128_000
+cache = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

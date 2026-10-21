@@ -5,12 +5,21 @@
 # $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
 # $.output_config.effort on /v1/messages, subject to model support.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Deprecated: catalog variant_kind deprecated-alias of deepseek-v4.1-flash-1017.
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# peak hours 01:00-04:00, 06:00-10:00 UTC bill 2x (catalog time_condition lines).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
+
+[limit]
+output = 393_216
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -21,3 +30,7 @@ cache = { read = 0.0031 }
 
 [cost.text.output]
 price = 0.62
+
+[[cost.multipliers]]
+when = { any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

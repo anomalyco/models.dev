@@ -7,16 +7,25 @@
 # Effort: reasoning_effort = minimal|low|medium|high on /v1/chat/completions.
 # Gemini native: generationConfig.thinkingConfig.thinkingLevel uses the corresponding uppercase levels.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true, explicit = true }
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.03 }
+cache = { read = 0.03, storage = 1 }
 
 [cost.text.output]
 price = 2.499999
+
+[cost.audio.input]
+price = 0.3
+
+[cost.video.input]
+price = 0.3

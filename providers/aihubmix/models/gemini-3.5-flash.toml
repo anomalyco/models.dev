@@ -1,21 +1,28 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Deprecated: catalog deprecated_at 2026-10-12, variant_kind deprecated-alias of gemini-3.6-flash.
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "google/gemini-3.5-flash"
+status = "deprecated"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-
-[limit]
-context = 1_000_000
-output = 64_000
+cache = { supported = true, implicit = true, explicit = true }
 
 [cost.text.input]
-price = 1.5
-cache = { read = 1.5 }
+price = 0.75
+cache = { read = 0.075, storage = 1 }
 
 [cost.text.output]
-price = 9
+price = 3.75
+
+[cost.audio.input]
+price = 0.75
+
+[cost.video.input]
+price = 0.75

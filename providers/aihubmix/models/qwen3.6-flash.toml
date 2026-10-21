@@ -1,3 +1,6 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "alibaba/qwen3.6-flash"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -6,26 +9,26 @@ knowledge = "2025-04"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 context = 991_000
-output = 64_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.17
+price = 0.169
 cache = { read = 0.0169, write = 0.21125 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
-price = 0.68
+price = 0.676
 cache = { read = 0.0676, write = 0.845 }
 
 [cost.text.output]
-price = 1.01
+price = 1.014
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }
-price = 4.06
+price = 4.056

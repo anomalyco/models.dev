@@ -1,24 +1,19 @@
 # Anthropic-compatible /v1/messages: $.thinking.type = "enabled"|"disabled"|"adaptive" (disabled turns reasoning off = toggle) and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"; manual budget_tokens is rejected on this Opus tier. https://docs.aihubmix.com/cn/api-reference/anthropic-compatible/create-a-message (accessed 2026-07-02)
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "anthropic/claude-opus-4-8"
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-
-[limit]
-context = 200_000
-output = 32_000
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]
 price = 5
-cache = { read = 0.5, write = 6.25 }
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
 [cost.text.output]
 price = 25

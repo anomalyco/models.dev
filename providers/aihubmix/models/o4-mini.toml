@@ -5,12 +5,19 @@
 # Catalog: https://aihubmix.com/api/v1/models?type=llm&sort_by=order
 # Canon export SHA: 00fb309c0dba28a9e4c9a3a6569d418db947cafc
 # Effort: $.reasoning_effort = low|medium|high on /v1/chat/completions.
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "openai/o4-mini"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 1.1

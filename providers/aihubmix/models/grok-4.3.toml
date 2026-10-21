@@ -1,3 +1,5 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "xai/grok-4.3"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -9,9 +11,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-
-[limit]
-output = 1_000_000
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 1.25

@@ -1,11 +1,16 @@
+# Retired: absent from GET https://aihubmix.com/api/v1/models and https://aihubmix.com/model/deep-deepseek-v4-flash returns 410 (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash (DeepSeek)"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

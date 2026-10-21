@@ -7,11 +7,16 @@
 # Toggle: $.enable_thinking = true|false on /v1/chat/completions.
 # Effort: $.reasoning_effort = low|medium|xhigh on /v1/chat/completions.
 # Budget: integer $.reasoning.max_tokens on /v1/chat/completions.
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Deprecated: catalog variant_kind deprecated-alias of qwen3.8-max.
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "alibaba/qwen3.8-max-preview"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+cache = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

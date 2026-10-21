@@ -1,5 +1,7 @@
 # AIHubMix Models API reports text,image input (queried 2026-08-31T04:06:29Z).
 # OpenAI-compatible HTTPS image input returned HTTP 200 (validated 2026-08-31T04:08:19Z).
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
@@ -10,10 +12,10 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
+cache = { supported = true }
 
 [limit]
-context = 262_000
-output = 262_000
+context = 1_000_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -1,10 +1,15 @@
+# Retired: listed as Retired on https://aihubmix.com/models/retirements ("Requests return 404 model_retired") (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "alibaba/qwen3.6-max-preview"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 context = 240_000

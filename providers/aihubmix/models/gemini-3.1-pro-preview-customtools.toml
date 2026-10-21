@@ -1,18 +1,21 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "google/gemini-3.1-pro-preview-customtools"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true, explicit = true }
 
 [cost.text.input]
 price = 2
-cache = { read = 0.2 }
+cache = { read = 0.2, storage = 4.5 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 200_000 } }
 price = 4
-cache = { read = 0.4 }
+cache = { read = 0.4, storage = 4.5 }
 
 [cost.text.output]
 price = 12

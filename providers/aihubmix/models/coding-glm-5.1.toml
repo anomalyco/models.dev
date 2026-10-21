@@ -1,3 +1,6 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "zhipuai/glm-5.1"
 name = "Coding GLM 5.1"
@@ -6,9 +9,7 @@ description = "Flagship GLM model for hybrid reasoning, coding, and agentic engi
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[limit]
-output = 128_000
+cache = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

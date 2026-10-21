@@ -1,4 +1,6 @@
 # Native Messages prefers $.thinking.type = "adaptive" with $.output_config.effort = "low"|"medium"|"high"|"max"; enabled budget_tokens >= 1024 is deprecated and must be < $.max_tokens. https://docs.aihubmix.com/cn/api/Claude-Native (accessed 2026-06-25)
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
@@ -6,22 +8,14 @@ description = "Flagship Claude model for deep reasoning, coding, and long-horizo
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]
 price = 5
-cache = { read = 0.5, write = 6.25 }
-
-[[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
-price = 10
-cache = { read = 1, write = 12.5 }
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
 [cost.text.output]
 price = 25
-
-[[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
-price = 37.5

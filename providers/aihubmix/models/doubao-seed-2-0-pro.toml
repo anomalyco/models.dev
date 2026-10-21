@@ -1,36 +1,44 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "bytedance-seed/seed-2.0-pro"
 name = "Doubao Seed 2.0 Pro"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video/mp4", "video/x-msvideo", "video/quicktime", "application/pdf"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+cache = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.48
-cache = { read = 0.09644 }
+price = 0.4958
+cache = { read = 0.09916 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 32_000 } }
-price = 0.72
-cache = { read = 0.144656 }
+price = 0.7436
+cache = { read = 0.14872 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128_000 } }
-price = 1.45
-cache = { read = 0.28932 }
+price = 1.4872
+cache = { read = 0.29744 }
 
 [cost.text.output]
-price = 2.41
+price = 2.479
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 32_000 } }
-price = 3.62
+price = 3.718
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 128_000 } }
-price = 7.23
+price = 7.436

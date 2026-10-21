@@ -1,15 +1,26 @@
 # AIHubMix unified Chat: $.reasoning_effort = low|medium|high
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Deprecated: catalog deprecated_at 2026-10-12, variant_kind deprecated-alias of gemini-3.8-flash.
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "google/gemini-3.7-flash"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true, explicit = true }
 
 [cost.text.input]
 price = 0.75
-cache = { read = 0.075 }
+cache = { read = 0.075, storage = 1 }
 
 [cost.text.output]
 price = 3.75
+
+[cost.audio.input]
+price = 0.75
+
+[cost.video.input]
+price = 0.75

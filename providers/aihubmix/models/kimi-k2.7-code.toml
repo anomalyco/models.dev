@@ -1,16 +1,15 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
-context = 262_144
 output = 32_768
 
 [api.chat-completions]

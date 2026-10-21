@@ -1,25 +1,21 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = false
-
-[limit]
-context = 1_000_000
-output = 128_000
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]
 price = 2
-cache = { read = 0.2, write = 2.5 }
+cache = { read = 0.2, write = { "5m" = 2.5, "1h" = 4 } }
 
 [cost.text.output]
 price = 10

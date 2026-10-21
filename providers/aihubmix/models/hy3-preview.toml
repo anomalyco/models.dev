@@ -1,6 +1,9 @@
+# Retired: listed as Retired on https://aihubmix.com/models/retirements ("Requests return 404 model_retired") (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "tencent/hy3-preview"
 name = "Hy3 Preview"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -9,6 +12,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 context = 256_000
