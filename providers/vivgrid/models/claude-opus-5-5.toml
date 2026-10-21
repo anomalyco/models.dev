@@ -1,14 +1,18 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/claude-opus-5-5 (accessed 2026-09-23)
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 4.0
-output = 20.0
-cache_read = 0.20
-cache_write = 5.0
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

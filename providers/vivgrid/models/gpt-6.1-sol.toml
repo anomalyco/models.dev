@@ -1,18 +1,24 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/gpt-6.1-sol (accessed 2026-09-30)
+schema = 2
 base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 4
-output = 15
-cache_read = 0.4
-cache_write = 5
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.4, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15

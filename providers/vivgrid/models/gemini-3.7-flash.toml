@@ -1,12 +1,17 @@
 # Source: https://vivgrid.com/docs/models/gemini-3.7-flash
+schema = 2
 base_model = "google/gemini-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75

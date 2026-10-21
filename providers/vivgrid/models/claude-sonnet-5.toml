@@ -2,15 +2,19 @@
 # https://docs.vivgrid.com/models/claude-sonnet-5 (accessed 2026-09-07)
 # Toggle: thinking.type = adaptive|disabled
 # Effort: output_config.effort = low|medium|high|xhigh|max
+schema = 2
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10
