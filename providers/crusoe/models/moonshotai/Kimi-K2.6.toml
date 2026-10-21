@@ -5,8 +5,11 @@
 # entry). Reasoning text arrives interleaved with tool_calls, in the
 # message field named "reasoning" (not "reasoning_content").
 # Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
+# Deprecated on 2026-10-02: https://docs.crusoecloud.com/serverless-inference/available-models
+# (accessed 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
