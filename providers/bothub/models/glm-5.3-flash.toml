@@ -1,6 +1,7 @@
-# Pricing: https://bothub.ru/models (accessed 2026-09-10) — includes the
-# site's current -20% promo (list 13.15/47.33 RUB per 1M tokens).
-# RUB converted to USD at the CBR rate 85.4594 RUB/USD (2026-09-10).
+# Pricing: https://bothub.ru/models lists 12,98 / 43,27 RUB per 1M input / output tokens
+# (checked 2026-10-21; the page shows a -22% badge and this is the displayed price).
+# RUB converted to USD at the CBR rate 82.8879 RUB/USD (2026-10-21), rounded to 4 decimals.
+# The per-model page (https://bothub.ru/<id>) shows prices about 6% higher.
 # Controls mirrored from the lab entry: GLM-5.3-Flash always reasons;
 # effort low|high|max with default max, no toggle.
 schema = 2
@@ -14,7 +15,7 @@ structured_output = true
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]
-price = 0.12
+price = 0.1566
 
 [cost.text.output]
-price = 0.44
+price = 0.522
