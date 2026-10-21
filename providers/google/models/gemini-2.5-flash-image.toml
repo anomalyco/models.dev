@@ -6,6 +6,11 @@ base_model = "google/gemini-2.5-flash-image"
 [capabilities]
 reasoning = { supported = true }
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
+
 [cost.text.input]
 price = 0.3
 cache = { read = 0.075 }

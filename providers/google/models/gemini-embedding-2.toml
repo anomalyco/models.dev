@@ -13,6 +13,9 @@ base_model = "google/gemini-embedding-2"
 [limit]
 output = 1
 
+[api.embed-content]
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 0.2
 

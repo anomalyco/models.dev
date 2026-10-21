@@ -15,6 +15,11 @@ top_p = true
 top_k = true
 cache = { supported = false }
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
+
 [cost.text.input]
 price = 1.5
 

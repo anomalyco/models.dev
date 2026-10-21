@@ -1,6 +1,9 @@
 schema = 2
 base_model = "openai/gpt-image-2.5-flare"
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
 [cost.text.input]
 price = 5
 cache = { read = 1.25 }

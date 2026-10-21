@@ -10,6 +10,9 @@ base_model = "google/gemini-3.5-transcribe"
 [capabilities]
 cache = { supported = false }
 
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/google-transcription" }
+
 [cost.text.input]
 price = 2
 

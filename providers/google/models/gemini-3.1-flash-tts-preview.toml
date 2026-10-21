@@ -8,6 +8,9 @@ base_model = "google/gemini-3.1-flash-tts-preview"
 reasoning = { supported = true }
 cache = { supported = false }
 
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/google-speech" }
+
 [cost.text.input]
 price = 1
 

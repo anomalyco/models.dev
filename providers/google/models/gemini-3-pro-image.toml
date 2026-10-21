@@ -10,6 +10,11 @@ base_model = "google/gemini-3-pro-image"
 reasoning = { supported = true, effort = ["low", "high"] }
 cache = { supported = false }
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
+
 [cost.text.input]
 price = 2
 

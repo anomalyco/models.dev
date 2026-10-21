@@ -13,6 +13,9 @@ structured_output = false
 cache = { supported = false }
 service_tier = ["flex", "priority"]
 
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/google-speech" }
+
 [cost.text.input]
 price = 0.5
 

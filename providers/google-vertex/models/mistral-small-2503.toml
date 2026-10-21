@@ -16,7 +16,7 @@ effort_updates = false
 
 [api.chat-completions]
 base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/mistralai/models"
-sdk = { aisdk = "@ai-sdk/mistral" }
+sdk = { aisdk = "@ai-sdk/mistral", opencodeai = "@opencode/ai/providers/google-vertex/mistral" }
 
 [cost.text.input]
 price = 0.1
