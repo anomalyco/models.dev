@@ -1,8 +1,13 @@
 # Pricing: https://api.impossibl.com/v1/models
+schema = 2
 base_model = "xai/grok-4.20-0309-non-reasoning"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.20
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.5

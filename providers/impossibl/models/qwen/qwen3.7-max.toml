@@ -1,11 +1,14 @@
 # Pricing: https://api.impossibl.com/v1/models
 # Toggle: {"reasoning_effort":"none"}
+schema = 2
 base_model = "alibaba/qwen3.7-max"
 
-[cost]
-input = 2.50
-output = 7.50
-cache_read = 0.50
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 2.5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 7.5

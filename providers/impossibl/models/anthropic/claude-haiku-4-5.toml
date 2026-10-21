@@ -1,17 +1,15 @@
 # Pricing: https://api.impossibl.com/v1/models
 # Toggle: {"thinking":{"type":"disabled"}}
 # Budget: {"thinking":{"type":"enabled","budget_tokens":<n>}}
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
-[cost]
-input = 1.00
-output = 5.00
-cache_read = 0.10
-cache_write = 1.25
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1024
+[cost.text.output]
+price = 5

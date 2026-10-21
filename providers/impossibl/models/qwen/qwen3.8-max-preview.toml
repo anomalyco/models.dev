@@ -1,10 +1,12 @@
 # Pricing: https://api.impossibl.com/v1/models
+schema = 2
 base_model = "alibaba/qwen3.8-max-preview"
 
-[cost]
-input = 2.50
-output = 7.50
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 7.5

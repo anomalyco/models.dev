@@ -1,8 +1,13 @@
 # Pricing: https://api.impossibl.com/v1/models
+schema = 2
 base_model = "openai/gpt-4o"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 2.50
-output = 10.00
-cache_read = 1.25
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

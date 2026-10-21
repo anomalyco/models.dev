@@ -1,12 +1,14 @@
 # Pricing: https://api.impossibl.com/v1/models
+schema = 2
 base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[cost]
-input = 0.07
-output = 0.30
-cache_read = 0.035
+[cost.text.input]
+price = 0.07
+cache = { read = 0.035 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.output]
+price = 0.3

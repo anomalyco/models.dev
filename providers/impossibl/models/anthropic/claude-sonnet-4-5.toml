@@ -1,17 +1,15 @@
 # Pricing: https://api.impossibl.com/v1/models
 # Toggle: {"thinking":{"type":"disabled"}}
 # Budget: {"thinking":{"type":"enabled","budget_tokens":<n>}}
+schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
-cache_write = 3.75
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1024
+[cost.text.output]
+price = 15

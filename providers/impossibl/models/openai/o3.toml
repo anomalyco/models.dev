@@ -1,12 +1,14 @@
 # Pricing: https://api.impossibl.com/v1/models
+schema = 2
 base_model = "openai/o3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[cost]
-input = 2.00
-output = 8.00
-cache_read = 0.50
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.output]
+price = 8

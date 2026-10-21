@@ -1,9 +1,14 @@
 # Pricing: https://api.impossibl.com/v1/models
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 1.40
-output = 4.40
-cache_read = 0.14
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

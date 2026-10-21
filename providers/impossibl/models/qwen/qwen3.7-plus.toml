@@ -1,17 +1,23 @@
 # Pricing: https://api.impossibl.com/v1/models
 # Toggle: {"reasoning_effort":"none"}
+schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
-[cost]
-input = 0.40
-output = 1.60
-cache_read = 0.08
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[[cost.tiers]]
-tier = { size = 262_144 }
-input = 1.20
-output = 4.80
-cache_read = 0.24
+[cost.text.input]
+price = 0.4
+cache = { read = 0.08 }
 
-[[reasoning_options]]
-type = "toggle"
+[[cost.text.input.overrides]]
+when = { context = { gt = 262_144 } }
+price = 1.2
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 1.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 262_144 } }
+price = 4.8

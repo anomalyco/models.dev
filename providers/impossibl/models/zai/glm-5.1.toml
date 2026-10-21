@@ -1,12 +1,15 @@
 # Pricing: https://api.impossibl.com/v1/models
 # Toggle: {"reasoning_effort":"none"}
+schema = 2
 base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[cost]
-input = 1.40
-output = 4.40
-cache_read = 0.26
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.output]
+price = 4.4

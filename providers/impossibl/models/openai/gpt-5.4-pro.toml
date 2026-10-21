@@ -1,18 +1,23 @@
 # Pricing: https://api.impossibl.com/v1/models
+schema = 2
 base_model = "openai/gpt-5.4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 structured_output = false
 
-[cost]
-input = 30.00
-output = 180.00
-cache_read = 3.00
+[cost.text.input]
+price = 30
+cache = { read = 3 }
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 60.00
-output = 270.00
-cache_read = 3.00
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+cache = { read = 3 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["medium", "high", "xhigh"]
+[cost.text.output]
+price = 180
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 270

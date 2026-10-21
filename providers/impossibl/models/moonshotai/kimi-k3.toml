@@ -1,9 +1,14 @@
 # Pricing: https://api.impossibl.com/v1/models
+schema = 2
 base_model = "moonshotai/kimi-k3"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15
