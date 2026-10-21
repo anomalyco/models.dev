@@ -1,20 +1,14 @@
 schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
 name = "Qwen/Qwen3-VL-30B-A3B-Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = false
-release_date = "2025-10-05"
-last_updated = "2025-11-25"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 262_000

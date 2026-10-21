@@ -1,19 +1,11 @@
 schema = 2
+base_model = "deepseek/deepseek-v3.2"
 name = "Pro/deepseek-ai/DeepSeek-V3.2"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek"
-open_weights = false
-release_date = "2025-12-03"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 
 [limit]
 context = 164_000
