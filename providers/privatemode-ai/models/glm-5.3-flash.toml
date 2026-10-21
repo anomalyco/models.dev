@@ -10,15 +10,21 @@
 # matching other Privatemode catalog entries.
 # EUR/MTok: input 0.20 / output 0.65 / cached input 0.05
 # Host exposes text+image only (docs); lab base also lists video/pdf.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 status = "beta"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.2311
-output = 0.7511
-cache_read = 0.0578
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.2311
+cache = { read = 0.0578 }
+
+[cost.text.output]
+price = 0.7511
