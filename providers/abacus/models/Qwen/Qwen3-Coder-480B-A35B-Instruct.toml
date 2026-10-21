@@ -3,8 +3,9 @@
 # RouteLLM output_modalities: ['text']
 # RouteLLM context_length: 262144
 # RouteLLM max_completion_tokens: 16384
-# RouteLLM input_token_rate: 0.00000029
-# RouteLLM output_token_rate: 0.0000012
+# RouteLLM input_token_rate: 0.00000038
+# RouteLLM output_token_rate: 0.00000155
+# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 
@@ -20,7 +21,7 @@ context = 262_144
 output = 16_384
 
 [cost.text.input]
-price = 0.29
+price = 0.38
 
 [cost.text.output]
-price = 1.2
+price = 1.55

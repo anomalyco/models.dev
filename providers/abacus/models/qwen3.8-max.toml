@@ -6,6 +6,8 @@
 # RouteLLM input_token_rate: 0.000002
 # RouteLLM output_token_rate: 0.000006
 # RouteLLM thinking: True
+# RouteLLM cached_input_token_rate: 0.00000025
+# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
@@ -18,6 +20,7 @@ reasoning = { supported = true }
 
 [cost.text.input]
 price = 2
+cache = { read = 0.25 }
 
 [cost.text.output]
 price = 6

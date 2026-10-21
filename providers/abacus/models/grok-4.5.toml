@@ -6,6 +6,8 @@
 # RouteLLM input_token_rate: 0.000002
 # RouteLLM output_token_rate: 0.000006
 # RouteLLM thinking: True
+# RouteLLM cached_input_token_rate: 0.0000003
+# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "xai/grok-4.5"
 
@@ -19,6 +21,7 @@ output = 32_768
 
 [cost.text.input]
 price = 2
+cache = { read = 0.3 }
 
 [cost.text.output]
 price = 6

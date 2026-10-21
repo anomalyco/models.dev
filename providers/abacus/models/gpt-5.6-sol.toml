@@ -3,10 +3,11 @@
 # RouteLLM output_modalities: ['text']
 # RouteLLM context_length: 1000000
 # RouteLLM max_completion_tokens: 128000
-# RouteLLM input_token_rate: 0.000005
-# RouteLLM output_token_rate: 0.00003
-# RouteLLM cached_input_token_rate: 0.0000005
+# RouteLLM input_token_rate: 0.000004
+# RouteLLM output_token_rate: 0.00002
+# RouteLLM cached_input_token_rate: 0.0000004
 # RouteLLM thinking: True
+# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "openai/gpt-5.6-sol"
 base_model_omit = ["limit.input"]
@@ -24,8 +25,8 @@ context = 1_000_000
 output = 128_000
 
 [cost.text.input]
-price = 5
-cache = { read = 0.5 }
+price = 4
+cache = { read = 0.4 }
 
 [cost.text.output]
-price = 30
+price = 20
