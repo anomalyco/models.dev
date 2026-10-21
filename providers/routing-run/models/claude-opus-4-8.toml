@@ -1,13 +1,18 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-8"
-reasoning_options = []
 
-[cost]
-input = 5.00
-output = 25.00
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 1_000_000
 output = 32_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 25
