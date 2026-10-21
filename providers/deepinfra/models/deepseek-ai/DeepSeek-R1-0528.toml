@@ -1,5 +1,7 @@
 # Lab identity: https://deepinfra.com/deepseek-ai/DeepSeek-R1-0528 (Hugging Face repo deepseek-ai/DeepSeek-R1-0528)
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 14720/14772 -> 0/14786; 14720/14772 -> 0/14786]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 14656/14722 -> 64/14807; 14656/14722 -> 384/14807]
 schema = 2
 base_model = "deepseek/deepseek-r1-0528"
 name = "DeepSeek-R1-0528"

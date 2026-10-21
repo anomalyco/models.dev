@@ -3780,6 +3780,62 @@ test("DeepInfra price updates keep v2 data and restore the synced v2 values", as
   }
 });
 
+test("DeepInfra clears stale caching and retention data when the catalog drops it", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-deepinfra-v2-clear-"));
+  const modelsDir = path.join(root, "providers", "deepinfra", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const id = "zai-org/GLM-5.2";
+  const base = "zhipuai/glm-5.2";
+  const source = (pricing: DeepInfraModel["pricing"]): DeepInfraModel => ({
+    model_name: id,
+    type: "text-generation",
+    tags: ["openai", "tools", "json", "structured-output", "reasoning", "can-disable-reasoning"],
+    pricing,
+    max_tokens: 1_048_576,
+    deprecated: null,
+    private: 0,
+  });
+
+  try {
+    await mkdir(path.dirname(path.join(modelsDir, `${id}.toml`)), { recursive: true });
+    await mkdir(path.dirname(path.join(root, "models", `${base}.toml`)), { recursive: true });
+    await copyFile(path.join(repo, "models", `${base}.toml`), path.join(root, "models", `${base}.toml`));
+    await copyFile(path.join(repo, "providers", "deepinfra", "models", `${id}.toml`), path.join(modelsDir, `${id}.toml`));
+    const read = async () => {
+      const text = await readFile(path.join(modelsDir, `${id}.toml`), "utf8");
+      return text.slice(text.indexOf("schema = 2"));
+    };
+
+    // Retention and service tiers gone, cache reads still priced.
+    await syncProvider({
+      ...deepinfra,
+      modelsDir,
+      fetchModels: async () => [source({
+        cents_per_input_token: 0.000075,
+        cents_per_output_token: 0.00024,
+        rate_per_input_token_cached: 0.18666667,
+      })],
+    });
+    let text = await read();
+    expect(text).toContain("cache = { read = 0.14 }");
+    expect(text).toContain("cache = { supported = true, implicit = true }");
+    expect(text).not.toContain("explicit");
+    expect(text).not.toContain("service_tier");
+
+    // No cache price at all: the cache table and capability go too.
+    await syncProvider({
+      ...deepinfra,
+      modelsDir,
+      fetchModels: async () => [source({ cents_per_input_token: 0.000075, cents_per_output_token: 0.00024 })],
+    });
+    text = await read();
+    expect(text).not.toContain("cache");
+    expect(text).not.toContain("prompt_cache_key");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("DeepInfra preserves descriptions for standalone models", () => {
   const model = buildDeepInfraModel(
     deepInfraModel("example/model", []),

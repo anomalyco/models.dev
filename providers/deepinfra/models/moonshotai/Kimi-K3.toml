@@ -6,7 +6,10 @@
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
 # Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12288/12691 -> 0/12715; 12288/12691 -> 0/12715]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12288/12967 -> 0/12966 (reasoning tokens 105 -> 65); 10752/12327 -> 0/12326 (reasoning tokens 94 -> 47)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12288/12406 -> 0/12450; 12288/12406 -> 0/12450]
 schema = 2
 base_model = "moonshotai/kimi-k3"
 

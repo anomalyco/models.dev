@@ -1,5 +1,7 @@
 # Lab identity: https://deepinfra.com/Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo (Hugging Face repo Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo)
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 17120/17157 -> 0/17170; 17120/17157 -> 0/17170]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 17024/17060 -> 64/17124; 17344/17380 -> 304/17444]
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3 Coder 480B A35B Instruct Turbo"

@@ -1,5 +1,7 @@
 # Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 15160/15260 -> 0/15278; 15160/15260 -> 0/15278]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 15160/15300 -> 0/15351; 15416/15620 -> 0/15671]
 schema = 2
 base_model = "bytedance-seed/seed-2.0-mini"
 

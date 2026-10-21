@@ -1,4 +1,6 @@
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 13312/13685 -> 0/13699; 13312/13685 -> 0/13699]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 13312/13596 -> 0/13656; 13312/13916 -> 0/13976]
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 

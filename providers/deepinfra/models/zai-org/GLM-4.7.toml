@@ -1,6 +1,8 @@
 # Lab identity: https://deepinfra.com/zai-org/GLM-4.7 (Hugging Face repo zai-org/GLM-4.7)
 # Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12576/12615 -> 0/12628; 12576/12615 -> 0/12628]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12416/12436 -> 96/12496; 12416/12436 -> 96/12496]
 schema = 2
 base_model = "zhipuai/glm-4.7"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"

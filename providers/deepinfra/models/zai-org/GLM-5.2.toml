@@ -4,7 +4,10 @@
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://deepinfra.com/zai-org/GLM-5.2/api
 # https://deepinfra.com/docs/advanced/max_tokens_limit
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12544/12624 -> 0/12638; 12544/12624 -> 0/12638]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12800/12929 -> 0/12929 (reasoning tokens 69 -> 55); 12160/12289 -> 0/12289 (reasoning tokens 85 -> 64)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12352/12434 -> 0/12484; 12352/12434 -> 0/12484]
 schema = 2
 base_model = "zhipuai/glm-5.2"
 

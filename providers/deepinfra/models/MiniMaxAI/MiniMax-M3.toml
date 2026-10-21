@@ -1,4 +1,5 @@
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12800/12922 -> 256/12977; 12800/12922 -> 384/12977]
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
