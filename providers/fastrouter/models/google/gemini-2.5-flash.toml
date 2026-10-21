@@ -1,23 +1,12 @@
 schema = 2
-name = "Gemini 2.5 Flash"
-description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-family = "gemini-flash"
-open_weights = false
-knowledge = "2025-01"
-release_date = "2025-06-17"
+base_model = "google/gemini-2.5-flash"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 0.3

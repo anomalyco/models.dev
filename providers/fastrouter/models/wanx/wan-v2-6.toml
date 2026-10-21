@@ -1,18 +1,10 @@
 schema = 2
+base_model = "alibaba/wan2.6"
 name = "Wan 2.6"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
-open_weights = true
-release_date = "2025-12-01"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp"]
+output = ["video/mp4"]
 
 [limit]
 context = 400_000
-output = 0

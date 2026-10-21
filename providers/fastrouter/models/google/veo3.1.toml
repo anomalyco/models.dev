@@ -1,18 +1,6 @@
 schema = 2
+base_model = "google/veo-3.1-generate-preview"
 name = "Veo 3.1"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
-family = "veo"
-open_weights = false
-release_date = "2026-05-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["video"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
 context = 400_000

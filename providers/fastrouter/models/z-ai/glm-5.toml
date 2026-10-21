@@ -1,22 +1,8 @@
 schema = 2
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-open_weights = true
-release_date = "2026-02-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "zhipuai/glm-5"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
-
-[limit]
-context = 204_800
-output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

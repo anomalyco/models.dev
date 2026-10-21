@@ -1,9 +1,8 @@
 schema = 2
 base_model = "openai/gpt-4.1"
-base_model_omit = ["structured_output"]
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [cost.text.input]

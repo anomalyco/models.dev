@@ -1,22 +1,9 @@
 schema = 2
+base_model = "openai/gpt-realtime-1.5"
 name = "GPT Realtime 1.5"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "gpt"
-open_weights = false
-release_date = "2025-06-01"
-
-[modalities]
-input = ["text", "audio", "image"]
-output = ["text", "audio"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 temperature = true
-
-[limit]
-context = 32_000
-output = 4_096
 
 [cost.text.input]
 price = 4
