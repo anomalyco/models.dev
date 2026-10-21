@@ -9,22 +9,21 @@
 # (accessed 2026-08-29; note first-party catalog entries predate 2026-08-16).
 # Toggle verified end-to-end on this host 2026-08-29.
 # Reasoning tokens billed at the output rate.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-structured_output = true
 name = "DeepSeek V4 Pro"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.726
+cache = { read = 0.0242 }
 
-[cost]
-input = 0.726
-output = 2.178
+[cost.text.output]
+price = 2.178
 reasoning = 2.178
-cache_read = 0.0242

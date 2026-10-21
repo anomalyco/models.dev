@@ -15,16 +15,19 @@
 #     UltraSpeed described as flagship V2.6-Pro performance at higher speed)
 # RMB upstream (CNY 30/0.25/60 per MTok; overseas USD list $4.35/$0.036/$8.70)
 # converted at 6.5 CNY/USD, then a flat 10% markup; rounded to 4dp.
+schema = 2
 base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
 name = "MiMo V2.6 Pro UltraSpeed"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 5.0769
-output = 10.1538
-cache_read = 0.0423
+[cost.text.input]
+price = 5.0769
+cache = { read = 0.0423 }
+
+[cost.text.output]
+price = 10.1538

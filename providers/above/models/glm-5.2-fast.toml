@@ -2,18 +2,20 @@
 # Effort: `reasoning_effort = none|high|max`; "none" disables thinking
 # (`chat_template_kwargs = {"thinking": false}` also works as an alternate).
 # Verified end-to-end on this host 2026-08-29.
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 name = "GLM 5.2 Fast"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 2.31
-output = 7.26
-cache_read = 0.231
+[cost.text.input]
+price = 2.31
+cache = { read = 0.231 }
+
+[cost.text.output]
+price = 7.26

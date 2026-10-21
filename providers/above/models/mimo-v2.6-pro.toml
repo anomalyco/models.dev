@@ -12,16 +12,19 @@
 # RMB upstream (CNY 3/0.025/6 per MTok)
 # converted at 6.5 CNY/USD (operator rate set 2026-07, spot ~6.79; buffer
 # covers FX drift), then a flat 10% markup; rounded to 4dp. Rechecked 2026-09-22.
+schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 name = "MiMo V2.6 Pro"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.5077
-output = 1.0154
-cache_read = 0.0042
+[cost.text.input]
+price = 0.5077
+cache = { read = 0.0042 }
+
+[cost.text.output]
+price = 1.0154
