@@ -10,10 +10,6 @@ name = "ByteDance Seed: Seed 1.6 Flash (retires Nov 11)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 status = "deprecated"
 
-[modalities]
-input = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "text", "video/mp4", "video/x-msvideo", "video/quicktime"]
-output = ["text"]
-
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "high"] }
