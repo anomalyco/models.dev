@@ -47,6 +47,16 @@ const ReasoningEffortOrder = new Map([
   "default",
 ].map((effort, index) => [effort, index]));
 
+// Low to high: v2 files compare effort lists in order, and the catalog lists
+// them in any order.
+function sortEfforts<T extends string>(efforts: T[]) {
+  return [...efforts].sort((a, b) => {
+    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
+      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return order || a.localeCompare(b);
+  });
+}
+
 export const LLMGatewayModel = z.object({
   id: z.string(),
   name: z.string(),
@@ -524,7 +534,7 @@ export function buildLLMGatewayMappedModel(
   const deploymentOptions = mapping?.reasoning_efforts?.length
     ? mapping.reasoning_efforts.length === 1 && mapping.reasoning_efforts[0] === "none"
       ? [{ type: "toggle" as const }]
-      : [{ type: "effort" as const, values: mapping.reasoning_efforts }]
+      : [{ type: "effort" as const, values: sortEfforts(mapping.reasoning_efforts) }]
     : undefined;
   // Deployment-declared efforts own the effort/toggle surface; curation falls
   // back from non-empty options on this file to the aggregated llmgateway
@@ -767,11 +777,7 @@ function llmGatewayReasoningOptions(
   const advertised = new Set((model.providers ?? []).flatMap((provider) => provider.reasoning_efforts ?? []));
   if (advertised.size === 0) return undefined;
 
-  const efforts = [...advertised].sort((a, b) => {
-    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
-      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
-    return order || a.localeCompare(b);
-  });
+  const efforts = sortEfforts([...advertised]);
   const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
   return [
     ...preserved,

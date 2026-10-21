@@ -4652,6 +4652,22 @@ test("prefers the gateway max_output over authored output on mapped resyncs", ()
   });
 });
 
+test("sorts mapped LLM Gateway deployment efforts low to high", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{
+      providerId: "anthropic",
+      vision: true,
+      tools: true,
+      reasoning: true,
+      reasoning_efforts: ["max", "xhigh", "none", "high", "low"],
+    }],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high", "xhigh", "max"] }],
+  });
+});
+
 test("translates a none-only effort list into a reasoning toggle", () => {
   const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
     providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: true, reasoning_efforts: ["none"] }],
