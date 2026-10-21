@@ -8,6 +8,7 @@ description = "Compact GPT model for low-latency assistance and high-volume work
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 cache = { supported = true, implicit = { min_tokens = 1_024 } }
+temperature = false
 
 [cost.text.input]
 price = 0.75

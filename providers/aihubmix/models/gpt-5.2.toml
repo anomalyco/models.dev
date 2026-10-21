@@ -12,6 +12,7 @@ output = ["text"]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 cache = { supported = true, implicit = { min_tokens = 1_024 } }
+temperature = false
 
 [cost.text.input]
 price = 1.75

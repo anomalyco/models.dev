@@ -10,9 +10,6 @@ reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"
 structured_output = true
 cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
 
-[limit]
-output = 128_000
-
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
 

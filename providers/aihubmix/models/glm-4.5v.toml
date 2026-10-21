@@ -17,9 +17,6 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, toggle = true }
 
-[limit]
-context = 65_536
-
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 

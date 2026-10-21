@@ -14,6 +14,7 @@ output = ["text"]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 cache = { supported = true }
+temperature = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
