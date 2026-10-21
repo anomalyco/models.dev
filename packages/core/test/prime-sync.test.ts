@@ -120,7 +120,7 @@ test("discovery generates an empty provider, updates prices, preserves incomplet
   }
 });
 
-test("v2 files keep their effort order, MIME lists and mid-conversation flags through a sync", async () => {
+test("v2 files keep their effort order and MIME lists through a sync", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-prime-v2-"));
   const modelsDir = path.join(root, "providers/prime/models");
   await mkdir(path.join(modelsDir, "openai"), { recursive: true });
@@ -138,10 +138,8 @@ test("v2 files keep their effort order, MIME lists and mid-conversation flags th
     'output = ["text"]',
     "",
     "[capabilities]",
-    "tools = { supported = true, updates = false }",
     'reasoning = { supported = true, effort = ["none", "low", "high"] }',
     "structured_output = true",
-    "effort_updates = false",
     "",
     "[limit]",
     "context = 128_000",
@@ -161,8 +159,8 @@ test("v2 files keep their effort order, MIME lists and mid-conversation flags th
     expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
     const text = await file.text();
     expect(text).toContain("# Effort: top-level reasoning_effort = none|low|high.");
-    expect(text).toContain("effort_updates = false");
-    expect(text).toContain("# Mid-conversation: Prime serves this model on POST /api/v1/chat/completions");
+    expect(text).toContain("# Mid-conversation: system_updates, effort_updates and tools.updates are unset");
+    expect(text).toContain("https://api.pinference.ai/openapi.json");
     expect(text).toContain("# Input MIME types: the lab's entries");
     expect((await syncProvider(provider, { openIssues: false })).unchanged).toBe(1);
 
@@ -171,10 +169,9 @@ test("v2 files keep their effort order, MIME lists and mid-conversation flags th
     const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
     expect(updated.cost.text).toEqual({ input: { price: 1 }, output: { price: 2 } });
     expect(updated.modalities.input).toEqual(["text", "image/jpeg", "image/png"]);
-    expect(updated.capabilities).toMatchObject({
-      tools: { supported: true, updates: false },
+    expect(updated.capabilities).toEqual({
       reasoning: { supported: true, effort: ["none", "low", "high"] },
-      effort_updates: false,
+      structured_output: true,
     });
   } finally {
     await rm(root, { recursive: true, force: true });

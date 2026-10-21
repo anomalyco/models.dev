@@ -136,10 +136,8 @@ export const prime = {
       modalities: { input, output },
     }, limit, baseLimit?.input === undefined ? undefined : ["limit.input"]);
 
-    // Lines for v2-only fields the file already has; sync keeps those fields as is.
-    const v2 = context.v2?.(model.id) as
-      | { modalities?: { input?: string[] }; capabilities?: Record<string, unknown> }
-      | undefined;
+    // The MIME line cites the file's own v2 modalities, which sync keeps as is.
+    const v2 = context.v2?.(model.id) as { modalities?: { input?: string[] } } | undefined;
     return {
       id: model.id,
       model: translated,
@@ -147,16 +145,15 @@ export const prime = {
         + "# Prices are USD per million tokens; lab facts are inherited via base_model.\n"
         + (reasoning ? `# Effort: top-level reasoning_effort = ${efforts!.join("|")}.\n` : "")
         + (modalities.input.includes("file") ? "# Generic file input is omitted; it does not imply PDF support.\n" : "")
-        + (v2?.capabilities?.effort_updates === false ? `${MID_CONVERSATION_LINES}\n` : "")
+        + `${MID_CONVERSATION_LINES}\n`
         + (v2?.modalities?.input?.some((value) => value.includes("/")) ? `${MIME_LINE}\n` : ""),
     };
   },
 } satisfies SyncProvider<PrimeModel>;
 
 const MID_CONVERSATION_LINES = [
-  "# Mid-conversation: Prime serves this model on POST /api/v1/chat/completions (https://docs.primeintellect.ai/api-reference/inference-chat-completions);",
-  "# reasoning_effort and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).",
-  "# system_updates unset: gateway models go to an external provider (https://docs.primeintellect.ai/inference/overview) and Prime doesn't document where a later system message goes.",
+  "# Mid-conversation: system_updates, effort_updates and tools.updates are unset; Prime documents none of them and they weren't tested live.",
+  "# Prime serves Chat Completions, Anthropic Messages (translated onto chat completions) and Responses (https://api.pinference.ai/openapi.json).",
 ].join("\n");
 const MIME_LINE = "# Input MIME types: the lab's entries for each kind Prime lists (Prime documents no formats).";
 
