@@ -1,24 +1,28 @@
+schema = 2
 name = "Step 1 (32K)"
 description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
+open_weights = false
+knowledge = "2024-06"
 release_date = "2025-01-01"
 last_updated = "2026-02-13"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-06"
-open_weights = false
 
-[cost]
-input = 2.05
-output = 9.59
-cache_read = 0.41
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 32_768
 input = 32_768
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 2.05
+cache = { read = 0.41 }
+
+[cost.text.output]
+price = 9.59
