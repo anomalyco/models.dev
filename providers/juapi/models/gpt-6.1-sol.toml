@@ -1,0 +1,30 @@
+# JuAPI default token group only; other groups have different rates.
+# Pricing and group availability: https://www.juaiapi.com/api/pricing
+# Recharge/currency presentation: https://www.juaiapi.com/api/status
+# 2026-10-21: group 7 * recharge 0.04 CNY / 7 CNY per USD = 0.04.
+# Multiply the default billing-expression coefficients by 0.04 for USD/MTok.
+# Context threshold: len <= 272000 base; len > 272000 override.
+# Model metadata is inherited from the canonical lab model; no measured
+# latency/throughput or independent inference-quality claim is made here.
+# Effort: Chat Completions reasoning_effort; native/peer GPT-6.1 Sol controls.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.004, write = 0.10 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.16
+cache = { read = 0.008, write = 0.20 }
+
+[cost.text.output]
+price = 0.40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.60
