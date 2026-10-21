@@ -9,8 +9,8 @@ schema = 2
 base_model = "google/gemini-3.1-flash-image"
 
 [modalities]
-input = ["text", "image"]
-output = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 reasoning = { supported = true }

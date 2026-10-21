@@ -1,3 +1,4 @@
+# Input MIME types: same as models/openai/gpt-5.3-codex.toml (this ID is GPT-5.3 Codex at xhigh effort).
 schema = 2
 name = "GPT-5.3 Codex XHigh"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
@@ -7,7 +8,7 @@ knowledge = "2025-08-31"
 release_date = "2026-02-05"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

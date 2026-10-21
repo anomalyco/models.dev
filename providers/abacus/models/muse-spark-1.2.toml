@@ -11,7 +11,7 @@ schema = 2
 base_model = "meta/muse-spark-1.2"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "audio/mpeg", "audio/wav", "video/mp4"]
 output = ["text"]
 
 [capabilities]

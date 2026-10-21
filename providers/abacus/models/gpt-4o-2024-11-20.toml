@@ -5,7 +5,7 @@ base_model = "openai/gpt-4o-2024-11-20"
 knowledge = "2024-10"
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "audio"]
 output = ["text"]
 
 [cost.text.input]
