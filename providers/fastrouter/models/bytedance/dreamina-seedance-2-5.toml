@@ -1,8 +1,10 @@
 # Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
 #   pricing.videoCost default 0.231120 per 1s clip = 0.23112 per second (lowest listed length; other lengths, resolutions and tiers differ).
+# FastRouter's bytedance/dreamina-seedance-2-5 route is ByteDance Seedance 2.5 (same name, 30-second clips
+#   with native audio, text, image and reference video/audio inputs), so it reuses the existing lab.
 schema = 2
 v2_only = true
-base_model = "bytedance-seed/dreamina-seedance-2-5"
+base_model = "bytedance-seed/seedance-2.5"
 
 [cost.video.output]
 unit = "second"
