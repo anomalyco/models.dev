@@ -2,7 +2,7 @@
 # Generally available (check mark in the model availability table), so the earlier beta status is dropped.
 # Effort: Chat Completions `reasoning_effort` = none|minimal|low|medium|high (REST docs, Thinking and reasoning); `reasoning.effort` overrides it.
 # Pricing: Snowflake Service Consumption Table effective 2026-10-15 (https://www.snowflake.com/legal-files/CreditConsumptionTable.pdf), Table 6(b) Cortex Inference with Prompt Caching, AI Credits per 1M tokens x USD 2.00 per AI Credit (on-demand Global routing, Table 2(b); https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing). Regional routing costs USD 2.20 per AI Credit: the 1.1x multiplier when region is not global.
-# Long-context rows: the table doesn't state the threshold; 272K input tokens is OpenAI's documented cutoff for these models.
+# Long-context rows: the table doesn't state the threshold. Its -long-context rows are exactly 2x input and 1.5x output of the base rows, which is OpenAI's long-context tier for prompts over 272K input tokens (https://developers.openai.com/api/docs/models/gpt-5.4), so 272K is used.
 # Cache: implicit for prompts of 1,024+ tokens; prompt_cache_key is supported (REST docs, compatibility chart).
 # Images: base64 only, 20 per conversation, 20 MiB max request (REST docs).
 # PDF dropped: `messages[].content[].file` returns an error for OpenAI models in the compatibility chart, and the Messages API lists no document input.
