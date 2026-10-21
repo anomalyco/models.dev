@@ -1,23 +1,25 @@
+schema = 2
 name = "Gemini-2.5-Flash-Lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
 family = "gemini-flash-lite"
-release_date = "2025-06-19"
-last_updated = "2025-06-19"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 0, max = 24_576 }]
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2025-06-19"
 
-[cost]
-input = 0.07
-output = 0.28
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, budget = { min = 0, max = 24_576 } }
+temperature = false
 
 [limit]
 context = 1_024_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.28

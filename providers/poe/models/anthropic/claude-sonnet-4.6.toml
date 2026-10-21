@@ -1,24 +1,25 @@
+schema = 2
 name = "Claude-Sonnet-4.6"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-release_date = "2026-02-05"
-last_updated = "2026-02-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2026-02-05"
 
-[cost]
-input = 2.6
-output = 13
-cache_read = 0.26
-cache_write = 3.2
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+temperature = false
 
 [limit]
 context = 983_040
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.6
+cache = { read = 0.26, write = 3.2 }
+
+[cost.text.output]
+price = 13

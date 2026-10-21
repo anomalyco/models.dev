@@ -1,10 +1,15 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-8"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 name = "Claude-Opus-4.8"
 
-[cost]
-input = 4.2929
-output = 21.4646
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 4.2929
+
+[cost.text.output]
+price = 21.4646

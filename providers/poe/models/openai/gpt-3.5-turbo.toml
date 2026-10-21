@@ -1,22 +1,25 @@
+schema = 2
 name = "GPT-3.5-Turbo"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
-release_date = "2023-09-13"
-last_updated = "2023-09-13"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2023-09-13"
 
-[cost]
-input = 0.45
-output = 1.4
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 16_384
 output = 2_048
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.45
+
+[cost.text.output]
+price = 1.4

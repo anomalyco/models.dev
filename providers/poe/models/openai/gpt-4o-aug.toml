@@ -1,23 +1,26 @@
+schema = 2
 name = "GPT-4o-Aug"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
-release_date = "2024-11-21"
-last_updated = "2024-11-21"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2024-11-21"
 
-[cost]
-input = 2.2
-output = 9
-cache_read = 1.1
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 2.2
+cache = { read = 1.1 }
+
+[cost.text.output]
+price = 9

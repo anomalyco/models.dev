@@ -1,23 +1,26 @@
+schema = 2
 name = "GPT-4-Classic-0314"
 description = "Legacy model retained for compatibility with older integrations"
 family = "gpt"
-release_date = "2024-08-26"
-last_updated = "2024-08-26"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2024-08-26"
 status = "deprecated"
 
-[cost]
-input = 27
-output = 54
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 8_192
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 27
+
+[cost.text.output]
+price = 54

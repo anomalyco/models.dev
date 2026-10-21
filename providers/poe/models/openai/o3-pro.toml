@@ -1,23 +1,25 @@
+schema = 2
 name = "o3-pro"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 family = "o-pro"
-release_date = "2025-06-10"
-last_updated = "2025-06-10"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2025-06-10"
 
-[cost]
-input = 18
-output = 72
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = false
 
 [limit]
 context = 200_000
 output = 100_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 18
+
+[cost.text.output]
+price = 72
