@@ -3,7 +3,10 @@
 # returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/overview
 # https://docs.baseten.co/inference/model-apis/reasoning
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is kept in place (cached prefix survives, instruction followed); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 14848/15098 -> 14848/15112; 15360/15418 -> 15360/15432]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 14848/15082 -> 0/15174 (reasoning tokens 0 -> 87); 14848/15082 -> 0/15174 (reasoning tokens 0 -> 71)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 15104/15353 -> 0/15404; 15104/15353 -> 0/15404]
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 

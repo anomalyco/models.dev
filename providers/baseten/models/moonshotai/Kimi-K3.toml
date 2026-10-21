@@ -4,7 +4,10 @@
 # documented. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Image MIME types are the lab's; Baseten's vision guide lists the model but no formats (https://docs.baseten.co/inference/model-apis/vision).
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is kept in place (cached prefix survives, instruction followed); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 12288/12368 -> 12288/12392; 12608/12688 -> 12608/12712]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12160/12250 -> 64/12323 (reasoning tokens 0 -> 44); 12160/12250 -> 64/12323 (reasoning tokens 0 -> 33)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12352/12403 -> 0/12447; 128/12403 -> 64/12447; 12352/12403 -> 0/12447]
 schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"

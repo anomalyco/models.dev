@@ -2,7 +2,10 @@
 # so reasoning cannot be disabled.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Pricing: https://www.baseten.co/pricing
-# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is kept in place (cached prefix survives, instruction followed); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 12288/12305 -> 12288/12319; 12608/12625 -> 12608/12639]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12544/12610 -> 0/12610 (reasoning tokens 7 -> 30); 12224/12290 -> 0/12290 (reasoning tokens 7 -> 72)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12736/12755 -> 64/12805; 12416/12435 -> 64/12485]
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
