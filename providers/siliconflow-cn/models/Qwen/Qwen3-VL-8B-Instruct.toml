@@ -4,6 +4,9 @@
 # CNY: input 0.5, output 2
 # Modalities: the China multimodal guide lists image and video input for the Qwen3-VL series
 # (https://docs.siliconflow.cn/docs/userguide/capabilities/multimodal-vision, 2026-10-21).
+# Input MIME types: this file serves Qwen's open-weight Qwen3-VL-8B-Instruct; formats are the lab's, per
+#   https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; open-source Qwen3-VL included,
+#   registered MIME types used). The host lists no formats, so it is assumed to relay the lab's.
 schema = 2
 name = "Qwen/Qwen3-VL-8B-Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -13,7 +16,7 @@ release_date = "2025-10-15"
 last_updated = "2025-11-25"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]

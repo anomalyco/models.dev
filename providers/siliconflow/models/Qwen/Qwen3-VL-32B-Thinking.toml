@@ -1,5 +1,8 @@
 # Budget: thinking_budget = 128..32768 (top-level request field); the reasoning guide says the Qwen3 series
 # natively enforces it (https://docs.siliconflow.com/en/userguide/capabilities/reasoning).
+# Input MIME types: this file serves Qwen's open-weight Qwen3-VL-32B-Thinking; formats are the lab's, per
+#   https://www.alibabacloud.com/help/en/model-studio/vision (Image limits; open-source Qwen3-VL included,
+#   registered MIME types used). The host lists no formats, so it is assumed to relay the lab's.
 schema = 2
 name = "Qwen/Qwen3-VL-32B-Thinking"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -9,7 +12,7 @@ release_date = "2025-10-21"
 last_updated = "2025-11-25"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

@@ -1,3 +1,6 @@
+# Image MIME types: this file serves OpenAI's chatgpt-4o-latest; formats are the lab's, per
+#   https://developers.openai.com/api/docs/guides/images-vision ("PNG, JPEG, WEBP, and non-animated GIF").
+#   Helicone lists no formats, so it is assumed to relay the lab's.
 schema = 2
 name = "OpenAI ChatGPT-4o"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
@@ -7,7 +10,7 @@ knowledge = "2024-08"
 release_date = "2024-08-14"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
