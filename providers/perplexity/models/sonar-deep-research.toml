@@ -5,10 +5,22 @@
 # Sources:
 # https://docs.perplexity.ai/api-reference/sonar-post
 # https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research
+# Lifecycle: "Sonar Chat Completions support ended on September 27, 2026. Synchronous and streaming requests keep
+#   working: they are being reformulated as Agent API requests, rolling out gradually by model."
+#   (https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview.md, accessed 2026-10-21), so the model is
+#   deprecated. The Sonar model pages and the Sonar API reference now redirect to that page.
+# Token prices: the Sonar table on the pricing page, last archived with it on 2026-09-13
+#   (https://web.archive.org/web/20260913155539/https://docs.perplexity.ai/docs/getting-started/pricing); the current
+#   pricing page no longer lists Sonar. This model was not probed live (cost); sonar, sonar-pro and sonar-reasoning-pro
+#   requests on 2026-10-21 were billed at rates that differ from that table, so the listed prices may be stale.
+# Archived pricing page: input $2, output $8, reasoning tokens $3, citation tokens $2 per MTok, search queries $5 per
+#   1,000. Not representable in v2: the citation-token price (no field for a separate input-token class) and the
+#   per-search-query fee (no per-request unit).
 schema = 2
 base_model = "perplexity/sonar-deep-research"
 name = "Perplexity Sonar Deep Research"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
