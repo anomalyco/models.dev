@@ -1,6 +1,7 @@
-# Baseten documents opt-in via chat_template_args.enable_thinking=true, but no
-# explicit false behavior, effort values, or reasoning-token budget. Reasoning
-# output is returned in reasoning_content.
+# Toggle: chat_template_args.enable_thinking = true turns reasoning on; it is off
+# when the field is absent (opt-in, per the reasoning guide when this model was
+# listed). Baseten documented no effort values or reasoning-token budget.
+# Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Image MIME types are the lab's; Baseten documents no formats for this model.
 # Retired: absent from GET /v1/models; chat completions return 410 "the model version you are trying to access has been deprecated" (live, 2026-10-21).
@@ -16,7 +17,6 @@ output = ["text"]
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
-cache = { supported = true, implicit = true }
 
 [limit]
 context = 262_000

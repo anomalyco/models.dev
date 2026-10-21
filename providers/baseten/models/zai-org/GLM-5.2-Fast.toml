@@ -8,6 +8,7 @@
 #   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 12928/12945 -> 12928/12959; 13248/13265 -> 13248/13279]
 #   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 13184/13244 -> 0/13250 (reasoning tokens 0 -> 54); 12864/12924 -> 0/12930 (reasoning tokens 0 -> 54)]
 #   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 13376/13395 -> 0/13445; 13056/13075 -> 64/13125]
+# Image input: listed in Baseten's vision guide (https://docs.baseten.co/inference/model-apis/vision) and the catalog's input_modalities, but every image request returned 403 "Media could not be processed ... Authentication failed" on 2026-10-21, so no formats could be confirmed.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 Fast"

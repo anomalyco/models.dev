@@ -1,16 +1,16 @@
 # Effort: reasoning_effort = low|high|max (default high). Baseten also accepts
 # none but runs it at low, so reasoning cannot be disabled.
 # https://docs.baseten.co/inference/model-apis/reasoning
-# Image MIME types are the lab's; Baseten's vision guide lists the model but no formats (https://docs.baseten.co/inference/model-apis/vision).
 # Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
 #   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12800/12945 -> 0/12959; 0/13265 -> 0/13279; 13056/13265 -> 0/13279]
+# Image formats (live, 2026-10-21, notes/deepinfra-baseten-v2-2026-10-21/imgprobe.ts): PNG, JPEG, GIF, WebP, BMP and TIFF are read; HEIC rejected (400). Baseten lists no video for GLM 5.3 Flash (vision guide, "Max videos per request: Not supported").
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "image/bmp", "image/tiff"]
 output = ["text"]
 
 [capabilities]

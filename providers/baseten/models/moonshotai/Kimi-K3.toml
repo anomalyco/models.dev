@@ -3,17 +3,17 @@
 # chat_template_args.enable_thinking=false. No reasoning-token budget is
 # documented. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
-# Image MIME types are the lab's; Baseten's vision guide lists the model but no formats (https://docs.baseten.co/inference/model-apis/vision).
 # Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
 #   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 12288/12368 -> 12288/12392; 12608/12688 -> 12608/12712]
 #   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12160/12250 -> 64/12323 (reasoning tokens 0 -> 44); 12160/12250 -> 64/12323 (reasoning tokens 0 -> 33)]
 #   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12352/12403 -> 0/12447; 128/12403 -> 64/12447; 12352/12403 -> 0/12447]
+# Image formats (live, 2026-10-21, notes/deepinfra-baseten-v2-2026-10-21/imgprobe.ts): PNG, JPEG, GIF, WebP, BMP and TIFF are read; HEIC rejected (400). Video is left out: the vision guide allows 12 videos per request, but the catalog's input_modalities (which the sync follows) list text and image only.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "image/bmp", "image/tiff"]
 output = ["text"]
 
 [capabilities]

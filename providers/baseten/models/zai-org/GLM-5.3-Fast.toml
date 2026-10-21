@@ -6,13 +6,14 @@
 #   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 12928/12945 -> 12928/12959; 13248/13265 -> 13248/13279]
 #   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 13184/13250 -> 0/13250 (reasoning tokens 7 -> 17); 12864/12930 -> 0/12930 (reasoning tokens 7 -> 32)]
 #   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 13376/13395 -> 0/13445; 13056/13075 -> 64/13125]
+# Image formats (live, 2026-10-21, notes/deepinfra-baseten-v2-2026-10-21/imgprobe.ts): PNG, JPEG, GIF, WebP and BMP are read; TIFF is not seen and HEIC rejected (400). Vision support: https://docs.baseten.co/inference/model-apis/vision
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3 Fast"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "image/bmp"]
 output = ["text"]
 
 [capabilities]

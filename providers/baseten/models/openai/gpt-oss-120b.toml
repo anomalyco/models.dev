@@ -1,7 +1,8 @@
 # Baseten now documents top-level reasoning_effort = none | minimal | low |
 # medium (default) | high | xhigh | max for GPT OSS 120B; reasoning is
-# otherwise enabled by default. No toggle or budget exists. Reasoning output is
-# returned in reasoning_content.
+# otherwise enabled by default. The guide's Effective depth column runs every
+# value as sent ("none can still reason"), so all seven are distinct levels.
+# No toggle or budget exists. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Lab identity: model slug = Hugging Face repo openai/gpt-oss-120b
 # Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
