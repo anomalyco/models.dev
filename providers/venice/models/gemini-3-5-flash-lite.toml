@@ -1,17 +1,22 @@
+schema = 2
 base_model = "google/gemini-3.5-flash-lite"
-structured_output = true
 name = "Gemini 3.5 Flash-Lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-release_date = "2026-07-09"
-reasoning_options = []
 
-[cost]
-input = 0.375
-output = 3.125
-cache_read = 0.0375
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image", "audio", "video"]
+[cost.text.input]
+price = 0.375
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 3.125
