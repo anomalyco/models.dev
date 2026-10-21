@@ -1,10 +1,12 @@
 # Included in subscription
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.supported = false: NanoGPT's catalog reports capabilities.tool_calling = false for this model (https://nano-gpt.com/api/v1/models?detailed=true, checked 2026-10-20).
 schema = 2
 base_model = "nousresearch/hermes-4-405b"
 name = "Hermes 4 Large"
 
 [capabilities]
+tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
 effort_updates = false
