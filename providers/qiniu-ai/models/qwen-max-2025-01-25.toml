@@ -2,21 +2,12 @@
 # Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
 # converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
 schema = 2
+base_model = "alibaba/qwen-max"
 name = "Qwen2.5-Max-2025-01-25"
-description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
-open_weights = false
-release_date = "2025-08-05"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 128_000
