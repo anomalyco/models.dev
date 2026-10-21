@@ -7,30 +7,30 @@
 # Reasoning: reasoning_effort documented enum none|low|medium|high (default
 # medium). A reasoning side channel is returned as message.reasoning, which is
 # not a schema-supported interleaved field, so no interleaved is authored.
-
+schema = 2
 name = "SenseNova 6.8 Flash Lite"
 description = "SenseNova lightweight multimodal agent model for real-world complex tasks, data analysis, and complex information presentation"
+open_weights = false
 release_date = "2026-08-11"
 last_updated = "2026-08-28"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = [
-  { type = "effort", values = ["none", "low", "medium", "high"] },
-]
-
-[limit]
-context = 262_144
-output = 65_536
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
