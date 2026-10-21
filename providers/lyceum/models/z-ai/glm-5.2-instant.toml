@@ -1,0 +1,17 @@
+# Lyceum -instant alias: same model and price as z-ai/glm-5.2, answers without a reasoning phase (docs: Instant variants).
+schema = 2
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 Instant"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 4.5
