@@ -1,25 +1,27 @@
+schema = 2
 name = "deepseek-ai/DeepSeek-V4-Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-04-24"
 
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.145
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+temperature = true
 
 [limit]
 context = 1_049_000
 output = 393_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.74
+cache = { read = 0.145 }
+
+[cost.text.output]
+price = 3.48

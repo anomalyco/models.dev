@@ -1,26 +1,29 @@
+schema = 2
 name = "Pro/MiniMaxAI/MiniMax-M2.5"
 description = "Frontier MiniMax model for engineering, office tasks, and agentic reasoning"
 family = "minimax"
-release_date = "2026-02-13"
-last_updated = "2026-02-13"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-02-13"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 1.22
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 192_000
 output = 131_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.22

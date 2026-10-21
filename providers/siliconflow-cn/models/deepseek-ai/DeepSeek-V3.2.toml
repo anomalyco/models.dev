@@ -1,24 +1,26 @@
+schema = 2
 name = "deepseek-ai/DeepSeek-V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
-release_date = "2025-12-03"
-last_updated = "2025-12-03"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2025-12-03"
 
-[cost]
-input = 0.27
-output = 0.42
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 164_000
 output = 164_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 0.42
