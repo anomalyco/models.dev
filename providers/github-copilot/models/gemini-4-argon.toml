@@ -4,11 +4,16 @@
 # - https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
 # Pricing: Gemini 4 Argon promo $2.00 input / $0.10 cached input / $10.00 output per 1M tokens until 2026-12-01
 # Reasoning: effort low|medium|high (matches lab providers/google/models/gemini-4-argon.toml + github-copilot gemini-3.7-flash / gemini-3.8-flash peers)
+schema = 2
 base_model = "google/gemini-4-argon"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.1
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10

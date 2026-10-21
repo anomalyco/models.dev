@@ -1,16 +1,21 @@
+schema = 2
 base_model = "microsoft/mai-code-1-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.75
-output = 4.5
-cache_read = 0.075
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 256_000
 input = 128_000
 output = 128_000
 
-[provider]
-npm = "@ai-sdk/openai"
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 4.5

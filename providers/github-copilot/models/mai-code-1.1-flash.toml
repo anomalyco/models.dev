@@ -1,19 +1,25 @@
 # Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 # Capabilities and limits verified against the GitHub Copilot /models API on 2026-08-12.
+schema = 2
 base_model = "microsoft/mai-code-1.1-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.20
-output = 1.20
-cache_read = 0.02
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 input = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai" }
 
-[provider]
-npm = "@ai-sdk/openai"
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 1.2
