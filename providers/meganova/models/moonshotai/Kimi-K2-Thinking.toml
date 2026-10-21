@@ -1,27 +1,29 @@
+schema = 2
 name = "Kimi K2 Thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
 family = "kimi-thinking"
-release_date = "2025-11-06"
-last_updated = "2025-11-06"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-08"
 open_weights = true
+knowledge = "2024-08"
+release_date = "2025-11-06"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.60
-output = 2.60
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.6
