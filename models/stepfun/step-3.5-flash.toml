@@ -1,8 +1,11 @@
 # https://huggingface.co/stepfun-ai/Step-3.5-Flash
 # Sampling: open weights; the model card recommends temperature and top_p (temperature=0.6/1.0, top_p=0.95).
+# Family: StepFun's Step series ("step" in packages/core/src/family.ts; providers already publish it for this model);
+#   https://huggingface.co/stepfun-ai/Step-3.5-Flash
 schema = 2
 name = "Step 3.5 Flash"
 description = "StepFun flash lane for quick multimodal reasoning and coding assistance"
+family = "step"
 open_weights = true
 knowledge = "2025-01"
 release_date = "2026-01-29"
