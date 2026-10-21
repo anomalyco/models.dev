@@ -1,18 +1,49 @@
+# Cortex REST API (accessed 2026-10-20): https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api (model availability, features, Chat Completions compatibility chart).
+# Generally available (check mark in the model availability table), so the earlier beta status is dropped.
+# Effort: Chat Completions `reasoning_effort` = none|minimal|low|medium|high (REST docs, Thinking and reasoning); `reasoning.effort` overrides it.
+# Pricing: Snowflake Service Consumption Table effective 2026-10-15 (https://www.snowflake.com/legal-files/CreditConsumptionTable.pdf), Table 6(b) Cortex Inference with Prompt Caching, AI Credits per 1M tokens x USD 2.00 per AI Credit (on-demand Global routing, Table 2(b); https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing). Regional routing costs USD 2.20 per AI Credit: the 1.1x multiplier when region is not global.
+# Long-context rows: the table doesn't state the threshold; 272K input tokens is OpenAI's documented cutoff for these models.
+# Cache: implicit for prompts of 1,024+ tokens; prompt_cache_key is supported (REST docs, compatibility chart).
+# Images: base64 only, 20 per conversation, 20 MiB max request (REST docs).
+# PDF dropped: `messages[].content[].file` returns an error for OpenAI models in the compatibility chart, and the Messages API lists no document input.
+# The earlier priority fast mode is removed: `service_tier` returns an error (compatibility chart).
+# structured_output: response_format json_schema (compatibility chart).
+# Compatibility chart: `store` and `service_tier` return an error for every model family, so store = false and no service tier.
+# Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
 schema = 2
 base_model = "openai/gpt-5.4"
-status = "beta"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
+store = false
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
 
-[experimental.modes.fast]
-service_tier = "priority"
-body = { service_tier = "priority" }
+[limit]
+request_bytes = 20_971_520
+image = { max_per_request = 20 }
 
-[experimental.modes.fast.cost.text.input]
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
 price = 5
 cache = { read = 0.5 }
 
-[experimental.modes.fast.cost.text.output]
-price = 30
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 22.5
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1

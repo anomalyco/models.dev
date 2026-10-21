@@ -1,2 +1,33 @@
+# Cortex REST API (accessed 2026-10-20): https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api (model availability, features, Chat Completions compatibility chart).
+# Other model families (compatibility chart): `tools` and `image_url` return an error, `response_format`, `reasoning_effort` and `cache_control` are ignored, and cached_tokens is not reported.
+# Pricing: Snowflake Service Consumption Table effective 2026-10-15 (https://www.snowflake.com/legal-files/CreditConsumptionTable.pdf), Table 6(c) Cortex Inference, AI Credits per 1M tokens x USD 2.00 per AI Credit (on-demand Global routing, Table 2(b); https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing). Regional routing costs USD 2.20 per AI Credit: the 1.1x multiplier when region is not global.
+# Limits: AI_COMPLETE model restrictions (https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability#model-restrictions); the REST chart caps max_completion_tokens at 131,072. mistral-large2: 128,000 context, 8,192 output.
+# mistral-large2 is Mistral Large 2; whether that is the 2407 or 2411 checkpoint is not documented, so the base_model link is unchanged.
+# Compatibility chart: `store` and `service_tier` return an error for every model family, so store = false and no service tier.
+# Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
 schema = 2
 base_model = "mistral/mistral-large-latest"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
+store = false
+cache = { supported = false }
+
+[limit]
+context = 128_000
+output = 8192
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 6
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1

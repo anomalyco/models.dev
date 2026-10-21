@@ -1,12 +1,36 @@
-# Served AI_COMPLETE limits: https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability#model-restrictions
+# Cortex REST API (accessed 2026-10-20): https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api (model availability, features, Chat Completions compatibility chart).
+# Generally available (check mark in the model availability table), so the earlier beta status is dropped.
+# Effort: Chat Completions `reasoning_effort` = none|minimal|low|medium|high (REST docs, Thinking and reasoning); `reasoning.effort` overrides it.
+# Pricing: Snowflake Service Consumption Table effective 2026-10-15 (https://www.snowflake.com/legal-files/CreditConsumptionTable.pdf), Table 6(b) Cortex Inference with Prompt Caching, AI Credits per 1M tokens x USD 2.00 per AI Credit (on-demand Global routing, Table 2(b); https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing). Regional routing costs USD 2.20 per AI Credit: the 1.1x multiplier when region is not global.
+# Limits: AI_COMPLETE model restrictions (https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability#model-restrictions); the REST chart caps max_completion_tokens at 131,072.
+# Cache: implicit for prompts of 1,024+ tokens; prompt_cache_key is supported (REST docs, compatibility chart).
+# Images: base64 only, 20 per conversation, 20 MiB max request (REST docs).
+# structured_output: response_format json_schema (compatibility chart).
+# Compatibility chart: `store` and `service_tier` return an error for every model family, so store = false and no service tier.
+# Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
 schema = 2
 base_model = "openai/gpt-5"
-status = "beta"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
+store = false
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
 
 [limit]
 context = 272_000
-output = 8_192
+output = 8192
+request_bytes = 20_971_520
+image = { max_per_request = 20 }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 10
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1

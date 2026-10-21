@@ -1,2 +1,14 @@
+# Cortex REST API (accessed 2026-10-20): https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api (model availability, features, Chat Completions compatibility chart).
+# Other model families (compatibility chart): `tools` and `image_url` return an error, `response_format`, `reasoning_effort` and `cache_control` are ignored, and cached_tokens is not reported.
+# The REST model name is `snowflake-llama-3.3-70b`; this file's ID lacks the hyphen. Not renamed (v1 IDs are kept).
+# Pricing: Table 6(c) of the Snowflake Service Consumption Table effective 2026-10-15 lists llama3.3-70b but not snowflake-llama-3.3-70b, so no cost.
+# Compatibility chart: `store` and `service_tier` return an error for every model family, so store = false and no service tier.
+# Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
 schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
+store = false
+cache = { supported = false }
