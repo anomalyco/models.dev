@@ -1,11 +1,21 @@
-# Chat `reasoning_effort` and Messages `output_config.effort` accept low/high
-# (accessed 2026-06-25).
-# https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash
+# Sources (accessed 2026-10-21):
+# - Model card (256K context, text only): https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash
+# - Step Plan (credit subscription, no per-token price, so no [cost]): https://platform.stepfun.com/docs/zh/step-plan/overview, https://platform.stepfun.com/docs/zh/step-plan/pricing
+# - Plan endpoints: POST /step_plan/v1/chat/completions and /step_plan/v1/messages (no Responses):
+#   https://platform.stepfun.com/docs/zh/step-plan/integrations/reasoning-api
+# - Structured output (JSON Schema): https://platform.stepfun.com/docs/zh/guides/developer/json-mode
+# - Caching: automatic prefix cache from 256 tokens, no cache_control (https://platform.stepfun.com/docs/zh/guides/developer/prompt-cache); the
+#   plan has its own cache-hit rate (https://platform.stepfun.com/docs/zh/announcements/step-5-preview-price-adjustment).
+# Effort: reasoning_effort (Chat) and output_config.effort (Messages) = low|high (documented for step-3.5-flash-2603).
+# Chat Completions returns reasoning in both `reasoning` and `reasoning_content`.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) unset: undocumented, and no StepFun key to test.
 schema = 2
 base_model = "stepfun/step-3.5-flash-2603"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+cache = { supported = true, implicit = { min_tokens = 256 }, explicit = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

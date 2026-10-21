@@ -1,19 +1,24 @@
-# Chat `reasoning_effort`, Messages `output_config.effort`, and Responses
-# `reasoning.effort` accept low/medium/high (accessed 2026-09-21).
-# https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
-# Verified live: GET https://api.stepfun.ai/v1/models lists step-5-preview
-# with reasoning_effort_support_list ["low", "medium", "high"] and
-# max_input_tokens 1024000; POST /v1/chat/completions succeeds.
-# The model card specifies maximum output of 64k tokens:
-# https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
-# Pricing (USD/MTok): input 1.00, output 2.70, cache_read 0.05 (95% cache
-# discount), matching existing mirrors and vendor reporting.
+# Sources (accessed 2026-10-21):
+# - Model card (1M context, 64k max output, text/image/video input, JSON Mode and JSON Schema, effort, prompt cache):
+#   https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
+# - Pricing (USD per 1M tokens): 1.00 input, 0.10 cache hit, 2.70 output: https://platform.stepfun.ai/docs/en/guides/pricing/details
+# - Caching: automatic prefix cache from 256 tokens, no cache_control; cache writes bill at the cache-miss input
+#   price: https://platform.stepfun.ai/docs/en/guides/developer/prompt-cache
+# Context 1,024,000: GET https://api.stepfun.ai/v1/models listed max_input_tokens 1024000 and
+#   reasoning_effort_support_list ["low", "medium", "high"] (checked live 2026-09-21).
+# Effort: reasoning_effort (Chat), output_config.effort (Messages), reasoning.effort (Responses) = low|medium|high
+#   (https://platform.stepfun.ai/docs/en/api-reference/chat/chat-completion-create, https://platform.stepfun.ai/docs/en/api-reference/chat/messages-create,
+#   https://platform.stepfun.ai/docs/en/api-reference/responses/responses-create).
+# Chat Completions returns reasoning in both `reasoning` and `reasoning_content`.
+# Sampling: Chat and Responses document temperature and top_p; Messages also documents top_k (0-500).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) unset: undocumented, and no StepFun key to test.
 schema = 2
 base_model = "stepfun/step-5-preview"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = { min_tokens = 256 }, explicit = false }
 
 [limit]
 context = 1_024_000
@@ -25,7 +30,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1
-cache = { read = 0.05 }
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 2.7
