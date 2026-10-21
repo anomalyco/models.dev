@@ -292,11 +292,11 @@ function scaleCost(cost: Record<string, unknown>, factor: number) {
   );
 }
 
-function toV1Modalities(modalities: string[]) {
+export function toV1Modalities(modalities: string[]) {
   return [...new Set(modalities.map(toV1Modality))];
 }
 
-function toV1Modality(modality: string) {
+export function toV1Modality(modality: string) {
   if (modality === "application/pdf") return "pdf";
   if (["decision", "embedding", "reranking"].includes(modality)) return "text";
   const base = modality.split("/")[0]!;

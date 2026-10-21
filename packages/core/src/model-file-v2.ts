@@ -4,7 +4,7 @@
 import { toCostV2 } from "./generate-v2.js";
 import { ReasoningOption } from "./schema.js";
 import type { CostV2, CostWhenV2, InputCostV2, OutputCostV2 } from "./schema-v2.js";
-import { roundPrice, toV1Shape } from "./translate.js";
+import { roundPrice, toV1Modalities, toV1Modality, toV1Shape } from "./translate.js";
 
 type Doc = Record<string, any>;
 
@@ -125,7 +125,15 @@ export function patchModelV2(
       return stable(before[key]) === stable(after[key]);
     });
 
-  if (same("modalities") && doc.modalities !== undefined) next.modalities = doc.modalities;
+  if (doc.modalities !== undefined) {
+    if (same("modalities")) next.modalities = doc.modalities;
+    else if (next.modalities !== undefined) {
+      next.modalities = {
+        input: mergeModalities(doc.modalities.input, next.modalities.input),
+        output: mergeModalities(doc.modalities.output, next.modalities.output),
+      };
+    }
+  }
 
   const capabilities: Doc = { ...doc.capabilities };
   const owned: Array<[string, string[]]> = [
@@ -162,6 +170,17 @@ export function patchModelV2(
   if (doc.metadata !== undefined) next.metadata = doc.metadata;
   if (doc.v2_only !== undefined) next.v2_only = doc.v2_only;
   return next;
+}
+
+// A synced modality list in the synced kinds and order, keeping the file's
+// exact formats (`image/png`, `application/pdf`) for each kind it already has.
+function mergeModalities(current: string[] | undefined, synced: string[]) {
+  if (current === undefined) return synced;
+  if (stable(toV1Modalities(current)) === stable(toV1Modalities(synced))) return current;
+  return synced.flatMap((value) => {
+    const own = current.filter((item) => toV1Modality(item) === toV1Modality(value));
+    return own.length > 0 ? own : [value];
+  });
 }
 
 // Modes priced by a multiplier in the v2 file whose v1 price sync only carried
