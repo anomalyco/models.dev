@@ -1,24 +1,21 @@
-name = "MiniMax-M2.7"
+# Retired: absent from https://docs.frogbot.ai/api-reference/models (accessed 2026-10-21).
+# knowledge: FrogBot's value, unsourced (the lab states none). Kept so v1 doesn't change.
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = true
-reasoning = false
-temperature = true
 knowledge = "2024-09"
-tool_call = true
-open_weights = false
+status = "deprecated"
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 192_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

@@ -1,27 +1,24 @@
+# Price: https://docs.frogbot.ai/api-reference/models (accessed 2026-10-21)
+# knowledge: FrogBot's value, unsourced and different from the lab's. Kept so v1 doesn't change.
 schema = 2
-name = "GPT-5.5"
+base_model = "openai/gpt-5.5"
+base_model_omit = ["limit.input"]
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
-family = "gpt"
-open_weights = false
 knowledge = "2025-08-31"
-release_date = "2026-03-05"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-temperature = false
 
 [limit]
 context = 272_000
-output = 128_000
 
 [cost.text.input]
-price = 2.5
-cache = { read = 0.25 }
+price = 5
+cache = { read = 0.5 }
 
 [cost.text.output]
-price = 15
+price = 30

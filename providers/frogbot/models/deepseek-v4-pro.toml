@@ -1,24 +1,21 @@
+# Price: https://docs.frogbot.ai/api-reference/models (accessed 2026-10-21)
+# knowledge: FrogBot's value, unsourced and different from the lab's. Kept so v1 doesn't change.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek v4 Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = true
-reasoning = false
-temperature = true
 knowledge = "2026-01"
-tool_call = true
-open_weights = false
 
-[cost]
-input = 1.74
-output = 3.48
-cache_read= 0.14
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96
