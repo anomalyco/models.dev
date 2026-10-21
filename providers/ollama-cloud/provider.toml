@@ -1,6 +1,7 @@
 name = "Ollama Cloud"
 env = ["OLLAMA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP reasoning controls (sources accessed 2026-06-25):
 # Native POST `/api/chat` and `/api/generate` use `think = true|false` or a
 # model-supported level. GPT-OSS accepts only low|medium|high; booleans are

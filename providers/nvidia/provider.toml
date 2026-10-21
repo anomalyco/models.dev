@@ -1,6 +1,7 @@
 name = "Nvidia"
 env = ["NVIDIA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP reasoning controls (sources accessed 2026-06-25):
 # POST `/v1/chat/completions` has a model-specific NIM request schema; there is
 # no provider-wide reasoning field or enum. Examples include top-level
