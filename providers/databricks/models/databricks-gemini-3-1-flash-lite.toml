@@ -1,11 +1,18 @@
-base_model = "google/gemini-3.1-flash-lite-preview"
-structured_output = true
 # Chat `reasoning_effort = low|medium|high`; `low` is the default.
 # https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+schema = 2
+base_model = "google/gemini-3.1-flash-lite-preview"
 
-[cost]
-input = 0.25
-output = 1.5
-cache_read = 0.025
-input_audio = 0.5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 1.5
+
+[cost.audio.input]
+price = 0.5

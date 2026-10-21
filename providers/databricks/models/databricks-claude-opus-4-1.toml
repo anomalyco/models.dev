@@ -1,11 +1,15 @@
-base_model = "anthropic/claude-opus-4-1"
 # Chat uses `thinking = { type = "enabled", budget_tokens = N }`; N >= 1024
 # and must be less than `max_tokens`.
 # https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+schema = 2
+base_model = "anthropic/claude-opus-4-1"
 
-[cost]
-input = 15
-output = 75
-cache_read = 1.5
-cache_write = 18.75
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[cost.text.input]
+price = 15
+cache = { read = 1.5, write = 18.75 }
+
+[cost.text.output]
+price = 75

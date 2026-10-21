@@ -1,10 +1,15 @@
-base_model = "moonshotai/kimi-k2.7-code"
-structured_output = true
 # Chat `reasoning_effort = low|medium|high`; `medium` is the default.
 # https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-07-11)
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
 
-[cost]
-input = 0.95
-output = 4.0
-cache_read = 0.19
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

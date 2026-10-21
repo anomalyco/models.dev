@@ -10,15 +10,23 @@
 # rate. The 10% regional uplift is excluded. The promotion expiry can change these rates.
 # https://www.databricks.com/product/pricing/proprietary-foundation-model-serving
 # https://www.databricks.com/en-pricing-assets/data/pricing/cards.json
+schema = 2
 base_model = "google/gemini-3.5-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-
-[cost]
-input = 1.50
-output = 9.00
-cache_read = 0.15
-input_audio = 1.50
 
 [modalities]
 input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 9
+
+[cost.audio.input]
+price = 1.5
