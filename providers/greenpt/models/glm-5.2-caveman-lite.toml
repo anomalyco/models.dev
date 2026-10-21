@@ -4,13 +4,18 @@
 # Values verified against the production API. See https://docs.greenpt.ai/chat-completion
 # cache_read: discounted rate for cached prompt tokens. Cache writes are not
 # charged. See https://docs.greenpt.ai/prompt-caching
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 name = "GLM-5.2 Caveman Lite"
 description = "glm-5.2 carrying a built-in ruleset that compresses prose, keeping code and technical detail verbatim. The gentlest tier: it cuts filler only and keeps the explanation intact. Same upstream model and price per token as glm-5.2, with fewer output tokens."
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 
-[cost]
-input = 1.254
-cache_read = 0.3135
-output = 5.016
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.254
+cache = { read = 0.3135 }
+
+[cost.text.output]
+price = 5.016

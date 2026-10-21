@@ -1,25 +1,27 @@
 # Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+schema = 2
 name = "Holo2 30B A3B"
 description = "H Company Holo2 vision model for GUI navigation and computer-use agents"
-release_date = "2025-11"
-last_updated = "2025-11"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2025-11"
 
-[cost]
-input = 0.399
-output = 0.969
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+temperature = true
 
 [limit]
 context = 22_016
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.399
+
+[cost.text.output]
+price = 0.969
