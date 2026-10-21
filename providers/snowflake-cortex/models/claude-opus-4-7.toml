@@ -1,8 +1,17 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-7"
 status = "beta"
 
-reasoning_options = []
+[capabilities]
+reasoning = { supported = true }
 
 [experimental.modes.fast]
-cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
-provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }
+body = { speed = "fast" }
+headers = { anthropic-beta = "fast-mode-2026-02-01" }
+
+[experimental.modes.fast.cost.text.input]
+price = 30
+cache = { read = 3, write = 37.5 }
+
+[experimental.modes.fast.cost.text.output]
+price = 150

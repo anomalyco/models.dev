@@ -1,6 +1,8 @@
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
-reasoning_options = [{ type = "budget_tokens" }]
+[capabilities]
+reasoning = { supported = true, budget = {} }
 
 [limit]
 output = 16_384

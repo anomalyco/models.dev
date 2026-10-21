@@ -1,5 +1,8 @@
 # Served AI_COMPLETE limits: https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability#model-restrictions
+schema = 2
 base_model = "openai/gpt-4.1"
+
+[capabilities]
 structured_output = true
 
 [limit]
