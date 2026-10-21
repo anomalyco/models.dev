@@ -1,18 +1,10 @@
+# Linked to models/alibaba/qwen3-max.toml (same model).
 schema = 2
-name = "Qwen3 Max"
+base_model = "alibaba/qwen3-max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
-family = "qwen"
-open_weights = false
-release_date = "2025-05-28"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
 context = 131_072

@@ -1,21 +1,13 @@
+# Linked to models/alibaba/qwen3-235b-a22b-instruct-2507.toml (same model).
 schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B A22B Instruct"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = true
-release_date = "2025-07-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 262_144
 output = 8_192
 
 [cost.text.input]

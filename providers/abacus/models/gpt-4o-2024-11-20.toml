@@ -1,23 +1,12 @@
+# Linked to models/openai/gpt-4o-2024-11-20.toml (same model).
+# knowledge: unsourced host value kept as an override (lab: 2023-09).
 schema = 2
-name = "GPT-4o (2024-11-20)"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-open_weights = false
+base_model = "openai/gpt-4o-2024-11-20"
 knowledge = "2024-10"
-release_date = "2024-11-20"
 
 [modalities]
 input = ["text", "image", "audio"]
 output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 128_000
-output = 16_384
 
 [cost.text.input]
 price = 2.5

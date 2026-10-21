@@ -1,23 +1,9 @@
+# Linked to models/anthropic/claude-3-7-sonnet-20250219.toml (same model).
 schema = 2
-name = "Claude Sonnet 3.7"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-open_weights = false
-knowledge = "2024-10-31"
-release_date = "2025-02-19"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
+base_model = "anthropic/claude-3-7-sonnet-20250219"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 200_000
-output = 64_000
 
 [cost.text.input]
 price = 3

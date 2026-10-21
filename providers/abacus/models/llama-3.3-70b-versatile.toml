@@ -1,21 +1,10 @@
+# Linked to models/meta/llama-3.3-70b-instruct.toml (same model).
 schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B Versatile"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-open_weights = true
-release_date = "2024-12-06"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
-context = 128_000
 output = 32_768
 
 [cost.text.input]

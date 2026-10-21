@@ -1,22 +1,9 @@
+# Linked to models/anthropic/claude-opus-4-20250514.toml (same model).
 schema = 2
-name = "Claude Opus 4"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-open_weights = false
-release_date = "2025-05-14"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
+base_model = "anthropic/claude-opus-4-20250514"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 200_000
-output = 32_000
 
 [cost.text.input]
 price = 15

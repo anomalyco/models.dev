@@ -1,21 +1,13 @@
+# Linked to models/deepseek/deepseek-r1.toml (same model).
 schema = 2
+base_model = "deepseek/deepseek-r1"
 name = "DeepSeek R1"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek-thinking"
-open_weights = true
-release_date = "2025-01-20"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 128_000
 output = 8_192
 
 [cost.text.input]
