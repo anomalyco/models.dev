@@ -1,10 +1,26 @@
-# Toggle: thinking.type = enabled|disabled
-# Source: https://mimo.mi.com/docs/zh-CN/api/chat/openai-api
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Token Plan: flat subscription (individual Lite/Standard/Pro/Max $6/$16/$50/$100 per month, ¥39/¥99/¥329/¥659;
+#   team $16/$50/$100 per seat per month) with a monthly Credits quota (https://mimo.mi.com/static/docs/price/token-plan.md). Not expressible
+#   as a per-token USD price, so cost is zeroed per this provider's subscription convention.
+# - mimo-v2.6-flash consumes 2 / 100 / 200 Credits per cache-hit / cache-miss input / output token; off-peak (UTC 16:00-24:00) the
+#   consumption coefficient is 0.8x (same page). Neither has a v2 field.
+# - The plan serves the platform API on its own hosts (https://mimo.mi.com/static/docs/tokenplan/Token%20Plan/quick-access.md):
+# - Chat Completions (https://mimo.mi.com/static/docs/api/chat/openai-api.md): thinking.type = enabled|disabled, default enabled;
+#   max_completion_tokens <= 131072; tool_choice only "auto" (other values are dropped); function `strict` is a
+#   documented field; no top_k parameter; response_format json_object
+#   (https://mimo.mi.com/static/docs/quick-start/usage-guide/text-generation/structured-output.md); stream chunks carry `usage`.
+# - Prompt cache: automatic prefix cache billed at the cache-hit price; no cache_control field on any protocol.
+# Not checked live (the available key is pay-as-you-go; plan hosts return 401), so mid-conversation flags are unset.
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+tools = { supported = true, strict = true, choice = ["auto"] }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { supported = true, implicit = true, explicit = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

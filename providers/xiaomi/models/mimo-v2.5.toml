@@ -1,9 +1,13 @@
+# Toggle: thinking.type = enabled|disabled (default enabled, per the provider docs accessed 2026-06-25)
+# Retired 2026-10-21 10:00 UTC+8 (requests routed to mimo-v2.6-flash from 2026-10-14): https://mimo.mi.com/static/docs/updates/deprecate.md
+# Prices: the V2.6 series "adopts the same API pricing as the V2.5 series" (https://mimo.mi.com/static/docs/news/latest/v2-6.md).
+# Live 2026-10-21: api.xiaomimimo.com answers "Unsupported model mimo-v2.5" (400) on Chat Completions.
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
 status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
