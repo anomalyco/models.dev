@@ -1,25 +1,26 @@
+# Sources (accessed 2026-10-20):
+# - Upstream model: gitlab-ai-provider maps duo-chat-gpt-5-1 to OpenAI `gpt-5.1-2025-11-13` (https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/model-mappings.ts).
+# - AI Gateway proxy allowlist: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/model_selection/models.yml (`gpt_5`, proxy_provider openai,
+#   max_context_tokens 400000, max_tokens 128_000).
+# - Supported models: https://docs.gitlab.com/user/duo_agent_platform/model_selection/
+# Chat Completions: POST /ai/v1/proxy/openai/v1/chat/completions, forwarded unchanged to api.openai.com
+#   (gitlab-ai-provider routes this model to Chat Completions). Effort: top-level reasoning_effort.
+#   https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/proxy/clients/openai.py
+# Effort values: GPT-5.1's native none|low|medium|high (as on the OpenAI provider entry).
+# Cost: billed per model call in GitLab Credits ($1 each on demand; row `gpt-5`, 3.3 calls per credit; models.yml identifier gpt_5 is GPT-5.1, https://docs.gitlab.com/subscriptions/gitlab_credits/).
+#   v2 has no per-request unit, so token prices stay 0 (calls draw on the subscription's credits).
+# Status: deprecated. models.yml sets deprecation_date 2026-10-02 / removal_version 19.10 for gpt_5
+#   (gpt-5.1-2025-11-13) (https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/commit/292002bf); OpenAI shuts gpt-5.1 down on 2027-04-01 (https://developers.openai.com/api/docs/deprecations).
+# Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
 schema = 2
+base_model = "openai/gpt-5.1"
 name = "Agentic Chat (GPT-5.1)"
 description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-family = "gpt"
-open_weights = false
-knowledge = "2024-09-30"
-release_date = "2026-01-22"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-temperature = false
-
-[limit]
-context = 400_000
-input = 272_000
-output = 128_000
 
 [cost.text.input]
 price = 0

@@ -1,25 +1,26 @@
+# Sources (accessed 2026-10-20):
+# - Upstream model: gitlab-ai-provider maps duo-chat-gpt-5-mini to OpenAI `gpt-5-mini-2025-08-07` (https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/model-mappings.ts).
+# - AI Gateway proxy allowlist: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/model_selection/models.yml (`gpt_5_mini`, proxy_provider openai,
+#   max_context_tokens 400000, max_tokens 128_000).
+# - Supported models: https://docs.gitlab.com/user/duo_agent_platform/model_selection/
+# Chat Completions: POST /ai/v1/proxy/openai/v1/chat/completions, forwarded unchanged to api.openai.com
+#   (gitlab-ai-provider routes this model to Chat Completions). Effort: top-level reasoning_effort.
+#   https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/proxy/clients/openai.py
+# Effort values: GPT-5 mini's native minimal|low|medium|high (as on the OpenAI provider entry).
+# Cost: billed per model call in GitLab Credits ($1 each on demand; gpt-5-mini: 8.0 calls per credit, https://docs.gitlab.com/subscriptions/gitlab_credits/).
+#   v2 has no per-request unit, so token prices stay 0 (calls draw on the subscription's credits).
+# Status: deprecated. models.yml sets deprecation_date 2026-06-16 / removal_version 19.6 for gpt_5_mini
+#   (https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/commit/2f861e61); OpenAI shuts gpt-5-mini-2025-08-07 down on 2026-12-11 (https://developers.openai.com/api/docs/deprecations).
+# Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
 schema = 2
+base_model = "openai/gpt-5-mini"
 name = "Agentic Chat (GPT-5 Mini)"
 description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-family = "gpt-mini"
-open_weights = false
-knowledge = "2024-05-30"
-release_date = "2026-01-22"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-temperature = false
-
-[limit]
-context = 400_000
-input = 272_000
-output = 128_000
 
 [cost.text.input]
 price = 0

@@ -1,23 +1,22 @@
+# Sources (accessed 2026-10-20):
+# - Upstream model: gitlab-ai-provider maps duo-chat-opus-4-6 to Anthropic `claude-opus-4-6` (https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/model-mappings.ts).
+# - AI Gateway proxy allowlist: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/model_selection/models.yml (`claude_opus_4_6_20260205`, proxy_provider anthropic,
+#   max_context_tokens 1_000_000, max_tokens 128_000).
+# - Supported models: https://docs.gitlab.com/user/duo_agent_platform/model_selection/
+# Messages: POST /ai/v1/proxy/anthropic/v1/messages, forwarded unchanged to api.anthropic.com (body passed
+#   through; anthropic-version and anthropic-beta headers forwarded).
+#   https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/proxy/clients/anthropic.py
+# Effort: output_config.effort = low|medium|high|max. Budget: thinking = { type = "enabled", budget_tokens = N } (N >= 1,024).
+# Cost: billed per model call in GitLab Credits ($1 each on demand; claude-opus-4.6: 1.1 calls per credit, https://docs.gitlab.com/subscriptions/gitlab_credits/).
+#   v2 has no per-request unit, so token prices stay 0 (calls draw on the subscription's credits).
+# Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
 schema = 2
+base_model = "anthropic/claude-opus-4-6"
 name = "Agentic Chat (Claude Opus 4.6)"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-open_weights = false
-knowledge = "2025-05-31"
-release_date = "2026-02-05"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 1_000_000
-output = 64_000
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 
 [cost.text.input]
 price = 0

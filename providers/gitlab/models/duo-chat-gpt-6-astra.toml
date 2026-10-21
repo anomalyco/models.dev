@@ -1,3 +1,15 @@
+# Sources (accessed 2026-10-20):
+# - Upstream model: gitlab-ai-provider maps duo-chat-gpt-6-astra to OpenAI `gpt-6-astra` (https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/model-mappings.ts).
+# - AI Gateway proxy allowlist: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/model_selection/models.yml (`gpt_6_astra`, proxy_provider openai,
+#   max_context_tokens 1050000, max_tokens 128_000).
+# - Supported models: https://docs.gitlab.com/user/duo_agent_platform/model_selection/
+# Responses: POST /ai/v1/proxy/openai/v1/responses, forwarded unchanged to api.openai.com
+#   (gitlab-ai-provider routes this model to Responses). Effort: reasoning.effort.
+#   https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/proxy/clients/openai.py
+# Effort values: GPT-6 Astra's native low|medium|high|xhigh|max (as on the OpenAI provider entry).
+# Cost: billed per model call in GitLab Credits ($1 each on demand; gpt-6-astra: 0.54 calls per credit up to 272,000 tokens of context, 0.31 above, https://docs.gitlab.com/subscriptions/gitlab_credits/).
+#   v2 has no per-request unit, so token prices stay 0 (calls draw on the subscription's credits).
+# Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
 schema = 2
 base_model = "openai/gpt-6-astra"
 name = "Agentic Chat (GPT-6 Astra)"
