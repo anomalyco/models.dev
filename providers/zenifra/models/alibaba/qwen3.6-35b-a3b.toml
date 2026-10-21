@@ -1,15 +1,20 @@
+# Text-only on Zenifra (commit dbdbbf33c "restrict modalities to text-only"), so v1 attachment is now false (it was inherited as true from the lab).
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
-reasoning = true
-structured_output = true
-reasoning_options = []
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-shape = "completions"
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
-[cost]
-input = 0.19
-output = 0.48
+[api.chat-completions]
+legacy_shape = "completions"
+
+[cost.text.input]
+price = 0.19
+
+[cost.text.output]
+price = 0.48

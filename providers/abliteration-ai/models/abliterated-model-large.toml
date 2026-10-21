@@ -12,34 +12,32 @@
 # ladder values as aliases, mapping minimal-high -> high and xhigh-max -> max.
 # effort: API: {"reasoning_effort": "<value>"} on /v1/chat/completions
 # toggle: API: {"thinking": false} on /v1/messages (legacy alias on /v1/chat/completions)
+# v1 reasoning_options are now listed as [toggle, effort] (v2 order); the options themselves are unchanged.
+schema = 2
 name = "Abliterated Model Large"
 description = "GLM-5.2 model abliterated and finetuned for cyber, ML red teaming, and agent testing"
+open_weights = false
 release_date = "2026-07-25"
 last_updated = "2026-07-28"
-attachment = false
-reasoning = true
-tool_call = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["none", "high", "max"] }
 structured_output = true
 temperature = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 5.00
-output = 5.00
-cache_read = 0.50
 
 [limit]
 context = 1_000_000
 input = 1_000_000
 output = 999_990
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 5
