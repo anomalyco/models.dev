@@ -1,0 +1,29 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type reranking)
+# https://vercel.com/docs/ai-gateway/modalities/reranking
+schema = 2
+type = "reranking"
+name = "Cohere Rerank 5 Fast"
+description = "Reranking model for improving retrieval quality in search and recommendation systems"
+open_weights = false
+release_date = "2026-10-21"
+
+[modalities]
+input = ["text"]
+output = ["reranking"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[api.rerank]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.02
