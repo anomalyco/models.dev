@@ -2,15 +2,18 @@
 # reasoning_effort and thinking.type are accepted but ignored). Reasoning is
 # off by default on this route; send thinking=true to enable it.
 # reasoning_content interleaved field verified against Inco responses.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.6
 
-[cost]
-input = 0.6
-output = 2.4
+[cost.text.output]
+price = 2.4

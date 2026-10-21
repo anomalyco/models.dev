@@ -2,15 +2,18 @@
 # Inco; reasoning_effort and thinking.type are accepted but ignored). Reasons
 # by default; reasoning_content interleaved field verified against Inco
 # responses.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.15
 
-[cost]
-input = 0.15
-output = 0.5
+[cost.text.output]
+price = 0.5
