@@ -4,13 +4,20 @@
 # control is chat_template_kwargs.enable_thinking (toggle) — verified
 # via live request, 2026-07-22: reasoning drops to null and completion
 # tokens drop ~70% when disabled.
-name = "deepseek-v4-flash"
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
+name = "deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-reasoning_options = [{ type = "toggle" }]
+
 [limit]
 context = 1_000_000
 output = 100_000
-[cost]
-input = 0
-output = 0
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
