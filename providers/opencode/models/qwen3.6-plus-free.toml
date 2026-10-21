@@ -1,5 +1,6 @@
+# No thinking.budget_tokens bound, as on qwen3.6-plus (live: 100000 accepted on Zen) and Alibaba's first-party entry.
 # Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
-# Budget: thinking.budget_tokens (max 81920) with thinking.type = enabled (deprecated; not re-verified on Zen)
+# Budget: thinking.budget_tokens with thinking.type = enabled (deprecated; not re-verified on Zen)
 schema = 2
 base_model = "alibaba/qwen3.6-plus"
 name = "Qwen3.6 Plus Free"
@@ -7,7 +8,7 @@ description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [limit]
 context = 262_144

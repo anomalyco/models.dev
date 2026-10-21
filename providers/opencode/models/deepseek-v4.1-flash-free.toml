@@ -1,4 +1,6 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Toggle as on the paid deepseek-v4.1-flash route (live: thinking.type = disabled -> 0 reasoning tokens) and DeepSeek's own API; the free tier itself only serves OpenCode clients, so it wasn't probed.
+# Toggle: thinking.type = enabled|disabled (not re-verified on Zen: the free tier only serves OpenCode clients)
 # Effort: reasoning_effort = low|high|max (not re-verified on Zen: the free tier only serves OpenCode clients)
 # Mid-conversation flags unset: Zen documents none and this model wasn't testable (the free tier only serves OpenCode clients).
 schema = 2
@@ -6,7 +8,7 @@ base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Free"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [limit]
