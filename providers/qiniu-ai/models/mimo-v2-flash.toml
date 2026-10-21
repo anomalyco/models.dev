@@ -1,9 +1,11 @@
 # No model-specific Qiniu documentation maps the generic reasoning_effort or
 # thinking fields to this catalog alias (accessed 2026-06-25).
 # https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
 schema = 2
 base_model = "xiaomi/mimo-v2-flash"
 name = "Mimo-V2-Flash"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }

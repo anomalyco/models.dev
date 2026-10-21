@@ -1,7 +1,13 @@
 # Modalities: Qiniu's model square lists video input, which the lab has no MIME types for, so the generic kind is kept.
+# Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
+# Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-03-31 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
 schema = 2
 base_model = "bytedance-seed/seed-1-6-flash"
 name = "Doubao-Seed 1.6 Flash"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video"]
@@ -9,4 +15,26 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-structured_output = false
+structured_output = true
+
+[cost.text.input]
+price = 0.02173913
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.04347826
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.08695652
+
+[cost.text.output]
+price = 0.2173913
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.43478261
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.86956522

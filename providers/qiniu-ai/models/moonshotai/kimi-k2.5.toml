@@ -1,12 +1,22 @@
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-08-31 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 name = "Moonshotai/Kimi-K2.5"
+status = "deprecated"
 
 [capabilities]
-reasoning = { supported = false }
-structured_output = false
+reasoning = { supported = true }
+structured_output = true
 temperature = true
 
 [limit]
 context = 256_000
 output = 256_000
+
+[cost.text.input]
+price = 0.57971014
+
+[cost.text.output]
+price = 3.04347826

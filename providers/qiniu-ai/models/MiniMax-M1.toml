@@ -1,7 +1,19 @@
+# Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
+# Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-10-23 (scheduled for retirement).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
 schema = 2
 base_model = "minimax/minimax-m1-80k"
 name = "MiniMax M1"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-structured_output = false
+structured_output = true
+
+[cost.text.input]
+price = 0.57971014
+
+[cost.text.output]
+price = 2.31884058

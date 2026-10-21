@@ -1,11 +1,13 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+# Reasoning: inherited from the lab (no thinking mode); the old reasoning = true had no source.
 schema = 2
 base_model = "google/gemini-2.0-flash-lite"
 name = "Gemini 2.0 Flash Lite"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
 structured_output = false

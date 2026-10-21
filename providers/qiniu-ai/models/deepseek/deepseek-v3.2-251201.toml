@@ -1,6 +1,11 @@
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-09-29 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+# Batch inference: input 0.001008 / output 0.001512 CNY per 1K (Qiniu batch API); v2 has no batch condition, so only real-time prices are recorded.
 schema = 2
 base_model = "deepseek/deepseek-v3.2"
 name = "Deepseek/DeepSeek-V3.2"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }
@@ -8,3 +13,10 @@ structured_output = false
 
 [limit]
 output = 32_000
+
+[cost.text.input]
+price = 0.28985507
+cache = { read = 0.02898551 }
+
+[cost.text.output]
+price = 0.43478261

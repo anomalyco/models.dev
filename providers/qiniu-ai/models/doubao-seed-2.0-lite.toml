@@ -1,7 +1,37 @@
+# Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
+# Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+# Web search: 0.004 CNY per search on top of tokens; not expressible in v2.
 schema = 2
 base_model = "bytedance-seed/seed-2.0-lite"
 name = "Doubao Seed 2.0 Lite"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-structured_output = false
+structured_output = true
+
+[cost.text.input]
+price = 0.08695652
+cache = { read = 0.0173913 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.13043478
+cache = { read = 0.02608696 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.26086957
+cache = { read = 0.05217391 }
+
+[cost.text.output]
+price = 0.52173913
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.7826087
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.56521739
