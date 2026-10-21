@@ -7,8 +7,12 @@
 # minimal 1161/1033/805, high 1195/741/840, max 957/709/1088 -- fully overlapping,
 # so no graded control is declared. 'none' is likewise accepted without disabling
 # thinking (reasoning_tokens stays non-zero), so thinking.type is the real switch.
+# Deprecated: no longer in the Coding Plan's supported Model Name list at https://www.volcengine.com/docs/82379/1928261
+# (checked 2026-10-21: doubao-seed-evolving, -2.1-pro, -2.1-lite, -2.0-mini, glm-5.3, glm-5.3-flash, deepseek-v4.1-flash(-economy),
+# deepseek-v4-flash, deepseek-v4-pro, kimi-k2.8-preview, kimi-k3).
 schema = 2
 base_model = "minimax/MiniMax-M3"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
