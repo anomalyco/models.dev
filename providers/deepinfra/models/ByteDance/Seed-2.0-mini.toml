@@ -1,8 +1,9 @@
+# Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
 schema = 2
 base_model = "bytedance-seed/seed-2.0-mini"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]

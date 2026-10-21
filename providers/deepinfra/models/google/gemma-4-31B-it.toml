@@ -1,8 +1,10 @@
+# Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
+# Video input: catalog tag input-video; DeepInfra documents no video formats and the lab lists none.
 schema = 2
 base_model = "google/gemma-4-31b-it"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video"]
 output = ["text"]
 
 [capabilities]
