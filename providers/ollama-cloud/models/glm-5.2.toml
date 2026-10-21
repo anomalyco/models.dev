@@ -1,10 +1,17 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+# Reasoning: POST https://ollama.com/api/show reports thinking.values [false, high, max] (2026-10-21); Ollama applies a model's named levels exactly and `false` disables thinking (https://docs.ollama.com/api/openai-compatibility).
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-reasoning = { supported = true, effort = ["high", "max"] }
-structured_output = true
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 976_000

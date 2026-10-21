@@ -1,18 +1,22 @@
-# Cost from https://ollama.com/pricing (accessed 2026-09-15). Ollama bills
-# Base (off-peak) and Peak (2x, 12:00-18:00 UTC Mon-Fri) rates; the schema
-# cannot express time-based tiers, so the Base rate is recorded. See
-# https://github.com/anomalyco/models.dev/issues/5913.
+# Cost: the off-peak rate is the base price; Peak is 2x from 12:00 to 18:00 UTC on weekdays (https://ollama.com/pricing, 2026-10-21:
+#   "Off-peak pricing apply outside 12:00 and 18:00 UTC on weekdays and all day on weekends").
 # Toggle: native POST /api/chat and /api/generate use `think = true|false`.
 # Effort: OpenAI POST /v1/chat/completions accepts top-level `reasoning_effort`
 # or `reasoning.effort` with low|high|max (Flash maps requested low -> low).
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
 # API-verified context: https://ollama.com/api/show (deepseek_v41.context_length = 1048576)
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
-structured_output = true
+structured_output = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_048_576
@@ -26,3 +30,7 @@ cache = { read = 0.003 }
 
 [cost.text.output]
 price = 0.6
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "12:00" } }, { utc_hours = { lt = "18:00" } }] }
+factor = 2

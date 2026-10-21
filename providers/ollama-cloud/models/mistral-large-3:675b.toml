@@ -1,5 +1,8 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
 # Lab identity: mistral/mistral-large-2512 (Ollama library page https://ollama.com/library/mistral-large-3).
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
 schema = 2
 base_model = "mistral/mistral-large-2512"
 name = "mistral-large-3:675b"
@@ -7,6 +10,7 @@ description = "Flagship Mistral model for advanced reasoning, coding, and multil
 
 [capabilities]
 reasoning = { supported = false }
+structured_output = false
 
 [cost.text.input]
 price = 0.5

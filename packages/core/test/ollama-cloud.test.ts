@@ -1,4 +1,9 @@
 import { expect, test } from "bun:test";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
+import { syncProvider } from "../src/sync/index.js";
 
 import {
   fetchOllamaCloudModels,
@@ -6,6 +11,8 @@ import {
   parseOllamaCloudModels,
   type OllamaCloudModel,
 } from "../src/sync/providers/ollama-cloud.js";
+
+const REPO = path.join(import.meta.dir, "../../..");
 
 function model(overrides: Partial<OllamaCloudModel> = {}): OllamaCloudModel {
   return {
@@ -63,4 +70,36 @@ test("preserves existing Ollama Cloud provider overrides", () => {
     existing: () => undefined,
     authored: () => undefined,
   })).toBeUndefined();
+});
+
+test("leaves shipped v2 files byte-identical, including time-of-day multipliers", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "ollama-cloud-sync-"));
+  const modelsDir = path.join(dir, "providers/ollama-cloud/models");
+  const ids = ["deepseek-v4-pro:0813", "glm-5.1", "kimi-k3"];
+  await mkdir(modelsDir, { recursive: true });
+  for (const id of ids) {
+    await Bun.write(path.join(modelsDir, `${id}.toml`), Bun.file(path.join(REPO, "providers/ollama-cloud/models", `${id}.toml`)));
+  }
+  for (const lab of ["deepseek/deepseek-v4-pro-0813", "zhipuai/glm-5.1", "moonshotai/kimi-k3"]) {
+    await mkdir(path.dirname(path.join(dir, "models", lab)), { recursive: true });
+    await Bun.write(path.join(dir, "models", `${lab}.toml`), Bun.file(path.join(REPO, "models", `${lab}.toml`)));
+  }
+  const before = await Promise.all(ids.map((id) => Bun.file(path.join(modelsDir, `${id}.toml`)).text()));
+  expect(before[0]).toContain("utc_hours");
+
+  try {
+    const result = await syncProvider({
+      ...ollamaCloud,
+      modelsDir,
+      async fetchModels() {
+        return { object: "list", data: [model(), model({ id: "kimi-k3" })] };
+      },
+    });
+    expect(result.updated).toBe(0);
+    expect(result.deleted).toBe(0);
+    const after = await Promise.all(ids.map((id) => Bun.file(path.join(modelsDir, `${id}.toml`)).text()));
+    expect(after).toEqual(before);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });

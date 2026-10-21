@@ -1,5 +1,10 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
 # Lab identity: openai/gpt-oss-120b (Ollama library page https://ollama.com/library/gpt-oss).
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "gpt-oss:120b"
@@ -7,6 +12,8 @@ description = "Open-weight GPT model for self-hosted reasoning and instruction-f
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.15

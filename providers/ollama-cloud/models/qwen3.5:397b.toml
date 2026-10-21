@@ -1,9 +1,14 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
 # Lab identity: alibaba/qwen3.5-397b-a17b (Ollama library page https://ollama.com/library/qwen3.5).
+# Retired: POST https://ollama.com/api/show returns "qwen3.5:397b was retired on September 25, 2026" (2026-10-21); it is no longer in https://ollama.com/v1/models.
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "qwen3.5:397b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
@@ -11,6 +16,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+structured_output = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_details" }
