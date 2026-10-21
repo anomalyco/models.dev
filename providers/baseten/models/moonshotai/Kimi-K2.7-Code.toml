@@ -2,11 +2,12 @@
 # explicit false behavior, effort values, or reasoning-token budget. Reasoning
 # output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Image MIME types are the lab's; Baseten documents no formats for this model.
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
