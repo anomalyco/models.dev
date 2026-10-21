@@ -5,16 +5,8 @@
 # tools.updates = false: `tools` is request-level, with no tool addition/removal message.
 # Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
 schema = 2
-name = "Mercury 3"
+base_model = "inception/mercury-3"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "mercury"
-open_weights = false
-release_date = "2026-10-19"
-last_updated = "2026-10-20"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
@@ -24,10 +16,6 @@ system_updates = false
 effort_updates = false
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
-
-[limit]
-context = 1_000_000
-output = 131_072
 
 [cost.text.input]
 price = 0.1
