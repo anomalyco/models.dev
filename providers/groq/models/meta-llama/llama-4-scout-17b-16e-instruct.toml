@@ -1,0 +1,22 @@
+# Groq meta-llama/llama-4-scout-17b-16e-instruct.
+# Price: $0.11 input, $0.34 output per 1M tokens (https://home.cloud.groq.io/pricing;
+# launch pricing https://groq.humain.ai/news_press/llama-4-live-day-zero-on-groq-at-lowest-cost/).
+# Limits: context window 131_072, max completion tokens 8192
+# (https://console.groq.com/docs/models archived 2025-05-30:
+# https://web.archive.org/web/20250530220814/https://console.groq.com/docs/models;
+# 128K context also in https://console.groq.com/docs/changelog Apr 14 2025 entry).
+# Status: deprecated 2026-07-17 for free/developer-tier usage, enterprise unaffected
+# (https://console.groq.com/docs/deprecations).
+schema = 2
+base_model = "meta/llama-4-scout-17b-instruct"
+status = "deprecated"
+
+[limit]
+context = 131_072
+output = 8_192
+
+[cost.text.input]
+price = 0.11
+
+[cost.text.output]
+price = 0.34
