@@ -2,8 +2,10 @@
 # medium (default) | high | xhigh | max for DeepSeek V4 Pro; no toggle or
 # reasoning-token budget field is documented.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Retired: absent from GET /v1/models; chat completions return 410 "the model version you are trying to access has been deprecated" (live, 2026-10-21).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }

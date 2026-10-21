@@ -2,9 +2,11 @@
 # explicit false behavior, effort values, or reasoning-token budget.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Lab identity: model slug = Hugging Face repo moonshotai/Kimi-K2.6
+# Retired: absent from GET /v1/models; chat completions return 410 "the model version you are trying to access has been deprecated" (live, 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]

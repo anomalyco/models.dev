@@ -1,9 +1,11 @@
 # Opt in with chat_template_args.enable_thinking=true. Baseten documents no
 # explicit false behavior, effort values, or reasoning-token budget.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Retired: absent from GET /v1/models; chat completions return 410 "the model version you are trying to access has been deprecated" (live, 2026-10-21).
 schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron Super"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
