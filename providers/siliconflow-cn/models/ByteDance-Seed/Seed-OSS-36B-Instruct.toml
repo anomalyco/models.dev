@@ -1,1 +1,27 @@
-../../../siliconflow/models/ByteDance-Seed/Seed-OSS-36B-Instruct.toml
+schema = 2
+name = "ByteDance-Seed/Seed-OSS-36B-Instruct"
+description = "Tool-capable chat model for instruction following and agentic application workflows"
+family = "seed"
+open_weights = false
+release_date = "2025-09-04"
+last_updated = "2025-11-25"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_000
+output = 262_000
+
+[cost.text.input]
+price = 0.21
+
+[cost.text.output]
+price = 0.57

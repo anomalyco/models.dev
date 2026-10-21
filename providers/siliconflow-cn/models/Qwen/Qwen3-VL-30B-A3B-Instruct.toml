@@ -1,1 +1,27 @@
-../../../siliconflow/models/Qwen/Qwen3-VL-30B-A3B-Instruct.toml
+schema = 2
+name = "Qwen/Qwen3-VL-30B-A3B-Instruct"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+family = "qwen"
+open_weights = false
+release_date = "2025-10-05"
+last_updated = "2025-11-25"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_000
+output = 262_000
+
+[cost.text.input]
+price = 0.29
+
+[cost.text.output]
+price = 1

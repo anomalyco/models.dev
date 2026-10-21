@@ -1,1 +1,27 @@
-../../../siliconflow/models/inclusionAI/Ling-flash-2.0.toml
+schema = 2
+name = "inclusionAI/Ling-flash-2.0"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "ling"
+open_weights = false
+release_date = "2025-09-18"
+last_updated = "2025-11-25"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 131_000
+output = 131_000
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.57
