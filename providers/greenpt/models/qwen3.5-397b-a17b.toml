@@ -3,7 +3,6 @@
 # reasoning_effort: thinking is enabled by default and "none" disables it.
 # Values verified against the production API. See https://docs.greenpt.ai/chat-completion
 base_model = "alibaba/qwen3.5-397b-a17b"
-attachment = false
 structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 
@@ -12,7 +11,8 @@ input = 0.798
 output = 4.959
 
 [limit]
-output = 16_384
+context = 250_000
+output = 16_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]

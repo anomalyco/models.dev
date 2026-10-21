@@ -1,0 +1,13 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# Sources: https://docs.greenpt.ai/reranker and https://docs.greenpt.ai/pricing
+# green-rerank is GreenPT's self-hosted Qwen3-Reranker-4B (named on the reranker page above).
+# Served on POST /v1/rerank, not on chat completions.
+base_model = "alibaba/qwen3-reranker-4b"
+name = "Green Rerank"
+
+[cost]
+input = 0.1368
+output = 0
+
+[limit]
+context = 32_000

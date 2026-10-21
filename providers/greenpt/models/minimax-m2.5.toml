@@ -1,13 +1,28 @@
-# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-08-01).
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# Retiring: since 2026-10-05 GreenPT answers minimax-m2.5 with minimax-m3 and bills its price.
+# From 2026-11-05 requests return 400 Unsupported model. Source: https://docs.greenpt.ai/support/changelog
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
-# reasoning_effort: thinking is enabled by default and "none" disables it.
-# Values verified against the production API. See https://docs.greenpt.ai/chat-completion
+# reasoning_effort: minimax-m2.5 is served by MiniMax-M3, so it takes minimax-m3's values. The
+# retirement notice at https://docs.greenpt.ai/support/changelog (5 October 2026) says so ("It
+# accepts the same reasoning_effort values: minimal, low, medium and high"), and the per-model
+# table at https://docs.greenpt.ai/reasoning lists them for minimax-m3. On the production API
+# (2026-10-19) one prompt spent about 550 reasoning tokens at minimal and 1,250 at high.
 # cache_read: discounted rate for cached prompt tokens. Cache writes are not
 # charged. See https://docs.greenpt.ai/prompt-caching
 base_model = "minimax/MiniMax-M2.5"
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+status = "deprecated"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+attachment = true
+structured_output = true
 
 [cost]
-input = 0.1938
-cache_read = 0.0627
-output = 1.129
+input = 0.5016
+cache_read = 0.1254
+output = 2.508
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]

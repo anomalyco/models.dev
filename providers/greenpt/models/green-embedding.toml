@@ -1,0 +1,15 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# Sources: https://docs.greenpt.ai/embeddings and https://docs.greenpt.ai/pricing
+# green-embedding is GreenPT's self-hosted Qwen3-Embedding-4B (named on the docs page above).
+# Output dimensions are configurable from 32 up to 2560 (Matryoshka); limit.output
+# carries the maximum, per the convention in providers/openai/models/text-embedding-3-large.toml.
+base_model = "alibaba/qwen3-embedding-4b"
+name = "Green Embedding"
+
+[cost]
+input = 0.228
+output = 0
+
+[limit]
+context = 32_000
+output = 2_560

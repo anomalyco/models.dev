@@ -1,0 +1,16 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# GreenPT recommends qwen3-embedding-8b instead for new work; this id stays served.
+# GreenPT accepts 8,000 input tokens (https://api.greenpt.ai/v1/pricing contextWindowTokens).
+# Vectors have 3584 dimensions (hidden_size in the model's config.json); limit.output carries
+# them, per the convention in providers/openai/models/text-embedding-3-large.toml.
+base_model = "baai/bge-multilingual-gemma2"
+
+[cost]
+input = 0.1254
+output = 0
+
+[limit]
+context = 8_000
+input = 8_000
+output = 3_584

@@ -2,10 +2,11 @@
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
 base_model = "mistral/mistral-small-2506"
 attachment = true
+structured_output = true
 
 [cost]
 input = 0.228
 output = 0.456
 
 [limit]
-output = 32_768
+output = 32_000

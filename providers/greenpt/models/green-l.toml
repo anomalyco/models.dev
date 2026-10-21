@@ -3,10 +3,11 @@
 base_model = "mistral/mistral-small-2506"
 name = "Green L"
 attachment = true
+structured_output = true
 
 [cost]
 input = 0.285
 output = 0.912
 
 [limit]
-output = 32_768
+output = 32_000
