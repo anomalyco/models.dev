@@ -13,7 +13,7 @@ base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
 output = ["text"]
 
 [capabilities]
