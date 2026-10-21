@@ -1,19 +1,9 @@
 schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3 Next 80B A3B Instruct"
-description = "Tool-capable chat model for instruction following and agentic application workflows"
-open_weights = false
-release_date = "2025-09-12"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
 context = 131_072
-output = 32_768

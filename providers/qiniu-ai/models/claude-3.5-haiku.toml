@@ -1,19 +1,10 @@
 schema = 2
+base_model = "anthropic/claude-3-5-haiku-20241022"
 name = "Claude 3.5 Haiku"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-open_weights = false
-release_date = "2025-08-26"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
-
-[limit]
-context = 200_000
-output = 8_192

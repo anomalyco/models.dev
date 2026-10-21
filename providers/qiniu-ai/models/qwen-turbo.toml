@@ -1,19 +1,10 @@
 schema = 2
+base_model = "alibaba/qwen-turbo"
 name = "Qwen-Turbo"
-description = "Efficient Qwen model for fast chat, extraction, and high-volume workloads"
-open_weights = false
-release_date = "2025-08-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-temperature = true
 
 [limit]
-context = 1_000_000
 output = 4_096

@@ -1,19 +1,6 @@
 schema = 2
-name = "X-Ai/Grok-4-Fast-Reasoning"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-open_weights = false
-release_date = "2025-12-18"
-
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
+base_model = "xai/grok-4-fast-reasoning"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-temperature = true
-
-[limit]
-context = 2_000_000
-output = 2_000_000

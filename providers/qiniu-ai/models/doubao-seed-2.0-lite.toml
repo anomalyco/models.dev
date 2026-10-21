@@ -1,19 +1,7 @@
 schema = 2
+base_model = "bytedance-seed/seed-2.0-lite"
 name = "Doubao Seed 2.0 Lite"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-open_weights = false
-release_date = "2026-02-14"
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-temperature = true
-
-[limit]
-context = 256_000
-output = 32_000

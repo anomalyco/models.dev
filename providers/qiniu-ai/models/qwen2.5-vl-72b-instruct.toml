@@ -1,19 +1,15 @@
+# Modalities: Qiniu's model square lists video input and the lab's header cites Model Studio video support (no MIME types yet),
+# so the generic kind is kept. The square's audio input isn't in the model card and is left out.
 schema = 2
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 name = "Qwen 2.5 VL 72B Instruct"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-open_weights = false
-release_date = "2025-08-05"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
 context = 128_000
-output = 8_192

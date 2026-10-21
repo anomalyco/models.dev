@@ -1,15 +1,8 @@
 schema = 2
+base_model = "moonshotai/kimi-k2.5"
 name = "Moonshotai/Kimi-K2.5"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-open_weights = false
-release_date = "2026-01-28"
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
 temperature = true

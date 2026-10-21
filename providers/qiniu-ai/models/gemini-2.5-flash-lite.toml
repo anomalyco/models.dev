@@ -1,19 +1,14 @@
 schema = 2
+base_model = "google/gemini-2.5-flash-lite"
 name = "Gemini 2.5 Flash Lite"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-open_weights = false
-release_date = "2025-08-05"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
-context = 1_048_576
 output = 64_000

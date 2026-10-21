@@ -1,18 +1,9 @@
 schema = 2
-name = "Qwen3 30B A3B"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-open_weights = false
-release_date = "2025-08-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "alibaba/qwen3-30b-a3b"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-temperature = true
 
 [limit]
 context = 40_000

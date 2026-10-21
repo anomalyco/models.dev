@@ -1,18 +1,8 @@
 schema = 2
-name = "Qwen3 Max Preview"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-open_weights = false
-release_date = "2025-09-06"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "alibaba/qwen3-max-preview"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
 context = 256_000

@@ -1,19 +1,10 @@
 schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
 name = "Qwen3 Next 80B A3B Thinking"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-open_weights = false
-release_date = "2025-09-12"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-temperature = true
 
 [limit]
 context = 131_072
-output = 32_768

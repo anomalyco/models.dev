@@ -1,18 +1,9 @@
 schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3 Coder 480B A35B Instruct"
-description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
-open_weights = false
-release_date = "2025-08-14"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
 context = 262_000
