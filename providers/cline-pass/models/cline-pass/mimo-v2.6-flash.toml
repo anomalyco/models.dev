@@ -7,8 +7,10 @@
 # reasoning_tokens per response) shows no measurable difference for
 # minimal/max, so this file declares the established same-host peer set
 # used by cline-pass/mimo-v2.5* (none, low, medium, high, xhigh).
+# Retired: absent from the model list on https://docs.cline.bot/getting-started/clinepass (accessed 2026-10-21).
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }

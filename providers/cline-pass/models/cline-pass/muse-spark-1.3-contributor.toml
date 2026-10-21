@@ -1,7 +1,5 @@
-# Model ID cline-pass/muse-spark-1.3-contributor. Cline publishes no
-# ClinePass reference rate for this model: docs.cline.bot/getting-started/
-# clinepass has no row for it (accessed 2026-09-22) and the model is absent
-# from api.cline.bot/api/v1/ai/cline/models, so no [cost] block is declared.
+# Model ID cline-pass/muse-spark-1.3-contributor.
+# Reference price 0.10 / 0.002 / 0.20 (input / cache read / output) now listed on https://docs.cline.bot/getting-started/clinepass (accessed 2026-10-21).
 schema = 2
 base_model = "meta/muse-spark-1.3"
 name = "Muse Spark 1.3 Contributor"
@@ -9,3 +7,10 @@ name = "Muse Spark 1.3 Contributor"
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

@@ -2,8 +2,10 @@
 # https://api-docs.deepseek.com/guides/thinking_mode/ (OpenAI: thinking.type + reasoning_effort low|high|max)
 # Effort: reasoning_effort = none|low|high|max (none disables thinking; DeepSeek Flash graded set)
 # Legacy Flash slug; lab serves V4.1-Flash. Same reasoning surface as deepseek-v4.1-flash.
+# Retired: "no longer available on ClinePass" per https://docs.cline.bot/getting-started/clinepass (accessed 2026-10-21).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
