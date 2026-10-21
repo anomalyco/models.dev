@@ -1,24 +1,26 @@
+schema = 2
 name = "Claude Opus 4.5"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 family = "claude-opus"
-release_date = "2025-11-01"
-last_updated = "2025-11-01"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2025-03"
 open_weights = false
+knowledge = "2025-03"
+release_date = "2025-11-01"
 
-[cost]
-input = 0.71
-output = 3.57
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 200_000
 output = 32_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.71
+
+[cost.text.output]
+price = 3.57
