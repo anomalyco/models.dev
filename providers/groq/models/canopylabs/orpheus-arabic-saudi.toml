@@ -3,11 +3,15 @@
 # Price: $40 per 1M characters (https://console.groq.com/docs/text-to-speech/orpheus, https://console.groq.com/docs/models;
 # GET /openai/v1/models pricing.prompt = "0.00004" per character).
 # Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
+# API: POST https://api.groq.com/openai/v1/audio/speech (https://console.groq.com/docs/text-to-speech).
 schema = 2
 base_model = "canopylabs/orpheus-arabic-saudi"
 name = "Canopy Labs Orpheus Arabic Saudi"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 status = "beta"
+
+[api.speech]
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-speech" }
 
 [cost.text.input]
 unit = "character"

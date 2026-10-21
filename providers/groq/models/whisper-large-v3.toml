@@ -4,6 +4,7 @@
 # Price: $0.111 per hour of audio = $0.00185 per minute (https://console.groq.com/docs/models,
 # https://console.groq.com/docs/model/whisper-large-v3). Groq bills at least 10 seconds per request, which v2 can't express.
 # Limits: context_window and max_completion_tokens 448 in GET /openai/v1/models (the lab's output is 4,096).
+# API: POST https://api.groq.com/openai/v1/audio/transcriptions (https://console.groq.com/docs/speech-to-text).
 schema = 2
 base_model = "openai/whisper-large-v3"
 name = "Whisper"
@@ -11,6 +12,9 @@ description = "Speech transcription model for accurate audio-to-text and caption
 
 [limit]
 output = 448
+
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.audio.input]
 unit = "minute"
