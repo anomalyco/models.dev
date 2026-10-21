@@ -1,22 +1,25 @@
+schema = 2
 name = "o3"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[cost]
-input = 10
-output = 40
-
-[limit]
-context = 131072
-output = 131072
+release_date = "2026-01"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 40

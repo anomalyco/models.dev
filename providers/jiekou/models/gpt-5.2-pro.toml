@@ -1,24 +1,26 @@
+schema = 2
 name = "gpt-5.2-pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 family = "gpt-pro"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[cost]
-input = 18.9
-output = 151.2
-
-[limit]
-context = 400000
-output = 128000
+release_date = "2026-01"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 400_000
+output = 128_000
+
+[cost.text.input]
+price = 18.9
+
+[cost.text.output]
+price = 151.2

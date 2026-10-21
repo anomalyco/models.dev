@@ -1,23 +1,26 @@
+schema = 2
 name = "o3-mini"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 family = "o"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[cost]
-input = 1.1
-output = 4.4
-
-[limit]
-context = 131072
-output = 131072
+release_date = "2026-01"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 1.1
+
+[cost.text.output]
+price = 4.4

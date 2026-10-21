@@ -1,23 +1,26 @@
+schema = 2
 name = "gpt-5-nano"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt-nano"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[cost]
-input = 0.045
-output = 0.36
-
-[limit]
-context = 400000
-output = 128000
+release_date = "2026-01"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 400_000
+output = 128_000
+
+[cost.text.input]
+price = 0.045
+
+[cost.text.output]
+price = 0.36

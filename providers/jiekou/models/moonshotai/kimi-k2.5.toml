@@ -1,24 +1,26 @@
+schema = 2
 name = "Kimi K2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi-k2"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 262_143 }]
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
-
-[cost]
-input = 0.6
-output = 3
-
-[limit]
-context = 262144
-output = 262144
+release_date = "2026-01"
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, budget = { min = 1_024, max = 262_143 } }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3
