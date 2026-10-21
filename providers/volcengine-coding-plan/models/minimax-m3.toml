@@ -7,15 +7,18 @@
 # minimal 1161/1033/805, high 1195/741/840, max 957/709/1088 -- fully overlapping,
 # so no graded control is declared. 'none' is likewise accepted without disabling
 # thinking (reasoning_tokens stays non-zero), so thinking.type is the real switch.
+schema = 2
 base_model = "minimax/MiniMax-M3"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

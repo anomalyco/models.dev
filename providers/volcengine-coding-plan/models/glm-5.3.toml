@@ -15,17 +15,19 @@
 # measurements above rather than from that table.
 # No toggle: both reasoning_effort=none|minimal and thinking.type=disabled are
 # rejected with 'not supported by this model'.
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.output]
+price = 0

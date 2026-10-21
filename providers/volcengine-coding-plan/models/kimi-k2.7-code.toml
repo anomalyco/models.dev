@@ -6,15 +6,19 @@
 # level on a hard arithmetic prompt, reasoning_content length came back
 # minimal 707/697/917, high 823/892/755, max 712/861/690, i.e. fully overlapping,
 # so no graded control is declared.
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
 
-reasoning_options = []
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.output]
+price = 0
