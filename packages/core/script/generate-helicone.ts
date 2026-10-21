@@ -4,6 +4,9 @@ import { z } from "zod";
 import path from "node:path";
 import { mkdir, rm, readdir, stat } from "node:fs/promises";
 
+import { formatModelV2, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
+import { isSchemaV2, modelV2ToV1, roundPrice } from "../src/translate.js";
+
 // Helicone public model registry endpoint
 const DEFAULT_ENDPOINT =
   "https://jawn.helicone.ai/v1/public/model-registry/models";
@@ -54,19 +57,6 @@ const HeliconeResponse = z
   })
   .passthrough();
 
-interface ExistingModel {
-  base_model?: string;
-  base_model_omit?: string[];
-}
-
-async function loadExistingModel(filePath: string): Promise<ExistingModel | undefined> {
-  const file = Bun.file(filePath);
-  if (!(await file.exists())) return undefined;
-  return await import(filePath, { with: { type: "toml" } }).then(
-    (mod) => mod.default as ExistingModel,
-  );
-}
-
 function pickEndpoint(m: z.infer<typeof ModelItem>) {
   if (!m.endpoints || m.endpoints.length === 0) return undefined;
   // Prefer endpoint that matches author if available
@@ -90,84 +80,92 @@ function sanitizeModalities(values: string[] | undefined): string[] {
   return out.length > 0 ? out : ["text"];
 }
 
-function formatToml(model: z.infer<typeof ModelItem>, existing: ExistingModel | undefined) {
-  const ep = pickEndpoint(model);
-  const pricing = ep?.pricing;
+type HeliconeModel = z.infer<typeof ModelItem>;
 
+// The registry's price for a model, in v1 cost fields (USD per 1M tokens).
+export function heliconeCost(model: HeliconeModel) {
+  const pricing = pickEndpoint(model)?.pricing;
+  if (pricing === undefined) return undefined;
+  const reasoning = boolFromParams(model.supportedParameters, ["reasoning", "include_reasoning"]);
+  const cost: Record<string, number> = {};
+  if (pricing.prompt !== undefined) cost.input = roundPrice(pricing.prompt);
+  if (pricing.completion !== undefined) cost.output = roundPrice(pricing.completion);
+  if (reasoning && pricing.reasoning !== undefined) cost.reasoning = roundPrice(pricing.reasoning);
+  if (pricing.cacheRead !== undefined) cost.cache_read = roundPrice(pricing.cacheRead);
+  if (pricing.cacheWrite !== undefined) cost.cache_write = roundPrice(pricing.cacheWrite);
+  return Object.keys(cost).length > 0 ? cost : undefined;
+}
+
+// A full v1 model from the registry, for models without a file yet.
+function heliconeModel(model: HeliconeModel) {
   const supported = model.supportedParameters ?? [];
 
   const nowISO = new Date().toISOString().slice(0, 10);
   const rdRaw = model.trainingDate ? String(model.trainingDate) : nowISO;
   const releaseDate = rdRaw.slice(0, 10);
-  const lastUpdated = releaseDate;
   const knowledge = model.trainingDate
     ? String(model.trainingDate).slice(0, 7)
     : undefined;
 
-  const attachment = false; // Not exposed by Helicone registry
-  const temperature = boolFromParams(supported, ["temperature"]);
-  const toolCall = boolFromParams(supported, ["tools", "tool_choice"]);
-  const reasoning = boolFromParams(supported, [
-    "reasoning",
-    "include_reasoning",
-  ]);
+  return {
+    name: model.name,
+    release_date: releaseDate,
+    last_updated: releaseDate,
+    reasoning: boolFromParams(supported, ["reasoning", "include_reasoning"]),
+    temperature: boolFromParams(supported, ["temperature"]),
+    tool_call: boolFromParams(supported, ["tools", "tool_choice"]),
+    knowledge,
+    open_weights: false,
+    cost: heliconeCost(model),
+    limit: { context: model.contextLength ?? 0, output: model.maxOutput ?? 4096 },
+    modalities: {
+      input: sanitizeModalities(model.inputModalities),
+      output: sanitizeModalities(model.outputModalities),
+    },
+  };
+}
 
-  const inputMods = sanitizeModalities(model.inputModalities);
-  const outputMods = sanitizeModalities(model.outputModalities);
+export function newModelToml(model: HeliconeModel) {
+  return formatModelV2(providerModelToV2(heliconeModel(model)));
+}
 
+// Existing files are authored v2 files; the registry only refreshes their price.
+// Returns undefined when the price is unchanged, so the file is left as is.
+export function updatedModelToml(text: string, model: HeliconeModel) {
+  const doc = Bun.TOML.parse(text) as Record<string, any>;
+  if (!isSchemaV2(doc)) throw new Error("not a v2 file; migrate it with migrate-v2.ts first");
+  const { id: _id, ...before } = modelV2ToV1({ ...doc, id: model.id });
+  const cost = heliconeCost(model);
+  if (stable(before.cost) === stable(cost)) return undefined;
+  const next = patchModelV2(doc, before, { ...before, cost });
+  const content = leadingComments(text) + formatModelV2(next);
+  const written = modelV2ToV1({ ...(Bun.TOML.parse(content) as Record<string, unknown>), id: model.id });
+  if (stable(written.cost) !== stable(cost)) {
+    throw new Error("the v2 file does not reproduce the registry price");
+  }
+  return content;
+}
+
+function leadingComments(text: string) {
   const lines: string[] = [];
-  if (existing?.base_model !== undefined) {
-    lines.push(`base_model = "${existing.base_model}"`);
+  for (const line of text.split("\n")) {
+    if (line.trim() !== "" && !line.trim().startsWith("#")) break;
+    lines.push(line);
   }
-  if (existing?.base_model_omit !== undefined) {
-    lines.push(
-      `base_model_omit = [${existing.base_model_omit.map((item) => `"${item}"`).join(", ")}]`,
-    );
+  while (lines.length > 0 && lines.at(-1)!.trim() === "") lines.pop();
+  return lines.length > 0 ? `${lines.join("\n")}\n` : "";
+}
+
+function stable(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
+  if (value !== null && typeof value === "object") {
+    return `{${Object.entries(value)
+      .filter(([, item]) => item !== undefined)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, item]) => `${JSON.stringify(key)}:${stable(item)}`)
+      .join(",")}}`;
   }
-  lines.push(`name = "${model.name.replaceAll('"', '\\"')}"`);
-  lines.push(`release_date = "${releaseDate}"`);
-  lines.push(`last_updated = "${lastUpdated}"`);
-  lines.push(`attachment = ${attachment}`);
-  lines.push(`reasoning = ${reasoning}`);
-  lines.push(`temperature = ${temperature}`);
-  lines.push(`tool_call = ${toolCall}`);
-  if (knowledge) lines.push(`knowledge = "${knowledge}"`);
-  lines.push(`open_weights = false`);
-  lines.push("");
-
-  if (
-    pricing &&
-    (pricing.prompt ??
-      pricing.completion ??
-      pricing.cacheRead ??
-      pricing.cacheWrite ??
-      (reasoning && pricing.reasoning)) !== undefined
-  ) {
-    lines.push(`[cost]`);
-    if (pricing.prompt !== undefined) lines.push(`input = ${pricing.prompt}`);
-    if (pricing.completion !== undefined)
-      lines.push(`output = ${pricing.completion}`);
-    if (reasoning && pricing.reasoning !== undefined)
-      lines.push(`reasoning = ${pricing.reasoning}`);
-    if (pricing.cacheRead !== undefined)
-      lines.push(`cache_read = ${pricing.cacheRead}`);
-    if (pricing.cacheWrite !== undefined)
-      lines.push(`cache_write = ${pricing.cacheWrite}`);
-    lines.push("");
-  }
-
-  const context = model.contextLength ?? 0;
-  const output = model.maxOutput ?? 4096;
-  lines.push(`[limit]`);
-  lines.push(`context = ${context}`);
-  lines.push(`output = ${output}`);
-  lines.push("");
-
-  lines.push(`[modalities]`);
-  lines.push(`input = [${inputMods.map((m) => `"${m}"`).join(", ")}]`);
-  lines.push(`output = [${outputMods.map((m) => `"${m}"`).join(", ")}]`);
-
-  return lines.join("\n") + "\n";
+  return JSON.stringify(value);
 }
 
 async function main() {
@@ -199,37 +197,51 @@ async function main() {
   }
 
   const models = parsed.data.data.models;
-  const existing = new Map<string, ExistingModel>();
   await mkdir(outDir, { recursive: true });
-  for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: outDir })) {
-    const filePath = path.join(outDir, file);
-    const model = await loadExistingModel(filePath);
-    if (model !== undefined) existing.set(file, model);
-  }
+  const fileName = (m: HeliconeModel) => `${m.id.replaceAll("/", "-")}.toml`;
+  const listed = new Set(models.map(fileName));
+  let created = 0;
+  let updated = 0;
+  let deleted = 0;
+  let unchanged = 0;
 
-  // Clean output directory: remove subfolders and existing TOML files
+  // Remove subfolders and the TOML files of models the registry no longer lists
   for (const entry of await readdir(outDir)) {
     const p = path.join(outDir, entry);
     const st = await stat(p);
     if (st.isDirectory()) {
       await rm(p, { recursive: true, force: true });
-    } else if (st.isFile() && entry.endsWith(".toml")) {
+    } else if (st.isFile() && entry.endsWith(".toml") && !listed.has(entry)) {
       await rm(p, { force: true });
+      deleted++;
     }
   }
-  let created = 0;
 
   for (const m of models) {
-    const fileSafeId = m.id.replaceAll("/", "-");
-    const filePath = path.join(outDir, `${fileSafeId}.toml`);
-    const toml = formatToml(m, existing.get(`${fileSafeId}.toml`));
-    await Bun.write(filePath, toml);
-    created++;
+    const file = fileName(m);
+    const filePath = path.join(outDir, file);
+    const current = Bun.file(filePath);
+    if (!(await current.exists())) {
+      await Bun.write(filePath, newModelToml(m));
+      created++;
+      continue;
+    }
+    try {
+      const toml = updatedModelToml(await current.text(), m);
+      if (toml === undefined) {
+        unchanged++;
+        continue;
+      }
+      await Bun.write(filePath, toml);
+      updated++;
+    } catch (error) {
+      console.warn(`Skipped ${file}: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 
   console.log(
-    `Generated ${created} model file(s) under providers/helicone/models/*.toml`,
+    `providers/helicone/models: ${created} created, ${updated} updated, ${deleted} deleted, ${unchanged} unchanged`,
   );
 }
 
-await main();
+if (import.meta.main) await main();
