@@ -1,5 +1,6 @@
 # Serverless: $1.40 input, $0.26 cached input, $4.40 output per 1M; context 1,048,575
-# (https://docs.together.ai/docs/serverless-models, accessed 2026-10-21).
+# (https://docs.together.ai/docs/serverless-models and context_length in GET https://api.together.xyz/v1/models,
+# accessed 2026-10-21).
 # Effort: reasoning_effort = low|high|max (live 2026-10-21: the rendered prompt says "Reasoning
 # Effort: Low", "High" or "Max"; other values render Max, the default). Reasoning can't be turned
 # off: reasoning.enabled, thinking.type, chat_template_kwargs and `none` all still reason.
@@ -19,7 +20,7 @@ effort_updates = false
 prompt_cache_key = true
 
 [limit]
-context = 1_048_576
+context = 1_048_575
 output = 262_144
 
 [api.chat-completions]

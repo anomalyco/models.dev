@@ -1,6 +1,7 @@
-# Serverless: $0.30 input, $0.06 cached input, $1.20 output per 1M; context 524,288 (accessed 2026-10-21).
-# Output 250,000 is kept from the earlier entry; Together caps max_tokens only by context (see provider.toml):
+# Serverless: $0.30 input, $0.06 cached input, $1.20 output per 1M; context 524,288 (accessed 2026-10-21):
 # https://docs.together.ai/docs/serverless-models
+# Output = context: a max_tokens = 10,000,000 request fails with "This model's maximum context length is
+# 524288 tokens" and no separate output limit (live 2026-10-21).
 # Toggle: thinking.type = enabled|disabled (live 2026-10-21: disabled returns 0 reasoning tokens).
 # Together lists M3 as hybrid (https://docs.together.ai/docs/inference/chat/reasoning), but
 # reasoning.enabled = false, chat_template_kwargs and reasoning_effort leave the rendered prompt in
@@ -28,7 +29,7 @@ prompt_cache_key = true
 
 [limit]
 context = 524_288
-output = 250_000
+output = 524_288
 
 [cost.text.input]
 price = 0.3
