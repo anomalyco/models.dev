@@ -1,13 +1,13 @@
+# attachment are for security reasons not supported on AKI.IO and are therefore disabled
+# AKI.IO offers discrete reasoning settings instead of a range, values map to 0, 25, 50, 75 and 100
+# cost as described on the AKI.IO pricing page at https://aki.io/#pricing
 base_model = "deepseek/deepseek-v4.1-flash"
 structured_output = true
 
-# attachment are for security reasons not supported on AKI.IO and are therefore disabled
 attachment = false
 
-# AKI.IO offers discrete reasoning settings instead of a range, values map to 0, 25, 50, 75 and 100
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
 
-# cost as described on the AKI.IO pricing page at https://aki.io/#pricing
 [cost]
 input = 0.25
 output = 1.00
