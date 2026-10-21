@@ -1,5 +1,8 @@
-# Host rate per /v1/models: 0.147/0.295, matching the V4 Flash line.
-# cache_ratio 0.19047619 gives 0.028, not the 0.02 those models use.
+# Host rate per /v1/models and /api/pricing (accessed 2026-10-21): 0.242/0.726,
+# cache read 0.0077 (10% above the V4 Flash line).
+# Peak hours (accessed 2026-10-21): https://api.orcarouter.ai/api/pricing lists
+# timed_pricing in UTC: 01:00-04:00 and 06:00-10:00 at 2x, on every day (the host
+# gives no weekday or holiday condition).
 schema = 2
 base_model = "deepseek/deepseek-reasoner"
 
@@ -10,8 +13,12 @@ reasoning = { supported = true }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.147
-cache = { read = 0.028 }
+price = 0.242
+cache = { read = 0.0077 }
 
 [cost.text.output]
-price = 0.295
+price = 0.726
+
+[[cost.multipliers]]
+when = { any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

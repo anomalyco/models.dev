@@ -1,3 +1,4 @@
+# Prices: https://api.orcarouter.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -13,7 +14,8 @@ output = 128_000
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.075
+price = 0.15
+cache = { read = 0.03 }
 
 [cost.text.output]
-price = 0.25
+price = 0.5

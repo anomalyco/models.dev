@@ -1,3 +1,4 @@
+# Prices and context tiers: https://api.orcarouter.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "xai/grok-4.6"
 
@@ -9,5 +10,14 @@ structured_output = true
 price = 2
 cache = { read = 0.5 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
 [cost.text.output]
 price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12

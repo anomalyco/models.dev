@@ -1,4 +1,5 @@
 # Toggle: thinking true|false
+# Prices: https://api.orcarouter.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -10,8 +11,8 @@ structured_output = true
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 3.3
-cache = { read = 0.33 }
+price = 3
+cache = { read = 0.3 }
 
 [cost.text.output]
-price = 16.5
+price = 15

@@ -1,5 +1,6 @@
-# Host bills this at 2x Google's own rate (0.75/3.75); confirmed by
-# /api/pricing and prompt_per_million in /v1/models.
+# Prices (accessed 2026-10-21): 0.75/3.75, cache read 0.075, in both
+# https://api.orcarouter.ai/api/pricing and https://api.orcarouter.ai/v1/models
+# (the host no longer bills 2x Google's rate).
 schema = 2
 base_model = "google/gemini-3.6-flash"
 
@@ -8,8 +9,8 @@ reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 
 [cost.text.input]
-price = 1.5
-cache = { read = 0.15 }
+price = 0.75
+cache = { read = 0.075 }
 
 [cost.text.output]
-price = 7.5
+price = 3.75

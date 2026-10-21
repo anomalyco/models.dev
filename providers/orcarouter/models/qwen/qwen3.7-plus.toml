@@ -1,4 +1,5 @@
 # Toggle: enable_thinking; budget: thinking_budget
+# Prices and context tiers: https://api.orcarouter.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
@@ -9,5 +10,14 @@ reasoning = { supported = true, toggle = true, budget = {} }
 price = 0.35
 cache = { read = 0.071 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 1.06
+cache = { read = 0.21 }
+
 [cost.text.output]
 price = 1.42
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 4.25

@@ -1,4 +1,8 @@
 # Toggle: thinking true|false
+# Peak hours (accessed 2026-10-21): https://api.orcarouter.ai/api/pricing lists
+# timed_pricing in UTC: 01:00-04:00 and 06:00-10:00 at 2x, on every day (the host
+# gives no weekday or holiday condition).
+# Prices: https://api.orcarouter.ai/v1/models (accessed 2026-10-21).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
@@ -10,8 +14,12 @@ structured_output = true
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.442
-cache = { read = 0.06 }
+price = 0.66
+cache = { read = 0.022 }
 
 [cost.text.output]
-price = 0.884
+price = 1.98
+
+[[cost.multipliers]]
+when = { any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
