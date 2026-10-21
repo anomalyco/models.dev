@@ -1,16 +1,8 @@
 schema = 2
+base_model = "anthropic/claude-3-7-sonnet-20250219"
 name = "Claude-Sonnet-3.7"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-open_weights = false
-release_date = "2025-02-19"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 temperature = false
 

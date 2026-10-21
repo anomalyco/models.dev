@@ -1,9 +1,6 @@
 schema = 2
+base_model = "openai/gpt-4"
 name = "GPT-4-Classic"
-description = "Legacy model retained for compatibility with older integrations"
-family = "gpt"
-open_weights = false
-release_date = "2024-03-25"
 status = "deprecated"
 
 [modalities]
@@ -11,12 +8,9 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 temperature = false
 
 [limit]
-context = 8_192
 output = 4_096
 
 [cost.text.input]

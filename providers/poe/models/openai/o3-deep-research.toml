@@ -1,22 +1,12 @@
 schema = 2
-name = "o3-deep-research"
-description = "Research model for long-horizon investigation, synthesis, and analytical reports"
-family = "o"
-open_weights = false
-release_date = "2025-06-27"
+base_model = "openai/o3-deep-research"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = false
-
-[limit]
-context = 200_000
-output = 100_000
 
 [cost.text.input]
 price = 9

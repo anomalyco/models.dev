@@ -1,16 +1,12 @@
 schema = 2
+base_model = "google/gemini-2.5-flash"
 name = "Gemini-2.5-Flash"
-description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-family = "gemini-flash"
-open_weights = false
-release_date = "2025-04-26"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, budget = { min = 0, max = 24_576 } }
 temperature = false
 

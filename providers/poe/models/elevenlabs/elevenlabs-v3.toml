@@ -1,19 +1,9 @@
 schema = 2
+base_model = "elevenlabs/eleven_v3"
 name = "ElevenLabs-v3"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "elevenlabs"
-open_weights = false
-release_date = "2025-06-05"
-
-[modalities]
-input = ["text"]
-output = ["audio"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
 context = 128_000
-output = 0

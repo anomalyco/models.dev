@@ -1,22 +1,9 @@
 schema = 2
+base_model = "openai/gpt-4-turbo"
 name = "GPT-4-Turbo"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt"
-open_weights = false
-release_date = "2023-09-13"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 temperature = false
-
-[limit]
-context = 128_000
-output = 4_096
 
 [cost.text.input]
 price = 9

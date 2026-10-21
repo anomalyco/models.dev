@@ -1,21 +1,11 @@
 schema = 2
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-open_weights = false
-release_date = "2026-02-15"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "zhipuai/glm-5"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
 
 [limit]
 context = 205_000
-output = 131_072
 
 [cost.text.input]
 price = 1

@@ -1,20 +1,12 @@
 schema = 2
+base_model = "google/gemma-4-31b-it"
 name = "Gemma-4-31B"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-open_weights = false
-release_date = "2026-04-02"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
 temperature = false
 
 [limit]
-context = 262_144
 output = 8_192
 
 [cost.text.input]

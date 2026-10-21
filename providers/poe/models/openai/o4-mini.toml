@@ -1,22 +1,8 @@
 schema = 2
-name = "o4-mini"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-mini"
-open_weights = false
-release_date = "2025-04-16"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "openai/o4-mini"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-temperature = false
-
-[limit]
-context = 200_000
-output = 100_000
 
 [cost.text.input]
 price = 0.99

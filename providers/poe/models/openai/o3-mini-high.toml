@@ -1,22 +1,13 @@
 schema = 2
+base_model = "openai/o3-mini"
 name = "o3-mini-high"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-mini"
-open_weights = false
-release_date = "2025-01-31"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = false
-
-[limit]
-context = 200_000
-output = 100_000
 
 [cost.text.input]
 price = 0.99

@@ -1,21 +1,11 @@
 schema = 2
+base_model = "openai/gpt-4o-2024-08-06"
 name = "GPT-4o-Aug"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-open_weights = false
-release_date = "2024-11-21"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 temperature = false
 
 [limit]
-context = 128_000
 output = 8_192
 
 [cost.text.input]

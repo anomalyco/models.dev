@@ -1,16 +1,8 @@
 schema = 2
+base_model = "moonshotai/kimi-k2-thinking"
 name = "kimi-k2-thinking"
-description = "Kimi reasoning model for long-horizon research, planning, and tool use"
-family = "kimi-thinking"
-open_weights = false
-release_date = "2025-11-07"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 temperature = false
 

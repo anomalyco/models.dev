@@ -1,18 +1,10 @@
 schema = 2
+base_model = "zhipuai/glm-4.7-flash"
 name = "glm-4.7-flash"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-open_weights = false
-release_date = "2026-01-19"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 temperature = false
 
 [limit]
-context = 200_000
 output = 65_500

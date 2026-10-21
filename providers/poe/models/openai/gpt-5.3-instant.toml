@@ -1,22 +1,12 @@
 schema = 2
+base_model = "openai/gpt-5.3-chat-latest"
 name = "GPT-5.3-Instant"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-open_weights = false
-release_date = "2026-03-03"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 temperature = false
 
 [limit]
-context = 128_000
 input = 111_616
-output = 16_384
 
 [cost.text.input]
 price = 1.6

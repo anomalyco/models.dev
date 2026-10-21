@@ -1,23 +1,13 @@
 schema = 2
+base_model = "anthropic/claude-3-5-sonnet-20241022"
 name = "Claude-Sonnet-3.5"
-description = "Legacy model retained for compatibility with older integrations"
-family = "claude-sonnet"
-open_weights = false
-release_date = "2024-06-05"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 temperature = false
 
 [limit]
 context = 189_096
-output = 8_192
 
 [cost.text.input]
 price = 2.6

@@ -1,19 +1,8 @@
 schema = 2
-name = "GPT-Image-1"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "gpt"
-open_weights = false
-release_date = "2025-03-31"
-
-[modalities]
-input = ["text", "image"]
-output = ["image"]
+base_model = "openai/gpt-image-1"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
 context = 128_000
-output = 0

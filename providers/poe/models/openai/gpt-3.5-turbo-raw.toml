@@ -1,9 +1,6 @@
 schema = 2
+base_model = "openai/gpt-3.5-turbo"
 name = "GPT-3.5-Turbo-Raw"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt"
-open_weights = false
-release_date = "2023-09-27"
 
 [modalities]
 input = ["text", "image"]
@@ -11,7 +8,6 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
 temperature = false
 
 [limit]

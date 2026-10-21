@@ -1,22 +1,12 @@
 schema = 2
-name = "GPT-4.1"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-open_weights = false
-release_date = "2025-04-14"
+base_model = "openai/gpt-4.1"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 temperature = false
-
-[limit]
-context = 1_047_576
-output = 32_768
 
 [cost.text.input]
 price = 1.8

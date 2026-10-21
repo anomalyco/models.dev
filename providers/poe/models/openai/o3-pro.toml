@@ -1,22 +1,8 @@
 schema = 2
-name = "o3-pro"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-pro"
-open_weights = false
-release_date = "2025-06-10"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "openai/o3-pro"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-temperature = false
-
-[limit]
-context = 200_000
-output = 100_000
 
 [cost.text.input]
 price = 18

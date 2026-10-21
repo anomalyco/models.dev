@@ -1,17 +1,12 @@
 schema = 2
+base_model = "openai/gpt-4o-mini"
 name = "GPT-4o-mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-open_weights = false
-release_date = "2024-07-18"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 temperature = false
 
 [limit]

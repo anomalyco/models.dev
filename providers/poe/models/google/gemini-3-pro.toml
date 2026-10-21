@@ -1,23 +1,15 @@
 schema = 2
+base_model = "google/gemini-3-pro-preview"
 name = "Gemini-3-Pro"
-description = "Legacy model retained for compatibility with older integrations"
-family = "gemini-pro"
-open_weights = false
-release_date = "2025-10-22"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 temperature = false
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 1.6

@@ -1,17 +1,10 @@
 schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
 name = "llama-3.3-70b-cs"
-description = "Legacy model retained for compatibility with older integrations"
-open_weights = false
-release_date = "2025-05-13"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 temperature = false
 
 [limit]

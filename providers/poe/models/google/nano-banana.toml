@@ -1,13 +1,6 @@
 schema = 2
+base_model = "google/gemini-2.5-flash-image"
 name = "Nano-Banana"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "nano-banana"
-open_weights = false
-release_date = "2025-08-21"
-
-[modalities]
-input = ["text", "image"]
-output = ["text", "image"]
 
 [capabilities]
 tools = { supported = true }
