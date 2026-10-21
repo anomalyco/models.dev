@@ -1,0 +1,12 @@
+# Prices: https://llm.wavespeed.ai/v1/models (USD per million tokens, accessed 2026-10-21)
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.16
+
+[limit]
+context = 262144
+output = 262142
