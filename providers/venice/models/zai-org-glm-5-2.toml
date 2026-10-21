@@ -1,16 +1,17 @@
 # Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
 # https://api.venice.ai/api/v1/models?type=text
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 name = "GLM 5.2"
 release_date = "2026-06-16"
-last_updated = "2026-06-16"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

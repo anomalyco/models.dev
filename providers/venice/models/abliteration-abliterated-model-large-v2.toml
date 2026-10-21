@@ -1,23 +1,25 @@
+schema = 2
 name = "Abliterated Large V2"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-release_date = "2026-10-01"
-last_updated = "2026-10-01"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
-reasoning_options = []
+release_date = "2026-10-01"
 
-[cost]
-input = 3
-output = 5
-cache_read = 0.3
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_000_000
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 5

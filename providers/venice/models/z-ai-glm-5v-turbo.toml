@@ -1,22 +1,24 @@
 # Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
 # https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
-
+schema = 2
 base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5V Turbo"
 last_updated = "2026-06-11"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 1.5
-output = 5
-cache_read = 0.3
 
 [limit]
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.5
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 5

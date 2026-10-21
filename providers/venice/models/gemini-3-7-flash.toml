@@ -1,17 +1,22 @@
+schema = 2
 base_model = "google/gemini-3.7-flash"
-structured_output = true
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 release_date = "2026-08-14"
-last_updated = "2026-08-14"
-reasoning_options = []
 
-[cost]
-input = 0.9375
-output = 4.6875
-cache_read = 0.09375
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image", "audio", "video"]
+[cost.text.input]
+price = 0.9375
+cache = { read = 0.09375 }
+
+[cost.text.output]
+price = 4.6875

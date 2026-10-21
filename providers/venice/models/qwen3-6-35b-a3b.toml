@@ -1,17 +1,23 @@
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen 3.6 35B A3B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 release_date = "2026-07-20"
 last_updated = "2026-07-22"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.1
-output = 1
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 1

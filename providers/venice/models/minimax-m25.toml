@@ -1,21 +1,23 @@
 # Live /models (2026-06-25): low|medium|high; no dedicated reasoning budget.
 # https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5"
 last_updated = "2026-06-11"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.27
-output = 0.95
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 198_000
 output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.27
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.95

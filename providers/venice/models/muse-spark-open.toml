@@ -1,15 +1,18 @@
+schema = 2
 base_model = "meta/muse-spark-open"
-structured_output = true
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 1.5625
-output = 5.3125
-cache_read = 0.1875
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5625
+cache = { read = 0.1875 }
+
+[cost.text.output]
+price = 5.3125

@@ -1,23 +1,25 @@
 # Live metadata: reasoning only; no effort control or dedicated budget (2026-07-01).
 # https://api.venice.ai/api/v1/models?type=text
+schema = 2
 base_model = "anthropic/claude-sonnet-5"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 release_date = "2026-06-29"
 last_updated = "2026-07-01"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
 
 [limit]
 output = 64_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10

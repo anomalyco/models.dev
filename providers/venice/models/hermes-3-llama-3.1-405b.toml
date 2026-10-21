@@ -1,14 +1,19 @@
+schema = 2
 base_model = "nousresearch/hermes-3-llama-3.1-405b"
 name = "Hermes 3 Llama 3.1 405b"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "hermes"
 release_date = "2025-09-25"
 last_updated = "2026-06-11"
-structured_output = true
 
-[cost]
-input = 1.1
-output = 3
+[capabilities]
+structured_output = true
 
 [limit]
 context = 128_000
+
+[cost.text.input]
+price = 1.1
+
+[cost.text.output]
+price = 3

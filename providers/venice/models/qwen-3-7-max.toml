@@ -1,20 +1,24 @@
 # Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
 # https://api.venice.ai/api/v1/models?type=text
+schema = 2
 base_model = "alibaba/qwen3.7-max"
 name = "Qwen 3.7 Max"
 release_date = "2026-05-22"
 last_updated = "2026-06-11"
-attachment = true
-reasoning_options = []
 
-[cost]
-input = 2.7
-output = 8.05
-cache_read = 0.27
-cache_write = 3.35
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video"]
+[cost.text.input]
+price = 2.7
+cache = { read = 0.27, write = 3.35 }
+
+[cost.text.output]
+price = 8.05

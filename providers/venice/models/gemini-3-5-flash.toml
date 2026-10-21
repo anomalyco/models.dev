@@ -1,24 +1,25 @@
 # Live /models (2026-06-25): low|medium|high; no dedicated reasoning budget.
 # https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
-
+schema = 2
 base_model = "google/gemini-3.5-flash"
-structured_output = true
 family = "gemini"
 release_date = "2026-05-22"
 last_updated = "2026-06-11"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
 
-[cost]
-input = 1.55
-output = 9.45
-cache_read = 0.155
-cache_write = 0.086
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image", "audio", "video"]
+[cost.text.input]
+price = 1.55
+cache = { read = 0.155, write = 0.086 }
+
+[cost.text.output]
+price = 9.45

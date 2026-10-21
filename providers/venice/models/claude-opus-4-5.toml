@@ -1,21 +1,26 @@
 # Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
 # https://api.venice.ai/api/v1/models?type=text
+schema = 2
 base_model = "anthropic/claude-opus-4-5"
 name = "Claude Opus 4.5"
 release_date = "2025-12-06"
 last_updated = "2026-06-11"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 198_000
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25

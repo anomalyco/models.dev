@@ -1,14 +1,20 @@
+schema = 2
 base_model = "openai/gpt-4o-mini"
-structured_output = true
 name = "GPT-4o Mini"
 family = "gpt"
 release_date = "2026-02-28"
 last_updated = "2026-06-11"
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.075
-
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.6

@@ -1,35 +1,35 @@
+schema = 2
 name = "GPT-6 Astra Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 family = "gpt"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-05"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 20
-output = 75
-cache_read = 2
-cache_write = 25
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_050_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

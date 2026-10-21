@@ -1,11 +1,15 @@
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
 name = "Qwen 3.8 Flash"
 release_date = "2026-09-10"
-last_updated = "2026-09-10"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.14
-output = 0.49
-cache_read = 0.014
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 0.49

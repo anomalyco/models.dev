@@ -1,10 +1,15 @@
+schema = 2
 base_model = "openai/gpt-4o-2024-11-20"
-structured_output = true
 name = "GPT-4o"
 release_date = "2026-02-28"
 last_updated = "2026-06-11"
 
-[cost]
-input = 2.5
-output = 10
-cache_read = 1.25
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

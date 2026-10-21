@@ -1,19 +1,22 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 last_updated = "2026-07-17"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 3.75
-output = 18.75
-cache_read = 0.375
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 3.75
+cache = { read = 0.375 }
+
+[cost.text.output]
+price = 18.75
