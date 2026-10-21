@@ -8,11 +8,12 @@
 # Aixy's gemini route uses OpenAI Chat Completions; effort: reasoning_effort.
 # Keep the non-streaming output cap; native long decode is not advertised.
 # Input modalities are limited to the documented OpenAI-compatible surface.
+# MIME: the lab's image types (image_url) and OpenAI input_audio formats wav|mp3.
 schema = 2
 base_model = "google/gemini-4-argon"
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3"]
 output = ["text"]
 
 [capabilities]
