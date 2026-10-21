@@ -1,8 +1,11 @@
+# Deprecated: no longer listed by GET https://api.synthetic.new/openai/v1/models
+# (accessed 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
@@ -10,7 +13,6 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [limit]
-context = 262_144
 output = 65_536
 
 [api.chat-completions]
