@@ -1,0 +1,9 @@
+# Sources (2026-10-21): https://docs.lyceum.technology/docs/inference/serverless (reasoning, image input, limits)
+# and https://lyceum.technology/models/ (prices). Output capped at 131_072 (max_tokens limit). reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false). response_format is
+# undocumented, so structured_output is unset.
+name = "Lyceum"
+npm = "@ai-sdk/openai-compatible"
+env = ["LYCEUM_API_KEY"]
+api = "https://api.lyceum.technology/openai/v1"
+doc = "https://docs.lyceum.technology/docs/inference/serverless"

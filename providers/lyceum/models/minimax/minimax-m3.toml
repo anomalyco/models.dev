@@ -1,0 +1,26 @@
+# Always reasons (reasoning_effort none is ignored).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2
