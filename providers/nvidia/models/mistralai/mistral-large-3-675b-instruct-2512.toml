@@ -1,26 +1,11 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-23T09:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 schema = 2
+base_model = "mistral/mistral-large-2512"
 name = "Mistral Large 3 675B Instruct 2512"
-description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
-family = "mistral-large"
-open_weights = true
-knowledge = "2025-01"
-release_date = "2025-12-02"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 262_144
-output = 262_144
 
 [cost.text.input]
 price = 0

@@ -1,17 +1,21 @@
+# Price: NVIDIA publishes no per-token rate; the hosted API is a free trial (see provider.toml), so 0.
+# The earlier $0.50/$2.50 (cache $0.15) had no source.
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): a late system message was
+# followed and kept the cache in 2 of 2 trials; adding a tool dropped the cache to 0.
 schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+system_updates = true
+tools = { supported = true, updates = false }
 
 [limit]
-context = 1_000_000
 output = 65_536
 
 [cost.text.input]
-price = 0.5
-cache = { read = 0.15 }
+price = 0
 
 [cost.text.output]
-price = 2.5
+price = 0

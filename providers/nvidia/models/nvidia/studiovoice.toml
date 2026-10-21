@@ -1,22 +1,28 @@
+# Audio in, audio out ("Input Type(s): Audio ... Output Type(s): Audio", PCM F32,
+# https://build.nvidia.com/nvidia/studiovoice);
+# the earlier text-to-text modalities were wrong. No model type fits speech enhancement, so it stays untyped.
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21). Temperature false
+# and context/output 0: audio in, audio
+# out, with no sampling parameters or token limits.
 schema = 2
 name = "studiovoice"
-description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
+description = "Enhances noisy or reverberant speech recordings to studio-quality speech"
 open_weights = true
 release_date = "2024-10-03"
 last_updated = "2025-06-13"
 
 [modalities]
-input = ["text"]
-output = ["text"]
+input = ["audio"]
+output = ["audio"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
-temperature = true
+temperature = false
 
 [limit]
-context = 128_000
-output = 8_192
+context = 0
+output = 0
 
 [cost.text.input]
 price = 0

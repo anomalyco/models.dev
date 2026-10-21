@@ -5,8 +5,12 @@
 # - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.1-nemotron-ultra-253b-v1
 # Toggle: system message `detailed thinking on` | `detailed thinking off`.
 # Infer OpenAPI: max_tokens 1..16384.
+# Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
+# and POST /v1/chat/completions returns 404 "Function ...: Not found for account" (probed 2026-10-21 against
+# integrate.api.nvidia.com).
 schema = 2
 base_model = "nvidia/llama-3.1-nemotron-ultra-253b"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

@@ -1,25 +1,10 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3-Next-80B-A3B-Instruct"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = false
-knowledge = "2024-12"
-release_date = "2024-12-01"
-last_updated = "2025-09-05"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
 [limit]
-context = 262_144
 output = 16_384
 
 [cost.text.input]

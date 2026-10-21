@@ -1,22 +1,9 @@
+# Context 163,840 (lab) is NVIDIA's "Context Length: 163,840 tokens"
+# (https://build.nvidia.com/meta/llama-guard-4-12b).
 schema = 2
-name = "Llama Guard 4 12B"
-description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
-family = "llama"
-open_weights = true
-release_date = "2025-04-05"
-last_updated = "2026-04-30"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
+base_model = "meta/llama-guard-4-12b"
 
 [limit]
-context = 128_000
 output = 16_384
 
 [cost.text.input]

@@ -1,8 +1,10 @@
 # NIM wire syntax (verified against integrate.api.nvidia.com/v1, 2026-08-22):
 #   on/off: chat_template_kwargs = { "thinking": true | false }  (default: true)
 #   effort: top-level "reasoning_effort" = "low" | "high" | "max"
+# NVIDIA API: HTTP 410 Gone — end of life 2026-10-15T08:00:00Z (probed 2026-10-21 against integrate.api.nvidia.com)
 schema = 2
 base_model = "moonshotai/kimi-k3"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }

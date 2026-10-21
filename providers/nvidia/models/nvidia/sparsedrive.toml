@@ -1,6 +1,9 @@
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
+# a driving perception and planning
+# model with no sampling parameters.
 schema = 2
 name = "sparsedrive"
-description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
+description = "End-to-end autonomous driving stack for perception, prediction, and planning"
 open_weights = true
 release_date = "2025-03-18"
 last_updated = "2025-07-20"
@@ -12,7 +15,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
-temperature = true
+temperature = false
 
 [limit]
 context = 128_000

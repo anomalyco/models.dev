@@ -1,6 +1,8 @@
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
+# a classifier with no sampling parameters.
 schema = 2
 name = "synthetic-video-detector"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
+description = "Detects AI-generated (synthetic) video"
 open_weights = true
 release_date = "2026-04-16"
 
@@ -11,7 +13,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
-temperature = true
+temperature = false
 
 [limit]
 context = 0

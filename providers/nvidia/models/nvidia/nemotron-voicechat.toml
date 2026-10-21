@@ -1,21 +1,6 @@
 schema = 2
 base_model = "nvidia/nemotron-voicechat"
 name = "nemotron-voicechat"
-open_weights = true
-release_date = "2026-03-16"
-
-[modalities]
-input = ["text", "audio"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 128_000
-output = 8_192
 
 [cost.text.input]
 price = 0

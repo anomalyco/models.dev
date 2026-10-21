@@ -1,21 +1,12 @@
+# Live 2026-10-21: POST /v1/embeddings returns vectors.
+# Context 8,192: NVIDIA's card says "The model's maximum context length is 8192 tokens" and "max sequence length
+# is 8192" (https://build.nvidia.com/nvidia/llama-nemotron-embed-vl-1b-v2).
 schema = 2
 base_model = "nvidia/llama-nemotron-embed-vl-1b-v2"
 name = "llama-nemotron-embed-vl-1b-v2"
-open_weights = true
-release_date = "2026-02-10"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
-context = 32_768
-output = 2_048
+context = 8_192
 
 [cost.text.input]
 price = 0

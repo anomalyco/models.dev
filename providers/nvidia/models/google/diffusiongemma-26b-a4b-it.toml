@@ -4,8 +4,15 @@
 # Limit: the endpoint rejects requests above max_total_tokens = 250000.
 # Pricing: free endpoint on NVIDIA's API trial tier; no list rate is published.
 # https://build.nvidia.com/google/diffusiongemma-26b-a4b-it
+# Inputs: NVIDIA's card lists "Text, Image, Video" with "Video (MP4)"
+# (https://build.nvidia.com/google/diffusiongemma-26b-a4b-it);
+# live 2026-10-21 an MP4 clip was read (answered its color) and audio was rejected ("does not have an audio tower").
 schema = 2
 base_model = "google/diffusiongemma-26b-a4b-it"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }

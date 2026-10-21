@@ -1,21 +1,11 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-08-26T09:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 schema = 2
+base_model = "meta/llama-3.2-1b-instruct"
 name = "Llama 3.2 1b Instruct"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-open_weights = true
-knowledge = "2023-12"
-release_date = "2024-09-18"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 128_000

@@ -1,21 +1,9 @@
+# Live 2026-10-21: POST https://ai.api.nvidia.com/v1/retrieval/nvidia/llama-nemotron-rerank-vl-1b-v2/reranking
+# returns rankings. Context 10,240 (lab) matches NVIDIA's card
+# (https://build.nvidia.com/nvidia/llama-nemotron-rerank-vl-1b-v2).
 schema = 2
 base_model = "nvidia/llama-nemotron-rerank-vl-1b-v2"
 name = "llama-nemotron-rerank-vl-1b-v2"
-open_weights = true
-release_date = "2026-03-31"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-
-[limit]
-context = 128_000
-output = 4_096
 
 [cost.text.input]
 price = 0

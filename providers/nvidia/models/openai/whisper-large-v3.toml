@@ -1,23 +1,13 @@
+# In the build.nvidia.com catalog (https://build.nvidia.com/openai/whisper-large-v3, accessed 2026-10-21); served
+# through NVIDIA Riva speech-to-text, not /v1/chat/completions (404 there).
+# Linked to the lab: transcription model, audio in, text out. The old entry had attachment = false next to audio
+# input, which v2 can't express.
+schema = 2
+base_model = "openai/whisper-large-v3"
 name = "Whisper Large v3"
-description = "Speech transcription model for accurate audio-to-text and captioning workflows"
-family = "whisper"
-release_date = "2023-09-01"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = false
-temperature = false
-knowledge = "2023-09"
-tool_call = false
-open_weights = true
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
 
-[limit]
-context = 0
-output = 4096
-
-[modalities]
-input = ["audio"]
-output = ["text"]
+[cost.text.output]
+price = 0

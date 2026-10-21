@@ -2,12 +2,24 @@
 # (verified 2026-09-12). Thinking is always enabled; reasoning budget controlled
 # with top-level `reasoning_effort`: low|high|max, default max.
 # https://docs.nvidia.com/nim/vision-language-models/latest/get-started/advanced/get-started-glm-5-3-flash.html
+# Inputs (live 2026-10-21): PNG, JPEG and WebP images are read; GIF returns 415, video returns 400
+# "At most 0 video(s) may be provided in one prompt", and there is no PDF content part.
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): a late system message was
+# followed and kept the cache in 2 of 2 trials; changing reasoning_effort (low → high) and adding a tool each
+# dropped the cache to 0.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+system_updates = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

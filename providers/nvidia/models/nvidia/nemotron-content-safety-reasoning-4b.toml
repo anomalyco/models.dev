@@ -2,22 +2,10 @@
 schema = 2
 base_model = "nvidia/nemotron-content-safety-reasoning-4b"
 name = "nemotron-content-safety-reasoning-4b"
-open_weights = true
-release_date = "2026-01-22"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true }
-temperature = false
-
-[limit]
-context = 128_000
-output = 4_096
 
 [cost.text.input]
 price = 0

@@ -3,23 +3,15 @@
 # This catalog ID has no `-v0.1` suffix and returns HTTP 404 on the chat endpoint.
 # https://build.nvidia.com/mistralai/mixtral-8x22b-instruct lists the free endpoint as deprecated.
 schema = 2
+base_model = "mistral/mixtral-8x22b-instruct"
 name = "Mistral: Mixtral 8x22B Instruct"
-description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-open_weights = true
-release_date = "2024-04-17"
 status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
 [limit]
-context = 65_536
 output = 13_108
 
 [cost.text.input]

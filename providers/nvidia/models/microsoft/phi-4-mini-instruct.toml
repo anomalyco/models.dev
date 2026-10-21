@@ -1,22 +1,8 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-15T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 schema = 2
+base_model = "microsoft/phi-4-mini"
 name = "Phi-4-Mini"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "phi"
-open_weights = true
-knowledge = "2024-12"
-release_date = "2024-12-01"
-last_updated = "2025-09-05"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 131_072

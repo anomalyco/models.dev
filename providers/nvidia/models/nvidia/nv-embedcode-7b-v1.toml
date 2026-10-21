@@ -1,13 +1,17 @@
+# NVIDIA API: HTTP 410 Gone on POST /v1/embeddings — end of life 2026-08-25T09:00:00Z (probed 2026-10-21 against
+# integrate.api.nvidia.com)
 schema = 2
+type = "embedding"
 name = "nv-embedcode-7b-v1"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 open_weights = true
 release_date = "2025-03-17"
 last_updated = "2025-05-29"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
 
 [capabilities]
 tools = { supported = false }

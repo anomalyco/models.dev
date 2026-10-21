@@ -1,6 +1,7 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-08-07T09:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 # NIM Chat schema: `reasoning_effort = none|high|max`; `none` disables thinking.
 # https://docs.api.nvidia.com/nim/reference/deepseek-ai-deepseek-v4-flash-infer
+# Price: NVIDIA publishes no per-token rate; the hosted API is a free trial (see provider.toml), so 0.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 status = "deprecated"
@@ -17,8 +18,7 @@ output = 393_216
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.14
-cache = { read = 0.0028 }
+price = 0
 
 [cost.text.output]
-price = 0.28
+price = 0

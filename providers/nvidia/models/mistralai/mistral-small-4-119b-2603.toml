@@ -1,20 +1,12 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 schema = 2
+base_model = "mistral/mistral-small-2603"
 name = "mistral-small-4-119b-2603"
-description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-open_weights = true
-release_date = "2026-03-16"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 128_000

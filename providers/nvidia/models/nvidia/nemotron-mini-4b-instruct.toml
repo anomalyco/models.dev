@@ -2,23 +2,7 @@
 schema = 2
 base_model = "nvidia/nemotron-mini-4b-instruct"
 name = "nemotron-mini-4b-instruct"
-open_weights = true
-release_date = "2024-08-21"
-last_updated = "2024-08-26"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 128_000
-output = 8_192
 
 [cost.text.input]
 price = 0

@@ -1,19 +1,17 @@
+# Inputs: NVIDIA's card lists "Text, Image, Video" with "Video (MP4/WebM)", up to 60 s at 1 fps
+# (https://build.nvidia.com/google/gemma-4-31b-it). PNG, JPEG and WebP images were read live (2026-10-21);
+# video and audio requests were held by NVIDIA's content-safety screening, so they weren't confirmed.
+# Context 256,000: the card's "Input Context Length (ISL): 256K".
 schema = 2
+base_model = "google/gemma-4-31b-it"
 name = "Gemma-4-31B-IT"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-open_weights = true
-knowledge = "2025-01"
-release_date = "2026-04-02"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video/mp4", "video/webm"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
 
 [limit]
 context = 256_000

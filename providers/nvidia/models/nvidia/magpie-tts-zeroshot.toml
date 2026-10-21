@@ -1,13 +1,17 @@
+# Type speech: text in, audio out "in wav format" (https://build.nvidia.com/nvidia/magpie-tts-zeroshot); the zero-shot
+# voice prompt is reference audio, whose format the card doesn't list.
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21).
 schema = 2
+type = "speech"
 name = "magpie-tts-zeroshot"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
+description = "Expressive text-to-speech that clones a voice from a short audio sample"
 open_weights = true
 release_date = "2025-05-22"
 last_updated = "2025-06-12"
 
 [modalities]
 input = ["text", "audio"]
-output = ["audio"]
+output = ["audio/wav"]
 
 [capabilities]
 tools = { supported = false }

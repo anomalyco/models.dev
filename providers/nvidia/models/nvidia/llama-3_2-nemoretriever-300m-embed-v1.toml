@@ -1,12 +1,16 @@
+# NVIDIA API: HTTP 410 Gone on POST /v1/embeddings — end of life 2026-05-18T00:00:00Z (probed 2026-10-21 against
+# integrate.api.nvidia.com)
 schema = 2
+type = "embedding"
 name = "llama-3_2-nemoretriever-300m-embed-v1"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 open_weights = true
 release_date = "2025-07-24"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
 
 [capabilities]
 tools = { supported = false }

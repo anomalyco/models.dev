@@ -1,13 +1,18 @@
+# Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
+# and POST https://ai.api.nvidia.com/v1/retrieval/nvidia/reranking returns 404 "Function ...: Not found for
+# account" (probed 2026-10-21).
 schema = 2
+type = "reranking"
 name = "rerank-qa-mistral-4b"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
 open_weights = true
 release_date = "2024-03-17"
 last_updated = "2025-01-17"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["reranking"]
 
 [capabilities]
 tools = { supported = false }

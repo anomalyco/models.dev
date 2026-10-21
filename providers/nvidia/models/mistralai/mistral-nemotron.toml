@@ -2,23 +2,7 @@
 schema = 2
 base_model = "nvidia/mistral-nemotron"
 name = "mistral-nemotron"
-open_weights = true
-release_date = "2025-06-11"
-last_updated = "2025-06-12"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 128_000
-output = 8_192
 
 [cost.text.input]
 price = 0

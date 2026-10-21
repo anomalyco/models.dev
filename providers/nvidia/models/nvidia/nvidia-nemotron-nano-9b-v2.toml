@@ -2,24 +2,10 @@
 schema = 2
 base_model = "nvidia/nemotron-nano-9b-v2"
 name = "nvidia-nemotron-nano-9b-v2"
-family = "nemotron"
-open_weights = true
-knowledge = "2024-09"
-release_date = "2025-08-18"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
-
-[limit]
-context = 131_072
-output = 131_072
 
 [cost.text.input]
 price = 0

@@ -18,17 +18,23 @@
 # rate is published for this ID. Source: this model's catalog card,
 # https://build.nvidia.com/stepfun-ai/step-5-preview (governed by the
 # NVIDIA API Trial Terms of Service).
+# Inputs (live 2026-10-21): PNG, JPEG and WebP images are read; GIF returns 415 Unsupported Media Type and
+# video and audio return 400.
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): changing reasoning_effort
+# (low → high) dropped the cache in 3 of 3 conclusive trials, and adding a tool dropped it in 2 of 2.
+# system_updates unset: the cache was kept in 2 of 3 trials.
 schema = 2
 base_model = "stepfun/step-5-preview"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
-temperature = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 context = 1_048_576

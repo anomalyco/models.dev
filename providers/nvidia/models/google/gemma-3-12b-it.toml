@@ -1,22 +1,12 @@
 # https://build.nvidia.com/google/gemma-3-12b-it
+# Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
+# and POST /v1/chat/completions returns 404 "Function ...: Not found for account" (probed 2026-10-21 against
+# integrate.api.nvidia.com).
 schema = 2
-name = "Gemma 3 12B IT"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-open_weights = true
-release_date = "2025-03-12"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
+base_model = "google/gemma-3-12b-it"
+status = "deprecated"
 
 [limit]
-context = 131_072
 output = 16_384
 
 [cost.text.input]

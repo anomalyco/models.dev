@@ -1,25 +1,11 @@
+# Live 2026-10-21: POST https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-schnell validates the request
+# (422 on an unsupported height). Context and output come from the lab (0: prompts aren't chat tokens).
 schema = 2
+base_model = "black-forest-labs/flux-1-schnell"
 name = "FLUX.1-schnell"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-open_weights = true
-knowledge = "2024-07"
-release_date = "2024-08-01"
-last_updated = "2026-02-04"
-
-[modalities]
-input = ["text"]
-output = ["image"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = false
-
-[limit]
-context = 77
-input = 77
-output = 0
 
 [cost.text.input]
 price = 0

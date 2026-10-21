@@ -1,12 +1,9 @@
+# Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
+# and POST /v1/chat/completions returns 404 "page not found" (probed 2026-10-21 against integrate.api.nvidia.com).
 schema = 2
+base_model = "mistral/magistral-small-2506"
 name = "Magistral Small 2506"
-description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
-open_weights = false
-release_date = "2025-09-25"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
 tools = { supported = false }
