@@ -100,3 +100,16 @@ test("patchModelV2 keeps legacy_shape", () => {
 test("formatTomlValue writes an empty inline table as {}", () => {
   expect(formatTomlValue({ budget: {} })).toBe("{ budget = {} }");
 });
+
+test('v2 effort "default" stays the literal "default" in v1', () => {
+  const v1 = {
+    base_model: "alibaba/qwen3.8-27b",
+    reasoning_options: [{ type: "effort", values: ["none", "default", "low"] }],
+    cost: { input: 1, output: 2 },
+  };
+  const doc = providerModelToV2(v1);
+  expect(doc.capabilities.reasoning).toEqual({ supported: true, effort: ["none", "default", "low"] });
+
+  const back = modelV2ToV1({ ...(Bun.TOML.parse(formatModelV2(doc)) as Record<string, unknown>), id: "m" });
+  expect(back.reasoning_options).toEqual([{ type: "effort", values: ["none", "default", "low"] }]);
+});

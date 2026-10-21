@@ -69,6 +69,11 @@ function migrateProvider(text: string, toml: Record<string, unknown>, modelID: s
   if (body.some((line) => line.trim().startsWith("#")) || tail.length > 0) {
     throw new Error(`${modelID}: comments or raw tables outside the header would be lost`);
   }
+  // v1 effort `null` (or "null") means "reasoning off"; v2 has no such effort value.
+  const efforts = (toml.reasoning_options as { type: string; values?: unknown[] }[] | undefined) ?? [];
+  if (efforts.some((option) => option.type === "effort" && option.values?.some((v) => v === null || v === "null"))) {
+    throw new Error(`${modelID}: effort value null has no v2 form; write reasoning off as a toggle first`);
+  }
   // v2 modalities replace the base's as a whole, so a v1 file that overrides only
   // `input` or `output` takes the other side from its base model.
   const modalities = toml.modalities as Record<string, unknown> | undefined;

@@ -167,10 +167,7 @@ function toReasoningOptions(reasoning: ReasoningSupportV2) {
   const options: Record<string, unknown>[] = [];
   if (reasoning.toggle) options.push({ type: "toggle" });
   if (reasoning.effort !== undefined) {
-    options.push({
-      type: "effort",
-      values: reasoning.effort.map((value) => (value === "default" ? null : value)),
-    });
+    options.push({ type: "effort", values: reasoning.effort });
   }
   if (reasoning.budget !== undefined) {
     options.push(withoutUndefined({ type: "budget_tokens", ...reasoning.budget }));
