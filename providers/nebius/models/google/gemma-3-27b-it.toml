@@ -1,20 +1,19 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 110_000, use_cases text/image/function_calling)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# Cost: $0.10 in / $0.30 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as Kimi-K3 / GLM-5.3 on this host). The earlier 0.01 read / 0.125 write had no source and is gone.
+# Modalities: image input per the catalog's image use case; MIME types come from the lab entry.
+# Limits: context = models_info max_model_len. input 100_000 / output 8_192 are carried over from the original
+#   entry; models_info publishes no separate input or output cap.
 schema = 2
+base_model = "google/gemma-3-27b-it"
 name = "Gemma-3-27b-it"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-open_weights = true
-knowledge = "2025-10"
-release_date = "2026-01-20"
-last_updated = "2026-02-04"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 110_000
@@ -23,7 +22,7 @@ output = 8_192
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.01, write = 0.125 }
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 0.3

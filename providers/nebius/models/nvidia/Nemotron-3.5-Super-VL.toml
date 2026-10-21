@@ -18,6 +18,8 @@
 # No discounted prompt-cache tier is published in the public catalog: cached and fresh
 # input are billed identically, so cache_read = input (same rationale as
 # Nemotron-3_5-Lightning / GLM-5.3 / Kimi-K3).
+# Rechecked 2026-10-20 against models_info: price, max_model_len and model type unchanged; no
+# input_cached_price_per_million_tokens listed.
 schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 description = "NVIDIA vision-language reasoning model for coding, visual understanding, and agentic tool use"

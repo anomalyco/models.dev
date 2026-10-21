@@ -16,6 +16,8 @@
 # input are billed identically, so cache_read = input (same rationale as Kimi-K3 / GLM-5.3).
 # Limits are inherited from the lab entry (1_048_576 context, matching models_info
 # max_model_len; 131_072 output).
+# Rechecked 2026-10-20 against models_info: price, max_model_len and model type unchanged; no
+# input_cached_price_per_million_tokens listed.
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 

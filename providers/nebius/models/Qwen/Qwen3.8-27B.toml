@@ -2,9 +2,10 @@
 # - https://tokenfactory.nebius.com/?modals=endpoint-details&model-id=Qwen/Qwen3.8-27B
 # - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
 # Accessed 2026-09-28.
-# Serverless NVFP4 deployment (us-central1). Server reports model type text2text, and an
-# image_url content part is rejected live with 400 "This model does not support image
-# input", so image/video input from the lab entry is narrowed to text-only here.
+# Serverless NVFP4 deployment (us-central1). On 2026-09-28 the catalog reported text2text and an
+# image_url part was rejected live with 400 "This model does not support image input". Rechecked
+# 2026-10-20: models_info now reports type image2text with an image use case (no video), so input is
+# text + the lab entry's image MIME types and video stays off. Image input not re-probed (no key).
 # Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off; off is
 # effort=none, so no separate toggle). Probed live against
 # api.tokenfactory.nebius.com/v1/chat/completions on 2026-09-28 (temperature 0, fixed
@@ -21,10 +22,9 @@
 # DeepSeek-V4-Flash-0731 / Kimi-K3 / GLM-5.3).
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
-description = "Dense 27B reasoning model for coding, research, and long-horizon agent tasks"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

@@ -5,8 +5,9 @@
 # - https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash (effort set; thinking
 #   cannot be disabled, so there is no toggle — effort per lab: low|high|max, default max)
 # Accessed 2026-08-29.
-# Text-only on this host: Token Factory serves GLM-5.3-Flash as text2text with no
-# image/video use cases, unlike the multimodal lab model — attachment stays false.
+# Modalities: models_info now (rechecked 2026-10-20) reports type image2text with an image use case and
+# no video or document use case, so input is text + the lab entry's image MIME types (no video, no PDF).
+# It was text2text when this entry was added. Image input not re-probed (no key).
 # No discounted prompt-cache tier in the public catalog (no cache rate listed for this
 # model): cached and fresh input are billed identically, so cache_read = input
 # (same rationale as Kimi-K3 / DeepSeek-V4-Flash-0731).
@@ -14,7 +15,7 @@ schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

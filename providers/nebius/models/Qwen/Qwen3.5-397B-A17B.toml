@@ -1,29 +1,38 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 262_144, type text2text
+#   with no image/video use cases)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# - https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion (extra request
+#   properties are passed through to the model)
+# Toggle: chat_template_kwargs.enable_thinking = true|false (Qwen3.5 chat template). Not re-probed on this host.
+# Modalities: text-only here (catalog type text2text), narrower than the multimodal lab entry.
+# Cost: $0.60 in / $3.60 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as Kimi-K3 / GLM-5.3 on this host). The earlier 0.06 read / 0.75 write had no source and is gone.
+# knowledge = 2025-07 is unsourced: carried over from the original entry (Qwen publishes no cutoff).
+# Limits: input 250_000 / output 8_192 are carried over from the original entry; models_info publishes only
+#   max_model_len.
 schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5-397B-A17B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-open_weights = true
 knowledge = "2025-07"
-release_date = "2025-07-15"
-last_updated = "2026-05-07"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 
 [limit]
-context = 262_144
 input = 250_000
 output = 8_192
 
 [cost.text.input]
 price = 0.6
-cache = { read = 0.06, write = 0.75 }
+cache = { read = 0.6 }
 
 [cost.text.output]
 price = 3.6

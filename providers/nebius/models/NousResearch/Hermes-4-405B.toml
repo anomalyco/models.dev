@@ -1,23 +1,24 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 131_072,
+#   use_cases include function_calling and reasoning)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# Cost: $1 in / $3 out. No discounted prompt-cache tier is published, so cache_read = input (same rationale
+#   as Kimi-K3 / GLM-5.3 on this host). The earlier 0.10 read / 1.25 write had no source and is gone.
+# Reasoning: Hermes 4 is hybrid (thinking enabled by system prompt or chat template). No host-specific
+#   control has been verified on Token Factory, so reasoning_options stays empty. Reasoning text is returned
+#   on message.reasoning_content.
+# Limits: input 120_000 / output 8_192 are carried over from the original entry; models_info publishes
+#   only max_model_len.
 schema = 2
+base_model = "nousresearch/hermes-4-405b"
 name = "Hermes-4-405B"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-open_weights = true
-knowledge = "2025-11"
-release_date = "2026-01-30"
-last_updated = "2026-02-04"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-temperature = true
 
 [limit]
-context = 131_072
 input = 120_000
 output = 8_192
 
@@ -26,7 +27,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1
-cache = { read = 0.1, write = 1.25 }
+cache = { read = 1 }
 
 [cost.text.output]
 price = 3

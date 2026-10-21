@@ -1,29 +1,29 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 262_144, text2text)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# Cost: $0.10 in / $0.30 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as Kimi-K3 / GLM-5.3 on this host). The earlier 0.01 read / 0.125 write had no source and is gone.
+# knowledge = 2025-12 is unsourced: carried over from the original entry (Qwen publishes no cutoff, and the
+#   value postdates the 2025-07 release).
+# Limits: input 262_144 / output 8_192 are carried over from the original entry; models_info publishes only
+#   max_model_len.
 schema = 2
+base_model = "alibaba/qwen3-30b-a3b-instruct-2507"
 name = "Qwen3-30B-A3B-Instruct-2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-open_weights = true
 knowledge = "2025-12"
-release_date = "2026-01-28"
-last_updated = "2026-02-04"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
-context = 262_144
 input = 262_144
 output = 8_192
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.01, write = 0.125 }
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 0.3

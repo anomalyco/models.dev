@@ -11,6 +11,8 @@
 # forwarded, but reasoning_effort is the host's documented control.
 # Served window: models_info max_model_len = 1_048_576 with no separate output cap, so
 # context and output both take the full served window.
+# Rechecked 2026-10-20 against models_info: price, max_model_len and model type unchanged; no
+# input_cached_price_per_million_tokens listed.
 schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 

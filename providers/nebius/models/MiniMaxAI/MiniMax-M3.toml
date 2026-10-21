@@ -1,3 +1,13 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 1_048_576, type text2text)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# Modalities: text-only, following the catalog type text2text (its use_cases also list image and video;
+#   not probed, no key).
+# Reasoning: no host control verified, so reasoning_options stays empty.
+# Cost: $0.30 in / $1.20 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as Kimi-K3 / GLM-5.3 on this host).
+# Served window: max_model_len = 1_048_576 with no separate output cap, so output takes the full window.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
@@ -9,11 +19,11 @@ output = ["text"]
 reasoning = { supported = true }
 
 [limit]
-context = 1_048_576
 output = 1_048_576
 
 [cost.text.input]
 price = 0.3
+cache = { read = 0.3 }
 
 [cost.text.output]
 price = 1.2

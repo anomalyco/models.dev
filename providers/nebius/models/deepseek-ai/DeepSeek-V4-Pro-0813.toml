@@ -12,6 +12,8 @@
 # No discounted prompt-cache tier is published in the public catalog: cached and fresh
 # input are billed identically, so cache_read = input (same rationale as
 # DeepSeek-V4-Flash-0731 / Kimi-K3 / GLM-5.3-Flash).
+# Rechecked 2026-10-20 against models_info: price, max_model_len and model type unchanged; no
+# input_cached_price_per_million_tokens listed.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
