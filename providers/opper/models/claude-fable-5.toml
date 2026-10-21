@@ -1,15 +1,18 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
+schema = 2
 base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
 
-reasoning_options = []
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 50

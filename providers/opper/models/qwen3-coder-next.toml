@@ -1,7 +1,12 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.5811
-output = 2.3244
+[cost.text.input]
+price = 0.5811
+
+[cost.text.output]
+price = 2.3244

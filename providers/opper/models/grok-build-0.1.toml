@@ -2,15 +2,19 @@
 # All pool members publish flat rates: no pricing.thresholds or input_surcharge_threshold_tokens.
 # Opper billing uses this schedule; native context surcharges do not apply to these pools.
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
+schema = 2
 base_model = "xai/grok-build-0.1"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
 
-reasoning_options = []
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 2

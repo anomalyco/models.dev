@@ -1,16 +1,21 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
-structured_output = true
-
-reasoning_options = []
-
-[cost]
-input = 0.248
-output = 1.485
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.248
+
+[cost.text.output]
+price = 1.485
