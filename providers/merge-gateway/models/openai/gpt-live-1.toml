@@ -16,6 +16,7 @@ output = 4_096
 
 [api.live]
 base_url = "wss://api-gateway.merge.dev/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
 
 [cost.audio.input]
 unit = "second"

@@ -1,3 +1,4 @@
+# Images: POST /v3/images/generations only (https://www.edenai.co/docs/v3/llms/image-generation)
 schema = 2
 base_model = "google/gemini-nano-banana-2.1"
 name = "Nano Banana 2.1 (Vertex AI)"
@@ -9,6 +10,9 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "medium", "high"] }
 structured_output = false
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.text.input]
 price = 1.5

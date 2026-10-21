@@ -1,5 +1,6 @@
 # Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
 # input/output set than the lab; listed media kinds use the lab's MIME types.
+# Images: POST /v3/images/generations only (https://www.edenai.co/docs/v3/llms/image-generation)
 schema = 2
 base_model = "google/gemini-nano-banana-2.1"
 
@@ -14,6 +15,9 @@ structured_output = true
 
 [limit]
 context = 65_536
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.text.input]
 price = 1.5

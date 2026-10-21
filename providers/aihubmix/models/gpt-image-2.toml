@@ -5,11 +5,15 @@
 # Canon export SHA: 1109e82ee0263621ec4bc0e0b43a12c11a8faec4
 # Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
 # Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Images: POST /v1/images/generations (https://aihubmix.com/call/schema/models/gpt-image-2/endpoints)
 schema = 2
 base_model = "openai/gpt-image-2"
 
 [capabilities]
 cache = { supported = true, implicit = { min_tokens = 1_024 } }
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.text.input]
 price = 5

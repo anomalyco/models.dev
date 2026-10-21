@@ -2,11 +2,15 @@
 # Price: per generated image (pricing_lines output_image, Rp 250), / 17,500 IDR per USD.
 # Reasoning: catalog reasoning_options ["minimal","high"], reasoning_toggle false (https://kenari.id/en/docs/reasoning).
 # Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+# Images: POST /v1/images/generations (https://kenari.id/en/docs/images)
 schema = 2
 base_model = "google/gemini-3.1-flash-image"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "high"] }
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.image.output]
 unit = "image"

@@ -7,6 +7,7 @@
 # Image output uses billing_config output_image_tokens=120 USD/MTok; completion_tokens=12 is text/thinking output and is not substituted.
 # Effort: $.generationConfig.thinkingConfig.thinkingLevel = low|high.
 # Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Images: POST /v1/images/generations (https://aihubmix.com/call/schema/models/gemini-3-pro-image/endpoints)
 schema = 2
 base_model = "google/gemini-3-pro-image"
 
@@ -15,6 +16,9 @@ reasoning = { supported = true, effort = ["low", "high"] }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.text.input]
 price = 2

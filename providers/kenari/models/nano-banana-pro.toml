@@ -2,11 +2,15 @@
 # Price: per generated image (pricing_lines output_image, Rp 350), / 17,500 IDR per USD.
 # kenari publishes no reasoning options for this id; the baseline is the model's
 # own lab entry (providers/google/models/gemini-3-pro-image.toml), per AGENTS.md.
+# Images: POST /v1/images/generations (https://kenari.id/en/docs/images)
 schema = 2
 base_model = "google/gemini-3-pro-image"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high"] }
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.image.output]
 unit = "image"

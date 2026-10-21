@@ -4,6 +4,7 @@
 # grok-voice-transcribe-1.0, reached end of life on 2026-10-02 and xAI routes it to
 # grok-voice-transcribe-2.0: https://docs.x.ai/developers/release-notes
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Transcriptions: POST /api/v1/audio/transcriptions, JSON input_audio body (https://zenmux.ai/docs/api/openai/create-audio-transcriptions.html)
 schema = 2
 base_model = "xai/grok-voice-transcribe-2.0"
 name = "Grok Voice STT 1.0"
@@ -11,6 +12,9 @@ name = "Grok Voice STT 1.0"
 [limit]
 context = 15_000
 output = 15_000
+
+[api.transcriptions]
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.audio.input]
 unit = "second"

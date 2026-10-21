@@ -14,7 +14,7 @@ output = 4_096
 
 [api.transcriptions]
 base_url = "https://api-gateway.merge.dev/v1"
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.audio.input]
 unit = "second"

@@ -2,8 +2,12 @@
 # ZenMux pricing is non-token-denominated for this route and is intentionally omitted.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Images: POST /api/v1/images/generations (https://zenmux.ai/docs/api/openai/generate-an-image.html)
 schema = 2
 base_model = "xai/grok-imagine-image-2.0"
 
 [limit]
 context = 66_000
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }

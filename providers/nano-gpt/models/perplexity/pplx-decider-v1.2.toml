@@ -1,3 +1,4 @@
+# Decisions: POST /api/v1/systemone and /api/v1/decisions (https://docs.nano-gpt.com/api-reference/endpoint/decisions)
 schema = 2
 base_model = "perplexity/pplx-decider-v1.2"
 name = "PPLX Decider v1.2"
@@ -7,6 +8,12 @@ structured_output = false
 
 [limit]
 input = 262_144
+
+[api.systemone]
+sdk = { aisdk = "none" }
+
+[api.decisions]
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.02

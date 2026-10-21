@@ -1,3 +1,4 @@
+# Images: POST /v3/images/generations only (https://www.edenai.co/docs/v3/llms/image-generation)
 schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
 
@@ -5,6 +6,9 @@ base_model = "google/gemini-3.1-flash-lite-image"
 tools = { supported = false }
 reasoning = { supported = true, effort = ["minimal", "high"] }
 structured_output = true
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.text.input]
 price = 0.25
