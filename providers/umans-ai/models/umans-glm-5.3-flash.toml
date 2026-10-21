@@ -10,22 +10,28 @@
 # limit.output is cap-1 on purpose: the gateway 400s max_tokens >=
 # max_completion_tokens (131072), so 131071 is the largest value that serves
 # (its advertised `recommended_max_tokens`).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 name = "GLM 5.3 Flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.50
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 131_071
 
-[modalities]
-input = ["text", "image", "video"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
