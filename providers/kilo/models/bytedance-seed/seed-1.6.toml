@@ -2,6 +2,10 @@
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 # Deprecated: Kilo's catalog names it "ByteDance Seed: Seed 1.6 (retires Nov 11)" (GET https://api.kilo.ai/api/gateway/models, 2026-10-20)
+# Image formats (Kilo documents none; ByteDance's Volcengine Ark list): image understanding, 图片格式说明 table:
+#   https://www.volcengine.com/docs/82379/1362931
+# Video formats (Kilo documents none; ByteDance's Volcengine Ark list): video understanding, 视频格式说明 table
+#   (MP4 video/mp4, AVI video/x-msvideo, MOV video/quicktime): https://www.volcengine.com/docs/82379/1895586
 schema = 2
 base_model = "bytedance-seed/seed-1-6"
 name = "ByteDance Seed: Seed 1.6 (retires Nov 11)"
@@ -9,7 +13,7 @@ description = "Multimodal reasoning model for visual analysis, planning, and too
 status = "deprecated"
 
 [modalities]
-input = ["image", "text", "video"]
+input = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "text", "video/mp4", "video/x-msvideo", "video/quicktime"]
 output = ["text"]
 
 [capabilities]
