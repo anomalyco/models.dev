@@ -1,8 +1,16 @@
+# Synced from CrossModel's catalog, https://www.crossmodel.ai/api/models (accessed 2026-10-21):
+# prices (USD micro/1M, threshold tiers -> context overrides), limits, modalities,
+# reasoning controls, structured_output.json_schema, context.caching, release_stage.
+# Effort: reasoning_effort (/v1/chat/completions), reasoning.effort (/v1/responses)
+# (https://www.crossmodel.ai/docs/api-reference/chat.md, responses.md)
+# MIME: the lab's types for the media kinds CrossModel lists; CrossModel documents no format list.
+# Mid-conversation flags unset: CrossModel documents none and nothing was tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages (https://www.crossmodel.ai/docs/models-and-capabilities.md).
 schema = 2
 base_model = "openai/gpt-5.4"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
