@@ -1,23 +1,19 @@
+# Status: absent from GET https://api.jiekou.ai/openai/models and GET /openai/models/claude-opus-4-1-20250805 returns 404 MODEL_NOT_FOUND (2026-10-21). Price, limits and capabilities are the last listed values.
+# Cache: explicit cache_control {"type":"ephemeral"} on chat/completions and /anthropic/v1/messages; minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Budget: thinking.budget_tokens on /anthropic/v1/messages (only route with thinking control), minimum 1024 and below max_tokens; https://docs.jiekou.ai/docs/providers/anthropic.
 schema = 2
+base_model = "anthropic/claude-opus-4-1-20250805"
 name = "claude-opus-4-1-20250805"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-open_weights = false
-release_date = "2026-01"
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true, budget = { min = 1_024, max = 31_999 } }
+cache = { supported = true, implicit = false, explicit = { min_tokens = 1_024 } }
 structured_output = true
-temperature = true
-
-[limit]
-context = 200_000
-output = 32_000
 
 [cost.text.input]
 price = 13.5

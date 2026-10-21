@@ -1,26 +1,16 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 schema = 2
-name = "Kimi K2.5"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-open_weights = true
-release_date = "2026-01"
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+base_model = "moonshotai/kimi-k2.5"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, budget = { min = 1_024, max = 262_143 } }
+cache = { supported = true, implicit = true }
 structured_output = true
-temperature = true
-
-[limit]
-context = 262_144
-output = 262_144
 
 [cost.text.input]
 price = 0.6
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 3

@@ -1,23 +1,13 @@
+# Status: absent from GET https://api.jiekou.ai/openai/models and GET /openai/models/gpt-5-chat-latest returns 404 MODEL_NOT_FOUND (2026-10-21). Price, limits and capabilities are the last listed values.
 schema = 2
+base_model = "openai/gpt-5-chat-latest"
 name = "gpt-5-chat-latest"
-description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-family = "gpt"
-open_weights = false
-release_date = "2026-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 400_000
-output = 128_000
 
 [cost.text.input]
 price = 1.125

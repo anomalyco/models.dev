@@ -1,23 +1,12 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
 schema = 2
+base_model = "baidu/ernie-4.5-vl-424b-a47b"
 name = "ERNIE 4.5 VL 424B A47B"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "ernie"
-open_weights = true
-release_date = "2026-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-temperature = true
-
-[limit]
-context = 123_000
-output = 16_000
 
 [cost.text.input]
 price = 0.42

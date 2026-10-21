@@ -1,19 +1,11 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
 schema = 2
-name = "Qwen3 30B A3B"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = true
-release_date = "2026-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "alibaba/qwen3-30b-a3b"
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
 structured_output = false
-temperature = true
 
 [limit]
 context = 40_960

@@ -1,26 +1,15 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 schema = 2
-name = "DeepSeek V3 0324"
-description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-open_weights = true
-release_date = "2026-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "deepseek/deepseek-v3-0324"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
+cache = { supported = true, implicit = true }
 structured_output = true
-temperature = true
-
-[limit]
-context = 163_840
-output = 163_840
 
 [cost.text.input]
 price = 0.28
+cache = { read = 0.14 }
 
 [cost.text.output]
 price = 1.14

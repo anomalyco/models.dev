@@ -1,23 +1,16 @@
+# Status: absent from GET https://api.jiekou.ai/openai/models and GET /openai/models/grok-4-fast-reasoning returns 404 MODEL_NOT_FOUND (2026-10-21). Price, limits and capabilities are the last listed values.
 schema = 2
+base_model = "xai/grok-4-fast-reasoning"
 name = "grok-4-fast-reasoning"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
-open_weights = false
-release_date = "2026-01"
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true }
 structured_output = true
-temperature = true
-
-[limit]
-context = 2_000_000
-output = 2_000_000
 
 [cost.text.input]
 price = 0.18

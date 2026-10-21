@@ -1,26 +1,20 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 schema = 2
+base_model = "xiaomi/mimo-v2-flash"
 name = "XiaomiMiMo/MiMo-V2-Flash"
-description = "MiMo flash model for fast multimodal assistance and agent workflows"
-family = "mimo"
-open_weights = true
-release_date = "2026-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
+cache = { supported = true, implicit = true }
 structured_output = true
-temperature = true
 
 [limit]
-context = 262_144
 output = 131_072
 
 [cost.text.input]
-price = 0
+price = 0.1
+cache = { read = 0.02 }
 
 [cost.text.output]
-price = 0
+price = 0.3

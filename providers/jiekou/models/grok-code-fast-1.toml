@@ -1,26 +1,21 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Modalities: the catalog lists image input, which the model doesn't accept (lab); inherited from the lab.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 schema = 2
+base_model = "xai/grok-code-fast-1"
 name = "grok-code-fast-1"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
-open_weights = false
-release_date = "2026-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
 structured_output = true
-temperature = true
 
 [limit]
-context = 256_000
 output = 256_000
 
 [cost.text.input]
-price = 0.18
+price = 0.19
+cache = { read = 0.019 }
 
 [cost.text.output]
-price = 1.35
+price = 1.425

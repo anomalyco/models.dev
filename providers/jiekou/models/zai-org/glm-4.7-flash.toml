@@ -1,26 +1,19 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 schema = 2
-name = "GLM-4.7-Flash"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-family = "glm-flash"
-open_weights = true
-release_date = "2026-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "zhipuai/glm-4.7-flash"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
+cache = { supported = true, implicit = true }
 structured_output = true
-temperature = true
 
 [limit]
-context = 200_000
 output = 128_000
 
 [cost.text.input]
 price = 0.07
+cache = { read = 0.01 }
 
 [cost.text.output]
 price = 0.4

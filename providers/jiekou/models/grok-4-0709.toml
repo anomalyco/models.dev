@@ -1,3 +1,4 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
 schema = 2
 name = "grok-4-0709"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -17,10 +18,10 @@ temperature = true
 
 [limit]
 context = 256_000
-output = 8_192
+output = 256_000
 
 [cost.text.input]
-price = 2.7
+price = 2.85
 
 [cost.text.output]
-price = 13.5
+price = 14.25

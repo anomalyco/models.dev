@@ -1,23 +1,12 @@
+# Status: absent from GET https://api.jiekou.ai/openai/models and GET /openai/models/o4-mini returns 404 MODEL_NOT_FOUND (2026-10-21). Price, limits and capabilities are the last listed values.
+# Effort: top-level reasoning_effort on /openai/chat/completions (provider.toml), values from providers/openai or relay peers for this model.
 schema = 2
-name = "o4-mini"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o"
-open_weights = false
-release_date = "2026-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "openai/o4-mini"
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 200_000
-output = 100_000
 
 [cost.text.input]
 price = 1.1

@@ -1,25 +1,21 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Effort: top-level reasoning_effort on /openai/chat/completions (provider.toml), values from providers/openai or relay peers for this model.
 schema = 2
-name = "o3"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-open_weights = false
-release_date = "2026-01"
+base_model = "openai/o3"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true }
 structured_output = true
-temperature = true
-
-[limit]
-context = 131_072
-output = 131_072
 
 [cost.text.input]
-price = 10
+price = 9.5
+cache = { read = 0.475 }
 
 [cost.text.output]
-price = 40
+price = 38
