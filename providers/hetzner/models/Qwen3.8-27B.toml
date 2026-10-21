@@ -1,10 +1,16 @@
+# Hetzner Experiments inference (https://inference.hetzner.com/api/v1, OpenAI Chat Completions). The docs at
+#   https://experiments.hetzner.com/docs/inference load only after a Hetzner account login (accessed 2026-10-21), and
+#   /api/v1/models needs a key, so nothing here could be re-checked: the existing name, beta status, free pricing,
+#   limits, image input and structured output are kept as they were.
+# Image formats are not documented; the lab's image types are used (Alibaba Model Studio list), without video.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8-27B"
 status = "beta"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
