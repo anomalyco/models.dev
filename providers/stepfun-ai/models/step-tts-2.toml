@@ -1,1 +1,20 @@
-../../stepfun/models/step-tts-2.toml
+schema = 2
+name = "Step TTS 2"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "step"
+open_weights = false
+release_date = "2026-03-01"
+last_updated = "2026-07-02"
+
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0
