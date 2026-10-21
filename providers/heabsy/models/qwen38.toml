@@ -1,20 +1,29 @@
-# Toggle: chat_template_kwargs.enable_thinking = true|false (vLLM Qwen chat template).
-# The gateway also maps OpenAI-style fields onto that switch: reasoning_effort "none"|"off"|"disabled" -> off,
-# any other reasoning_effort value -> on; reasoning.enabled; thinking.type = enabled|disabled.
-# No graded effort: reasoning_effort levels (low/medium/xhigh) all map to "on"; there is no reasoning budget field.
 # Qwen3.8 27B served by Heabsy on dedicated GPUs in the EEA (EEA tier, zero data retention).
-# Pricing (USD per 1M tokens: input 1.00, cached input 0.0761, output 3.00) and limits:
-# https://heabsy.com/models (accessed 2026-10-21). API: https://api.heabsy.com/docs
-
+# Model ID: requests use model = "qwen38" (https://heabsy.com/models/qwen38, "model id: qwen38").
+# API reference: https://api.heabsy.com/docs
+# Pricing (accessed 2026-10-21, https://heabsy.com/models/qwen38): $1.00 input, $0.0761 cached input,
+# $3.00 output per 1M tokens.
+# Reasoning: the model page says thinking can be switched per request.
+# Toggle: reasoning.enabled = true|false, thinking.type = "disabled", or reasoning_effort = "none"
+# (also "off"/"disabled"); the gateway maps these onto the Qwen chat template's enable_thinking.
+# Effort: reasoning_effort = "low"|"medium"|"xhigh" is passed through to the Qwen3.8 chat template, the
+# same ladder as the lab and the other hosts; "high"/"max" are folded to "xhigh", "minimal" to "low".
+# Modalities: the catalog lists text and image input for this model (model page: "reads images and
+# documents as well as text"); video is not listed, so the base model's video input is not inherited.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1.00
-output = 3.00
-cache_read = 0.0761
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.0
+cache = { read = 0.0761 }
+
+[cost.text.output]
+price = 3.0
