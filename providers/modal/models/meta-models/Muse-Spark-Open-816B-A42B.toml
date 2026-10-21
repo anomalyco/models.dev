@@ -1,0 +1,23 @@
+# Library page https://modal.com/library/meta/muse-spark-open (accessed 2026-10-21): Shared Endpoint model ID meta-models/Muse-Spark-Open-816B-A42B;
+#   prompt $1.25, cached prompt $0.15, completion $4.25 per MTok; modalities "Text, Image, Video, Audio" (the lab's);
+#   no reasoning control documented.
+# Modal Shared Endpoints (https://modal.com/docs/guide/endpoints): Chat Completions, Responses and Anthropic Messages APIs,
+#   automatic prefix KV cache with Modal-Routing-Affinity-Key routing.
+schema = 2
+v2_only = true
+base_model = "meta/muse-spark-open"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

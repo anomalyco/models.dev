@@ -1,0 +1,34 @@
+# Perplexity Agent API (accessed 2026-10-21): https://docs.perplexity.ai/docs/agent-api/models.md (prices, service tiers),
+#   https://docs.perplexity.ai/api-reference/agent-post.md (POST /v1/agent; /v1/responses alias for OpenAI SDKs;
+#   reasoning.effort = minimal|low|medium|high|xhigh|max), https://docs.perplexity.ai/docs/getting-started/integrations/vercel-ai-sdk.md
+#   (@ai-sdk/open-responses). Images: PNG, JPEG, WEBP, GIF (https://docs.perplexity.ai/docs/agent-api/image-attachments.md);
+#   documents via input_file (PDF and others, model-dependent). Effort: the model's own levels within the Agent API enum.
+#   Tool fees (web_search $0.0025 per call, etc.) have no v2 field.
+# Also on the Orchestrator API (private preview, https://docs.perplexity.ai/docs/router/models.md): same id and prices on
+#   /router/v1/chat/completions and /router/v1/messages (and /router/v1/responses).
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.responses]
+base_url = "https://api.perplexity.ai/v1"
+sdk = { aisdk = "@ai-sdk/open-responses" }
+
+[api.chat-completions]
+base_url = "https://api.perplexity.ai/router/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+
+[api.messages]
+base_url = "https://api.perplexity.ai/router"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96

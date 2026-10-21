@@ -1,0 +1,29 @@
+# Toggle: thinking.type = disabled (Tinker type Hybrid: "chain-of-thought can be disabled")
+# Tinker models.json https://tinker-docs.thinkingmachines.ai/tinker/models.json (accessed 2026-10-21): type Hybrid + Vision, context 64K.
+# Tinker Anthropic-compatible API (https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/, accessed
+#   2026-10-21) serves any Tinker model: thinking.type = disabled turns reasoning off; output_config.effort (low|medium|high|
+#   xhigh|max) is documented for Thinking Machines models and "Not all models support effort" (400), so it is listed only
+#   for those; images via base64 or URL; no audio blocks;
+#   cache_control is ignored, prefill tokens that hit the prompt cache bill at 80% off.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
+reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true, explicit = false }
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 1.65
+cache = { read = 0.33 }
+
+[cost.text.output]
+price = 7.5

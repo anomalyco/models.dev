@@ -1,0 +1,22 @@
+# Arcee pricing page (accessed 2026-10-21, USD per MTok, input / output / cached input): https://docs.arcee.ai/get-started/pricing.md
+# Not in the beta launch post; the pricing page is the only listing. Like the other Arcee files, input is text only and
+#   effort follows the same family on this host (reasoning_effort = high|max; unverified, no key).
+# APIs on this host: OpenAI Chat Completions (https://api.arcee.ai/api/v1/chat/completions) and /api/v1/models.
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.3"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
