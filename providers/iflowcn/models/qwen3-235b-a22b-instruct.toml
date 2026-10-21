@@ -1,19 +1,12 @@
+# Deprecated: iFlow shut down its API service and model library on 2026-04-17
+# (https://vibex.iflow.cn/t/topic/4819, FAQ 6; https://github.com/iflow-ai/iflow-cli).
+# knowledge: kept from the earlier entry; unsourced.
 schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3-235B-A22B-Instruct"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = true
 knowledge = "2025-04"
-release_date = "2025-07-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
+status = "deprecated"
 
 [limit]
 context = 256_000

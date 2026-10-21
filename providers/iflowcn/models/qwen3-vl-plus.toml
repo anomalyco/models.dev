@@ -1,19 +1,14 @@
+# Deprecated: iFlow shut down its API service and model library on 2026-04-17
+# (https://vibex.iflow.cn/t/topic/4819, FAQ 6; https://github.com/iflow-ai/iflow-cli).
+# knowledge: kept from the earlier entry; unsourced.
 schema = 2
+base_model = "alibaba/qwen3-vl-plus"
 name = "Qwen3-VL-Plus"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = false
 knowledge = "2024-12"
-release_date = "2025-01-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 256_000

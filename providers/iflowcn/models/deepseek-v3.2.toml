@@ -1,3 +1,7 @@
+# Deprecated: iFlow shut down its API service and model library on 2026-04-17
+# (https://vibex.iflow.cn/t/topic/4819, FAQ 6; https://github.com/iflow-ai/iflow-cli).
+# Standalone: iFlow served DeepSeek-V3.2-Exp (Sept 2025) under this id, a different model
+# from deepseek/deepseek-v3.2 (Dec 2025), and there is no V3.2-Exp lab entry.
 schema = 2
 name = "DeepSeek-V3.2-Exp"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
@@ -5,6 +9,7 @@ family = "deepseek"
 open_weights = true
 knowledge = "2024-12"
 release_date = "2025-01-01"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
