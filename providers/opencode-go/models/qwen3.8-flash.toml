@@ -8,7 +8,6 @@ base_model = "alibaba/qwen3.8-flash"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
-temperature = true
 
 [api.messages]
 base_url = "https://opencode.ai/inference/go/anthropic/v1"

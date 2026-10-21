@@ -1,24 +1,10 @@
 schema = 2
-name = "MiniMax-M2.7"
+base_model = "minimax/MiniMax-M2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax-m2.7"
-open_weights = true
-knowledge = "2025-01"
-release_date = "2026-03-18"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 204_800
-output = 131_072
 
 [api.messages]
 base_url = "https://opencode.ai/inference/go/anthropic/v1"

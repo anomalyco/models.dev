@@ -1,19 +1,10 @@
 schema = 2
+base_model = "xiaomi/mimo-v2.5"
 name = "MiMo V2.5"
 description = "MiMo omni model for text, image, video, audio, and agents"
-family = "mimo-v2.5"
-open_weights = true
-knowledge = "2024-12"
-release_date = "2026-04-22"
-
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
 context = 1_000_000
