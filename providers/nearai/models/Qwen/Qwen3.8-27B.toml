@@ -3,19 +3,23 @@
 # reasoning_content present when on, absent when off
 # Text and image, as /v1/models reports for this route. The lab entry adds video,
 # which was never probed here.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.04
-output = 1.35
-cache_read = 0.018
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 1.35

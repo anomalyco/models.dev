@@ -9,23 +9,23 @@
 # Text and image, as /v1/models reports for this route. The lab entry adds video,
 # which was never probed here, and pdf, which fails as a type: "file" content part
 # on every route.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.08
-output = 0.5
-cache_read = 0.012
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.5

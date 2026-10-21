@@ -2,14 +2,16 @@
 # NEAR AI relays third-party reasoning controls natively: https://docs.near.ai/cloud/reasoning-models ("Third-party models served through the gateway ... use their provider's standard reasoning controls, such as reasoning_effort")
 # Effort: reasoning_effort = low|medium|high|xhigh (xAI default high, cannot be disabled). Same set as providers/xai/models/grok-4.7.toml and the sibling NEAR AI route providers/nearai/models/x-ai/grok-4.6.toml.
 # Cost mirrors xAI list pricing below 200k prompt tokens ($2.00 in / $0.50 cached / $6.00 out); flat with no tiers because NEAR AI /v1/models publishes a single rate per model.
+schema = 2
 base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
+[cost.text.output]
+price = 6

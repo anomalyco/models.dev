@@ -1,22 +1,25 @@
+schema = 2
 name = "FLUX.2 Klein 4B"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "flux"
-release_date = "2026-01-14"
-last_updated = "2026-01-14"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
 open_weights = true
+release_date = "2026-01-14"
 
-[cost]
-input = 1.00
-output = 1.00
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["image"]
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 1

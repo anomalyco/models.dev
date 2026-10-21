@@ -1,16 +1,19 @@
 # Toggle: chat_template_kwargs.thinking = true|false (OFF by default on this host)
 # Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-08:
 # reasoning_content present when on, absent when off
+schema = 2
 base_model = "deepseek/deepseek-v3.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
 
-[cost]
-input = 1.1
-output = 1.1
-cache_read = 0.55
+[cost.text.output]
+price = 1.1
