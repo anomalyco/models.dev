@@ -242,6 +242,9 @@ async function main() {
   console.log(
     `providers/helicone/models: ${created} created, ${updated} updated, ${deleted} deleted, ${unchanged} unchanged`,
   );
+  if (created > 0) {
+    console.log("New files are standalone registry data: link them to their labs and add descriptions by hand.");
+  }
 }
 
 if (import.meta.main) await main();

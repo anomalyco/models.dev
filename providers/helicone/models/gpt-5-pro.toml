@@ -2,6 +2,7 @@
 # Effort: reasoning_effort = high. Helicone's gateway schema accepts minimal|low|medium|high
 # and OpenAI routes pass it through, so these are the model's native values within that set.
 # https://docs.helicone.ai/gateway/concepts/reasoning
+# Tools: inherited from the lab; the Helicone registry lists tools and tool_choice for gpt-5-pro.
 schema = 2
 base_model = "openai/gpt-5-pro"
 name = "OpenAI: GPT-5 Pro"
@@ -12,7 +13,6 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true, effort = ["high"] }
 
 [limit]
