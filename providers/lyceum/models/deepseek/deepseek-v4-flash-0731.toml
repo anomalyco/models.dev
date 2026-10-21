@@ -1,0 +1,19 @@
+# Effort: reasoning_effort none|low|high|max (none = off). Reasoning field unpinned: Lyceum returns reasoning_content or reasoning depending on serving path.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.3

@@ -1,0 +1,23 @@
+# Effort: reasoning_effort none|low|high|max (none = off). Lyceum also accepts medium, but Kimi K3 has no native medium.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.75 }
+
+[cost.text.output]
+price = 15

@@ -1,0 +1,26 @@
+# Always reasons (reasoning_effort none is ignored). PDFs only work as image_url data URLs, not file parts, so PDF isn't listed.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.31 }
+
+[cost.text.output]
+price = 4.5
