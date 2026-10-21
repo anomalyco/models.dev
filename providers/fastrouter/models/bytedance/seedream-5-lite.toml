@@ -1,8 +1,10 @@
 # Price: FastRouter list price, GET https://api.fastrouter.ai/api/v1/models (2026-10-21).
 #   pricing.image is USD per generated image.
+# FastRouter's bytedance/seedream-5-lite route is ByteDance Seedream 5.0 Lite (same name and 2026-02-13
+#   release), so it reuses the existing lab. The catalog entry lists text input only; modalities are inherited from the lab.
 schema = 2
 v2_only = true
-base_model = "bytedance-seed/seedream-5-lite"
+base_model = "bytedance-seed/seedream-5.0-lite"
 
 [cost.image.output]
 unit = "image"
