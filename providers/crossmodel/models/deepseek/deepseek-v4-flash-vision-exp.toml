@@ -1,15 +1,13 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006, write = 0.3 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
-cache_write = 0.3
+[cost.text.output]
+price = 1.2

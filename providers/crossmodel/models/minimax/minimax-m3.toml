@@ -1,21 +1,25 @@
+schema = 2
 base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.33
-output = 1.32
-cache_read = 0.066
-cache_write = 0.33
-
-[[cost.tiers]]
-tier = { type = "context", size = 512_000 }
-input = 0.66
-output = 2.63
-cache_read = 0.132
-cache_write = 0.66
 
 [limit]
 context = 1_024_000
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.066, write = 0.33 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 0.66
+cache = { read = 0.132, write = 0.66 }
+
+[cost.text.output]
+price = 1.32
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 2.63

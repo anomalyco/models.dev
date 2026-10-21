@@ -1,19 +1,26 @@
+schema = 2
 base_model = "xai/grok-build-0.1"
-structured_output = true
-reasoning_options = []
-
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
-cache_write = 1
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2
-output = 4
-cache_read = 0.4
-cache_write = 2
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2, write = 1 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2
+cache = { read = 0.4, write = 2 }
+
+[cost.text.output]
+price = 2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4

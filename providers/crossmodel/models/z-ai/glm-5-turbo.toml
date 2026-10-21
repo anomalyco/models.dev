@@ -1,21 +1,25 @@
+schema = 2
 base_model = "zhipuai/glm-5-turbo"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.9
-output = 3.7
-cache_read = 0.18
-cache_write = 0.9
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 1.1
-output = 4.3
-cache_read = 0.27
-cache_write = 1.1
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.18, write = 0.9 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.1
+cache = { read = 0.27, write = 1.1 }
+
+[cost.text.output]
+price = 3.7
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 4.3
