@@ -1,18 +1,15 @@
+# Identity: @qvac/ai-sdk-provider 0.10.0 (dist/models/catalog.js, checked 2026-10-21) maps qwen3.5-4b to a Q4_K_M GGUF of
+# Qwen/Qwen3.5-4B, so the file links to that lab. Context, output and reasoning stay the host's values.
 schema = 2
-name = "Qwen3.5 4B"
+base_model = "alibaba/qwen3.5-4b"
 description = "Qwen instruction model for multilingual chat and tool use"
-family = "qwen"
-open_weights = true
-release_date = "2025-11-01"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 32_768
