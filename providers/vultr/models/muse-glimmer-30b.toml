@@ -1,8 +1,9 @@
+# Image and video formats: GET https://api.vultrinference.com/v1/models input_modalities[].supported_inputs.formats (2026-10-21)
 schema = 2
 base_model = "meta/muse-glimmer-30b"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/webm"]
 output = ["text"]
 
 [capabilities]
