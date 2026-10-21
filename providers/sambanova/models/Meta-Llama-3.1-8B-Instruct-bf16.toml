@@ -1,0 +1,13 @@
+# Cost verified 2026-10-20
+# Source: https://sambanova.ai/pricing
+# Note: provider model ID uses a different naming convention than base_model.
+# The agent should verify this by grepping for the model name pattern across
+# the repository to check for naming consistency.
+schema = 2
+base_model = "meta/llama-3.1-8b-instruct"
+
+[cost.text.input]
+price = 0.10
+
+[cost.text.output]
+price = 0.10
