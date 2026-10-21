@@ -7,27 +7,28 @@
 # Budget: thinking_token_budget (integer reasoning tokens)
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B Flex"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"], budget = {} }
 structured_output = true
-
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.1885
-output = 0.7475
-cache_read = 0.01885
 
 [limit]
 context = 131_056
 output = 131_056
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.1885
+cache = { read = 0.01885 }
+
+[cost.text.output]
+price = 0.7475

@@ -1,14 +1,21 @@
+schema = 2
 base_model = "google/gemma-4-31b-it"
-structured_output = true
 name = "Gemma 4 31B"
-reasoning_options = [{ type = "effort", values = ["none", "max"] }]
-interleaved = true
 
-[cost]
-input = 0.144
-output = 0.42
-cache_read = 0.0144
+[capabilities]
+reasoning = { supported = true, effort = ["none", "max"] }
+structured_output = true
 
 [limit]
 context = 262_128
 output = 16_384
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.144
+cache = { read = 0.0144 }
+
+[cost.text.output]
+price = 0.42

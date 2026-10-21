@@ -8,19 +8,23 @@
 # declared.
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://portal.neuralwatt.com/docs/api/models
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
 structured_output = true
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "xhigh", "max"]
-
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.015
 
 [limit]
 context = 1_048_560
 output = 393_216
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

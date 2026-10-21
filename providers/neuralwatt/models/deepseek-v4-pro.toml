@@ -8,26 +8,27 @@
 # accepted on this model (unlike deepseek-v4-flash, which rejects it); no
 # bounds or disable sentinel documented.
 # https://portal.neuralwatt.com/docs/api/chat-completions
-base_model = "deepseek/deepseek-v4-pro"
-structured_output = true
-status = "deprecated"
-interleaved = true
-
 # Effort: reasoning_effort = none|low|high|max (off is effort=none; aliases
 # medium/minimal -> low, xhigh -> high)
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
 # Budget: thinking_token_budget (integer reasoning tokens)
-[[reasoning_options]]
-type = "budget_tokens"
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+status = "deprecated"
 
-[cost]
-input = 1.0
-output = 3.0
-cache_read = 0.1
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], budget = {} }
+structured_output = true
 
 [limit]
 context = 1_048_560
 output = 393_216
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3

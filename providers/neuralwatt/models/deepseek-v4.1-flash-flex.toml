@@ -8,20 +8,24 @@
 # generation and is not documented for V4.1-Flash, so it is not declared.
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-structured_output = true
 name = "DeepSeek V4.1 Flash Flex"
-interleaved = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "xhigh", "max"]
-
-[cost]
-input = 0.0975
-output = 0.39
-cache_read = 0.00975
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_560
 output = 393_216
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.0975
+cache = { read = 0.00975 }
+
+[cost.text.output]
+price = 0.39

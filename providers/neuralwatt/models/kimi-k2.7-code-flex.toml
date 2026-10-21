@@ -1,21 +1,26 @@
 # Budget: thinking_token_budget (integer reasoning tokens)
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 name = "Kimi K2.7 Code Flex"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, budget = {} }
 structured_output = true
-
-interleaved = true
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.6175
-output = 2.6
-cache_read = 0.06175
 
 [limit]
 context = 262_128
 output = 262_128
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.6175
+cache = { read = 0.06175 }
+
+[cost.text.output]
+price = 2.6

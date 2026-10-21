@@ -11,26 +11,27 @@
 # GET /v1/models metadata (checked 2026-09-18):
 # https://portal.neuralwatt.com/models/qwen-3.8-27b
 # https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], budget = {} }
 structured_output = true
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "xhigh"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.45
-output = 3.2
-cache_read = 0.25
 
 [limit]
 context = 262_128
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 3.2

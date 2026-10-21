@@ -8,28 +8,28 @@
 # video/pdf). JSON mode is off on this host, unlike the lab default.
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://portal.neuralwatt.com/models/glm-5.3-flash
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3 Flash"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], budget = {} }
 structured_output = false
-
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
 
 [limit]
 context = 1_048_560
 output = 1_048_560
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
