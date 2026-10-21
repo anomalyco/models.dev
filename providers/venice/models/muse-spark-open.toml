@@ -4,13 +4,12 @@
 # effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
 # tools.updates = false: `tools` is request-level, with no tool addition/removal message.
 # Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
-# Modalities: image from Meta's API docs (https://dev.meta.ai/docs/image-understanding). Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
 schema = 2
 base_model = "meta/muse-spark-open"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]

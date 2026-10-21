@@ -1,10 +1,9 @@
-# Modalities: image formats from Meta's API docs (https://dev.meta.ai/docs/image-understanding).
 schema = 2
 base_model = "meta/muse-spark-open"
 name = "Muse Spark Open (Nebius)"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
