@@ -1,13 +1,14 @@
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# No thinking.budget_tokens bound recorded, matching Alibaba's first-party entry (qwen3.6-plus on Zen accepts 100000).
 # Toggle: thinking.type = enabled|disabled (not re-verified on Zen: model access is disabled for the probe key)
-# Budget: thinking.budget_tokens (max 81920) with thinking.type = enabled (not re-verified on Zen: model access is disabled for the probe key)
+# Budget: thinking.budget_tokens with thinking.type = enabled (not re-verified on Zen: model access is disabled for the probe key)
 # Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
 schema = 2
 base_model = "alibaba/qwen3.5-plus"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [limit]
 context = 262_144

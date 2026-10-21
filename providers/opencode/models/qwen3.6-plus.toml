@@ -1,6 +1,7 @@
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# thinking.budget_tokens has no 81,920 cap on Zen: 81921 and 100000 are accepted (live; 200000 returns 400). Alibaba's first-party entry records no bound either.
 # Toggle: thinking.type = enabled|disabled
-# Budget: thinking.budget_tokens (max 81920) with thinking.type = enabled
+# Budget: thinking.budget_tokens with thinking.type = enabled
 # Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
 #   system_updates = true: a role:system message after the last user turn was kept in place (cached 14504 -> 14523)
 #   effort_updates = false: thinking.type enabled -> disabled dropped the cache (cached 14507 -> 0)
@@ -12,7 +13,7 @@ description = "Multimodal reasoning model for visual analysis, planning, and too
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
+reasoning = { supported = true, toggle = true, budget = {} }
 cache = { supported = true, explicit = { ttl = ["5m"] } }
 system_updates = true
 effort_updates = false

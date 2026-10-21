@@ -1,7 +1,8 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
-# thinking.type = disabled turns reasoning off (live: 192 -> 0 reasoning tokens).
+# thinking.type = disabled turns reasoning off (live: 0 reasoning tokens in 3 of 3 runs, vs 104-192 enabled).
+# reasoning_effort levels are graded on Zen (live, 3 trials each: low 94-374, high 339-520, max 817-1495 reasoning tokens; omitted behaves like max).
 # Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = max
+# Effort: reasoning_effort = low|high|max
 # Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
 #   system_updates = true: a system message before the next user turn was kept in place (cached 9216 -> 9216)
 #   effort_updates = false: thinking.type enabled -> disabled dropped the cache (cached 9216 -> 0)
@@ -12,7 +13,7 @@ base_model = "moonshotai/kimi-k3"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["max"], toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 system_updates = true
