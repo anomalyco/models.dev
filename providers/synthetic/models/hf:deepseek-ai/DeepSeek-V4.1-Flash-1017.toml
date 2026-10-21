@@ -8,18 +8,23 @@
 # Lab weights: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
 # Live probes on sibling hf:deepseek-ai/DeepSeek-V4.1-Flash: `reasoning_effort = "none"` disables reasoning; `"xhigh"` streams it.
 # Reasoning is returned in the `reasoning` message field.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
 structured_output = true
-
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "xhigh", "max"] }]
-
-interleaved = true
-
-[cost]
-input = 0.6
-output = 1.2
-cache_read = 0.03
 
 [limit]
 context = 524_288
 output = 65_536
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

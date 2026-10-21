@@ -3,18 +3,23 @@
 # none|low|high|xhigh|max, text+image input, fp8 quantization.
 # Live probes: `reasoning_effort = "none"` disables reasoning; `"xhigh"` streams it.
 # Reasoning is returned in the `reasoning` message field.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
 structured_output = true
-
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "xhigh", "max"] }]
-
-interleaved = true
-
-[cost]
-input = 0.6
-output = 1.2
-cache_read = 0.03
 
 [limit]
 context = 524_288
 output = 65_536
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

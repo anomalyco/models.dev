@@ -1,15 +1,20 @@
+schema = 2
 base_model = "alibaba/qwen3.6-27b"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.45
-output = 3.6
-cache_read = 0.45
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 3.6
