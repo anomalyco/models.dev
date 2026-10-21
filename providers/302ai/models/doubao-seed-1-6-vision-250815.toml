@@ -1,21 +1,6 @@
 schema = 2
+base_model = "bytedance-seed/seed-1-6-vision"
 name = "doubao-seed-1-6-vision-250815"
-description = "Multimodal model for analyzing text, images, documents, and rich media"
-open_weights = false
-release_date = "2025-09-30"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 256_000
-output = 32_000
 
 [cost.text.input]
 price = 0.114

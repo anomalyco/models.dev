@@ -1,18 +1,14 @@
 schema = 2
+base_model = "google/gemini-3-pro-preview"
 name = "gemini-3-pro-preview"
-description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-open_weights = false
 knowledge = "2025-06"
-release_date = "2025-11-19"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 1_000_000

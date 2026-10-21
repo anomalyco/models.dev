@@ -1,22 +1,12 @@
 schema = 2
-name = "GLM-5V-Turbo"
-description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-family = "glm"
-open_weights = false
-release_date = "2026-04-02"
+base_model = "zhipuai/glm-5v-turbo"
 
 [modalities]
-input = ["text", "image", "video", "audio", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime", "video/x-matroska", "audio", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
-
-[limit]
-context = 200_000
-output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -1,18 +1,9 @@
 schema = 2
+base_model = "google/gemini-3.1-flash-image-preview"
 name = "gemini-3.1-flash-image-preview"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-open_weights = false
-knowledge = "2025-01"
-release_date = "2026-02-27"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text", "image"]
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 131_072

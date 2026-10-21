@@ -1,18 +1,14 @@
 schema = 2
+base_model = "google/gemini-3-pro-image-preview"
 name = "gemini-3-pro-image-preview"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-open_weights = false
 knowledge = "2025-06"
-release_date = "2025-11-20"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 32_768

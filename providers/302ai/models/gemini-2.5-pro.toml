@@ -1,23 +1,16 @@
 schema = 2
+base_model = "google/gemini-2.5-pro"
 name = "gemini-2.5-pro"
-description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-family = "gemini-pro"
-open_weights = false
-knowledge = "2025-01"
-release_date = "2025-06-17"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 1_000_000
-output = 65_536
 
 [cost.text.input]
 price = 1.25

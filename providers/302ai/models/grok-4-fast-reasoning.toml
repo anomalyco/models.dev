@@ -1,21 +1,16 @@
 schema = 2
+base_model = "xai/grok-4-fast-reasoning"
 name = "grok-4-fast-reasoning"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-open_weights = false
 knowledge = "2025-06"
-release_date = "2025-09-23"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 2_000_000
 output = 30_000
 
 [cost.text.input]

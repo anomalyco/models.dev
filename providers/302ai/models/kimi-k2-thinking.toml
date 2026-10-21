@@ -1,22 +1,10 @@
 schema = 2
+base_model = "moonshotai/kimi-k2-thinking"
 name = "kimi-k2-thinking"
-description = "Kimi reasoning model for long-horizon research, planning, and tool use"
-open_weights = false
 knowledge = "2025-06"
-release_date = "2025-09-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 262_144
-output = 262_144
 
 [cost.text.input]
 price = 0.575

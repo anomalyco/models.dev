@@ -1,24 +1,9 @@
 schema = 2
+base_model = "openai/gpt-4.1-mini"
 name = "gpt-4.1-mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-open_weights = false
-knowledge = "2024-04"
-release_date = "2025-04-14"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_047_576
-output = 32_768
 
 [cost.text.input]
 price = 0.4
