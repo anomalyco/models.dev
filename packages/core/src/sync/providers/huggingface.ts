@@ -1,10 +1,14 @@
 import { z } from "zod";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
-import { describeModel } from "../../describe.js";
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { providerModelToV2 } from "../../model-file-v2.js";
+import type { SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://router.huggingface.co/v1/models";
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
 // Hugging Face org prefixes mapped to the canonical metadata prefixes understood
 // by resolveCanonicalBaseModel. Anything not listed falls back to a direct lookup.
@@ -94,27 +98,28 @@ export const huggingface = {
   translateModel(model, context) {
     if (!model.providers.some((provider) => provider.status === "live")) return undefined;
 
-    const existing = context.existing(model.id);
-    const baseModel = existing === undefined
-      ? resolveHuggingFaceBaseModel(model.id)
-      : existing.base_model;
-    if (existing === undefined && baseModel === undefined) return undefined;
+    // Existing files are curated (prices differ per inference provider), so the
+    // sync only creates new ones and writes existing files back unchanged.
+    const v2 = context.v2?.(model.id);
+    if (v2 !== undefined) return { id: model.id, v2 };
+    const authored = context.authored(model.id);
+    if (authored !== undefined) return { id: model.id, model: authored as SyncedModel };
+
+    const baseModel = resolveHuggingFaceBaseModel(model.id);
+    const lab = baseModel === undefined ? undefined : labModel(baseModel);
+    if (baseModel === undefined || lab === undefined) return undefined;
 
     // The router only exposes pricing per inference provider, so a new model with
     // no priced provider cannot be created with a meaningful cost.
     const aggregate = aggregateProviders(model);
-    if (existing === undefined && aggregate.cost === undefined) return undefined;
+    if (aggregate.cost === undefined) return undefined;
+    // Reasoning controls depend on the inference provider the router picks, so a
+    // new reasoning model needs them researched before it's created.
+    if (((lab.capabilities as { reasoning?: { supported?: boolean } } | undefined)?.reasoning?.supported ?? lab.reasoning) === true) {
+      throw new MissingReasoningOptionsError(model.id, "Hugging Face reasoning controls vary by inference provider; author them before creating this model");
+    }
 
-    return {
-      id: model.id,
-      model: buildHuggingFaceModel(model, existing, baseModel, aggregate),
-    };
-  },
-  sameModel() {
-    // For now the sync only creates new models; existing curated TOMLs are left
-    // untouched. Treating every existing model as already in sync skips updates
-    // while still allowing new files to be created.
-    return true;
+    return { id: model.id, v2: buildHuggingFaceModel(model, baseModel, aggregate, lab) };
   },
 } satisfies SyncProvider<HuggingFaceModel>;
 
@@ -166,87 +171,62 @@ function aggregateProviders(model: HuggingFaceModel): Aggregate {
   };
 }
 
-type Modality = "text" | "audio" | "image" | "video" | "pdf";
+const KINDS = ["text", "image", "audio", "video", "pdf"];
 
-function modalities(values: string[], fallback: Modality[]): Modality[] {
-  const allowed = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
-  const result = values
-    .map((value) => value.toLowerCase())
-    .filter((value): value is Modality => allowed.has(value as Modality));
-  return [...new Set(result.length > 0 ? result : fallback)];
+// The router lists modality kinds only (text, image). Each kind takes the lab's
+// exact MIME types of that kind.
+function exactModalities(values: string[], lab: string[]) {
+  const kinds = [...new Set(values.map((value) => value.toLowerCase()).filter((value) => KINDS.includes(value)))];
+  return kinds.flatMap((kind) => {
+    if (kind === "text") return ["text"];
+    const mime = kind === "pdf" ? "application/pdf" : kind;
+    const exact = lab.filter((item) => item === mime || item.startsWith(`${mime}/`));
+    return exact.length > 0 ? exact : [mime];
+  });
 }
 
+// A new v2 file for a router model that maps to a lab model. Only host data is
+// written: price, context, structured output, and modalities when the router
+// lists different kinds than the lab. Model facts come from the lab.
 export function buildHuggingFaceModel(
   model: HuggingFaceModel,
-  existing: ExistingModel | undefined,
-  baseModel = existing === undefined ? resolveHuggingFaceBaseModel(model.id) : existing.base_model,
+  baseModel: string,
   aggregate: Aggregate = aggregateProviders(model),
-): SyncedModel {
-  const input = modalities(model.architecture.input_modalities, existing?.modalities?.input ?? ["text"]);
-  const output = modalities(model.architecture.output_modalities, existing?.modalities?.output ?? ["text"]);
-  // Pricing is curated: keep what was authored and only fall back to the router
-  // (fastest route) when the local model has no cost yet.
-  const cost = existing?.cost ?? aggregate.cost;
-  // context/output may be unset for a freshly created base_model entry, in which case
-  // factorBaseModel inherits them from the canonical metadata; the standalone-model
-  // path below validates their presence at runtime.
-  const limit = {
-    context: existing?.limit?.context ?? aggregate.context,
-    input: existing?.limit?.input,
-    output: existing?.limit?.output,
-  } as SyncedFullModel["limit"];
-  const values: Partial<SyncedFullModel> = {
-    name: existing?.name,
-    description: existing?.description ?? describeModel({
-      id: model.id,
-      name: existing?.name ?? model.id,
-      family: existing?.family,
-      reasoning: existing?.reasoning,
-      tool_call: aggregate.tools || existing?.tool_call || undefined,
-      structured_output: aggregate.structuredOutput || existing?.structured_output || undefined,
-      open_weights: existing?.open_weights ?? true,
-      limit,
-      modalities: { input, output },
-    }),
-    family: existing?.family,
-    release_date: existing?.release_date,
-    last_updated: existing?.last_updated,
-    attachment: input.some((value) => value !== "text"),
-    reasoning: existing?.reasoning,
-    reasoning_options: existing?.reasoning_options,
-    temperature: existing?.temperature,
-    tool_call: aggregate.tools || existing?.tool_call || undefined,
-    structured_output: aggregate.structuredOutput || existing?.structured_output || undefined,
-    knowledge: existing?.knowledge,
-    open_weights: existing?.open_weights ?? true,
-    status: existing?.status,
-    interleaved: existing?.interleaved,
-    cost,
-    limit,
-    modalities: { input, output },
-  };
+  lab: Record<string, unknown> | undefined = labModel(baseModel),
+): Record<string, unknown> {
+  if (lab === undefined) throw new Error(`Hugging Face model ${model.id}: no lab file for ${baseModel}`);
+  const labModalities = lab.modalities as { input: string[]; output: string[] };
+  const factored = factorBaseModel(baseModel, {
+    structured_output: aggregate.structuredOutput || undefined,
+    cost: aggregate.cost,
+    limit: { context: aggregate.context } as SyncedFullModel["limit"],
+  }, { context: aggregate.context });
+  const doc = providerModelToV2(factored);
 
-  if (baseModel !== undefined) {
-    return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+  const input = exactModalities(model.architecture.input_modalities, labModalities.input);
+  const output = exactModalities(model.architecture.output_modalities, labModalities.output);
+  const kinds = (values: string[]) => [...new Set(values.map((value) => value.split("/")[0]))].sort().join();
+  if (input.length > 0 && output.length > 0
+    && (kinds(input) !== kinds(labModalities.input) || kinds(output) !== kinds(labModalities.output))) {
+    doc.modalities = { input, output };
   }
 
-  // Standalone (non base_model) models require concrete booleans the router does
-  // not always report; default the capability flags it leaves out.
-  const full = { ...values, tool_call: values.tool_call ?? false };
-  const required = z.object({
-    name: z.string(),
-    release_date: z.string(),
-    last_updated: z.string(),
-    description: z.string(),
-    reasoning: z.boolean(),
-    open_weights: z.boolean(),
-    cost: z.object({ input: z.number(), output: z.number() }),
-    limit: z.object({ context: z.number(), output: z.number() }),
-  }).safeParse(full);
-  if (!required.success) {
-    throw new Error(`Hugging Face model ${model.id} has incomplete local metadata required for sync`);
+  // Chat Completions takes tools and reasoning_effort per request, with no
+  // per-turn effort or tool-change message.
+  // Tool support comes from the router (any live provider); otherwise it's inherited.
+  const next: Record<string, unknown> = {};
+  if (aggregate.tools) next.tools = { supported: true, updates: false };
+  Object.assign(next, doc.capabilities, { effort_updates: false });
+  doc.capabilities = next;
+  return doc;
+}
+
+function labModel(modelID: string) {
+  try {
+    return Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as Record<string, unknown>;
+  } catch {
+    return undefined;
   }
-  return full as SyncedFullModel;
 }
 
 export function resolveHuggingFaceBaseModel(id: string) {

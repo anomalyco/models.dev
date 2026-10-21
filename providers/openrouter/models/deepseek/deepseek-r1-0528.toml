@@ -1,26 +1,20 @@
-name = "R1 0528"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on DeepInfra (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek"
-release_date = "2025-05-28"
-last_updated = "2025-05-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
 structured_output = true
-knowledge = "2025-03-31"
-open_weights = true
-reasoning_options = []
+system_updates = false
+effort_updates = false
 
-[cost]
-input = 0.5
-output = 2.15
-cache_read = 0.35
+[cost.text.input]
+price = 0.5
+cache = { read = 0.35 }
 
-[limit]
-context = 163_840
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 2.15

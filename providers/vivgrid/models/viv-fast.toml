@@ -1,6 +1,7 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/viv-fast (accessed 2026-09-21)
 base_model = "vivgrid/viv-fast"
+structured_output = true
 # Effort: reasoning_effort = low|high|max
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 

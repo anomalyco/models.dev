@@ -1,27 +1,48 @@
-# k3-256k is the 256K-context variant of Kimi K3 on the Kimi For Coding
-# endpoint. Unlike full K3 it accepts no video input (image only).
-# reasoning_options per the Kimi Code docs:
-#   reasoning_effort = "low" | "high" | "max" (default "high")
-# Cost is zeroed per this provider's subscription convention.
+# Verified 2026-09-18 against https://api.kimi.com/coding/v1/chat/completions
+# with kimi-code OAuth credentials; reasoning returned via reasoning_content.
+# Kimi Code docs (accessed 2026-10-19): https://www.kimi.com/code/docs/en/kimi-code/models.html
+# k3-256k is K3 with a fixed 256K context and image-only input (no video).
+# Effort: reasoning_effort = "none" | "low" | "high" | "max" (default "high"); unknown values return 400.
+# Off is effort "none" (the docs map it to thinking.type = "disabled"; with thinking off, K3 and K2.8 Preview requests are
+# served by K2.8 Preview without thinking). The OpenAI-compatible endpoint documents only reasoning_effort, so no
+# separate toggle is authored.
+# Switching reasoning effort invalidates the context cache (same page); prompt_cache_key is required for good cache
+# hit rates on Kimi Code Plan (https://platform.kimi.ai/docs/api/chat). Cost is zeroed per this provider's
+# subscription convention.
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3-256K"
 description = "256K-context version of Kimi K3, reducing token consumption for shorter coding sessions"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
+structured_output = true
+effort_updates = false
+prompt_cache_key = true
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 context = 262_144
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

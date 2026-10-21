@@ -10,6 +10,7 @@
 # 'high' sits below 'low', so the levels are not separable and only the toggle is
 # declared, matching the toggle the lab (providers/deepseek) exposes.
 base_model = "deepseek/deepseek-v4-flash"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"

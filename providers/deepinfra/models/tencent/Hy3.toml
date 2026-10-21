@@ -1,11 +1,24 @@
+schema = 2
 base_model = "tencent/hy3"
-structured_output = true
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.13
-output = 0.53
-cache_read = 0.033
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 0.13
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 0.53
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

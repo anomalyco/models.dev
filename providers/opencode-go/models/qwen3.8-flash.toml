@@ -4,6 +4,7 @@
 # Effort (Messages): output_config.effort = low|medium|xhigh
 base_model = "alibaba/qwen3.8-flash"
 temperature = true
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -23,3 +24,4 @@ cache_write = 0.2
 
 [provider]
 npm = "@ai-sdk/anthropic"
+api = "https://opencode.ai/inference/go/anthropic/v1"

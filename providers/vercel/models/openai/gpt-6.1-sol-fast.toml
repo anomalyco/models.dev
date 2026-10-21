@@ -1,17 +1,28 @@
 # Live model and rates: https://ai-gateway.vercel.sh/v1/models/openai/gpt-6.1-sol-fast
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system/developer messages stay in place (cache prefix kept). The gateway's AI SDK request has no OpenAI configuration_update or additional_tools, so effort and tool changes are false.
+schema = 2
 base_model = "openai/gpt-6.1-sol"
 name = "GPT-6.1 Sol (Fast)"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 4.00
-output = 20.00
-cache_read = 0.20
-cache_write = 5.00
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_001 }
-input = 8.00
-output = 30.00
-cache_read = 0.40
-cache_write = 10.00
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_001 } }
+price = 8
+cache = { read = 0.4, write = 10 }
+
+[cost.text.output]
+price = 20
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_001 } }
+price = 30

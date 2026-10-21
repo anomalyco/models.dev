@@ -1,10 +1,19 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
-reasoning_options = []
 
-[cost]
-input = 0.111
-output = 0.557
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 262_000
 output = 81_920
+
+[cost.text.input]
+price = 0.111
+
+[cost.text.output]
+price = 0.557

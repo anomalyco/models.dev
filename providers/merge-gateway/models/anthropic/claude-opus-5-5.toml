@@ -1,9 +1,17 @@
+# Cache: default route anthropic is in the explicit caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 5
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

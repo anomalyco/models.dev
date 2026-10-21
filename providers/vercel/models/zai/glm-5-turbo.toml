@@ -1,13 +1,20 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+schema = 2
 base_model = "zhipuai/glm-5-turbo"
 name = "GLM 5 Turbo"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1.2
-output = 4
-cache_read = 0.24
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 202_800
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 4

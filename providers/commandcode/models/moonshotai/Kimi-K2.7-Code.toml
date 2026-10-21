@@ -1,0 +1,20 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Reasoning: First-party Moonshot publishes kimi-k2.7-code with no caller-facing reasoning
+#   control. The kimi-k2.6 sibling does have a toggle, but 2.7-Code is a separate
+#   surface contract.
+# Output ceiling: capped at the host context window (prompt plus completion).
+base_model = "moonshotai/kimi-k2.7-code"
+structured_output = true
+
+reasoning_options = []
+
+[limit]
+output = 256000
+context = 256000
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19

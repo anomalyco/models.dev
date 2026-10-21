@@ -1,14 +1,34 @@
+# Serverless: $1.40 input, $0.26 cached input, $4.40 output per 1M; context 1,048,575
+# (https://docs.together.ai/docs/serverless-models and context_length in GET https://api.together.xyz/v1/models,
+# accessed 2026-10-21).
+# Effort: reasoning_effort = low|high|max (live 2026-10-21: the rendered prompt says "Reasoning
+# Effort: Low", "High" or "Max"; other values render Max, the default). Reasoning can't be turned
+# off: reasoning.enabled, thinking.type, chat_template_kwargs and `none` all still reason.
+# Inputs: text only ("multimodal not supported for model", live 2026-10-21).
+# Mid-conversation (live 2026-10-21): a late system message was followed in 5 of 5 trials and kept
+# the cache in 4 (the miss was without prompt_cache_key); adding a tool dropped the cache to 0.
+schema = 2
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.40
-output = 4.40
-cache_read = 0.26
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { supported = true, implicit = true, explicit = false }
+structured_output = true
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
-context = 1_048_576
+context = 1_048_575
 output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

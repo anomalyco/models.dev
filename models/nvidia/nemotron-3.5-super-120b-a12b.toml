@@ -1,0 +1,28 @@
+# Text-only Nemotron 3.5 Super as Perplexity serves it (Agent API id perplexity/nemotron-3.5-super-120b-a12b):
+#   "Nemotron 3.5 Super is a reasoning model with a 1,048,576-token context window and up to 131,072 output tokens. It
+#   accepts text input only." (https://docs.perplexity.ai/docs/agent-api/models.md, accessed 2026-10-21)
+# NVIDIA has published no separate text-only checkpoint; its open Nemotron 3.5 Super release (2026-10-15,
+#   https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16) is the VL model, which has its own lab file.
+#   Release date and open weights follow that release; tool use and sampling follow the Nemotron family.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Nemotron 3.5 Super 120B A12B"
+description = "NVIDIA Nemotron 3.5 Super reasoning model (120B total, 12B active) served with text-only input"
+family = "nemotron"
+open_weights = true
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072

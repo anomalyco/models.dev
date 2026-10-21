@@ -1,13 +1,19 @@
+# system_updates = false: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 name = "Claude Haiku 4.5 (latest) (EU)"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
+system_updates = false
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[cost.text.input]
+price = 1.1
+cache = { read = 0.11, write = 1.375 }
 
-[cost]
-input = 1.1
-output = 5.5
-cache_read = 0.11
-cache_write = 1.375
+[cost.text.output]
+price = 5.5

@@ -1,30 +1,34 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Cache: implicit = true: Kilo adds cache_control breakpoints (system + last user/tool message) when the request has none (https://github.com/Kilo-Org/cloud/blob/d26988c12beabe7d276220e101507a807d4ea0cf/packages/web-shared/src/lib/ai-gateway/providers/qwen.ts, https://github.com/Kilo-Org/cloud/blob/d26988c12beabe7d276220e101507a807d4ea0cf/packages/web-shared/src/lib/ai-gateway/providers/openrouter/request-helpers.ts)
+schema = 2
 name = "Stealth: Qwen3.6 Plus (50% off)"
 description = "Your prompts and completions may be retained and used to train or improve the provider's services. This third-party-served variant of Qwen3.6 Plus is offered at 50% lower cost than standard Qwen3.6 Plus pricing and is not served by Alibaba or Kilo Code. Note: a surcharge applies to long-context workloads exceeding 256K input tokens."
 family = "qwen3.6"
-release_date = "2025-08-26"
-last_updated = "2025-08-26"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-08-26"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.25
-output = 1.5
-reasoning = 0
-cache_read = 0.025
-cache_write = 0.3125
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = false
+temperature = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025, write = 0.3125 }
+
+[cost.text.output]
+price = 1.5
+reasoning = 0

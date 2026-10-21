@@ -1,13 +1,40 @@
 # Toggle: reasoning.enabled = true|false
-# Effort: reasoning_effort = high|max
+# Effort: reasoning_effort = low|high|max, the DeepSeek V4 levels (minimal->low,
+# medium/xhigh->high per https://api-docs.deepseek.com/guides/thinking_mode).
+# DeepInfra's schema lists the generic none..max enum for every model and
+# documents no per-model mapping, so the lab's levels apply.
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 14848/15097 -> 0/15111; 14848/15097 -> 0/15111]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 15360/15480 -> 0/15493 (reasoning tokens 53 -> 54); 14592/14840 -> 0/14853 (reasoning tokens 52 -> 54)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 14848/15032 -> 0/15083; 14848/15032 -> 0/15083]
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
-[cost]
-input = 1.3
-output = 2.6
-cache_read = 0.1
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 1.3
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.6
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

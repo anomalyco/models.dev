@@ -1,0 +1,18 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "typesafe/jev-latest"
+name = "Jev 1.13"
+
+[capabilities]
+structured_output = false
+effort_updates = false
+
+[limit]
+context = 32_000
+input = 32_000
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

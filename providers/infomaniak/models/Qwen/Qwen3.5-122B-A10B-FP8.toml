@@ -18,6 +18,7 @@
 base_model = "alibaba/qwen3.5-122b-a10b"
 name = "Qwen3.5 122B-A10B FP8"
 last_updated = "2026-08-01"
+structured_output = true
 reasoning_options = [{ type = "toggle" }] # API: {"reasoning_effort": "none"} off | "low"|"medium"|"high" on
 interleaved = true
 

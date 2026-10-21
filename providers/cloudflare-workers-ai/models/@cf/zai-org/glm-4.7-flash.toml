@@ -3,19 +3,30 @@
 # Workers AI's per-model config exposes only the binary thinking toggle;
 # the generic sync-input.json low/medium/high enum is not an effort selector here.
 # Creator template: https://huggingface.co/zai-org/GLM-4.7-Flash/blob/main/chat_template.jinja
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted, adds a role header (+15 tokens) and is honored; the chat template renders it in place.
+# No prefix cache on this model, so effort and tool changes keep nothing.
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+cache = { supported = false }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.0605
-output = 0.4
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.0605
+
+[cost.text.output]
+price = 0.4

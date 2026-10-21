@@ -5,50 +5,55 @@
 # qwen3-max currently aliases qwen3-max-2026-01-23.
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (integer reasoning tokens, max 81,920)
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
+schema = 2
 name = "Qwen3 Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
 family = "qwen"
+open_weights = false
+knowledge = "2025-04"
 release_date = "2026-01-23"
 last_updated = "2026-09-22"
-attachment = false
-reasoning = true
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
 structured_output = true
 temperature = true
-knowledge = "2025-04"
-tool_call = true
-open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-max = 81_920
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.359
-output = 1.434
-reasoning = 1.434
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.574
-output = 2.294
-reasoning = 2.294
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 1.004
-output = 4.014
-reasoning = 4.014
 
 [limit]
 context = 262_144
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.359
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.574
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.004
+
+[cost.text.output]
+price = 1.434
+reasoning = 1.434
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.294
+reasoning = 2.294
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 4.014
+reasoning = 4.014

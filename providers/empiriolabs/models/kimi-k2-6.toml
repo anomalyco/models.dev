@@ -1,20 +1,26 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/kimi-k2-6.md
+# Effort: reasoning_effort = none|low|medium|high|max
+#   (model page: each level sets a bounded thinking budget, "translated into enable_thinking and thinking_budget for the model service")
+# Budget: thinking_budget (integer reasoning tokens)
+# Cache: model page prices an "Implicit cache read" row.
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/kimi-k2-6:generateContent
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-last_updated = "2026-06-12"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 81_920
-
-[cost]
-input = 0.8939
-output = 3.7131
-cache_read = 0.1788
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 81_920 } }
+structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 256_000
 output = 16_000
+
+[cost.text.input]
+price = 0.8939
+cache = { read = 0.1788 }
+
+[cost.text.output]
+price = 3.7131

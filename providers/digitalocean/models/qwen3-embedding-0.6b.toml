@@ -1,23 +1,32 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/embeddings)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/
+schema = 2
+type = "embedding"
 name = "Qwen3 Embedding 0.6B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
+open_weights = true
 release_date = "2025-06-03"
 last_updated = "2026-04-16"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
 status = "beta"
 
-[cost]
-input = 0.04
-output = 0.00
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 8_000
 output = 1_024
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.embeddings]
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0

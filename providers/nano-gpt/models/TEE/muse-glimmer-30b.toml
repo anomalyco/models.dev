@@ -1,14 +1,21 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
 base_model = "meta/muse-glimmer-30b"
 name = "Muse Glimmer 30B TEE"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.35
-output = 1.5
-cache_read = 0.04
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+tools = { supported = true, updates = false }
+effort_updates = false
 
 [limit]
 input = 131_072
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.5

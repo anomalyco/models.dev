@@ -1,22 +1,35 @@
 # Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
 # https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
-
+# Modalities: image from zhipuai/glm-5v-turbo. Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+# Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+schema = 2
 base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5V Turbo"
-last_updated = "2026-06-11"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 1.5
-output = 5
-cache_read = 0.3
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
 
 [limit]
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.5
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 5

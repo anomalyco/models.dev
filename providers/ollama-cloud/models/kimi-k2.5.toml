@@ -1,18 +1,18 @@
+# Lab identity: moonshotai/kimi-k2.5 (Ollama library page https://ollama.com/library/kimi-k2.5).
+# Retired: POST https://ollama.com/api/show returns "kimi-k2.5 was retired on July 31, 2026" (2026-10-21); it is no longer in https://ollama.com/v1/models.
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
 name = "kimi-k2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-release_date = "2026-01-27"
-last_updated = "2026-01-27"
-open_weights = true
-
-[limit]
-context = 262144
-output = 262144
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = false

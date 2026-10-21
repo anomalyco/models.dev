@@ -1,0 +1,22 @@
+# Image formats: OpenAI image inputs: PNG, JPEG, WEBP, non-animated GIF (https://platform.openai.com/docs/guides/images-vision).
+schema = 2
+base_model = "openai/gpt-5-search-api"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 272_000
+output = 128_000
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 10

@@ -1,37 +1,56 @@
+schema = 2
 name = "GPT-5.4"
 description = "Agent-ready GPT for coding and computer-use workflows at a lower cost"
 family = "gpt"
-release_date = "2026-03-05"
-last_updated = "2026-03-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
-temperature = true
-knowledge = "2025-08-31"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2026-03-05"
 
-[cost]
-input = 2.50
-output = 15.00
-cache_read = 0.25
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 5.00
-output = 22.50
-cache_read = 0.50
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
+system_updates = true
+effort_updates = false
+store = true
+cache = { supported = true, implicit = { ttl = ["24h"], min_tokens = 1_024 }, explicit = false }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_050_000
 input = 922_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 22.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
 
 [experimental.modes.fast]
-cost = { input = 5.00, output = 30.00, cache_read = 0.50 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }

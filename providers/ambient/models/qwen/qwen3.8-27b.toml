@@ -2,25 +2,29 @@
 # Effort: reasoning.effort = low|medium|xhigh
 # Ambient request schema: https://api.ambient.xyz/openapi.json
 # Model controls: https://openrouter.ai/api/v1/models (qwen/qwen3.8-27b)
+# Mid-conversation: Ambient serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://api.ambient.xyz/openapi.json
+# Input MIME types: the lab's image list; Ambient's catalog reports image input without formats (https://api.ambient.xyz/v1/models).
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[cost]
-input = 0.32
-output = 3.2
-cache_read = 0.16
-cache_write = 0
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 32_768
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.32
+cache = { read = 0.16, write = 0 }
+
+[cost.text.output]
+price = 3.2

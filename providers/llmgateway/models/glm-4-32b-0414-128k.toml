@@ -1,23 +1,28 @@
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 name = "GLM-4 32B (0414-128k)"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2025-04-14"
 
-[cost]
-input = 0.10
-output = 0.10
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.1

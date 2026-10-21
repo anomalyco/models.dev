@@ -1,0 +1,31 @@
+# Published August 2025 (CC-BY-4.0): https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3
+# Input formats: the common list in OpenRouter's speech-to-text docs (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/stt
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Parakeet TDT 0.6B v3"
+description = "Open multilingual speech-to-text model with automatic language detection across 25 European languages"
+family = "parakeet"
+open_weights = true
+release_date = "2025-08"
+license = "CC-BY-4.0"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3"

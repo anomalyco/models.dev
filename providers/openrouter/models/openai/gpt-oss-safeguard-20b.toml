@@ -1,14 +1,23 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Groq (live)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "openai/gpt-oss-safeguard-20b"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.075
-output = 0.3
-cache_read = 0.0375
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 0.3

@@ -1,27 +1,20 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "aion-labs/aion-3.0-mini"
 name = "AionLabs: Aion-3.0-Mini"
 description = "Aion-3.0 Mini is a multi-model roleplaying and storytelling system from AionLabs, built on the DeepSeek family of models. It uses a collaborative generation process in which multiple specialized models each..."
-release_date = "2026-07-07"
-last_updated = "2026-07-07"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["high"] }
 structured_output = false
-open_weights = false
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+[cost.text.input]
+price = 0.7
+cache = { read = 0.18 }
 
-[cost]
-input = 0.7
-output = 1.4
-cache_read = 0.18
-
-[limit]
-context = 131_072
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.4

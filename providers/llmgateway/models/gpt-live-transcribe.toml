@@ -1,0 +1,12 @@
+# structured_output = false: /v1/models structured_outputs, strict json_schema (https://docs.llmgateway.io/learn/structured-outputs)
+schema = 2
+base_model = "openai/gpt-live-transcribe"
+
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

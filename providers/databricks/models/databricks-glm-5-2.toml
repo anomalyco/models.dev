@@ -1,9 +1,34 @@
+# Models, inputs and lifecycle (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Reasoning (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Chat `reasoning_effort` = none|high|max; `max` is the default, other values fall back to `max`, and `none` disables reasoning.
+# Legacy (supported-models): still served to workspaces that used it before, closed to new ones.
+# Pricing (accessed 2026-10-20): DBU rates from https://www.databricks.com/product/pricing/foundation-model-serving x USD 0.070/DBU (`foundation_model_apis` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json, AWS US East (N. Virginia); other regions are USD 0.070-0.112/DBU, not modeled).
+# Priority: request `service_tier = "priority"` (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/priority-mode); priority DBU rates are 1.75x standard (35/110/6.5 vs 20/62.857/3.714). cards.json lists a priority cache-read price of USD 0.49, which doesn't match 6.5 DBU (USD 0.455).
+# Provisioned throughput (per DBU-hour) is not modeled.
+# Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+schema = 2
 base_model = "zhipuai/glm-5.2"
-# Chat `reasoning_effort = low|medium|high`; `medium` is the default.
-# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-07-11)
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+system_updates = false
+cache = { supported = true, implicit = true }
+service_tier = ["priority"]
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }

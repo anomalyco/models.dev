@@ -1,0 +1,27 @@
+# Mid-conversation: Hyper serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://hyper.charm.land/v1/models
+schema = 2
+name = "Prism"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+open_weights = false
+release_date = "1970-01-01"
+last_updated = "2026-10-15"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+effort_updates = false
+
+[limit]
+context = 1_000_000
+output = 16_000
+
+[cost.text.input]
+price = 3.2664
+cache = { read = 0.32664 }
+
+[cost.text.output]
+price = 16.332

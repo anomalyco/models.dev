@@ -13,7 +13,7 @@ import snapshot from "./fixtures/void-api-resolved.json";
 // active models carry the latest public API metadata and selling prices.
 const baseID = snapshot["gpt-6-astra"].base_model;
 const { base_model: _base, cost: _cost, ...fixtureBase } = snapshot["gpt-6-astra"];
-const { id: _fixtureID, ...base } = AuthoredModel.parse({ id: "fixture", ...fixtureBase });
+const { id: _fixtureID, structured_output: _structuredOutput, ...base } = AuthoredModel.parse({ id: "fixture", ...fixtureBase });
 const prices = { input: 1.25, output: 2, cache_read: 0, cache_write: 0.5 };
 const row = (id = "route") => ({ id, object: "model", created: 1700000000, owned_by: "not-an-identity",
   base_model: baseID, ...base,
@@ -22,7 +22,7 @@ const envelope = (...data: unknown[]) => ({ object: "list", data });
 const parsed = (raw: unknown = row()) => voidApi.parseModels(envelope(raw))[0]!;
 function canonical(id: string) {
   // the runner intentionally excludes enrichment from inherited host metadata.
-  const { benchmarks: _benchmarks, license: _license, links: _links, weights: _weights, ...fields } = modelMetadata(id);
+  const { id: _id, benchmarks: _benchmarks, license: _license, links: _links, weights: _weights, ...fields } = modelMetadata(id);
   return fields;
 }
 const context = (authored?: ExistingModel, metadata = canonical(baseID), header?: string) => ({

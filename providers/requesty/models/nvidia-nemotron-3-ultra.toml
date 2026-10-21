@@ -1,26 +1,24 @@
-name = "nvidia-nemotron-3-ultra"
-description = "NVIDIA Nemotron 3 Ultra is NVIDIA's strongest open-weights reasoning model, positioned near GPT-5.4 Mini (xhigh) and ahead of DeepSeek V4-Flash and Qwen3.5-397B-A17B."
-family = "nemotron"
-release_date = "2026-06-23"
-last_updated = "2026-06-23"
-attachment = false
-reasoning = true
-tool_call = false
+# Identity (https://router.requesty.ai/v1/models/managed (accessed 2026-10-20)): hugging_face_id nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16 (model_lab nvidia, open_weights true).
+#   Host deltas: context_window 262,144 (lab 1,000,000), max_output_tokens 131,072 (lab 128,000), supports_tool_calling false.
+#   Requesty's created date (2026-06-23) is its listing date; the lab has NVIDIA's 2026-06-04 release.
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = false
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 0.5
-output = 2.5
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 2.5

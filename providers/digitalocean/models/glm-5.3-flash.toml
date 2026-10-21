@@ -1,18 +1,38 @@
+# Text-only on DigitalOcean for now. The DigitalOcean catalog and docs list image
+# and video input, but the standard serverless endpoint rejects them with 400
+# "unsupported multimodal content: image_url" / "video_url" (verified 2026-10-16
+# on Chat Completions and Messages). DigitalOcean confirmed the standard endpoint
+# lacks multimodal support and is working on a fix. Restore the original line
+# below and remove the UNSUPPORTED_INPUT_MODALITIES entry in
+# packages/core/src/sync/providers/digitalocean.ts once it is served.
+# input = ["text", "image", "video"]
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM5.3 Flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
 context = 1_048_576
-output = 1_048_576
 
-[modalities]
-input = ["text", "image", "video"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

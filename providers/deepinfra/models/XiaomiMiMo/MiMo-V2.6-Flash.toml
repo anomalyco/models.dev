@@ -1,13 +1,25 @@
 # Toggle: reasoning.enabled = true|false (DeepInfra OpenAI Chat Completions).
 # https://docs.deepinfra.com/chat/reasoning
 # https://mimo.mi.com/docs/zh-CN/api/chat/openai-api
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 14880/14915 -> 0/14932; 14880/14915 -> 32/14932]
+#   changing reasoning_effort between turns keeps the cached prefix [cached/prompt tokens, control -> test: 15168/15216 -> 15200/15214 (reasoning tokens 0 -> 111); 14528/14576 -> 14560/14574 (reasoning tokens 0 -> 6)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 14624/14651 -> 0/14711; 14944/14971 -> 64/15031]
+schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+system_updates = false
+effort_updates = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
 
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
+[cost.text.output]
+price = 0.28

@@ -1,12 +1,21 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded to Claude in place (live: cache prefix kept)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: tool_addition/tool_removal system blocks are accepted but have no effect on Chat Completions (live)
+# Cache: cache_control (top-level or per block), 4 breakpoints, 5m/1h TTL, 1h write = 2x input; min tokens per model (https://openrouter.ai/docs/guides/best-practices/prompt-caching#anthropic-claude)
+schema = 2
 base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = { "5m" = 12.5, "1h" = 20 } }
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[cost.text.output]
+price = 50

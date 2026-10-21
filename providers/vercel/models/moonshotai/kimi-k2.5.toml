@@ -1,18 +1,28 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
 temperature = true
-
-interleaved = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.6
-output = 3
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3

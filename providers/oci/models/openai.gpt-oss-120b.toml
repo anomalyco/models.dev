@@ -6,6 +6,7 @@
 # Effort: reasoning_effort = low|medium|high (accepted on this endpoint, 2026-09-14).
 # Reasoning is streamed in `reasoning_content` deltas.
 base_model = "openai/gpt-oss-120b"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]

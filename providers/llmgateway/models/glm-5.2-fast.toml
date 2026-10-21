@@ -1,7 +1,16 @@
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "zhipuai/glm-5.2"
-reasoning_options = []
 
-[cost]
-input = 2.2
-output = 6.5
-cache_read = 0.45
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 2.156
+cache = { read = 0.429 }
+
+[cost.text.output]
+price = 6.776

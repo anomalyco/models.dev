@@ -1,0 +1,10 @@
+# Served on Chat Completions with one `input_audio` part (https://mimo.mi.com/static/docs/api/audio/Speech-Recognition.md).
+# Price: USD 0.074 per hour of input audio, counted to the second (https://mimo.mi.com/static/docs/price/pay-as-you-go.md).
+#   Per minute: 0.074 / 60 = 0.0012333…, rounded to 8 decimal places = 0.00123333.
+schema = 2
+v2_only = true
+base_model = "xiaomi/mimo-v2.5-asr"
+
+[cost.audio.input]
+unit = "minute"
+price = 0.00123333

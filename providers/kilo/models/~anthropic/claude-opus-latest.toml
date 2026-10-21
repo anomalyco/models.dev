@@ -1,29 +1,33 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Cache: implicit = true: Kilo adds cache_control breakpoints (system + last user/tool message) when the request has none (https://github.com/Kilo-Org/cloud/blob/d26988c12beabe7d276220e101507a807d4ea0cf/packages/web-shared/src/lib/ai-gateway/providers/anthropic.ts, https://github.com/Kilo-Org/cloud/blob/d26988c12beabe7d276220e101507a807d4ea0cf/packages/web-shared/src/lib/ai-gateway/providers/openrouter/request-helpers.ts)
+schema = 2
 name = "Anthropic: Claude Opus Latest"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 family = "claude-opus"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-04-21"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 5
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

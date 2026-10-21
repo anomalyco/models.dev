@@ -1,16 +1,25 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Relace)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 description = "MiMo flash model for fast multimodal assistance and agent workflows"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_050_000
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

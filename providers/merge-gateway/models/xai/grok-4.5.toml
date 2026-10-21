@@ -1,11 +1,18 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=xai%2Fgrok-4.5 (accessed 2026-07-21)
+# Cache: default route xai is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "xai/grok-4.5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 6

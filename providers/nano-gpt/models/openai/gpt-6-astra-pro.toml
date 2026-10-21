@@ -1,29 +1,33 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Cache: implicit (automatic) for OpenAI models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "GPT 6 Astra Pro"
 description = "GPT 6 Astra in Pro reasoning mode. Uses additional model work for difficult tasks, with higher latency and token usage at the same per-token rates. Reasoning effort remains independently configurable."
 family = "gpt"
-release_date = "2026-09-04"
-last_updated = "2026-09-04"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-04"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_050_000
 input = 1_050_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[cost.text.output]
+price = 50

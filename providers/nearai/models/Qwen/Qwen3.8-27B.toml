@@ -1,0 +1,27 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-08:
+# reasoning_content present when on, absent when off
+# Text and image, as /v1/models reports for this route. The lab entry adds video,
+# which was never probed here.
+# Cache: automatic prefix caching on NEAR-hosted (TEE) models, no request changes (https://docs.near.ai/cloud/guides/prompt-caching).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { supported = true, implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 1.35

@@ -1,24 +1,23 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "amazon/nova-lite-v1"
 name = "Amazon Nova Lite 1.0"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "nova-lite"
-release_date = "2024-12-03"
-last_updated = "2024-12-03"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
-
-[cost]
-input = 0.0595
-output = 0.238
-cache_read = 0.02975
-
-[limit]
-context = 300_000
-input = 300_000
-output = 5_120
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
+effort_updates = false
+
+[limit]
+input = 300_000
+
+[cost.text.input]
+price = 0.0595
+cache = { read = 0.02975 }
+
+[cost.text.output]
+price = 0.238

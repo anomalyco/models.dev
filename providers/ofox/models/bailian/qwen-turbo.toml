@@ -1,14 +1,25 @@
 # https://ofox.ai/en/models/bailian/qwen-turbo
 # Pricing: $0.05/M input, $0.09/M output, $0.0086/M cache read
 # Context 128K / output 16K; capabilities listed as Function Calling only (no Reasoning)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+schema = 2
 base_model = "alibaba/qwen-turbo"
-reasoning = false
 
-[cost]
-input = 0.05
-output = 0.09
-cache_read = 0.0086
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 128_000
 output = 16_384
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.0086 }
+
+[cost.text.output]
+price = 0.09

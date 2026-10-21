@@ -1,5 +1,6 @@
 # Toggle: thinking true|false
 base_model = "deepseek/deepseek-v4-pro-0813"
+structured_output = true
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["high", "max"] },

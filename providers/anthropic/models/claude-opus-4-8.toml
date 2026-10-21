@@ -1,34 +1,45 @@
+# tools.updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
+schema = 2
 name = "Claude Opus 4.8"
 description = "Top Claude Opus tier for the hardest reasoning, coding, and long-horizon agents"
 family = "claude-opus"
-release_date = "2026-05-28"
-last_updated = "2026-05-28"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-01"
 open_weights = false
+knowledge = "2026-01"
+release_date = "2026-05-28"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+service_tier = ["fast"]
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
+
+[cost.text.output]
+price = 25
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = 1.1
 
 [experimental.modes.fast]
-cost = { input = 10.00, output = 50.00, cache_read = 1.00, cache_write = 12.50 }
-provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }
+body = { speed = "fast" }
+headers = { anthropic-beta = "fast-mode-2026-02-01" }

@@ -2,6 +2,7 @@
 # Lab Moonshot K2.6: thinking on/off only (providers/moonshotai/models/kimi-k2.6.toml)
 # Toggle: thinking / reasoning enabled|disabled (OpenAI-compatible relay; no graded effort on lab)
 base_model = "moonshotai/kimi-k2.6"
+structured_output = true
 reasoning_options = [{ type = "toggle" }]
 
 [cost]

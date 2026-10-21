@@ -1,27 +1,32 @@
 # Not included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# system_updates = false: Gemini places every system message, even one after the history, in its system instruction (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching#gemini-implicit-caching)
+# Cache: implicit (automatic) for Gemini models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+# Modalities (image: the lab's formats that NanoGPT Chat Completions accepts; audio: the lab's formats): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
 name = "Gemini 3.1 Pro (Preview Low)"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-family = "gemini"
-release_date = "2026-02-21"
-last_updated = "2026-02-21"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = []
-
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
-cache_write = 0.375
-
-[limit]
-context = 1_048_576
-input = 1_048_576
-output = 65_536
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+tools = { supported = true, updates = false }
+effort_updates = false
+system_updates = false
+cache = { supported = true, implicit = true }
+
+[limit]
+input = 1_048_576
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 0.375 }
+
+[cost.text.output]
+price = 12

@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { z } from "zod";
 
+import { readProviderModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import {
   factorBaseModel,
@@ -330,10 +331,7 @@ function effortValues(options: unknown): string[] | "always-on" | undefined {
 
 function parseToml(filePath: string) {
   try {
-    return Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<
-      string,
-      unknown
-    >;
+    return readProviderModel(filePath);
   } catch {
     return undefined;
   }

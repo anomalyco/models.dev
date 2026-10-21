@@ -1,19 +1,25 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Sail Research)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.01
-output = 1.28
-cache_read = 0.01
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
-output = 943_718
+output = 131_072
+
+[cost.text.input]
+price = 0.44
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 1.32

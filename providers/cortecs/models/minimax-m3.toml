@@ -1,14 +1,26 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: automatic prefix caching on every routed provider (tensorix, arkane). https://docs.cortecs.ai/routing/prompt-caching
+# Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
+schema = 2
 base_model = "minimax/MiniMax-M3"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+structured_output = true
+effort_updates = false
 
 [limit]
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

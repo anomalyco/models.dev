@@ -1,32 +1,38 @@
+# Modalities: xAI image inputs jpg/jpeg and png, https://docs.x.ai/docs/guides/image-understanding
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system messages stay in place (cache prefix kept). No per-turn effort or tool-change mechanism is forwarded.
+schema = 2
 name = "Grok 4.20 Multi Agent Beta"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2026-03-11"
-last_updated = "2026-03-11"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2026-03-11"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_001 }
-input = 2.5
-output = 5
-cache_read = 0.4
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 2_000_000
 output = 2_000_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_001 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_001 } }
+price = 5

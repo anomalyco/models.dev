@@ -1,0 +1,28 @@
+# Sources (accessed 2026-10-19):
+# - https://docs.z.ai/guides/audio/glm-asr-2512 (audio in, text out; clips up to 30 s / 25 MB)
+# - https://docs.z.ai/api-reference/audio/audio-transcriptions (.wav / .mp3 files; no sampling parameters)
+# - https://docs.bigmodel.cn/cn/update/new-releases (launched 2025-12-10)
+# No token window is published, so limits are 0 (not applicable).
+schema = 2
+v2_only = true
+type = "transcription"
+name = "GLM-ASR-2512"
+description = "Speech recognition model for multilingual and dialect transcription with custom hotwords"
+family = "glm"
+open_weights = false
+release_date = "2025-12-10"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

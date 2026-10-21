@@ -1,25 +1,39 @@
-name = "MiniMax-M3"
-description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
-family = "minimax"
-release_date = "2026-06-12"
-last_updated = "2026-06-12"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+# Serverless: $0.30 input, $0.06 cached input, $1.20 output per 1M; context 524,288 (accessed 2026-10-21):
+# https://docs.together.ai/docs/serverless-models
+# Output = context: a max_tokens = 10,000,000 request fails with "This model's maximum context length is
+# 524288 tokens" and no separate output limit (live 2026-10-21).
+# Toggle: thinking.type = enabled|disabled (live 2026-10-21: disabled returns 0 reasoning tokens).
+# Together lists M3 as hybrid (https://docs.together.ai/docs/inference/chat/reasoning), but
+# reasoning.enabled = false, chat_template_kwargs and reasoning_effort leave the rendered prompt in
+# its default "adaptive" thinking mode and the model still reasons.
+# Inputs (live 2026-10-21): PNG, JPEG and WebP images and MP4 video are read. A solid-red GIF came
+# back as black, orange and teal in three tries, so GIF is left out; audio is rejected.
+# Mid-conversation (live 2026-10-21): a system message after the first turn is dropped. The
+# rendered prompt doesn't contain it, prompt tokens match the request without it, and the
+# instruction was ignored in 3 of 3 trials. Adding a tool dropped the cache (8,064 → 128).
+schema = 2
+base_model = "minimax/MiniMax-M3"
 
-[cost]
-input = 0.30
-cache_read = 0.06
-output = 1.20
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true, explicit = false }
+structured_output = true
+system_updates = false
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
 context = 524_288
-output = 250_000
+output = 524_288
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

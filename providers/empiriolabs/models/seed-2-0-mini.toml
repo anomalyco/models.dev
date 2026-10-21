@@ -1,22 +1,31 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/seed-2-0-mini.md
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|high
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/seed-2-0-mini:generateContent
+schema = 2
 base_model = "bytedance-seed/seed-2.0-mini"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.12
-output = 0.5
-cache_read = 0.12
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 0.24
-output = 1
-cache_read = 0.24
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.12 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.24
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1

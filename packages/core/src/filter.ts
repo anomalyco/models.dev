@@ -1,4 +1,14 @@
-export const MODEL_TYPES = ["decision"] as const;
+export const MODEL_TYPES = [
+  "chat",
+  "image",
+  "video",
+  "embedding",
+  "reranking",
+  "decision",
+  "transcription",
+  "speech",
+  "realtime",
+] as const;
 
 export type ModelTypeValue = (typeof MODEL_TYPES)[number];
 export type ModelTypeFilter = "default" | "all" | ModelTypeValue[];
@@ -36,8 +46,9 @@ export function parseModelTypes(value: string | null): ModelTypeFilter {
 
 function includesModel(model: TypedModel, filter: ModelTypeFilter) {
   if (filter === "all") return true;
-  if (filter === "default") return model.type === undefined;
-  return model.type !== undefined && filter.includes(model.type);
+  const type = model.type ?? "chat";
+  if (filter === "default") return type !== "decision";
+  return filter.includes(type);
 }
 
 export function filterProvidersByModelType<

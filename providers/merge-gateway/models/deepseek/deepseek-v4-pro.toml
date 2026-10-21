@@ -1,17 +1,22 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=deepseek%2Fdeepseek-v4-pro (accessed 2026-07-21)
 # Selected route reasoning.controls = ["thinking"], disable_supported = true.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.145
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
 
-[limit]
-output = 262_000
+[cost.text.output]
+price = 3.96

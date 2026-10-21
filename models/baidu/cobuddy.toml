@@ -1,0 +1,24 @@
+# https://openrouter.ai/baidu/cobuddy
+# https://novita.ai/models/model-detail/baidu-cobuddy
+# Sampling: Baidu Qianfan's chat API takes temperature and top_p but has no top_k
+# (https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb).
+schema = 2
+name = "CoBuddy"
+description = "Baidu Qianfan model optimized for code generation and tool-using coding agents"
+open_weights = false
+release_date = "2026-05-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 131_072
+output = 65_536

@@ -1,0 +1,24 @@
+# Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, China (Beijing), accessed 2026-10-19).
+# Capabilities: Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions; structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (tool definitions count as part of the system message, so changing tools changes the prefix).
+# Thinking only (deep-thinking doc); Effort: reasoning_effort = low|medium|xhigh (default xhigh); Budget: thinking_budget 0-262144, not combinable with reasoning_effort.
+# Cache: explicit and implicit (context-cache model lists); creation bills at 125% of input; the hit price for this model is not published ("see the console"), so only the write price is set.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.65
+cache = { write = 2.0625 }
+
+[cost.text.output]
+price = 4.951

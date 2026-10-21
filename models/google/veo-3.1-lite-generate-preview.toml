@@ -5,22 +5,28 @@
 #   (release 2026-03-31; text-to-video and image-to-video; 720p/1080p; 4s/6s/8s)
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   (Veo 3.1 Lite paid-tier per-second video pricing; not token-based — cost omitted)
-
+# Video formats: https://ai.google.dev/gemini-api/docs/veo (generated and extension videos are video/mp4).
+# Image MIME types: the Veo API takes image/jpeg or image/png for image, lastFrame and referenceImages:
+# https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/veo-video-generation
+schema = 2
+type = "video"
 name = "Veo 3.1 Lite Preview"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "veo"
-release_date = "2026-03-31"
-last_updated = "2026-03-31"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = false
+release_date = "2026-03-31"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 1_024
 output = 0
-
-[modalities]
-input = ["text", "image"]
-output = ["video"]

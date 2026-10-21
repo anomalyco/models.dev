@@ -9,18 +9,25 @@
 # Effort: reasoning_effort = low|medium|xhigh (not yet in the API reference; see
 # the Qwen3.8-Flash-Next release blog)
 # Budget: thinking_budget (Max Reasoning 262K)
+# v2 capabilities (docs for China (Beijing), accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling incl. top_k, which the DeepSeek, Kimi and MiniMax series do not support; enable_thinking defaults; stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens", max = 262_144 },
-]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
-[cost]
-input = 0.11875
-output = 0.40073
-cache_read = 0.01187
-cache_write = 0.14844
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11875
+cache = { read = 0.01187, write = 0.14844 }
+
+[cost.text.output]
+price = 0.40073

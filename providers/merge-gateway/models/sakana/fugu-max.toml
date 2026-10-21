@@ -1,0 +1,19 @@
+schema = 2
+base_model = "sakana/fugu-max"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+structured_output = false
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

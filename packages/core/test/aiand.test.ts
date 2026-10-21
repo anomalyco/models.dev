@@ -358,21 +358,23 @@ test("first factor of a full-inline file inherits the lab entry instead of re-em
   expect(built).toMatchObject({ cost: { cache_read: 0.2 }, interleaved: { field: "reasoning_content" } });
 });
 
-test("an already-factored file keeps its authored lab-field deltas and omit list", () => {
+test("an already-factored file keeps its display name and omit list but leaves model facts to the lab", () => {
   const built = buildAiandModel(aiandModel(), {
     base_model: "deepseek/deepseek-v4-flash",
     base_model_omit: ["limit.input"],
     name: "DeepSeek V4 Flash (ai& lane)",
     knowledge: "2025-06",
+    release_date: "2026-01-01",
   });
-  // Deltas that differ from the lab entry survive; identical values would be
+  // A name that differs from the lab entry survives; identical values would be
   // dropped by factoring as redundant, which is the point.
   expect(built).toMatchObject({
     base_model: "deepseek/deepseek-v4-flash",
     base_model_omit: ["limit.input"],
     name: "DeepSeek V4 Flash (ai& lane)",
-    knowledge: "2025-06",
   });
+  expect(built).not.toHaveProperty("knowledge");
+  expect(built).not.toHaveProperty("release_date");
 });
 
 test("a created reasoner gets a leading header naming the single effort wire path and no other control", () => {

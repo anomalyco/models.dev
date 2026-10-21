@@ -1,23 +1,52 @@
+# Sources:
+# - Same model as kimi-k2.7-code with faster output: https://platform.kimi.ai/docs/guide/kimi-k2-7-code-quickstart
+# - Input formats: https://platform.kimi.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats lists them
+#   literally as MIME types ("Images support the following formats (MIME types): image/jpeg, image/png, image/gif,
+#   image/webp, image/bmp, image/heic, image/heif"; "Videos support the following formats (MIME types): video/mp4,
+#   video/mpeg, video/mov, video/avi, video/x-flv, video/mpg, video/webm, video/wmv, video/3gpp"), so the strings are kept
+#   as written, the same as the Gemini lab files.
+# Sampling: Moonshot fixes temperature (1.0) and top_p (0.95) for this model and documents no top_k
+# (https://platform.kimi.ai/docs/api/models-overview); the lab keeps all three off.
+schema = 2
 name = "Kimi K2.7 Code Highspeed"
 description = "Lower-latency Kimi Code variant for interactive edits and coding-agent loops"
 family = "kimi-k2"
-release_date = "2026-06-12"
-last_updated = "2026-06-12"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
 open_weights = true
+knowledge = "2025-01"
+release_date = "2026-06-12"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 262_144
 output = 262_144
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

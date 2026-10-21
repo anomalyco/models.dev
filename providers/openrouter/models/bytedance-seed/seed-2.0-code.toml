@@ -1,21 +1,32 @@
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning.effort = low|medium|high
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Seed)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Deprecated: GET /api/v1/models lists expiration_date 2026-11-11
+schema = 2
 base_model = "bytedance-seed/seed-2.0-code"
 description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.5
 
-[cost]
-input = 0.5
-output = 3
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1
 
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 1
-output = 6
+[cost.text.output]
+price = 3
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 6

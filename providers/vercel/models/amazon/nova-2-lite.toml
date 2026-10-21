@@ -1,31 +1,24 @@
-name = "Nova 2 Lite"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "nova"
-release_date = "2025-12-02"
-last_updated = "2024-12-01"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-knowledge = "2024-10"
-open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.075
-
-[limit]
-context = 1_000_000
-output = 65_535
+# Modalities: Nova image formats PNG, JPEG, GIF, WEBP, as on Amazon Bedrock (https://docs.aws.amazon.com/nova/latest/userguide/modalities-image.html)
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "amazon/nova-2-lite"
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+system_updates = false
+effort_updates = false
+
+[limit]
+output = 65_535
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 2.5

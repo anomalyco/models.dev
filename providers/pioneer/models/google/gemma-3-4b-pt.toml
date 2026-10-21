@@ -1,30 +1,30 @@
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Reasoning: none. gemma-3-4b-pt is a pretrained base checkpoint (https://huggingface.co/google/gemma-3-4b-pt); Pioneer's catalog listed the same boilerplate levels on every model.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): tools.updates = false: `tools` is request-level, with no tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 name = "Gemma 3 4B (Pretrained)"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-release_date = "2025-02-28"
-last_updated = "2025-02-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2025-02-28"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.15
-output = 0.15
-cache_read = 0.15
-cache_write = 0.15
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 32_768
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.15, write = 0.15 }
+
+[cost.text.output]
+price = 0.15

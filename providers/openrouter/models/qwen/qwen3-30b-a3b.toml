@@ -1,15 +1,23 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "alibaba/qwen3-30b-a3b"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.13
-output = 0.52
+effort_updates = false
 
 [limit]
-output = 8_192
+context = 40_960
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0.5

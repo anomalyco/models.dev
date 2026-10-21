@@ -1,0 +1,28 @@
+# https://developers.cloudflare.com/workers-ai/models/clef-flash/
+# Images: embedded PNG, JPEG or WebP (model page).
+schema = 2
+type = "decision"
+name = "Clef Flash"
+description = "Fast multimodal decision model for typed questions over text, structured state, and images"
+open_weights = true
+release_date = "2026-09-29"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 24_576
+output = 65_536
+
+[cost.text.input]
+price = 0.038
+
+[cost.text.output]
+price = 0

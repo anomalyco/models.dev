@@ -4,15 +4,25 @@
 # - https://www.anthropic.com/claude/haiku (first-party $1/$5 MTok list price)
 # Lab: models/anthropic/claude-haiku-4-5.toml
 # Budget: thinking.budget_tokens (Anthropic Messages; Ofox anthropic protocol)
+# Mid-conversation (Ofox Anthropic Messages, https://ofox.ai/docs/api/anthropic/messages): system_updates, effort_updates, tools.updates = false because Anthropic's own API has no such mechanism for this model (providers/anthropic/models/claude-haiku-4-5.toml).
+# Cache: explicit cache_control only (neither endpoint caches automatically), 5m TTL or 1h with ttl = "1h"; minimum length per Anthropic (https://ofox.ai/docs/develop/models/claude/caching). 1h write price: catalog input_cache_write_1h.
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
 
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = { min = 1_024 } }
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 4_096 } }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://api.ofox.ai/anthropic/v1"
+[api.messages]
+base_url = "https://api.ofox.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
+
+[cost.text.output]
+price = 5

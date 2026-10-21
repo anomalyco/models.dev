@@ -1,28 +1,20 @@
-name = "MiniMax-M2.7"
+# Lab identity: https://huggingface.co/MiniMaxAI/MiniMax-M2.7
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
 structured_output = true
-open_weights = true
+effort_updates = false
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 204_800
-output = 131_072
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
 
-[interleaved]
-field = "reasoning_content"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.2

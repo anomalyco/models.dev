@@ -94,3 +94,35 @@ test("never raises a context window or pins other models", () => {
   expect(translatedContext("@cf/zai-org/glm-5.3", 262_144)).toBe(262_144);
   expect(translatedContext("@cf/test/unpinned", 1_310_720)).toBe(1_310_720);
 });
+
+test("marks Clef and Clairic routes as decisions even when Workers AI search labels them text generation", () => {
+  for (const id of ["@cf/cloudflare/clairic", "@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
+    const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow(id, 65_536)] } });
+    const translated = cloudflareWorkersAi.translateModel(source!, {
+      existing: () => undefined,
+      authored: () => undefined,
+    });
+    expect(translated?.model.type).toBe("decision");
+  }
+  const [other] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow("@cf/test/chat", 65_536)] } });
+  expect(cloudflareWorkersAi.translateModel(other!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.model.type).toBeUndefined();
+});
+
+test("lists search efforts weakest first so v2 files stay unchanged", () => {
+  const [source] = cloudflareWorkersAi.parseModels({
+    result: {
+      data: [{
+        ...searchRow("@cf/test/efforts", 65_536),
+        supported_parameters: ["reasoning"],
+        reasoning: { mandatory: false, supported_efforts: ["max", "high", "low", "none"] },
+      }],
+    },
+  });
+  expect(cloudflareWorkersAi.translateModel(source!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.model.reasoning_options).toEqual([{ type: "effort", values: ["none", "low", "high", "max"] }]);
+});

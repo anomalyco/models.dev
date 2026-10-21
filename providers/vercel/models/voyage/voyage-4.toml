@@ -1,18 +1,10 @@
-name = "voyage-4"
-description = "General-purpose chat model for instruction following, writing, and analysis"
-family = "voyage"
-release_date = "2026-01-15"
-last_updated = "2026-03-06"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
+schema = 2
+base_model = "voyageai/voyage-4"
 
-[limit]
-context = 32_000
-output = 0
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.06

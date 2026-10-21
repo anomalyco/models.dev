@@ -3,13 +3,22 @@
 # - https://docs.z.ai/guides/overview/pricing (Z.AI list/promo: GLM-5.3-Flash $0.075/$0.25/M, cached input $0.015/M; 50% promo ends 2026-09-09 24:00 UTC+8)
 # - https://docs.z.ai/guides/llm/glm-5.3-flash (thinking.type only enabled; cannot disable; reasoning_effort recommended max)
 # Effort: reasoning_effort = low|high|max (thinking always on)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/glm).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

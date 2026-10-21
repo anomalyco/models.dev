@@ -7,6 +7,7 @@
 # level (DeepSeek lab maps low/medium -> high); no toggle and no max on this
 # host.
 base_model = "deepseek/deepseek-v4-flash"
+structured_output = true
 reasoning_options = [
   { type = "effort", values = ["none", "high"] },
 ]

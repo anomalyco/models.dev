@@ -1,29 +1,25 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "cohere/command-a-plus-05-2026"
 name = "Command A+"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
-family = "command-a"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.3
-output = 1.5
-cache_read = 0.15
+effort_updates = false
 
 [limit]
 context = 192_000
-output = 64_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 1.5

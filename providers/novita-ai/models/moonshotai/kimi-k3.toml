@@ -1,20 +1,26 @@
+# https://novita.ai/models/model-detail/moonshotai-kimi-k3
+# Effort: reasoning_effort = none|low|high|max; none suppresses reasoning on Novita, unlike the native Kimi API.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
-context = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image", "video"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

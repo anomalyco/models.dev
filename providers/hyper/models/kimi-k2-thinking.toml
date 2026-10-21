@@ -1,12 +1,18 @@
+# Mid-conversation: Hyper serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://hyper.charm.land/v1/models
+schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
-release_date = "2026-09-02"
-last_updated = "2026-09-02"
-reasoning_options = []
 
-[cost]
-input = 0.6
-output = 2.5
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 output = 26_214
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 2.5

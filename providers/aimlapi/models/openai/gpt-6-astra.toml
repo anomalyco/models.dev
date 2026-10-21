@@ -1,0 +1,16 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=openai%2Fgpt-6-astra&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 13
+cache = { read = 1.3, write = 16.25 }
+
+[cost.text.output]
+price = 65

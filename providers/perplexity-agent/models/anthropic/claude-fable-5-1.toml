@@ -1,0 +1,15 @@
+# Perplexity Agent API (accessed 2026-10-21): https://docs.perplexity.ai/docs/agent-api/models.md (USD per MTok: input,
+#   output, cache read). reasoning.effort = minimal|low|medium|high|xhigh|max (https://docs.perplexity.ai/api-reference/agent-post.md);
+#   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
+# Anthropic models require max_output_tokens on the Agent API.
+base_model = "anthropic/claude-fable-5-1"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 0.25

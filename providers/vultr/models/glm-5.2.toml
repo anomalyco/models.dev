@@ -1,0 +1,10 @@
+base_model = "zhipuai/glm-5.2"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+
+[cost]
+input = 0.75
+output = 3.00
+
+[limit]
+context = 1_048_576

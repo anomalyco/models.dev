@@ -1,24 +1,18 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "mistral/mistral-small-3.1-24b-instruct"
 name = "Mistral Small 3.1 24B (2503)"
-description = "Building upon Mistral Small 3 (2501), Mistral Small 3.1 (2503) adds state-of-the-art vision understanding and enhances long context capabilities up to 128k tokens without compromising text performance. With 24 billion parameters, this model achieves top-tier capabilities in both text and vision tasks."
-family = "mistral-small"
-release_date = "2025-04-15"
-last_updated = "2025-04-15"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.05
+[capabilities]
+structured_output = false
+effort_updates = false
 
 [limit]
-context = 128_000
 input = 128_000
-output = 102_400
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.3

@@ -1,0 +1,19 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=google%2Fgemma-3-12b-it&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "google/gemma-3-12b-it"
+name = "Gemma 3 12B"
+
+[capabilities]
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[limit]
+context = 131_000
+output = 96_000
+
+[cost.text.input]
+price = 0.06877
+cache = { read = 0.055016 }
+
+[cost.text.output]
+price = 0.20631

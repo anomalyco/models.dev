@@ -2,13 +2,23 @@
 # https://api.ofox.ai/v1/models/bailian/qwen3.6-27b
 # Toggle: enable_thinking true|false (Bailian/DashScope chat path via Ofox)
 # Budget: thinking_budget
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+schema = 2
 base_model = "alibaba/qwen3.6-27b"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[cost]
-input = 0.6
-output = 3.6
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 256_000
 output = 64_000
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3.6

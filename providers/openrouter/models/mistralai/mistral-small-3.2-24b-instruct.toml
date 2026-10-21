@@ -1,24 +1,17 @@
-name = "Mistral Small 3.2 24B"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "mistral/mistral-small-3.2-24b-instruct"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral-small"
-release_date = "2025-06-20"
-last_updated = "2025-06-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
-knowledge = "2023-10-31"
-open_weights = true
+effort_updates = false
 
-[cost]
-input = 0.09375
-output = 0.25
+[cost.text.input]
+price = 0.09375
 
-[limit]
-context = 256_000
-output = 16_384
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]
+[cost.text.output]
+price = 0.25

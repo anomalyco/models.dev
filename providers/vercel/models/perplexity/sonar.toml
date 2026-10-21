@@ -1,24 +1,31 @@
+# Modalities: Sonar image formats PNG, JPEG, WEBP, GIF, https://docs.perplexity.ai/docs/sonar/media
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 name = "Sonar"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
 family = "sonar"
-release_date = "2025-02-19"
-last_updated = "2025-02-19"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-02"
 open_weights = false
+knowledge = "2025-02"
+release_date = "2025-02-19"
 
-[cost]
-input = 0.25
-output = 2.5
-cache_write = 0.0625
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 127_000
 output = 8_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { write = 0.0625 }
+
+[cost.text.output]
+price = 2.5

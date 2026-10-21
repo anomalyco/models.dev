@@ -10,4 +10,25 @@ npm = "@ai-sdk/togetherai"
 # Sources:
 # https://docs.together.ai/reference/chat-completions
 # https://docs.together.ai/docs/inference/chat/reasoning
+# Serverless catalog, prices and cached-input prices (accessed 2026-10-21):
+# https://docs.together.ai/docs/serverless-models and GET https://api.together.xyz/v1/models.
+# Retirements: https://docs.together.ai/docs/deprecations. A removed model returns 400
+# "Unable to access non-serverless model" (checked live 2026-10-21).
+# APIs: Chat Completions only for these models (also legacy /v1/completions, embeddings,
+# images, audio, video, batch). No Responses or Anthropic Messages endpoint:
+# https://docs.together.ai/docs/inference/openai-compatibility
+# Output: Together has no output cap below the context window. max_tokens = 10,000,000 fails with
+# "maximum context length is N tokens" (or is clamped), never with a separate output limit (live 2026-10-21).
+# Batch discount applies only to openai/whisper-large-v3; chat models bill standard rates in batch:
+# https://docs.together.ai/docs/inference/batch/overview
+# Cache: automatic prefix cache on serverless, no parameter or write charge; `prompt_cache_key`
+# routes related requests; cached tokens bill at the cached-input price:
+# https://docs.together.ai/docs/inference/chat/prompt-caching
+# effort_updates = false: the same page says to set `reasoning` and `reasoning_effort` once per
+# conversation, because changing them partway through changes the rendered prompt.
+# Mid-conversation probes (live 2026-10-21): `echo: true` + `logprobs: true` returns the prompt as
+# the chat template rendered it, which shows where a later system message and the tool list land.
+# Where the backend doesn't return it, a cache probe warms a ~8k-token prefix, sends a control
+# turn, then the changed turn: a late system message that is answered and keeps the cache is in
+# place (system_updates = true); adding one tool that drops the cache means tools.updates = false.
 doc = "https://docs.together.ai/docs/serverless-models"

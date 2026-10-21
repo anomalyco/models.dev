@@ -1,13 +1,21 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (amazon_ireland). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 base_model = "openai/gpt-oss-safeguard-120b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.179
-output = 0.697
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = false }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 128_000
+
+[cost.text.input]
+price = 0.179
+
+[cost.text.output]
+price = 0.697

@@ -1,1 +1,30 @@
-../../zai/models/glm-4.7-flash.toml
+# Sources (accessed 2026-10-19):
+# - Pricing (CNY): https://docs.bigmodel.cn/cn/guide/start/pricing
+# - Model: https://docs.bigmodel.cn/cn/guide/models/free/glm-4.7-flash
+# - Thinking: https://docs.bigmodel.cn/cn/guide/capabilities/thinking, https://docs.bigmodel.cn/cn/guide/capabilities/thinking-mode
+# - Caching (automatic, no write price): https://docs.bigmodel.cn/cn/guide/capabilities/cache
+# - Chat API (temperature and top_p, no top_k; images jpg/png; video mp4/mkv/mov): https://docs.z.ai/api-reference/llm/chat-completion
+# CNY→USD rate: 6.693661, 2026-10-19, source: https://open.er-api.com/v6/latest/USD
+# List price: CNY 0/0/0 (input/cache read/output per MTok)
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Mid-conversation (checked live 2026-10-19 on api.z.ai and open.bigmodel.cn): a late system message
+# is accepted and keeps the cache; adding or removing tools between turns drops it.
+schema = 2
+base_model = "zhipuai/glm-4.7-flash"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+top_k = false
+system_updates = true
+cache = { supported = true, implicit = true, explicit = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

@@ -1,27 +1,32 @@
+schema = 2
 name = "GPT-5.3 Codex Spark"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
 family = "gpt-codex-spark"
-release_date = "2026-02-05"
-last_updated = "2026-02-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
-temperature = false
-knowledge = "2025-08-31"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2026-02-05"
 
-[cost]
-input = 1.75
-output = 14.00
-cache_read = 0.175
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = false
+system_updates = true
+effort_updates = false
+store = true
 
 [limit]
 context = 128_000
 input = 100_000
 output = 32_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

@@ -1,0 +1,14 @@
+# AMD Token Factory catalog (accessed 2026-10-21): https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3AOmniVoice
+# Section "Public Free Model APIs"; pricing note "Free to use. Points show relative usage, not a charge.", so every price is 0.
+# Text-to-speech on POST /v1/audio/speech with preset, described or cloned voices; "Metered per input character".
+# Weights are CC-BY-NC (non-commercial use only).
+schema = 2
+v2_only = true
+base_model = "k2-fsa/omnivoice"
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+unit = "character"
+price = 0

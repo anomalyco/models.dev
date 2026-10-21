@@ -1,23 +1,25 @@
+schema = 2
 name = "GPT-4o (2024-05-13)"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
-release_date = "2024-05-13"
-last_updated = "2024-05-13"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2023-09"
 open_weights = false
+knowledge = "2023-09"
+release_date = "2024-05-13"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 128_000
 output = 4_096
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[benchmarks]]
 name = "Artificial Analysis Coding Index"

@@ -1,24 +1,15 @@
-name = "Mistral Small 3"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "mistral/mistral-small-24b-instruct-2501"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral-small"
-release_date = "2025-01-30"
-last_updated = "2025-01-30"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
 structured_output = true
-knowledge = "2023-10-31"
-open_weights = true
+effort_updates = false
 
-[cost]
-input = 0.05
-output = 0.08
+[cost.text.input]
+price = 0.05
 
-[limit]
-context = 32_768
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.08

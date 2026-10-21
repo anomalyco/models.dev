@@ -1,0 +1,25 @@
+# OpenAI Standard API prices in USD per million tokens; checked 2026-10-13.
+# https://developers.openai.com/api/docs/pricing
+# https://developers.openai.com/api/docs/models/gpt-6-sol
+# Long-context rates apply to the full request above 272K input tokens.
+base_model = "openai/gpt-6-sol"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.00
+cache_read = 0.20
+cache_write = 2.50
+output = 10.00
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4.00
+cache_read = 0.40
+cache_write = 5.00
+output = 15.00
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.aixy-gateway.com/v1"
+shape = "responses"

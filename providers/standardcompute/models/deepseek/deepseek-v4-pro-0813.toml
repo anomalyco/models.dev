@@ -1,0 +1,23 @@
+# Model ID deepseek/deepseek-v4-pro-0813. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
+# of the endpoint Standard Compute routes this model to, as charged against the budget
+# (price listing: https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro-0813/endpoints, accessed 2026-10-16).
+# A lower off-peak rate is also listed ($0.5808 / $1.7424, cache read $0.05808).
+base_model = "deepseek/deepseek-v4-pro-0813"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 1.122
+output = 3.366
+cache_read = 0.1122
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

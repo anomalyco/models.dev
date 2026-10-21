@@ -1,14 +1,24 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live: cache prefix kept on gpt-4.1, gpt-5.4, gpt-6-sol)
+# effort_updates = false: no per-turn effort control
+schema = 2
 base_model = "openai/o1-pro"
-tool_call = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 150
-output = 600
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = true
+effort_updates = false
+
+[cost.text.input]
+price = 150
+
+[cost.text.output]
+price = 600

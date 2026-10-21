@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-fable-5-1"
+attachment = false
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 0.25
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text"]

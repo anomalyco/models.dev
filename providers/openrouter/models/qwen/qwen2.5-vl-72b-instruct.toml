@@ -1,25 +1,23 @@
-name = "Qwen2.5 VL 72B Instruct"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2025-02-01"
-last_updated = "2025-02-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
-knowledge = "2024-06-30"
-open_weights = true
 
-[cost]
-input = 0.8
-output = 1
-cache_read = 0.4
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 115_200
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.8
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 1

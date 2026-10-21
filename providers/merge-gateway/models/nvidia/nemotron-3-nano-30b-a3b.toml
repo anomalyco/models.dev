@@ -1,0 +1,18 @@
+schema = 2
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+effort_updates = false
+
+[limit]
+context = 256_000
+output = 32_000
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.2

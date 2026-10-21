@@ -1,0 +1,27 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+schema = 2
+type = "decision"
+name = "Classify-1"
+description = "Decision model for typed evaluation of shared state"
+open_weights = false
+release_date = "2026-10-13"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 1_000_000
+output = 0
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0

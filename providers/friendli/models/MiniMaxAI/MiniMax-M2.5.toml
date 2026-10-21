@@ -1,18 +1,24 @@
 # Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
 # https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
+# Mid-conversation: Friendli serves this model on POST /serverless/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://friendli.ai/docs/openapi/model-apis/chat-completions
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = {} }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+effort_updates = false
 
 [limit]
 context = 196_608
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

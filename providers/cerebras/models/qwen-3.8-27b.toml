@@ -1,23 +1,48 @@
-# Cerebras Qwen3.8 27B paid-tier limits: 128K context (131,072), 40K max output (40,960).
-# Free Trial is 64K/32K; catalog uses paid-tier maxima per Cerebras precedent (cf. gpt-oss-120b).
-# Source: https://inference-docs.cerebras.ai/models/qwen-3.8-27b (accessed 2026-09-24)
-# Cached input tokens are billed at the standard input rate (no caching discount or fee).
-# Source: https://inference-docs.cerebras.ai/capabilities/prompt-caching#how-are-cached-tokens-priced (accessed 2026-09-29)
+# Cerebras docs and live checks (accessed 2026-10-21):
+# - Model page https://inference-docs.cerebras.ai/models/qwen-3.8-27b: $0.99 input, $1.49 output per MTok; context 128K
+#   (131,072) and max output 40K (40,960) on paid tiers (64K / 32K on the Free Trial; the paid-tier maxima are used).
+#   Input is text plus base64-encoded PNG or JPEG images, at most 10 images per request on Developer and Enterprise
+#   accounts (2 on the Free Trial) and a 10 MiB request payload.
+# - Reasoning https://inference-docs.cerebras.ai/capabilities/reasoning: reasoning_effort = none|low|medium|high, default
+#   high (high selects Qwen's xhigh mode), none disables reasoning. Reasoning is returned in choices[0].message.reasoning;
+#   clear_thinking (default false) keeps earlier assistant reasoning sent back in history.
+# - Prompt caching https://inference-docs.cerebras.ai/capabilities/prompt-caching: automatic prefix caching in 128-token
+#   blocks, guaranteed TTL 5 minutes (up to 1 hour), "No manual cache management is required or available", optional
+#   prompt_cache_key routing hint; cached input tokens are billed at the standard input rate.
+# - Sampling: top_k returns 400 "property 'top_k' is unsupported" (live).
+# - Streaming with stream_options.include_usage returns a usage chunk (live).
+# - Mid-conversation, live 2026-10-21 (a ~2.8K-token conversation, comparing
+#   usage.prompt_tokens_details.cached_tokens): a system message after
+#   the first assistant turn returns 400 "System message must be at the beginning." Changing reasoning_effort, adding a
+#   tool, or removing every tool drops the cached prefix to 0 tokens (2048 cached when unchanged).
+# APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models, /public/v1/models.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-last_updated = "2026-09-03"
-# Model-specific reasoning HTTP values from the Cerebras launch contract:
-# reasoning_effort = "none" | "low" | "medium" | "high"; default is "high".
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
-[cost]
-input = 0.99
-output = 1.49
-cache_read = 0.99
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+top_k = false
+system_updates = false
+effort_updates = false
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { ttl = ["5m"], min_tokens = 128 }, explicit = false }
 
 [limit]
 context = 131_072
 output = 40_960
+request_bytes = 10_485_760
+image = { max_per_request = 10 }
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.99
+cache = { read = 0.99 }
+
+[cost.text.output]
+price = 1.49

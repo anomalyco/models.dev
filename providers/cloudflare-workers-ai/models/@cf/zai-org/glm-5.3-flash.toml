@@ -2,22 +2,34 @@
 # Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
 # Context/output capped to Cloudflare Workers AI context window (1,048,576).
 # Search reports 1,310,720, exceeding AI Gateway max_completion_tokens.
+# Cache: implicit prefix caching; cached-input price on the model page (https://developers.cloudflare.com/workers-ai/features/prompt-caching/).
+# Images: jpeg/png/gif/webp data URLs accepted live 2026-10-19; bmp, tiff and heic rejected (code 8006).
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message keeps the cached prefix and is honored;
+# changing reasoning_effort reads 0 cached tokens on the first request after the switch; adding or removing a tool drops the cached history (tools render ahead of it).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "Glm 5.3 Flash"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

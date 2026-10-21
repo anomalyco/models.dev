@@ -1,25 +1,28 @@
-# Sources :
-#   https://mistral.ai/news/voxtral-tts/  ($0.016 per 1k characters)
-#   https://docs.mistral.ai/capabilities/audio/text_to_speech
-# Le bloc [cost] est volontairement absent : la synthèse se facture au CARACTÈRE
-# ($16 per 1M characters) et non au token, unité que le schéma ne modélise pas.
-# Modèle de 4 milliards de paramètres, neuf langues, clonage de voix zero-shot à
-# partir de deux à trois secondes d'audio de référence.
+# Sources:
+#   https://docs.mistral.ai/models/voxtral-tts-26-03 (Voxtral TTS, API IDs voxtral-mini-tts-2603 and
+#     voxtral-mini-tts-latest, released 2026-03-23; open weights under CC BY-NC 4.0 at
+#     https://huggingface.co/mistralai/Voxtral-4B-TTS-2603; $16 per 1M output characters)
+#   https://docs.mistral.ai/studio/audio/text_to_speech/speech (POST /v1/audio/speech; response_format
+#     pcm|wav|mp3|flac|opus, default mp3; a 2-3 second reference audio clip can clone a voice)
+#   https://mistral.ai/news/voxtral-tts
+# No [cost]: speech is billed per output character ($16 per 1M), left out to keep this model's v1 output unchanged.
+schema = 2
+type = "speech"
 name = "Voxtral Mini TTS (latest)"
 description = "Multilingual text-to-speech model with zero-shot voice cloning"
 family = "voxtral"
-release_date = "2026-03-01"
-last_updated = "2026-03-01"
-attachment = false
-reasoning = false
+open_weights = true
+release_date = "2026-03-23"
+
+[modalities]
+input = ["text"]
+output = ["audio/pcm", "audio/wav", "audio/mpeg", "audio/flac", "audio/opus"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = false
-tool_call = false
-open_weights = false
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["audio"]

@@ -1,0 +1,39 @@
+# Effort: reasoning_effort = none|low|high|max; none disables reasoning.
+# Graded levels match native DeepSeek Flash 1017; reasoning.enabled = false is equivalent to none.
+# https://docs.deepinfra.com/chat/reasoning
+# https://api.deepinfra.com/models/deepseek-ai/DeepSeek-V4.1-Flash-1017/schema/openai-chat-completions
+# https://api-docs.deepseek.com/guides/thinking_mode
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 16000/16058 -> 16000/16073; 16000/16058 -> 16000/16073]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 16256/16362 -> 0/16387 (reasoning tokens 0 -> 29); 15616/15722 -> 0/15747 (reasoning tokens 0 -> 28)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 15872/15982 -> 0/16033; 15872/15982 -> 0/16033]
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
+system_updates = true
+effort_updates = false
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.6
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

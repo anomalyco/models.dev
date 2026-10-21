@@ -1,0 +1,20 @@
+# https://novita.ai/models/model-detail/qwen-qwen3.6-27b
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking_budget (reasoning tokens)
+schema = 2
+base_model = "alibaba/qwen3.6-27b"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+effort_updates = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3.6

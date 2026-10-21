@@ -1,28 +1,20 @@
-name = "Solar Mini 4"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Upstage)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "upstage/solar-mini4"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "solar"
-release_date = "2026-09-23"
-last_updated = "2026-09-23"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-open_weights = false
+system_updates = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
 
-[cost]
-input = 0.05
-output = 0.2
-cache_read = 0.005
-
-[limit]
-context = 524_288
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.2

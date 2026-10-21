@@ -1,0 +1,30 @@
+# Released 2026-10-15 under the FLUX Kommunity License: https://bfl.ai/blog/flux-3-image-klein
+#   Inputs PNG, JPEG or WebP: https://docs.bfl.ml/llms-full.txt ("Images can be PNG, JPEG, or WebP")
+#   Output: output_format jpeg (default) or png (Flux3ImageKleinInputs in https://api.bfl.ai/openapi.json)
+schema = 2
+v2_only = true
+type = "image"
+name = "FLUX 3 Image Klein"
+description = "5.6B open-weight FLUX 3 image generation and editing model"
+family = "flux"
+open_weights = true
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/jpeg", "image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/black-forest-labs/flux-3-image-klein"

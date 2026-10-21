@@ -1,19 +1,30 @@
 # Managed catalog and rates: https://router.requesty.ai/v1/models/managed
 # Reasoning controls: https://docs.requesty.ai/features/reasoning
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 base_model = "openai/gpt-6.1-sol"
 name = "GPT-6.1 Sol (EU)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
-[cost]
-input = 2.4
-output = 12
-cache_read = 0.12
+[cost.text.input]
+price = 2.4
+cache = { read = 0.12, write = 3 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 4.8
-output = 18
-cache_read = 0.24
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.8
+cache = { read = 0.24, write = 6 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 18

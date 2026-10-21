@@ -1,23 +1,53 @@
+# Sources:
+# - Release (2026-04-20): https://www.kimi.ai/blog/kimi-k2-6, https://huggingface.co/moonshotai/Kimi-K2.6
+# - Context: https://platform.kimi.ai/docs/guide/kimi-k2-6-quickstart
+# - Input formats: https://platform.kimi.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats lists them
+#   literally as MIME types ("Images support the following formats (MIME types): image/jpeg, image/png, image/gif,
+#   image/webp, image/bmp, image/heic, image/heif"; "Videos support the following formats (MIME types): video/mp4,
+#   video/mpeg, video/mov, video/avi, video/x-flv, video/mpg, video/webm, video/wmv, video/3gpp"), so the strings are kept
+#   as written, the same as the Gemini lab files.
+# Open weights: sampling is a runtime feature, so the lab keeps temperature/top_p/top_k on;
+# Moonshot's own API fixes them (see providers/moonshotai).
+schema = 2
 name = "Kimi K2.6"
 description = "Multimodal Kimi workhorse for agent loops, coding tasks, and visual context"
 family = "kimi-k2"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
 open_weights = true
+knowledge = "2025-01"
+release_date = "2026-04-20"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 262_144
 output = 262_144
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

@@ -5,6 +5,7 @@
 # TokenGo OpenAI-compatible extra_body; same on/off control as typical Qwen relays.
 # No thinking_budget on this host (generic relays omit DashScope budget).
 base_model = "alibaba/qwen3.5-397b-a17b"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"

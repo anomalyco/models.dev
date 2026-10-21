@@ -1,0 +1,27 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/llama/llama4-scout (us-east5 only)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+schema = 2
+base_model = "meta/llama-4-scout-17b-instruct"
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+system_updates = false
+effort_updates = false
+
+[limit]
+context = 1_310_720
+output = 8_192
+
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 0.7

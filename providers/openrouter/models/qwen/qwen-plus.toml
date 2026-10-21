@@ -1,16 +1,28 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Alibaba (live)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "alibaba/qwen-plus"
-reasoning = false
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
 structured_output = true
+system_updates = false
+effort_updates = false
 
-[cost]
-input = 0.26
-output = 0.78
-cache_read = 0.052
-cache_write = 0.325
+[cost.text.input]
+price = 0.26
+cache = { read = 0.052, write = 0.325 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.78
-output = 2.34
-cache_read = 0.156
-cache_write = 0.975
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.78
+cache = { read = 0.156, write = 0.975 }
+
+[cost.text.output]
+price = 0.78
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2.34

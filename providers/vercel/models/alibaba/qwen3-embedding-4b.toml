@@ -1,18 +1,10 @@
-name = "Qwen3 Embedding 4B"
-description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "qwen"
-release_date = "2025-06-05"
-last_updated = "2025-06-05"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
+schema = 2
+base_model = "alibaba/qwen3-embedding-4b"
 
-[limit]
-context = 32_768
-output = 32_768
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.02

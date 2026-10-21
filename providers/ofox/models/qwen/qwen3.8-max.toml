@@ -6,22 +6,23 @@
 # Toggle: enable_thinking true|false (hybrid; Qwen/DashScope surface through Ofox)
 # Effort: reasoning_effort = low|medium|xhigh (default xhigh); high accepted as alias → xhigh
 # Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+# structured_output: Ofox's Qwen page documents response_format json_schema (https://ofox.ai/docs/develop/models/qwen); Alibaba's own API agrees (providers/alibaba).
+schema = 2
 base_model = "alibaba/qwen3.8-max"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
+[cost.text.input]
+price = 1.71
+cache = { read = 0.17, write = 2.14 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 0
-max = 262_144
-
-[cost]
-input = 1.71
-output = 5.14
-cache_read = 0.17
-cache_write = 2.14
+[cost.text.output]
+price = 5.14

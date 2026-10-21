@@ -1,5 +1,6 @@
 # Budget: thinking_budget. Dedicated thinking SKU, so no off switch.
 base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
+structured_output = true
 reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 81_920 }]
 
 [cost]

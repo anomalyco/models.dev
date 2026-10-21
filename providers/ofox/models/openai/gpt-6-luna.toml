@@ -3,18 +3,33 @@
 # - Ofox catalog API: https://api.ofox.ai/v2/models/catalog?include=provider_price&search=gpt-6-luna
 # - OpenAI model docs (pricing/reasoning): https://developers.openai.com/api/docs/models/gpt-6-luna
 # Ofox provider_price override is flat $0.08/$0.40 (+ cache) with no context tier in the catalog, so no [[cost.tiers]].
+# Mid-conversation (Ofox Responses, https://ofox.ai/docs/api/openai/responses): system_updates, effort_updates, tools.updates unset: OpenAI supports them, but Ofox's reference doesn't document passing them through.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/gpt#caching).
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max (https://ofox.ai/docs/develop/models/gpt/reasoning)
+schema = 2
 base_model = "openai/gpt-6-luna"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
 
-[cost]
-input = 0.08
-output = 0.4
-cache_read = 0.008
-cache_write = 0.1
+[api.responses]
+base_url = "https://api.ofox.ai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://api.ofox.ai/v1"
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.75

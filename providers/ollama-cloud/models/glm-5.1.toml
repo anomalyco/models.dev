@@ -1,27 +1,31 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+# Lab identity: zhipuai/glm-5.1 (Ollama library page https://ollama.com/library/glm-5.1).
+# Retired: POST https://ollama.com/api/show returns "glm-5.1 was retired on September 25, 2026" (2026-10-21); it is no longer in https://ollama.com/v1/models.
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+schema = 2
+base_model = "zhipuai/glm-5.1"
 name = "glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-release_date = "2026-03-27"
-last_updated = "2026-04-07"
-open_weights = true
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = false
+cache = { supported = true, implicit = true }
 
 [limit]
-context = 202752
-output = 131072
+context = 202_752
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 1.0
-output = 3.2
-cache_read = 0.2
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

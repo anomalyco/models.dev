@@ -1,0 +1,27 @@
+# Released in September 2026 (ModelArk ID dola-seedream-5-0-flash-260915); ByteDance published no launch post.
+#   https://byteplus-sa.github.io/ComfyUI-BytePlus-ModelArk/nodes/seedream/ (output_format jpeg or png)
+#   Input formats jpeg, png, webp, bmp, tiff, gif, heic, heif:
+#   https://ai.byteplus.com/resources/seedream-5-0-overview-what-we-know-about-this-version
+schema = 2
+v2_only = true
+type = "image"
+name = "Seedream 5.0 Flash"
+description = "Fast, low-cost Seedream 5.0 image generation and editing model"
+family = "seed"
+open_weights = false
+release_date = "2026-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif"]
+output = ["image/jpeg", "image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

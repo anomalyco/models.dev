@@ -2,16 +2,22 @@
 # https://api-docs.deepseek.com/quick_start/pricing/
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max (Flash; lab maps xhigh→high)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/deepseek).
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+effort_updates = false
+cache = { supported = true, implicit = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 0.44
+cache = { read = 0.014 }
 
-[cost]
-input = 0.44
-output = 1.32
-cache_read = 0.014
+[cost.text.output]
+price = 1.32

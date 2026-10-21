@@ -1,0 +1,29 @@
+# Modalities: image formats JPEG, PNG, WebP, GIF (https://docs.llmgateway.io/features/vision)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
+name = "Reka Edge 2603"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+family = "reka"
+open_weights = false
+release_date = "2026-10-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+effort_updates = false
+
+[limit]
+context = 16_384
+output = 16_384
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.1

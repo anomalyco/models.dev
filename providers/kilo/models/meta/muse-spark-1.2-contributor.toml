@@ -1,28 +1,31 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 name = "Meta: Muse Spark 1.2 Contributor"
 description = "Muse Spark 1.2 contributor tier is a reasoning model from Meta designed for developers who want to start building at an even lower cost. It’s meaningfully cheaper than Muse Spark..."
 family = "muse"
-release_date = "2026-08-21"
-last_updated = "2026-08-21"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-21"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.002
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

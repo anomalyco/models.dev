@@ -1,0 +1,30 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "NVIDIA Nemotron 3.5 Super VL"
+description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
+prompt_cache_key = true
+
+[limit]
+output = 1_048_576
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.65

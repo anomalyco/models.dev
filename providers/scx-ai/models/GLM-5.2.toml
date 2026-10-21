@@ -15,6 +15,7 @@
 # 1515/969/1181), so the Z.AI effective set high/max is kept rather than
 # inventing extra levels.
 base_model = "zhipuai/glm-5.2"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
 [interleaved]

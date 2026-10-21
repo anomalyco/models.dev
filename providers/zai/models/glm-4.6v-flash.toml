@@ -1,14 +1,28 @@
+# Sources (accessed 2026-10-19):
+# - Pricing (USD): https://docs.z.ai/guides/overview/pricing
+# - Model: https://docs.z.ai/guides/vlm/glm-4.6v
+# - Thinking: https://docs.z.ai/guides/capabilities/thinking-mode, https://docs.z.ai/guides/capabilities/thinking
+# - Caching (automatic, no write price): https://docs.z.ai/guides/capabilities/cache
+# - Chat API (temperature and top_p, no top_k; images jpg/png; video mp4/mkv/mov): https://docs.z.ai/api-reference/llm/chat-completion
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Mid-conversation (checked live 2026-10-19 on api.z.ai and open.bigmodel.cn): a late system message
+# is accepted and keeps the cache; adding or removing tools between turns drops it.
+schema = 2
 base_model = "zhipuai/glm-4.6v-flash"
-# Free Flash tier on Z.AI; cost shape mirrors providers/zai/models/glm-4.5-flash.toml.
-# Lab metadata (limits/modalities) lives in models/zhipuai/glm-4.6v-flash.toml.
-# https://z.ai/blog/glm-4.6v
-# https://huggingface.co/zai-org/GLM-4.6V-Flash
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+top_k = false
+system_updates = true
+cache = { supported = true, implicit = true, explicit = false }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

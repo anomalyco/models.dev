@@ -1,0 +1,22 @@
+# Library page https://modal.com/library/zai/glm-5-3 (accessed 2026-10-21): Shared Endpoint model ID zai-org/GLM-5.3;
+#   prompt $1.40, cached prompt $0.26, completion $4.40 per MTok; "reasoning_effort parameter (low, high, or max)".
+#   The spec block says "Text, image & video" but the library index lists it as Language; the lab's text input is kept.
+# Modal Shared Endpoints (https://modal.com/docs/guide/endpoints): Chat Completions, Responses and Anthropic Messages APIs,
+#   automatic prefix KV cache with Modal-Routing-Affinity-Key routing.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { supported = true, implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

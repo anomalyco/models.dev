@@ -1,0 +1,12 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
+# https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+schema = 2
+v2_only = true
+base_model = "voyageai/voyage-4"
+
+[api.embeddings]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+
+[cost.text.input]
+price = 0.06

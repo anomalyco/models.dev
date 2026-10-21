@@ -1,27 +1,39 @@
-# Opt in with chat_template_args.enable_thinking=true. Baseten now documents
-# reasoning_effort = none | high | max for GLM 5.2, and returns a 400 for any
-# value outside that set. GLM 5.2 honors reasoning_effort both top-level and
-# inside chat_template_args. No reasoning-token budget is documented.
+# Reasoning is off by default; opt in with chat_template_args.enable_thinking=true.
+# Baseten documents reasoning_effort = none | low | high | max for GLM 5.2, each
+# run as sent, honored top-level and inside chat_template_args. No
+# reasoning-token budget is documented.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 12224/12299 -> 12288/12313; 12544/12619 -> 12608/12633]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12544/12604 -> 0/12610 (reasoning tokens 0 -> 67); 12224/12284 -> 0/12290 (reasoning tokens 0 -> 61)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12672/12749 -> 64/12799; 12352/12429 -> 192/12479]
+# Image input: listed in Baseten's vision guide (https://docs.baseten.co/inference/model-apis/vision) and the catalog's input_modalities, but every image request returned 403 "Media could not be processed ... Authentication failed" on 2026-10-21, so no formats could be confirmed.
+schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
-attachment = true
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

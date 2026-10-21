@@ -1,0 +1,22 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = true
+name = "DeepSeek V4.1 Flash Free"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 200_000
+output = 32_000
+
+[provider]
+api = "https://opencode.ai/inference/openai/v1"

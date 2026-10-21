@@ -1,27 +1,22 @@
-name = "GLM-5"
+# Lab identity: https://huggingface.co/zai-org/GLM-5
+schema = 2
+base_model = "zhipuai/glm-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.00
-output = 3.20
-cache_read = 0.20
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 context = 202_752
-output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

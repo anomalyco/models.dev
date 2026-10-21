@@ -1,22 +1,21 @@
+# Sources: Poe API model entry + live /v1/models comparison, accessed 2026-10-12
+#   (verified live with packages/core/script/poe-reasoning-audit.py)
+#   — https://poe.com/gemini-3.1-flash-lite
+# - effort: parameters[].thinking_level = minimal|low|high (Poe's per-bot enum)
+# - cost: pricing.prompt x1e6 -> 0.2525, completion -> 1.5152 USD/MTok (USD per token,
+#   no FX conversion). This bot reports no pricing.input_cache_read -> no cache_read
+# - modalities: architecture.input_modalities lists no pdf -> pdf dropped from input
+# - The previous inline copy of this file carried release_date 2026-02-18, which is
+#   Poe's bot-created date and contradicted the lab's 2026-05-07; base_model restores
+#   Google's date (and every other lab fact it duplicated verbatim)
+base_model = "google/gemini-3.1-flash-lite"
+structured_output = true
 name = "Gemini-3.1-Flash-Lite"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-release_date = "2026-02-18"
-last_updated = "2026-02-18"
-attachment = true
-reasoning = true
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "high"] }]
-temperature = false
-open_weights = false
-tool_call = true
 
 [cost]
-input = 0.25
-output = 1.5
-
-[limit]
-context = 1_048_576
-output = 65_536
+input = 0.2525
+output = 1.5152
 
 [modalities]
 input = ["text", "image", "video", "audio"]
-output = ["text"]

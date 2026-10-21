@@ -1,23 +1,27 @@
+schema = 2
+type = "embedding"
 name = "text-embedding-3-small"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
-release_date = "2024-01-25"
-last_updated = "2024-01-25"
-attachment = false
-reasoning = false
-temperature = false
-knowledge = "2024-01"
-tool_call = false
 open_weights = false
+knowledge = "2024-01"
+release_date = "2024-01-25"
 
-[cost]
-input = 0.02
-output = 0.00
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 8_191
 output = 1_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

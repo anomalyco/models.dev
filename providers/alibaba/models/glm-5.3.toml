@@ -1,0 +1,25 @@
+# Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, Singapore, accessed 2026-10-19).
+# Capabilities: Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions; structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (tool definitions count as part of the system message, so changing tools changes the prefix).
+# Thinking only: enable_thinking accepts only true; Effort: reasoning_effort = low|high|max (default max); thinking_budget is ignored (Chat API reference).
+# Cache: implicit (context-cache model lists); the hit price is not set.
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: enable_thinking=false rejected; reasoning_effort outside low|high|max rejected; late system message accepted, obeyed and kept the implicit cache; reasoning_effort changes missed it; adding tools missed it.
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+system_updates = true
+effort_updates = false
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+
+[cost.text.output]
+price = 4.4

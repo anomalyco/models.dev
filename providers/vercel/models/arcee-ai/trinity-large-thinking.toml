@@ -1,13 +1,19 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "arcee-ai/trinity-large-thinking"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 0.25
-output = 0.9
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_100
 output = 80_000
+
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 0.8

@@ -1,23 +1,34 @@
-# Native `/ai/run` accepts `reasoning_effort = low|medium|high` and
-# `chat_template_kwargs.enable_thinking = true|false`; no budget is documented.
-# https://developers.cloudflare.com/workers-ai/models/nemotron-3-120b-a12b/sync-input.json (accessed 2026-06-25)
-
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default: true).
+# Effort: chat_template_kwargs.low_effort = true (low) | false (high, default).
+# The input schema has no reasoning_effort; live 2026-10-19 it is ignored (same prompt
+# tokens and reasoning length for low and high, none is rejected), while low_effort
+# appends Nemotron's low-effort marker and shortens reasoning. No budget is documented.
+# https://developers.cloudflare.com/workers-ai/models/nemotron-3-120b-a12b/sync-input.json (accessed 2026-10-19)
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted, adds a role header (+20 tokens) and is honored; the chat template renders it in place.
+# No prefix cache on this model, so effort and tool changes keep nothing.
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super 120B"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high"] }
+cache = { supported = false }
 structured_output = true
-interleaved = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.5
-output = 1.5
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 256_000
 output = 256_000
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

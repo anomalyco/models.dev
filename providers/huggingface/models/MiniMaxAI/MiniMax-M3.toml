@@ -1,13 +1,22 @@
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (minimax/MiniMax-M3).
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
-structured_output = true
 
-[cost]
-input = 0.3
-output = 1.2
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 524_288
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

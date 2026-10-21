@@ -1,0 +1,31 @@
+# Model ID openai/gpt-5.6-sol. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
+# of the endpoint Standard Compute routes this model to, as charged against the budget
+# (price listing: https://openrouter.ai/api/v1/models/openai/gpt-5.6-sol/endpoints, accessed 2026-10-16).
+# Context tiers start at 272,000 prompt tokens.
+base_model = "openai/gpt-5.6-sol"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.4
+cache_write = 5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 8
+output = 30
+cache_read = 0.8
+cache_write = 10
+
+[limit]
+input = 850_000
+output = 50_000
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

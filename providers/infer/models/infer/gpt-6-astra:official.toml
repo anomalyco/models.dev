@@ -3,6 +3,7 @@
 # Responses request reasoning.effort follows the underlying OpenAI model.
 base_model = "openai/gpt-6-astra"
 base_model_omit = ["limit.input"]
+structured_output = true
 name = "GPT-6 Astra (Official API)"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 

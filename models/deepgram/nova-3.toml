@@ -1,0 +1,24 @@
+# Released 2025-02-12: https://deepgram.com/learn/introducing-nova-3-speech-to-text-api
+# Input formats (MP3, MP4, AAC, WAV, FLAC, M4A, Ogg, Opus, WebM): https://developers.deepgram.com/docs/supported-audio-formats
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Nova-3"
+description = "General-purpose speech-to-text model with monolingual and multilingual transcription"
+open_weights = false
+release_date = "2025-02-12"
+
+[modalities]
+input = ["audio/mpeg", "audio/mp4", "audio/aac", "audio/wav", "audio/flac", "audio/ogg", "audio/opus", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,18 +1,37 @@
-name = "Seedance 2.0"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
-family = "seed"
-release_date = "2026-04-14"
-last_updated = "2026-04-14"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
-
-[limit]
-context = 0
-output = 0
+# Modalities: Seedance input images jpeg, png, webp, bmp, tiff, gif, heic, heif (https://ai.byteplus.com/ark/region:ap-southeast-1/docs/create-video-generation-task-api); AI Gateway: all Seedance models output MP4 (https://vercel.com/docs/ai-gateway/modalities/video-generation/text-to-video)
+schema = 2
+base_model = "bytedance-seed/seedance-2.0"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif"]
+output = ["video/mp4"]
+
+[api.videos]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.video.output]
+price = 7
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 7.7
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" } }
+price = 4
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480p" }, input_video = { equals = true } }
+price = 4.3
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" }, input_video = { equals = true } }
+price = 4.3
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, input_video = { equals = true } }
+price = 4.7
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" }, input_video = { equals = true } }
+price = 2.4

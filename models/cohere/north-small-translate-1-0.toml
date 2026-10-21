@@ -1,0 +1,28 @@
+# https://docs.cohere.com/docs/north-small-translate-1.0
+# https://docs.cohere.com/changelog (September 9, 2026)
+schema = 2
+name = "North Small Translate"
+description = "Open-weight translation model for more than 50 languages and locale variants"
+family = "north"
+open_weights = true
+release_date = "2026-09-09"
+license = "CC-BY-NC-4.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_000
+output = 16_000
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/North-Small-Translate-1.0"

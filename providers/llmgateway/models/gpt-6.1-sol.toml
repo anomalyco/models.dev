@@ -1,11 +1,20 @@
+# system_updates = true: the gateway keeps later system messages in place on openai, azure (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts: Claude native or <system-reminder> user turn, Gemini user turn, OpenAI/xAI forwarded)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+# Cache: automatic, plus prompt_cache_options explicit mode with prompt_cache_breakpoint and optional 30m TTL on GPT-5.6+ (https://docs.llmgateway.io/features/caching/provider-cache-control)
+schema = 2
 base_model = "openai/gpt-6.1-sol"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true, explicit = { ttl = ["30m"] } }
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.1
-cache_write = 2.5
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 10

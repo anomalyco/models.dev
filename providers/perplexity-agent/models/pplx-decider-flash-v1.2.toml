@@ -1,0 +1,15 @@
+# Decisions API (accessed 2026-10-21): https://docs.perplexity.ai/docs/decisions/quickstart and
+#   https://docs.perplexity.ai/docs/getting-started/pricing: billed per input token, output tokens free, no per-request fee.
+#   Alias pplx-decider-flash-latest.
+schema = 2
+v2_only = true
+base_model = "perplexity/pplx-decider-flash-v1.2"
+
+[api.decisions]
+base_url = "https://api.perplexity.ai/v1"
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

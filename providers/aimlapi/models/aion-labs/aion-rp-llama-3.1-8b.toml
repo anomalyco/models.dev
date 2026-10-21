@@ -1,0 +1,16 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=aion-labs%2Faion-rp-llama-3.1-8b&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "aion-labs/aion-rp-llama-3.1-8b"
+
+[capabilities]
+structured_output = false
+effort_updates = false
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 1.10032
+
+[cost.text.output]
+price = 2.20064

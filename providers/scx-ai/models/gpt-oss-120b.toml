@@ -6,6 +6,7 @@
 # from /v1/models -- it reports a placeholder 4096 for most models.
 # Thinking is returned as `reasoning_content` on the message.
 base_model = "openai/gpt-oss-120b"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]

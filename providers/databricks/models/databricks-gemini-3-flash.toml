@@ -1,10 +1,79 @@
+# Models, inputs and lifecycle (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Reasoning (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Chat `reasoning_effort` = minimal|low|medium|high (Gemini 3 group); `low` is the default and `minimal` returns no reasoning tokens.
+# Pricing (accessed 2026-10-20): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google and OpenAI on AWS Premium/Enterprise, every region).
+# Gemini promotion: listed DBU rates exclude a 20% discount that runs through 2027-01-31, so base prices are 80% of list and a 1.25x multiplier applies from 2027-02-01.
+# Audio input and cache-read rates are the page's "Audio tokens" row; image tokens share the text rates.
+# Priority: request `service_tier = "priority"` (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/priority-mode); priority DBU rates are 1.8x standard.
+# Batch inference is billed per DBU-hour, not per token; not modeled.
+# Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
+# Images: JPEG, PNG, WebP only, up to 50 per API request (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-vision-models); video, audio and PDF follow the lab.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+schema = 2
 base_model = "google/gemini-3-flash-preview"
-# Chat `reasoning_effort = low|medium|high`; `low` is the default.
-# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
-input_audio = 1
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+  "audio/wav",
+  "audio/mp3",
+  "audio/aiff",
+  "audio/aac",
+  "audio/ogg",
+  "audio/flac",
+  "audio/mpeg",
+  "audio/m4a",
+  "audio/l16",
+  "audio/opus",
+  "audio/alaw",
+  "audio/mulaw",
+  "audio/webm",
+  "application/pdf",
+]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+system_updates = false
+cache = { supported = true, implicit = true }
+service_tier = ["priority"]
+
+[limit]
+image = { max_per_request = 50 }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3
+
+[cost.audio.input]
+price = 1
+cache = { read = 0.1 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.8
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-02-01" } }
+factor = 1.25
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }

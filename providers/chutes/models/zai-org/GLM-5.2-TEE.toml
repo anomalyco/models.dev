@@ -1,20 +1,27 @@
 # Toggle: chat_template_kwargs.thinking = true|false
 # Source: https://huggingface.co/zai-org/GLM-5.2 (chat template exposes thinking)
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
+schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 TEE"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1.25
-output = 3.95
-cache_read = 0.12499999999999997
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 65_535
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.12499999999999997 }
+
+[cost.text.output]
+price = 3.95

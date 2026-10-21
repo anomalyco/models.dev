@@ -1,23 +1,20 @@
-name = "Sonar"
-description = "Fast web-grounded Sonar for current answers, citations, and lightweight retrieval"
-family = "sonar"
-release_date = "2024-01-01"
-last_updated = "2025-09-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-knowledge = "2025-09-01"
-open_weights = false
+# Lifecycle: "Sonar Chat Completions support ended on September 27, 2026. Synchronous and streaming requests keep
+#   working: they are being reformulated as Agent API requests, rolling out gradually by model."
+#   (https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview.md, accessed 2026-10-21), so the model is
+#   deprecated. The Sonar model pages and the Sonar API reference now redirect to that page.
+# Token prices: the Sonar table on the pricing page, last archived with it on 2026-09-13
+#   (https://web.archive.org/web/20260913155539/https://docs.perplexity.ai/docs/getting-started/pricing); the current
+#   pricing page no longer lists Sonar. A live POST /v1/sonar on 2026-10-21 still answered; usage.cost billed tokens at
+#   rates that differ from that table plus a request_cost of $0.0025 (the Agent API web_search fee), so the listed
+#   prices may be stale for reformulated requests.
+# Not representable in v2 (no per-request unit): request fee per 1,000 requests by search context size, $5 low /
+#   $8 medium / $12 high (archived pricing page).
+schema = 2
+base_model = "perplexity/sonar"
+status = "deprecated"
 
-[cost]
-input = 1.00
-output = 1.00
+[cost.text.input]
+price = 1
 
-[limit]
-context = 128_000
-output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1

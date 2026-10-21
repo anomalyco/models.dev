@@ -1,19 +1,26 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
+schema = 2
 base_model = "stepfun/step-3.7-flash"
 base_model_omit = ["limit.input"]
 name = "Step 3.7 Flash (FlexAI)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.2
-output = 1.15
-cache_read = 0.03
+effort_updates = false
 
 [limit]
 context = 262_144
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.15

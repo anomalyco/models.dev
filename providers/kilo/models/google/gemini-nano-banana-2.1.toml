@@ -1,0 +1,23 @@
+schema = 2
+base_model = "google/gemini-nano-banana-2.1"
+description = "Nano Banana 2.1 (Gemini Nano Banana 2.1) is Google's image generation and editing model on the Flash tier, succeeding Nano Banana 2 and Nano Banana Pro. It improves product recontextualization,..."
+
+[modalities]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 65_536
+output = 58_982
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

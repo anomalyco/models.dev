@@ -1,22 +1,28 @@
+# Image MIME types: served on the Gemini API (https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api).
+# Gemini API image formats: https://ai.google.dev/gemini-api/docs/image-understanding (Supported image formats: image/png, image/jpeg, image/webp, image/heic, image/heif)
+# Knowledge: "cutoff date of January 2025" (Training Dataset, https://huggingface.co/google/gemma-4-31b-it).
+schema = 2
 name = "Gemma 4 31B IT"
 description = "Largest Gemma 4 instruction model for open, self-hosted chat and reasoning"
 family = "gemma"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+knowledge = "2025-01"
+release_date = "2026-04-02"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 262_144
 output = 32_768
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

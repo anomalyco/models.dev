@@ -1,28 +1,21 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-name = "Nova 2 Lite"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: served only on Amazon Bedrock Converse, which takes no mid-conversation system message for this model
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "amazon/nova-2-lite-v1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "nova"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = false
-open_weights = false
+system_updates = false
+effort_updates = false
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.3
 
-[cost]
-input = 0.3
-output = 2.5
-
-[limit]
-context = 1_000_000
-output = 65_535
-
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 2.5

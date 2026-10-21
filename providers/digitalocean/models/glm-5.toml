@@ -1,30 +1,27 @@
+# Lifecycle: lifecycle_status = end_of_life in https://api.digitalocean.com/v2/gen-ai/models (2026-10-20).
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+schema = 2
+base_model = "zhipuai/glm-5"
 name = "GLM 5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-04-16"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 1
-output = 3.2
-cache_read = 0.2
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+effort_updates = false
 
 [limit]
 context = 64_000
 output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

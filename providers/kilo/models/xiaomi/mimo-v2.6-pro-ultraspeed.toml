@@ -1,12 +1,19 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
 description = "MiMo-V2.6-Pro-UltraSpeed is the fast speed edition of Xiaomi's flagship foundation model, MiMo-V2.6-Pro. Built from the same 1T MiMo-V2.6-Pro checkpoint, it matches the original model in quality while delivering roughly 10x..."
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 4.35
+cache = { read = 0.036 }
 
-[cost]
-input = 4.35
-output = 8.7
-cache_read = 0.036
+[cost.text.output]
+price = 8.7

@@ -1,6 +1,7 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/glm-5.3 (accessed 2026-09-18)
 base_model = "zhipuai/glm-5.3"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]

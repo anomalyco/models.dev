@@ -4,6 +4,7 @@
 # documented values are rejected with a 400. Verified against the production API.
 # See https://docs.greenpt.ai/chat-completion
 base_model = "openai/gpt-oss-120b"
+structured_output = true
 attachment = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 

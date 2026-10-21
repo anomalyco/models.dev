@@ -1,0 +1,26 @@
+# Modalities: Meta Model API image types png, jpeg, gif, webp (x-icon has no registered MIME type), https://dev.meta.ai/docs/file-handling
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "meta/muse-spark-open"
+description = "Open Llama multimodal model for image understanding and text reasoning"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+
+[limit]
+output = 1_048_576
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

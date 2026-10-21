@@ -1,12 +1,45 @@
+# Structured output: "Supported"; maximum output tokens 65,536 (model page). responseSchema verified live 2026-10-08.
+# Retires 2026-10-20: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions
+# https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-lite
+# v2 capabilities and prices:
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/context-cache/context-cache-overview
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/priority-paygo
+# Explicit cache storage is per 1M tokens per hour and isn't scaled by tier, region, or date.
+# Mid-conversation updates: false. Vertex takes system instructions, thinking config and tools only as request-level
+# fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
+# Thinking is off unless a thinking_budget is set (verified live 2026-10-19).
+# Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-lite
+# The documented text/plain document type is covered by `text`.
+schema = 2
 base_model = "google/gemini-2.5-flash-lite"
-base_model_omit = ["structured_output"]
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24_576 }]
+status = "deprecated"
 
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.01
-input_audio = 0.3
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/x-aac", "audio/flac", "audio/mp3", "audio/m4a", "audio/mpeg", "audio/mpga", "audio/mp4", "audio/ogg", "audio/pcm", "audio/wav", "audio/webm", "video/x-flv", "video/quicktime", "video/mpeg", "video/mpegs", "video/mpg", "video/mp4", "video/webm", "video/wmv", "video/3gpp", "application/pdf"]
+output = ["text"]
 
-[limit]
-output = 65_535
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = { min = 512, max = 24_576 } }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 2_048 }, explicit = { min_tokens = 2_048 } }
+service_tier = ["priority"]
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, storage = 1 }
+
+[cost.text.output]
+price = 0.4
+
+[cost.audio.input]
+price = 0.3
+cache = { read = 0.03, storage = 1 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.8 } }, output = 1.8 }, audio = { input = { price = 1.8, cache = { read = 1.8 } } } }

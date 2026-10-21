@@ -1,0 +1,27 @@
+# Sources (accessed 2026-10-10; prices rechecked 2026-10-21 on the model page and the
+# /v1/models pricing object: $0.17 input, $0.005 cache read, $0.7 output per 1M tokens):
+# https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
+# https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
+# https://iteracompute.com/models/deepseek-v4-1-flash/ (retail USD/MTok prices, context, and vision)
+# Effort wire path: reasoning_effort = low|high|max; reasoning.effort is also accepted.
+# The host advertises mandatory = true and supports_enable_disable = false.
+# Text-only on this host: detailed catalog input_modalities contains only text.
+# Host capability recheck (2026-10-15), exact record id = "deepseek/deepseek-v4.1-flash":
+# /v1/models data[id].reasoning: mandatory=true, supports_enable_disable=false,
+# supported_efforts=["low","high","max"]. This host exposes effort and rejects reasoning off.
+base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = true
+attachment = false
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.17
+output = 0.7
+cache_read = 0.005
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[modalities]
+input = ["text"]

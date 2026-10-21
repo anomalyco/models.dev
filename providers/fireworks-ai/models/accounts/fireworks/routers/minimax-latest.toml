@@ -12,30 +12,47 @@
 # Effort: $.reasoning_effort = "low" | "medium" | "high" (same surface as
 # accounts/fireworks/models/minimax-m3).
 # https://docs.fireworks.ai/guides/reasoning
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = false: after a system message sent after the first turn, cached tokens fell to 114 in 1 trials while the control turns hit, so it is moved to the top.
+#   effort_updates = false: changing reasoning_effort low → high on the last turn left 107/133/107 cached tokens in 3 trials.
+#   tools.updates = false: adding a second tool on the last turn left 123/207 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax Latest"
-release_date = "2026-06-12"
-last_updated = "2026-09-15"
-attachment = false
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 512_000
 
-[modalities]
-input = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
 
 [experimental.modes.priority]
-cost = { input = 0.45, output = 1.8, cache_read = 0.09 }
-provider = { body = { service_tier = "priority" } }
+body = { service_tier = "priority" }

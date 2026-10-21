@@ -1,15 +1,21 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 base_model = "alibaba/qwen3.5-plus"
 name = "Qwen3.5 Plus Thinking"
-attachment = true
-tool_call = false
-structured_output = false
-reasoning_options = []
 
-[cost]
-input = 0.4
-output = 2.4
-cache_read = 0.04
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 983_616
 input = 983_616
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 2.4

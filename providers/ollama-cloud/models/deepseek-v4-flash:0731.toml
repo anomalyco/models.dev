@@ -7,15 +7,28 @@
 # or `reasoning.effort` with high|max (DeepSeek V4 maps low/medium -> high).
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
 # API-verified context: https://ollama.com/api/show (deepseek4.context_length = 1048576)
+# Retired: POST https://ollama.com/api/show returns "deepseek-v4-flash:0731 was retired on September 25, 2026" (2026-10-21); it is no longer in https://ollama.com/v1/models.
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
+status = "deprecated"
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = false
+cache = { supported = true, implicit = true }
 
 [limit]
-context = 1048576
-output = 1048576
+context = 1_048_576
+output = 1_048_576
 
-[cost]
-input = 0.22
-output = 0.66
-cache_read = 0.007
+[cost.text.input]
+price = 0.22
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 0.66

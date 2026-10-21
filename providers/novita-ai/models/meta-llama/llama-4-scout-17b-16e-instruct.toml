@@ -1,21 +1,18 @@
-name = "Llama 4 Scout Instruct"
-description = "Open multimodal Llama model for long-context analysis and efficient agents"
-release_date = "2025-04-06"
-last_updated = "2025-04-06"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
+# https://novita.ai/models/model-detail/meta-llama-llama-4-scout-17b-16e-instruct
+# Tools: no function-calling in the catalog features; a tools request returns 400 "model features function calling not support" (live 2026-10-20).
+schema = 2
+base_model = "meta/llama-4-scout-17b-instruct"
 
-[cost]
-input = 0.18
-output = 0.59
+[capabilities]
+tools = { supported = false }
+effort_updates = false
 
 [limit]
 context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.18
+
+[cost.text.output]
+price = 0.59

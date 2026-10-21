@@ -1,0 +1,10 @@
+# Sources:
+# - https://docs.x.ai/developers/model-capabilities/audio/text-to-speech
+# - https://docs.x.ai/developers/rest-api-reference/inference/voice (POST /v1/tts, wss://api.x.ai/v1/tts)
+# - https://docs.x.ai/developers/pricing (Text to Speech: $15.00 / 1M characters)
+# The TTS endpoints take no model parameter; xAI's model catalog lists the model as grok-tts (version 1.0).
+# Not listed by the models endpoints, so xAI sync keeps this file as authored.
+# Pricing is per character, which v1 cost can't express; no [cost] authored.
+schema = 2
+v2_only = true
+base_model = "xai/grok-tts"

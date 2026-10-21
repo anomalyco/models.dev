@@ -1,0 +1,25 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-nano-banana-2.1
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/image-generation (thinking minimal|medium|high, default medium)
+# - Output: $7.50 text and thinking, $30.00 images. v1 output carries the image rate, like other image models.
+schema = 2
+v2_only = true
+base_model = "google/gemini-nano-banana-2.1"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "medium", "high"] }
+structured_output = false
+temperature = true
+top_p = true
+top_k = true
+cache = { supported = false }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 30
+
+[cost.image.output]
+price = 30

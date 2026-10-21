@@ -3,17 +3,39 @@
 # AWS recommends high to keep thinking in the reasoning channel.
 # Live 2026-09-09: high returns reasoning; strict JSON schema and max_output_tokens=8192 accepted.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted.
+# Modalities: the model card lists image, audio and video input on Mantle (Responses / Chat Completions) and Bedrock names no formats.
+# Image and audio MIME types are the base model's (Gemma docs). `video` stays generic: neither Bedrock nor Google's Gemma docs name a video format.
+schema = 2
 base_model = "google/gemma-4-E2B-it"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
-
-[cost]
-input = 0.04
-output = 0.08
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/jpeg", "image/png", "audio/mpeg", "audio/wav", "video"]
+output = ["text"]
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+service_tier = ["flex", "priority"]
+
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle" }
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.08
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

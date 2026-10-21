@@ -1,15 +1,25 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: explicit cache_control (ttl 5m|1h); automatic only through the Inference Router. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
 base_model = "anthropic/claude-opus-5"
 name = "Anthropic Claude Opus 5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+system_updates = true
+effort_updates = false
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25

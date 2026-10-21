@@ -1,19 +1,27 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: Gemini has one systemInstruction, so it is hoisted (live: cache prefix lost; https://openrouter.ai/docs/guides/best-practices/prompt-caching#google-gemini)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+schema = 2
 base_model = "google/gemini-3.1-flash-image-preview"
+
+[modalities]
+input = ["image/png", "image/jpeg", "image/webp", "text"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
-
-[cost]
-input = 0.5
-output = 3
+system_updates = false
+effort_updates = false
 
 [limit]
 output = 58_982
 
-[modalities]
-input = ["image", "text"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3
+
+[cost.image.output]
+price = 60

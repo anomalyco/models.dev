@@ -1,17 +1,23 @@
 # Included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
 base_model = "stepfun/step-3.7-flash"
 name = "Step 3.7 Flash Thinking"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 0.2
-output = 1.15
-cache_read = 0.04
+tools = { supported = true, updates = false }
+effort_updates = false
 
 [limit]
 context = 262_144
 input = 262_144
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.15

@@ -8,6 +8,7 @@
 # 16,384 / 32,768 tokens. Default is on with a 16,384-token budget. Off is
 # effort=none, so no toggle.
 base_model = "google/gemma-4-26b-a4b-it"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
 
 [cost]

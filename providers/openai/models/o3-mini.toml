@@ -1,27 +1,35 @@
+schema = 2
 name = "o3-mini"
 description = "Smaller o-series reasoner for economical coding, math, and planning tasks"
 family = "o-mini"
+open_weights = false
+knowledge = "2024-05"
 release_date = "2024-12-20"
 last_updated = "2025-01-29"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-knowledge = "2024-05"
-tool_call = true
-structured_output = true
-open_weights = false
 status = "deprecated"
 
-[cost]
-input = 1.10
-output = 4.40
-cache_read = 0.55
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = false
+system_updates = true
+effort_updates = false
+store = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+prompt_cache_key = true
 
 [limit]
 context = 200_000
 output = 100_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4

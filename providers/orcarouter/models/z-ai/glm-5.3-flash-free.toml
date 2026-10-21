@@ -1,5 +1,6 @@
 # Source: https://api.orcarouter.ai/api/pricing (z-ai/glm-5.3-flash-free, is_free_tier=true, free_base_model=z-ai/glm-5.3-flash, 1M/128k)
 base_model = "zhipuai/glm-5.3-flash"
+structured_output = true
 name = "GLM-5.3-Flash (free)"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 

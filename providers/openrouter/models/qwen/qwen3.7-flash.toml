@@ -1,34 +1,43 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Alibaba)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "alibaba/qwen3.7-flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.03
-output = 0.13
-cache_read = 0.006
-cache_write = 0.038
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.1
-output = 0.4
-cache_read = 0.02
-cache_write = 0.125
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.2
-output = 0.8
-cache_read = 0.04
-cache_write = 0.25
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006, write = 0.038 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1
+cache = { read = 0.02, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.2
+cache = { read = 0.04, write = 0.25 }
+
+[cost.text.output]
+price = 0.13
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.8

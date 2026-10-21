@@ -6,6 +6,7 @@
 # named "reasoning" (not "reasoning_content"). A tool-call request returned
 # tool_calls without reasoning text, so no interleaved claim is made.
 base_model = "google/gemma-4-31b-it"
+structured_output = true
 reasoning_options = [{ type = "toggle" }]
 
 # Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)

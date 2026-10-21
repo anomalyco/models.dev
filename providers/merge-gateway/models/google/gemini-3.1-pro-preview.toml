@@ -1,17 +1,27 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemini-3.1-pro-preview (accessed 2026-07-21)
+# Cache: default route google is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4
-output = 18
-cache_read = 0.4
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18

@@ -1,19 +1,28 @@
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "xai/grok-4.20-0309-reasoning"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2.5
-output = 5
-cache_read = 0.4
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 2_000_000
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5

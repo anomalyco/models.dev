@@ -1,22 +1,15 @@
-name = "Qwen3 Embedding 0.6B"
+# Lab identity: https://cloud-api.near.ai/v1/models hugging_face_id = Qwen/Qwen3-Embedding-0.6B
+# Served on POST /v1/embeddings (https://docs.near.ai/cloud/guides/specialized-endpoints).
+# Limit and price: https://cloud-api.near.ai/v1/models (context_length, max_output_length, per-token pricing).
+schema = 2
+base_model = "alibaba/qwen3-embedding-0.6b"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "text-embedding"
-release_date = "2025-06-03"
-last_updated = "2025-06-03"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
-
-[cost]
-input = 0.01
-output = 0.01
 
 [limit]
-context = 32768
 output = 1_024
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0.01

@@ -1,17 +1,30 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type realtime)
+# https://vercel.com/docs/ai-gateway/modalities/realtime
+# Price: session duration billed as audio input per second; $0.004 per client message not represented
+schema = 2
+type = "realtime"
 name = "Grok Voice Think Fast 1.0"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
+description = "Realtime voice model for low-latency spoken conversations"
 family = "grok"
-release_date = "2026-04-23"
-last_updated = "2026-04-23"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-04-23"
+
+[modalities]
+input = ["text", "audio/pcm"]
+output = ["text", "audio/pcm"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["text", "audio"]
-output = ["text", "audio"]
+[api.realtime]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.audio.input]
+unit = "second"
+price = 0.000834

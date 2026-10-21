@@ -1,24 +1,38 @@
-# API: thinking.type = "enabled" | "disabled" | "adaptive"; in adaptive mode the
-# reasoning depth is set by output_config.effort = "low" | "high" | "max".
-# Pricing: https://platform.kimi.ai/docs/pricing/chat-k3 (accessed 2026-07-17).
-# Chat API max_completion_tokens can be set up to 1048576 for Kimi K3:
-# https://platform.kimi.ai/docs/api/chat
+# Sources (platform.kimi.ai/docs, accessed 2026-10-19):
+# - Pricing: https://platform.kimi.ai/docs/pricing/chat (cache write $3 for the default 5m TTL, $6 for 1h)
+# - Parameters: https://platform.kimi.ai/docs/api/models-overview (switching reasoning_effort invalidates the
+#   prefix cache)
+# - Chat API: https://platform.kimi.ai/docs/api/chat (max_completion_tokens up to 1048576, prompt_cache_options.ttl
+#   = 5m|1h, explicit cache breakpoints rejected, prompt_cache_key, stream_options.include_usage)
+# - Caching: https://platform.kimi.ai/docs/guide/context-caching
+# - Dynamic tools (system message with `tools`, appended without breaking the prefix cache):
+#   https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading
+# Effort: reasoning_effort = "low" | "high" | "max" (default "max"); always thinks, reasoning in reasoning_content.
+# Live 2026-10-19: switching reasoning_effort max -> low re-wrote the whole prefix (no cache read); a mid-conversation
+# system message and a dynamic tool message were accepted, and the tool was called; tool_choice "required" works but a
+# named function returns 400 ("incompatible with thinking enabled"); temperature/top_p other than 1/0.95 return 400.
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 3.0
-output = 15.0
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required"], updates = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { ttl = ["5m", "1h"] }, explicit = false }
 
 [limit]
 output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = { "5m" = 3, "1h" = 6 } }
+
+[cost.text.output]
+price = 15

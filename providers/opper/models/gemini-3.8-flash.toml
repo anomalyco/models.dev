@@ -3,6 +3,7 @@
 # for such cards before dispatch, so temperature is accepted but not respected.
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
 base_model = "google/gemini-3.8-flash"
+structured_output = true
 temperature = false
 
 reasoning_options = []

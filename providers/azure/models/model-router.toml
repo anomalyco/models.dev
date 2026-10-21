@@ -1,21 +1,37 @@
+# Azure OpenAI resource endpoints serve model-router on Chat Completions; it is not in the Responses API model list.
+# https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#supported-models
+# https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/model-router
+# Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
+# system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
+# `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
+# Modalities: Azure OpenAI vision chat image formats (JPEG, PNG, GIF first frame only, WEBP): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/gpt-with-vision
+schema = 2
 name = "Model Router"
 description = "Automatic model router for matching prompts to suitable backends and budgets"
 family = "model-router"
+open_weights = false
 release_date = "2025-05-19"
 last_updated = "2025-11-18"
-attachment = true
-reasoning = false
-tool_call = true
-open_weights = false
 
-[cost]
-input = 0.14
-output = 0.00
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 200_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/azure" }
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0

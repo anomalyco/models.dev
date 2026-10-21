@@ -1,12 +1,21 @@
 # Source: https://api.pioneer.ai/v1/models (accessed 2026-09-11)
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): tools.updates = false: `tools` is request-level, with no tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 base_model = "mistral/ministral-14b"
+status = "deprecated"
 
-[cost]
-input = 0.2
-output = 0.2
-cache_read = 0.2
-cache_write = 0.2
+[capabilities]
+tools = { supported = true, updates = false }
 
 [limit]
 context = 256_000
 output = 131_072
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.2, write = 0.2 }
+
+[cost.text.output]
+price = 0.2

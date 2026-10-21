@@ -1,0 +1,16 @@
+schema = 2
+base_model = "mistral/mistral-small-24b-instruct-2501"
+
+[capabilities]
+structured_output = true
+service_tier = ["flex"]
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.08
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

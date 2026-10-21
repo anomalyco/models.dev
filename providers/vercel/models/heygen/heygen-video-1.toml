@@ -1,0 +1,70 @@
+# Modalities: HeyGen assets png, jpeg, mp4, webm, mp3, wav (https://developers.heygen.com/reference/upload-asset); heygen-video-1 returns an MP4 (https://developers.heygen.com/docs/quick-start)
+# Inputs: AI Gateway's catalog video_capabilities.input_limits (kinds and supported_formats), https://ai-gateway.vercel.sh/v1/models
+schema = 2
+type = "video"
+name = "HeyGen Video"
+description = "Video model for prompt-guided generation, editing, and motion workflows"
+open_weights = false
+release_date = "2026-10-09"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "video/mp4", "video/webm", "audio/mpeg", "audio/wav"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[api.videos]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.video.output]
+unit = "second"
+price = 0.01
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "768p" }, mode = { equals = "text_to_video" } }
+price = 0.018
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, mode = { equals = "text_to_video" } }
+price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "2k" }, mode = { equals = "text_to_video" } }
+price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "768p" }, mode = { equals = "image_to_video" } }
+price = 0.018
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, mode = { equals = "image_to_video" } }
+price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "2k" }, mode = { equals = "image_to_video" } }
+price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480p" }, mode = { equals = "reference_to_video" } }
+price = 0.035
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "768p" }, mode = { equals = "reference_to_video" } }
+price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, mode = { equals = "reference_to_video" } }
+price = 0.09
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "2k" }, mode = { equals = "reference_to_video" } }
+price = 0.09

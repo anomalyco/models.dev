@@ -8,6 +8,7 @@
 # (verified 2026-08-27: max_tokens=131072 -> 200, 132000 -> 400 invalid), matching
 # what openrouter/kilo/nano-gpt already declare for this model. Overridden below.
 base_model = "bytedance-seed/seed-2.0-lite"
+structured_output = true
 
 [limit]
 output = 131_072

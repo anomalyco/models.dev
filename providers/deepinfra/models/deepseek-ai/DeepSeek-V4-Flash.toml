@@ -1,25 +1,45 @@
-# Model-specific reasoning HTTP values (accessed 2026-06-25):
-# reasoning_effort = "low"|"medium"|"high"|"xhigh"; "none" disables reasoning.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables).
+# Effort: reasoning_effort = low|high|max, the DeepSeek V4 levels (minimal->low,
+# medium/xhigh->high per https://api-docs.deepseek.com/guides/thinking_mode).
+# DeepInfra's schema lists the generic none..max enum for every model and
+# documents no per-model mapping, so the lab's levels apply.
 # Sources:
+# https://docs.deepinfra.com/chat/reasoning
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash/api
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 14336/14457 -> 0/14471; 14336/14457 -> 0/14471]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 14592/14761 -> 0/14840 (reasoning tokens None -> None); 14080/14121 -> 0/14200 (reasoning tokens None -> None)]
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.09
-output = 0.18
-cache_read = 0.018
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.018, explicit = { write = { "5m" = 0.1125, "1h" = 0.18 } } }
+
+[cost.text.output]
+price = 0.18
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

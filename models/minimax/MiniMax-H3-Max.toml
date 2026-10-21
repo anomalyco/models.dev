@@ -1,0 +1,28 @@
+# "Jointly released by MiniMax and fal.ai ... post-trained by fal.ai on MiniMax H3":
+#   https://platform.minimax.io/docs/guides/video-generation (inputs: images JPG/JPEG/PNG/WEBP/HEIC/HEIF, videos
+#   MP4/MOV, audio WAV/MP3)
+# Launched 2026-08-26: https://fal.ai/minimax-h3-max, https://x.com/ArtificialAnlys/status/2092717615739494424
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "MiniMax H3 Max"
+description = "Fast video model post-trained by fal.ai on MiniMax H3, with synchronized audio at 480p and 768p"
+family = "minimax"
+open_weights = false
+release_date = "2026-08-26"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,23 +1,28 @@
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+# Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+schema = 2
+base_model = "aion-labs/aion-3.0"
 name = "Aion 3.0"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2026-07-08"
-last_updated = "2026-07-08"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = []
 
-[cost]
-input = 3.75
-output = 7.5
-cache_read = 0.9375
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
 
 [limit]
 context = 128_000
-output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 3.75
+cache = { read = 0.9375 }
+
+[cost.text.output]
+price = 7.5

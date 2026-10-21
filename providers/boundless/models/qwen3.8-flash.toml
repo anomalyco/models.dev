@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen3.8-flash"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium"] }]
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+
+[modalities]
+input = ["text", "image"]

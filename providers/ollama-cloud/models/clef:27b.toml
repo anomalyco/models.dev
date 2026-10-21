@@ -1,0 +1,15 @@
+# Sources (accessed 2026-10-20):
+# https://registry.ollama.com/library/clef:27b-cloud — Clef 27B by Cloudflare, $0.24/1M input,
+#   64K context, Text+Image input, decision/cloud/27b tags, served via POST /v1/systemone.
+# https://ollama.com/pricing — clef $0.24 input per 1M tokens, no cached/output charge.
+# https://ollama.com/library/clef — 27B decision model from Cloudflare, cloud input limit
+#   65,536 tokens billed per input token, usage output_tokens 0. Lab identity Cloudflare Clef.
+# Ollama Cloud serves Clef via SystemOne (not chat completions); input-only billing matches lab output 0.
+schema = 2
+base_model = "cloudflare/clef"
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0

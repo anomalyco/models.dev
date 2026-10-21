@@ -1,25 +1,23 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live: cache prefix kept on gpt-4.1, gpt-5.4, gpt-6-sol)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Cache: automatic from 1,024 tokens (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
+schema = 2
+base_model = "openai/gpt-4o-mini"
 name = "GPT-4o-mini (2024-07-18)"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "o-mini"
-release_date = "2024-07-18"
-last_updated = "2024-07-18"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
 structured_output = true
-knowledge = "2023-10-31"
-open_weights = false
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.075
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
 
-[limit]
-context = 128_000
-output = 16_384
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 0.6

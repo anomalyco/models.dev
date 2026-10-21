@@ -1,6 +1,7 @@
 # Availability and pricing: https://opencode.ai/docs/zen
 # Reasoning: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6.1-sol
 base_model = "openai/gpt-6.1-sol"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
@@ -18,3 +19,4 @@ cache_write = 5
 
 [provider]
 npm = "@ai-sdk/openai"
+api = "https://opencode.ai/inference/openai/v1"

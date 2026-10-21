@@ -1,0 +1,25 @@
+# Lab metadata carried over from providers/openrouter/models/relace/relace-apply-3.toml (curated catalogue data
+#   already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: https://docs.relace.ai/api-reference/instant-apply/apply.md takes no sampling parameters, and
+#   Relace's own endpoint advertises none (temperature/top_p/top_k false).
+schema = 2
+name = "Relace Apply 3"
+description = "General-purpose chat model for instruction following, writing, and analysis"
+open_weights = false
+release_date = "2025-09-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 256_000
+output = 128_000

@@ -1,27 +1,21 @@
-name = "GLM-4.7-Flash"
+# Lab identity: https://huggingface.co/zai-org/GLM-4.7-Flash
+schema = 2
+base_model = "zhipuai/glm-4.7-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-family = "glm-flash"
-release_date = "2025-08-08"
-last_updated = "2025-08-08"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2025-04"
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+effort_updates = false
 
 [limit]
-context = 200_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

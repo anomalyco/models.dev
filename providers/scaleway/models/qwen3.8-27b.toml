@@ -7,6 +7,7 @@
 # chain-of-thought in `reasoning` and counts it inside completion_tokens.
 
 base_model = "alibaba/qwen3.8-27b"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 status = "beta"
 

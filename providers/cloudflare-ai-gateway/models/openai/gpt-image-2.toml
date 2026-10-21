@@ -1,0 +1,23 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image fields (the lab's MIME types) and output_format enum, else the lab's outputs. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+# output_tokens is the text output price; image output tokens are priced apart (output_image_tokens), as on OpenAI: https://developers.openai.com/api/docs/pricing
+schema = 2
+v2_only = true
+base_model = "openai/gpt-image-2"
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10
+
+[cost.image.input]
+price = 8
+cache = { read = 2 }
+
+[cost.image.output]
+price = 30

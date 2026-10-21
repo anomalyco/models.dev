@@ -5,6 +5,7 @@
 # reasoning_effort is rejected with 400 by this endpoint for the reasoning variant: no caller control.
 # Only text and base64 images were verified through this endpoint; PDF input is not declared.
 base_model = "xai/grok-4.20-0309-reasoning"
+structured_output = true
 reasoning_options = []
 
 [cost]

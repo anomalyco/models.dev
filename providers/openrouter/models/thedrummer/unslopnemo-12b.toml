@@ -1,23 +1,18 @@
-name = "UnslopNemo 12B"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "thedrummer/unslopnemo-12b"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-release_date = "2024-11-08"
-last_updated = "2024-11-08"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = true
-knowledge = "2024-04-30"
-open_weights = true
+system_updates = true
+effort_updates = false
 
-[cost]
-input = 0.4
-output = 0.4
+[cost.text.input]
+price = 0.4
 
-[limit]
-context = 1_024_000
-output = 819_200
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.4

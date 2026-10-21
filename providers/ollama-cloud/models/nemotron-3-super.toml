@@ -1,24 +1,24 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
-name = "nemotron-3-super"
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-family = "nemotron"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-release_date = "2026-03-11"
-last_updated = "2026-03-12"
-open_weights = true
+name = "nemotron-3-super"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = false
+cache = { supported = true, implicit = true }
 
 [limit]
-context = 262144
-output = 65536
+output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.015
+cache = { read = 0.015 }
 
-[cost]
-input = 0.015
-output = 0.6
-cache_read = 0.015
+[cost.text.output]
+price = 0.6

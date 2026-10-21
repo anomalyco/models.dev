@@ -1,0 +1,11 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type reranking)
+# https://vercel.com/docs/ai-gateway/modalities/reranking
+schema = 2
+base_model = "voyageai/rerank-3-lite"
+name = "Voyage Rerank 3 Lite"
+
+[api.rerank]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.text.input]
+price = 0.02

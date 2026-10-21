@@ -1,15 +1,33 @@
+# Models, inputs and lifecycle (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Deprecated: Gemini 3 Pro retired 2026-03-26, with calls redirected to Gemini 3.1 Pro until 2026-06-07 (retired-models-policy).
+# Reasoning (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Chat `reasoning_effort` = low|medium|high; `low` is the default.
+# Prices are the last published rates; the current pricing page no longer lists this model.
+# Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+schema = 2
 base_model = "google/gemini-3-pro-preview"
-# Chat `reasoning_effort = low|medium|high`; `low` is the default.
-# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+status = "deprecated"
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+cache = { supported = true, implicit = true }
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4
-output = 18
-cache_read = 0.4
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18

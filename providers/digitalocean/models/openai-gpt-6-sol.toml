@@ -1,20 +1,35 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: automatic for prompts of 1024+ tokens. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
 base_model = "openai/gpt-6-sol"
 name = "OpenAI GPT-6 Sol"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 4
-output = 15
-cache_read = 0.4
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
+structured_output = true
+system_updates = true
+effort_updates = false
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15

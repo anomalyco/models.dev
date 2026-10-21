@@ -1,6 +1,7 @@
 # see: https://www.scaleway.com/en/docs/generative-apis/reference-content/supported-models/#deepseek-v4-flash-0731
 # last update: 2026-08-21
 base_model = "deepseek/deepseek-v4-flash-0731"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 status = "beta"
 

@@ -19,6 +19,7 @@
 # limit.context: the catalog reports 203_000 for this deployment, not the lab's
 # 200_000.
 base_model = "zhipuai/glm-5.1"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [cost]

@@ -1,21 +1,24 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Crusoe)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium"], budget = {} }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.08
-output = 0.45
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 235_929
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2.4

@@ -1,31 +1,40 @@
 # Alias for the current Gemini Flash-Lite release (gemini-3.5-flash-lite).
 # Keep reasoning_options and cost in sync with gemini-3.5-flash-lite.
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
 name = "Gemini Flash-Lite Latest"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 family = "gemini-flash-lite"
-release_date = "2026-07-21"
-last_updated = "2026-07-21"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2026-03"
 open_weights = false
+knowledge = "2026-03"
+release_date = "2026-07-21"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.30
-output = 2.50
-cache_read = 0.03
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
+cache = { supported = true, implicit = true, explicit = true }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.5

@@ -1,21 +1,30 @@
+# v2 capabilities (docs for China (Beijing), accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling incl. top_k, which the DeepSeek, Kimi and MiniMax series do not support; enable_thinking defaults; stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
+# Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
+# China (Beijing) list: 0-256K $0.276/$1.101, 256K-1M $0.826/$3.301 (previously the Qwen3.6 Plus Singapore prices with a 128K tier). Explicit cache: read 10%, creation 125% of input.
+schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
-[[reasoning_options]]
-type = "budget_tokens"
-max = 262_144
+[cost.text.input]
+price = 0.276
+cache = { read = 0.0276, write = 0.345 }
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
-cache_write = 0.625
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.826
+cache = { read = 0.0826, write = 1.0325 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 2
-output = 6
-cache_read = 0.2
-cache_write = 2.5
+[cost.text.output]
+price = 1.101
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 3.301

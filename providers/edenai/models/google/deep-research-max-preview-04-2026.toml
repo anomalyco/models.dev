@@ -1,0 +1,20 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
+schema = 2
+base_model = "google/deep-research-max-preview-04-2026"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+effort_updates = false
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 12

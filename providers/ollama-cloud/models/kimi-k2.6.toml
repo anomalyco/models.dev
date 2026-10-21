@@ -1,24 +1,27 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+# Lab identity: moonshotai/kimi-k2.6 (Ollama library page https://ollama.com/library/kimi-k2.6).
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
 name = "kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
-open_weights = true
-
-[limit]
-context = 262144
-output = 262144
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.16
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = false
+cache = { supported = true, implicit = true }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

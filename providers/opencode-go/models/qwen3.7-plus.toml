@@ -30,3 +30,7 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://opencode.ai/inference/go/anthropic/v1"

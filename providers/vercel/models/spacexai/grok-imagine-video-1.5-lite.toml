@@ -1,0 +1,23 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type video)
+# https://vercel.com/docs/ai-gateway/modalities/video-generation
+schema = 2
+base_model = "xai/grok-imagine-video-1.5-lite"
+
+[modalities]
+input = ["text"]
+output = ["video/mp4"]
+
+[api.videos]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.video.output]
+unit = "second"
+price = 0.02
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" } }
+price = 0.03
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.14

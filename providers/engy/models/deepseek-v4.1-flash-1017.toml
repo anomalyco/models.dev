@@ -1,0 +1,30 @@
+# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: reasoning_effort = low|high|max
+# Prices and context: https://api.engy.ai/v1/models (2026-10-19). The authed list omits this id, so the
+# input/output split is carried from deepseek-v4.1-flash, which has the same context and price.
+# Live 2026-10-19, n=4/arm: no trace by default or with thinking=false (0/8), a trace every time with
+# thinking=true; max reasoned longer than low (median 150 vs 46 tokens).
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 1_048_576
+input = 983_040
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 0.08

@@ -1,30 +1,30 @@
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Reasoning: none. Mistral-7B-Instruct-v0.3 is a instruction model without a thinking mode (https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3); Pioneer's catalog listed the same boilerplate levels on every model.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): tools.updates = false: `tools` is request-level, with no tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 name = "Mistral 7B Instruct v0.3"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-release_date = "2023-04-30"
-last_updated = "2023-04-30"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2023-04-30"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.2
-output = 0.2
-cache_read = 0.2
-cache_write = 0.2
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 32_768
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+cache = { read = 0.2, write = 0.2 }
+
+[cost.text.output]
+price = 0.2

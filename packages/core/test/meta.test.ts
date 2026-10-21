@@ -8,40 +8,65 @@ import { fetchMetaModels, meta, parseMetaModels } from "../src/sync/providers/me
 
 // Public docs format; intentionally exclude account-scoped API responses.
 const models = `
-## Muse Spark {#muse-spark}
+# Models
 
-| Model ID | Tier | Input modalities | Output modalities | Context window |
-| :---- | :---- | :---- | :---- | :---- |
-| \`muse-spark-1.2\` | [Standard](/docs/pricing-rate-limits#standard-tier) | Text, image, video, audio, PDF | Text | 1,048,576 tokens |
-| \`muse-spark-1.2-contributor\` | [Contributor](/docs/pricing-rate-limits#contributor-tier) | Text, image, video, audio, PDF | Text | 1,048,576 tokens |
+| Use case | Model | Input | Output |
+| :---- | :---- | :---- | :---- |
+| Agentic work | [Muse Spark](https://dev.meta.ai/docs/models#muse-spark) | Text, image | Text |
+
+## Muse Wonder
+
+Muse Wonder takes text, image, video, audio, and PDF input, returns text, has a 1,048,576-token context window.
+
+### Muse Wonder availability
+
+| Variant | Model API (pay-as-you-go) | Muse Code |
+| :---- | :---- | :---- |
+| Muse Wonder (\`muse-wonder-1.0\`) | Available (Standard mode only) | Pay-as-you-go |
+| Muse Wonder Full | Not available | [Power Usage](https://dev.meta.ai/docs/muse-code/subscriptions#power-usage) |
+
+## Muse Spark
+
+Muse Spark comes in two versions. All take text input, return text, and have a 1,048,576-token context window.
+
+### Muse Spark availability
+
+| Version | Model API (pay-as-you-go) | Muse Code |
+| :---- | :---- | :---- |
+| Muse Spark 1.2 (\`muse-spark-1.2\`) | Standard mode | Pay-as-you-go |
+| Muse Spark 1.2 Contributor (\`muse-spark-1.2-contributor\`) | Contributor mode | Pay-as-you-go |
 
 ## Muse Image
 
-| Model ID | Family | Input | Output |
-| :---- | :---- | :---- | :---- |
-| \`muse-image-1.0\` | Muse Image | Text, image | Image |
+| Model ID | Input | Output |
+| :---- | :---- | :---- |
+| \`muse-image-1.0\` | Text, image | Image |
 `;
 
 const pricing = `
-### Standard tier
+## Model pricing
 
-| Usage | Price per 1M tokens |
+### Muse Wonder
+
+| Usage | Standard mode (per 1M tokens) | Contributor mode (per 1M tokens) |
+| :---- | :---- | :---- |
+| Cached input | $0.20 | Not available |
+| Input | $4.00 | Not available |
+| Output | $20.00 | Not available |
+
+### Muse Spark
+
+| Usage | Standard mode (per 1M tokens) | Contributor mode (per 1M tokens) |
+| :---- | :---- | :---- |
+| Cached input | $0.15 | $0.002 |
+| Input | $1.25 | $0.10 |
+| Output | $4.25 | $0.20 |
+
+### Muse Image
+
+| Usage | Price |
 | :---- | :---- |
-| Cached input | $0.15 |
-| Input | $1.25 |
-| Output | $4.25 |
-
-### Contributor tier
-
-| Usage | Price per 1M tokens |
-| :---- | :---- |
-| Cached input | $0.002 |
-| Input | $0.10 |
-| Output | $0.20 |
-
-### Image generation
-
-Muse Image costs $0.01 per image, not per token.
+| Generated image | $0.01 per image |
 `;
 
 const source = { models, pricing };
@@ -53,37 +78,44 @@ test("Meta sync is registered for direct and hourly runs", () => {
   expect(meta.deleteMissing).toBe(false);
 });
 
-test("parses public text models, tier prices in USD/MTok, and context windows", () => {
+test("parses documented token-priced models, mode prices in USD/MTok, and context windows", () => {
   expect(parseMetaModels(source)).toEqual([
+    { id: "muse-wonder-1.0", context: 1_048_576, cost: { input: 4, output: 20, cache_read: 0.2 } },
     { id: "muse-spark-1.2", context: 1_048_576, cost: { input: 1.25, output: 4.25, cache_read: 0.15 } },
     { id: "muse-spark-1.2-contributor", context: 1_048_576, cost: { input: 0.1, output: 0.2, cache_read: 0.002 } },
   ]);
-  expect(parseMetaModels({ ...source, pricing: pricing.replace("$0.002", "$0") })[1]?.cost.cache_read).toBe(0);
+  expect(parseMetaModels({ ...source, pricing: pricing.replace("$0.002", "$0") })[2]?.cost.cache_read).toBe(0);
   expect(parseMetaModels({ ...source, models: models.replaceAll("1,048,576", "1048576") })[0]?.context).toBe(1_048_576);
   expect(parseMetaModels({
     ...source,
     pricing: pricing
-      .replace("### Standard tier", "### Standard tier {#standard-tier}")
-      .replace("### Contributor tier", "### Contributor tier {#contributor-tier}"),
-  })).toHaveLength(2);
+      .replace("### Muse Wonder", "### Muse Wonder {#muse-wonder}")
+      .replace("### Muse Spark", "### Muse Spark {#muse-spark}"),
+  })).toHaveLength(3);
 });
 
 test("rejects incomplete or changed docs rather than guessing prices or limits", () => {
   for (const bad of [
     { ...source, models: "<html>Unavailable</html>" },
     { ...source, pricing: "" },
-    { ...source, models: models.replace("1,048,576 tokens", "Unknown") },
-    { ...source, models: models.replace("1,048,576 tokens", "0 tokens") },
-    { ...source, models: models.replace("1,048,576 tokens", "1,04,8576 tokens") },
-    { ...source, models: models.replace("#standard-tier)", "#unknown-tier)") },
+    { ...source, models: models.replace("1,048,576-token context window", "large context window") },
+    { ...source, models: models.replace("have a 1,048,576-token", "have a 0-token") },
+    { ...source, models: models.replace("have a 1,048,576-token", "have a 1,04,8576-token") },
+    { ...source, models: models.replace("Muse Spark comes in two versions.", "Muse Spark has a 2,000,000-token context window.") },
+    { ...source, models: models.replace("| Standard mode |", "| Batch only |") },
+    { ...source, models: models.replace("| Contributor mode |", "| Standard mode |") },
+    { ...source, models: models.replace("(`muse-spark-1.2`)", "") },
     { ...source, models: models.replace("`muse-spark-1.2`", "`../private`") },
+    { ...source, models: models.replace("Contributor (`muse-spark-1.2-contributor`) | Contributor mode", "(`muse-spark-1.2`) | Standard mode") },
+    { ...source, models: models.replace("| :---- | :---- | :---- |\n| Muse Spark 1.2", "| broken |\n| Muse Spark 1.2") },
+    { ...source, models: models.replace("## Muse Spark", "## Muse Sparkle") },
     { ...source, pricing: pricing.replace("$1.25", "€1.25") },
     { ...source, pricing: pricing.replace("$1.25", "$-1") },
-    { ...source, pricing: pricing.replace("Price per 1M tokens", "Price per 1K tokens") },
-    { ...source, pricing: pricing.replace("| Output | $4.25 |", "") },
-    { ...source, pricing: pricing.replace("| Output | $4.25 |", "| Output | $4.25 |\n| Input | $2 |") },
-    { ...source, models: models.replace("muse-spark-1.2-contributor", "muse-spark-1.2") },
-    { ...source, models: models.replace("| :---- | :---- | :---- | :---- | :---- |", "| broken |") },
+    { ...source, pricing: pricing.replace("| $0.002 |", "| Not available |") },
+    { ...source, pricing: pricing.replaceAll("(per 1M tokens)", "(per 1K tokens)") },
+    { ...source, pricing: pricing.replace("| Output | $4.25 | $0.20 |", "") },
+    { ...source, pricing: pricing.replace("| Output | $4.25 | $0.20 |", "| Output | $4.25 | $0.20 |\n| Input | $2 | $2 |") },
+    { ...source, pricing: pricing + pricing.slice(pricing.indexOf("### Muse Spark"), pricing.indexOf("### Muse Image")) },
   ]) {
     expect(() => parseMetaModels(bad)).toThrow();
   }
@@ -104,7 +136,7 @@ test("updates only authoritative fields without expanding inherited metadata", (
     limit: { context: 1_048_576, output: 131_072 },
     modalities: { input: ["text", "image", "pdf", "video"], output: ["text"] },
   };
-  const model = parseMetaModels(source)[0]!;
+  const model = parseMetaModels(source)[1]!;
   const context = { authored: () => authored, existing: () => existing };
   const translated = meta.translateModel(model, context)!;
   expect(translated.model).toEqual({

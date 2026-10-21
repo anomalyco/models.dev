@@ -1,32 +1,22 @@
-name = "Llama 3.2 1B Instruct"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-release_date = "2024-08-31"
-last_updated = "2024-09-25"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
-knowledge = "2023-12-31"
-open_weights = true
+# Lab: meta/llama-3.2-1b-instruct (Pioneer id meta-llama/Llama-3.2-1B-Instruct is the Hugging Face repo name).
+# Reasoning: none. Llama 3.2 1B Instruct is not a reasoning model; the effort levels Pioneer's catalog listed are the same boilerplate on every model.
+# Tools: inherited from the lab; the old `tools = false` had no Pioneer source (the catalog has no tool-calling field).
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): tools.updates = false: `tools` is request-level, with no tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
+base_model = "meta/llama-3.2-1b-instruct"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.1
-output = 0.201
-cache_read = 0.1
-cache_write = 0.1
+[capabilities]
+tools = { supported = true, updates = false }
 
 [limit]
-context = 131_072
 output = 60_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1, write = 0.1 }
+
+[cost.text.output]
+price = 0.201

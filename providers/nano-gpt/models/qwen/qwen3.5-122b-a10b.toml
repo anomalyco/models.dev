@@ -1,17 +1,26 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
 base_model = "alibaba/qwen3.5-122b-a10b"
 name = "Qwen3.5 122B A10B"
-attachment = false
-reasoning = false
-
-[cost]
-input = 0.437
-output = 3.496
-cache_read = 0.103788
-
-[limit]
-context = 131_072
-input = 131_072
-output = 32_768
 
 [modalities]
 input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+tools = { supported = true, updates = false }
+effort_updates = false
+
+[limit]
+input = 262_144
+output = 32_768
+
+[cost.text.input]
+price = 0.26
+cache = { read = 0.103788 }
+
+[cost.text.output]
+price = 2.08

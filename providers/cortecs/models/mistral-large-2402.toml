@@ -1,23 +1,29 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (amazon_ireland, amazon_paris). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 name = "mistral-large-2402"
 description = "Mistral Large (24.02) is Mistral AI’s most advanced language model, built for complex multilingual reasoning, code generation, and deep text understanding."
-release_date = "2025-05-26"
-last_updated = "2025-05-26"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
-reasoning_options = []
+release_date = "2025-05-26"
 
-[cost]
-input = 4.284
-output = 12.952
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+cache = { supported = false }
+structured_output = true
+temperature = false
+effort_updates = false
 
 [limit]
 context = 32_000
 output = 8_192
 
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 4.284
+
+[cost.text.output]
+price = 12.952

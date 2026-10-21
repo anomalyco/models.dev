@@ -1,0 +1,22 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Effective discounted rates: https://commandcode.ai/docs/resources/pricing-limits#minimax-m3-2x-usage
+# Toggle: omit reasoning_effort for off; set reasoning_effort = low for on.
+# Live /chat/completions checks (2026-10-14), same prompt and temperature=0:
+#   omitted reasoning tokens: 0/0/0
+#   low reasoning tokens: 30/14/69
+# Arithmetic n=3 per level did not establish a graded effect (overlapping counts):
+#   low 2559/2118/1284, medium 2029/2559/1145, high 2028/2559/1289.
+# Native thinking.type enabled/disabled both returned zero without reasoning_effort.
+base_model = "minimax/MiniMax-M3"
+
+reasoning_options = [{ type = "toggle" }]
+
+[limit]
+context = 1000000
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06

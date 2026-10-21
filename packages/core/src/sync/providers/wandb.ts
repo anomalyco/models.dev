@@ -145,10 +145,9 @@ export function buildWandbModel(
     family: resolveFamily(model),
     attachment: model.attachment,
     reasoning: model.reasoning,
-    // The endpoint is authoritative for reasoning controls: an explicit list
-    // (e.g. a toggle) means the capability is exposed, while reasoning without
-    // any options means reasoning is always on and cannot be disabled.
-    reasoning_options: model.reasoning ? model.reasoning_options ?? [] : undefined,
+    reasoning_options: model.reasoning
+      ? mergeReasoningOptions(model.reasoning_options ?? [], existing?.reasoning_options)
+      : undefined,
     temperature: model.temperature ?? true,
     tool_call: model.tool_call,
     structured_output: model.structured_output === true,
@@ -173,7 +172,24 @@ export function buildWandbModel(
   };
 
   if (baseModel === undefined) return synced;
-  return factorBaseModel(baseModel, synced, limit, existing?.base_model_omit);
+  // Model facts belong to the lab file; a base_model file only carries host fields.
+  const { family: _family, release_date: _release, last_updated: _updated, knowledge: _knowledge, open_weights: _open, ...host } = synced;
+  return factorBaseModel(baseModel, host, limit, existing?.base_model_omit);
+}
+
+// The endpoint is authoritative for on/off: a toggle means thinking can be
+// switched per request, while no options means it is always on. It never lists
+// effort levels, so an effort option authored in the TOML must survive the
+// sync instead of being wiped back to the bare endpoint list.
+export function mergeReasoningOptions(
+  endpoint: NonNullable<WandbModel["reasoning_options"]>,
+  existing: ExistingModel["reasoning_options"] | undefined,
+): NonNullable<WandbModel["reasoning_options"]> {
+  const effort = existing?.find((option) => option.type === "effort");
+  if (effort === undefined) return endpoint;
+  // An effort list containing "none" already expresses turning thinking off.
+  const toggleable = endpoint.some((option) => option.type === "toggle") && !effort.values.includes("none");
+  return [...(toggleable ? [{ type: "toggle" as const }] : []), effort];
 }
 
 function buildCost(

@@ -1,23 +1,21 @@
-name = "OpenAI: GPT Audio Mini"
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "openai/gpt-audio-mini"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "gpt"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 0.6
-output = 2.4
-
-[limit]
-context = 128_000
-output = 16_384
 
 [modalities]
-input = ["text", "audio", "pdf"]
-output = ["text", "audio"]
+input = ["text", "audio/wav", "audio/mpeg", "application/pdf"]
+output = ["text", "audio/wav", "audio/aac", "audio/mpeg", "audio/flac", "audio/opus", "audio/pcm"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.4

@@ -1,0 +1,28 @@
+# Sources (accessed 2026-10-16):
+# - https://fireworks.ai/blog/ember-1 — Fireworks Research's own model, built on Kimi K3, shorter reasoning traces (~40% fewer tokens).
+# - https://fireworks.ai/models/fireworks/ember-1 — released 2026-09-22, ~1M context, image input, function calling, no open weights.
+# - https://app.fireworks.ai/models/fireworks/ember-1 — usage example max_tokens 131072.
+# - Image formats: https://docs.fireworks.ai/guides/querying-vision-language-models lists .png, .jpg, .jpeg, .gif, .bmp, .tiff
+#   and .ppm, written here as their registered MIME types.
+# - Sampling: Fireworks' chat completions API takes temperature, top_p and top_k
+#   (https://docs.fireworks.ai/api-reference/post-chatcompletions).
+schema = 2
+name = "Ember-1"
+description = "Specialized model from Fireworks built on Kimi K3, producing shorter reasoning traces with approximately 40% fewer tokens while maintaining comparable quality"
+open_weights = false
+release_date = "2026-09-22"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/bmp", "image/tiff", "image/x-portable-pixmap"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072

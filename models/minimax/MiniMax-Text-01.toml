@@ -1,0 +1,27 @@
+# Lab metadata carried over from providers/llmgateway-providers/models/minimax/MiniMax-Text-01.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# MiniMax-Text-01 is the MiniMax-01 foundation (non-reasoning) model; MiniMax-M1 was the
+# first MiniMax reasoning model (https://www.minimax.io/news/minimax-01-series-2,
+# https://www.minimax.io/news/minimaxm1). Structured output is a host capability, so it
+# is not set on the lab file.
+schema = 2
+name = "MiniMax Text 01 (MiniMax)"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
+family = "minimax"
+open_weights = false
+release_date = "2025-01-15"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 131_072

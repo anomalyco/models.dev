@@ -1,28 +1,21 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
+base_model = "cohere/north-mini-code-1-0"
 name = "North Mini Code (free)"
 description = "Cohere coding model for practical software engineering and agentic edits"
-family = "north"
-release_date = "2026-06-17"
-last_updated = "2026-06-17"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = false
-open_weights = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0
 
-[cost]
-input = 0
-output = 0
-
-[limit]
-context = 256_000
-output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0

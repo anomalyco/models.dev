@@ -35,9 +35,21 @@ export const FireworksModel = z.object({
   created: z.number().int().nonnegative(),
 }).passthrough();
 
+const FireworksRouter = z.object({
+  id: z.string().min(1),
+  object: z.literal("model"),
+  kind: z.literal("router"),
+  pricing_mode: z.string().min(1),
+  usage_identifier: z.string().min(1),
+}).passthrough();
+
 export const FireworksResponse = z.object({
   object: z.literal("list"),
-  data: z.array(FireworksModel),
+  // FireRouter auto shares the endpoint but routes to other models and has
+  // neither fixed modalities nor model-level token pricing.
+  // TODO: Sync routers separately once we can represent dynamic model selection and pricing.
+  data: z.array(z.union([FireworksRouter, FireworksModel]))
+    .transform((rows) => rows.filter((row): row is z.infer<typeof FireworksModel> => row.kind !== "router")),
 }).passthrough();
 
 export const FireworksInventoryModel = z.object({
@@ -66,10 +78,13 @@ export type FireworksInventoryModel = z.infer<typeof FireworksInventoryModel>;
 export type FireworksCatalogModel = FireworksModel & {
   catalogId: string;
   flagModes: FireworksModel[];
+  // List Models reports a deprecation date for the underlying model.
+  deprecated?: true;
 };
 export type FireworksInventoryCatalogModel = {
   catalogId: string;
   inventoryOnly: true;
+  deprecated?: true;
 };
 
 type FireworksSourceModel = FireworksCatalogModel | FireworksInventoryCatalogModel;
@@ -115,7 +130,10 @@ export const fireworksAi = {
     }
     if ("inventoryOnly" in model) {
       // The shared runner validates translated models before writing them.
-      return { id: model.catalogId, model: authored as SyncedModel };
+      return {
+        id: model.catalogId,
+        model: { ...authored, status: lifecycleStatus(model, authored!.status) } as SyncedModel,
+      };
     }
     return {
       id: model.catalogId,
@@ -166,6 +184,7 @@ export function mergeFireworksModels(
     throw new Error("Fireworks AI returned an empty serverless source; refusing destructive sync");
   }
   const today = now.toISOString().slice(0, 10);
+  const deprecated = new Set<string>();
   const available = inventory.filter((model) => {
     if (!model.supportsServerless) return false;
     const date = model.deprecationDate;
@@ -174,12 +193,14 @@ export function mergeFireworksModels(
     const lastDay = date == null
       ? DEPRECATION_DATE_FALLBACK[model.name]
       : `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
+    if (lastDay !== undefined) deprecated.add(model.name);
     return lastDay === undefined || lastDay >= today;
   });
   // Pricing rows can outlive serverless deployments. Only expand modes and
   // aliases for models that the availability inventory still lists.
   const availableIds = new Set(available.map((model) => model.name));
-  const expanded = expandFireworksModels(serverless.filter((model) => availableIds.has(model.id)));
+  const expanded = expandFireworksModels(serverless.filter((model) => availableIds.has(model.id)))
+    .map((model) => deprecated.has(model.id) ? { ...model, deprecated: true as const } : model);
   const ids = new Set(expanded.map((model) => model.catalogId));
   const inventoryOnly = available.filter((model) => model.kind === "HF_BASE_MODEL" && !ids.has(model.name));
   if (!expanded.some(supportsCatalogModel) && inventoryOnly.length === 0) {
@@ -191,6 +212,7 @@ export function mergeFireworksModels(
       .map((model): FireworksInventoryCatalogModel => ({
         catalogId: model.name,
         inventoryOnly: true,
+        ...(deprecated.has(model.name) ? { deprecated: true as const } : {}),
       })),
   ];
 }
@@ -222,6 +244,13 @@ export function expandFireworksModels(models: FireworksModel[]): FireworksCatalo
   function add(catalogId: string, model: FireworksModel, flagModes: FireworksModel[]) {
     if (!expanded.has(catalogId)) expanded.set(catalogId, { ...model, catalogId, flagModes });
   }
+}
+
+// A deprecation date in List Models marks the model deprecated until it is
+// removed; a model whose date was withdrawn is no longer deprecated.
+function lifecycleStatus(model: FireworksSourceModel, status: ExistingModel["status"]): ExistingModel["status"] {
+  if (model.deprecated === true) return "deprecated";
+  return status === "deprecated" ? undefined : status;
 }
 
 function supportsCatalogModel(model: FireworksSourceModel) {
@@ -357,7 +386,7 @@ export function buildFireworksModel(
     structured_output: existing.structured_output,
     knowledge: existing.knowledge,
     open_weights: openWeights,
-    status: existing.status,
+    status: lifecycleStatus(model, existing.status),
     interleaved: existing.interleaved,
     cost: modelCost,
     limit: {
@@ -373,7 +402,8 @@ export function buildFireworksModel(
     experimental: experimental(model, modelCost, existing.experimental),
   } satisfies SyncedFullModel;
 
-  return existing.base_model === undefined
-    ? values
-    : factorBaseModel(existing.base_model, values, values.limit, existing.base_model_omit);
+  if (existing.base_model === undefined) return values;
+  // Model facts belong to the lab file; a base_model file only carries host fields.
+  const { family: _family, release_date: _release, last_updated: _updated, knowledge: _knowledge, open_weights: _open, ...host } = values;
+  return factorBaseModel(existing.base_model, host, values.limit, existing.base_model_omit);
 }

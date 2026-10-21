@@ -1,24 +1,16 @@
-name = "Kimi K2 0905"
-description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-release_date = "2025-09-05"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-10"
-tool_call = true
+# https://novita.ai/models/model-detail/moonshotai-kimi-k2-0905
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20: mid turn 7,936 of 7,981 prompt tokens cached; usage.prompt_tokens_details.cached_tokens, reported here although no cache-read price is listed).
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
+
+[capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
-open_weights = true
+system_updates = true
+effort_updates = false
 
-[cost]
-input = 0.6
-output = 2.5
+[cost.text.input]
+price = 0.6
 
-[limit]
-context = 262_144
-output = 98_304
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 2.5

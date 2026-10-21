@@ -1,23 +1,20 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (ovh, ionos). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
+base_model = "mistral/mistral-nemo"
 name = "mistral-nemo-instruct-2407"
 description = "A 12B parameter, instruct-tuned language model by Mistral AI and NVIDIA, designed for advanced instruction following, multi-turn conversations, and generating text and code across multiple languages."
-release_date = "2024-08-07"
-last_updated = "2024-08-07"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = false }
 structured_output = true
-open_weights = false
+temperature = false
+effort_updates = false
 
-[cost]
-input = 0.145
-output = 0.145
-cache_read = 0.014
+[cost.text.input]
+price = 0.145
+cache = { read = 0.014 }
 
-[limit]
-context = 128_000
-output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.145

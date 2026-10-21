@@ -1,11 +1,15 @@
+schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "GPT OSS 20B (OVHcloud)"
-tool_call = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+effort_updates = false
 
-[cost]
-input = 0.05
-output = 0.18
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.18

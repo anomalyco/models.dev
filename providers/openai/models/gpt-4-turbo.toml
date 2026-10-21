@@ -1,25 +1,33 @@
+schema = 2
 name = "GPT-4 Turbo"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
+open_weights = false
+knowledge = "2023-12"
 release_date = "2023-11-06"
 last_updated = "2024-04-09"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-12"
-tool_call = true
-structured_output = false
-open_weights = false
 status = "deprecated"
 
-[cost]
-input = 10.00
-output = 30.00
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+system_updates = true
+effort_updates = false
+store = true
+cache = { supported = false }
 
 [limit]
 context = 128_000
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 30

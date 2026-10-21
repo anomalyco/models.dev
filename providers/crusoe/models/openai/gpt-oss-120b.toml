@@ -4,6 +4,7 @@
 # Reasoning text arrives interleaved with tool_calls, in the message field
 # named "reasoning" (not "reasoning_content"), hence the boolean form below.
 base_model = "openai/gpt-oss-120b"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 interleaved = true
 

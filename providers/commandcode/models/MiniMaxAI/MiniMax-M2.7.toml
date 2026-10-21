@@ -1,0 +1,18 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Reasoning controls follow the native/established-peer thinking-only baseline.
+# Baseline: providers/minimax/models/MiniMax-M2.7.toml and
+# providers/alibaba-token-plan/models/MiniMax-M2.7.toml
+
+base_model = "minimax/MiniMax-M2.7"
+
+reasoning_options = []
+
+[limit]
+context = 200000
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06

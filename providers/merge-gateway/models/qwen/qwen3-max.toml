@@ -1,8 +1,17 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3-max (accessed 2026-07-21)
+# Cache: default route alibaba is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "alibaba/qwen3-max"
-structured_output = true
 
-[cost]
-input = 0.359
-output = 1.434
-cache_read = 0.0718
+[capabilities]
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
+
+[cost.text.input]
+price = 0.359
+cache = { read = 0.0718, write = 0.44875 }
+
+[cost.text.output]
+price = 1.434

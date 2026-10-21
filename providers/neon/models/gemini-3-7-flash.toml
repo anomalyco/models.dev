@@ -1,0 +1,24 @@
+# Cost: https://neon.com/models.json gemini-3-7-flash (USD / 1M tokens).
+# Google's own API takes temperature; the Neon gateway answers
+# "Model gemini-3.7-flash does not support the temperature parameter".
+# `minimal` effort is rejected: "Thinking level is unsupported: THINKING_LEVEL_MINIMAL".
+# Measured 2026-10-13.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+schema = 2
+base_model = "google/gemini-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = false
+cache = { supported = true, implicit = true }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

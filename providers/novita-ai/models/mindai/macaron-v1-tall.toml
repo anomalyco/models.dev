@@ -1,0 +1,30 @@
+# https://novita.ai/models/model-detail/mindai-macaron-v1-tall
+# Modalities: text only on Novita; its catalog (https://api.novita.ai/openai/v1/models) lists mindai/macaron-v1-tall with
+# input_modalities ["text"].
+# Effort: reasoning_effort = none|high; this field, not thinking.type, suppresses reasoning with none.
+# Other accepted effort values were not demonstrated to be distinct depth controls, so only the verified off/on effort values are represented.
+# thinking.type=disabled does not suppress reasoning on this route; thinking_budget is not honored.
+# system_updates = false: the turn after a mid-conversation system message missed the cache in two trials while control turns hit (live 2026-10-20).
+schema = 2
+base_model = "mindlab/macaron-v1-tall"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { supported = true, implicit = true }
+system_updates = false
+effort_updates = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2475
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 1.43

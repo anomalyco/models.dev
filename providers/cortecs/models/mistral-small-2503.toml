@@ -1,22 +1,22 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (ionos). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
+base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
 name = "mistral-small-2503"
 description = "Combines advanced text and vision capabilities with 24 billion parameters, supporting multilingual tasks and long contexts up to 131k tokens, making it versatile for various applications without sacrificing performance."
-release_date = "2025-03-20"
-last_updated = "2025-03-20"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.111
-output = 0.334
+[capabilities]
+tools = { supported = true, updates = false }
+cache = { supported = false }
+structured_output = true
+temperature = false
+effort_updates = false
 
 [limit]
-context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.111
+
+[cost.text.output]
+price = 0.334

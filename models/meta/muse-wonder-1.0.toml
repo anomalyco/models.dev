@@ -1,0 +1,156 @@
+# Sources:
+# https://research.meta.ai/blog/muse-wonder
+# https://research.meta.ai/static/muse-wonder-model-card (PDF; scores on the capabilities scorecard)
+# Meta Model API probes with muse-wonder-1.0 on 2026-10-12:
+# - Prompt plus max_tokens is accepted up to 1,048,576 tokens (including Meta's injected scaffolding).
+#   There is no separate output cap, but max_tokens reserves output TPM capacity, so this uses
+#   the same 131,072 practical output limit as Muse Spark.
+# - Image, PDF, audio, and video inputs, strict json_schema output, temperature, and tool calls are accepted.
+# Meta has not published a knowledge cutoff.
+# Sampling (temperature, top_p; no top_k): https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/protocols/messages
+# Image MIME types: https://dev.meta.ai/docs/image-understanding
+# Video and audio MIME types: https://dev.meta.ai/docs/video-understanding#supported-formats (video/mp4, audio/mpeg, audio/wav)
+schema = 2
+name = "Muse Wonder"
+description = "Muse Wonder is a frontier multimodal reasoning model from Meta for personal and professional agents, long-horizon coding, and computer use. It combines Active Memory, which carries relevant context across conversations, with Active Focus, which keeps it working through blockers toward a goal."
+family = "muse"
+open_weights = false
+release_date = "2026-10-12"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf", "audio/mpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[links]]
+label = "Announcement"
+url = "https://research.meta.ai/blog/muse-wonder"
+type = "announcement"
+
+[[links]]
+label = "Model card"
+url = "https://research.meta.ai/static/muse-wonder-model-card"
+type = "model_card"
+
+[[benchmarks]]
+name = "Harvey Legal Agent Benchmark"
+score = 10.0
+metric = "all-pass rate"
+variant = "max effort; Artificial Analysis LAB-AA"
+version = "1.1"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "Finance Agent"
+score = 56.6
+metric = "accuracy"
+variant = "max effort"
+version = "v2"
+dataset = "Vals AI private test set"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "HealthBench Professional"
+score = 60.5
+metric = "length-normalized weighted rubric score"
+variant = "max effort"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 39.1
+metric = "strict pass@1"
+variant = "max effort; Artificial Analysis AutomationBench-AA"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "GDP.pdf"
+score = 30.8
+metric = "score"
+variant = "max effort"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "JobBench"
+score = 70.5
+metric = "mean reward"
+variant = "max effort"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 72.6
+metric = "mean partial score"
+variant = "max effort"
+version = "2.1"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 34.3
+metric = "binary completion rate"
+variant = "max effort"
+version = "2.1"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 52.0
+metric = "accuracy"
+variant = "max effort; Artificial Analysis Terminal-Bench 4.0-AA"
+version = "4.0"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 78.8
+metric = "pass@1"
+variant = "max effort"
+version = "1.1"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "SWE-Marathon"
+score = 53.1
+metric = "pass@1"
+variant = "max effort"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "ProgramBench"
+score = 50.0
+metric = "share of rollouts passing at least 95% of tests"
+variant = "max effort"
+harness = "mini-swe-agent"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 52
+metric = "index score"
+variant = "max effort"
+version = "4.3"
+source = "https://research.meta.ai/static/muse-wonder-model-card"
+date = "2026-10-12"

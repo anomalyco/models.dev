@@ -1,0 +1,15 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/lyria-realtime-exp (experimental model code)
+# - https://ai.google.dev/gemini-api/docs/realtime-music-generation (WebSocket session via client.live.music.connect)
+# - https://generativelanguage.googleapis.com/v1beta/models (displayName)
+# - Not on https://ai.google.dev/gemini-api/docs/pricing, so the file has no cost.
+schema = 2
+v2_only = true
+base_model = "google/lyria-realtime-exp"
+name = "Lyria Realtime Experimental"
+status = "alpha"
+
+[capabilities]
+structured_output = false
+cache = { supported = false }
+

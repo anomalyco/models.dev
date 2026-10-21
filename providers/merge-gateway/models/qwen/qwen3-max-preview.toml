@@ -1,0 +1,17 @@
+schema = 2
+base_model = "alibaba/qwen3-max-preview"
+
+[capabilities]
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[limit]
+context = 256_000
+output = 65_536
+
+[cost.text.input]
+price = 1.08
+
+[cost.text.output]
+price = 4.8

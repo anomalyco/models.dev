@@ -1,25 +1,29 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 name = "GLM 4.6 Turbo (Thinking)"
 description = "GLM 4.6 Turbo with thinking mode enabled for enhanced reasoning; shows internal reasoning and supports long context."
 family = "glm"
-release_date = "2025-10-02"
-last_updated = "2025-10-02"
-attachment = false
-reasoning = true
-tool_call = false
-structured_output = false
 open_weights = true
-reasoning_options = []
+release_date = "2025-10-02"
 
-[cost]
-input = 1
-output = 3
-cache_read = 0.5
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 204_800
 input = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 3

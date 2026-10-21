@@ -1,0 +1,17 @@
+# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+name = "Beam 1.0"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+effort_updates = false
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

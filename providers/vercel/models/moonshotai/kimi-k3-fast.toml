@@ -4,21 +4,29 @@
 # No thinking toggle — K3 always returns reasoning content.
 # https://vercel.com/ai-gateway/models/kimi-k3-fast
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 4.5
-output = 22.5
-cache_read = 0.45
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 4.5
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 22.5

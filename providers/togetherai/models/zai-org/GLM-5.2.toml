@@ -1,30 +1,35 @@
 # Served context_length=1048575 for this ID in GET https://api.together.xyz/v1/models
-# (checked 2026-09-23).
-name = "GLM-5.2"
+# (checked 2026-09-23 and 2026-10-21).
+# Serverless: $1.40 input, $0.26 cached input, $4.40 output per 1M (https://docs.together.ai/docs/serverless-models).
+# Toggle: reasoning.enabled = true|false (https://docs.together.ai/docs/inference/chat/reasoning);
+# false renders an empty <think></think> (live 2026-10-21).
+# Effort: reasoning_effort = high|max. Live 2026-10-21, the rendered prompt says "Reasoning
+# Effort: High" for high and "Max" for every other value; none and minimal turn thinking off.
+# Inputs: text only ("multimodal not supported for model", live 2026-10-21).
+# Mid-conversation (live 2026-10-21): adding a tool dropped the cache to 0. system_updates unset:
+# a late system message was followed, but the cache was kept in 1 of 3 trials (requests with
+# prompt_cache_key returned 503, so routing wasn't pinned).
+schema = 2
 base_model = "zhipuai/glm-5.2"
-family = "glm"
-release_date = "2026-06-16"
-last_updated = "2026-06-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
-temperature = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+cache = { supported = true, implicit = true, explicit = false }
 structured_output = true
-tool_call = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.40
-cache_read = 0.26
-output = 4.40
+effort_updates = false
+prompt_cache_key = true
 
 [limit]
 context = 1_048_575
 output = 164_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

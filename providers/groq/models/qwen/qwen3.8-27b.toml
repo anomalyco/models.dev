@@ -3,9 +3,14 @@
 # https://console.groq.com/docs/models
 # https://console.groq.com/docs/reasoning
 # Effort: reasoning_effort = none|default|low|medium|high
-# Pricing: $0.80/M input, $4.00/M output. Context 131_042, max output 16_384.
-# Modalities on Groq: text + images in, text out (no video). Preview model.
+# Pricing: $0.80/M input, $4.00/M output. Context 131,072 and max output 16,384 (model page, models page and
+# GET /openai/v1/models context_window, accessed 2026-10-21). Up to 3 input images, 20 MB max file size.
+# Modalities on Groq: text + images in, text out (no video).
+# Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
+# Stays v1: the effort value "default" has no v2 round trip.
 base_model = "alibaba/qwen3.8-27b"
+structured_output = true
+status = "beta"
 reasoning_options = [{ type = "effort", values = ["none", "default", "low", "medium", "high"] }]
 
 [cost]
@@ -13,7 +18,7 @@ input = 0.80
 output = 4.00
 
 [limit]
-context = 131_042
+context = 131_072
 output = 16_384
 
 [modalities]

@@ -1,25 +1,27 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: automatic for prompts of 1024+ tokens. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "openai/gpt-4o"
 name = "OpenAI GPT-4o"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2024-05-13"
-last_updated = "2024-08-06"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2023-09"
-open_weights = false
-
-[cost]
-input = 2.5
-output = 10
-cache_read = 1.25
-
-[limit]
-context = 128_000
-output = 16_384
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+cache = { supported = true, implicit = { min_tokens = 1_024 } }
+structured_output = true
+system_updates = true
+effort_updates = false
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

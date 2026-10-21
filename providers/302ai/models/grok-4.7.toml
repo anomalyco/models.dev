@@ -1,5 +1,6 @@
 # Effort: reasoning_effort = low|medium|high|xhigh
 base_model = "xai/grok-4.7"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [interleaved]

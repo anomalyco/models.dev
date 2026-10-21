@@ -1,25 +1,37 @@
-# Baseten documents top-level reasoning_effort for DeepSeek V4.1 Flash with
-# values none | low | high (default) | max. Reasoning is enabled by default;
+# Baseten accepts top-level reasoning_effort = none | low | high (default) | max
+# for DeepSeek V4.1 Flash, but runs low at the default depth, so the distinct
+# levels are none | high | max. Reasoning is enabled by default;
 # reasoning_effort: "none" disables it. Reasoning output is returned in
 # reasoning_content.
 # Baseten serves at most 32k output tokens for this model on Model APIs.
 # https://www.baseten.co/library/deepseek-v41-flash/
 # https://docs.baseten.co/inference/model-apis/overview
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 14592/14804 -> 14592/14819; 15104/15124 -> 15104/15139]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 14592/14763 -> 0/14788 (reasoning tokens 0 -> 30); 14592/14763 -> 0/14788 (reasoning tokens 0 -> 50)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 14848/15050 -> 0/15101; 14848/15050 -> 0/15101]
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1.2

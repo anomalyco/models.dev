@@ -3,6 +3,7 @@
 # /v1/messages: thinking.type = enabled|disabled
 # /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
 base_model = "zhipuai/glm-5-turbo"
+structured_output = true
 
 reasoning_options = [
   { type = "toggle" },

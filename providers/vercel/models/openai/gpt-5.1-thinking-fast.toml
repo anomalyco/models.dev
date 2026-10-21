@@ -1,27 +1,30 @@
+# Modalities: OpenAI image inputs PNG, JPEG, WEBP, non-animated GIF, https://platform.openai.com/docs/guides/images-vision
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system/developer messages stay in place (cache prefix kept). The gateway's AI SDK request has no OpenAI configuration_update or additional_tools, so effort and tool changes are false.
+schema = 2
 name = "GPT 5.1 Thinking (Fast)"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
-release_date = "2025-11-12"
-last_updated = "2025-11-12"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2025-11-12"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 2.5
-output = 20
-cache_read = 0.25
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 20

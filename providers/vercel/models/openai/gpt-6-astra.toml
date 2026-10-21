@@ -1,19 +1,27 @@
 # Pricing: https://ai-gateway.vercel.sh/v1/models (2026-09-04), upper band starts at 272,001 prompt tokens
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system/developer messages stay in place (cache prefix kept). The gateway's AI SDK request has no OpenAI configuration_update or additional_tools, so effort and tool changes are false.
+schema = 2
 base_model = "openai/gpt-6-astra"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_001 }
-input = 20
-output = 75
-cache_read = 2
-cache_write = 25
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_001 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_001 } }
+price = 75

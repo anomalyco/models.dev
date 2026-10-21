@@ -1,0 +1,25 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/mistral
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# POST .../publishers/mistralai/models/mistral-small-2503:streamRawPredict with the Mistral chat body.
+# Regional endpoints only; the global endpoint does not serve Mistral.
+# Mid-conversation updates: false. Mistral on Vertex (rawPredict with the Mistral chat body) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/mistral
+schema = 2
+base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+system_updates = false
+effort_updates = false
+
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/mistralai/models"
+sdk = { aisdk = "@ai-sdk/mistral" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.3

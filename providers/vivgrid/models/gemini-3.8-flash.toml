@@ -3,6 +3,7 @@
 # Vivgrid documents 128K max output for this model, double the 64K the Gemini
 # Flash line normally serves.
 base_model = "google/gemini-3.8-flash"
+structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]

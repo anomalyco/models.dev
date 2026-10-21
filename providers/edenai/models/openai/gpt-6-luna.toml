@@ -1,18 +1,29 @@
+# Cache: OpenAI caches eligible prefixes automatically; Eden AI forwards prompt_cache_key,
+# prompt_cache_retention, and (GPT-5.6+) prompt_cache_breakpoint / prompt_cache_options
+# (https://www.edenai.co/docs/v3/llms/prompt-caching). Limits follow OpenAI's own API.
+schema = 2
 base_model = "openai/gpt-6-luna"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+structured_output = true
+effort_updates = false
+prompt_cache_key = true
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.2
-output = 0.75
-cache_read = 0.02
-cache_write = 0.25
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.75

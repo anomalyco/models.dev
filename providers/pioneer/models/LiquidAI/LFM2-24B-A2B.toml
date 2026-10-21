@@ -1,31 +1,32 @@
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Reasoning: none. LFM2-24B-A2B is a "general-purpose instruct model (without reasoning traces)" (https://huggingface.co/LiquidAI/LFM2-24B-A2B); Pioneer's catalog listed the same boilerplate levels on every model.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): no reasoning or tools, so no effort or tool updates.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 name = "LFM2 24B A2B"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
 family = "liquid"
+open_weights = true
 release_date = "2026-01-31"
 last_updated = "2026-02-25"
-attachment = false
-reasoning = true
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = true
-tool_call = false
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.03
-output = 0.12
-cache_read = 0.03
-cache_write = 0.03
 
 [limit]
 context = 32_768
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03, write = 0.03 }
+
+[cost.text.output]
+price = 0.12

@@ -1,0 +1,24 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-audio-1.5
+# https://developers.openai.com/api/docs/pricing
+# No tools.updates: OpenAI's additional_tools items are Responses-only, and this model is Chat Completions only.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-audio-1.5"
+
+[capabilities]
+structured_output = false
+system_updates = true
+effort_updates = false
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 32
+
+[cost.audio.output]
+price = 64

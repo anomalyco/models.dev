@@ -1,0 +1,14 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=moonshotai%2Fkimi-k2-0905&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
+name = "Kimi K2 0905"
+
+[capabilities]
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 1.3754
+
+[cost.text.output]
+price = 4.1262

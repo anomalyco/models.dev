@@ -1,18 +1,20 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-opus-4-8 (accessed 2026-07-21)
-
+# Cache: default route anthropic is in the explicit caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "anthropic/claude-opus-4-8"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1, max = 128_000 } }
 structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"] } }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 128_000
-
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[cost.text.output]
+price = 25

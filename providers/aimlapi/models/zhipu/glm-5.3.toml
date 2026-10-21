@@ -1,0 +1,20 @@
+# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=zhipu%2Fglm-5.3&endpoint=openai%2Fchat-completions
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[limit]
+context = 1_024_000
+
+[cost.text.input]
+price = 1.82
+cache = { read = 0.338 }
+
+[cost.text.output]
+price = 5.72

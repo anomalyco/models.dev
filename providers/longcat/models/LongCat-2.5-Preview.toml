@@ -1,0 +1,25 @@
+# Toggle: thinking.type = enabled|disabled
+# LongCat API docs (accessed 2026-10-21):
+# - Pricing https://longcat.chat/platform/docs/pricing/longcat-2.5: "Discounted Price (limited-time)": uncached input $0.30,
+#   cached input $0.006, output $1.20 per MTok (no end date published).
+# - Parameters https://longcat.chat/platform/docs/api/model-params: context 1,048,576, max_tokens up to 262,144, temperature fixed.
+# APIs on this host: OpenAI Chat Completions and Responses, Anthropic Messages, /v1/models.
+schema = 2
+base_model = "meituan/longcat-2.5-preview"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

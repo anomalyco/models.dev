@@ -1,6 +1,13 @@
+schema = 2
 base_model = "mistral/devstral-small-2507"
 status = "deprecated"
 
-[cost]
-input = 0.1
-output = 0.3
+[capabilities]
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.3

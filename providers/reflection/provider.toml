@@ -1,0 +1,10 @@
+# Reflection: first-party host for Reflection's Beam models.
+# OpenAI-compatible API: https://api.reflection.ai/openai/v1
+#   Endpoints: GET /models, GET /models/{model}, POST /chat/completions.
+# Auth: Authorization: Bearer <key>, read from REFLECTION_API_KEY; keys at https://platform.reflection.ai
+# Docs: https://developers.reflection.ai/openai-compatibility, https://developers.reflection.ai/authentication
+name = "Reflection"
+npm = "@ai-sdk/openai-compatible"
+env = ["REFLECTION_API_KEY"]
+api = "https://api.reflection.ai/openai/v1"
+doc = "https://developers.reflection.ai/models"

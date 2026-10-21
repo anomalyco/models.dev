@@ -1,17 +1,15 @@
-name = "Grok Imagine Image"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "grok"
-release_date = "2026-01-28"
-last_updated = "2026-01-28"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = false
-
-[limit]
-context = 0
-output = 0
+# Synced from https://ai-gateway.vercel.sh/v1/models (type image)
+# https://vercel.com/docs/ai-gateway/modalities/image-generation
+schema = 2
+base_model = "xai/grok-imagine-image"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/jpeg", "image/png"]
+
+[api.images]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+
+[cost.image.output]
+unit = "image"
+price = 0.02

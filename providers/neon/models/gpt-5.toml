@@ -1,16 +1,25 @@
+# Modalities: the lab's. Image generation through the Responses `image_generation` tool doesn't make the model an
+# image-output model, so output is the lab's text.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+schema = 2
 base_model = "openai/gpt-5"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
-[cost]
-input = 1.25
-output = 10
-cache_read = 0.125
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { supported = true, implicit = true }
 
-[modalities]
-input = ["text", "image"]
-output = ["text", "image"]
+[api.responses]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
+legacy_shape = "responses"
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
-shape = "responses"
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 10
