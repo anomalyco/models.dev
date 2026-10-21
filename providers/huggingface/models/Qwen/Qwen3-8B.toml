@@ -1,0 +1,24 @@
+# Sources (accessed 2026-10-21):
+# - HF Inference Providers table https://huggingface.co/inference/models?model=Qwen%2FQwen3-8B : nscale $0.07 in / $0.18 out, 40,960 context, tools Yes, structured Yes
+# - Live providers https://huggingface.co/api/models/Qwen/Qwen3-8B?expand[]=inferenceProviderMapping : nscale + featherless-ai live; priced route is nscale
+# - Lab hybrid thinking https://huggingface.co/Qwen/Qwen3-8B : enable_thinking=True default, False disables; 32,768 native (131,072 with YaRN)
+# - HF Chat Completion https://huggingface.co/docs/inference-providers/en/tasks/chat-completion : top-level reasoning_effort, common values none/minimal/low/medium/high/xhigh, support is provider+model-dependent; no shared toggle/budget field
+# - Effort levels none|low|medium|high per https://docs.deepinfra.com/chat/reasoning (same OpenAI-compatible reasoning_effort surface; HF peer Qwen/Qwen3.5-397B uses the same set); underlying Featherless Qwen3 toggle https://featherless.ai/docs/chat-template-kwargs (enable_thinking:false disables)
+# Effort: reasoning_effort = none|low|medium|high. Effort includes none, so no separate toggle.
+schema = 2
+base_model = "alibaba/qwen3-8b"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 40_960
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.18
