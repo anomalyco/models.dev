@@ -1,0 +1,32 @@
+# Sources (Xiaomi MiMo docs, accessed 2026-10-21):
+# - Models (context 8K, max output 8K): https://mimo.mi.com/static/docs/quick-start/summary/model.md
+# - Release: launched with the MiMo-V2.5 public beta (https://mimo.mi.com/static/docs/news/latest/v2.5-news.md),
+#   the same day as MiMo-V2.5 (2026-04-22 in this catalog; the update log lists 2026-04-23:
+#   https://mimo.mi.com/static/docs/updates/model.md).
+# - API (Chat Completions with an `audio` object; the voice sample to clone is base64 mp3 or wav in audio.voice; audio.format wav | mp3 | pcm/pcm16, pcm when streaming; no
+#   temperature, top_p or top_k parameter): https://mimo.mi.com/static/docs/api/audio/tts.md
+# - Weights: not released. The V2.5-TTS + ASR announcement open-sources only MiMo-V2.5-ASR
+#   (https://mimo.mi.com/static/docs/news/latest/v2.5-tts-release.md), and the XiaomiMiMo Hugging Face
+#   organization has no TTS repository (https://huggingface.co/api/models?author=XiaomiMiMo, checked 2026-10-21).
+schema = 2
+type = "speech"
+name = "MiMo-V2.5-TTS-VoiceClone"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "mimo"
+open_weights = false
+release_date = "2026-04-22"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav", "audio/mpeg", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 8_192
