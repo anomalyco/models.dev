@@ -10,6 +10,8 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
 
 [limit]
 context = 256_000

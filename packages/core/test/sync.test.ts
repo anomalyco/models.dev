@@ -20,6 +20,8 @@ import {
 } from "../src/sync/providers/crossmodel.js";
 import {
   buildDeepInfraModel,
+  deepinfra,
+  deepInfraV2Set,
   resolveDeepInfraBaseModel,
   type DeepInfraModel,
 } from "../src/sync/providers/deepinfra.js";
@@ -3672,6 +3674,110 @@ test("DeepInfra excludes incorrectly tagged Gemma 4 audio input", () => {
   expect(model).toMatchObject({
     modalities: { input: ["text", "image", "video"] },
   });
+});
+
+test("DeepInfra base_model entries carry no model facts", () => {
+  const model = buildDeepInfraModel(
+    deepInfraModel("zai-org/GLM-5.2", ["reasoning"]),
+    {
+      base_model: "zhipuai/glm-5.2",
+      family: "glm",
+      release_date: "2020-01-01",
+      last_updated: "2020-01-02",
+      knowledge: "2019-01",
+      open_weights: false,
+    },
+    "zhipuai/glm-5.2",
+  );
+
+  for (const key of ["family", "release_date", "last_updated", "knowledge", "open_weights"]) {
+    expect(model).not.toHaveProperty(key);
+  }
+});
+
+test("DeepInfra writes service tiers, prompt caching and retention prices as v2 data", () => {
+  const model: DeepInfraModel = {
+    ...deepInfraModel("zai-org/GLM-5.2", []),
+    pricing: {
+      cents_per_input_token: 0.000075,
+      cents_per_output_token: 0.00024,
+      rate_per_input_token_cached: 0.2,
+      rate_per_explicit_cache_write_token: { "5m": 1.25, "1h": 2 },
+      explicit_cache_granularity_tokens: 1024,
+      rate_per_service_tier_priority: 1.5,
+      rate_per_service_tier_flex: 0.8,
+    },
+  };
+
+  expect(deepInfraV2Set(model, { input: 0.75, cache_read: 0.15 }, undefined)).toEqual({
+    "capabilities.cache": {
+      supported: true,
+      implicit: true,
+      explicit: { ttl: ["5m", "1h"], min_tokens: 1024 },
+    },
+    "capabilities.prompt_cache_key": true,
+    "capabilities.service_tier": ["flex", "priority"],
+    "cost.multipliers": [
+      { when: { service_tier: { equals: "priority" } }, factor: 1.5 },
+      { when: { service_tier: { equals: "flex" } }, factor: 0.8 },
+    ],
+    "cost.text.input.cache.explicit": { write: { "5m": 0.9375, "1h": 1.5 } },
+  });
+
+  // Without catalog values only paths the file already has are cleared.
+  const plain = deepInfraModel("zai-org/GLM-5.2", []);
+  expect(deepInfraV2Set(plain, { input: 0.75 }, undefined)).toBeUndefined();
+  expect(deepInfraV2Set(plain, { input: 0.75 }, { capabilities: { service_tier: ["flex"] } })).toEqual({
+    "capabilities.service_tier": undefined,
+  });
+});
+
+test("DeepInfra price updates keep v2 data and restore the synced v2 values", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-deepinfra-v2-"));
+  const modelsDir = path.join(root, "providers", "deepinfra", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const id = "zai-org/GLM-5.2";
+  const base = "zhipuai/glm-5.2";
+
+  try {
+    await mkdir(path.dirname(path.join(modelsDir, `${id}.toml`)), { recursive: true });
+    await mkdir(path.dirname(path.join(root, "models", `${base}.toml`)), { recursive: true });
+    await copyFile(path.join(repo, "models", `${base}.toml`), path.join(root, "models", `${base}.toml`));
+    const shipped = await readFile(path.join(repo, "providers", "deepinfra", "models", `${id}.toml`), "utf8");
+    // A stale price and a lost multiplier are both restored from the catalog.
+    const stale = shipped
+      .replace(/\[cost\.text\.input\]\nprice = [\d.]+/, "[cost.text.input]\nprice = 9")
+      .replace(/\n\[\[cost\.multipliers\]\]\nwhen = \{ service_tier = \{ equals = "flex" \} \}\nfactor = [\d.]+\n/, "\n");
+    expect(stale).not.toBe(shipped);
+    await writeFile(path.join(modelsDir, `${id}.toml`), stale);
+
+    const source: DeepInfraModel = {
+      model_name: id,
+      type: "text-generation",
+      tags: ["openai", "tools", "json", "structured-output", "reasoning", "can-disable-reasoning", "priority", "flex"],
+      pricing: {
+        type: "tokens",
+        cents_per_input_token: 0.000075,
+        cents_per_output_token: 0.00024,
+        rate_per_input_token_cached: 0.18666667,
+        rate_per_input_token_cache_write: null,
+        rate_per_service_tier_priority: 1.5,
+        rate_per_service_tier_flex: 0.8,
+        rate_per_explicit_cache_write_token: { "5m": 1.25, "1h": 2 },
+        explicit_cache_granularity_tokens: 1024,
+      },
+      max_tokens: 1_048_576,
+      deprecated: null,
+      private: 0,
+    };
+    const provider = { ...deepinfra, modelsDir, fetchModels: async () => [source] };
+
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 0, updated: 1, deleted: 0 });
+    expect(await readFile(path.join(modelsDir, `${id}.toml`), "utf8")).toBe(shipped);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("DeepInfra preserves descriptions for standalone models", () => {

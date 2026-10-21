@@ -3,6 +3,7 @@ base_model = "deepseek/deepseek-v3"
 
 [capabilities]
 structured_output = true
+service_tier = ["flex"]
 
 [limit]
 context = 163_840
@@ -12,3 +13,7 @@ price = 0.32
 
 [cost.text.output]
 price = 0.89
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

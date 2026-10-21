@@ -8,9 +8,18 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 0.2
 
 [cost.text.output]
 price = 0.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

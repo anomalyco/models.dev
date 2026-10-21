@@ -4,6 +4,9 @@ status = "deprecated"
 
 [capabilities]
 structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 0.24
@@ -11,3 +14,11 @@ cache = { read = 0.135 }
 
 [cost.text.output]
 price = 0.9
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

@@ -13,6 +13,7 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
+service_tier = ["flex"]
 
 [limit]
 context = 131_072
@@ -23,3 +24,7 @@ price = 0.1
 
 [cost.text.output]
 price = 0.32
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

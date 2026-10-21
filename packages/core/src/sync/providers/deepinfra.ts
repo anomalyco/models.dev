@@ -20,6 +20,14 @@ export const DeepInfraModel = z.object({
     // Cache rates are multipliers applied to the input price, not absolute prices.
     rate_per_input_token_cached: z.number().nullish(),
     rate_per_input_token_cache_write: z.number().nullish(),
+    // Prompt cache retention (`prompt_cache_options.ttl`): write rate per TTL,
+    // as a multiplier on the input price, and the block size cached prefixes
+    // are rounded down to.
+    rate_per_explicit_cache_write_token: z.record(z.number()).nullish(),
+    explicit_cache_granularity_tokens: z.number().int().positive().nullish(),
+    // `service_tier` request field: price multipliers for the priority and flex tiers.
+    rate_per_service_tier_priority: z.number().nullish(),
+    rate_per_service_tier_flex: z.number().nullish(),
     // Free-text breakdown of context-based pricing tiers, when the model has them.
     full: z.string().nullish(),
   }).passthrough().nullish(),
@@ -98,12 +106,89 @@ export const deepinfra = {
     // existing entries are kept and marked instead.
     if (existing === undefined && isDeprecated(model)) return undefined;
 
+    const built = buildDeepInfraModel(model, existing, baseModel);
     return {
       id,
-      model: buildDeepInfraModel(model, existing, baseModel),
+      model: built,
+      v2Set: deepInfraV2Set(model, built.cost, context.v2?.(id)),
     };
   },
 } satisfies SyncProvider<DeepInfraModel>;
+
+// v2 data the catalog states that v1 fields can't carry: service tiers and
+// their price multipliers, prompt caching, and the per-TTL write prices of
+// prompt cache retention. A path is only set when the catalog has a value or
+// the file already has one to clear, so models without them stay untouched.
+export function deepInfraV2Set(
+  model: DeepInfraModel,
+  cost: { input?: number; cache_read?: number; tiers?: unknown[] } | undefined,
+  current: Record<string, unknown> | undefined,
+) {
+  const pricing = model.pricing;
+  const tiers = (
+    [
+      ["priority", pricing?.rate_per_service_tier_priority],
+      ["flex", pricing?.rate_per_service_tier_flex],
+    ] as const
+  ).filter((entry): entry is readonly ["priority" | "flex", number] => typeof entry[1] === "number" && entry[1] > 0);
+
+  const retention = Object.entries(pricing?.rate_per_explicit_cache_write_token ?? {})
+    .filter(([ttl, rate]) => /^\d+(ms|s|m|h|d)$/.test(ttl) && Number.isFinite(rate) && rate >= 0);
+  if (retention.length > 0 && (cost?.tiers?.length ?? 0) > 0) {
+    // Retention write prices are a multiple of the input price; with context
+    // tiers they would differ per tier, which the catalog doesn't spell out.
+    console.warn(`Deep Infra: ${model.model_name} has context tiers and cache retention; retention prices not written`);
+  }
+  const retentionPrices = retention.length > 0 && cost?.input !== undefined && (cost.tiers?.length ?? 0) === 0
+    ? Object.fromEntries(retention.map(([ttl, rate]) => [ttl, round(cost.input! * rate)]))
+    : undefined;
+
+  const cached = cost?.cache_read !== undefined;
+  const cache = cached
+    ? {
+        supported: true,
+        implicit: true,
+        ...(retention.length > 0
+          ? {
+              explicit: {
+                ttl: retention.map(([ttl]) => ttl),
+                ...(pricing?.explicit_cache_granularity_tokens == null
+                  ? {}
+                  : { min_tokens: pricing.explicit_cache_granularity_tokens }),
+              },
+            }
+          : {}),
+      }
+    : undefined;
+
+  const values: Record<string, unknown> = {
+    "capabilities.cache": cache,
+    "capabilities.prompt_cache_key": cached ? true : undefined,
+    "capabilities.service_tier": tiers.length > 0
+      ? tiers.map(([tier]) => tier).sort()
+      : undefined,
+  };
+  if (cost !== undefined) {
+    values["cost.multipliers"] = tiers.length > 0
+      ? tiers.map(([tier, factor]) => ({ when: { service_tier: { equals: tier } }, factor }))
+      : undefined;
+  }
+  if (cached) {
+    values["cost.text.input.cache.explicit"] = retentionPrices === undefined ? undefined : { write: retentionPrices };
+  }
+
+  const set = Object.fromEntries(
+    Object.entries(values).filter(([path, value]) => value !== undefined || valueAt(current, path) !== undefined),
+  );
+  return Object.keys(set).length > 0 ? set : undefined;
+}
+
+function valueAt(doc: Record<string, unknown> | undefined, path: string) {
+  return path.split(".").reduce<unknown>(
+    (node, part) => (node !== null && typeof node === "object" ? (node as Record<string, unknown>)[part] : undefined),
+    doc,
+  );
+}
 
 export async function fetchDeepInfraModels(
   key: string | undefined,
@@ -317,14 +402,18 @@ export function buildDeepInfraModel(
       ? undefined
       : existing?.status;
 
+  // Model facts (family, dates, knowledge, open weights) belong to the lab file
+  // that a base_model entry inherits; only standalone definitions carry them.
+  const facts = baseModel === undefined ? existing : undefined;
   const values: Partial<SyncedFullModel> = {
-    // For base_model entries the display name is inherited from `models/`;
-    // deriveName is only a fallback for standalone full definitions.
+    // For base_model entries the display name is inherited from `models/`
+    // unless the file names the model differently; deriveName is only a
+    // fallback for standalone full definitions.
     name: existing?.name ?? (baseModel !== undefined ? undefined : deriveName(model.model_name)),
     description: existing?.description,
-    family: existing?.family,
-    release_date: existing?.release_date,
-    last_updated: existing?.last_updated,
+    family: facts?.family,
+    release_date: facts?.release_date,
+    last_updated: facts?.last_updated,
     attachment,
     reasoning,
     reasoning_options: reasoningOptions,
@@ -332,11 +421,11 @@ export function buildDeepInfraModel(
     temperature: existing?.temperature,
     tool_call: toolCall,
     structured_output: structuredOutput,
-    knowledge: existing?.knowledge,
+    knowledge: facts?.knowledge,
     // open_weights is a model-intrinsic fact: always inherit it from `models/`
     // for base_model entries (so proprietary passthrough models like Claude keep
     // open_weights=false), and only carry it on standalone full definitions.
-    open_weights: baseModel !== undefined ? undefined : existing?.open_weights,
+    open_weights: facts?.open_weights,
     status,
     interleaved: existing?.interleaved,
     cost,

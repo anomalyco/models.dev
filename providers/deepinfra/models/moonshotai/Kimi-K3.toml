@@ -15,10 +15,12 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_536 } }
+prompt_cache_key = true
 
 [cost.text.input]
 price = 2.85
-cache = { read = 0.285 }
+cache = { read = 0.285, explicit = { write = { "5m" = 3.5625, "1h" = 5.7 } } }
 
 [cost.text.output]
 price = 14.25

@@ -5,6 +5,9 @@ status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 262_144
@@ -15,3 +18,7 @@ cache = { read = 0.04 }
 
 [cost.text.output]
 price = 1.15
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

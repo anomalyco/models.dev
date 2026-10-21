@@ -5,9 +5,18 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 0.02
 
 [cost.text.output]
 price = 0.1
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

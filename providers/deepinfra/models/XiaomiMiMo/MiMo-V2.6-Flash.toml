@@ -7,6 +7,8 @@ base_model = "xiaomi/mimo-v2.6-flash"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
 
 [cost.text.input]
 price = 0.14

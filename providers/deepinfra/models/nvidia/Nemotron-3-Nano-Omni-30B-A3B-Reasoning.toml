@@ -5,6 +5,7 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+service_tier = ["priority"]
 
 [limit]
 context = 262_144
@@ -14,3 +15,7 @@ price = 0.2
 
 [cost.text.output]
 price = 0.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5

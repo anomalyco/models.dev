@@ -9,6 +9,9 @@ base_model = "zhipuai/glm-5.3"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 1_048_576
@@ -19,3 +22,7 @@ cache = { read = 0.2 }
 
 [cost.text.output]
 price = 4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

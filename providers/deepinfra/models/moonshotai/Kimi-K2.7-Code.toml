@@ -5,13 +5,24 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.68
-cache = { read = 0.136 }
+cache = { read = 0.136, explicit = { write = { "5m" = 0.85, "1h" = 1.36 } } }
 
 [cost.text.output]
 price = 3.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

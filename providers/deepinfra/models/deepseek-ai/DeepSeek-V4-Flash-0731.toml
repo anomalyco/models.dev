@@ -4,6 +4,9 @@ base_model = "deepseek/deepseek-v4-flash-0731"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_048_576
@@ -14,3 +17,11 @@ cache = { read = 0.015 }
 
 [cost.text.output]
 price = 0.18
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

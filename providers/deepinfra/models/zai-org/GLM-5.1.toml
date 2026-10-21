@@ -18,6 +18,9 @@ tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 202_752
@@ -32,3 +35,7 @@ cache = { read = 0.205 }
 
 [cost.text.output]
 price = 3.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8
