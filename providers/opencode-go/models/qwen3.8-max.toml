@@ -2,12 +2,16 @@
 # https://help.aliyun.com/en/model-studio/anthropic-api-messages
 # Toggle (Messages): thinking.type = enabled|disabled
 # Effort (Messages): output_config.effort = low|medium|xhigh
+# Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Modalities: image and video input as the file already listed (not PDF); MIME types from the lab.
+# Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 description = "2.4-trillion-parameter multimodal flagship for coding, professional work, and long-horizon agentic workflows"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]

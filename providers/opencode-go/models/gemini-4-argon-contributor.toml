@@ -1,6 +1,9 @@
 # Sources: https://opencode.ai/docs/go/#endpoints and https://opencode.ai/docs/go/#usage-limits
 # Contributor tier: prompts and completions may be used to train future Google models,
 # so Go requires the workspace's consent to paid endpoints that train on request data.
+# Pricing and endpoint (Gemini generateContent): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
 schema = 2
 base_model = "google/gemini-4-argon"
 name = "Gemini 4 Argon Contributor"

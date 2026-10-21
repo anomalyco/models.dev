@@ -1,3 +1,7 @@
+# Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# The docs list only $0.30/$1.20/$0.06; the >512K tier is MiniMax's long-context price (https://platform.minimax.io/docs/pricing/overview#models/text), kept from the existing file.
+# Toggle: thinking.type = adaptive|disabled (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"

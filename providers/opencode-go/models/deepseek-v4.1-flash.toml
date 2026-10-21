@@ -1,3 +1,8 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Go lists Off-Peak and Peak prices; Peak is 01:00-04:00 and 06:00-10:00 UTC, Monday through Friday, and every other hour is Off-Peak.
+# Base prices are Off-Peak; the multiplier doubles them at Peak. Go doesn't mention DeepSeek's Chinese-holiday exception, so none is applied.
+# Effort: reasoning_effort = low|high|max (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
@@ -15,3 +20,7 @@ cache = { read = 0.003 }
 
 [cost.text.output]
 price = 0.6
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
