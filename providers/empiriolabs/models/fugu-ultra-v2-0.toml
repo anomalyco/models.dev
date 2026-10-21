@@ -1,6 +1,10 @@
 schema = 2
-base_model = "sakana/fugu-ultra"
+base_model = "sakana/fugu-ultra-v2"
 name = "Fugu Ultra v2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }

@@ -1,22 +1,13 @@
 schema = 2
-name = "Qwen3.5 4B"
+base_model = "alibaba/qwen3.5-4b"
 description = "Qwen3.5 4B is a low-cost multimodal reasoning model with 256K context, image and video input, function tools, and structured output."
-open_weights = true
-release_date = "2026-03-02"
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1_024, max = 32_768 } }
 structured_output = true
-temperature = true
 cache = { supported = true }
 
 [limit]
-context = 262_144
 output = 32_768
 
 [cost.text.input]
