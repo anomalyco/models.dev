@@ -1,19 +1,12 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 schema = 2
+base_model = "sarvam/sarvam-m"
 name = "sarvam-m"
-description = "Efficient Indian-language reasoning model for chat, coding, and multilingual work"
-open_weights = true
-release_date = "2025-07-25"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
 
 [limit]
 context = 128_000

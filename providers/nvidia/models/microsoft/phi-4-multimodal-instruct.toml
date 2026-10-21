@@ -1,9 +1,7 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-15T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 schema = 2
+base_model = "microsoft/phi-4-multimodal-instruct"
 name = "Phi 4 Multimodal"
-description = "General-purpose chat model for instruction following, writing, and analysis"
-open_weights = false
-release_date = "2025-07-26"
 status = "deprecated"
 
 [modalities]
@@ -12,7 +10,6 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [limit]

@@ -2,6 +2,7 @@
 # (https://build.nvidia.com/google/gemma-4-31b-it). PNG, JPEG and WebP images were read live (2026-10-21);
 # video and audio requests were held by NVIDIA's content-safety screening, so they weren't confirmed.
 # Context 256,000: the card's "Input Context Length (ISL): 256K".
+# Toggle: chat_template_kwargs.enable_thinking = true|false (https://docs.api.nvidia.com/nim/reference/google-gemma-4-31b-it-infer).
 schema = 2
 base_model = "google/gemma-4-31b-it"
 name = "Gemma-4-31B-IT"
