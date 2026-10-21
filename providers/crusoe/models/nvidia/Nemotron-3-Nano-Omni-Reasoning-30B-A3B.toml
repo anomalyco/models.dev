@@ -3,15 +3,24 @@
 # low/medium/high are accepted but inert; "max" returns HTTP 400. Encoded
 # as a toggle. Reasoning text arrives interleaved with tool_calls, in the
 # message field named "reasoning" (not "reasoning_content").
-base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
-reasoning_options = [{ type = "toggle" }]
-interleaved = true
-
 # Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13).
 # Text/image/video input is 0.30; audio input is billed at 0.50
 # (cached-audio pricing exists on the page but has no schema field).
-[cost]
-input = 0.30
-output = 1.83
-cache_read = 0.30
-input_audio = 0.50
+schema = 2
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 1.83
+
+[cost.audio.input]
+price = 0.5

@@ -4,13 +4,20 @@
 # does not disable). No working caller-side control was found, so no
 # options are advertised. Reasoning text arrives interleaved with
 # tool_calls, in the message field named "reasoning".
-base_model = "zhipuai/glm-5.1"
-structured_output = true
-reasoning_options = []
-interleaved = true
-
 # Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
-[cost]
-input = 1.20
-output = 4.40
-cache_read = 0.25
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 4.4

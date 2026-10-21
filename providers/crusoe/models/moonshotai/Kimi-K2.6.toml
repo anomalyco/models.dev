@@ -4,13 +4,20 @@
 # length, so this is encoded as a toggle (matches deepinfra's Kimi-K2.6
 # entry). Reasoning text arrives interleaved with tool_calls, in the
 # message field named "reasoning" (not "reasoning_content").
-base_model = "moonshotai/kimi-k2.6"
-structured_output = true
-reasoning_options = [{ type = "toggle" }]
-interleaved = true
-
 # Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
-[cost]
-input = 0.70
-output = 3.50
-cache_read = 0.35
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.35 }
+
+[cost.text.output]
+price = 3.5
