@@ -2,9 +2,11 @@
 # NIM Chat schema: `chat_template_kwargs.enable_thinking = true|false`.
 # https://docs.api.nvidia.com/nim/reference/qwen-qwen3-5-397b-a17b-infer
 # video is natively supported by Qwen3.5 but not available on NVIDIA NIM
+# Knowledge 2026-01: kept from NVIDIA's earlier entry; unsourced (the lab publishes no cutoff).
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5-397B-A17B"
+knowledge = "2026-01"
 status = "deprecated"
 
 [modalities]

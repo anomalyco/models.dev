@@ -2,9 +2,11 @@
 # on an
 # unsupported height). The genai endpoint takes prompt, steps, cfg_scale and seed, no temperature; context and
 # output come from the lab (0: prompts aren't chat tokens).
+# Knowledge 2024-08: kept from NVIDIA's earlier entry; unsourced (the lab publishes no cutoff).
 schema = 2
 base_model = "black-forest-labs/flux-1-dev"
 name = "FLUX.1-dev"
+knowledge = "2024-08"
 
 [cost.text.input]
 price = 0

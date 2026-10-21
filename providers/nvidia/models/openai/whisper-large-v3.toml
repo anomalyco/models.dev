@@ -2,9 +2,11 @@
 # through NVIDIA Riva speech-to-text, not /v1/chat/completions (404 there).
 # Linked to the lab: transcription model, audio in, text out. The old entry had attachment = false next to audio
 # input, which v2 can't express.
+# Knowledge 2023-09: kept from NVIDIA's earlier entry; unsourced (the lab publishes no cutoff).
 schema = 2
 base_model = "openai/whisper-large-v3"
 name = "Whisper Large v3"
+knowledge = "2023-09"
 
 [cost.text.input]
 price = 0
