@@ -7,8 +7,10 @@
 # RouteLLM input_token_rate: 0.000002
 # RouteLLM output_token_rate: 0.000012
 # RouteLLM cached_input_token_rate: 0.0000002
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21), which listed it when this file was written.
 schema = 2
 base_model = "google/gemini-3-pro-image-preview"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }

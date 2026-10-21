@@ -5,8 +5,10 @@
 # RouteLLM max_completion_tokens: 8192
 # RouteLLM input_token_rate: 0.00000059
 # RouteLLM output_token_rate: 0.00000079
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21), which listed it when this file was written.
 schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
+status = "deprecated"
 
 [modalities]
 input = ["text"]

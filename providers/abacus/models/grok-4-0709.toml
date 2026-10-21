@@ -1,10 +1,12 @@
 # Input MIME types: JPEG and PNG, as in the xAI lab files (models/xai/grok-4.1-fast.toml).
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
 schema = 2
 name = "Grok 4"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
 open_weights = false
 release_date = "2025-07-09"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png"]
