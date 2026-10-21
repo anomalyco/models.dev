@@ -2,18 +2,23 @@
 # Effort: reasoning_effort = low|high|max
 # Live metadata: levels none/low/high/max, default max, and `can_disable=true`
 # (accessed 2026-07-28): https://api.code.umans.ai/v1/models/info
+schema = 2
 base_model = "moonshotai/kimi-k3"
-structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
