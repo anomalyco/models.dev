@@ -1,3 +1,6 @@
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking.budget_tokens (lab-mapped, not probed on 302.AI)
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "anthropic/claude-opus-4-1-20250805"
 name = "claude-opus-4-1-20250805"
@@ -7,6 +10,7 @@ reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 31_
 
 [cost.text.input]
 price = 15
+cache = { read = 1.5, write = 18.75 }
 
 [cost.text.output]
 price = 75

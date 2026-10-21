@@ -1,5 +1,6 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: output_config.effort = low|high|max
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -12,6 +13,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 3
+cache = { read = 0.3 }
 
 [cost.text.output]
 price = 15

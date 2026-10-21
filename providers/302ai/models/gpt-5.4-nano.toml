@@ -1,3 +1,5 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "openai/gpt-5.4-nano"
 name = "gpt-5.4-nano"
@@ -9,6 +11,7 @@ temperature = false
 
 [cost.text.input]
 price = 0.2
+cache = { read = 0.02 }
 
 [cost.text.output]
 price = 1.25

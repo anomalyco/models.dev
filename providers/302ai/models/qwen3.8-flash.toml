@@ -1,6 +1,7 @@
 # Toggle: enable_thinking true|false
 # Effort: reasoning_effort = low|medium|xhigh
 # Budget: thinking_budget (integer reasoning tokens)
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
@@ -12,7 +13,8 @@ structured_output = true
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.18
+price = 0.15
+cache = { read = 0.016, write = 0.2 }
 
 [cost.text.output]
-price = 0.564
+price = 0.47

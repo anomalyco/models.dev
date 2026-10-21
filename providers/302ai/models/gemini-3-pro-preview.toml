@@ -1,3 +1,4 @@
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "google/gemini-3-pro-preview"
 name = "gemini-3-pro-preview"
@@ -17,5 +18,13 @@ output = 64_000
 [cost.text.input]
 price = 2
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+
 [cost.text.output]
 price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18

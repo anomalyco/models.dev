@@ -1,3 +1,4 @@
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "bytedance-seed/seed-1-8"
 name = "doubao-seed-1-8-251215"
@@ -9,7 +10,23 @@ reasoning = { supported = false }
 context = 224_000
 
 [cost.text.input]
-price = 0.114
+price = 0.1143
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1715
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.343
 
 [cost.text.output]
 price = 0.286
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.286
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 3.43

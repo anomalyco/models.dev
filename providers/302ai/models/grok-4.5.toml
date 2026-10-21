@@ -1,3 +1,5 @@
+# Effort: reasoning_effort = low|medium|high (lab-mapped, not probed on 302.AI)
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "xai/grok-4.5"
 
@@ -7,6 +9,7 @@ structured_output = true
 
 [cost.text.input]
 price = 2
+cache = { read = 0.5 }
 
 [cost.text.output]
 price = 6

@@ -1,3 +1,4 @@
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "qwen3-coder-480b-a35b-instruct"
@@ -5,5 +6,21 @@ name = "qwen3-coder-480b-a35b-instruct"
 [cost.text.input]
 price = 0.86
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.29
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 2.15
+
 [cost.text.output]
 price = 3.43
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 5.15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 8.58

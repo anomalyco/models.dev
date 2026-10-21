@@ -1,5 +1,6 @@
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (integer reasoning tokens)
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3.5-35b-a3b"
 
@@ -10,5 +11,13 @@ structured_output = true
 [cost.text.input]
 price = 0.06
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.23
+
 [cost.text.output]
 price = 0.46
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.83
