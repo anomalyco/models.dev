@@ -2,10 +2,10 @@ name = "GLM Latest"
 description = "Lab latest market for GLM supply. You contract for the latest qualifying route, not a specific model."
 # contract spec: https://thegrid.ai/docs/instrument-specifications/current-instruments
 release_date = "2026-07-06"
-last_updated = "2026-07-06"
+last_updated = "2026-08-18"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 temperature = false
 tool_call = true
 structured_output = true
@@ -15,9 +15,9 @@ open_weights = false
 field = "reasoning_content"
 
 [limit]
-context = 1_000_000
-input = 922_000
-output = 128_000
+context = 1_048_576
+input = 917_504
+output = 131_072
 
 [modalities]
 input = ["text"]
