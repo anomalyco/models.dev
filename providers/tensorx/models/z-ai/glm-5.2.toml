@@ -1,17 +1,16 @@
+schema = 2
 base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}} (default on)
-
-[[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 1.5
-output = 4.5
-cache_read = 0.375
-
 [limit]
-context = 1048576
+context = 1_048_576
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.375 }
+
+[cost.text.output]
+price = 4.5

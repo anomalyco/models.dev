@@ -1,12 +1,14 @@
-base_model = "alibaba/qwen3.8-27b"
-structured_output = true
 # Thinking is always on; reasoning_effort low|medium|xhigh (default xhigh).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
 
-[cost]
-input = 0.4
-output = 2.4
-cache_read = 0.1
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.4

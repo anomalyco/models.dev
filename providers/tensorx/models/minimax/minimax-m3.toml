@@ -1,13 +1,16 @@
+schema = 2
 base_model = "minimax/MiniMax-M3"
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"thinking_mode": "enabled" | "disabled"}} (default "adaptive")
-
-[cost]
-input = 0.4
-output = 2
-cache_read = 0.1
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
-context = 1048576
-output = 131072
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2
