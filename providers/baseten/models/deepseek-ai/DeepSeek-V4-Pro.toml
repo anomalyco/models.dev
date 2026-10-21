@@ -3,13 +3,16 @@
 # reasoning-token budget field is documented.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Retired: absent from GET /v1/models; chat completions return 410 "the model version you are trying to access has been deprecated" (live, 2026-10-21).
+# Distinct levels: none | low | high | max. The guide no longer lists this retired slug;
+# Baseten runs minimal at low, medium at high and xhigh at max on DeepSeek V4 Flash 0731.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 1_048_576
