@@ -2,11 +2,20 @@
 # image, and audio inputs.
 # https://modal.com/blog/inkling-by-thinking-machines-labs-now-available-on-modal
 # https://modal.com/docs/guide/endpoints
+# Modal Shared Endpoints (https://modal.com/docs/guide/endpoints, accessed 2026-10-21): text models are served on the
+#   OpenAI Chat Completions and Responses APIs and the Anthropic Messages API, billed per token. Serving engines cache
+#   the KV state of a prompt prefix automatically; the Modal-Routing-Affinity-Key header keeps a conversation on one
+#   container so the cached prefix is reused, and cached prompt tokens have their own price.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+# Library page https://modal.com/library/thinking-machines/inkling (accessed 2026-10-21): model ID
+#   thinkingmachines/Inkling-NVFP4; prompt $1.20, cached prompt $0.27, completion $5.00 per MTok; modalities
+#   "Text, image & audio" (the lab's input types).
 schema = 2
 base_model = "thinkingmachines/inkling"
 
 [capabilities]
 reasoning = { supported = true }
+cache = { supported = true, implicit = true }
 structured_output = false
 
 [limit]
