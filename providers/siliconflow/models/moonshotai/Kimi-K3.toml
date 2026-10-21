@@ -1,11 +1,12 @@
 # Sources: https://www.siliconflow.com/models (2026-09-08)
 # SiliconFlow serves image input but not video for this model
 # (model page "Support image input: Yes"): https://www.siliconflow.com/models/kimi-k3
+# Image formats are the lab's.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

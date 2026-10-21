@@ -5,11 +5,12 @@
 # https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions
 # SiliconFlow serves image input but not video for this model
 # (model page "Support image input: Yes"): https://www.siliconflow.com/models/minimax-m3
+# Image formats are the lab's.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
