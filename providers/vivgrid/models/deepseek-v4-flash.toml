@@ -4,6 +4,8 @@
 # Served on Chat Completions only: every API surface listed for this model uses
 # /chat/completions, so it needs the openai-compatible SDK rather than the
 # provider default (Responses). https://docs.vivgrid.com/models/deepseek-v4-flash (accessed 2026-10-21)
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash"
