@@ -2,11 +2,12 @@
 # Other model families (compatibility chart): `tools` and `image_url` return an error, `response_format`, `reasoning_effort` and `cache_control` are ignored, and cached_tokens is not reported.
 # Pricing: Snowflake Service Consumption Table effective 2026-10-15 (https://www.snowflake.com/legal-files/CreditConsumptionTable.pdf), Table 6(c) Cortex Inference, AI Credits per 1M tokens x USD 2.00 per AI Credit (on-demand Global routing, Table 2(b); https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing). Regional routing costs USD 2.20 per AI Credit: the 1.1x multiplier when region is not global.
 # Limits: AI_COMPLETE model restrictions (https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability#model-restrictions); the REST chart caps max_completion_tokens at 131,072. mistral-large2: 128,000 context, 8,192 output.
-# mistral-large2 is Mistral Large 2; whether that is the 2407 or 2411 checkpoint is not documented, so the base_model link is unchanged.
+# Identity: Mistral Large 2 (mistral-large-2407). Snowflake's model table lists mistral-large2 with 128,000 context and MMLU 84 (https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability), Mistral's figures for Large 2 (https://mistral.ai/news/mistral-large-2407). It was linked to mistral-large-latest before.
+# Text only: other model families get an error for `image_url`, and `file` content is ignored (compatibility chart). AI_COMPLETE marks the model [legacy]; it isn't deprecated.
 # Compatibility chart: `store` and `service_tier` return an error for every model family, so store = false and no service tier.
 # Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
 schema = 2
-base_model = "mistral/mistral-large-latest"
+base_model = "mistral/mistral-large-2407"
 
 [modalities]
 input = ["text"]
