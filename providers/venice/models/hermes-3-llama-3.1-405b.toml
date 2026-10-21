@@ -1,3 +1,6 @@
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
 schema = 2
 base_model = "nousresearch/hermes-3-llama-3.1-405b"
 name = "Hermes 3 Llama 3.1 405b"
@@ -5,6 +8,7 @@ description = "Open Llama instruction model for multilingual chat, reasoning, an
 
 [capabilities]
 structured_output = true
+system_updates = false
 
 [limit]
 context = 128_000

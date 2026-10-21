@@ -1,5 +1,12 @@
 # Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
 # https://api.venice.ai/api/v1/models?type=text
+# Modalities: video from Venice's docs. Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+# Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
 schema = 2
 name = "MiniMax M3 Preview"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
@@ -9,12 +16,16 @@ release_date = "2026-06-12"
 last_updated = "2026-06-13"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image", "video/mp4", "video/mpeg", "video/quicktime", "video/webm"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
 
 [limit]
 context = 524_288

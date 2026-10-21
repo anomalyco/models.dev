@@ -1,22 +1,15 @@
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
 schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-open_weights = true
-release_date = "2025-04-06"
-last_updated = "2026-06-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-
-[limit]
-context = 128_000
-output = 4_096
+tools = { supported = true, updates = false }
+system_updates = false
 
 [cost.text.input]
 price = 0.7

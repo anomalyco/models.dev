@@ -1,10 +1,21 @@
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+# Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true }
+prompt_cache_key = true
 
 [limit]
 output = 131_072

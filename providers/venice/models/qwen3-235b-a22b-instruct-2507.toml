@@ -1,10 +1,16 @@
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen 3 235B A22B Instruct 2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
+system_updates = false
 
 [limit]
 context = 128_000
