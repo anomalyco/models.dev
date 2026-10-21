@@ -1,3 +1,4 @@
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
 schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 name = "glm-4.7-flash"
@@ -8,3 +9,9 @@ temperature = false
 
 [limit]
 output = 65_500
+
+[cost.text.input]
+price = 0.0707
+
+[cost.text.output]
+price = 0.404

@@ -1,14 +1,22 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh (default none)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+# Modalities: /v1/models architecture.output_modalities = text, image (2026-10-21).
 schema = 2
 base_model = "openai/gpt-5.4-nano"
 name = "GPT-5.4-Nano"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text", "image"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 temperature = false
 
 [cost.text.input]
-price = 0.18
-cache = { read = 0.018 }
+price = 0.1818
+cache = { read = 0.0182 }
 
 [cost.text.output]
-price = 1.1
+price = 1.1364

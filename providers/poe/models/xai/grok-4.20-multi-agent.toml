@@ -1,3 +1,6 @@
+# Effort: reasoning_effort = medium|high (default medium)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
 schema = 2
 name = "Grok-4.20-Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -10,7 +13,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["medium", "high"] }
 temperature = false
 
 [limit]
@@ -18,8 +21,8 @@ context = 128_000
 output = 0
 
 [cost.text.input]
-price = 2
-cache = { read = 0.2 }
+price = 1.2626
+cache = { read = 0.202 }
 
 [cost.text.output]
-price = 6
+price = 2.5253

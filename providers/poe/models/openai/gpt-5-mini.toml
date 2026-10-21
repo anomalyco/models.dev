@@ -1,3 +1,6 @@
+# Effort: reasoning_effort = minimal|low|medium|high (default minimal)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
 schema = 2
 base_model = "openai/gpt-5-mini"
 name = "GPT-5-mini"
@@ -6,8 +9,8 @@ name = "GPT-5-mini"
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 
 [cost.text.input]
-price = 0.22
-cache = { read = 0.022 }
+price = 0.2273
+cache = { read = 0.0227 }
 
 [cost.text.output]
-price = 1.8
+price = 1.8182

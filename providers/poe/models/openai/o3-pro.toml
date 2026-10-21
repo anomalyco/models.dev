@@ -1,3 +1,6 @@
+# Effort: reasoning_effort = low|medium|high (default medium)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
 schema = 2
 base_model = "openai/o3-pro"
 
@@ -5,7 +8,7 @@ base_model = "openai/o3-pro"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
-price = 18
+price = 18.1818
 
 [cost.text.output]
-price = 72
+price = 72.7273

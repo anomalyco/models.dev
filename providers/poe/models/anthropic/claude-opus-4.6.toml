@@ -1,3 +1,6 @@
+# Effort: extra_body.output_effort = max|high|medium|low|none (default high)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 name = "Claude-Opus-4.6"
@@ -10,8 +13,8 @@ temperature = false
 context = 983_040
 
 [cost.text.input]
-price = 4.3
-cache = { read = 0.43, write = 5.3 }
+price = 4.2929
+cache = { read = 0.4293, write = 5.3662 }
 
 [cost.text.output]
-price = 21
+price = 21.4646

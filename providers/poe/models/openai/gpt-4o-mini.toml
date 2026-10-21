@@ -1,3 +1,4 @@
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
 schema = 2
 base_model = "openai/gpt-4o-mini"
 name = "GPT-4o-mini"
@@ -14,8 +15,8 @@ context = 124_096
 output = 4_096
 
 [cost.text.input]
-price = 0.14
-cache = { read = 0.068 }
+price = 0.1364
+cache = { read = 0.0682 }
 
 [cost.text.output]
-price = 0.54
+price = 0.5455

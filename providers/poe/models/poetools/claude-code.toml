@@ -1,3 +1,6 @@
+# Effort: extra_body.effort = max|high|medium|low|none|xhigh (default high)
+# Budget: extra_body.thinking_budget = number (default 4096)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
 schema = 2
 name = "claude-code"
 description = "Claude model for careful reasoning, writing, coding, and tool use"
@@ -10,7 +13,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], budget = {} }
 temperature = false
 
 [limit]

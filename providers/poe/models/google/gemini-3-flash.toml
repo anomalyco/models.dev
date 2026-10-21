@@ -3,12 +3,14 @@
 # USD/MTok (pricing x1e6); thinking_level enum = minimal|low|high verified live.
 # temperature validated 0..2 on this host; base already has temperature = true.
 # Lab id is the -preview entry (same pattern as Pioneer/Neon/Snowflake hosts).
+# Effort: extra_body.thinking_level = minimal|low|high (default low)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
 schema = 2
 base_model = "google/gemini-3-flash-preview"
 name = "Gemini-3-Flash"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
 
 [capabilities]

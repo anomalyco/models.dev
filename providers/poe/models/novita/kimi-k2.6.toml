@@ -1,3 +1,4 @@
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 name = "Kimi-K2.6"
@@ -10,8 +11,8 @@ reasoning = { supported = true, toggle = true }
 input = 262_144
 
 [cost.text.input]
-price = 0.96
-cache = { read = 0.16 }
+price = 0.9596
+cache = { read = 0.1616 }
 
 [cost.text.output]
-price = 4.04
+price = 4.0404

@@ -16,7 +16,7 @@ base_model = "google/gemini-3.5-flash"
 name = "Gemini-3.5-Flash"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
 
 [capabilities]

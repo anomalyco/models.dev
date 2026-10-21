@@ -1,3 +1,4 @@
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
 schema = 2
 base_model = "google/gemini-3-pro-image-preview"
 name = "Nano-Banana-Pro"
@@ -15,8 +16,8 @@ temperature = false
 output = 0
 
 [cost.text.input]
-price = 2
-cache = { read = 0.2 }
+price = 2.0202
+cache = { read = 0.202 }
 
 [cost.text.output]
-price = 12
+price = 12.1212
