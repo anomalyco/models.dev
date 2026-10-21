@@ -1,8 +1,10 @@
+# Reasoning is always on: Kimi models "cannot be toggled off" on TensorX and take no reasoning_effort.
+# https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-10-21)
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 structured_output = true
 
 [cost.text.input]

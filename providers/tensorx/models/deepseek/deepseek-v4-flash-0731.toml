@@ -1,8 +1,10 @@
+# Toggle: chat_template_kwargs.thinking = true (default off). Effort: reasoning_effort = high|max, only with thinking on ("low"/"medium" map to "high").
+# https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-10-21), DeepSeek V4 section.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
 
 [limit]
