@@ -1,3 +1,5 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Not represented: web search $0.005 per request (no v2 per-request field).
 schema = 2
 base_model = "xai/grok-4.3"
 
@@ -7,6 +9,15 @@ structured_output = true
 
 [cost.text.input]
 price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
 
 [cost.text.output]
 price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5

@@ -1,3 +1,7 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices.
+# Not represented: cache storage $1.0/MTok per hour isn't representable.
+# Not represented: web search $35 per 1K requests (no v2 per-request field).
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
@@ -7,10 +11,23 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
+service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.0375 }
+cache = { read = 0.03 }
 
 [cost.text.output]
 price = 2.5
+
+[cost.audio.input]
+price = 1
+cache = { read = 0.1 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5 }, output = 0.5 }, audio = { input = { price = 0.5 } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.8

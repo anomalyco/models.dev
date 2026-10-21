@@ -1,3 +1,4 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
@@ -7,6 +8,7 @@ structured_output = true
 
 [cost.text.input]
 price = 1.74
+cache = { read = 0.145 }
 
 [cost.text.output]
 price = 3.48

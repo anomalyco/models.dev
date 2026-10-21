@@ -1,3 +1,5 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices.
 schema = 2
 base_model = "openai/gpt-5-nano"
 knowledge = "2024-10-01"
@@ -5,6 +7,7 @@ knowledge = "2024-10-01"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 temperature = true
+service_tier = ["flex"]
 
 [cost.text.input]
 price = 0.05
@@ -12,3 +15,7 @@ cache = { read = 0.005 }
 
 [cost.text.output]
 price = 0.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

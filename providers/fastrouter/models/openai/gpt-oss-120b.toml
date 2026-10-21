@@ -1,3 +1,4 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
@@ -5,7 +6,7 @@ base_model = "openai/gpt-oss-120b"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
-price = 0.15
+price = 0.09
 
 [cost.text.output]
-price = 0.6
+price = 0.36

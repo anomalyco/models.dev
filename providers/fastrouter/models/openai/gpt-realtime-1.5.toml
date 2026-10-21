@@ -1,3 +1,4 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
 schema = 2
 base_model = "openai/gpt-realtime-1.5"
 name = "GPT Realtime 1.5"
@@ -7,6 +8,17 @@ temperature = true
 
 [cost.text.input]
 price = 4
+cache = { read = 0.4 }
 
 [cost.text.output]
 price = 16
+
+[cost.audio.input]
+price = 32
+cache = { read = 0.4 }
+
+[cost.audio.output]
+price = 64
+
+[cost.image.input]
+price = 5

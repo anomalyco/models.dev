@@ -1,3 +1,5 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Video: catalog videoCost rows per clip length (seconds) and resolution, priced here per second of output.
 schema = 2
 base_model = "bytedance-seed/seedance-2.0"
 name = "Seedance 2"
@@ -8,3 +10,15 @@ output = ["video/mp4"]
 
 [limit]
 context = 4_096
+
+[cost.video.output]
+unit = "second"
+price = 0.18
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480p" } }
+price = 0.084
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.438

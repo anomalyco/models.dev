@@ -1,3 +1,5 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Video: catalog videoCost rows per clip length (seconds) and resolution, priced here per second of output.
 schema = 2
 base_model = "google/veo-3.1-generate-preview"
 name = "Veo 3.1"
@@ -5,3 +7,19 @@ name = "Veo 3.1"
 [limit]
 context = 400_000
 output = 0
+
+[cost.video.output]
+unit = "second"
+price = 0.2
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" } }
+price = 0.4
+
+[[cost.video.output.overrides]]
+when = { generate_audio = { equals = true } }
+price = 0.4
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "4k" } }, { generate_audio = { equals = true } }] }
+price = 0.6

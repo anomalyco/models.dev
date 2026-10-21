@@ -1,3 +1,6 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Image tokens: catalog prompt / completion / input_cache_read (GPT Image 2 image-token prices); text-token input price not listed.
+# Not represented: web search $0.01 per request (no v2 per-request field).
 schema = 2
 base_model = "openai/gpt-image-2"
 name = "GPT Image 2"
@@ -7,3 +10,10 @@ temperature = true
 
 [limit]
 context = 128_000
+
+[cost.image.input]
+price = 8
+cache = { read = 2 }
+
+[cost.image.output]
+price = 30

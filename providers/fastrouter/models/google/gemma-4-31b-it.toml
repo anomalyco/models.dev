@@ -1,3 +1,4 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
 schema = 2
 base_model = "google/gemma-4-31b-it"
 
@@ -6,7 +7,7 @@ reasoning = { supported = true }
 structured_output = true
 
 [cost.text.input]
-price = 0.13
+price = 0.1
 
 [cost.text.output]
-price = 0.38
+price = 0.3

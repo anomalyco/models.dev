@@ -1,12 +1,28 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices.
+# Not represented: web search $0.01 per request (no v2 per-request field).
 schema = 2
 base_model = "openai/gpt-5.5-pro"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+service_tier = ["flex"]
 
 [cost.text.input]
 price = 30
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
 [cost.text.output]
 price = 180
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 270
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
