@@ -5,13 +5,14 @@
 # Reasoning is returned in message.reasoning_content, the answer in
 # message.content.
 # https://api.berget.ai/openapi.json
+# Prices: https://api.berget.ai/v1/models lists EUR per 1M tokens (public, checked 2026-10-21);
+# EUR 3 input / 0.90 cached input / 15 output; they were stored as unconverted EUR values.
+# converted to USD at the ECB reference rate of 1.1215 USD/EUR (2026-10-20).
 schema = 2
 base_model = "moonshotai/kimi-k3"
-release_date = "2026-07-27"
-last_updated = "2026-07-28"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
@@ -26,7 +27,8 @@ output = 32_768
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 3
+price = 3.3645
+cache = { read = 1.00935 }
 
 [cost.text.output]
-price = 15
+price = 16.8225

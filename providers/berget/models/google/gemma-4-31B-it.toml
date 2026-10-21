@@ -1,29 +1,29 @@
 # Berget documents no meaningful toggle, effort subset, or budget for this model.
 # https://api.berget.ai/openapi.json
+# Prices: https://api.berget.ai/v1/models lists EUR per 1M tokens (public, checked 2026-10-21);
+# EUR 0.25 / 0.50; the old values used an unrecorded 1.10 rate.
+# converted to USD at the ECB reference rate of 1.1215 USD/EUR (2026-10-20).
+# knowledge is an unsourced provider value, kept so v1 does not change.
 schema = 2
+base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B Instruct"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-open_weights = true
 knowledge = "2025-12"
-release_date = "2026-04-02"
 
 [modalities]
-input = ["audio", "image", "text", "video"]
+input = ["audio", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "video"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true }
 structured_output = true
-temperature = true
+reasoning = { supported = true }
 
 [limit]
 context = 128_000
 output = 8_192
 
 [cost.text.input]
-price = 0.275
+price = 0.280375
 
 [cost.text.output]
-price = 0.55
+price = 0.56075

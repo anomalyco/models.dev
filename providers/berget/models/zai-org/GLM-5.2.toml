@@ -1,12 +1,10 @@
 # Berget's schema accepts none/low/medium/high, but documents no GLM-specific
 # mapping; schema acceptance alone does not establish meaningful support.
 # https://api.berget.ai/openapi.json
+# Deprecated: no longer listed by https://api.berget.ai/v1/models (checked 2026-10-21).
 schema = 2
 base_model = "zhipuai/glm-5.2"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }

@@ -14,10 +14,9 @@
 # 2026-08-29). PDF input is NOT supported by the serving stack.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-last_updated = "2026-09-30"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
 output = ["text"]
 
 [capabilities]
