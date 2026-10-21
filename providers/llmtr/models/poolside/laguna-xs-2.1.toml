@@ -1,12 +1,15 @@
 # Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
 # reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
 # Toggle: $.reasoning = true|false (model-id suffix aliases :think|:fast)
+schema = 2
 base_model = "poolside/laguna-xs-2.1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = false
 
-[cost]
-input = 0
-output = 0
+[cost.text.input]
+price = 0
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.output]
+price = 0

@@ -4,18 +4,17 @@
 # Budget: $.thinking_budget (integer reasoning tokens).
 # Measured: `thinking_budget` is honoured as a cap: 64 -> 64 reasoning tokens; at 600 the model used 452.
 # The bare `$.reasoning` boolean is inert on this route (no reasoning output with it set); `enable_thinking` is the control that works.
+schema = 2
 base_model = "alibaba/qwen3-max"
-reasoning = true
 
-[cost]
-input = 1.2
-output = 6
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [limit]
 context = 256_000
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 1.2
 
-[[reasoning_options]]
-type = "budget_tokens"
+[cost.text.output]
+price = 6

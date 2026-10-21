@@ -6,10 +6,15 @@
 # The model-id suffixes low|medium|high|fast|pro|auto are search controls, not reasoning: the
 # gateway names the parameter in its own rejection (search_type) and the vocabulary is
 # identical for every perplexity route.
+schema = 2
 base_model = "perplexity/sonar-deep-research"
-reasoning_options = []
 
-[cost]
-input = 2
-output = 8
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 8
 reasoning = 3

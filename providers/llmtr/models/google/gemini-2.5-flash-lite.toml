@@ -7,10 +7,15 @@
 #   usage.completion_tokens_details.reasoning_tokens.
 # The same harness detected reasoning on six Qwen routes in the same run, so [] here means
 # "no caller control", not "untested".
+schema = 2
 base_model = "google/gemini-2.5-flash-lite"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.1
-output = 0.1
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.1

@@ -6,12 +6,14 @@
 # POST /v1/chat/completions on 2026-08-16 they are not distinct controls:
 # `none`, `minimal` and `low` all return no reasoning tokens, so they are three
 # spellings of the same off path. `medium` and `high` both return reasoning.
+schema = 2
 base_model = "upstage/solar-pro3"
 
-[cost]
-input = 0.15
-output = 0.6
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

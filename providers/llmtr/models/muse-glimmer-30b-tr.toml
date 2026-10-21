@@ -6,12 +6,17 @@
 # with `The "reasoning_effort" parameter is not supported by
 # "llmtr/muse-glimmer-30b-tr". This model does not expose a thinking mode.`
 # Hence always-on with no caller control, not a toggle.
-name = "Muse Glimmer 30B (TR)"
+schema = 2
 base_model = "meta/muse-glimmer-30b"
-structured_output = true
-reasoning_options = []
+name = "Muse Glimmer 30B (TR)"
 
-[cost]
-input = 2.0
-output = 5.0
-cache_read = 0.5
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 5

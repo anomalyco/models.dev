@@ -5,12 +5,17 @@
 #   :fast, reasoning.max_tokens, enable_thinking and thinking.type all return no
 #   reasoning_content and no usage.completion_tokens_details.reasoning_tokens.
 # Xiaomi's first-party host exposes a toggle; this gateway does not forward it.
+schema = 2
 base_model = "xiaomi/mimo-v2.5"
-reasoning_options = []
 
-[cost]
-input = 0.14
-output = 0.28
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 1_000_000
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.28
