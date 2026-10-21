@@ -134,6 +134,7 @@ export const OpenRouterModel = z.object({
     input_modalities: z.array(z.string()),
     output_modalities: z.array(z.string()),
   }),
+  // Passthrough: catalogCost reports price keys it doesn't know.
   pricing: z.object({
     prompt: z.string(),
     completion: z.string(),
@@ -143,14 +144,22 @@ export const OpenRouterModel = z.object({
     internal_reasoning: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
+    input_cache_write_1h: z.string().optional(),
+    image_output: z.string().optional(),
+    web_search: z.string().optional(),
+    request: z.string().optional(),
     overrides: z.array(z.object({
       min_prompt_tokens: z.number().optional(),
       prompt: z.string().optional(),
       completion: z.string().optional(),
       input_cache_read: z.string().optional(),
       input_cache_write: z.string().optional(),
+      // Time-of-day windows, checked by parseTimeWindow.
+      utc_days: z.unknown().optional(),
+      utc_start: z.unknown().optional(),
+      utc_end: z.unknown().optional(),
     }).passthrough()).optional(),
-  }),
+  }).passthrough(),
   top_provider: z.object({
     context_length: z.number().nullable(),
     max_completion_tokens: z.number().nullable(),
@@ -238,12 +247,18 @@ export const openrouter = {
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
     const translated = buildOpenRouterModel(model, context.existing(model.id));
+    // Without a catalog price the file's cost is kept as is.
+    const catalog = price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined
+      ? undefined
+      : catalogV2Set(model, context.v2?.(model.id));
     return {
       id: model.id,
       model: translated,
       header: translated.reasoning_options?.some((option) => option.type === "toggle")
         ? "# Toggle: reasoning.enabled = true|false\n# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens\n"
         : undefined,
+      v2Set: catalog?.v2Set,
+      notices: catalog?.notices,
     };
   },
 } satisfies SyncProvider<OpenRouterModel>;
@@ -869,16 +884,284 @@ function price(value: string | undefined) {
     : undefined;
 }
 
+// ---------------------------------------------------------------------------
+// Chat model prices
+// ---------------------------------------------------------------------------
+
+// Where each catalog price goes in a v2 file. Prices are per token in the catalog
+// (per 1M in the file). `image` and `image_output` are per token too: OpenRouter's
+// model pages show "Image Input: $0.30/M tokens" and "Image Output: $60/M tokens".
+// https://openrouter.ai/docs/guides/overview/models#pricing-object
+type PriceTarget = {
+  section: "text" | "image";
+  entry: string;
+  field: "price" | "reasoning" | "read" | "write";
+  ttl?: "1h";
+};
+
+const PRICE_TARGETS: Record<string, PriceTarget> = {
+  prompt: { section: "text", entry: "input", field: "price" },
+  input_cache_read: { section: "text", entry: "input", field: "read" },
+  input_cache_write: { section: "text", entry: "input", field: "write" },
+  input_cache_write_1h: { section: "text", entry: "input", field: "write", ttl: "1h" },
+  completion: { section: "text", entry: "output", field: "price" },
+  internal_reasoning: { section: "text", entry: "output", field: "reasoning" },
+  image: { section: "image", entry: "input", field: "price" },
+  image_output: { section: "image", entry: "output", field: "price" },
+};
+
+// Audio prices carry no unit: OpenRouter's model pages show them per token on most
+// models ("Input Audio: $1/M tokens") and per minute on others (Voxtral Small:
+// "Input Audio at $0.006/minute"), so the catalog alone can't price them exactly.
+const UNITLESS_PRICES = new Set(["audio", "input_audio_cache", "audio_output"]);
+
+// Flat fees per call ("Cost per web search operation", "Fixed cost per API request");
+// v2 costs have no per-call price.
+const PER_CALL_PRICES = new Set(["web_search", "request"]);
+
+function isPriceKey(key: string) {
+  return PRICE_TARGETS[key] !== undefined || UNITLESS_PRICES.has(key) || PER_CALL_PRICES.has(key);
+}
+
+// Override conditions this module reads. The docs ask consumers to skip entries
+// with any other condition.
+const CONDITION_KEYS = new Set(["min_prompt_tokens", "utc_days", "utc_start", "utc_end"]);
+const TIME_WINDOW_KEYS = ["utc_days", "utc_start", "utc_end"];
+
+type PriceOverride = NonNullable<OpenRouterModel["pricing"]["overrides"]>[number];
+type CostEntry = Record<string, any>;
+type CostOverride = { when: Record<string, unknown> } & CostEntry;
+
+const UTC_DAYS: Record<string, string> = {
+  monday: "mon",
+  tuesday: "tue",
+  wednesday: "wed",
+  thursday: "thu",
+  friday: "fri",
+  saturday: "sat",
+  sunday: "sun",
+};
+
+function hasReasoning(model: OpenRouterModel) {
+  return model.supported_parameters.includes("reasoning") || model.supported_parameters.includes("include_reasoning");
+}
+
+function isTimeWindow(override: PriceOverride) {
+  return TIME_WINDOW_KEYS.some((key) => key in override);
+}
+
+function isContextOnly(override: PriceOverride) {
+  return Object.keys(override).every((key) => !CONDITION_KEYS.has(key) || key === "min_prompt_tokens");
+}
+
+// A v2 `when` for one override entry, or why it has none.
+// https://openrouter.ai/docs/guides/overview/models#pricing-overrides
+export function overrideWhen(override: PriceOverride): Record<string, unknown> | string {
+  const when: Record<string, unknown> = {};
+  if (override.min_prompt_tokens !== undefined) {
+    if (!Number.isInteger(override.min_prompt_tokens) || override.min_prompt_tokens < 0) {
+      return "min_prompt_tokens is not a token count";
+    }
+    // "applies when total prompt tokens are strictly greater than this threshold"
+    when.context = { gt: override.min_prompt_tokens };
+  }
+  if (override.utc_days !== undefined) {
+    const days = Array.isArray(override.utc_days)
+      ? override.utc_days.map((day) => (typeof day === "string" ? UTC_DAYS[day.toLowerCase()] : undefined))
+      : [];
+    if (days.length === 0 || days.some((day) => day === undefined)) return "utc_days is not a list of weekdays";
+    // Evaluated at the request instant, like utc_hours.
+    when.utc_days = { in: Object.values(UTC_DAYS).filter((day) => days.includes(day)) };
+  }
+  if ((override.utc_start === undefined) !== (override.utc_end === undefined)) {
+    return "only one of utc_start and utc_end";
+  }
+  if (override.utc_start !== undefined) {
+    const start = utcTime(override.utc_start);
+    const end = utcTime(override.utc_end);
+    if (start === undefined || end === undefined) return "utc_start or utc_end is not an HHMM time";
+    const from = start === "00:00" ? [] : [{ utc_hours: { gte: start } }];
+    const until = end === "00:00" ? [] : [{ utc_hours: { lt: end } }];
+    // "A window whose end is not after its start wraps past midnight ... t >= start || t < end",
+    // so one that ends where it starts is the whole day.
+    const hours = end > start
+      ? [...from, ...until]
+      : end === start ? [] : from.length + until.length === 2 ? [{ any: [...from, ...until] }] : [...from, ...until];
+    if (hours.length === 1) Object.assign(when, hours[0]);
+    if (hours.length === 2) when.all = hours;
+  }
+  return when;
+}
+
+function utcTime(value: unknown) {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0) return undefined;
+  const hours = Math.floor(value / 100);
+  const minutes = value % 100;
+  if (hours > 23 || minutes > 59) return undefined;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+// The default and 1h cache write TTLs a file lists, which label the catalog's
+// input_cache_write and input_cache_write_1h prices.
+function writeTtls(current: Record<string, unknown> | undefined) {
+  const cache = (current?.capabilities as { cache?: { explicit?: { ttl?: unknown } } } | undefined)?.cache;
+  const ttls = cache?.explicit?.ttl;
+  return Array.isArray(ttls) && ttls.length === 2 && ttls[0] !== "1h" && ttls[1] === "1h"
+    ? (ttls[0] as string)
+    : undefined;
+}
+
+/**
+ * Every catalog price as v2 cost: the top-level prices and each override entry
+ * in catalog order, with its conditions as `when`. v2 overrides merge in order
+ * with later ones winning per field, and absent fields inherit the base, as
+ * OpenRouter's overrides do. Prices with no exact v2 form get a notice.
+ */
+export function catalogCost(model: OpenRouterModel, current?: Record<string, unknown>) {
+  const reasoning = hasReasoning(model);
+  const has1h = [model.pricing, ...(model.pricing.overrides ?? [])]
+    .some((prices) => (prices as Record<string, unknown>).input_cache_write_1h !== undefined);
+  const defaultTtl = has1h ? writeTtls(current) : undefined;
+  const issues = new Map<string, Set<string>>();
+  const note = (reason: string, key: string) => issues.set(reason, (issues.get(reason) ?? new Set()).add(key));
+
+  const prices = (source: Record<string, unknown>, isOverride: boolean) => {
+    const cost: Record<string, Record<string, CostEntry>> = {};
+    for (const [key, raw] of Object.entries(source)) {
+      if (key === "overrides" || (isOverride && CONDITION_KEYS.has(key))) continue;
+      const target = PRICE_TARGETS[key];
+      if (target === undefined) {
+        note(UNITLESS_PRICES.has(key)
+          ? "the catalog gives no unit (per token on some models, per minute on others)"
+          : PER_CALL_PRICES.has(key) ? "v2 has no per-call price" : "no known v2 field", key);
+        continue;
+      }
+      if (key === "internal_reasoning" && !reasoning) {
+        note("the model takes no reasoning parameter, so v1 carries no reasoning price", key);
+        continue;
+      }
+      if (target.ttl !== undefined && defaultTtl === undefined) {
+        note("the file's cache capability doesn't list a default and a 1h TTL", key);
+        continue;
+      }
+      const value = typeof raw === "string" ? price(raw) : undefined;
+      if (value === undefined) {
+        note("not a price", key);
+        continue;
+      }
+      const entry = ((cost[target.section] ??= {})[target.entry] ??= {});
+      if (target.field === "read") (entry.cache ??= {}).read = value;
+      else if (target.field === "write" && defaultTtl !== undefined) {
+        ((entry.cache ??= {}).write ??= {})[target.ttl ?? defaultTtl] = value;
+      } else if (target.field === "write") (entry.cache ??= {}).write = value;
+      else entry[target.field] = value;
+    }
+    // The default TTL leads, as v1 takes the first cache write price.
+    const write = cost.text?.input?.cache?.write;
+    if (typeof write === "object" && defaultTtl !== undefined && write[defaultTtl] !== undefined) {
+      cost.text!.input!.cache.write = { [defaultTtl]: write[defaultTtl], ...write };
+    }
+    return cost;
+  };
+
+  const base = prices(model.pricing, false);
+  const overrides: Record<string, CostOverride[]> = {};
+  let ownsContext = false;
+  for (const override of model.pricing.overrides ?? []) {
+    const unknown = Object.keys(override).filter((key) =>
+      !CONDITION_KEYS.has(key) && !isPriceKey(key)
+    );
+    const when = unknown.length > 0 ? `unknown fields ${unknown.join(", ")}` : overrideWhen(override);
+    if (typeof when === "string") {
+      note(`skipped override ${JSON.stringify(override)}: ${when}`, "overrides");
+      continue;
+    }
+    if (when.context !== undefined && isContextOnly(override)) ownsContext = true;
+    for (const [section, entries] of Object.entries(prices(override, true))) {
+      for (const [entry, fields] of Object.entries(entries)) {
+        if (base[section]?.[entry]?.price === undefined && fields.price === undefined) {
+          note(`an override prices ${section}.${entry} with no base price`, "overrides");
+          continue;
+        }
+        (overrides[`${section}.${entry}`] ??= []).push({ when, ...fields });
+      }
+    }
+  }
+
+  const section = (name: "image") => {
+    const entries: Record<string, CostEntry> = Object.fromEntries(
+      Object.entries(base[name] ?? {}).map(([entry, fields]) => {
+        const list = overrides[`${name}.${entry}`];
+        return [entry, { ...fields, ...(list === undefined ? {} : { overrides: list }) }];
+      }),
+    );
+    return Object.keys(entries).length > 0 ? entries : undefined;
+  };
+  const write = base.text?.input?.cache?.write;
+  return {
+    write: typeof write === "object" ? write as Record<string, number> : undefined,
+    overrides: { input: overrides["text.input"] ?? [], output: overrides["text.output"] ?? [] },
+    ownsContext,
+    image: section("image"),
+    notices: [...issues].map(([reason, keys]) => `${model.id}: ${[...keys].join(", ")} not synced: ${reason}`),
+  };
+}
+
+// v2 values the v1 patch can't write: the 1h cache write price, override lists
+// and image prices.
+function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> | undefined) {
+  const cost = catalogCost(model, current);
+  return {
+    notices: cost.notices,
+    v2Set: {
+      ...(cost.write === undefined ? {} : { "cost.text.input.cache.write": cost.write }),
+      "cost.text.input.overrides": withCatalogOverrides(cost.overrides.input, cost.ownsContext),
+      "cost.text.output.overrides": withCatalogOverrides(cost.overrides.output, cost.ownsContext),
+      "cost.image": cost.image,
+    },
+  };
+}
+
+function usesCondition(when: unknown, keys: string[]): boolean {
+  if (Array.isArray(when)) return when.some((item) => usesCondition(item, keys));
+  if (!isPlainObject(when)) return false;
+  return Object.entries(when).some(([key, value]) =>
+    keys.includes(key) || (["all", "any", "not"].includes(key) && usesCondition(value, keys))
+  );
+}
+
+// The file's overrides with the catalog's in place of the ones it owns: every
+// time-of-day override, and context tiers when the catalog lists any (otherwise
+// the file's tiers stay, as v1 keeps them).
+function withCatalogOverrides(catalog: CostOverride[], ownsContext: boolean) {
+  return (current: unknown) => {
+    const kept = (Array.isArray(current) ? current : []).filter((item) => {
+      const when = (item as { when?: unknown } | null)?.when;
+      if (usesCondition(when, ["utc_days", "utc_hours"])) return false;
+      return !(ownsContext && isPlainObject(when) && Object.keys(when).length === 1 && "context" in when);
+    });
+    const next = [...kept, ...catalog];
+    return next.length > 0 ? next : undefined;
+  };
+}
+
 function costTiers(model: OpenRouterModel, existing: ExistingModel | undefined) {
+  const prompt = price(model.pricing.prompt);
+  const completion = price(model.pricing.completion);
+  const reasoning = hasReasoning(model);
   const tiers = (model.pricing.overrides ?? [])
     .flatMap((o) => {
-      const input = price(o.prompt);
-      const output = price(o.completion);
-      if (o.min_prompt_tokens === undefined || input === undefined || output === undefined) return [];
+      if (o.min_prompt_tokens === undefined || isTimeWindow(o) || typeof overrideWhen(o) === "string") return [];
+      if (Object.keys(o).some((key) => !CONDITION_KEYS.has(key) && !isPriceKey(key))) return [];
+      // Prices an entry leaves out are the base prices.
+      const input = price(o.prompt) ?? prompt;
+      const output = price(o.completion) ?? completion;
+      if (input === undefined || output === undefined) return [];
       return [{
         tier: { type: "context" as const, size: o.min_prompt_tokens },
         input,
         output,
+        reasoning: reasoning ? price(o.internal_reasoning as string | undefined) : undefined,
         cache_read: price(o.input_cache_read),
         cache_write: price(o.input_cache_write),
       }];

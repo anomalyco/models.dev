@@ -148,9 +148,14 @@ export interface SyncProvider<SourceModel> {
      * v2 values the source states that v1 fields can't carry (e.g. a price per
      * cache TTL), keyed by dotted path as in `base_model_omit`. Each replaces
      * the value at its path in a v2 file after the v1 patch, and a v2 file is
-     * rewritten when one differs even if its v1 view is unchanged.
+     * rewritten when one differs even if its v1 view is unchanged. A function
+     * maps the current value to the new one (undefined removes it), for v2 data
+     * that shares a field with v1 data, such as time-of-day price overrides
+     * next to context tiers.
      */
     v2Set?: Record<string, unknown>;
+    /** Source data the module skipped, listed with the sync's notices. */
+    notices?: string[];
   } | SyncedV2Model | undefined;
 }
 
@@ -327,6 +332,7 @@ export async function syncProvider<SourceModel>(
   const skippedRemote: string[] = [];
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
+  const translateNotices: string[] = [];
 
   for (const sourceModel of sourceModels) {
     let translated: ReturnType<typeof provider.translateModel>;
@@ -354,6 +360,13 @@ export async function syncProvider<SourceModel>(
       const missingID = provider.missingModelID?.(sourceModel);
       if (missingID !== undefined) missingRemote.add(missingID);
       continue;
+    }
+
+    if ("notices" in translated) {
+      for (const notice of translated.notices ?? []) {
+        translateNotices.push(notice);
+        console.warn(notice);
+      }
     }
 
     const relativePath = `${translated.id}.toml`;
@@ -658,6 +671,7 @@ export async function syncProvider<SourceModel>(
   }
 
   const notices = [
+    ...translateNotices,
     ...v2Notices,
     ...missingReasoning.values(),
     ...provider.skippedNotice?.(skippedRemote) ?? [],
@@ -744,22 +758,35 @@ function v2Content(
 // Whether a v2 file already holds every `v2Set` value.
 function hasV2Values(doc: Record<string, unknown>, v2Set: Record<string, unknown> | undefined) {
   return Object.entries(v2Set ?? {}).every(([key, value]) => {
-    const current = key.split(".").reduce<unknown>(
-      (node, part) => (node !== null && typeof node === "object" ? (node as Record<string, unknown>)[part] : undefined),
-      doc,
-    );
-    return stable(current) === stable(value);
+    const current = getPath(doc, key);
+    return stable(current) === stable(v2Value(value, current));
   });
+}
+
+function getPath(doc: Record<string, unknown>, key: string) {
+  return key.split(".").reduce<unknown>(
+    (node, part) => (node !== null && typeof node === "object" ? (node as Record<string, unknown>)[part] : undefined),
+    doc,
+  );
+}
+
+function v2Value(value: unknown, current: unknown) {
+  return typeof value === "function" ? value(structuredClone(current)) : value;
 }
 
 function setPath(doc: Record<string, unknown>, key: string, value: unknown) {
   const parts = key.split(".");
+  const next = v2Value(value, getPath(doc, key));
   let node = doc;
   for (const part of parts.slice(0, -1)) {
-    if (node[part] === null || typeof node[part] !== "object") node[part] = {};
+    if (node[part] === null || typeof node[part] !== "object") {
+      if (next === undefined) return;
+      node[part] = {};
+    }
     node = node[part] as Record<string, unknown>;
   }
-  node[parts.at(-1)!] = value;
+  if (next === undefined) delete node[parts.at(-1)!];
+  else node[parts.at(-1)!] = next;
 }
 
 // A new v2 file puts `provider` and `interleaved` fields under the model's API

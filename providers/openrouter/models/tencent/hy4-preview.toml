@@ -19,5 +19,23 @@ context = 1_048_576
 price = 0.834
 cache = { read = 0.042 }
 
+[[cost.text.input.overrides]]
+when = { utc_hours = { lt = "16:00" } }
+price = 0.834
+cache = { read = 0.042 }
+
+[[cost.text.input.overrides]]
+when = { utc_hours = { gte = "16:00" } }
+price = 0.7506
+cache = { read = 0.0378 }
+
 [cost.text.output]
 price = 2.501
+
+[[cost.text.output.overrides]]
+when = { utc_hours = { lt = "16:00" } }
+price = 2.501
+
+[[cost.text.output.overrides]]
+when = { utc_hours = { gte = "16:00" } }
+price = 2.2509

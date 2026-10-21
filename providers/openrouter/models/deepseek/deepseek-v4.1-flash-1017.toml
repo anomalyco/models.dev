@@ -20,5 +20,59 @@ output = 393_216
 price = 0.15
 cache = { read = 0.003 }
 
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["sat", "sun"] } }
+price = 0.15
+cache = { read = 0.003 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { lt = "01:00" } }
+price = 0.15
+cache = { read = 0.003 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }
+price = 0.3
+cache = { read = 0.006 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "04:00" } }, { utc_hours = { lt = "06:00" } }] }
+price = 0.15
+cache = { read = 0.003 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }
+price = 0.3
+cache = { read = 0.006 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { gte = "10:00" } }
+price = 0.15
+cache = { read = 0.003 }
+
 [cost.text.output]
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["sat", "sun"] } }
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { lt = "01:00" } }
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "04:00" } }, { utc_hours = { lt = "06:00" } }] }
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { gte = "10:00" } }
 price = 0.6

@@ -61,6 +61,8 @@ import {
   mediaType,
   openrouter,
   resolveCanonicalBaseModel,
+  catalogCost,
+  overrideWhen,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
 import {
@@ -2414,7 +2416,7 @@ test("OpenRouter sync maps pricing.overrides into cost tiers", () => {
   });
 });
 
-test("OpenRouter sync ignores time-window pricing overrides", () => {
+test("OpenRouter sync keeps time-window pricing overrides out of v1 cost tiers", () => {
   const source = openRouterModel({
     pricing: {
       prompt: "0.00000132",
@@ -2462,6 +2464,383 @@ test("OpenRouter sync keeps authored tiers when API omits overrides", () => {
       tiers: [{ tier: { size: 200_000 }, input: 6, output: 22.5 }],
     },
   });
+});
+
+// Catalog entries below are shaped like https://openrouter.ai/api/v1/models (2026-10-20).
+const WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+const MON_FRI = { utc_days: { in: ["mon", "tue", "wed", "thu", "fri"] } };
+
+// deepseek/deepseek-v4.1-flash-1017
+function openRouterPeakPricedModel() {
+  const offPeak = { prompt: "0.00000015", completion: "0.0000006", input_cache_read: "0.000000003" };
+  const peak = { prompt: "0.0000003", completion: "0.0000012", input_cache_read: "0.000000006" };
+  return openRouterModel({
+    id: "deepseek/deepseek-v4.1-flash-1017",
+    name: "DeepSeek: DeepSeek V4.1 Flash (1017)",
+    pricing: {
+      ...peak,
+      overrides: [
+        { utc_days: ["saturday", "sunday"], ...offPeak },
+        { utc_days: WEEKDAYS, utc_start: 0, utc_end: 100, ...offPeak },
+        { utc_days: WEEKDAYS, utc_start: 100, utc_end: 400, ...peak },
+        { utc_days: WEEKDAYS, utc_start: 400, utc_end: 600, ...offPeak },
+        { utc_days: WEEKDAYS, utc_start: 600, utc_end: 1000, ...peak },
+        { utc_days: WEEKDAYS, utc_start: 1000, utc_end: 0, ...offPeak },
+      ],
+    },
+  });
+}
+
+// anthropic/claude-haiku-5.5
+function openRouterClaudeModel() {
+  return openRouterModel({
+    id: "anthropic/claude-haiku-5.5",
+    name: "Anthropic: Claude Haiku 5.5",
+    pricing: {
+      prompt: "0.0000001",
+      completion: "0.0000005",
+      web_search: "0.01",
+      input_cache_read: "0.00000001",
+      input_cache_write: "0.000000125",
+      input_cache_write_1h: "0.0000002",
+      overrides: [{
+        min_prompt_tokens: 100_000,
+        prompt: "0.0000005",
+        completion: "0.0000025",
+        input_cache_read: "0.00000005",
+        input_cache_write: "0.000000625",
+        input_cache_write_1h: "0.000001",
+      }],
+    },
+  });
+}
+
+// google/gemini-3.1-flash-image and google/gemini-2.5-flash
+function openRouterGeminiModel() {
+  return openRouterModel({
+    id: "google/gemini-2.5-flash",
+    name: "Google: Gemini 2.5 Flash",
+    pricing: {
+      prompt: "0.0000003",
+      completion: "0.0000025",
+      image: "0.0000003",
+      image_output: "0.00006",
+      audio: "0.000001",
+      input_audio_cache: "0.0000001",
+      web_search: "0.014",
+      internal_reasoning: "0.0000025",
+      input_cache_read: "0.00000003",
+      input_cache_write: "0.0000000833333333333333",
+    },
+  });
+}
+
+const CLAUDE_CACHE = { capabilities: { cache: { supported: true, explicit: { ttl: ["5m", "1h"] } } } };
+const translateContext = { existing: () => undefined, authored: () => undefined };
+type OverridesSet = (current: unknown) => unknown;
+
+test("OpenRouter time-window prices become v2 overrides in catalog order, with the base unchanged", () => {
+  const [source] = openrouter.parseModels({ data: [openRouterPeakPricedModel()] });
+  const translated = openrouter.translateModel(source!, translateContext) as {
+    model: SyncedModel;
+    v2Set: Record<string, unknown>;
+    notices: string[];
+  };
+
+  // v1 keeps the catalog's top-level prices, with no context tiers.
+  expect(translated.model.cost).toEqual({ input: 0.3, output: 1.2, cache_read: 0.006 });
+  expect(translated.notices).toEqual([]);
+  const windows = [
+    { utc_days: { in: ["sat", "sun"] } },
+    { ...MON_FRI, utc_hours: { lt: "01:00" } },
+    { ...MON_FRI, all: [{ utc_hours: { gte: "01:00" } }, { utc_hours: { lt: "04:00" } }] },
+    { ...MON_FRI, all: [{ utc_hours: { gte: "04:00" } }, { utc_hours: { lt: "06:00" } }] },
+    { ...MON_FRI, all: [{ utc_hours: { gte: "06:00" } }, { utc_hours: { lt: "10:00" } }] },
+    // utc_end 0 is the end of the day.
+    { ...MON_FRI, utc_hours: { gte: "10:00" } },
+  ];
+  const peak = [false, false, true, false, true, false];
+  expect((translated.v2Set["cost.text.input.overrides"] as OverridesSet)(undefined)).toEqual(
+    windows.map((when, i) => peak[i]
+      ? { when, price: 0.3, cache: { read: 0.006 } }
+      : { when, price: 0.15, cache: { read: 0.003 } }),
+  );
+  expect((translated.v2Set["cost.text.output.overrides"] as OverridesSet)(undefined)).toEqual(
+    windows.map((when, i) => ({ when, price: peak[i] ? 1.2 : 0.6 })),
+  );
+  expect(translated.v2Set["cost.image"]).toBeUndefined();
+});
+
+test("OpenRouter override conditions map to v2 when, wrapping past midnight", () => {
+  const cheap = { prompt: "0.000001", completion: "0.000004" };
+  const when = (override: Record<string, unknown>) => overrideWhen({ ...override, ...cheap });
+
+  // tencent/hy3: 00:00-16:00 and 16:00-24:00 every day.
+  expect(when({ utc_start: 0, utc_end: 1600 })).toEqual({ utc_hours: { lt: "16:00" } });
+  expect(when({ utc_start: 1600, utc_end: 0 })).toEqual({ utc_hours: { gte: "16:00" } });
+  // "A window whose end is not after its start wraps past midnight ... t >= start || t < end",
+  // on the days given, evaluated at the request instant.
+  expect(when({ utc_days: ["friday"], utc_start: 1630, utc_end: 30 })).toEqual({
+    utc_days: { in: ["fri"] },
+    any: [{ utc_hours: { gte: "16:30" } }, { utc_hours: { lt: "00:30" } }],
+  });
+  expect(when({ utc_days: ["monday"], utc_start: 900, utc_end: 900 })).toEqual({ utc_days: { in: ["mon"] } });
+  expect(when({ utc_days: ["sunday", "saturday"] })).toEqual({ utc_days: { in: ["sat", "sun"] } });
+  // "strictly greater than this threshold", and every condition must match.
+  expect(when({ min_prompt_tokens: 200_000, utc_days: ["monday"] })).toEqual({
+    context: { gt: 200_000 },
+    utc_days: { in: ["mon"] },
+  });
+
+  expect(when({ utc_start: 100 })).toBe("only one of utc_start and utc_end");
+  expect(when({ utc_start: 2400, utc_end: 0 })).toBe("utc_start or utc_end is not an HHMM time");
+  expect(when({ utc_start: 160, utc_end: 0 })).toBe("utc_start or utc_end is not an HHMM time");
+  expect(when({ utc_days: ["someday"] })).toBe("utc_days is not a list of weekdays");
+  expect(when({ utc_days: [] })).toBe("utc_days is not a list of weekdays");
+  expect(when({ min_prompt_tokens: -1 })).toBe("min_prompt_tokens is not a token count");
+});
+
+test("OpenRouter overrides keep catalog order and skip entries with unknown conditions", () => {
+  const cost = catalogCost(openRouterModel({
+    id: "lab/model",
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.000008",
+      overrides: [
+        { min_prompt_tokens: 200_000, prompt: "0.000004", completion: "0.000016" },
+        // Later entries win per key, as v2 overrides merge in order.
+        { utc_days: ["saturday", "sunday"], min_prompt_tokens: 200_000, prompt: "0.000002" },
+        { region: "eu", prompt: "0.000003" },
+        { utc_start: 100, prompt: "0.000001" },
+        // A per-call price is a price key, not an unknown condition.
+        { utc_days: ["monday"], prompt: "0.000003", web_search: "0.02" },
+      ],
+    },
+  }));
+
+  expect(cost.ownsContext).toBe(true);
+  expect(cost.overrides.input).toEqual([
+    { when: { context: { gt: 200_000 } }, price: 4 },
+    { when: { context: { gt: 200_000 }, utc_days: { in: ["sat", "sun"] } }, price: 2 },
+    { when: { utc_days: { in: ["mon"] } }, price: 3 },
+  ]);
+  expect(cost.overrides.output).toEqual([{ when: { context: { gt: 200_000 } }, price: 16 }]);
+  expect(cost.notices).toEqual([
+    'lab/model: overrides not synced: skipped override {"region":"eu","prompt":"0.000003"}: unknown fields region',
+    'lab/model: overrides not synced: skipped override {"utc_start":100,"prompt":"0.000001"}: only one of utc_start and utc_end',
+    "lab/model: web_search not synced: v2 has no per-call price",
+  ]);
+});
+
+test("OpenRouter 1h cache writes take the file's cache TTLs", () => {
+  const [source] = openrouter.parseModels({ data: [openRouterClaudeModel()] });
+  const translated = openrouter.translateModel(source!, { ...translateContext, v2: () => CLAUDE_CACHE }) as {
+    model: SyncedModel;
+    v2Set: Record<string, unknown>;
+    notices: string[];
+  };
+
+  // v1 keeps the default (5m) write price.
+  expect(translated.model.cost).toMatchObject({
+    cache_write: 0.125,
+    tiers: [{ tier: { type: "context", size: 100_000 }, input: 0.5, output: 2.5, cache_read: 0.05, cache_write: 0.625 }],
+  });
+  expect(translated.v2Set["cost.text.input.cache.write"]).toEqual({ "5m": 0.125, "1h": 0.2 });
+  expect((translated.v2Set["cost.text.input.overrides"] as OverridesSet)(undefined)).toEqual([
+    { when: { context: { gt: 100_000 } }, price: 0.5, cache: { read: 0.05, write: { "5m": 0.625, "1h": 1 } } },
+  ]);
+  expect(translated.v2Set).not.toHaveProperty("cost.fees");
+  expect(translated.notices).toEqual(["anthropic/claude-haiku-5.5: web_search not synced: v2 has no per-call price"]);
+
+  // Without the TTLs in the file, the 1h prices have no label.
+  const unlabeled = catalogCost(openRouterClaudeModel(), {});
+  expect(unlabeled.write).toBeUndefined();
+  expect(unlabeled.overrides.input[0]).toMatchObject({ cache: { write: 0.625 } });
+  expect(unlabeled.notices).toEqual([
+    "anthropic/claude-haiku-5.5: web_search not synced: v2 has no per-call price",
+    "anthropic/claude-haiku-5.5: input_cache_write_1h not synced: the file's cache capability doesn't list a default and a 1h TTL",
+  ]);
+});
+
+test("OpenRouter image and reasoning prices map to v2; audio and per-call prices are reported", () => {
+  const cost = catalogCost(openRouterGeminiModel());
+
+  // Per token, like the text prices.
+  expect(cost.image).toEqual({ input: { price: 0.3 }, output: { price: 60 } });
+  expect(cost).not.toHaveProperty("fees");
+  expect(cost.notices).toEqual([
+    "google/gemini-2.5-flash: audio, input_audio_cache not synced: the catalog gives no unit (per token on some models, per minute on others)",
+    "google/gemini-2.5-flash: web_search not synced: v2 has no per-call price",
+  ]);
+  expect(buildOpenRouterModel(openRouterGeminiModel(), undefined).cost).toMatchObject({ reasoning: 2.5 });
+
+  const perRequest = catalogCost(openRouterModel({
+    id: "lab/model",
+    pricing: { prompt: "0.000001", completion: "0.000002", request: "0.005", audio_output: "0.000064", video_seconds: "0.1" },
+  }));
+  expect(perRequest.notices).toEqual([
+    "lab/model: request not synced: v2 has no per-call price",
+    "lab/model: audio_output not synced: the catalog gives no unit (per token on some models, per minute on others)",
+    "lab/model: video_seconds not synced: no known v2 field",
+  ]);
+
+  // google/gemini-2.5-flash-image lists a reasoning price but no reasoning parameter.
+  const noReasoning = catalogCost(openRouterModel({
+    id: "lab/model",
+    supported_parameters: ["tools"],
+    pricing: { prompt: "0.0000003", completion: "0.0000025", internal_reasoning: "0.0000025" },
+  }));
+  expect(noReasoning.notices).toEqual([
+    "lab/model: internal_reasoning not synced: the model takes no reasoning parameter, so v1 carries no reasoning price",
+  ]);
+});
+
+test("OpenRouter overrides replace only the file's overrides the catalog owns", () => {
+  const region = { when: { region: { equals: "eu" } }, price: 3 };
+  const tier = { when: { context: { gt: 200_000 } }, price: 6 };
+  const stale = { when: { all: [{ utc_hours: { gte: "01:00" } }] }, price: 9 };
+
+  // The catalog has a time window but no context tiers: the file's tiers stay, as in v1.
+  const timed = openrouter.translateModel(openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.000008",
+      overrides: [{ utc_days: ["sunday"], prompt: "0.000001", completion: "0.000004" }],
+    },
+  }), translateContext) as unknown as { v2Set: Record<string, OverridesSet> };
+  expect(timed.v2Set["cost.text.output.overrides"]!([region, tier, stale])).toEqual([
+    region,
+    tier,
+    { when: { utc_days: { in: ["sun"] } }, price: 4 },
+  ]);
+
+  // With context tiers in the catalog, the file's tiers are replaced.
+  const tiered = openrouter.translateModel(openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.000008",
+      overrides: [{ min_prompt_tokens: 200_000, prompt: "0.000004", completion: "0.000016" }],
+    },
+  }), translateContext) as unknown as { v2Set: Record<string, OverridesSet> };
+  expect(tiered.v2Set["cost.text.input.overrides"]!([region, tier, stale])).toEqual([
+    region,
+    { when: { context: { gt: 200_000 } }, price: 4 },
+  ]);
+
+  const flat = openrouter.translateModel(openRouterModel(), translateContext) as unknown as { v2Set: Record<string, OverridesSet> };
+  expect(flat.v2Set["cost.text.output.overrides"]!([stale])).toBeUndefined();
+});
+
+test("syncs every OpenRouter price into v2 files without changing v1", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-openrouter-prices-"));
+  const modelsDir = path.join(root, "providers", "example", "models");
+  await mkdir(path.join(root, "models", "lab"), { recursive: true });
+  await mkdir(path.join(modelsDir, "lab"), { recursive: true });
+  await writeFile(path.join(root, "models", "lab", "chat.toml"), [
+    "schema = 2",
+    'name = "Chat"',
+    'description = "Example chat model"',
+    "open_weights = false",
+    'release_date = "2026-01-01"',
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "temperature = true",
+    "top_p = true",
+    "top_k = false",
+    "",
+    "[limit]",
+    "context = 100_000",
+    "output = 10_000",
+    "",
+  ].join("\n"));
+  const file = path.join(modelsDir, "lab", "chat.toml");
+  const write = (cost: string[]) => writeFile(file, [
+    "schema = 2",
+    'base_model = "lab/chat"',
+    "",
+    "[capabilities]",
+    'cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }',
+    "",
+    ...cost,
+  ].join("\n"));
+  let source = openRouterPeakPricedModel();
+  const provider: SyncProvider<string> = {
+    id: "openrouter-prices-test",
+    name: "OpenRouter prices test",
+    modelsDir,
+    async fetchModels() {
+      return ["lab/chat"];
+    },
+    parseModels(raw) {
+      return raw as string[];
+    },
+    translateModel(id, context) {
+      const translated = openrouter.translateModel(source, { ...context, v2: () => context.v2?.(id) }) as {
+        model: SyncedModel;
+        v2Set: Record<string, unknown>;
+      };
+      return { id, model: { base_model: "lab/chat", cost: translated.model.cost }, v2Set: translated.v2Set };
+    },
+  };
+  const read = async () => {
+    const doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
+    return { doc, v1: modelV2ToV1({ ...doc, id: "lab/chat" }, { modelPath: file }) };
+  };
+
+  try {
+    await write(["[cost.text.input]", "price = 0.3", "cache = { read = 0.006 }", "", "[cost.text.output]", "price = 1.2", ""]);
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    let { doc, v1 } = await read();
+    expect(doc.cost.text.input.overrides).toHaveLength(6);
+    expect(doc.cost.text.output.overrides).toHaveLength(6);
+    // v1 ignores the time-window overrides: base prices, no tiers.
+    expect(v1.cost).toEqual({ input: 0.3, output: 1.2, cache_read: 0.006 });
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1 });
+
+    // The catalog drops the windows: their overrides go too.
+    source = openRouterModel({ pricing: { prompt: "0.0000003", completion: "0.0000012", input_cache_read: "0.000000006" } });
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    ({ doc } = await read());
+    expect(doc.cost.text).toEqual({ input: { price: 0.3, cache: { read: 0.006 } }, output: { price: 1.2 } });
+
+    // 1h cache writes and image prices; v1 keeps only what it had.
+    source = { ...openRouterClaudeModel(), pricing: { ...openRouterClaudeModel().pricing, image: "0.0000001" } };
+    await write([
+      "[cost.text.input]",
+      "price = 0.1",
+      "cache = { read = 0.01, write = 0.125 }",
+      "",
+      "[[cost.text.input.overrides]]",
+      "when = { context = { gt = 100_000 } }",
+      "price = 0.5",
+      "cache = { read = 0.05, write = 0.625 }",
+      "",
+      "[cost.text.output]",
+      "price = 0.5",
+      "",
+      "[[cost.text.output.overrides]]",
+      "when = { context = { gt = 100_000 } }",
+      "price = 2.5",
+      "",
+    ]);
+    const before = (await read()).v1;
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    ({ doc, v1 } = await read());
+    expect(doc.cost.text.input.cache.write).toEqual({ "5m": 0.125, "1h": 0.2 });
+    expect(doc.cost.text.input.overrides[0].cache.write).toEqual({ "5m": 0.625, "1h": 1 });
+    expect(doc.cost.image).toEqual({ input: { price: 0.1 } });
+    expect(doc.cost).not.toHaveProperty("fees");
+    expect(v1.cost).toEqual(before.cost);
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("skips new DigitalOcean models with incomplete pricing or limits", () => {
