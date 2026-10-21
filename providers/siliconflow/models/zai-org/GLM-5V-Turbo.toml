@@ -1,28 +1,29 @@
+schema = 2
 name = "zai-org/GLM-5V-Turbo"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 family = "glm"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 128, max = 32_768 }]
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-04-01"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 1.2
-output = 4
-cache_read = 0.24
-cache_write = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, budget = { min = 128, max = 32_768 } }
+temperature = true
 
 [limit]
 context = 200_000
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.24, write = 0 }
+
+[cost.text.output]
+price = 4

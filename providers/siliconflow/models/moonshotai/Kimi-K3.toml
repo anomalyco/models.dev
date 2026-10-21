@@ -1,23 +1,26 @@
 # Sources: https://www.siliconflow.com/models (2026-09-08)
 # SiliconFlow serves image input but not video for this model
 # (model page "Support image input: Yes"): https://www.siliconflow.com/models/kimi-k3
+schema = 2
 base_model = "moonshotai/kimi-k3"
-structured_output = true
-
-
-reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 2.7
-output = 13.5
-cache_read = 0.27
-
-[limit]
-output = 262_000
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
+structured_output = true
+
+[limit]
+output = 262_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.7
+cache = { read = 0.27 }
+
+[cost.text.output]
+price = 13.5

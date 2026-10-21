@@ -1,13 +1,17 @@
 # Sources: https://www.siliconflow.com/models (2026-09-08)
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
 structured_output = true
 
-reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.44
+cache = { read = 0.028 }
 
-[cost]
-input = 0.44
-output = 1.32
-cache_read = 0.028
+[cost.text.output]
+price = 1.32

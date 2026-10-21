@@ -1,23 +1,27 @@
+schema = 2
 name = "zai-org/GLM-4.5-Air"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
 family = "glm-air"
+open_weights = false
 release_date = "2025-07-28"
 last_updated = "2025-11-25"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.14
-output = 0.86
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 131_000
 output = 131_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.86
