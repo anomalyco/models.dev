@@ -387,6 +387,105 @@ test("does not report Fireworks embedding rows as missing generation models", ()
   })).toBeUndefined();
 });
 
+test("marks models with a List Models deprecation date as deprecated", () => {
+  const retiring = {
+    ...inventoryModel({ name: "accounts/fireworks/models/retiring" }),
+    deprecationDate: { year: 2026, month: 11, day: 7 },
+  };
+  const live = inventoryModel({ name: "accounts/fireworks/models/live" });
+  const inventoryOnly = {
+    ...inventoryModel({ name: "accounts/fireworks/models/inventory-only" }),
+    deprecationDate: { year: 2026, month: 11, day: 7 },
+  };
+  const models = mergeFireworksModels(
+    [
+      fireworksModel({ id: retiring.name, aliases: ["accounts/fireworks/routers/retiring-latest"] }),
+      fireworksModel({ id: live.name }),
+    ],
+    [retiring, live, inventoryOnly],
+    new Date("2026-10-21T00:00:00Z"),
+  );
+
+  expect(models.map((model) => [model.catalogId, model.deprecated])).toEqual([
+    [retiring.name, true],
+    ["accounts/fireworks/routers/retiring-latest", true],
+    [live.name, undefined],
+    [inventoryOnly.name, true],
+  ]);
+  expect(buildFireworksModel(models[1] as FireworksCatalogModel, existingModel()).status).toBe("deprecated");
+  expect(buildFireworksModel(models[2] as FireworksCatalogModel, {
+    ...existingModel(),
+    status: "deprecated",
+  }).status).toBeUndefined();
+  expect(fireworksAi.translateModel(models[3]!, {
+    existing: () => existingModel(),
+    authored: () => ({ base_model: "example/example", cost: { input: 1, output: 2 } }),
+  })?.model).toEqual({ base_model: "example/example", cost: { input: 1, output: 2 }, status: "deprecated" });
+});
+
+test("leaves model facts on the lab for base_model files", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "fireworks-facts-"));
+  const modelsDir = path.join(dir, "providers/fireworks-ai/models");
+  // factorBaseModel reads the repository's lab files, the runner reads the temp copy.
+  const labPath = path.join(dir, "models/zhipuai/glm-5.3.toml");
+  const filePath = path.join(modelsDir, "accounts/fireworks/models/example.toml");
+  await mkdir(path.dirname(labPath), { recursive: true });
+  await mkdir(path.dirname(filePath), { recursive: true });
+  await Bun.write(labPath, Bun.file(path.join(import.meta.dir, "../../../models/zhipuai/glm-5.3.toml")));
+  await Bun.write(filePath, `# Host evidence stays in the header.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "Example Host"
+release_date = "2026-09-01"
+last_updated = "2026-09-15"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+system_updates = true
+tools = { supported = true, updates = false }
+cache = { supported = true, implicit = true }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2
+`);
+  const provider = {
+    ...fireworksAi,
+    modelsDir,
+    async fetchModels() {
+      return {
+        serverless: { object: "list" as const, data: [fireworksModel({ input_modalities: ["text"], pricing: [
+          { sku: "LLM input tokens (cached)", amount: "0.1", unit: "1M tokens" as const },
+          { sku: "LLM input tokens (uncached)", amount: "1", unit: "1M tokens" as const },
+          { sku: "LLM output tokens", amount: "2", unit: "1M tokens" as const },
+        ] })] },
+        inventory: [inventoryModel()],
+      };
+    },
+  };
+
+  try {
+    await syncProvider(provider);
+    const text = await Bun.file(filePath).text();
+    expect(text).not.toContain("release_date");
+    expect(text).not.toContain("last_updated");
+    expect(text).toContain('name = "Example Host"');
+    expect(text).toContain("# Host evidence stays in the header.");
+    expect(text).toContain("system_updates = true");
+    expect(text).toContain("cache = { supported = true, implicit = true }");
+    expect(text).not.toContain("[modalities]");
+
+    await syncProvider(provider);
+    expect(await Bun.file(filePath).text()).toBe(text);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 function fireworksModel(overrides: Partial<FireworksModel> = {}): FireworksModel {
   return {
     id: "accounts/fireworks/models/example",
