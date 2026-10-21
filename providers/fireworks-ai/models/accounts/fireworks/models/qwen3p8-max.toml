@@ -1,12 +1,26 @@
+# Image types: the lab's image types that Fireworks accepts. Fireworks documents .png, .jpg/.jpeg, .gif, .bmp, .tiff and .ppm
+#   (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations); webp and avif also decoded in live tests (2026-10-21), heic failed.
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = false: a system message after the first turn returns 400 "jinja template rendering failed. System message must be at the beginning.".
+#   tools.updates = false: adding a second tool on the last turn left 0/0 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 262_144

@@ -4,6 +4,15 @@
 #   GET https://api.fireworks.ai/v1/accounts/fireworks/models (2026-10-21)
 # Serving: GET https://api.fireworks.ai/v1/serverless/models lists text input only and
 #   context_length 512000 (the lab serves 1M with image and video input).
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = false: after a system message sent after the first turn, cached tokens fell to 114/137 in 2 trials while the control turns hit, so it is moved to the top.
+#   effort_updates = false: changing reasoning_effort low → high on the last turn left 7892/78/109 cached tokens in 3 trials.
+#   tools.updates = false: adding a second tool on the last turn left 114/207 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 description = "Fireworks text-only MiniMax coding model for long-context reasoning and agent tasks"
@@ -13,7 +22,12 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 512_000
