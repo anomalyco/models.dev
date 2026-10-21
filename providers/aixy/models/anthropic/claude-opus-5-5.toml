@@ -4,16 +4,20 @@
 # Cache writes use the 5-minute rate.
 # Effort: output_config.effort; https://platform.claude.com/docs/en/build-with-claude/effort
 # Adaptive thinking is always on.
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 4.00
-output = 20.00
-cache_read = 0.20
-cache_write = 5.00
+[api.messages]
+base_url = "https://api.aixy-gateway.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://api.aixy-gateway.com/v1"
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

@@ -6,14 +6,22 @@
 # read are $1.50/$7.50/$0.15. Cache storage is billed separately by Google.
 # Aixy's gemini route uses OpenAI Chat Completions; effort: reasoning_effort.
 # Input modalities are limited to the documented OpenAI-compatible surface.
+schema = 2
 base_model = "google/gemini-3.8-flash"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
-input_audio = 0.75
 
 [modalities]
 input = ["text", "image", "audio"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75
+
+[cost.audio.input]
+price = 0.75
