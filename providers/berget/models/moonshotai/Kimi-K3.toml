@@ -5,24 +5,28 @@
 # Reasoning is returned in message.reasoning_content, the answer in
 # message.content.
 # https://api.berget.ai/openapi.json
+schema = 2
 base_model = "moonshotai/kimi-k3"
 release_date = "2026-07-27"
 last_updated = "2026-07-28"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 3.0
-output = 15.0
 
 [limit]
 context = 327_680
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

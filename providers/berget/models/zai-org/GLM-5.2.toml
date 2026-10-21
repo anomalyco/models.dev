@@ -1,18 +1,23 @@
-base_model = "zhipuai/glm-5.2"
-structured_output = true
 # Berget's schema accepts none/low/medium/high, but documents no GLM-specific
 # mapping; schema acceptance alone does not establish meaningful support.
 # https://api.berget.ai/openapi.json
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+schema = 2
+base_model = "zhipuai/glm-5.2"
 
-[cost]
-input = 1.54
-output = 4.84
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 context = 524_288
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.54
+
+[cost.text.output]
+price = 4.84
