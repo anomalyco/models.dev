@@ -1,23 +1,25 @@
+schema = 2
 name = "Qwen3-Coder-Next"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 family = "qwen"
-release_date = "2026-03-01"
-last_updated = "2026-03-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = true
-
-[cost]
-input = 0.30
-output = 1.20
-
-[limit]
-context = 262144
-output = 16384
+release_date = "2026-03-01"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 262_144
+output = 16_384
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

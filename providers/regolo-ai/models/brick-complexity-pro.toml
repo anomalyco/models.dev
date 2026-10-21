@@ -1,22 +1,25 @@
 # Prices listed in EUR on Regolo; converted to USD at 1 EUR = 1.1537 USD (2026-08-05)
+schema = 2
 name = "Brick Complexity Pro"
 description = "Complexity classifier that powers the Brick semantic router by extracting query difficulty"
-release_date = "2026-02-06"
-last_updated = "2026-02-06"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-02-06"
 
-[cost]
-input = 0.12
-output = 0.46
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 100_000
 output = 15_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0.46
