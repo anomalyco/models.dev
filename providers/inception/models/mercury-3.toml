@@ -3,26 +3,11 @@
 # Effort: reasoning_effort = instant|low|medium|high. The native `instant` value
 # is not representable in the current models.dev effort enum; do not map it to `none`.
 schema = 2
-name = "Mercury 3"
-description = "Inception's diffusion reasoning model for chat, multi-step problem solving, and tool use"
-family = "mercury"
-open_weights = false
-release_date = "2026-10-16"
-last_updated = "2026-10-20"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "inception/mercury-3"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_000_000
-output = 131_072
 
 [cost.text.input]
 price = 0.1

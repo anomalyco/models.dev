@@ -1,24 +1,5 @@
 schema = 2
-name = "Sonar Pro"
-description = "Deeper Sonar search model with broader retrieval and stronger synthesis"
-family = "sonar-pro"
-open_weights = false
-knowledge = "2025-09-01"
-release_date = "2024-01-01"
-last_updated = "2025-09-01"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 200_000
-output = 8_192
+base_model = "perplexity/sonar-pro"
 
 [cost.text.input]
 price = 3

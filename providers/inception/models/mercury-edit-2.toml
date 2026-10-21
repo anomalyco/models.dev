@@ -9,25 +9,10 @@
 # https://docs.inceptionlabs.ai/capabilities/reasoning-efforts
 # https://api.inceptionlabs.ai/openapi.json
 schema = 2
-name = "Mercury Edit 2"
-description = "Code editing dLLM for autocomplete (FIM) and next-edit suggestions"
-family = "mercury"
-open_weights = false
-release_date = "2026-03-30"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "inception/mercury-edit-2"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
-
-[limit]
-context = 32_000
-output = 8_192
 
 [cost.text.input]
 price = 0.25
