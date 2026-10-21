@@ -4,13 +4,16 @@
 # - Exact console rates incl. cache $0.40/$2.65/$0.20 (TokenGo model table ratios)
 # TokenGo OpenAI-compatible extra_body; same on/off control as typical Qwen relays.
 # No thinking_budget on this host (generic relays omit DashScope budget).
+schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.4
+cache = { read = 0.2 }
 
-[cost]
-input = 0.4
-output = 2.65
-cache_read = 0.2
+[cost.text.output]
+price = 2.65
