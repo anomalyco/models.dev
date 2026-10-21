@@ -1,9 +1,13 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Price: :free models cost Rp 0 within daily and per-minute limits (https://kenari.id/en/docs/free-models).
+# Reasoning: catalog reasoning_options [], reasoning_toggle true (https://kenari.id/en/docs/reasoning).
+# Toggle: reasoning = { enabled = false } on Chat completions (needs reasoning_toggle = true).
 schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 name = "GLM-4.7-Flash (Free)"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0

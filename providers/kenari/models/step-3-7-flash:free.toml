@@ -1,6 +1,11 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Retired: absent from GET /v1/models and /api/public/pricing ("every model that is for sale") on 2026-10-21;
+#   removed before the changes feed's first entry (2026-10-11).
+# Price: :free models cost Rp 0 (https://kenari.id/en/docs/free-models).
 schema = 2
 base_model = "stepfun/step-3.7-flash"
 name = "Step 3.7 Flash (Free)"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }

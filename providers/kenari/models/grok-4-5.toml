@@ -1,3 +1,7 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
+# Reasoning: catalog reasoning_options ["low","medium","high"], reasoning_toggle false (https://kenari.id/en/docs/reasoning).
+# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
 schema = 2
 base_model = "xai/grok-4.5"
 
@@ -6,7 +10,8 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [cost.text.input]
-price = 0
+price = 2.28571429
+cache = { read = 0.34285714 }
 
 [cost.text.output]
-price = 0
+price = 6.85714286

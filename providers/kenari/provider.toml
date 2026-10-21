@@ -1,3 +1,11 @@
+# Docs: https://kenari.id/llms.txt (append .md to any docs page); accessed 2026-10-21.
+# Catalog (public): https://kenari.id/v1/models; prices: https://kenari.id/api/public/pricing; retirements:
+#   https://kenari.id/v1/models/changes. Prices are micro-IDR; files convert at the published usd_idr_rate (17,500).
+# Billing: PAYG from a prepaid IDR balance, per token for chat (https://kenari.id/en/docs/billing). Subscriptions
+#   (Indie/Kreator/Studio/Agensi/Enterprise) give chat quota on listed models instead; :free ids cost Rp 0.
+#   Server tools and web/X search are billed per call. Neither the plans nor per-call fees fit a per-model price.
+# APIs: Chat completions, Responses (stateless) and Anthropic Messages (base https://kenari.id) for every chat
+#   model; images, speech, transcription, music, video, embeddings, rerank, moderation on their own endpoints.
 name = "Kenari"
 npm = "@ai-sdk/openai-compatible"
 env = ["KENARI_API_KEY"]

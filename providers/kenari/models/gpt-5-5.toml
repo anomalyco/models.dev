@@ -1,3 +1,8 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
+# Reasoning: catalog reasoning_options ["none","low","medium","high","xhigh"], reasoning_toggle false (https://kenari.id/en/docs/reasoning).
+# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+# Off: reasoning_effort = none (listed level), so no separate toggle.
 schema = 2
 base_model = "openai/gpt-5.5"
 
@@ -6,7 +11,8 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 
 [cost.text.input]
-price = 0
+price = 5.71428571
+cache = { read = 0.57142857 }
 
 [cost.text.output]
-price = 0
+price = 36

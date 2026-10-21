@@ -1,8 +1,8 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Price: Rp 0.175 per second of input audio (pricing_lines input_audio), / 17,500 IDR per USD.
 schema = 2
 base_model = "openai/whisper-large-v3-turbo"
 
-[cost.text.input]
-price = 0
-
-[cost.text.output]
-price = 0
+[cost.audio.input]
+unit = "second"
+price = 0.00001

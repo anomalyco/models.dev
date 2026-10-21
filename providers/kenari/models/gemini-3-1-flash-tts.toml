@@ -1,8 +1,8 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Price: Rp 250 per 1,000 input characters (pricing_lines output_audio), / 17,500 IDR per USD.
 schema = 2
 base_model = "google/gemini-3.1-flash-tts-preview"
 
 [cost.text.input]
-price = 0
-
-[cost.text.output]
-price = 0
+unit = "character"
+price = 14.28571429

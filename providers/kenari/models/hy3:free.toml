@@ -1,3 +1,8 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Price: :free models cost Rp 0 within daily and per-minute limits (https://kenari.id/en/docs/free-models).
+# Reasoning: catalog reasoning_options ["none","low","high"], reasoning_toggle false (https://kenari.id/en/docs/reasoning).
+# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+# Off: reasoning_effort = none (listed level), so no separate toggle.
 schema = 2
 base_model = "tencent/hy3"
 name = "Hy3 (Free)"
