@@ -1,26 +1,13 @@
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
+# Billed in EUR: €0.10 input / €0 output per 1M tokens; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
 schema = 2
-name = "BGE Multilingual Gemma2"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-open_weights = false
-release_date = "2024-07-26"
-last_updated = "2025-06-15"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
+base_model = "baai/bge-multilingual-gemma2"
 
 [limit]
 context = 8_191
-output = 3_072
 
 [cost.text.input]
-price = 0.1
+price = 0.11215
 
 [cost.text.output]
 price = 0

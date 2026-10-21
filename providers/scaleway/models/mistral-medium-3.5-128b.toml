@@ -1,3 +1,5 @@
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
+# Billed in EUR: €1.50 input / €7.50 output per 1M tokens; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
 schema = 2
 base_model = "mistral/mistral-medium-2604"
 name = "Mistral Medium 3.5 128B"
@@ -11,7 +13,7 @@ context = 256_000
 output = 16_384
 
 [cost.text.input]
-price = 1.5
+price = 1.68225
 
 [cost.text.output]
-price = 7.5
+price = 8.41125

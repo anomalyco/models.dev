@@ -1,21 +1,20 @@
-# Scaleway does not list a reasoning_effort mapping for this model in its
-# reasoning guide (accessed 2026-06-25).
+# Relinked from alibaba/qwen3-235b-a22b to the 2507 Instruct lab model: Scaleway serves
+# qwen3-235b-a22b-instruct-2507, a non-thinking model ("Chat" on the pricing page; not in
+# Scaleway's reasoning guide), so the old reasoning flag and reasoning price are dropped.
 # https://www.scaleway.com/en/docs/generative-apis/how-to/query-reasoning-models/
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
+# Billed in EUR: €0.75 input / €2.25 output per 1M tokens; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
-base_model = "alibaba/qwen3-235b-a22b"
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B A22B Instruct 2507"
-release_date = "2025-07-01"
-last_updated = "2026-03-17"
-
-[capabilities]
-reasoning = { supported = true }
+knowledge = "2025-04"
 
 [limit]
 context = 260_000
 
 [cost.text.input]
-price = 0.75
+price = 0.841125
 
 [cost.text.output]
-price = 2.25
-reasoning = 8.4
+price = 2.523375

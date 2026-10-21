@@ -1,8 +1,10 @@
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
+# Billed in EUR: €0.60 input / €3.60 output per 1M tokens; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B A17B"
 knowledge = "2025-04"
-release_date = "2026-03-17"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
@@ -13,7 +15,7 @@ context = 256_000
 output = 16_384
 
 [cost.text.input]
-price = 0.6
+price = 0.6729
 
 [cost.text.output]
-price = 3.6
+price = 4.0374
