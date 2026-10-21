@@ -1,3 +1,4 @@
+# Pricing: GET https://pass.wafer.ai/v1/models (checked 2026-10-21): input 140, output 440, cache read 26 cents per 1M tokens.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
@@ -13,8 +14,8 @@ output = 131_072
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 1.2
-cache = { read = 0.2, write = 0 }
+price = 1.4
+cache = { read = 0.26, write = 0 }
 
 [cost.text.output]
-price = 4.1
+price = 4.4

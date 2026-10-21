@@ -8,6 +8,7 @@
 # Verified live against POST https://inference.coralbricks.ai/v1/chat/completions (2026-10-04) on this ID: low, high and
 # max return HTTP 200 with reasoning_content; none and no field return 0 reasoning tokens. An image_url part in a user
 # message is answered from the image, so attachment and the image modality come from the base model.
+# Pricing and output update: GET https://inference.coralbricks.ai/v1/models (checked 2026-10-21) lists input 0.25, cached_input 0.005, cache_write 0.00, output 1.20 USD per 1M tokens and max_output_tokens 393,216 (the 2026-10-10 notes above are superseded).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
@@ -17,14 +18,14 @@ structured_output = true
 
 [limit]
 context = 1_048_576
-output = 131_072
+output = 393_216
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]
-price = 0.01
-cache = { read = 0, write = 0.09 }
+price = 0.25
+cache = { read = 0.005, write = 0 }
 
 [cost.text.output]
 price = 1.2
