@@ -1,21 +1,27 @@
 # GPTZZZ is an OpenAI-compatible relay. Effort values verified per model against the
 # live /v1/chat/completions endpoint on 2026-09-16 and re-probed on 2026-09-29: none, low,
 # medium, high, xhigh and max all return HTTP 200; minimal returns HTTP 400.
-# Pricing source: https://gptzzz.ai/model-plaza (read from /api/v1/model-plaza on 2026-09-29).
-# Published list price 2.00 / 12.00 / 0.20 / 2.50 per MTok (>272K: 4.00 / 18.00 / 0.40 / 5.00),
-# multiplied by the public 0.05x group rate. The host's /v1/usage "cost" field matches this list.
+# Pricing: https://gptzzz.ai/pricing/ and https://gptzzz.ai/api/v1/model-plaza, read 2026-10-22.
+# Lowest-priced group serving this model: group 3 "混合号池pro兜底", rate 0.1x.
+# Host list price per MTok (input / output / cache read / cache write): 2.00 / 12.00 / 0.20 / 2.50,
+# >272K context: 4.00 / 18.00 / 0.40 / 5.00.
+# x 0.1 = 0.20 / 1.20 / 0.02 / 0.25 (>272K: 0.40 / 1.80 / 0.04 / 0.50) in account balance,
+# which the host sells at CNY 1 per balance unit (Alipay top-up, "¥1 = $1 余额"), so these are CNY.
+# CNY→USD rate: 6.691314, 2026-10-21, source: https://open.er-api.com/v6/latest/USD
+# USD = CNY / 6.691314, rounded to 8 decimals.
+# Also served in group 33 "不降智分组" at 0.25x (2.5x the prices below).
 base_model = "openai/gpt-5.6-terra"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 0.1
-output = 0.6
-cache_read = 0.01
-cache_write = 0.125
+input = 0.0298895
+output = 0.17933697
+cache_read = 0.00298895
+cache_write = 0.03736187
 
 [[cost.tiers]]
 tier = { size = 272_000 }
-input = 0.2
-output = 0.9
-cache_read = 0.02
-cache_write = 0.25
+input = 0.05977899
+output = 0.26900546
+cache_read = 0.0059779
+cache_write = 0.07472374

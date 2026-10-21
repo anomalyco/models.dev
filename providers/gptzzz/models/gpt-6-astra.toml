@@ -3,22 +3,27 @@
 # HTTP 200 (reasoning_tokens 10 / 11 / 14 at high / xhigh / max); none and minimal return
 # HTTP 400 ("Supported values are: 'low', 'medium', 'high', 'xhigh', and 'max'").
 # This matches the OpenAI lab entry.
-# Pricing source: https://gptzzz.ai/model-plaza (read from /api/v1/model-plaza on 2026-09-29).
-# Published list price 10.00 / 50.00 / 1.00 / 12.50 per MTok (>272K: 20.00 / 75.00 / 2.00 / 25.00),
-# multiplied by the public 0.05x group rate. The host's /v1/usage "cost" field matches this
-# list price exactly.
+# Pricing: https://gptzzz.ai/pricing/ and https://gptzzz.ai/api/v1/model-plaza, read 2026-10-22.
+# Lowest-priced group serving this model: group 3 "混合号池pro兜底", rate 0.1x.
+# Host list price per MTok (input / output / cache read / cache write): 10.00 / 50.00 / 1.00 / 12.50,
+# >272K context: 20.00 / 75.00 / 2.00 / 25.00.
+# x 0.1 = 1.00 / 5.00 / 0.10 / 1.25 (>272K: 2.00 / 7.50 / 0.20 / 2.50) in account balance,
+# which the host sells at CNY 1 per balance unit (Alipay top-up, "¥1 = $1 余额"), so these are CNY.
+# CNY→USD rate: 6.691314, 2026-10-21, source: https://open.er-api.com/v6/latest/USD
+# USD = CNY / 6.691314, rounded to 8 decimals.
+# Also served in group 33 "不降智分组" at 0.25x (2.5x the prices below).
 base_model = "openai/gpt-6-astra"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 0.5
-output = 2.5
-cache_read = 0.05
-cache_write = 0.625
+input = 0.14944748
+output = 0.74723739
+cache_read = 0.01494475
+cache_write = 0.18680935
 
 [[cost.tiers]]
 tier = { size = 272_000 }
-input = 1.0
-output = 3.75
-cache_read = 0.1
-cache_write = 1.25
+input = 0.29889496
+output = 1.12085608
+cache_read = 0.0298895
+cache_write = 0.37361869
