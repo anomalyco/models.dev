@@ -1,6 +1,7 @@
 # Sources (accessed 2026-10-21):
 # - Speech recognition API (POST /v1/audio/asr/sse; format ogg, mp3, wav, pcm, m4a): https://platform.stepfun.ai/docs/en/api-reference/audio/asr-sse
-# - Pricing: USD 0.022 per hour of audio (https://platform.stepfun.ai/docs/en/guides/pricing/details). v2 has no per-hour unit, so no [cost].
+# - Pricing: USD 0.022 per hour of audio (https://platform.stepfun.ai/docs/en/guides/pricing/details).
+#   Per minute: 0.022 / 60 = USD 0.000366... (repeating), written as 0.00036667.
 # release_date is unsourced.
 schema = 2
 type = "transcription"
@@ -23,3 +24,7 @@ temperature = false
 [limit]
 context = 0
 output = 0
+
+[cost.audio.input]
+unit = "minute"
+price = 0.00036667

@@ -2,7 +2,9 @@
 # - Speech recognition API (POST /v1/audio/asr/sse; format ogg, mp3, wav, pcm, m4a): https://platform.stepfun.com/docs/zh/api-reference/audio/asr-sse
 # - Audio transcription API (POST /v1/audio/transcriptions; mp3, pcm, ogg, wav under 100MB): https://platform.stepfun.com/docs/zh/api-reference/audio/transcriptions
 # - Audio file recognition (wav, mp3, pcm, ogg, m4a): https://platform.stepfun.com/docs/zh/api-reference/audio/asr
-# - Pricing: CNY 0.15 per hour of audio (https://platform.stepfun.com/docs/zh/guides/pricing/details). v2 has no per-hour unit, so no [cost].
+# - Pricing: CNY 0.15 per hour of audio (https://platform.stepfun.com/docs/zh/guides/pricing/details).
+#   Per minute: 0.15 / 60 = CNY 0.0025, at the rate below = USD 0.00037362 (rounded to 5 significant digits).
+# CNY→USD rate: 6.691314, 2026-10-21, source: https://open.er-api.com/v6/latest/USD
 # release_date is unsourced.
 schema = 2
 type = "transcription"
@@ -25,3 +27,7 @@ temperature = false
 [limit]
 context = 0
 output = 0
+
+[cost.audio.input]
+unit = "minute"
+price = 0.00037362
