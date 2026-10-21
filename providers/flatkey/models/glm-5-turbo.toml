@@ -1,5 +1,7 @@
 # Pricing: https://flatkey.ai/models (accessed 2026-10-21), USD per 1M tokens; "Cache" column = cache read.
-# Reasoning controls mirror the first-party API; Flatkey relays OpenAI-compatible Chat Completions.
+# Reasoning controls mirror the first-party API on Flatkey's OpenAI-compatible Chat Completions relay.
+# Flatkey forwards these provider request fields unchanged to the upstream API.
+# Toggle: thinking.type = enabled|disabled (default enabled)
 schema = 2
 base_model = "zhipuai/glm-5-turbo"
 
