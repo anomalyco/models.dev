@@ -8,6 +8,7 @@ name = "GPT-5.1-Codex-Mini"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { supported = true, implicit = true }
+temperature = true
 
 [limit]
 output = 100_000

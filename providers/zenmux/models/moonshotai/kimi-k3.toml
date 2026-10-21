@@ -12,9 +12,6 @@ reasoning = { supported = true, toggle = true, effort = ["max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 
-[limit]
-output = 262_144
-
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 

@@ -1,5 +1,5 @@
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
-# Reasoning: catalog capabilities.reasoning = true; controls as on ZenMux openai/gpt-5.4.
+# Reasoning: catalog capabilities.reasoning = true. Responses reasoning.effort = none|minimal|low|medium|high|xhigh (https://docs.zenmux.ai/guide/advanced/reasoning.html); levels as on OpenAI.
 # Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "openai/gpt-5.4-mini"
@@ -12,7 +12,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 cache = { supported = true, implicit = true }
 
 [api.responses]

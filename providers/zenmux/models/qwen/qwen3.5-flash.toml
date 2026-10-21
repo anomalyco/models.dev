@@ -1,12 +1,12 @@
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
-# Reasoning: catalog capabilities.reasoning = true; controls as on ZenMux qwen/qwen3.5-plus.
+# Reasoning: catalog capabilities.reasoning = true. Toggle: reasoning.enabled = true|false; budget: reasoning.max_tokens (https://docs.zenmux.ai/guide/advanced/reasoning.html), as Alibaba's enable_thinking / thinking_budget.
 # Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "alibaba/qwen3.5-flash"
 knowledge = "2025-01-01"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, toggle = true, budget = {} }
 cache = { supported = true, implicit = true, explicit = { min_tokens = 256 } }
 
 [limit]

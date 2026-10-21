@@ -12,6 +12,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { supported = true, implicit = true }
+temperature = true
 
 [api.responses]
 base_url = "https://zenmux.ai/api/v1"

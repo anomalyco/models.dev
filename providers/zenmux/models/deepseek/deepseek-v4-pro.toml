@@ -4,11 +4,12 @@
 # prompt lists 0.66 / 1.32 with no condition (model page shows a range); the lowest is the base.
 # completion lists 1.98 / 3.96 with no condition (model page shows a range); the lowest is the base.
 # input_cache_read lists 0.022 / 0.044 with no condition (model page shows a range); the lowest is the base.
+# Effort: reasoning_effort = low|high|max (DeepSeek V4 levels; the ZenMux model page lists high / max).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 
