@@ -8,7 +8,7 @@ structured_output = false
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.01, write = 0.125 }
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
 
 [cost.text.output]
 price = 0.5
