@@ -4,6 +4,7 @@ base_model = "zhipuai/glm-5.2"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 output = 128_000

@@ -14,6 +14,7 @@ import {
 import { buildCortecsModel, cortecs, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
+  crossmodel,
   CrossModelResponse,
   type CrossModelModel,
 } from "../src/sync/providers/crossmodel.js";
@@ -546,6 +547,46 @@ test.each([{ off: false }, { off: true }])("syncs CrossModel's reasoning control
       { type: "budget_tokens", min: 1_024, max: 32_000 },
     ],
   });
+});
+
+test("syncs CrossModel's catalog structured output, lifecycle and effort order", () => {
+  const model = buildCrossModel(
+    crossModelModel({
+      capabilities: {
+        structured_output: { json_schema: false },
+        reasoning: { supported: true, effort: ["xhigh", "low", "medium"] },
+      },
+      identity: { release_stage: "deprecated" },
+    }),
+    { base_model: "alibaba/qwen3.8-max", structured_output: true, knowledge: "2020-01" },
+  );
+  const unknown = buildCrossModel(
+    crossModelModel({ capabilities: { structured_output: { json_schema: null } } }),
+    { base_model: "alibaba/qwen3.8-max", structured_output: true, status: "beta" },
+  );
+
+  expect(model).toMatchObject({
+    structured_output: false,
+    status: "deprecated",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "xhigh"] }],
+  });
+  expect(model).not.toHaveProperty("knowledge");
+  expect(unknown).toMatchObject({ structured_output: true, status: "beta" });
+});
+
+test("syncs CrossModel's prompt caching flag into v2 files only", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const caching = crossmodel.translateModel(
+    crossModelModel({ capabilities: { context: { caching: true } } }),
+    context,
+  );
+  const unknown = crossmodel.translateModel(
+    crossModelModel({ capabilities: { context: { caching: null } } }),
+    context,
+  );
+
+  expect(caching).toMatchObject({ v2Set: { "capabilities.cache.supported": true } });
+  expect(unknown && "v2Set" in unknown ? unknown.v2Set : undefined).toBeUndefined();
 });
 
 test("rejects unknown CrossModel reasoning efforts", () => {

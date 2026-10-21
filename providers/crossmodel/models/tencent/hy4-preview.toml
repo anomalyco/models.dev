@@ -3,6 +3,7 @@ base_model = "tencent/hy4-preview"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
+cache = { supported = true }
 
 [limit]
 context = 1_048_576

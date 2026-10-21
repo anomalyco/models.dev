@@ -4,6 +4,7 @@ base_model = "xai/grok-4.5"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true }
 
 [cost.text.input]
 price = 2

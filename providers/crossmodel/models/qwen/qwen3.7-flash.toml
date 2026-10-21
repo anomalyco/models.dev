@@ -4,6 +4,7 @@ base_model = "alibaba/qwen3.7-flash"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 output = 65_536

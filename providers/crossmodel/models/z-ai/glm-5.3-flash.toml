@@ -8,6 +8,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 output = 128_000

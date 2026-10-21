@@ -4,6 +4,7 @@ base_model = "tencent/hy3"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 context = 262_144

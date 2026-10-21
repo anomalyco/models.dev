@@ -4,6 +4,7 @@ base_model = "alibaba/qwen3.8-flash"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
+cache = { supported = true }
 
 [cost.text.input]
 price = 0.13

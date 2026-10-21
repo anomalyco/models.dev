@@ -3,6 +3,7 @@ base_model = "xiaomi/mimo-v2.6-flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { supported = true }
 
 [cost.text.input]
 price = 0.16
