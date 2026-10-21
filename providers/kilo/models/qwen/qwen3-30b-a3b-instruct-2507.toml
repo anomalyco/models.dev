@@ -2,25 +2,17 @@
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
+base_model = "alibaba/qwen3-30b-a3b-instruct-2507"
 name = "Qwen: Qwen3 30B A3B Instruct 2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = false
-release_date = "2025-07-29"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
 effort_updates = false
 
 [limit]
-context = 262_144
 output = 235_929
 
 [cost.text.input]
