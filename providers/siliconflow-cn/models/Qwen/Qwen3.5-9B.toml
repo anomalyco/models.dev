@@ -5,6 +5,8 @@
 # knowledge: unsourced value kept from the v1 file (the lab has none).
 # Toggle: enable_thinking = true|false (top-level request field)
 # https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions
+# Budget: thinking_budget = 128..32768 (top-level request field); the China reasoning guide says the Qwen3
+# series natively enforces it (https://docs.siliconflow.cn/docs/userguide/capabilities/reasoning).
 schema = 2
 base_model = "alibaba/qwen3.5-9b"
 name = "Qwen/Qwen3.5-9B"
@@ -12,7 +14,7 @@ description = "Qwen vision-language model for visual reasoning, documents, and a
 knowledge = "2025-04"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, budget = { min = 128, max = 32_768 } }
 
 [cost.text.input]
 price = 0.07472374
