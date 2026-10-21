@@ -1,3 +1,4 @@
+# Reasoning: o1-mini always reasons and takes no reasoning_effort (OpenAI), so no control.
 schema = 2
 name = "OpenAI: o1-mini"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
@@ -12,7 +13,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
+reasoning = { supported = true }
 temperature = false
 
 [limit]
