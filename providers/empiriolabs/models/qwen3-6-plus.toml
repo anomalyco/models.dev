@@ -1,16 +1,22 @@
+schema = 2
 base_model = "alibaba/qwen3.6-plus"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.5
+cache = { read = 0.5 }
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.5
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2
+cache = { read = 2 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 2
-output = 6
-cache_read = 2
+[cost.text.output]
+price = 3
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 6

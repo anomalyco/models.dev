@@ -1,19 +1,16 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 393_216 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 393_216
-
-[cost]
-input = 1.32
-output = 3.96
-cache_read = 1.32
 
 [limit]
 output = 393_216
+
+[cost.text.input]
+price = 1.32
+cache = { read = 1.32 }
+
+[cost.text.output]
+price = 3.96

@@ -1,17 +1,20 @@
+schema = 2
 base_model = "sakana/fugu-max"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
 
 [limit]
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

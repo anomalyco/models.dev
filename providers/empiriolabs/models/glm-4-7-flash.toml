@@ -1,10 +1,13 @@
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 name = "GLM 4.7 Flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0
 
-[cost]
-input = 0
-output = 0
+[cost.text.output]
+price = 0

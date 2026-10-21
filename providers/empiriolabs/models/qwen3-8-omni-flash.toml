@@ -1,16 +1,13 @@
+schema = 2
 base_model = "alibaba/qwen3.8-omni-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 262_144 } }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.3 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 262_144
-
-[cost]
-input = 0.3
-output = 0.94
-cache_read = 0.3
+[cost.text.output]
+price = 0.94

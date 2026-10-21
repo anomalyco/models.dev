@@ -1,17 +1,16 @@
+schema = 2
 base_model = "bytedance-seed/seed-2.1-turbo"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.63
-output = 3.13
-cache_read = 0.63
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0.63
+cache = { read = 0.63 }
+
+[cost.text.output]
+price = 3.13

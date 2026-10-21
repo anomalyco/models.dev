@@ -1,20 +1,22 @@
+schema = 2
 base_model = "bytedance-seed/seed-2.0-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.63
+cache = { read = 0.63 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.26
+cache = { read = 1.26 }
 
-[cost]
-input = 0.63
-output = 3.79
-cache_read = 0.63
+[cost.text.output]
+price = 3.79
 
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 1.26
-output = 7.58
-cache_read = 1.26
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 7.58

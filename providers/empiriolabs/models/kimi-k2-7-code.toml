@@ -1,12 +1,17 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.95
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 131_072
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.95 }
+
+[cost.text.output]
+price = 4

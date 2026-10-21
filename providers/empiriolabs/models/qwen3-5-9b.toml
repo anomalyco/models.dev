@@ -1,19 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen3.5-9b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1_024, max = 32_768 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-max = 32_768
-
-[cost]
-input = 0.09
-output = 0.13
-cache_read = 0.045
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.045 }
+
+[cost.text.output]
+price = 0.13

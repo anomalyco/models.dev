@@ -1,13 +1,18 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
 name = "MiniMax M2.7"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 200_000
 output = 32_768
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.6

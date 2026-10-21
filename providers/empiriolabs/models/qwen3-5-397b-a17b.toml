@@ -1,26 +1,26 @@
+schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 80_000 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 80_000
-
-[cost]
-input = 0.172
-output = 1.032
-cache_read = 0.172
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 0.43
-output = 2.58
-cache_read = 0.43
 
 [limit]
 context = 256_000
 output = 64_000
+
+[cost.text.input]
+price = 0.172
+cache = { read = 0.172 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.43
+cache = { read = 0.43 }
+
+[cost.text.output]
+price = 1.032
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 2.58
