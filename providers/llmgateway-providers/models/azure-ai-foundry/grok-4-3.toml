@@ -1,19 +1,14 @@
 schema = 2
+base_model = "xai/grok-4.3"
 name = "Grok 4.3 (Azure AI Foundry)"
-description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-open_weights = false
-release_date = "2026-04-30"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = false
-temperature = true
 
 [limit]
 context = 20_000

@@ -1,23 +1,13 @@
 schema = 2
+base_model = "xai/grok-4.20-0309-reasoning"
 name = "Grok 4.20 Reasoning (Vertex AI (OpenAI-compatible))"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "grok"
-open_weights = false
-release_date = "2026-03-09"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-temperature = true
 
 [limit]
 context = 2_000_000
-output = 30_000
 
 [cost.text.input]
 price = 1.25

@@ -1,23 +1,10 @@
 schema = 2
+base_model = "xai/grok-build-0.1"
 name = "Grok Build 0.1 (xAI)"
-description = "Grok coding model for agentic engineering, edits, and codebase workflows"
-family = "grok-build"
-open_weights = false
-release_date = "2026-05-20"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-temperature = true
-
-[limit]
-context = 256_000
-output = 256_000
 
 [cost.text.input]
 price = 1

@@ -1,22 +1,12 @@
 schema = 2
+base_model = "mistral/ministral-8b-2512"
 name = "Ministral 8B (Mistral AI)"
-description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "ministral"
-open_weights = false
-release_date = "2025-12-02"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
-context = 262_144
 output = 262_144
 
 [cost.text.input]

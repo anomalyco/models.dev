@@ -1,23 +1,10 @@
 schema = 2
+base_model = "google/gemini-3.8-flash"
 name = "Gemini 3.8 Flash (Google Vertex AI)"
-description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-family = "gemini"
-open_weights = false
-release_date = "2026-09-02"
-
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 0.75

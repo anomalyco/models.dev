@@ -1,23 +1,10 @@
 schema = 2
+base_model = "xai/grok-4.5"
 name = "Grok 4.5 (xAI)"
-description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-open_weights = false
-release_date = "2026-07-08"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-temperature = true
-
-[limit]
-context = 500_000
-output = 500_000
 
 [cost.text.input]
 price = 2

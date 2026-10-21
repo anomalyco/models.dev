@@ -1,18 +1,11 @@
 schema = 2
+base_model = "alibaba/qwen3-235b-a22b"
 name = "Qwen3 235B A22B FP8 (NovitaAI)"
-description = "General-purpose chat model for instruction following, writing, and analysis"
-open_weights = false
-release_date = "2025-04-28"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
 
 [limit]
 context = 40_960

@@ -1,22 +1,12 @@
 schema = 2
+base_model = "xai/grok-4.3"
 name = "Grok 4.3 (AWS Bedrock)"
-description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-open_weights = false
-release_date = "2026-04-30"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
-context = 1_000_000
 output = 131_072
 
 [cost.text.input]

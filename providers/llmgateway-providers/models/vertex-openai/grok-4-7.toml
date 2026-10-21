@@ -1,19 +1,10 @@
 schema = 2
+base_model = "xai/grok-4.7"
 name = "Grok 4.7 (Vertex AI (OpenAI-compatible))"
-description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
-family = "grok"
-open_weights = false
-release_date = "2026-09-21"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 524_288
