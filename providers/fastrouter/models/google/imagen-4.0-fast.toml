@@ -1,4 +1,7 @@
 # Deprecated: absent from the catalog and https://fastrouter.ai/models/<id> returns 404 (2026-10-21).
+# Formats left generic: FastRouter's image API has no format control for Imagen (output_format is gpt-image-1 only;
+# https://docs.fastrouter.ai/api-reference/image/image-generation), and Google only documents a caller-selected
+# outputOptions.mimeType, not the format returned without it (https://docs.cloud.google.com/vertex-ai/generative-ai/docs/image/generate-images).
 schema = 2
 name = "Imagen 4 Fast"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
