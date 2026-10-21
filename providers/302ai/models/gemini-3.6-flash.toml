@@ -1,8 +1,13 @@
 # Cost: 302.AI listed price, https://doc.302.ai/ (retrieved 2026-09-08)
+schema = 2
 base_model = "google/gemini-3.6-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
-[cost]
-input = 1.5
-output = 7.5
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

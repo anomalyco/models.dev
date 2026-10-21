@@ -1,33 +1,37 @@
+schema = 2
 name = "gpt-5.4"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 family = "gpt"
-release_date = "2026-03-05"
-last_updated = "2026-03-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
 knowledge = "2025-08-31"
+release_date = "2026-03-05"
 
-[cost]
-input = 2.500
-output = 15.000
-cache_read = 0.250
-cache_write = 0
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 5.000
-output = 22.500
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 1_050_000
 input = 922_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25, write = 0 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 5
+
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 22.5

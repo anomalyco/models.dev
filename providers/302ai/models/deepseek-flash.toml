@@ -4,17 +4,19 @@
 # `thinking.type = disabled` suppresses reasoning output; invalid `reasoning_effort` values are rejected (-10003).
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.003
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6

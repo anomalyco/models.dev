@@ -1,17 +1,18 @@
 # Toggle: enable_thinking true|false
 # Effort: reasoning_effort = low|medium|xhigh
 # Budget: thinking_budget (integer reasoning tokens)
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens" },
-]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.18
-output = 0.564
+[cost.text.input]
+price = 0.18
+
+[cost.text.output]
+price = 0.564

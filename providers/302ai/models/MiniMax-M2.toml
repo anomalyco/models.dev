@@ -1,21 +1,24 @@
+schema = 2
 name = "MiniMax-M2"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-release_date = "2025-10-26"
-last_updated = "2025-10-26"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2025-10-26"
 
-[cost]
-input = 0.330
-output = 1.320
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.33
+
+[cost.text.output]
+price = 1.32

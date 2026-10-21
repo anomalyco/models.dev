@@ -1,23 +1,25 @@
+schema = 2
 name = "claude-sonnet-4-5-20250929-thinking"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-release_date = "2025-09-30"
-last_updated = "2025-09-30"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = false
 knowledge = "2025-03"
+release_date = "2025-09-30"
 
-[cost]
-input = 3.000
-output = 15.000
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 200_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

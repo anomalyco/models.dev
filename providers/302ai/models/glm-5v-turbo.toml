@@ -1,26 +1,28 @@
+schema = 2
 name = "GLM-5V-Turbo"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 family = "glm"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-04-02"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image", "video", "audio", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0.720
-output = 3.200
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
 
 [limit]
 context = 200_000
 output = 131_072
 
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.72
+
+[cost.text.output]
+price = 3.2

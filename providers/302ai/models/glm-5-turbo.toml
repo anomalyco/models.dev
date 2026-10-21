@@ -1,27 +1,29 @@
+schema = 2
 name = "glm-5-turbo"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
 family = "glm"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-03-16"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.720
-output = 3.200
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 200_000
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.72
+
+[cost.text.output]
+price = 3.2

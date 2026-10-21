@@ -1,21 +1,24 @@
+schema = 2
 name = "doubao-seed-1-8-251215"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2025-12-18"
-last_updated = "2025-12-18"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2025-12-18"
 
-[cost]
-input = 0.114
-output = 0.286
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 224_000
 output = 64_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.114
+
+[cost.text.output]
+price = 0.286
