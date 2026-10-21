@@ -1,0 +1,30 @@
+# Sources (accessed 2026-10-21): https://huggingface.co/openbmb/MiniCPM-V-4.7-1B (Apache-2.0; image-text-to-text; Hub createdAt
+#   2026-10-06): single-image, multi-image and video understanding. The card lists no exact image or video formats.
+# Context 262,144: the AMD Token Factory deployment (the only host); tools and reasoning as that catalog reports.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+v2_only = true
+name = "MiniCPM-V 4.7 1B"
+description = "Compact MiniCPM-V model for single-image, multi-image and video understanding"
+open_weights = true
+release_date = "2026-10-06"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openbmb/MiniCPM-V-4.7-1B"
