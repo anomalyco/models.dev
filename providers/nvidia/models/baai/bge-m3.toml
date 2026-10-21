@@ -1,15 +1,10 @@
+# Embedding model: modalities and limits come from the lab (vector output, output 0); the old text output and
+# 1,024-token output limit were chat boilerplate.
 # NVIDIA API: HTTP 410 Gone on POST /v1/embeddings — end of life 2026-08-25T09:00:00Z (probed 2026-10-21 against
 # integrate.api.nvidia.com)
 schema = 2
 base_model = "baai/bge-m3"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[limit]
-output = 1_024
 
 [cost.text.input]
 price = 0
