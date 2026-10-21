@@ -32,6 +32,7 @@ const Pricing = z.object({
   prompt: z.string().optional(),
   completion: z.string().optional(),
   internal_reasoning: z.string().optional(),
+  input_audio: z.string().optional(),
   input_cache_read: z.string().optional(),
   input_cache_write: z.string().optional(),
 });
@@ -251,6 +252,14 @@ function deploymentModalities(model: LLMGatewayModel, vision: boolean | undefine
     input: input.length > 0 ? input : (["text"] satisfies Modality[]),
     output: base.output,
   };
+}
+
+// `vision` only covers images: a deployment without vision still takes
+// attachments when it serves audio or video input (e.g. transcription), and
+// v2 derives attachment from the input modalities.
+function deploymentAttachment(model: LLMGatewayModel, vision: boolean | undefined) {
+  if (vision === undefined) return undefined;
+  return vision || deploymentModalities(model, false).input.some((value) => value !== "text");
 }
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
@@ -572,6 +581,7 @@ export function buildLLMGatewayMappedModel(
         reasoning: reasoning ? nonZeroPrice(model.pricing.internal_reasoning) ?? existing?.cost?.reasoning : existing?.cost?.reasoning,
         cache_read: nonZeroPrice(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
         cache_write: nonZeroPrice(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
+        input_audio: nonZeroPrice(model.pricing.input_audio) ?? existing?.cost?.input_audio,
         // The gateway API does not expose context pricing tiers, so authored
         // tiers stick and new files seed from the aggregated sibling's curated
         // tiers rather than silently under-stating long-context pricing.
@@ -612,7 +622,7 @@ export function buildLLMGatewayMappedModel(
       existing.base_model,
       {
         name: existing.name ?? model.name,
-        attachment: mapping?.vision ?? existing.attachment,
+        attachment: deploymentAttachment(model, mapping?.vision) ?? existing.attachment,
         // No describeModel fallback: synthesizing a description here would
         // stamp a sticky generic override on every name-pinned factored entry;
         // leaving it unset keeps inheriting the lab text from the base.
@@ -652,7 +662,7 @@ export function buildLLMGatewayMappedModel(
       throw new Error(`LLM Gateway mapped entry ${model.id} has no usable context to author`);
     }
     const resolved = {
-      attachment: mapping?.vision ?? existing.attachment ?? false,
+      attachment: deploymentAttachment(model, mapping?.vision) ?? existing.attachment ?? false,
       tool_call: mapping?.tools ?? existing.tool_call ?? false,
       structured_output: model.structured_outputs ?? existing.structured_output,
       // Same bidirectional vision rule as the factored path; with no base to
@@ -711,7 +721,7 @@ export function buildLLMGatewayMappedModel(
     };
     return factorBaseModel(canonical, {
       name: model.name,
-      attachment: mapping?.vision,
+      attachment: deploymentAttachment(model, mapping?.vision),
       reasoning: mapping?.reasoning,
       reasoning_options: reasoningOptions,
       interleaved,
@@ -749,7 +759,7 @@ export function buildLLMGatewayMappedModel(
     family: inferFamily(model, model.name),
     release_date: dateFromTimestamp(model.created),
     last_updated: dateFromTimestamp(model.created),
-    attachment: mapping?.vision ?? input.some((value) => value !== "text"),
+    attachment: deploymentAttachment(model, mapping?.vision) ?? input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,
     interleaved,
