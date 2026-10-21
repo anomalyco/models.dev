@@ -15,10 +15,6 @@ base_model = "moonshotai/kimi-k2.6"
 reasoning = { supported = true }
 structured_output = true
 
-[limit]
-context = 262_144
-output = 262_144
-
 [cost.text.input]
 price = 0.95
 cache = { read = 0.16 }

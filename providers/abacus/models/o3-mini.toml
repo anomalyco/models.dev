@@ -10,17 +10,9 @@
 schema = 2
 base_model = "openai/o3-mini"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-
-[limit]
-context = 200_000
-output = 100_000
 
 [cost.text.input]
 price = 1.1

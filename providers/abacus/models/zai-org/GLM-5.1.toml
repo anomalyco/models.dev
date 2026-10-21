@@ -11,17 +11,12 @@
 schema = 2
 base_model = "zhipuai/glm-5.1"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
 
 [limit]
 context = 204_800
-output = 131_072
 
 [cost.text.input]
 price = 1.38

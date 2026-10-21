@@ -14,10 +14,6 @@ base_model = "openai/o3-pro"
 reasoning = { supported = true }
 structured_output = true
 
-[limit]
-context = 200_000
-output = 100_000
-
 [cost.text.input]
 price = 20
 

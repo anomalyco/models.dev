@@ -10,15 +10,10 @@
 schema = 2
 base_model = "alibaba/qwen3-32b"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true }
 
 [limit]
-context = 131_072
 output = 8_192
 
 [cost.text.input]

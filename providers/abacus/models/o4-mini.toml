@@ -13,10 +13,6 @@ base_model = "openai/o4-mini"
 reasoning = { supported = true }
 structured_output = true
 
-[limit]
-context = 200_000
-output = 100_000
-
 [cost.text.input]
 price = 1.1
 

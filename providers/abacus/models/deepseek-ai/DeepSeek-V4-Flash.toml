@@ -12,16 +12,11 @@ schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
 
 [limit]
-context = 1_000_000
 output = 32_768
 
 [cost.text.input]

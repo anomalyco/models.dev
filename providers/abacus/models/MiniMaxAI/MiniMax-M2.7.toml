@@ -3,16 +3,8 @@
 schema = 2
 base_model = "minimax/MiniMax-M2.7"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true }
-
-[limit]
-context = 204_800
-output = 131_072
 
 [cost.text.input]
 price = 0.3
