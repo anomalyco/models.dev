@@ -1,27 +1,22 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
 release_date = "2026-07-27"
-last_updated = "2026-07-27"
-structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 4.5
-output = 22.5
-cache_read = 0.45
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 4.5
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 22.5

@@ -7,38 +7,30 @@
 # Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
 # Effort: reasoning_effort = low|medium|high|max; medium promotes to high, xhigh promotes to max
 # Budget: thinking.budget_tokens >= 1024 (integer reasoning-token cap)
+schema = 2
 name = "Ember-1"
 description = "Specialized model from Fireworks built on Kimi K3, producing shorter reasoning traces with approximately 40% fewer tokens while maintaining comparable quality"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2026-09-22"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

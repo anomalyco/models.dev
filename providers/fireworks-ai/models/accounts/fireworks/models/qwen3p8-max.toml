@@ -1,19 +1,26 @@
+schema = 2
 base_model = "alibaba/qwen3.8-max"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 262_144
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
 
 [experimental.modes.priority]
-cost = { input = 3, output = 9, cache_read = 0.375 }
-provider = { body = { service_tier = "priority" } }
+body = { service_tier = "priority" }

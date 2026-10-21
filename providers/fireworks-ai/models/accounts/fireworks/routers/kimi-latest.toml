@@ -9,34 +9,33 @@
 # Effort: reasoning_effort = low|medium|high|max
 # Budget: thinking.budget_tokens (min 1024; conflicts with reasoning_effort)
 # https://docs.fireworks.ai/guides/reasoning
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi Latest"
 release_date = "2026-07-27"
 last_updated = "2026-09-15"
-structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
 
 [experimental.modes.priority]
-cost = { input = 3.75, output = 18.75, cache_read = 0.375 }
-provider = { body = { service_tier = "priority" } }
+body = { service_tier = "priority" }

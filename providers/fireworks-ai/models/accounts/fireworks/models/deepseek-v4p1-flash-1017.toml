@@ -8,24 +8,26 @@
 # Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
 # Native DeepSeek Flash effort set low|high|max: https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-09-10)
 # Released on Fireworks Serverless API 2026-10-17.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.output]
+price = 1.2
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
 
 [experimental.modes.priority]
-cost = { input = 0.375, output = 1.5, cache_read = 0.0075 }
-provider = { body = { service_tier = "priority" } }
+body = { service_tier = "priority" }
