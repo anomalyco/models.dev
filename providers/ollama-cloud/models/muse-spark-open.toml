@@ -1,9 +1,8 @@
 # Cost from https://ollama.com/pricing (accessed 2026-10-15): muse-spark-open $1.25 input / $0.15 cached / $4.25 output per MTok.
 # Library: https://ollama.com/library/muse-spark-open (1M context, Text+Image input, vision/tools/thinking/cloud tags, 822B params).
-# Effort: reasoning_effort = low|medium|high|xhigh (default xhigh; reasoning cannot be disabled, so no toggle).
-# Lab native set per https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B and https://huggingface.co/blog/meta-muse-spark-open.
-# Host is a multi-model relay; options copy the lab set per AGENTS.md. Ollama native `think` accepts model-defined levels;
-# OpenAI POST /v1/chat/completions accepts `reasoning_effort` / `reasoning.effort` passthrough.
+# Toggle: native POST /api/chat and /api/generate take `think = false|true`; /api/show lists `false` as a thinking value (https://docs.ollama.com/capabilities/thinking).
+# Effort: reasoning_effort / reasoning.effort = low|medium|high|max on OpenAI POST /v1/chat/completions (Ollama's levels, default high;
+#   the lab's native set is low|medium|high|xhigh with no off switch: https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B).
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
 # Reasoning: POST https://ollama.com/api/show reports thinking.values [false, low, medium, high, max] (default high) (2026-10-21); Ollama applies a model's named levels exactly and `false` disables thinking (https://docs.ollama.com/api/openai-compatibility).
 # Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).

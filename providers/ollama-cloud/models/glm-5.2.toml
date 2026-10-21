@@ -1,4 +1,6 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+# Toggle: native POST /api/chat and /api/generate take `think = false|true`; /api/show lists `false` as a thinking value (https://docs.ollama.com/capabilities/thinking).
+# Effort: reasoning_effort / reasoning.effort = high|max on OpenAI POST /v1/chat/completions.
 # Reasoning: POST https://ollama.com/api/show reports thinking.values [false, high, max] (2026-10-21); Ollama applies a model's named levels exactly and `false` disables thinking (https://docs.ollama.com/api/openai-compatibility).
 # Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
 # Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
