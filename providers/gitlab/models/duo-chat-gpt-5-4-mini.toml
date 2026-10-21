@@ -1,26 +1,28 @@
+schema = 2
 name = "Agentic Chat (GPT-5.4 Mini)"
 description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
 family = "gpt-mini"
-release_date = "2026-03-17"
-last_updated = "2026-03-17"
-knowledge = "2025-08-31"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2026-03-17"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
