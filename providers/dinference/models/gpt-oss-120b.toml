@@ -1,21 +1,9 @@
 schema = 2
-name = "GPT OSS 120B"
+base_model = "openai/gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-open_weights = true
-release_date = "2025-08"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 131_072
-output = 32_768
 
 [cost.text.input]
 price = 0.0675
