@@ -1,0 +1,25 @@
+schema = 2
+type = "decision"
+name = "Elephant-1"
+description = "Elephant-1 is a 9B evaluation model from Baseten's Base Labs for classification, routing, and scoring. It evaluates structured context against choice, yes/no, and ordered scoring questions and returns answer probabilities and confidence in a single forward pass, without generating free-form text. Applications can use these probabilities to select answers or set confidence thresholds."
+family = "elephant"
+open_weights = false
+release_date = "2026-10-21"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 16_384
+output = 0
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

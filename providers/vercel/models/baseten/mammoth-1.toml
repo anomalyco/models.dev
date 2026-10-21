@@ -1,0 +1,24 @@
+schema = 2
+type = "decision"
+name = "Mammoth-1"
+description = "Mammoth-1 is a 27B evaluation model from Baseten's Base Labs, fine-tuned from Qwen3.5-27B for classification, routing, and scoring. It answers multiple-choice, yes/no, and ordered scoring questions with probabilities over predefined options rather than generated text. Shared-prefix caching reuses context across questions, while per-option probabilities support confidence thresholds and escalation decisions."
+open_weights = false
+release_date = "2026-10-21"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 16_384
+output = 0
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
