@@ -1,22 +1,18 @@
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+# Deprecated: no longer listed by QiHang's public pricing endpoint https://www.qhaigc.net/api/pricing (checked 2026-10-21).
 schema = 2
-name = "Claude Opus 4.5"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-open_weights = false
+base_model = "anthropic/claude-opus-4-5-20251101"
 knowledge = "2025-03"
-release_date = "2025-11-01"
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 200_000
 output = 32_000
 
 [cost.text.input]

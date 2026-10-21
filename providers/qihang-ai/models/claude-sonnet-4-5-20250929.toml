@@ -1,23 +1,10 @@
+# Deprecated: no longer listed by QiHang's public pricing endpoint https://www.qhaigc.net/api/pricing (checked 2026-10-21).
 schema = 2
-name = "Claude Sonnet 4.5"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-open_weights = false
-knowledge = "2025-07-31"
-release_date = "2025-09-29"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
+base_model = "anthropic/claude-sonnet-4-5-20250929"
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 200_000
-output = 64_000
 
 [cost.text.input]
 price = 0.43
