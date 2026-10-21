@@ -5,13 +5,19 @@
 # Effort: reasoning_effort = low|medium|high|max. NaN's reasoning table ("the
 # table is the contract", accessed 2026-09-28) lists glm5.3 and glm5.3-flash as
 # "Fully controllable"; max is the deepest. No off value, so no toggle.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
-
-[cost]
-input = 0
-output = 0
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

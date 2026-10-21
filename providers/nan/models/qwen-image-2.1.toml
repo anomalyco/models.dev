@@ -9,12 +9,15 @@
 # (0-2147483647).
 # Requires the inference tier; billed as a monthly quota of 100 requests per
 # member shared with flux-2-klein, so no per-token price.
+schema = 2
 base_model = "alibaba/qwen-image-2.1"
-attachment = false
-
-[cost]
-input = 0
-output = 0
 
 [modalities]
 input = ["text"]
+output = ["image"]
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

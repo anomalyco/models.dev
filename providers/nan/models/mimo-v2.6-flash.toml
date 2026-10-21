@@ -17,12 +17,18 @@
 # native 1_048_576 window. The docs/examples opencode.json snippet caps
 # contextWindow at 500000, but that snippet also trims maxTokens to a
 # per-request value rather than the ceiling.
+schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
-reasoning_options = []
-
-[cost]
-input = 0
-output = 0
 
 [modalities]
 input = ["text", "image", "audio"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

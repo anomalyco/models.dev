@@ -4,16 +4,22 @@
 # Included in the membership, so no per-token price.
 # Reasoning: on by default, with no caller control on this surface. NaN exposes
 # no request field to disable it.
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 262_144
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

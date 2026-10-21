@@ -11,10 +11,15 @@
 # membership, so no per-token price.
 # Reasoning: no caller control on this surface; NaN's request examples document
 # no reasoning field and reasoning_effort/thinking produced no measurable effect.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
