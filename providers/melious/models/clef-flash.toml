@@ -7,16 +7,21 @@
 # 16,384 tokens and rejects images with 422 invalid_request, so this entry is text
 # only. System One has no temperature parameter, so temperature is false. Reasoning
 # is always off; there is no caller control.
+schema = 2
 base_model = "cloudflare/clef-flash"
-attachment = false
-temperature = false
 
-[cost]
-input = 0.033675
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+temperature = false
 
 [limit]
 context = 16_384
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.033675
+
+[cost.text.output]
+price = 0

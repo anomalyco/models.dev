@@ -16,16 +16,21 @@
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
 # limit.context: the catalog reports 164_000 for this deployment, not the lab's
 # 128_000.
+schema = 2
 base_model = "deepseek/deepseek-r1"
-reasoning_options = []
 
-[cost]
-input = 0.69552
-output = 2.78208
-cache_read = 0.185472
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 164_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.69552
+cache = { read = 0.185472 }
+
+[cost.text.output]
+price = 2.78208

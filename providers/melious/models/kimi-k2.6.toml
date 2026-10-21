@@ -19,18 +19,23 @@
 # limit.context: the catalog reports 256_000 for this deployment, not the lab's
 # 262_144. limit.output: max_output_tokens is null for this model, so output is capped
 # at the served context rather than inheriting the lab's larger 262_144.
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 0.81144
-output = 4.0572
-cache_read = 0.266616
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 256_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.81144
+cache = { read = 0.266616 }
+
+[cost.text.output]
+price = 4.0572
