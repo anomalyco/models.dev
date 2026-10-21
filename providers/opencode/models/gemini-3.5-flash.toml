@@ -1,24 +1,9 @@
 schema = 2
-name = "Gemini 3.5 Flash"
-description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-family = "gemini-flash"
-open_weights = false
-knowledge = "2025-01"
-release_date = "2026-05-19"
-
-[modalities]
-input = ["text", "image", "video", "audio", "application/pdf"]
-output = ["text"]
+base_model = "google/gemini-3.5-flash"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [api.generate-content]
 base_url = "https://opencode.ai/inference/google/v1beta"

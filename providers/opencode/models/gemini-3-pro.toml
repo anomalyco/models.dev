@@ -1,25 +1,12 @@
 schema = 2
+base_model = "google/gemini-3-pro-preview"
 name = "Gemini 3 Pro"
 description = "Legacy model retained for compatibility with older integrations"
-family = "gemini-pro"
-open_weights = false
-knowledge = "2025-01"
-release_date = "2025-11-18"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image", "video", "audio", "application/pdf"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [api.generate-content]
 base_url = "https://opencode.ai/inference/google/v1beta"

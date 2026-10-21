@@ -1,22 +1,13 @@
 schema = 2
+base_model = "xai/grok-code-fast-1"
 name = "Grok Code Fast 1"
 description = "Legacy model retained for compatibility with older integrations"
-family = "grok"
-open_weights = false
-release_date = "2025-08-20"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 256_000
 output = 256_000
 
 [api.chat-completions]

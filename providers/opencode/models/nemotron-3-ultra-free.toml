@@ -1,23 +1,9 @@
 schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra Free"
-family = "nemotron-free"
-open_weights = true
-knowledge = "2026-02"
-release_date = "2026-06-04"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 1_000_000
-output = 128_000
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

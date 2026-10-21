@@ -1,23 +1,10 @@
 schema = 2
+base_model = "anthropic/claude-haiku-4-5"
 name = "Claude Haiku 4.5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-family = "claude-haiku"
-open_weights = false
-knowledge = "2025-02-28"
-release_date = "2025-10-15"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, budget = { min = 1_024 } }
-temperature = true
-
-[limit]
-context = 200_000
-output = 64_000
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"

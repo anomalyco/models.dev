@@ -1,24 +1,10 @@
 schema = 2
-name = "Kimi K2 Thinking"
+base_model = "moonshotai/kimi-k2-thinking"
 description = "Legacy model retained for compatibility with older integrations"
-family = "kimi-thinking"
-open_weights = true
-knowledge = "2024-10"
-release_date = "2025-09-05"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
-
-[limit]
-context = 262_144
-output = 262_144
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

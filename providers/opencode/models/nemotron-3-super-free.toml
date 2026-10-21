@@ -1,20 +1,10 @@
 schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super Free"
-family = "nemotron-free"
-open_weights = true
-knowledge = "2026-02"
-release_date = "2026-03-11"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
 context = 204_800

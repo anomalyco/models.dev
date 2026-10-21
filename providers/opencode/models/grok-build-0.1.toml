@@ -5,10 +5,6 @@ base_model = "xai/grok-build-0.1"
 reasoning = { supported = true }
 structured_output = true
 
-[limit]
-context = 256_000
-output = 256_000
-
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"
 sdk = { aisdk = "@ai-sdk/openai" }
