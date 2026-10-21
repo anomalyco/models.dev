@@ -1,5 +1,5 @@
-# Effort: reasoning_effort = none|low|high|max (default high); none runs at low,
-# so reasoning cannot be disabled.
+# Effort: reasoning_effort = low|high|max (default high). Baseten also accepts
+# none but runs it at low, so reasoning cannot be disabled.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Image MIME types are the lab's; Baseten's vision guide lists the model but no formats (https://docs.baseten.co/inference/model-apis/vision).
 # Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
@@ -14,7 +14,7 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 system_updates = false

@@ -1,6 +1,7 @@
-# Baseten's Fast variants use the same weights as their base models; the
-# DeepSeek V4.1 Flash API exposes reasoning_effort = none | low | high | max
-# and returns reasoning in reasoning_content.
+# Baseten's Fast variants use the same weights as their base models. Baseten
+# accepts reasoning_effort = none | low | high (default) | max for DeepSeek V4.1
+# Flash Fast, but runs low at the default depth, so the distinct levels are
+# none | high | max. Reasoning is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/overview
 # https://www.baseten.co/library/deepseek-v41-flash/
 # https://docs.baseten.co/inference/model-apis/reasoning
@@ -15,7 +16,7 @@ description = "Fast DeepSeek model for efficient chat, coding help, and agent lo
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
 structured_output = true
 temperature = false
 cache = { supported = true, implicit = true }

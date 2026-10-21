@@ -1,5 +1,6 @@
-# Baseten documents top-level reasoning_effort for DeepSeek V4.1 Flash with
-# values none | low | high (default) | max. Reasoning is enabled by default;
+# Baseten accepts top-level reasoning_effort = none | low | high (default) | max
+# for DeepSeek V4.1 Flash, but runs low at the default depth, so the distinct
+# levels are none | high | max. Reasoning is enabled by default;
 # reasoning_effort: "none" disables it. Reasoning output is returned in
 # reasoning_content.
 # Baseten serves at most 32k output tokens for this model on Model APIs.
@@ -15,7 +16,7 @@ base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 system_updates = true

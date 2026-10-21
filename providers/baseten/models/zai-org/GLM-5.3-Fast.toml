@@ -1,5 +1,5 @@
-# Effort: top-level reasoning_effort = none|low|high|max (default high).
-# none requests a direct answer but may still return short reasoning_content;
+# Effort: top-level reasoning_effort = low|high|max (default high). Baseten also
+# accepts none but runs it at low, so reasoning cannot be disabled;
 # chat_template_args.enable_thinking=false is rejected, so no separate toggle.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
@@ -17,7 +17,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 system_updates = true
