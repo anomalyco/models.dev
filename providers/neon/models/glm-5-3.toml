@@ -1,17 +1,20 @@
 # Cost: https://neon.com/models.json glm-5-3 (USD / 1M tokens).
 # Effort: chat completions reasoning_effort. Lab/peers: low|high|max, same as
 # glm-5-3-flash. thinking.type=disabled returns 200 and still emits reasoning_content.
-base_model = "zhipuai/glm-5.3"
-structured_output = true
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
-
 # Lab context is 1_000_000. neon.com/models publishes 1_048_576.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

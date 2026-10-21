@@ -3,13 +3,16 @@
 # No toggle: thinking.type=disabled returns 200 and still emits reasoning_content.
 # Output limit is inherited (384_000): 384_000 returns 200, 384_001 returns 400.
 # Measured 2026-10-13.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-structured_output = true
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

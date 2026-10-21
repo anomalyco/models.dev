@@ -3,12 +3,17 @@
 # "Model gemini-3.7-flash does not support the temperature parameter".
 # `minimal` effort is rejected: "Thinking level is unsupported: THINKING_LEVEL_MINIMAL".
 # Measured 2026-10-13.
+schema = 2
 base_model = "google/gemini-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = false
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 1.5
-output = 7.5
-cache_read = 0.15
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

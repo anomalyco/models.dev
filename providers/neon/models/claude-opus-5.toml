@@ -1,12 +1,15 @@
+# Toggle: {"thinking": {"type": "adaptive"|"disabled"}}
+# Effort: {"thinking": {"type": "adaptive"}, "output_config": {"effort": <v>}}
+schema = 2
 base_model = "anthropic/claude-opus-5"
-structured_output = true
-reasoning_options = [
-  { type = "toggle" },                                                   # API: {"thinking": {"type": "adaptive"|"disabled"}}
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }, # API: {"thinking": {"type": "adaptive"}, "output_config": {"effort": <v>}}
-]
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25
