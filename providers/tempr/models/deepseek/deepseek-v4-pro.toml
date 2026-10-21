@@ -6,17 +6,18 @@
 # Price: DeepSeek's pricing page lists V4 Pro at 0.66 in / 1.98 out / 0.022 cache hit (off-peak,
 # which is what providers/deepseek records for Flash); checked 2026-09-22.
 # https://api-docs.deepseek.com/quick_start/pricing
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-structured_output = true
 name = "DeepSeek V4 Pro"
 
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 0.66
-output = 1.98
+[cost.text.input]
+price = 0.66
+cache = { read = 0.022 }
+
+[cost.text.output]
+price = 1.98
 reasoning = 1.98
-cache_read = 0.022

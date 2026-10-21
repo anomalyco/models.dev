@@ -2,14 +2,15 @@
 # Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
 # /v1/messages: thinking.type = enabled|disabled
 # /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+schema = 2
 base_model = "zhipuai/glm-4.6v-flash"
 
-reasoning_options = [
-  { type = "toggle" },
-]
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

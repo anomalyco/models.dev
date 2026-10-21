@@ -3,13 +3,15 @@
 # Effort: reasoning.effort = none|high (alias: top-level reasoning_effort)
 # /v1/messages: thinking.type = enabled|disabled; output_config.effort = high
 # /v1/responses: reasoning.effort = none|high
+schema = 2
 base_model = "mistral/mistral-medium-2604"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
-reasoning_options = [
-  { type = "effort", values = ["none", "high"] },
-]
+[cost.text.input]
+price = 1.5
 
-[cost]
-input = 1.5
-output = 7.5
+[cost.text.output]
+price = 7.5

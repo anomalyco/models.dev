@@ -2,13 +2,15 @@
 # Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
 # /v1/messages: thinking.type = enabled|disabled
 # /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+schema = 2
 base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
 
-reasoning_options = [
-  { type = "toggle" },
-]
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 4.35
-output = 8.7
-cache_read = 0.036
+[cost.text.input]
+price = 4.35
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 8.7

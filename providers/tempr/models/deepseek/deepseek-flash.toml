@@ -3,16 +3,17 @@
 # Effort: reasoning.effort = none|low|high|max (alias: top-level reasoning_effort)
 # /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|high|max
 # /v1/responses: reasoning.effort = none|low|high|max
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
 
-[cost]
-input = 0.15
-output = 0.6
+[cost.text.output]
+price = 0.6
 reasoning = 0.6
-cache_read = 0.003

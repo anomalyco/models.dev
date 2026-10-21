@@ -2,15 +2,16 @@
 # Effort: reasoning.effort = low|high|max (alias: top-level reasoning_effort)
 # /v1/messages: output_config.effort = low|high|max
 # /v1/responses: reasoning.effort = low|high|max
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03, write = 0 }
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
-cache_write = 0
+[cost.text.output]
+price = 0.5

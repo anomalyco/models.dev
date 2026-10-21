@@ -3,15 +3,17 @@
 # Effort: reasoning.effort = none|high|max (alias: top-level reasoning_effort)
 # /v1/messages: thinking.type = enabled|disabled; output_config.effort = high|max
 # /v1/responses: reasoning.effort = none|high|max
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 status = "beta"
 
-reasoning_options = [
-  { type = "effort", values = ["none", "high", "max"] },
-]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.14
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

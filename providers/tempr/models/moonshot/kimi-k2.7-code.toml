@@ -1,12 +1,16 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
 # No reasoning control for this model: it reasons at its own depth, and the
 # x-tempr-reasoning-effort response header reports "default".
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
 
-reasoning_options = []
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.19
+[cost.text.output]
+price = 4

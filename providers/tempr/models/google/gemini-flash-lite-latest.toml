@@ -2,14 +2,16 @@
 # Effort: reasoning.effort = minimal|low|medium|high (alias: top-level reasoning_effort)
 # /v1/messages: output_config.effort = minimal|low|medium|high
 # /v1/responses: reasoning.effort = minimal|low|medium|high
+schema = 2
 base_model = "google/gemini-flash-lite-latest"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 
-reasoning_options = [
-  { type = "effort", values = ["minimal", "low", "medium", "high"] },
-]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
 
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.03
+[cost.text.output]
+price = 2.5

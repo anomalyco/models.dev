@@ -4,17 +4,16 @@
 # Budget: reasoning.max_tokens (integer reasoning tokens)
 # /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high; thinking.budget_tokens
 # /v1/responses: reasoning.effort = none|low|medium|high
+schema = 2
 base_model = "anthropic/claude-opus-4-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
 structured_output = true
 
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "high"] },
-  { type = "budget_tokens", min = 1024 },
-]
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[cost.text.output]
+price = 25
