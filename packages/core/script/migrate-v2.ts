@@ -4,6 +4,7 @@
 //   bun packages/core/script/migrate-v2.ts lab <lab-id>
 //   bun packages/core/script/migrate-v2.ts provider <provider-id>
 
+import { lstat, realpath } from "node:fs/promises";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 
@@ -50,6 +51,20 @@ for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: dir, absolute: tr
   migrated++;
 }
 console.log(`Migrated ${migrated} files in ${path.relative(root, dir)}`);
+
+// The scan above skips symlinked files. They share their target's file, which has
+// to be migrated with the target's provider, so list the ones still on v1.
+const v1Links: string[] = [];
+for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: dir, absolute: true, followSymlinks: true })) {
+  if (!(await lstat(file)).isSymbolicLink()) continue;
+  const target = await realpath(file);
+  if (isSchemaV2(Bun.TOML.parse(await Bun.file(target).text()) as Record<string, unknown>)) continue;
+  v1Links.push(`${path.relative(root, file)} -> ${path.relative(root, target)}`);
+}
+if (v1Links.length > 0) {
+  console.error(`Symlinks to v1 files (migrate the target's lab or provider):\n  ${v1Links.join("\n  ")}`);
+  process.exitCode = 1;
+}
 
 function migrateLab(text: string, toml: Record<string, unknown>, modelID: string) {
   const before = ModelMetadata.parse({ ...toml, id: modelID });
