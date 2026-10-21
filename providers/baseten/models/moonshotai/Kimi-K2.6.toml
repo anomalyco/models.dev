@@ -1,23 +1,18 @@
 # Opt in with chat_template_args.enable_thinking=true. Baseten documents no
 # explicit false behavior, effort values, or reasoning-token budget.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Lab identity: model slug = Hugging Face repo moonshotai/Kimi-K2.6
 schema = 2
-name = "Kimi K2.6"
+base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-open_weights = true
-knowledge = "2025-01"
-release_date = "2026-04-21"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 
 [limit]
 context = 262_000

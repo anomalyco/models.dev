@@ -1,23 +1,14 @@
 # This deprecated model is absent from Baseten's current reasoning support table;
 # no toggle, effort, or budget request field is documented for it.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Lab identity: model slug = Hugging Face repo MiniMaxAI/MiniMax-M2.5
 schema = 2
-name = "MiniMax-M2.5"
+base_model = "minimax/MiniMax-M2.5"
 description = "Legacy model retained for compatibility with older integrations"
-family = "minimax"
-open_weights = true
-knowledge = "2026-01"
-release_date = "2026-02-12"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
 context = 204_000
