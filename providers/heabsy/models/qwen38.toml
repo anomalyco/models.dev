@@ -3,23 +3,17 @@
 # API reference: https://api.heabsy.com/docs
 # Pricing (accessed 2026-10-21, https://heabsy.com/models/qwen38): $1.00 input, $0.0761 cached input,
 # $3.00 output per 1M tokens.
-# Reasoning: the model page says thinking can be switched per request.
-# Toggle: reasoning.enabled = true|false, thinking.type = "disabled", or reasoning_effort = "none"
-# (also "off"/"disabled"); the gateway maps these onto the Qwen chat template's enable_thinking.
-# Effort: reasoning_effort = "low"|"medium"|"xhigh" is passed through to the Qwen3.8 chat template, the
-# same ladder as the lab and the other hosts; "high"/"max" are folded to "xhigh", "minimal" to "low".
-# Modalities: the catalog lists text and image input for this model (model page: "reads images and
-# documents as well as text"); video is not listed, so the base model's video input is not inherited.
+# Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off, so no separate toggle).
+# Probed live against api.heabsy.com/v1/chat/completions on 2026-10-21 (temperature 0, fixed prompt,
+# three runs per level; reasoning tokens from usage.completion_tokens_details.reasoning_tokens):
+# none 0/0/0 (2 completion tokens); low 90/90/90; medium 95/95/95; xhigh 123/123/123, the same as
+# the omitted default. high is accepted and folded to xhigh, so it is not listed.
+# Modalities: inherited from the base model; a video_url input was accepted (HTTP 200) in the same probe.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
-structured_output = true
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 
 [cost.text.input]
 price = 1.0
