@@ -7,8 +7,12 @@
 # of a tool-calling request to be a user message.
 # opencode sends its system prompt first with tools; OCI rejects that for Llama models
 # (400 "Tool calling for this Llama model requires the first message to be a user message").
+# Deprecated: OCI's on-demand retirement table lists Meta Llama 3.3 70B with retirement "P1" (at least one month after
+# the first replacement) and names Llama 4 Maverick and Scout as replacements, so retirement is scheduled.
+# https://docs.oracle.com/en-us/iaas/Content/generative-ai/deprecating-on-demand.htm (checked 2026-10-21)
 schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = false }
