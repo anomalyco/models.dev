@@ -1,10 +1,12 @@
 # Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
-# Reasoning: the catalog lists `reasoning` in supported_parameters; the control set is unchanged from v1 (not re-tested, no API key).
+# Reasoning: FastRouter documents no controls of its own (the catalog lists `reasoning`), so these are DeepSeek's, as in providers/deepseek:
+# Toggle: thinking.type = enabled|disabled (lab wire field; https://api-docs.deepseek.com/guides/thinking_mode)
+# Effort: reasoning_effort = low|high|max (lab wire field)
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [cost.text.input]

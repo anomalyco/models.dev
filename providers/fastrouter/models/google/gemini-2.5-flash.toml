@@ -1,9 +1,10 @@
 # Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
-# Not represented: catalog audio_input $1 (cached $0.1); the catalog lists no audio input modality.
 # Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices.
 # Not represented: cache storage $1.0/MTok per hour isn't representable.
 # Not represented: web search $35 per 1K requests (no v2 per-request field).
 # Reasoning: the catalog lists no reasoning parameter for this route; the control set is unchanged from v1 (not re-tested, no API key).
+# Toggle/Budget: generationConfig.thinkingConfig.thinkingBudget = 0 (off) | 0..24576 (lab wire field, https://ai.google.dev/gemini-api/docs/thinking; FastRouter documents no mapping)
+# Audio: catalog audio_input / cached_audio_input.
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
@@ -22,9 +23,13 @@ cache = { read = 0.03 }
 [cost.text.output]
 price = 2.5
 
+[cost.audio.input]
+price = 1
+cache = { read = 0.1 }
+
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }
-factor = { text = { input = { price = 0.5 }, output = 0.5 } }
+factor = { text = { input = { price = 0.5 }, output = 0.5 }, audio = { input = { price = 0.5 } } }
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }
