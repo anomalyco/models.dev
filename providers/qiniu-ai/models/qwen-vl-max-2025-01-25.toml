@@ -1,6 +1,8 @@
 # Status: deprecated. Qiniu's model square lists retirement_at 2026-07-08 (retired).
 # Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
 # converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+# Modalities: image and video formats from the Model Studio vision guide, Image limits and Video limits (https://www.alibabacloud.com/help/en/model-studio/vision).
+# Audio stays generic: no audio format is documented for Qwen-VL-Max.
 schema = 2
 name = "Qwen VL-MAX-2025-01-25"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -9,7 +11,7 @@ release_date = "2025-08-05"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "audio", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]

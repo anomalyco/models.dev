@@ -1,6 +1,6 @@
 # Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
 # https://api.venice.ai/api/v1/models?type=text
-# Modalities: video from Venice's docs. Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
+# Modalities: image from the Model Studio vision guide, Image limits (https://www.alibabacloud.com/help/en/model-studio/vision); video from Venice's docs. Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
 # Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
 # leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
 # on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
@@ -12,7 +12,7 @@ base_model = "alibaba/qwen3.7-max"
 name = "Qwen 3.7 Max"
 
 [modalities]
-input = ["text", "image", "video/mp4", "video/mpeg", "video/quicktime", "video/webm"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/mpeg", "video/quicktime", "video/webm"]
 output = ["text"]
 
 [capabilities]

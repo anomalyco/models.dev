@@ -1,9 +1,10 @@
+# Modalities: image formats from the lab.
 schema = 2
 base_model = "meta/muse-spark-1.2"
 name = "Muse Spark 1.2 (Meta)"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

@@ -3,6 +3,8 @@
 # releases (2025-08 and later versions) without saying which one the endpoint serves.
 # Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
 # image generation takes steps and guidance, not sampling temperature.
+# Output: the hosted endpoint returns a base64 JPEG artifact; its image field accepts only null, so image input
+# has no format (https://docs.nvidia.com/nim/visual-genai/latest/api/qwen-image.html).
 schema = 2
 type = "image"
 name = "Qwen Image"
@@ -13,7 +15,7 @@ release_date = "2025-08-07"
 
 [modalities]
 input = ["text", "image"]
-output = ["image"]
+output = ["image/jpeg"]
 
 [capabilities]
 tools = { supported = false }

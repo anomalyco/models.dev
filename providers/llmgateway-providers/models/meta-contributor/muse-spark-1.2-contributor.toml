@@ -1,3 +1,4 @@
+# Modalities: image formats from models/meta/muse-spark-1.2.toml (same model)
 schema = 2
 name = "Muse Spark 1.2 Contributor (Meta Contributor)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -6,7 +7,7 @@ open_weights = false
 release_date = "2026-08-06"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

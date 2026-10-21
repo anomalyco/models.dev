@@ -1,5 +1,7 @@
 # NVIDIA API: HTTP 410 Gone on POST https://ai.api.nvidia.com/v1/cosmos/nvidia/cosmos-transfer1-7b — end of life
 # 2026-09-09T09:00:00Z (probed 2026-10-21)
+# Formats: video and control video mp4 in, mp4 out (https://build.nvidia.com/nvidia/cosmos-transfer1-7b.md);
+# the card lists no image format, so image stays generic.
 schema = 2
 type = "video"
 name = "cosmos-transfer1-7b"
@@ -10,8 +12,8 @@ last_updated = "2025-06-30"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "video"]
-output = ["video"]
+input = ["text", "image", "video/mp4"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

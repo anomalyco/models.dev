@@ -1,5 +1,5 @@
 # Type speech: text in, audio out "in wav format" (https://build.nvidia.com/nvidia/magpie-tts-zeroshot); the zero-shot
-# voice prompt is reference audio, whose format the card doesn't list.
+# voice prompt is a 16-bit mono WAV (https://docs.nvidia.com/nim/speech/latest/tts/voice-cloning.html).
 # Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21).
 schema = 2
 type = "speech"
@@ -10,7 +10,7 @@ release_date = "2025-05-22"
 last_updated = "2025-06-12"
 
 [modalities]
-input = ["text", "audio"]
+input = ["text", "audio/wav"]
 output = ["audio/wav"]
 
 [capabilities]

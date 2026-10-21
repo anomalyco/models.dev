@@ -1,4 +1,5 @@
 # Retired: absent from GET https://zenmux.ai/api/v1/models and its model page redirects to /bytedance/doubao-seed-code (2026-10-21).
+# Modalities: image formats from the Volcengine Ark image understanding, 图片格式说明 table (https://www.volcengine.com/docs/82379/1362931).
 schema = 2
 name = "Doubao-Seed-Code"
 description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
@@ -8,7 +9,7 @@ release_date = "2025-11-11"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic"]
 output = ["text"]
 
 [capabilities]

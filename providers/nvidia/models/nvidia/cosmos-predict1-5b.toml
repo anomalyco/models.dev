@@ -1,6 +1,7 @@
 # Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
 # and POST https://ai.api.nvidia.com/v1/cosmos/nvidia/cosmos-predict1-5b returns 404 "Function ...: Not found for
 # account" (probed 2026-10-21).
+# Formats: images jpg, png, jpeg or webp and video mp4 in, mp4 out (https://build.nvidia.com/nvidia/cosmos-predict1-5b.md).
 schema = 2
 type = "video"
 name = "cosmos-predict1-5b"
@@ -10,8 +11,8 @@ release_date = "2025-03-18"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "video"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

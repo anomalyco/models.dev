@@ -1,6 +1,9 @@
 # Type: video generation (Qiniu video API: https://developer.qiniu.com/aitokenapi/13388/new-video-generate-kling-api).
 # Prices: Qiniu's model square lists per-second video prices by mode (std/pro, with or without audio and
 # voice, motion control, 0.5-1.2 CNY/s). The mode names don't map to v2 conditions, so none are recorded.
+# Formats: image inputs .jpg, .jpeg or .png (Qiniu Kling series doc above); output MP4
+# (https://app.klingai.com/global/dev/document-api/apiReference/model/imageToVideo). Qiniu's MP4/MOV reference
+# video rule is documented only for kling-video-o1, so video input stays generic.
 schema = 2
 type = "video"
 name = "Kling-V2 6"
@@ -9,8 +12,8 @@ open_weights = false
 release_date = "2026-01-13"
 
 [modalities]
-input = ["text", "image", "video"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

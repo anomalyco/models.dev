@@ -1,4 +1,6 @@
-# Modalities: Qiniu's model square lists text, image and video input (the lab lists text only), so the generic kinds are kept.
+# Modalities: Qiniu's model square lists text, image and video input (the lab lists text only). Image formats from the
+# Volcengine Ark image understanding, 图片格式说明 table (https://www.volcengine.com/docs/82379/1362931); video formats from the
+# Volcengine Ark video understanding, 视频格式说明 table (https://www.volcengine.com/docs/82379/1895586).
 # Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
 # Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
 # Status: deprecated. Qiniu's model square lists retirement_at 2026-08-14 (retired).
@@ -11,7 +13,7 @@ name = "Doubao-Seed 1.6"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video/mp4", "video/x-msvideo", "video/quicktime"]
 output = ["text"]
 
 [capabilities]

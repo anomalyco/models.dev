@@ -1,3 +1,4 @@
+# Modalities: image formats JPEG, PNG, WebP, GIF (https://docs.llmgateway.io/features/vision)
 schema = 2
 name = "Reka Edge 2603 (reka-ai)"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
@@ -6,7 +7,7 @@ open_weights = false
 release_date = "2026-10-09"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

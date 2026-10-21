@@ -1,4 +1,6 @@
 # Retired: absent from GET https://zenmux.ai/api/v1/models and its model page shows Sunset (2026-10-21).
+# Modalities: StepFun lists JPG/JPEG, PNG, static GIF and WebP images for its vision models
+# (https://platform.stepfun.com/docs/zh/guides/developer/image-chat.md).
 schema = 2
 name = "Step-3"
 description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
@@ -8,7 +10,7 @@ release_date = "2025-07-31"
 status = "deprecated"
 
 [modalities]
-input = ["image", "text"]
+input = ["image/jpeg", "image/png", "image/gif", "image/webp", "text"]
 output = ["text"]
 
 [capabilities]

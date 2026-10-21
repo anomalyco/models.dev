@@ -2,6 +2,7 @@
 # value (or omitting the field) leaves it on. The gateway maps it to the
 # deployment's thinking switch.
 # https://docs.llmgateway.io/features/reasoning
+# Modalities: image formats from models/zhipuai/glm-4.6v.toml (same model)
 schema = 2
 name = "GLM-4.6V FlashX (Z AI)"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
@@ -10,7 +11,7 @@ open_weights = false
 release_date = "2025-12-08"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

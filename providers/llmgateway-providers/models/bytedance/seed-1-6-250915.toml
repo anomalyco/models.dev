@@ -1,3 +1,4 @@
+# Modalities: image formats from models/bytedance-seed/seed-1-6-vision.toml (same model)
 schema = 2
 name = "Seed 1.6 (250915) (ByteDance)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -6,7 +7,7 @@ open_weights = false
 release_date = "2025-09-15"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic"]
 output = ["text"]
 
 [capabilities]
