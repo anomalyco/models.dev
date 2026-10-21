@@ -1,22 +1,12 @@
 # Deprecated: no longer in the serverless catalog (https://docs.together.ai/docs/serverless-models,
 # accessed 2026-10-21); requests return 400 "Unable to access non-serverless model" (live 2026-10-21).
 schema = 2
+base_model = "alibaba/qwen2.5-7b-instruct"
 name = "Qwen 2.5 7B Instruct Turbo"
-description = "Efficient Qwen model for fast chat, extraction, and high-volume workloads"
-family = "qwen"
-open_weights = true
-release_date = "2024-09-19"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 32_768

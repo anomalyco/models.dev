@@ -4,15 +4,16 @@
 # Serverless: $2.50 input, $0.50 cached input, $7.50 output per 1M; structured outputs: yes
 # (https://docs.together.ai/docs/serverless-models and GET https://api.together.xyz/v1/models,
 # accessed 2026-10-21).
-# Reasoning: kept false as before. Together's reasoning guide doesn't list it
-# (https://docs.together.ai/docs/inference/chat/reasoning) and the route couldn't be probed.
+# Reasoning: on, as on Alibaba's own API, where Qwen3.7 Max thinks by default (lab file and
+# https://www.alibabacloud.com/help/en/model-studio/qwen3-7-max); Together forwards the request there.
+# No control is documented for this route (https://docs.together.ai/docs/inference/chat/reasoning).
 # Not probed: the route forwards prompts to a third-party provider and returns 403 unless the
 # organization enables third-party data sharing.
 schema = 2
 base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true }
 cache = { supported = true, implicit = true, explicit = false }
 structured_output = true
 prompt_cache_key = true

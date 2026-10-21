@@ -1,0 +1,31 @@
+# Model card (https://huggingface.co/LiquidAI/LFM2-24B-A2B): 24B MoE with 2B active parameters, "a
+# general-purpose instruct model (without reasoning traces)", context length 32,768 tokens, native function
+# calling, LFM Open License v1.0. Published 2026-02-24 (Hugging Face API createdAt).
+# Output: no separate generation cap is published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "LFM2 24B A2B"
+description = "Efficient open Liquid MoE instruct model for on-device chat and tool calling"
+family = "liquid"
+open_weights = true
+release_date = "2026-02-24"
+license = "LFM Open License v1.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LiquidAI/LFM2-24B-A2B"

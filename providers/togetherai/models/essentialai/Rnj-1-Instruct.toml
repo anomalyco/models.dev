@@ -3,26 +3,8 @@
 # Requests return 400 "Unable to access non-serverless model" (live 2026-10-21); the same model
 # under togethercomputer/EssentialAI-RNJ-1-Instruct returns the same error.
 schema = 2
-name = "Rnj-1 Instruct"
-description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-family = "rnj"
-open_weights = true
-knowledge = "2024-10"
-release_date = "2025-12-05"
+base_model = "essentialai/rnj-1-instruct"
 status = "deprecated"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 32_768
-output = 32_768
 
 [cost.text.input]
 price = 0.15

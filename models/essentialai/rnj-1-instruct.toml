@@ -1,0 +1,31 @@
+# Model card (https://huggingface.co/EssentialAI/rnj-1-instruct): 8B dense instruction-tuned model from
+# Essential AI for code and STEM with tool calling; context extended to 32K during mid-training; Apache 2.0.
+# Published 2025-12-04 (Hugging Face API createdAt).
+# Output: no separate generation cap is published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Rnj-1 Instruct"
+description = "Open 8B Essential AI model for code, STEM reasoning, and agentic tool use"
+family = "rnj"
+open_weights = true
+release_date = "2025-12-04"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/EssentialAI/rnj-1-instruct"

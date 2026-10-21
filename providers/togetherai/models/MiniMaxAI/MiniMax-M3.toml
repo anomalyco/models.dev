@@ -1,4 +1,5 @@
-# Serverless: $0.30 input, $0.06 cached input, $1.20 output per 1M; context 524,288 (accessed 2026-10-21):
+# Serverless: $0.30 input, $0.06 cached input, $1.20 output per 1M; context 524,288 (accessed 2026-10-21).
+# Output 250,000 is kept from the earlier entry; Together caps max_tokens only by context (see provider.toml):
 # https://docs.together.ai/docs/serverless-models
 # Toggle: thinking.type = enabled|disabled (live 2026-10-21: disabled returns 0 reasoning tokens).
 # Together lists M3 as hybrid (https://docs.together.ai/docs/inference/chat/reasoning), but
@@ -27,6 +28,7 @@ prompt_cache_key = true
 
 [limit]
 context = 524_288
+output = 250_000
 
 [cost.text.input]
 price = 0.3
