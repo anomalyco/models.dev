@@ -1,19 +1,18 @@
+# Lab identity: https://cloud-api.near.ai/v1/models hugging_face_id = Qwen/Qwen3-VL-30B-A3B-Instruct
+# Text and image on /v1/chat/completions (https://docs.near.ai/cloud/guides/specialized-endpoints#vision-image-input; catalog input_modalities); no video.
+# Cache: automatic prefix caching on NEAR-hosted (TEE) models, no request changes (https://docs.near.ai/cloud/guides/prompt-caching).
 schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
 name = "Qwen3-VL 30B-A3B Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-open_weights = true
-release_date = "2025-09-23"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
+cache = { supported = true, implicit = true }
 
 [limit]
 context = 16_384

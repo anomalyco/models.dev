@@ -1,11 +1,13 @@
 # Pricing: https://near.ai/models/anthropic/claude-sonnet-5-5 (Input $2 / Output $10 / Cache read $0.1 per 1M, 1000K context)
 # Lab specs/pricing: https://platform.claude.com/docs/en/models/sonnet-5-5/overview (1M context, 128K output, $2/$10, cache read $0.10)
 # Reasoning: adaptive effort low|medium|high|xhigh|max per https://platform.claude.com/docs/en/build-with-claude/effort (Sonnet 5.5 supports all five, default high) and providers/anthropic/models/claude-sonnet-5-5.toml; NEAR gateway passes provider-native controls https://docs.near.ai/cloud/reasoning-models
+# structured_output: https://cloud-api.near.ai/v1/models supported_features lists structured_outputs.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [cost.text.input]
 price = 2

@@ -1,18 +1,9 @@
+# Lab identity: https://cloud-api.near.ai/v1/models hugging_face_id = Qwen/Qwen3-Reranker-0.6B
+# Served on POST /v1/rerank (https://docs.near.ai/cloud/guides/specialized-endpoints).
+# Limit and price: https://cloud-api.near.ai/v1/models (context_length, max_output_length, per-token pricing).
 schema = 2
-name = "Qwen3 Reranker 0.6B"
+base_model = "alibaba/qwen3-reranker-0.6b"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
-family = "qwen"
-open_weights = true
-release_date = "2025-06-03"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
 context = 40_960
