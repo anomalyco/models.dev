@@ -1,14 +1,19 @@
-# Opt in with chat_template_args.enable_thinking=true. Baseten documents no
-# explicit false behavior, effort values, or reasoning-token budget.
+# Reasoning is off by default. Baseten documents reasoning_effort = none | high:
+# none turns reasoning off, high turns it on (chat_template_args.enable_thinking
+# also works). No reasoning-token budget is documented.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is kept in place (cached prefix survives, instruction followed); changing reasoning_effort between turns keeps the cached prefix; adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron Ultra"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = true
 
 [limit]
 context = 202_800

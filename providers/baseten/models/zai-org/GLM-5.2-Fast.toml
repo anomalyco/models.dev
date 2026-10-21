@@ -4,6 +4,7 @@
 # No reasoning-token budget is documented.
 # https://docs.baseten.co/inference/model-apis/overview
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is kept in place (cached prefix survives, instruction followed); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 Fast"
@@ -13,9 +14,12 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576

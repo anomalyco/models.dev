@@ -4,6 +4,7 @@
 # documented. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Image MIME types are the lab's; Baseten's vision guide lists the model but no formats (https://docs.baseten.co/inference/model-apis/vision).
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is kept in place (cached prefix survives, instruction followed); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -13,10 +14,13 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 temperature = true
 cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [limit]
 output = 262_144

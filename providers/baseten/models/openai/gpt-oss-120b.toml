@@ -4,15 +4,19 @@
 # returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Lab identity: model slug = Hugging Face repo openai/gpt-oss-120b
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "OpenAI GPT 120B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 128_072

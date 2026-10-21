@@ -2,6 +2,7 @@
 # so reasoning cannot be disabled.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Image MIME types are the lab's; Baseten's vision guide lists the model but no formats (https://docs.baseten.co/inference/model-apis/vision).
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
@@ -15,6 +16,7 @@ output = ["text"]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
+system_updates = false
 
 [limit]
 context = 1_048_576

@@ -4,16 +4,20 @@
 # https://docs.baseten.co/inference/model-apis/overview
 # https://www.baseten.co/library/deepseek-v41-flash/
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is kept in place (cached prefix survives, instruction followed); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Fast"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 temperature = false
 cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
