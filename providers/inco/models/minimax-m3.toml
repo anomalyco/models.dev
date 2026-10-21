@@ -1,6 +1,7 @@
 # Always reasons on Inco; no caller control — toggle fields (thinking.type,
 # chat_template_kwargs.thinking/enable_thinking, reasoning) were tested and are
 # ignored. reasoning_content interleaved field verified against Inco responses.
+# Prices from https://api.inco.ai/v1/models (public, checked 2026-10-21), including cached input.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
@@ -12,6 +13,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.3
+cache = { read = 0.06 }
 
 [cost.text.output]
 price = 1.2

@@ -2,6 +2,8 @@
 # Inco; reasoning_effort and thinking.type are accepted but ignored). Reasons
 # by default; reasoning_content interleaved field verified against Inco
 # responses.
+# Prices from https://api.inco.ai/v1/models (public, checked 2026-10-21), including cached input.
+# Fast route is 2x the standard glm-5.3-flash price (was listed at the standard 0.15/0.50).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -13,7 +15,8 @@ structured_output = true
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.15
+price = 0.3
+cache = { read = 0.06 }
 
 [cost.text.output]
-price = 0.5
+price = 1
