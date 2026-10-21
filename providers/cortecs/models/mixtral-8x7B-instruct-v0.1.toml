@@ -1,11 +1,8 @@
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort is a per-request field with no per-turn effort mechanism (effort_updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: not supported by the routed providers (amazon_ireland, amazon_paris). https://docs.cortecs.ai/routing/prompt-caching
 schema = 2
-name = "Mixtral 8x7B Instruct v0.1"
+base_model = "mistral/mixtral-8x7b-instruct-v0.1"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-open_weights = true
-knowledge = "2023-09"
-release_date = "2023-12-11"
 
 [modalities]
 input = ["text", "application/pdf"]
@@ -16,7 +13,6 @@ tools = { supported = false }
 reasoning = { supported = true }
 cache = { supported = false }
 structured_output = true
-temperature = true
 effort_updates = false
 
 [limit]
