@@ -1,4 +1,5 @@
 # Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Limit: the catalog's max_output_tokens 200000 is above Gemini's documented 65536 (lab); the lab value is inherited.
 # Cache: Gemini is implicit-only (no cache_control); minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 # Effort: top-level reasoning_effort, converted to a Gemini thinking budget (none/disable 0, low 1024, medium 2048, high 4096); https://docs.jiekou.ai/docs/providers/gemini.
 schema = 2
@@ -13,9 +14,6 @@ output = ["text"]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 cache = { supported = true, implicit = { min_tokens = 4_096 } }
 structured_output = true
-
-[limit]
-output = 200_000
 
 [cost.text.input]
 price = 1.1875
