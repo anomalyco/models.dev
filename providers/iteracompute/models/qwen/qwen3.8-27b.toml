@@ -14,18 +14,24 @@
 # https://iteracompute.com/models/qwen3-8-27b/: Free=128K, Starter=128K, Pro=256K.
 # All three tiers remain $0/token; recharge unlocks allowances/context, not token-price bands.
 # This entry publishes the default Free context, so no paid [[cost.tiers]] apply.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
 
 [limit]
 context = 131_072
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

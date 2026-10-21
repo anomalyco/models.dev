@@ -7,15 +7,20 @@
 # Host capability recheck (2026-10-15), exact record id = "deepseek/deepseek-v4-pro-0813":
 # /v1/models data[id].reasoning: mandatory=true, supports_enable_disable=false,
 # supported_efforts=["low","high","max"]. This host exposes effort and rejects reasoning off.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[cost]
-input = 0.89
-output = 2.69
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 393_216
+
+[cost.text.input]
+price = 0.89
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.69

@@ -4,17 +4,23 @@
 # https://iteracompute.com/models/glm-5-3-flash/ (retail USD/MTok prices, context, and vision)
 # Effort wire path: reasoning_effort = low|high|max; reasoning.effort is also accepted.
 # The host advertises mandatory = true and supports_enable_disable = false.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = false
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[cost]
-input = 0.099
-output = 0.35
-cache_read = 0.025
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.099
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.35
