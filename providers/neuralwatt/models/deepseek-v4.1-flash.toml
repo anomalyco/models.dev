@@ -8,8 +8,10 @@
 # declared.
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://portal.neuralwatt.com/docs/api/models
+# Lab: GET /v1/models lists huggingface_id deepseek-ai/DeepSeek-V4.1-Flash-1017 for this id (checked 2026-10-21).
 schema = 2
-base_model = "deepseek/deepseek-v4.1-flash"
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }

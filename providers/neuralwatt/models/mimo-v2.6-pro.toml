@@ -15,7 +15,7 @@ schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "audio/mpeg", "audio/wav", "audio/flac", "audio/mp4", "audio/ogg"]
 output = ["text"]
 
 [capabilities]
