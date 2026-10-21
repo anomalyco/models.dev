@@ -5,7 +5,7 @@
 # Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
 # (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
 # APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/glm-4-6v-flash:generateContent
-# Modalities: catalog input_modalities = text, image, video, file; this narrows the lab where it lists more.
+# Modalities: catalog input_modalities = text, image, video, file (`file` = PDF in the sync); the model page lists "image, video, file, and text understanding" and the document_understanding feature. PDF is a host addition over the lab.
 schema = 2
 base_model = "zhipuai/glm-4.6v-flash"
 name = "GLM 4.6V Flash"
