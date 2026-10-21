@@ -5,9 +5,11 @@
 #   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
 # Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
 #   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+# Knowledge: unsourced. "2025-01" is kept from the earlier Ollama file; the MiniMax model card and lab file state no cutoff.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "minimax-m3"
+knowledge = "2025-01"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
 
 [capabilities]
