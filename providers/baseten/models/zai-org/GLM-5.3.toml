@@ -1,4 +1,5 @@
-# Effort: reasoning_effort = low|high|max; reasoning cannot be disabled.
+# Effort: reasoning_effort = none|low|high|max (default high); none runs at low,
+# so reasoning cannot be disabled.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Pricing: https://www.baseten.co/pricing
 schema = 2
@@ -11,7 +12,7 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 

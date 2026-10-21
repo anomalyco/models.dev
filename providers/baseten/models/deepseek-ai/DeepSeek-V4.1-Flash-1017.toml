@@ -1,8 +1,6 @@
-# Baseten's reasoning docs do not list the 1017 slug yet; its library page
-# advertises configurable reasoning effort. Controls match Baseten's documented
-# DeepSeek V4.1 Flash API: top-level reasoning_effort = none | high (default) |
-# max. "low" is not supported (it runs at the default depth). Reasoning output
-# is returned in reasoning_content.
+# Baseten documents top-level reasoning_effort = none | low | medium | high
+# (default) | max for DeepSeek V4.1 Flash 1017, each run as sent. Reasoning
+# output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # https://www.baseten.co/library/deepseek-v41-flash-1017/
 schema = 2
@@ -10,7 +8,7 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 
