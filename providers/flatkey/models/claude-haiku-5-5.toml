@@ -1,0 +1,14 @@
+# Pricing: https://flatkey.ai/models (accessed 2026-10-21), USD per 1M tokens; "Cache" column = cache read.
+# Reasoning controls mirror the first-party API; Flatkey relays OpenAI-compatible Chat Completions.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 0.4

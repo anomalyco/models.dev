@@ -1,0 +1,14 @@
+# Pricing: https://flatkey.ai/models (accessed 2026-10-21), USD per 1M tokens; "Cache" column = cache read.
+# Reasoning controls mirror the first-party API; Flatkey relays OpenAI-compatible Chat Completions.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+
+[cost.text.input]
+price = 0.84
+cache = { read = 0.156 }
+
+[cost.text.output]
+price = 2.64

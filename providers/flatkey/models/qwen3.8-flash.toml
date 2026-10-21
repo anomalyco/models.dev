@@ -1,0 +1,14 @@
+# Pricing: https://flatkey.ai/models (accessed 2026-10-21), USD per 1M tokens; "Cache" column = cache read.
+# Reasoning controls mirror the first-party API; Flatkey relays OpenAI-compatible Chat Completions.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.0128 }
+
+[cost.text.output]
+price = 0.376
