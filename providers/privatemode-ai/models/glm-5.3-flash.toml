@@ -1,5 +1,5 @@
 # Sources (accessed 2026-10-02):
-# Model overview (preview, 1M context): https://docs.privatemode.ai/models/overview/#glm-53-flash
+# Model overview (1M context): https://docs.privatemode.ai/models/overview/#glm-53-flash
 # Pricing (EUR): https://docs.privatemode.ai/pricing/
 # Context 1M in v1.57.0, still current in v1.58.0: https://docs.privatemode.ai/release/#v1570
 # Added in v1.56.0: https://docs.privatemode.ai/release/#v1560
@@ -10,12 +10,13 @@
 # matching other Privatemode catalog entries.
 # EUR/MTok: input 0.20 / output 0.65 / cached input 0.05
 # Host exposes text+image only (docs); lab base also lists video/pdf.
+# Status: GA; the models overview no longer marks GLM-5.3 or GLM-5.3-Flash as preview
+# (only DeepSeek-OCR-2), accessed 2026-10-21.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-status = "beta"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
