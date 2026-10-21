@@ -19,11 +19,14 @@
 # at the served context rather than inheriting the lab's larger 262_144.
 # modalities.input: this host routes ["text", "image"], narrower than the lab's
 # ["text", "image", "video"].
+# Deprecated: no longer listed on https://melious.ai/hub/models (44 models, accessed
+# 2026-10-21); its hub page no longer loads.
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

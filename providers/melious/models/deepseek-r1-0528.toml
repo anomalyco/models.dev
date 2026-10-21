@@ -16,8 +16,11 @@
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
 # limit.context: the catalog reports 164_000 for this deployment, not the lab's
 # 128_000.
+# Deprecated: no longer listed on https://melious.ai/hub/models (44 models, accessed
+# 2026-10-21); its hub page no longer loads.
 schema = 2
 base_model = "deepseek/deepseek-r1"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }
