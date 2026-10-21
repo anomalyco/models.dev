@@ -4,15 +4,18 @@
 # POST /v1/chat/completions (see providers/bothub/provider.toml); no
 # thinking.type toggle is documented for this host. Levels verified
 # against the bothub model page; "none" disables reasoning.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
 structured_output = true
 
-interleaved = true
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
+[cost.text.input]
+price = 1.61
 
-[cost]
-input = 1.61
-output = 4.84
+[cost.text.output]
+price = 4.84

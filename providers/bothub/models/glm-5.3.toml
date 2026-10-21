@@ -3,15 +3,18 @@
 # RUB converted to USD at the CBR rate 85.4594 RUB/USD (2026-09-10).
 # Controls mirrored from the lab entry: GLM-5.3 always reasons; effort
 # low|high|max with default max, no toggle.
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-interleaved = true
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 1.72
 
-[cost]
-input = 1.72
-output = 5.41
+[cost.text.output]
+price = 5.41
