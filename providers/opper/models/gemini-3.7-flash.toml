@@ -1,10 +1,14 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
+# Cache: OpenAI and Gemini cache automatically with no flag; https://docs.opper.ai/build/gateway/prompt-caching (2026-10-21).
+# Status: every pool member is scheduled to retire 2027-01-28 (successor gemini-3.8-flash) per GET https://api.opper.ai/v3/models?model=gemini-3.7-flash&retired=true (2026-10-21).
 schema = 2
 base_model = "google/gemini-3.7-flash"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }
+cache = { supported = true, implicit = true }
 structured_output = true
 
 [api.chat-completions]

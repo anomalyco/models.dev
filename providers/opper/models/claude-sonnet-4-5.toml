@@ -1,11 +1,13 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
 # Context tiers are conservative pool price ceilings, including marginal-rate bands.
+# Cache: opt-in cache_control (top-level automatic breakpoint or up to 4 per-block), 5m default or ttl 1h; https://docs.opper.ai/build/gateway/prompt-caching (2026-10-21). 1h write = highest pool member cache_creation_1h.
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
 
 [capabilities]
 reasoning = { supported = true }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
 structured_output = true
 
 [api.chat-completions]
@@ -13,12 +15,12 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 3.3
-cache = { read = 0.33, write = 4.125 }
+cache = { read = 0.33, write = { "5m" = 4.125, "1h" = 6.6 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 200_000 } }
 price = 6.6
-cache = { read = 0.66, write = 8.25 }
+cache = { read = 0.66, write = { "5m" = 8.25, "1h" = 13.2 } }
 
 [cost.text.output]
 price = 16.5
