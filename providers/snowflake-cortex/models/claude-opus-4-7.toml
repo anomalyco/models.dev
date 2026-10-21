@@ -1,5 +1,6 @@
 # Cortex REST API (accessed 2026-10-20): https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api (model availability, features, Chat Completions compatibility chart).
 # Generally available (check mark in the model availability table), so the earlier beta status is dropped.
+# The earlier Anthropic `speed = "fast"` mode is removed: Snowflake doesn't document it, the chart has no `speed` field, and the Messages API takes only Bedrock-compatible beta headers.
 # Reasoning: no Chat Completions control is kept for this adaptive-thinking model; the Messages API takes `thinking.type = adaptive` and `output_config.effort`.
 # Pricing: Snowflake Service Consumption Table effective 2026-10-15 (https://www.snowflake.com/legal-files/CreditConsumptionTable.pdf), Table 6(b) Cortex Inference with Prompt Caching, AI Credits per 1M tokens x USD 2.00 per AI Credit (on-demand Global routing, Table 2(b); https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing). Regional routing costs USD 2.20 per AI Credit: the 1.1x multiplier when region is not global.
 # Limits: AI_COMPLETE model restrictions (https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability#model-restrictions); the REST chart caps max_completion_tokens at 131,072.
@@ -9,7 +10,6 @@
 # structured_output: response_format json_schema only (compatibility chart).
 # Compatibility chart: `store` and `service_tier` return an error for every model family, so store = false and no service tier.
 # Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
-# experimental.modes.fast (Anthropic `speed = "fast"`) is kept from v1, but Snowflake doesn't document it (the Messages API takes only Bedrock-compatible beta headers).
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
@@ -35,13 +35,5 @@ cache = { read = 0.5, write = 6.25 }
 price = 25
 
 [[cost.multipliers]]
-when = { service_tier = { equals = "fast" } }
-factor = 6
-
-[[cost.multipliers]]
 when = { not = { region = { equals = "global" } } }
 factor = 1.1
-
-[experimental.modes.fast]
-body = { speed = "fast" }
-headers = { anthropic-beta = "fast-mode-2026-02-01" }
