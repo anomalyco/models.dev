@@ -109,6 +109,7 @@ async function loadProviderV2(
     const model = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
     const tables = isSchemaV2(rawModel) ? ((rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined) : undefined;
     if (tables !== undefined) model.api = toModelApis(tables, resolved, v1Provider, opencodeai);
+    else if (opencodeai !== undefined) model.api = withOpencodePackage(model.api, opencodeai);
     models[modelID] = model;
   }
 
@@ -565,6 +566,17 @@ function toModelApis(
         ...(table.compatibility !== undefined ? { compatibility: table.compatibility } : {}),
       };
       return [protocol, entry];
+    }),
+  ) as ApiV2;
+}
+
+// A model without its own tables uses the provider's default API, so the
+// provider's `opencodeai` replaces the guessed package (`"none"` removes it).
+function withOpencodePackage(api: ApiV2, opencodeai: string): ApiV2 {
+  return Object.fromEntries(
+    Object.entries(api).map(([protocol, entry]) => {
+      const { opencodeai: _guess, ...sdk } = entry.sdk ?? {};
+      return [protocol, { ...entry, sdk: opencodeai === "none" ? sdk : { ...sdk, opencodeai } }];
     }),
   ) as ApiV2;
 }

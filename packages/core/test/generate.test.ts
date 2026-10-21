@@ -566,6 +566,40 @@ sdk = { opencodeai = "none" }
     });
   });
 
+  test("a provider's opencodeai applies to models without tables", async () => {
+    await withFixture(async (root) => {
+      // Cohere-like: the guess would be @opencode/ai/providers/cohere/chat.
+      await write(
+        root,
+        "providers/cohere/provider.toml",
+        `name = "Cohere"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.cohere.ai/compatibility/v1"
+env = ["COHERE_API_KEY"]
+doc = "https://docs.cohere.com/docs/models"
+opencodeai = "@opencode/ai/providers/cohere"
+`,
+      );
+      await write(root, "providers/cohere/models/model.toml", model());
+      await write(root, "providers/silent/provider.toml", providerToml("Silent") + 'opencodeai = "none"\n');
+      await write(root, "providers/silent/models/model.toml", model());
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(providersV2.cohere?.models.model?.api).toEqual({
+        "chat-completions": {
+          base_url: "https://api.cohere.ai/compatibility/v1",
+          sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/cohere" },
+        },
+      });
+      expect(providersV2.silent?.models.model?.api).toEqual({
+        responses: { base_url: "https://api.openai.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+      });
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.cohere).not.toHaveProperty("opencodeai");
+    });
+  });
+
   test("rejects an opencodeai that isn't an @opencode/ai entry point", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/openai"\n'));
