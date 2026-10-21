@@ -1,13 +1,19 @@
+schema = 2
 base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-structured_output = true
 
-[cost]
-input = 0.2
-output = 0.7
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_072
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.7

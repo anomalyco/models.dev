@@ -4,20 +4,23 @@
 # No thinking toggle — K3 always returns reasoning_content.
 # https://huggingface.co/moonshotai/Kimi-K3 (accessed 2026-07-27)
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
+schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 3
-output = 15
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

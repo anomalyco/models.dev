@@ -1,13 +1,19 @@
+schema = 2
 base_model = "thinkingmachines/inkling-small"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-reasoning_options = []
 
-[cost]
-input = 0.5
-output = 1.2
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 524_288
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.2

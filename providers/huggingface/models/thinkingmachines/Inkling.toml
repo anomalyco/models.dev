@@ -1,11 +1,17 @@
+schema = 2
 base_model = "thinkingmachines/inkling"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-
-[cost]
-input = 1
-output = 4.05
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 4.05

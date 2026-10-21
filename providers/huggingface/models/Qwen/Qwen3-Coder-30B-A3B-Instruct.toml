@@ -1,6 +1,11 @@
+schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.07
-output = 0.26
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.26

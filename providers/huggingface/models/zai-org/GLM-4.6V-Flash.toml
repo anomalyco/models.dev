@@ -1,13 +1,19 @@
+schema = 2
 base_model = "zhipuai/glm-4.6v-flash"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.3
-output = 0.9
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 131_072
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.9
