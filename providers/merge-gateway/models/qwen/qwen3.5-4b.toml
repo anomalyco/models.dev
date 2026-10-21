@@ -1,8 +1,9 @@
+# Image MIME types: the lab's (https://www.alibabacloud.com/help/en/model-studio/vision, Image limits); Merge Gateway lists no formats.
 schema = 2
 base_model = "alibaba/qwen3.5-4b"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

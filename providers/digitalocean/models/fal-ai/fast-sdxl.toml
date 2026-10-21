@@ -1,5 +1,7 @@
 # Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (fal models: POST /v1/async-invoke, no OpenAI protocol)
 # Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ($0.00111 per compute second; no cost unit for compute time)
+# Output: fal's input schema `format` enum jpeg|png (https://fal.ai/api/openapi/queue/openapi.json?endpoint_id=fal-ai/fast-sdxl);
+#   DigitalOcean relays the fal input object unchanged.
 schema = 2
 type = "image"
 name = "Fast SDXL"
@@ -11,7 +13,7 @@ last_updated = "2026-04-16"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/jpeg", "image/png"]
 
 [capabilities]
 tools = { supported = false }

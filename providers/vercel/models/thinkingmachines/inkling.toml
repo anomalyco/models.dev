@@ -3,13 +3,14 @@
 # - https://vercel.com/ai-gateway/models/inkling — routes to baseten
 # - https://docs.baseten.co/inference/model-apis/reasoning — Inkling reasoning_effort
 # API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
-# Modalities: generic image kept, the Inkling model cards accept "any pixel-based image input" and list no formats
+# Image MIME types: the lab's, https://tinker-docs.thinkingmachines.ai/cookbook/inkling/images/ ("Formats: PNG and JPEG");
+#   the AI Gateway catalog lists no image formats.
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
 schema = 2
 base_model = "thinkingmachines/inkling"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "application/pdf"]
 output = ["text"]
 
 [capabilities]

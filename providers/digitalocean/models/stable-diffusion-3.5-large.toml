@@ -1,5 +1,7 @@
 # Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/images/generations)
 # Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ($0.08 per image)
+# Output: /v1/images/generations output_format "Supported values: png, webp, jpeg"
+#   (https://docs.digitalocean.com/reference/api/reference/serverless-inference/).
 schema = 2
 type = "image"
 name = "Stable Diffusion 3.5 Large"
@@ -11,7 +13,7 @@ last_updated = "2026-04-30"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png", "image/webp", "image/jpeg"]
 
 [capabilities]
 tools = { supported = false }
