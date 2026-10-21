@@ -5,17 +5,22 @@
 # separate output cap, so output equals context. Do not trust max_output_length
 # from /v1/models -- it reports a placeholder 4096 for most models.
 # Thinking is returned as `reasoning_content` on the message.
+schema = 2
 base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.17
-output = 0.55
 
 [limit]
 context = 131_072
 output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.17
+
+[cost.text.output]
+price = 0.55

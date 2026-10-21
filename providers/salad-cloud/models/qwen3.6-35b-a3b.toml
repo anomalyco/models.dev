@@ -2,18 +2,24 @@
 # Limits and modalities: https://docs.salad.com/ai-gateway/reference/models (accessed 2026-08-04)
 # Reasoning toggle: chat_template_kwargs.enable_thinking true|false.
 # https://github.com/SaladTechnologies/ai-sdk-provider (accessed 2026-08-04)
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 description = "Qwen MoE for agentic tasks, complex reasoning, code generation, and instruction following"
-structured_output = true
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.09
-output = 0.60
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 input = 262_144
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 0.6

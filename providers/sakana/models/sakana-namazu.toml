@@ -1,9 +1,14 @@
 # Toggle: chat_template_kwargs.thinking = true|false
+schema = 2
 base_model = "sakana/sakana-namazu"
-structured_output = true
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4

@@ -11,26 +11,29 @@
 # Limits: context 1_000_000 (context_length), output 65_536 (max_output_length) — same endpoint.
 # Release 2024-05-15: live endpoint returns created = 1715731200 (= 2024-05-15) per model,
 # Last updated 2026-09: current lineup as verified live 2026-09-13 (month precision).
+schema = 2
 name = "Vision Medium"
 description = "Balanced multimodal model pairing a 1M-token context window with deeper reasoning for analysis, content creation, and tool use across text, image, audio, video, and PDF inputs."
+open_weights = false
 release_date = "2024-05-15"
 last_updated = "2026-09"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = []
 
-[cost]
-input = 4.21
-output = 12.63
+[modalities]
+input = ["text", "image", "audio", "video", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image", "audio", "video", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 4.21
+
+[cost.text.output]
+price = 12.63

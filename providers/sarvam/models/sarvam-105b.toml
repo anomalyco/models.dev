@@ -1,25 +1,23 @@
+schema = 2
 name = "Sarvam-105B"
 description = "Flagship Indian-language reasoning model for enterprise multilingual applications"
 family = "sarvam"
+open_weights = true
 release_date = "2026-02-18"
 last_updated = "2026-03-06"
-attachment = false
-reasoning = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["default", "low", "medium", "high"] }
 temperature = true
-tool_call = true
-open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["null", "low", "medium", "high"]
-
-[interleaved]
-field = "reasoning_content"
 
 [limit]
 context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

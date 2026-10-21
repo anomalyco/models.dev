@@ -8,17 +8,23 @@
 # Verified live against POST https://inference.coralbricks.ai/v1/chat/completions (2026-10-04) on this ID: low, high and
 # max return HTTP 200 with reasoning_content; none and no field return 0 reasoning tokens. An image_url part in a user
 # message is answered from the image, so attachment and the image modality come from the base model.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
-interleaved = true
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[cost]
-input = 0.01
-output = 1.2
-cache_read = 0
-cache_write = 0.09
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.01
+cache = { read = 0, write = 0.09 }
+
+[cost.text.output]
+price = 1.2

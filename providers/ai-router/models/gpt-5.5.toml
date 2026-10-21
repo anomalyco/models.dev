@@ -1,9 +1,14 @@
 # Pricing and supported reasoning values: https://ai-router.dev/pricing/
+schema = 2
 base_model = "openai/gpt-5.5"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
-[cost]
-input = 5.00
-output = 30.00
-cache_read = 0.50
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 30

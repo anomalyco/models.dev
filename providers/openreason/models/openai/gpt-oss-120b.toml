@@ -7,13 +7,18 @@
 # advertise them as universally accepted. Reasoning output is returned in
 # the `reasoning_content` field.
 # https://openreason.app
+schema = 2
 base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.1055
-output = 0.422
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.1055
+
+[cost.text.output]
+price = 0.422

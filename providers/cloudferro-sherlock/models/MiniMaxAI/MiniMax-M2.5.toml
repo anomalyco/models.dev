@@ -1,29 +1,31 @@
-name = "MiniMax-M2.5"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
 # Sherlock's published Chat request surface documents no toggle, effort, or
 # reasoning-token budget for this reasoning-only model.
 # https://docs.sherlock.cloudferro.com/ (accessed 2026-06-25)
+schema = 2
+name = "MiniMax-M2.5"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
+open_weights = true
+knowledge = "2026-01"
 release_date = "2026-03-05"
-last_updated = "2026-03-05"
-attachment = false
-reasoning = true
-reasoning_options = []
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 structured_output = true
 temperature = true
-tool_call = true
-knowledge = "2026-01"
-open_weights = true
-
-[cost]
-input = 0.30
-output = 1.20
 
 [limit]
 context = 196_000
 input = 180_000
 output = 16_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

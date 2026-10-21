@@ -4,27 +4,30 @@
 # Echo charges actual serving cost times 1.25, capped at $10/$50 per million
 # input/output tokens. Models.dev has no route-based cost shape, so the catalog
 # uses the documented cap instead of presenting dynamically routed calls as free.
+schema = 2
 name = "Echo"
 description = "Adaptive model for coding, reasoning, and tool-driven agent workflows through one OpenAI-compatible endpoint"
+open_weights = false
 release_date = "2026-07-19"
 last_updated = "2026-08-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
 status = "beta"
 
-[cost]
-input = 10
-output = 50
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+temperature = true
 
 [limit]
 context = 262_144
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 50

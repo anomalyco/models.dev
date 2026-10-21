@@ -1,26 +1,28 @@
+schema = 2
 name = "MiniMax M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
-release_date = "2025-03-01"
-last_updated = "2025-03-01"
 open_weights = false
+release_date = "2025-03-01"
 
-[interleaved]
-field = "reasoning_details"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.29
-output = 1.16
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.29
+
+[cost.text.output]
+price = 1.16

@@ -1,9 +1,11 @@
+schema = 2
 base_model = "sakana/fugu"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["high", "xhigh"] }]
 
 [limit]
 output = 1_000_000
 
-[provider]
-shape = "responses"
+[api.responses]

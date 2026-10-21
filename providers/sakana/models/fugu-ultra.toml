@@ -1,20 +1,27 @@
+schema = 2
 base_model = "sakana/fugu-ultra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["high", "xhigh"] }]
 
 [limit]
 output = 1_000_000
 
-[cost]
-input = 5
-output = 30
-cache_read = 0.5
+[api.responses]
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 10
-output = 45
-cache_read = 1
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
 
-[provider]
-shape = "responses"
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 10
+cache = { read = 1 }
+
+[cost.text.output]
+price = 30
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 45

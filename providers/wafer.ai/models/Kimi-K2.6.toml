@@ -1,17 +1,21 @@
 # Sources (accessed 2026-07-11):
 # - Pricing and model details: https://app.wafer.ai/models
 # - Temperature behavior: https://docs.wafer.ai/serverless/api-reference#kimi-k26-sampling-params-are-stripped
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi K2.6 sparse MoE model with a 262K context window. Available serverless and not included in standard Wafer Pass. Non-ZDR only: requests with `Wafer-ZDR: required` are rejected."
-reasoning_options = [{ type = "toggle" }]
-temperature = false
-structured_output = true
 
-[cost]
-input = 1.14
-output = 4.80
-cache_read = 0.19
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = false
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 1.14
+cache = { read = 0.19, write = 0 }
+
+[cost.text.output]
+price = 4.8

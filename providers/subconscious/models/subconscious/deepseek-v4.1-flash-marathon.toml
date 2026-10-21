@@ -10,21 +10,20 @@
 #   https://api.subconscious.dev/v1/models
 #   https://www.subconscious.dev/pricing
 #   https://docs.subconscious.dev/features/thinking
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-structured_output = true
 name = "DeepSeek V4.1 Flash Marathon"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 5_000_000
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28
