@@ -3,34 +3,33 @@
 # Name/description from the ClinePass model catalog. ClinePass does not declare an
 # upstream lab mapping for this entry; specs (limits, modalities, reasoning) match
 # Z.ai's GLM-5.3-Flash (https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash).
+schema = 2
 name = "cline-pass/glm-5.3-flash"
 description = "Latest natively multimodal model in the GLM-5 series"
 family = "glm-flash"
-release_date = "2026-08-26"
-last_updated = "2026-08-26"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-26"
+
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 131_072
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[cost.text.output]
+price = 0.5

@@ -4,11 +4,16 @@
 # https://api-docs.deepseek.com/guides/thinking_mode/ (OpenAI: thinking.type + reasoning_effort low|high|max; medium/xhigh map to high)
 # Effort: reasoning_effort = none|low|high|max (none disables thinking; matches DeepSeek Flash graded set + off)
 # ClinePass is an OpenAI-compatible relay; do not advertise GPT-style medium/xhigh.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.003
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6
