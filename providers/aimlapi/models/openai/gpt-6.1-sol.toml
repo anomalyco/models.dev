@@ -1,11 +1,13 @@
+schema = 2
 base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 2.6
+cache = { read = 0.13 }
 
-[cost]
-input = 2.6
-output = 13
-cache_read = 0.13
+[cost.text.output]
+price = 13

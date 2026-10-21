@@ -1,9 +1,14 @@
+schema = 2
 base_model = "aion-labs/aion-rp-llama-3.1-8b"
-structured_output = false
 
-[cost]
-input = 1.10032
-output = 2.20064
+[capabilities]
+structured_output = false
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 1.10032
+
+[cost.text.output]
+price = 2.20064

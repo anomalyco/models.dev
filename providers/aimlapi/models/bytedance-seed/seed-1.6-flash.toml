@@ -1,10 +1,15 @@
+schema = 2
 base_model = "bytedance-seed/seed-1-6-flash"
-structured_output = true
 
-[cost]
-input = 0.103155
-output = 0.41262
+[capabilities]
+structured_output = true
 
 [limit]
 context = 262_144
 output = 32_768
+
+[cost.text.input]
+price = 0.103155
+
+[cost.text.output]
+price = 0.41262

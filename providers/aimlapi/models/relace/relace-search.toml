@@ -1,7 +1,12 @@
+schema = 2
 base_model = "relace/relace-search"
-structured_output = false
 name = "Search"
 
-[cost]
-input = 1.3754
-output = 4.1262
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 1.3754
+
+[cost.text.output]
+price = 4.1262

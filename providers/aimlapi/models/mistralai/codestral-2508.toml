@@ -1,11 +1,16 @@
+schema = 2
 base_model = "mistral/codestral-2508"
-structured_output = true
 name = "Codestral 2508"
 
-[cost]
-input = 0.41262
-output = 1.23786
-cache_read = 0.041262
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
+
+[cost.text.input]
+price = 0.41262
+cache = { read = 0.041262 }
+
+[cost.text.output]
+price = 1.23786

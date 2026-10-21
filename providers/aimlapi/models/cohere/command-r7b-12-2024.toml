@@ -1,6 +1,9 @@
+schema = 2
 base_model = "cohere/command-r7b-12-2024"
 name = "Command R7B (12-2024)"
 
-[cost]
-input = 0.051578
-output = 0.20631
+[cost.text.input]
+price = 0.051578
+
+[cost.text.output]
+price = 0.20631

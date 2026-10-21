@@ -1,10 +1,12 @@
+schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[cost]
-input = 13
-output = 65
-cache_read = 0.325
+[cost.text.input]
+price = 13
+cache = { read = 0.325 }
+
+[cost.text.output]
+price = 65

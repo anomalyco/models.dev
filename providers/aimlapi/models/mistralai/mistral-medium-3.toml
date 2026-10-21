@@ -1,8 +1,13 @@
+schema = 2
 base_model = "mistral/mistral-medium-3"
-structured_output = true
 name = "Medium 3"
 
-[cost]
-input = 0.55016
-output = 2.7508
-cache_read = 0.055016
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.55016
+cache = { read = 0.055016 }
+
+[cost.text.output]
+price = 2.7508

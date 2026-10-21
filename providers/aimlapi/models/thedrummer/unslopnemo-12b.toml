@@ -1,10 +1,15 @@
+schema = 2
 base_model = "thedrummer/unslopnemo-12b"
-structured_output = true
 
-[cost]
-input = 0.55016
-output = 0.55016
+[capabilities]
+structured_output = true
 
 [limit]
 context = 32_768
 output = 32_768
+
+[cost.text.input]
+price = 0.55016
+
+[cost.text.output]
+price = 0.55016

@@ -1,11 +1,14 @@
+schema = 2
 base_model = "google/gemma-3-27b-it"
 name = "Gemma 3 27B"
-
-[cost]
-input = 0.20631
-output = 0.632684
-cache_read = 0.103155
 
 [limit]
 context = 128_000
 output = 117_964
+
+[cost.text.input]
+price = 0.20631
+cache = { read = 0.103155 }
+
+[cost.text.output]
+price = 0.632684

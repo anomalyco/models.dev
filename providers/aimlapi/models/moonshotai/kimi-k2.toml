@@ -1,6 +1,11 @@
+schema = 2
 base_model = "moonshotai/kimi-k2"
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 0.783978
-output = 3.16342
+[cost.text.input]
+price = 0.783978
+
+[cost.text.output]
+price = 3.16342

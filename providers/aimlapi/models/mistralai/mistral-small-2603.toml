@@ -1,14 +1,16 @@
+schema = 2
 base_model = "mistral/mistral-small-2603"
 name = "Small 4"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.257888
-output = 1.03155
-cache_read = 0.020631
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 0.257888
+cache = { read = 0.020631 }
+
+[cost.text.output]
+price = 1.03155

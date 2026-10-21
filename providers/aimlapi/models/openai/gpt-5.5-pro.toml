@@ -1,13 +1,15 @@
+schema = 2
 base_model = "openai/gpt-5.5-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high"] }
 structured_output = true
 
-[interleaved]
-field = "reasoning_details"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["medium", "high"]
+[cost.text.input]
+price = 41.262
 
-[cost]
-input = 41.262
-output = 247.572
+[cost.text.output]
+price = 247.572

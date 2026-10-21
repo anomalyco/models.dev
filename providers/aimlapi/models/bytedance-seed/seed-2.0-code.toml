@@ -1,14 +1,16 @@
+schema = 2
 base_model = "bytedance-seed/seed-2.0-code"
 name = "Seed-2.0-Code"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[interleaved]
-field = "reasoning_details"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.6877
 
-[cost]
-input = 0.6877
-output = 4.1262
+[cost.text.output]
+price = 4.1262

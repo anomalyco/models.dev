@@ -1,14 +1,16 @@
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 name = "Claude 4.6 Sonnet"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
-
-[cost]
-input = 4.1262
-output = 20.631
-cache_read = 0.41262
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 
 [limit]
 context = 200_000
+
+[cost.text.input]
+price = 4.1262
+cache = { read = 0.41262 }
+
+[cost.text.output]
+price = 20.631

@@ -1,13 +1,15 @@
+schema = 2
 base_model = "thinkingmachines/inkling"
 
-[interleaved]
-field = "reasoning_details"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[cost]
-input = 1.3754
-output = 5.57037
-cache_read = 0.233818
+[cost.text.input]
+price = 1.3754
+cache = { read = 0.233818 }
+
+[cost.text.output]
+price = 5.57037

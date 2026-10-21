@@ -1,9 +1,14 @@
+schema = 2
 base_model = "undi95/remm-slerp-l2-13b"
-structured_output = true
 
-[cost]
-input = 0.6877
-output = 1.03155
+[capabilities]
+structured_output = true
 
 [limit]
 output = 4_096
+
+[cost.text.input]
+price = 0.6877
+
+[cost.text.output]
+price = 1.03155

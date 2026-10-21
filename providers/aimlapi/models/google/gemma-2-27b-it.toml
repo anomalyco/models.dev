@@ -1,6 +1,11 @@
+schema = 2
 base_model = "google/gemma-2-27b-it"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.89401
-output = 0.89401
+[cost.text.input]
+price = 0.89401
+
+[cost.text.output]
+price = 0.89401

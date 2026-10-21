@@ -1,12 +1,17 @@
 # No caller control: reasoning_effort is validated (invalid value -> 400) but low/high
 # do not order reasoning tokens; toggle/budget fields are dropped by the gateway.
+schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
-reasoning_options = []
 
-[cost]
-input = 0.82524
-output = 3.4385
-cache_read = 0.20631
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 output = 98_304
+
+[cost.text.input]
+price = 0.82524
+cache = { read = 0.20631 }
+
+[cost.text.output]
+price = 3.4385

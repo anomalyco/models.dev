@@ -1,6 +1,11 @@
+schema = 2
 base_model = "amazon/nova-lite-v1"
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 0.082524
-output = 0.330096
+[cost.text.input]
+price = 0.082524
+
+[cost.text.output]
+price = 0.330096

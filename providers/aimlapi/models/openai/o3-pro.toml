@@ -1,14 +1,16 @@
+schema = 2
 base_model = "openai/o3-pro"
-structured_output = true
 name = "o3 Pro"
 
-[interleaved]
-field = "reasoning_details"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[cost]
-input = 27.508
-output = 110.032
+[cost.text.input]
+price = 27.508
+
+[cost.text.output]
+price = 110.032

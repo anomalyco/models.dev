@@ -1,15 +1,20 @@
 # No caller control: reasoning_effort is validated (invalid value -> 400) but low/high
 # do not order reasoning tokens; toggle/budget fields are dropped by the gateway.
+schema = 2
 base_model = "google/gemma-4-31b-it"
-structured_output = true
 name = "Gemma 4 31B Instruct"
-reasoning_options = []
 
-[cost]
-input = 1.361646
-output = 2.049346
-cache_read = 1.361646
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 16_384
+
+[cost.text.input]
+price = 1.361646
+cache = { read = 1.361646 }
+
+[cost.text.output]
+price = 2.049346

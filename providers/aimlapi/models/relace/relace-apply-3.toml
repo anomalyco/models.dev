@@ -1,7 +1,12 @@
+schema = 2
 base_model = "relace/relace-apply-3"
-structured_output = false
 name = "Apply 3"
 
-[cost]
-input = 1.16909
-output = 1.71925
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 1.16909
+
+[cost.text.output]
+price = 1.71925

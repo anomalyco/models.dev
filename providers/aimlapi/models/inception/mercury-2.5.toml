@@ -1,11 +1,13 @@
+schema = 2
 base_model = "inception/mercury-2.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.27508
+cache = { read = 0.027508 }
 
-[cost]
-input = 0.27508
-output = 1.03155
-cache_read = 0.027508
+[cost.text.output]
+price = 1.03155

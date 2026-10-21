@@ -1,10 +1,13 @@
+schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3 Coder"
 
-[cost]
-input = 1.3754
-output = 6.705075
-cache_read = 1.3754
-
 [limit]
 context = 262_000
+
+[cost.text.input]
+price = 1.3754
+cache = { read = 1.3754 }
+
+[cost.text.output]
+price = 6.705075

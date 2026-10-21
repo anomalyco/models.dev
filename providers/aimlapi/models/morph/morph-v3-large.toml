@@ -1,7 +1,12 @@
+schema = 2
 base_model = "morph/morph-v3-large"
-structured_output = true
 name = "V3 Large"
 
-[cost]
-input = 1.23786
-output = 2.61326
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 1.23786
+
+[cost.text.output]
+price = 2.61326

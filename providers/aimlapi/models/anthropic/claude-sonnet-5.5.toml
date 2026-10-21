@@ -1,10 +1,12 @@
+schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[cost]
-input = 2.6
-output = 13
-cache_read = 0.26
+[cost.text.input]
+price = 2.6
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 13
