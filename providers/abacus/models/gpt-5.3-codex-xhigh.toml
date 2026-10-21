@@ -1,28 +1,14 @@
-# Input MIME types: same as models/openai/gpt-5.3-codex.toml (this ID is GPT-5.3 Codex at xhigh effort).
 # Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+# Linked to models/openai/gpt-5.3-codex.toml: RouteLLM served GPT-5.3 Codex pinned to xhigh effort.
 schema = 2
+base_model = "openai/gpt-5.3-codex"
 name = "GPT-5.3 Codex XHigh"
-description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
-family = "gpt"
-open_weights = false
-knowledge = "2025-08-31"
-release_date = "2026-02-05"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 temperature = false
-
-[limit]
-context = 400_000
-input = 272_000
-output = 128_000
 
 [cost.text.input]
 price = 1.75
