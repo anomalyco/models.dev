@@ -1,6 +1,7 @@
-# Prices: https://llm.wavespeed.ai/v1/models (USD per million tokens, accessed 2026-10-21)
+# Prices and limits: https://llm.wavespeed.ai/v1/models (USD per million tokens, accessed 2026-10-21)
+# Toggle: reasoning.enabled = true|false
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 1.475
@@ -8,5 +9,4 @@ output = 4.425
 cache_read = 0.295
 
 [limit]
-context = 1000000
 output = 65536

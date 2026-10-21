@@ -1,6 +1,8 @@
-# Prices: https://llm.wavespeed.ai/v1/models (USD per million tokens, accessed 2026-10-21)
+# Prices and limits: https://llm.wavespeed.ai/v1/models (USD per million tokens, accessed 2026-10-21)
+# Reasoning is mandatory on this host: reasoning.enabled=false returns HTTP 400, so there is no off switch.
+# Effort: reasoning_effort = low|medium|xhigh
 base_model = "alibaba/qwen3.8-max-0902"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 
 [cost]
 input = 2
