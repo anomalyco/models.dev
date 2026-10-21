@@ -1,8 +1,10 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Toggle: thinking.type = enabled|disabled (not re-verified on Zen: model access is disabled for the probe key)
 # Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
+# knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
 schema = 2
 base_model = "zhipuai/glm-5.1"
+knowledge = "2025-04"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
 [capabilities]
