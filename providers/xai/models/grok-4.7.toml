@@ -5,6 +5,7 @@
 # - Caching (automatic prefix cache, prompt_cache_key): https://docs.x.ai/developers/advanced-api-usage/prompt-caching
 # - Priority (service_tier = priority, 2x): https://docs.x.ai/developers/advanced-api-usage/priority-processing
 # - API params (store, stream_options.include_usage, top_k): https://docs.x.ai/developers/rest-api-reference/inference/responses, https://docs.x.ai/developers/rest-api-reference/inference/chat-completions
+# - Responses API (Chat Completions is its legacy predecessor): https://docs.x.ai/developers/model-capabilities/text/comparison
 # - US regional endpoint (1.1x): https://docs.x.ai/developers/advanced-api-usage/regions
 # Mid-conversation: system/developer messages are accepted in any order (docs.x.ai/developers/models);
 # changing reasoning effort or tools between turns drops the prompt cache, and there is no per-turn
@@ -23,6 +24,8 @@ stream_usage = true
 prompt_cache_key = true
 cache = { supported = true, implicit = true, explicit = false }
 service_tier = ["priority"]
+
+[api.responses]
 
 [cost.text.input]
 price = 2

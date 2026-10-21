@@ -5,6 +5,7 @@
 # - Caching (automatic prefix cache, prompt_cache_key): https://docs.x.ai/developers/advanced-api-usage/prompt-caching
 # - Priority (service_tier = priority, 2x): https://docs.x.ai/developers/advanced-api-usage/priority-processing
 # - API params (store, stream_options.include_usage, top_k): https://docs.x.ai/developers/rest-api-reference/inference/responses, https://docs.x.ai/developers/rest-api-reference/inference/chat-completions
+# - Responses API (Chat Completions is its legacy predecessor): https://docs.x.ai/developers/model-capabilities/text/comparison
 # Effort values: GET https://api.x.ai/v1/models lists capabilities.reasoning_effort = none, low, medium, high, xhigh (default low).
 # The API rejects values a model lacks (e.g. "none" on grok-4.5) and accepts each listed value (checked 2026-10-19).
 # Mid-conversation: system/developer messages are accepted in any order (docs.x.ai/developers/models);
@@ -39,6 +40,8 @@ service_tier = ["priority"]
 [limit]
 context = 1_000_000
 output = 30_000
+
+[api.responses]
 
 [cost.text.input]
 price = 1.25
