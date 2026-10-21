@@ -5,28 +5,32 @@
 # Context tiers start at 256,000 prompt tokens.
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 # Budget: reasoning.max_tokens (passed through as the upstream thinking budget)
+schema = 2
 base_model = "alibaba/qwen3.7-plus"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[interleaved]
-field = "reasoning_details"
-
-[cost]
-input = 0.32
-output = 1.28
-cache_read = 0.064
-cache_write = 0.4
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.96
-output = 3.84
-cache_read = 0.192
-cache_write = 1.2
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [limit]
 input = 850_000
 output = 50_000
 
-[provider]
-npm = "@openrouter/ai-sdk-provider"
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.32
+cache = { read = 0.064, write = 0.4 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.96
+cache = { read = 0.192, write = 1.2 }
+
+[cost.text.output]
+price = 1.28
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 3.84

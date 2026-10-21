@@ -4,21 +4,23 @@
 # (price listing: https://openrouter.ai/api/v1/models/qwen/qwen3.7-max/endpoints, accessed 2026-10-16).
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 # Budget: reasoning.max_tokens (passed through as the upstream thinking budget)
+schema = 2
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[interleaved]
-field = "reasoning_details"
-
-[cost]
-input = 1.475
-output = 4.425
-cache_read = 0.295
-cache_write = 1.84375
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [limit]
 input = 850_000
 output = 50_000
 
-[provider]
-npm = "@openrouter/ai-sdk-provider"
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 1.475
+cache = { read = 0.295, write = 1.84375 }
+
+[cost.text.output]
+price = 4.425

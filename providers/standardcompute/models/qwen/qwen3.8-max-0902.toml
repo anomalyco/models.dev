@@ -2,21 +2,23 @@
 # (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
 # of the endpoint Standard Compute routes this model to, as charged against the budget
 # (price listing: https://openrouter.ai/api/v1/models/qwen/qwen3.8-max-0902/endpoints, accessed 2026-10-16).
+schema = 2
 base_model = "alibaba/qwen3.8-max-0902"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
 
-[interleaved]
-field = "reasoning_details"
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
-cache_write = 2.5
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 
 [limit]
 input = 850_000
 output = 50_000
 
-[provider]
-npm = "@openrouter/ai-sdk-provider"
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25, write = 2.5 }
+
+[cost.text.output]
+price = 6

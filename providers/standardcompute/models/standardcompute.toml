@@ -15,22 +15,6 @@
 # (free trial: ~500,000 input / 32,768 output). The 50,000 output ceiling
 # replaced the earlier 24,576 cap on 2026-08-27.
 # release_date is the public launch month as stated by the operator.
-name = "Standard Compute"
-description = "Flat-rate smart-routing gateway: one model id, each request routed across the customer's enabled models from a curated ~1M-context catalog (Claude, GPT, Gemini, DeepSeek, GLM, Qwen, Kimi, MiniMax, Grok, MiMo) or pinned to a user-selected model"
-family = "auto"
-release_date = "2026-03-01"
-last_updated = "2026-10-13"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[interleaved]
-field = "reasoning_details"
-
 # No [cost]: there is no single per-token price for this id, and it is not
 # free. Access is a fixed monthly plan (https://standardcompute.com/pricing,
 # accessed 2026-10-16) whose USD compute budget is drawn down per request at
@@ -44,18 +28,32 @@ field = "reasoning_details"
 # upstream's cache-read rate. Anthropic models get gateway-injected
 # cache_control breakpoints (system prompt + latest turns); other models use
 # their upstream's automatic prefix caching where offered.
+# Responses carry OpenRouter-shape `reasoning_details` (reasoning.text,
+# reasoning.summary, reasoning.encrypted). The OpenRouter adapter replays them
+# as arrays on tool turns; the generic adapter would send them as a string.
+schema = 2
+name = "Standard Compute"
+description = "Flat-rate smart-routing gateway: one model id, each request routed across the customer's enabled models from a curated ~1M-context catalog (Claude, GPT, Gemini, DeepSeek, GLM, Qwen, Kimi, MiniMax, Grok, MiMo) or pinned to a user-selected model"
+family = "auto"
+open_weights = false
+release_date = "2026-03-01"
+last_updated = "2026-10-13"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_000_000
 input = 850_000
 output = 50_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-# Responses carry OpenRouter-shape `reasoning_details` (reasoning.text,
-# reasoning.summary, reasoning.encrypted). The OpenRouter adapter replays them
-# as arrays on tool turns; the generic adapter would send them as a string.
-[provider]
-npm = "@openrouter/ai-sdk-provider"
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+compatibility = { reasoning_field = "reasoning_details" }

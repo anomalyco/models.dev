@@ -5,26 +5,24 @@
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 # Effort: reasoning_effort or reasoning.effort = low|medium|xhigh
 # Budget: reasoning.max_tokens (passed through as the upstream thinking budget)
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens", max = 262_144 },
-]
-
-[interleaved]
-field = "reasoning_details"
-
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
-cache_write = 0.2
 
 [limit]
 input = 850_000
 output = 50_000
 
-[provider]
-npm = "@openrouter/ai-sdk-provider"
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016, write = 0.2 }
+
+[cost.text.output]
+price = 0.47

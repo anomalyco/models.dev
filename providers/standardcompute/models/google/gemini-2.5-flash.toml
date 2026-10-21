@@ -4,22 +4,24 @@
 # (price listing: https://openrouter.ai/api/v1/models/google/gemini-2.5-flash/endpoints, accessed 2026-10-16).
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 # Budget: reasoning.max_tokens (passed through as the upstream thinking budget)
+schema = 2
 base_model = "google/gemini-2.5-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 24_576 }]
-
-[interleaved]
-field = "reasoning_details"
-
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.03
-cache_write = 0.083333
 
 [limit]
 input = 850_000
 output = 50_000
 
-[provider]
-npm = "@openrouter/ai-sdk-provider"
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.083333 }
+
+[cost.text.output]
+price = 2.5
