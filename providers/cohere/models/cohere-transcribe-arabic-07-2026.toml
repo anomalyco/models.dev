@@ -4,6 +4,10 @@
 #   Model Vault billed per instance-hour, so no per-token cost is set).
 # Live: a WAV transcription returned 200 (2026-10-19).
 #   The GET /v1/models list omits it for the probe key; GET /v1/models/cohere-transcribe-arabic-07-2026 returns it.
+# API: POST https://api.cohere.com/v2/audio/transcriptions (https://docs.cohere.com/reference/create-audio-transcription).
 schema = 2
 v2_only = true
 base_model = "cohere/cohere-transcribe-arabic-07-2026"
+
+[api.transcriptions]
+sdk = { aisdk = "none", opencodeai = "none" }

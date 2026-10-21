@@ -28,7 +28,7 @@ effort_updates = false
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"
-sdk = { aisdk = "@ai-sdk/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
