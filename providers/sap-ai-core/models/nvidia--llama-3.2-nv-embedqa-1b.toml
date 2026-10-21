@@ -1,9 +1,14 @@
 # context = 8_192 per https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_2-nv-embedqa-1b-v2 (accessed 2026-07-14)
+# Cost: none. The v1 price was the SAP AI Core GenAI-token rate (not USD), and the model has no vendor list price.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Deprecated: the SAP AI Core calculator (https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/, 2026-10-21) listed with retirement date 2026-10-30 (version 2).
 schema = 2
 name = "nvidia--llama-3.2-nv-embedqa-1b"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 open_weights = false
 release_date = "2024-09-25"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -17,9 +22,3 @@ temperature = false
 [limit]
 context = 8_192
 output = 4_096
-
-[cost.text.input]
-price = 0.07
-
-[cost.text.output]
-price = 0

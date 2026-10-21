@@ -1,14 +1,19 @@
 # Deployed as version "2505" on SAP AI Core; older versions share the same model name and can be selected at deployment time.
+# Cost: Mistral list price (https://mistral.ai/pricing, as in providers/mistral), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Deprecated: the SAP AI Core calculator (https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/, 2026-10-21) listed with retirement date 2026-10-30 (version 2505).
 schema = 2
 base_model = "mistral/mistral-medium-2505"
 name = "mistralai--mistral-medium-instruct"
+status = "deprecated"
 
 [limit]
 context = 128_000
 output = 128_000
 
 [cost.text.input]
-price = 0.36
+price = 0.4
 
 [cost.text.output]
-price = 1.22
+price = 2

@@ -2,9 +2,14 @@
 # Not all models support the full range of configuration options. Where possible, orchestration maps unsupported values to the closest equivalent.
 # "minimal", "low" and "medium" are mapped to "high" for mistralai--mistral-small because the model only supports "none" or "high".
 # Reasoning support: https://help.sap.com/docs/sap-ai-core/generative-ai/reasoning?locale=en-US (accessed 2026-07-14)
+# Cost: Mistral list price (https://mistral.ai/pricing, as in providers/mistral), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Deprecated: the SAP AI Core calculator (https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/, 2026-10-21) listed with retirement date 2026-10-30 (version 2603).
 schema = 2
 base_model = "mistral/mistral-small-2603"
 name = "mistralai--mistral-small"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
@@ -14,7 +19,7 @@ context = 128_000
 output = 128_000
 
 [cost.text.input]
-price = 0.07
+price = 0.15
 
 [cost.text.output]
-price = 0.28
+price = 0.6

@@ -1,6 +1,11 @@
+# Cost: Azure OpenAI list price (https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/, as in providers/azure), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Deprecated: the SAP AI Core calculator (https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/, 2026-10-21) listed with retirement date 2026-10-14 (version 2025-04-14).
 schema = 2
 base_model = "openai/gpt-4.1-mini"
 name = "gpt-4.1-mini"
+status = "deprecated"
 
 [capabilities]
 structured_output = true
