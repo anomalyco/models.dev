@@ -1,10 +1,8 @@
 # Sources: https://www.siliconflow.com/models (2026-09-08)
+# Modalities: image input but no video, per the model page ("Support image input: Supported",
+# https://www.siliconflow.com/models/gemma-4-12b-it, 2026-10-21); image formats from the lab.
 schema = 2
 base_model = "google/gemma-4-12b-it"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = false }

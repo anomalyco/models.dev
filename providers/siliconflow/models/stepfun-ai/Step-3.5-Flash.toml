@@ -1,3 +1,4 @@
+# Limits: max output 66K on the model page (https://www.siliconflow.com/models/step-3-5-flash, 2026-10-21).
 schema = 2
 base_model = "stepfun/step-3.5-flash"
 base_model_omit = ["limit.input"]
@@ -10,7 +11,7 @@ structured_output = true
 
 [limit]
 context = 262_000
-output = 262_000
+output = 66_000
 
 [cost.text.input]
 price = 0.1

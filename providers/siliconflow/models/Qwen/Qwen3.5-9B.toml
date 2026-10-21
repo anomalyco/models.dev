@@ -1,9 +1,11 @@
+# Modalities: image input but no video, per the model page ("Support image input: Supported",
+# https://www.siliconflow.com/models/qwen3-5-9b, 2026-10-21); image formats from the lab.
 schema = 2
 base_model = "alibaba/qwen3.5-9b"
 name = "Qwen/Qwen3.5-9B"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

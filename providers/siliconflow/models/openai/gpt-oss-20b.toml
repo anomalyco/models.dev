@@ -1,9 +1,11 @@
+# Tools: the model page lists "Tools: Not supported" (https://www.siliconflow.com/models/gpt-oss-20b, 2026-10-21).
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
 [capabilities]
+tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
 

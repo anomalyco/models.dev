@@ -1,8 +1,11 @@
+# Modalities: image input but no video, per the model page ("Support image input: Supported",
+# https://www.siliconflow.com/models/qwen3-5-35b-a3b, 2026-10-21); image formats from the lab.
+# Prices: https://www.siliconflow.com/models/qwen3-5-35b-a3b and https://www.siliconflow.com/pricing (USD, 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen3.5-35b-a3b"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
@@ -15,6 +18,7 @@ output = 262_144
 
 [cost.text.input]
 price = 0.24
+cache = { read = 0.15 }
 
 [cost.text.output]
 price = 1.8

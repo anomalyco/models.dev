@@ -1,3 +1,4 @@
+# Limits: max output 131K on the model page (https://www.siliconflow.com/models/glm-5, 2026-10-21), as in the lab.
 schema = 2
 base_model = "zhipuai/glm-5"
 name = "zai-org/GLM-5"
@@ -9,7 +10,6 @@ structured_output = true
 
 [limit]
 context = 205_000
-output = 205_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

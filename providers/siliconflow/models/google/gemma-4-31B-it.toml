@@ -1,9 +1,8 @@
+# Modalities: image input but no video, per the model page ("Support image input: Supported",
+# https://www.siliconflow.com/models/gemma-4-31b-it, 2026-10-21); image formats from the lab.
+# Prices: https://www.siliconflow.com/models/gemma-4-31b-it and https://www.siliconflow.com/pricing (USD, 2026-10-21).
 schema = 2
 base_model = "google/gemma-4-31b-it"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = false }
@@ -14,7 +13,8 @@ context = 262_144
 output = 262_144
 
 [cost.text.input]
-price = 0.13
+price = 0.75
+cache = { read = 0.25 }
 
 [cost.text.output]
-price = 0.4
+price = 1
