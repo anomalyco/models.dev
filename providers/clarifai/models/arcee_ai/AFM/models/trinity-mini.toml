@@ -1,8 +1,13 @@
+schema = 2
 base_model = "arcee-ai/trinity-mini"
-last_updated = "2026-02-25"
-reasoning_options = []
 knowledge = "2024-10"
+last_updated = "2026-02-25"
 
-[cost]
-input = 0.045
-output = 0.15
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.045
+
+[cost.text.output]
+price = 0.15

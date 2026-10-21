@@ -1,23 +1,26 @@
+schema = 2
 name = "MiniMax-M2.5 High Throughput"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
+open_weights = true
 release_date = "2026-02-12"
 last_updated = "2026-02-25"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0.30
-output = 1.20
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2
