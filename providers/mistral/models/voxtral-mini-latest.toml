@@ -3,30 +3,37 @@
 #   https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02 (Voxtral Mini Transcribe 2, API IDs voxtral-mini-2602
 #     and voxtral-mini-latest, released 2026-02-04, $0.003 per minute, no open weights)
 #   https://docs.mistral.ai/studio/audio/speech_to_text/offline_transcription (POST /v1/audio/transcriptions, up to ~3 hours
-#     of audio per request; audio input formats are not documented)
+#     of audio per request; the audio file is the input, so v1 attachment is true)
+#   https://docs.mistral.ai/resources/known-limitations ("Supported formats: WAV, MP3, FLAC, OGG, WEBM")
 #   https://mistral.ai/news/voxtral-transcribe-2
 #
 # Not the open-weight Voxtral Mini 3B instruct model that other providers serve (see
 # providers/amazon-bedrock/models/mistral.voxtral-mini-3b-2507.toml): same family, different product.
+# Same model as models/mistral/voxtral-mini-2602.toml (v2-only). Not linked with base_model, which would add a v1
+# canonical_model_id pointing at a model v1 doesn't publish.
 #
-# No [cost]: transcription is billed per minute of audio, not per token.
-# Kept in the v1 format: v2 derives attachment from the audio input, which would flip attachment to true in v1.
-name = "Voxtral Mini (latest)"
+# Billed per minute of audio, which v1 can't express, so v1 shows no cost.
+schema = 2
 type = "transcription"
+name = "Voxtral Mini (latest)"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "voxtral"
-release_date = "2026-02-04"
-last_updated = "2026-02-04"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = false
+release_date = "2026-02-04"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/ogg", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[cost.audio.input]
+unit = "minute"
+price = 0.003

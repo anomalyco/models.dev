@@ -1,26 +1,32 @@
-# Kept as a v1 file: an audio-only speech-recognition model whose v1 attachment is false (v2 would derive true from the audio input).
-# Type: speech recognition (DashScope ASR task, per-second billing), per https://www.alibabacloud.com/help/en/model-studio/model-pricing (Qwen-ASR).
+# Type: speech recognition, served on OpenAI-compatible chat completions (input_audio, file URL or base64 data URL):
+#   https://www.alibabacloud.com/help/en/model-studio/qwen-asr-api-reference
+# MIME types: "mainstream audio and video formats such as AAC, WAV, and MP3"; data URL examples use audio/wav and audio/mpeg:
+#   https://www.alibabacloud.com/help/en/model-studio/qwen-speech-recognition
+# Price: $0.000035 per second of input audio, International (Singapore), output free:
+#   https://www.alibabacloud.com/help/en/model-studio/model-pricing (Qwen-ASR). v1 has no per-second price, so v1 shows no cost.
+# knowledge is unsourced.
+schema = 2
 type = "transcription"
 name = "Qwen3-ASR Flash"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "qwen"
-release_date = "2025-09-08"
-last_updated = "2025-09-08"
-attachment = false
-reasoning = false
-temperature = false
-knowledge = "2024-04"
-tool_call = false
 open_weights = false
+knowledge = "2024-04"
+release_date = "2025-09-08"
 
-[cost]
-input = 0.035
-output = 0.035
+[modalities]
+input = ["audio/aac", "audio/wav", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 53_248
 output = 4_096
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[cost.audio.input]
+unit = "second"
+price = 0.000035
