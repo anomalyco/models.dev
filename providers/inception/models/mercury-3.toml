@@ -1,13 +1,25 @@
-# Source (accessed 2026-10-20): https://docs.inceptionlabs.ai/get-started/models
-# Launch pricing is 50% off: regular input/output/cache-read rates are $0.20/$0.70/$0.02 per MTok.
-# Effort: reasoning_effort = instant|low|medium|high. The native `instant` value
-# is not representable in the current models.dev effort enum; do not map it to `none`.
+# Sources (accessed 2026-10-21):
+# - Pricing: https://docs.inceptionlabs.ai/get-started/models. Launch pricing is 50% off: $0.10 input, $0.01 cached
+#   input, $0.35 output per MTok (regularly $0.20 / $0.02 / $0.70). No end date is published, so the current
+#   (discounted) prices are listed.
+# - Effort: https://docs.inceptionlabs.ai/capabilities/reasoning-efforts. reasoning_effort = instant|low|medium|high,
+#   default low for mercury-3. The native `instant` value is not in the models.dev effort enum; do not map it to `none`.
+# - Tools and usage: https://api.inceptionlabs.ai/openapi.json (tool_choice auto|required|none or a named function;
+#   stream_options.include_usage) and https://docs.inceptionlabs.ai/resources/faq (usage chunk when streaming).
+# - Cache: https://docs.inceptionlabs.ai/resources/faq ("Prefix caching is automatic and requires no request parameter";
+#   no documented TTL, cached tokens billed at the input_cache_reads rate).
+# APIs on this host: /v1/chat/completions (chat models), /v1/fim/completions and /v1/edit/completions (Mercury Edit 2),
+#   /v1/decisions (Mercury Decide), /v1/models.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
 schema = 2
 base_model = "inception/mercury-3"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "medium", "high"] }
 structured_output = true
+stream_usage = true
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 0.1
