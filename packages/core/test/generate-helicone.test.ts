@@ -94,3 +94,22 @@ test("writes new models as v2 files", () => {
     modalities: { input: ["text", "image"], output: ["text"] },
   });
 });
+
+test("keeps provider overrides such as family when the price changes", () => {
+  const text = `# Family: kept from v1.
+schema = 2
+base_model = "xai/grok-code-fast-1"
+name = "xAI Grok Code Fast 1"
+family = "grok"
+knowledge = "2024-08"
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 1.5
+`;
+  const model = registryModel({ prompt: 0.25, completion: 1.5 }, { id: "grok-code-fast-1", author: "xai", endpoints: [{ provider: "xai", pricing: { prompt: 0.25, completion: 1.5 } }] });
+
+  expect(updatedModelToml(text, model)).toBe(text.replace("price = 0.2\n", "price = 0.25\n"));
+});
