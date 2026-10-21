@@ -1,11 +1,14 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # Off: reasoning.effort = "none" (or reasoning.enabled = false)
 # Effort: reasoning.effort = none|high|max (alias: top-level reasoning_effort)
 # /v1/messages: thinking.type = enabled|disabled; output_config.effort = high|max
 # /v1/responses: reasoning.effort = none|high|max
+# Status: deprecated in the Tempr catalog (tempr.status), as on the upstream provider.
 schema = 2
 base_model = "zhipuai/glm-5.2"
-status = "beta"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high", "max"] }

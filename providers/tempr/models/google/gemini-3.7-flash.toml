@@ -1,12 +1,17 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # Effort: reasoning.effort = low|medium|high (alias: top-level reasoning_effort)
 # /v1/messages: output_config.effort = low|medium|high
 # /v1/responses: reasoning.effort = low|medium|high
+# Prompt caching (https://temprhq.io/docs/gateway-reference#prompt-caching): the provider caches long
+# prompts automatically, with no request changes.
 schema = 2
 base_model = "google/gemini-3.7-flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { supported = true, implicit = true }
 structured_output = true
 
 [cost.text.input]
