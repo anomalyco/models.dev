@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; this alias redirects to the latest Gemini Pro, and every current Gemini Pro model in the lab catalog lists the same formats. Gemini API formats, as in models/google/gemini-3.8-flash.toml: https://ai.google.dev/gemini-api/docs/image-understanding, https://ai.google.dev/gemini-api/docs/video-understanding, https://ai.google.dev/gemini-api/docs/audio
 schema = 2
 name = "Google: Gemini Pro Latest"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-04-27"
 
 [modalities]
-input = ["audio", "application/pdf", "image", "text", "video"]
+input = ["audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
 
 [capabilities]

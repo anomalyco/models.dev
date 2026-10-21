@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay Meta's Muse Spark 1.3 at the contributor tier (meta/muse-spark-1.3). Meta image formats https://dev.meta.ai/docs/image-understanding; video and audio formats https://dev.meta.ai/docs/video-understanding#supported-formats
 schema = 2
 name = "Meta: Muse Spark 1.3 Contributor"
 description = "Muse Spark 1.3 Contributor is the cost-efficient contributor tier of Meta’s multimodal reasoning model for experimentation, learning, and early-stage agentic, multi-agent, and coding workflows. It is designed to track information..."
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-09-02"
 
 [modalities]
-input = ["text", "image", "video", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf"]
 output = ["text"]
 
 [capabilities]

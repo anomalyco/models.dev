@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay Z.ai's latest GLM Flash model (zhipuai/glm-5.3-flash). Z.ai chat API vision items image_url jpg/jpeg/png, video_url mp4/mkv/mov: https://docs.z.ai/api-reference/llm/chat-completion
 schema = 2
 name = "Z.ai: GLM Flash Latest"
 description = "This model always redirects to the latest model in the GLM Flash family."
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-08-27"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
 output = ["text"]
 
 [capabilities]
