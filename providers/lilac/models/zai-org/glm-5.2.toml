@@ -8,10 +8,6 @@ base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
