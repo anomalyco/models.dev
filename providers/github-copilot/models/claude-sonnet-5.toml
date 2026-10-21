@@ -1,5 +1,7 @@
 # structured_output: capabilities.supports.structured_outputs = true (authenticated GET https://api.githubcopilot.com/models (2026-10-21)).
 # Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-sonnet-5.toml.
+# No toggle: Copilot's /models lists only reasoning_effort for this model (no thinking on/off control), so the first-party
+#   thinking.type toggle isn't claimed here.
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 

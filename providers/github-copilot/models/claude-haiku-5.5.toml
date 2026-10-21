@@ -4,6 +4,8 @@
 # - https://platform.claude.com/docs/en/models/haiku-5-5/overview
 # - https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
 # Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-haiku-5-5.toml.
+# No toggle: Copilot's /models lists only reasoning_effort for this model (no thinking on/off control), so the first-party
+#   thinking.type toggle isn't claimed here.
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
