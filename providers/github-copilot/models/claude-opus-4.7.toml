@@ -1,10 +1,14 @@
 # Deprecated: retired from Copilot on 2026-10-02 (https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history).
+# Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-opus-4-7.toml.
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 200_000

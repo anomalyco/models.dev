@@ -300,3 +300,22 @@ test("runner patches prices in v2 files in place and keeps MIME, flags, status a
   expect(await Bun.file(path.join(modelsDir, "gpt-5.5.toml")).text()).toBe(retired);
   expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 3 });
 });
+
+test("a price update keeps the mid-conversation flags copied from Anthropic", async () => {
+  const opus = await Bun.file("providers/github-copilot/models/claude-opus-4.8.toml").text();
+  const modelsDir = await scratchProvider({
+    "claude-opus-4.8.toml": opus.replace("[cost.text.output]\nprice = 25", "[cost.text.output]\nprice = 26"),
+  }, ["anthropic/claude-opus-4-8"]);
+  const rows = [
+    row({ model: "Claude Opus 4.8", provider: "anthropic", input: "$5.00", cached_input: "$0.50", cache_write: "$6.25", output: "$25.00" }),
+  ];
+  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => rows };
+
+  expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+  const synced = await Bun.file(path.join(modelsDir, "claude-opus-4.8.toml")).text();
+  expect(Bun.TOML.parse(synced)).toMatchObject({
+    capabilities: { tools: { supported: true, updates: true }, system_updates: true, effort_updates: false },
+    cost: { text: { output: { price: 25 } } },
+  });
+  expect(synced).toBe(opus);
+});
