@@ -1,5 +1,6 @@
 # https://developers.cloudflare.com/workers-ai/models/clef-flash/
 # Images: embedded PNG, JPEG or WebP (model page).
+# API: POST /accounts/{ACCOUNT_ID}/ai/run/@cf/cloudflare/clef-flash (https://developers.cloudflare.com/workers-ai/models/clef-flash/).
 schema = 2
 type = "decision"
 name = "Clef Flash"
@@ -20,6 +21,10 @@ temperature = true
 [limit]
 context = 24_576
 output = 65_536
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.038

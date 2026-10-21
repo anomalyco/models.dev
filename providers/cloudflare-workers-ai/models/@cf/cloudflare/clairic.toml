@@ -2,6 +2,7 @@
 # System One-style extraction model: /ai/run takes model + state + typed fields and returns
 # typed answers with confidence; chat completions are rejected (live 2026-10-19, code 5006).
 # Images: embedded PNG, JPEG or WebP (model page).
+# API: POST /accounts/{ACCOUNT_ID}/ai/run/@cf/cloudflare/clairic (https://developers.cloudflare.com/workers-ai/models/clairic/).
 schema = 2
 type = "decision"
 name = "Clairic"
@@ -22,6 +23,10 @@ temperature = true
 [limit]
 context = 65_536
 output = 65_536
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.1

@@ -1,6 +1,7 @@
 # https://developers.cloudflare.com/workers-ai/models/clef-omni/
 # Images: embedded PNG, JPEG or WebP (model page). Audio and video inputs are also documented,
 # without formats; not listed here (Search reports text and image only).
+# API: POST /accounts/{ACCOUNT_ID}/ai/run/@cf/cloudflare/clef-omni (https://developers.cloudflare.com/workers-ai/models/clef-omni/).
 schema = 2
 type = "decision"
 name = "Clef Omni"
@@ -21,6 +22,10 @@ temperature = true
 [limit]
 context = 65_536
 output = 65_536
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.15
