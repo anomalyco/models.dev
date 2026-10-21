@@ -1,5 +1,7 @@
 # Auriko maps effort to Moonshot's native control; "off" disables thinking.
 # https://docs.auriko.ai/guides/extensions-and-thinking
+# Price: the only route (siliconflow) in https://api.auriko.ai/v1/directory/models
+# (accessed 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
@@ -11,7 +13,8 @@ structured_output = true
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.5
+price = 0.45
+cache = { read = 0.07 }
 
 [cost.text.output]
-price = 2.8
+price = 2.25
