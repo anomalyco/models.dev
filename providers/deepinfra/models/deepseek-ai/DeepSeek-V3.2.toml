@@ -1,16 +1,19 @@
 # Lab identity: https://deepinfra.com/deepseek-ai/DeepSeek-V3.2 (Hugging Face repo deepseek-ai/DeepSeek-V3.2)
 # Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "deepseek/deepseek-v3.2"
 name = "DeepSeek-V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]
+system_updates = false
 
 [limit]
 context = 163_840

@@ -1,10 +1,12 @@
 # Lab identity: https://deepinfra.com/Qwen/Qwen3.5-397B-A17B (Hugging Face repo Qwen/Qwen3.5-397B-A17B)
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen 3.5 397B A17B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
 cache = { supported = true, implicit = true }

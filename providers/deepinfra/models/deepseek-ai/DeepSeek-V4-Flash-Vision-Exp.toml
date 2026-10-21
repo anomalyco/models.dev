@@ -3,15 +3,18 @@
 # https://docs.deepinfra.com/chat/reasoning
 # https://api.deepinfra.com/models/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp/schema/openai-chat-completions
 # https://api-docs.deepseek.com/guides/thinking_mode
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
+system_updates = false
 
 [limit]
 context = 1_048_576

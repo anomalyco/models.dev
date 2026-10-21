@@ -1,14 +1,17 @@
 # Lab identity: https://deepinfra.com/Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo (Hugging Face repo Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo)
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3 Coder 480B A35B Instruct Turbo"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 
 [capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]
+system_updates = false
 
 [limit]
 output = 66_536

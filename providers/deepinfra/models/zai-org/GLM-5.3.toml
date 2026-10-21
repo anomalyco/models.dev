@@ -3,15 +3,19 @@
 # https://api.deepinfra.com/models/zai-org/GLM-5.3/schema/openai-chat-completions
 # Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
 # GLM-5.3 always reasons; no toggle or reasoning-token budget.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); changing reasoning_effort between turns drops the cached prefix; adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_048_576

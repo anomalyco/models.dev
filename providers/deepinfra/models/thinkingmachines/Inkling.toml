@@ -1,11 +1,14 @@
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "thinkingmachines/inkling"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
+system_updates = false
 
 [limit]
 context = 524_288

@@ -4,6 +4,7 @@
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash/api
 # Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); changing reasoning_effort between turns drops the cached prefix.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
@@ -13,6 +14,8 @@ structured_output = true
 cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 1_048_576

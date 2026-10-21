@@ -1,16 +1,19 @@
 # https://deepinfra.com/docs/advanced/max_tokens_limit
 # Lab identity: https://deepinfra.com/moonshotai/Kimi-K2.6 (Hugging Face repo moonshotai/Kimi-K2.6)
 # Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts): a system message after turn 1 is moved to the front or rejected (cached prefix lost); adding a tool between turns drops the cached prefix.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
+system_updates = false
 
 [limit]
 output = 16_384
