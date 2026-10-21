@@ -2,8 +2,13 @@
 # https://docs.perplexity.ai/docs/agent-api/models#deepseek
 # Reasoning tokens billed at the output rate (no separate CoT price).
 # Effort: reasoning_effort = low|high|max
+# Retired: absent from GET /v1/models and rejected as "not supported" (live probe 2026-10-21).
+# Agent API tool fees (per call; v2 cost has no per-call field): web_search $0.0025 ($0.001 with search_type fast),
+#   image_search $0.0025, fetch_url $0.0005, people_search and finance_search $0.005, sandbox $0.03 per session
+#   (https://docs.perplexity.ai/docs/getting-started/pricing.md, accessed 2026-10-21).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }

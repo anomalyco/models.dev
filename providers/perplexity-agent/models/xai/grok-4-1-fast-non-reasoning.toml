@@ -1,7 +1,17 @@
+# Perplexity Agent API: https://docs.perplexity.ai/docs/agent-api/models.md (USD per MTok: input, output, cache read);
+#   prices match GET https://api.perplexity.ai/v1/models (2026-10-21). reasoning.effort = minimal|low|medium|high|xhigh|max
+#   (https://docs.perplexity.ai/api-reference/agent-post.md); this file's effort list is unchanged from v1.
+#   Images: PNG, JPEG, WEBP, GIF; documents via input_file.
+# knowledge is the v1 host value (unsourced), kept as an override.
+# Retired: absent from GET /v1/models and rejected as "not supported" (live probe 2026-10-21).
+# Agent API tool fees (per call; v2 cost has no per-call field): web_search $0.0025 ($0.001 with search_type fast),
+#   image_search $0.0025, fetch_url $0.0005, people_search and finance_search $0.005, sandbox $0.03 per session
+#   (https://docs.perplexity.ai/docs/getting-started/pricing.md, accessed 2026-10-21).
 schema = 2
 base_model = "xai/grok-4.1-fast"
 name = "Grok 4.1 Fast (Non-Reasoning)"
 knowledge = "2025-07"
+status = "deprecated"
 
 [cost.text.input]
 price = 0.2

@@ -1,0 +1,26 @@
+# Perplexity Agent API (accessed 2026-10-21): https://docs.perplexity.ai/docs/agent-api/models.md lists Kimi K3 as
+#   perplexity/kimi-k3 (USD per MTok: input 3.00, output 15.00, cache read 0.30); GET https://api.perplexity.ai/v1/models
+#   matches. Live probe 2026-10-21: perplexity/kimi-k3 is served, moonshot-ai/kimi-k3 is rejected.
+# reasoning.effort accepts minimal|low|medium|high|xhigh|max: minimal uses low effort, xhigh and max use maximum effort.
+#   Reasoning tokens are billed at the output-token rate.
+# Images: PNG, JPEG, WEBP, GIF (https://docs.perplexity.ai/docs/agent-api/image-attachments.md); no video input.
+# Agent API tool fees (per call; v2 cost has no per-call field): web_search $0.0025 ($0.001 with search_type fast),
+#   image_search $0.0025, fetch_url $0.0005, people_search and finance_search $0.005, sandbox $0.03 per session
+#   (https://docs.perplexity.ai/docs/getting-started/pricing.md, accessed 2026-10-21).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

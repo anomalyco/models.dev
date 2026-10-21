@@ -4,8 +4,17 @@
 # instant/non-thinking mode unsupported) sourced from
 # https://huggingface.co/moonshotai/Kimi-K2.7-Code.
 # base_model inherits reasoning = true, so reasoning_options = [] is required
+# Retired: absent from GET /v1/models and rejected as "not supported" (live probe 2026-10-21).
+# Agent API tool fees (per call; v2 cost has no per-call field): web_search $0.0025 ($0.001 with search_type fast),
+#   image_search $0.0025, fetch_url $0.0005, people_search and finance_search $0.005, sandbox $0.03 per session
+#   (https://docs.perplexity.ai/docs/getting-started/pricing.md, accessed 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+status = "deprecated"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true }

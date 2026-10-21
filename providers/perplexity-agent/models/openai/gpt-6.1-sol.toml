@@ -1,18 +1,23 @@
 # Perplexity Agent API (accessed 2026-10-21): https://docs.perplexity.ai/docs/agent-api/models.md (USD per MTok: input,
 #   output, cache read). reasoning.effort = minimal|low|medium|high|xhigh|max (https://docs.perplexity.ai/api-reference/agent-post.md);
 #   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
-# Context tier above 272K; cache read 95% off input. Service tiers flex (0.5x) and priority (2x)
-#   are not expressible in this v1 file.
+# Context tier above 272K; cache read 95% off input.
+# Service tiers flex (0.5x) and priority (2x) per the models page.
+# Cache write price: GET https://api.perplexity.ai/v1/models pricing.cache_write (2026-10-21).
+# Agent API tool fees (per call; v2 cost has no per-call field): web_search $0.0025 ($0.001 with search_type fast),
+#   image_search $0.0025, fetch_url $0.0005, people_search and finance_search $0.005, sandbox $0.03 per session
+#   (https://docs.perplexity.ai/docs/getting-started/pricing.md, accessed 2026-10-21).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 2
-cache = { read = 0.1 }
+cache = { read = 0.1, write = 2.5 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
@@ -25,3 +30,11 @@ price = 10
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 15
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

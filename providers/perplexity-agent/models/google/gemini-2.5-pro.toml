@@ -1,5 +1,18 @@
+# Perplexity Agent API: https://docs.perplexity.ai/docs/agent-api/models.md (USD per MTok: input, output, cache read);
+#   prices match GET https://api.perplexity.ai/v1/models (2026-10-21). reasoning.effort = minimal|low|medium|high|xhigh|max
+#   (https://docs.perplexity.ai/api-reference/agent-post.md); this file's effort list is unchanged from v1.
+#   Images: PNG, JPEG, WEBP, GIF; documents via input_file.
+# Retired April 1, 2026 (https://docs.perplexity.ai/docs/resources/changelog.md); rejected as "not supported" (live probe 2026-10-21).
+# Agent API tool fees (per call; v2 cost has no per-call field): web_search $0.0025 ($0.001 with search_type fast),
+#   image_search $0.0025, fetch_url $0.0005, people_search and finance_search $0.005, sandbox $0.03 per session
+#   (https://docs.perplexity.ai/docs/getting-started/pricing.md, accessed 2026-10-21).
 schema = 2
 base_model = "google/gemini-2.5-pro"
+status = "deprecated"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "application/pdf"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
