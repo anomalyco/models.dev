@@ -1,27 +1,7 @@
 # Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
 # https://vercel.com/docs/ai-gateway/modalities/embeddings
 schema = 2
-type = "embedding"
-name = "Qwen3 Embedding 0.6B"
-description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "qwen"
-open_weights = false
-release_date = "2025-11-14"
-
-[modalities]
-input = ["text"]
-output = ["embedding"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-top_p = false
-top_k = false
-
-[limit]
-context = 32_768
-output = 0
+base_model = "alibaba/qwen3-embedding-0.6b"
 
 [api.embeddings]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
