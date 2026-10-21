@@ -1,6 +1,11 @@
+schema = 2
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = []
 
-[cost]
-input = 1.44
-output = 7.2
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.44
+
+[cost.text.output]
+price = 7.2
