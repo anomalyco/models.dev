@@ -3647,6 +3647,13 @@ test("Venice base_model files carry no model facts and keep the catalog display 
   expect(buildVeniceModel(veniceModel(), own, "anthropic/claude-opus-4-8")).toMatchObject(own);
 });
 
+test("Venice sync marks models with a scheduled removal as deprecated", () => {
+  const deprecation = { date: "2026-10-30T00:00:00.000Z", removesAt: "2026-10-30T00:00:00.000Z", autoRemap: false };
+  expect(buildVeniceModel(veniceModel({ deprecation }), undefined, "anthropic/claude-opus-4-8"))
+    .toMatchObject({ status: "deprecated" });
+  expect(buildVeniceModel(veniceModel(), undefined, "anthropic/claude-opus-4-8")).not.toHaveProperty("status");
+});
+
 test("Venice sync sorts reasoning efforts low to high", () => {
   expect(buildVeniceModel(veniceModel(), undefined, null)).toMatchObject({
     reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],

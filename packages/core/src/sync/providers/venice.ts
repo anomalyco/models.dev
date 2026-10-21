@@ -42,8 +42,13 @@ const Pricing = z.object({
   extended: ExtendedPricing.optional(),
 }).passthrough();
 
+const Deprecation = z.object({
+  date: z.string(),
+}).passthrough();
+
 const ModelSpec = z.object({
   pricing: Pricing.optional(),
+  deprecation: Deprecation.nullish(),
   availableContextTokens: z.number().int().nonnegative(),
   maxCompletionTokens: z.number().int().nonnegative().optional(),
   capabilities: Capabilities,
@@ -161,6 +166,8 @@ export function buildVeniceModel(
               cache_write: spec.pricing.extended.cache_write?.usd,
             }],
       };
+  // Venice lists a scheduled removal as model_spec.deprecation.
+  const status = spec.deprecation != null ? "deprecated" as const : existing?.status;
   const authoritative = {
     name: spec.name,
     attachment: input.some((value) => value !== "text"),
@@ -180,7 +187,7 @@ export function buildVeniceModel(
     return factorBaseModel(baseModel, {
       ...authoritative,
       description: existing?.description,
-      status: existing?.status,
+      status,
       interleaved: existing?.interleaved,
     }, limit, existing?.base_model_omit);
   }
@@ -208,7 +215,7 @@ export function buildVeniceModel(
     last_updated: existing?.last_updated ?? today,
     knowledge: existing?.knowledge,
     open_weights: openWeights,
-    status: existing?.status,
+    status,
     interleaved: existing?.interleaved,
   };
 }
