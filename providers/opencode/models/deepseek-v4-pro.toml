@@ -1,14 +1,17 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 1.74
-output = 3.84
-cache_read = 0.145
+[cost.text.input]
+price = 1.74
+cache = { read = 0.145 }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 3.84

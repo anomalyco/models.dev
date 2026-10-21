@@ -1,31 +1,32 @@
+schema = 2
 name = "Claude Sonnet 4.6"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
-release_date = "2026-02-17"
-last_updated = "2026-02-17"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
-temperature = true
-tool_call = true
-interleaved = true
-knowledge = "2025-08-31"
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2026-02-17"
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
-cache_write = 3.75
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.messages]
+base_url = "https://opencode.ai/inference/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+compatibility = { replay_reasoning = true }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://opencode.ai/inference/anthropic/v1"
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

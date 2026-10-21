@@ -1,33 +1,31 @@
+schema = 2
 name = "Cat Jam Free"
 description = "A text-only reasoning model for coding and agentic workflows, with tool calling and structured JSON outputs."
-release_date = "2026-10-12"
-last_updated = "2026-10-12"
-attachment = false
-reasoning = true
-reasoning_options = [
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
-]
-tool_call = true
-structured_output = true
-temperature = true
 open_weights = false
+release_date = "2026-10-12"
 status = "deprecated"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-
-[limit]
-context = 1_048_576
-output = 131_072
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

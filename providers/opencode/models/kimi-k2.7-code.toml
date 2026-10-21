@@ -1,14 +1,17 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.95
-output = 4.0
-cache_read = 0.19
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 4

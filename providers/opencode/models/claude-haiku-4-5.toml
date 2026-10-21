@@ -1,30 +1,31 @@
+schema = 2
 name = "Claude Haiku 4.5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
 family = "claude-haiku"
-release_date = "2025-10-15"
-last_updated = "2025-10-15"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
-temperature = true
-tool_call = true
-knowledge = "2025-02-28"
 open_weights = false
+knowledge = "2025-02-28"
+release_date = "2025-10-15"
 
-[cost]
-input = 1.00
-output = 5.00
-cache_read = 0.10
-cache_write = 1.25
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, budget = { min = 1_024 } }
+temperature = true
 
 [limit]
 context = 200_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.messages]
+base_url = "https://opencode.ai/inference/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://opencode.ai/inference/anthropic/v1"
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

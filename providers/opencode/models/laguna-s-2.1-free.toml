@@ -1,20 +1,22 @@
-name = "Laguna S 2.1 Free"
+schema = 2
 base_model = "poolside/laguna-s-2.1"
-structured_output = false
+name = "Laguna S 2.1 Free"
 status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
 
 [limit]
 context = 256_000
 output = 32_000
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

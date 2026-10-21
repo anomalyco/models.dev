@@ -1,25 +1,24 @@
+schema = 2
 base_model = "tencent/hy3"
 name = "Hy3 Free"
 family = "hy3-free"
-structured_output = true
 status = "deprecated"
 
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "high"] },
-]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 190_000
 output = 64_000
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

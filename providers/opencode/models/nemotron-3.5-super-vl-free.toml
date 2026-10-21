@@ -1,23 +1,26 @@
+schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "Nemotron 3.5 Super VL Free"
 family = "nemotron-free"
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-
-[limit]
-input = 1_048_576
-output = 131_072
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
+
+[limit]
+input = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

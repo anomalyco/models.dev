@@ -1,21 +1,24 @@
 # StepFun Chat supports reasoning_effort = low|medium|high.
 # https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
+schema = 2
 base_model = "stepfun/step-5-preview"
 name = "Step 5 Preview Free"
-structured_output = true
 status = "deprecated"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 output = 65_536
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 0

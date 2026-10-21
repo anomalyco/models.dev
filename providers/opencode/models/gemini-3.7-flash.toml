@@ -1,16 +1,20 @@
+schema = 2
 base_model = "google/gemini-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.generate-content]
+base_url = "https://opencode.ai/inference/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google" }
 
-[cost]
-input = 1.50
-output = 7.50
-cache_read = 0.15
-input_audio = 1.50
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://opencode.ai/inference/google/v1beta"
+[cost.text.output]
+price = 7.5
+
+[cost.audio.input]
+price = 1.5

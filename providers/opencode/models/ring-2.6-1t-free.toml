@@ -1,31 +1,31 @@
+schema = 2
 name = "Ring 2.6 1T Free"
 description = "Legacy model retained for compatibility with older integrations"
 family = "ring-1t-free"
-release_date = "2026-05-08"
-last_updated = "2026-05-08"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-knowledge = "2025-06"
-tool_call = true
 open_weights = true
+knowledge = "2025-06"
+release_date = "2026-05-08"
 status = "deprecated"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.00
-output = 0.00
-
-[limit]
-context = 262_000
-output = 66_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 262_000
+output = 66_000
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

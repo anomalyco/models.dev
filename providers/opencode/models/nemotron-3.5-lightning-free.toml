@@ -1,16 +1,19 @@
+schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning Free"
 family = "nemotron-free"
-reasoning_options = []
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 0

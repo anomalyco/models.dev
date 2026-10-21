@@ -1,15 +1,18 @@
+schema = 2
 base_model = "meituan/longcat-2.0"
 name = "LongCat-2.0 Free"
-reasoning_options = [{ type = "toggle" }]
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

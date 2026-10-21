@@ -2,34 +2,35 @@
 # Dates reflect first confirmed availability, not a public Meta announcement.
 # https://research.meta.ai/blog/introducing-muse-code-and-muse-spark-1-2
 # https://dev.meta.ai/docs/models
+schema = 2
 name = "Muse Spark 1.3 Free"
 description = "Muse Spark 1.3 is a multimodal reasoning model from Meta for coding and agentic workflows."
 family = "muse-free"
-release_date = "2026-09-02"
-last_updated = "2026-09-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+release_date = "2026-09-02"
 status = "deprecated"
+
+[modalities]
+input = ["text", "image", "video", "application/pdf", "audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text", "image", "video", "pdf", "audio"]
-output = ["text"]
+[api.responses]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 0

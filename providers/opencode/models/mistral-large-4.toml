@@ -1,15 +1,20 @@
+schema = 2
 base_model = "mistral/mistral-large-4"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 0.68
-output = 2.09
-cache_read = 0.07
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 context = 524_288
 
-[provider]
-npm = "@ai-sdk/mistral"
-api = "https://opencode.ai/inference/openai/v1"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/mistral" }
+
+[cost.text.input]
+price = 0.68
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2.09

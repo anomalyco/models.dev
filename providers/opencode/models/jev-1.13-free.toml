@@ -1,11 +1,16 @@
 # Availability: https://opencode.ai/zen/v1/models
+schema = 2
 base_model = "typesafe/jev-latest"
-structured_output = true
 name = "Jev 1.13 Free"
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+structured_output = true
 
-[provider]
-api = "https://opencode.ai/inference/systemone/v1"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/systemone/v1"
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

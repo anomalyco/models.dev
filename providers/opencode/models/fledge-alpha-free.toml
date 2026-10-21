@@ -3,31 +3,31 @@
 # input, a 1,048,576-token context, and up to 131,072 output tokens.
 # Input, output, and reasoning tokens share the context budget.
 # Effort: reasoning_effort = low|high|max (OpenCode route mapping supplied 2026-10-01).
+schema = 2
 name = "Fledge Alpha Free"
 description = "Free-tier preview reasoning model with text and image input and tool use"
-release_date = "2026-10-01"
-last_updated = "2026-10-01"
-attachment = true
-reasoning = true
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
-tool_call = true
-temperature = true
 open_weights = false
+release_date = "2026-10-01"
 status = "deprecated"
-
-[cost]
-input = 0
-output = 0
-
-[limit]
-context = 1_048_576
-output = 131_072
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

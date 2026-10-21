@@ -1,31 +1,33 @@
+schema = 2
 name = "GPT-5.2 Codex"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
 family = "gpt-codex"
-release_date = "2026-01-14"
-last_updated = "2026-01-14"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
-temperature = false
-knowledge = "2025-08-31"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2026-01-14"
 
-[cost]
-input = 1.75
-output = 14.00
-cache_read = 0.175
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.responses]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

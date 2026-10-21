@@ -1,12 +1,17 @@
 # Availability: https://opencode.ai/zen/v1/models
 # Pricing: https://docs.typesafe.ai/models.md
+schema = 2
 base_model = "typesafe/jev-latest"
-structured_output = true
 name = "Jev 1.13"
 
-[cost]
-input = 0.042
-output = 0
+[capabilities]
+structured_output = true
 
-[provider]
-api = "https://opencode.ai/inference/systemone/v1"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/systemone/v1"
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

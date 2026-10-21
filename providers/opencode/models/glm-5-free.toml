@@ -1,32 +1,32 @@
+schema = 2
 name = "GLM-5 Free"
 description = "Legacy model retained for compatibility with older integrations"
 family = "glm-free"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2025-04"
 open_weights = true
+knowledge = "2025-04"
+release_date = "2026-02-11"
 status = "deprecated"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-
-[limit]
-context = 204800
-output = 131072
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
+
+[limit]
+context = 204_800
+output = 131_072
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

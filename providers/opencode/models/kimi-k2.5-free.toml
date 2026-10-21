@@ -1,32 +1,32 @@
+schema = 2
 name = "Kimi K2.5 Free"
 description = "Legacy model retained for compatibility with older integrations"
 family = "kimi-free"
-release_date = "2026-01-27"
-last_updated = "2026-01-27"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2024-10"
 open_weights = true
+knowledge = "2024-10"
+release_date = "2026-01-27"
 status = "deprecated"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-
-[limit]
-context = 262_144
-output = 262_144
 
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

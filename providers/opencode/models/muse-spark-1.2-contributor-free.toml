@@ -1,16 +1,20 @@
+schema = 2
 base_model = "meta/muse-spark-1.2"
-structured_output = true
 name = "Muse Spark 1.2 Free"
 family = "muse-free"
-
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
 status = "deprecated"
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://opencode.ai/inference/openai/v1"
+[api.responses]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

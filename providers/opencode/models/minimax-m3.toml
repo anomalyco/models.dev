@@ -1,17 +1,20 @@
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 512_000
 output = 128_000
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

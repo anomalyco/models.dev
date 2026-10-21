@@ -1,18 +1,18 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["max"]
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 15

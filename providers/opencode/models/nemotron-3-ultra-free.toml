@@ -1,31 +1,31 @@
-name = "Nemotron 3 Ultra Free"
+schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "Nemotron 3 Ultra Free"
 family = "nemotron-free"
-release_date = "2026-06-04"
-last_updated = "2026-06-04"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2026-02"
 open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-
-[limit]
-context = 1_000_000
-output = 128_000
+knowledge = "2026-02"
+release_date = "2026-06-04"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

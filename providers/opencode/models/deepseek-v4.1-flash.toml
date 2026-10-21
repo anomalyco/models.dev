@@ -1,18 +1,18 @@
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-structured_output = true
 name = "DeepSeek V4.1 Flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 1.2

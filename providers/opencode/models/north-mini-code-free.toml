@@ -1,22 +1,22 @@
 # structured_output = false: Cohere's API rejects response_format for north-mini-code-1-0 (live 2026-10-19:
 #   400 "response_format is not supported with the specified model" on /v2/chat and the Compatibility API; GET
 #   /v1/models lists no json_mode/json_schema feature), and a proxy cannot add schema enforcement.
+schema = 2
 base_model = "cohere/north-mini-code-1-0"
 name = "North Mini Code Free"
 family = "north-free"
-structured_output = false
 status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
 
-[cost]
-input = 0.00
-output = 0.00
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 0
