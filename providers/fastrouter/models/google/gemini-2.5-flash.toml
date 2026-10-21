@@ -4,12 +4,13 @@
 # Not represented: web search $35 per 1K requests (no v2 per-request field).
 # Reasoning: the catalog lists no reasoning parameter for this route; the control set is unchanged from v1 (not re-tested, no API key).
 # Toggle/Budget: generationConfig.thinkingConfig.thinkingBudget = 0 (off) | 0..24576 (lab wire field, https://ai.google.dev/gemini-api/docs/thinking; FastRouter documents no mapping)
-# Audio: catalog audio_input / cached_audio_input.
+# Audio: catalog audio_input / cached_audio_input. The catalog's input_modalities omits audio, but FastRouter prices it
+#   and the model takes audio natively, so the lab's audio MIME types are listed as input.
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
 output = ["text"]
 
 [capabilities]
