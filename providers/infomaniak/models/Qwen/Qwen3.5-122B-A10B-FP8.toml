@@ -15,13 +15,15 @@
 #   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+# Deprecated: no longer listed on Infomaniak's model catalog or price list (both checked 2026-10-21).
+# Toggle: reasoning_effort = "none" (off) | "low"|"medium"|"high" (on), e.g. {"reasoning_effort": "none"}
 schema = 2
 base_model = "alibaba/qwen3.5-122b-a10b"
 name = "Qwen3.5 122B-A10B FP8"
-last_updated = "2026-08-01"
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

@@ -15,14 +15,14 @@
 #   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+# Toggle: reasoning_effort = "none" (off) | "low"|"medium"|"high" (on), e.g. {"reasoning_effort": "none"}
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B-A17B FP8"
-last_updated = "2026-08-01"
 status = "beta"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

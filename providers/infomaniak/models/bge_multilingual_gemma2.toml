@@ -13,6 +13,7 @@
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/embeddings
 #   https://huggingface.co/BAAI/bge-multilingual-gemma2
 schema = 2
+type = "embedding"
 name = "BGE Multilingual Gemma2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
@@ -33,6 +34,8 @@ temperature = false
 context = 8_000
 input = 8_000
 output = 3_584
+
+[api.embeddings]
 
 [cost.text.input]
 price = 0.08
