@@ -1,21 +1,10 @@
+# Priced per request on https://regolo.ai/pricing (EUR 0.001, accessed 2026-10-21), which v2 can't express; the per-token cost below is stale.
 schema = 2
+base_model = "alibaba/qwen3-embedding-8b"
 name = "Qwen3-Embedding-8B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "qwen"
-open_weights = true
-release_date = "2026-02-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
 
 [limit]
-context = 32_768
 output = 8_192
 
 [cost.text.input]

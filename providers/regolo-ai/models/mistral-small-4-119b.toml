@@ -1,25 +1,18 @@
+# Price: https://regolo.ai/pricing lists EUR (accessed 2026-10-21); converted to USD at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# EUR 0.50 / 2.10 per 1M tokens.
 schema = 2
+base_model = "mistral/mistral-small-2603"
 name = "Mistral Small 4 119B"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral-small"
-open_weights = false
-release_date = "2026-03-15"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 256_000
 output = 16_384
 
 [cost.text.input]
-price = 0.75
+price = 0.56075
 
 [cost.text.output]
-price = 3
+price = 2.35515

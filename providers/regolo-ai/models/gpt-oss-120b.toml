@@ -1,28 +1,22 @@
 # Regolo documents reasoning_effort = "low"|"medium"|"high" for this model;
 # thinking = true enables reasoning (accessed 2026-06-25).
 # https://docs.regolo.ai/models/features/thinking/
+# Price: https://regolo.ai/pricing lists EUR (accessed 2026-10-21); converted to USD at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# EUR 1.00 / 4.20 per 1M tokens.
 schema = 2
+base_model = "openai/gpt-oss-120b"
 name = "GPT-OSS-120B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-open_weights = false
-release_date = "2025-08-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-temperature = true
 
 [limit]
 context = 128_000
 output = 16_384
 
 [cost.text.input]
-price = 1
+price = 1.1215
 
 [cost.text.output]
-price = 4.2
+price = 4.7103
