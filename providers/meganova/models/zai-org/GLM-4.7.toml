@@ -1,29 +1,20 @@
+# Price: GET https://api.meganova.ai/api/v1/serverless/models (public catalog behind console.meganova.ai/serverless, accessed 2026-10-21)
 schema = 2
-name = "GLM-4.7"
+base_model = "zhipuai/glm-4.7"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-open_weights = true
-knowledge = "2025-04"
-release_date = "2025-12-22"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
 context = 202_752
-output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.2
+price = 0.4
+cache = { read = 0.08 }
 
 [cost.text.output]
-price = 0.8
+price = 1.75

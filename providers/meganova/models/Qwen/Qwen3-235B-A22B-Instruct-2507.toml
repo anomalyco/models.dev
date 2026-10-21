@@ -1,19 +1,11 @@
+# Price: GET https://api.meganova.ai/api/v1/serverless/models (public catalog behind console.meganova.ai/serverless, accessed 2026-10-21)
 schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B A22B Instruct 2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = true
-release_date = "2025-07-23"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 262_000
@@ -23,4 +15,4 @@ output = 262_000
 price = 0.09
 
 [cost.text.output]
-price = 0.6
+price = 0.1

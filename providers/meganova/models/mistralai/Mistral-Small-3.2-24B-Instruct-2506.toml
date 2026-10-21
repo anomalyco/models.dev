@@ -1,20 +1,11 @@
+# knowledge: Meganova's value, unsourced and different from the lab's. Kept so v1 doesn't change.
 schema = 2
+base_model = "mistral/mistral-small-2506"
 name = "Mistral Small 3.2 24B Instruct"
-description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral-small"
-open_weights = true
 knowledge = "2024-10"
-release_date = "2025-06-20"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
 context = 32_768
