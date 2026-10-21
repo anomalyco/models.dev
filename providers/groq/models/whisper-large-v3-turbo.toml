@@ -1,9 +1,13 @@
 # Transcription: POST https://api.groq.com/openai/v1/audio/transcriptions (https://console.groq.com/docs/speech-to-text;
 # turbo doesn't do translations). Input: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav or webm (same list as the lab), up to 100 MB.
 # Price: $0.04 per hour of audio (https://console.groq.com/docs/models,
-# https://console.groq.com/docs/model/whisper-large-v3-turbo), billed at least 10 seconds per request. Neither is stored:
-# $0.04/hour is $0.000666... per minute and $0.0000111... per second, and v2 has no hour unit.
+# https://console.groq.com/docs/model/whisper-large-v3-turbo), billed at least 10 seconds per request (not expressible in v2).
+# Stored per minute, rounded to 8 decimal places: $0.04 / 60 = $0.000666... -> 0.00066667 (v2 has no hour unit).
 # Limits: context_window and max_completion_tokens 448 in GET /openai/v1/models, same as the lab.
 schema = 2
 base_model = "openai/whisper-large-v3-turbo"
 name = "Whisper Large V3 Turbo"
+
+[cost.audio.input]
+unit = "minute"
+price = 0.00066667
