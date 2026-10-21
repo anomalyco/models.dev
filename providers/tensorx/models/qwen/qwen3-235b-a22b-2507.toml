@@ -1,19 +1,11 @@
+# Retired 2026-10-04 (rerouted to its replacement): https://docs.tensorx.ai/api-reference/model-deprecation (accessed 2026-10-21).
+# knowledge: TensorX's value, unsourced (the lab states none). Kept so v1 doesn't change.
 schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B-A22B-2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-open_weights = true
 knowledge = "2025-06-30"
-release_date = "2025-07-21"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
+status = "deprecated"
 
 [limit]
 context = 131_000
