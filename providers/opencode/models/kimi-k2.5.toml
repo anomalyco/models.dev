@@ -1,6 +1,8 @@
+# Deprecated: listed under Deprecated models (August 5, 2026) (https://opencode.ai/v2/docs/console/models/#deprecated-models, accessed 2026-10-21).
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
@@ -14,7 +16,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.6
-cache = { read = 0.08 }
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 3

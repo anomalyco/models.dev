@@ -1,9 +1,20 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Effort: reasoning_effort = low|high|max
+# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
+#   system_updates = true: a system message before the next user turn was kept in place in 5 of 6 runs (e.g. cached 10376 -> 10376); the one miss had a cold control
+#   effort_updates = false: reasoning_effort high -> low dropped the cache (cached 10368 -> 0)
+#   tools.updates = false: adding a tool dropped the cache (cached 10496 -> 0)
+# Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

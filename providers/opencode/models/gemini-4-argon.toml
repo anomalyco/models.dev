@@ -1,9 +1,21 @@
+# Pricing and endpoint (Gemini generateContent): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# The docs list Gemini 4 Argon at 50% off ($2/$10/$0.10, struck-through $4/$20/$0.20) through November 30, 2026; the multiplier restores list prices from 2026-12-01.
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high
+# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
+#   system_updates = true: a contents entry with role system was kept in place and followed, 2 of 2 runs (cached 12083 -> 12102)
+#   effort_updates = true: thinkingConfig.thinkingLevel high -> low kept the cache (cached 12084 -> 12103)
+#   tools.updates = true: adding a function declaration kept the cache (cached 12128 -> 12196)
+# Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "google/gemini-4-argon"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = true
 
 [api.generate-content]
 base_url = "https://opencode.ai/inference/google/v1beta"
@@ -18,3 +30,7 @@ price = 10
 
 [cost.audio.input]
 price = 2
+
+[[cost.multipliers]]
+when = { date = { gte = "2026-12-01" } }
+factor = 2

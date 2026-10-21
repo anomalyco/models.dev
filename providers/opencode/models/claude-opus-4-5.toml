@@ -1,9 +1,15 @@
+# Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Effort: output_config.effort = low|medium|high (not re-verified on Zen: model access is disabled for the probe key)
+# Budget: thinking.budget_tokens (min 1024) with thinking.type = enabled (not re-verified on Zen: model access is disabled for the probe key)
+# Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
+# Cache: explicit cache_control only, as on Anthropic (https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Zen forwards it: block and top-level cache_control and ttl 1h were honored, and no read happened without it (live on claude-haiku-5-5, claude-opus-5-5, claude-sonnet-5 and claude-sonnet-5-5). Zen lists only the 5m write price.
 schema = 2
 base_model = "anthropic/claude-opus-4-5"
 name = "Claude Opus 4.5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"

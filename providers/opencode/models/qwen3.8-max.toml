@@ -1,12 +1,25 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Modalities: Zen Chat Completions takes images (live: PNG read correctly) but rejects file parts (live 400), so no PDF or video; image types from the lab.
+# enable_thinking is rejected on Zen (400 "Extra inputs are not permitted"); thinking.type = disabled works. reasoning_effort is accepted but its levels aren't documented by Zen, so it isn't listed.
+# Toggle: thinking.type = enabled|disabled
+# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
+#   system_updates = false: a system message before the next user turn was rejected (400 "System message must be at the beginning")
+#   effort_updates = false: thinking.type enabled -> disabled dropped the cache (cached 14549 -> 0)
+#   tools.updates = false: adding a tool dropped the cache (cached 14806 -> 0)
+# Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 262_144

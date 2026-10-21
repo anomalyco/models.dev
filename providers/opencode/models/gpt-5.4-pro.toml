@@ -1,9 +1,14 @@
+# Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# The docs list the cached-read price equal to the input price ($30).
+# Modalities: PDF input via input_file (https://developers.openai.com/api/docs/guides/pdf-files); Zen forwards Responses requests to OpenAI.
+# Effort: reasoning.effort = medium|high|xhigh (not re-verified on Zen: model access is disabled for the probe key)
+# Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
 schema = 2
 base_model = "openai/gpt-5.4-pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

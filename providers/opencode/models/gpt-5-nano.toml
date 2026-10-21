@@ -1,10 +1,21 @@
+# Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Effort: reasoning.effort = minimal|low|medium|high
+# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
+#   system_updates = true: a developer message before the next user turn was kept in place (cached 8960 -> 9088)
+#   effort_updates = false: reasoning.effort medium -> low dropped the cache (cached 8960 -> 0)
+#   tools.updates = true: additional_tools item kept the cache (cached 9088 -> 9088)
+# Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "openai/gpt-5-nano"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"

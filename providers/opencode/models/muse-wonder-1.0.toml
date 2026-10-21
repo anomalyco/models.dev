@@ -2,12 +2,22 @@
 # Zen does not list Muse Wonder pricing yet; Zen sells at cost and matches Meta's Muse Spark
 # pricing, so cost follows Meta's Model API (https://dev.meta.ai/docs/pricing-rate-limits).
 # Effort values match Meta's API: minimal|low|medium|high|xhigh|max.
+# Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
+#   system_updates = true: a developer message before the next user turn was kept in place (cached 8678 -> 8692)
+#   effort_updates = false: reasoning.effort high -> low dropped the cache (cached 8678 -> 0)
+#   tools.updates = false: adding a tool dropped the cache (cached 9076 -> 116)
+# Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "meta/muse-wonder-1.0"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"

@@ -1,4 +1,5 @@
 # Availability: https://opencode.ai/zen/v1/models
+# Pricing and endpoint (System One, POST /systemone): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 schema = 2
 base_model = "typesafe/jev-latest"
 name = "Jev 1.13 Free"
@@ -6,7 +7,7 @@ name = "Jev 1.13 Free"
 [capabilities]
 structured_output = true
 
-[api.chat-completions]
+[api.systemone]
 base_url = "https://opencode.ai/inference/systemone/v1"
 
 [cost.text.input]

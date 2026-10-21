@@ -1,9 +1,20 @@
+# Deprecated: listed under Deprecated models (May 14, 2026); the ID now answers as GLM-5.3 (live 400 message, 2026-10-21) (https://opencode.ai/v2/docs/console/models/#deprecated-models, accessed 2026-10-21).
+# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
+#   system_updates = true: a system message before the next user turn was kept in place (cached 10 -> 10374)
+#   effort_updates = false: disabling thinking is rejected (400: [400] GLM-5.3 is a thinking-only model; disab; the ID is served by GLM-5.3)
+#   tools.updates = false: adding a tool dropped the cache (cached 10522 -> 51)
+# Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "zhipuai/glm-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+status = "deprecated"
 
 [capabilities]
+tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
+cache = { supported = true, implicit = true }
+system_updates = true
+effort_updates = false
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"
