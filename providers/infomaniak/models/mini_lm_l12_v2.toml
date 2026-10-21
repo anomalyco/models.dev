@@ -14,10 +14,12 @@
 #   https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2
 #   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
+# family: host value kept from the v1 file. No sentence-transformers or MiniLM lab names a family, so the lab can't supply one.
 schema = 2
 base_model = "sentence-transformers/all-minilm-l12-v2"
 name = "All-MiniLM-L12-v2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+family = "text-embedding"
 
 [limit]
 input = 128
