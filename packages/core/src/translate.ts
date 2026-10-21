@@ -31,6 +31,13 @@ export function readProviderModel(filePath: string) {
   return model;
 }
 
+// Reads a provider.toml as v1 fields: `opencodeai` (the default API's OpenCode
+// package) is v2-only.
+export function providerTomlToV1(toml: Record<string, unknown>): Record<string, unknown> {
+  const { opencodeai: _opencodeai, ...v1 } = toml;
+  return v1;
+}
+
 export function labModelV2ToV1(
   toml: Record<string, unknown>,
   cause: Record<string, unknown> = {},

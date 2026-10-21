@@ -166,7 +166,11 @@ export function patchModelV2(
       if (capabilities !== undefined) mode.capabilities = capabilities;
     }
   }
-  if (same("provider", "interleaved") && doc.api !== undefined) next.api = doc.api;
+  if (doc.api !== undefined) {
+    const api = same("provider", "interleaved") ? doc.api : patchApis(next.api, doc.api);
+    if (api === undefined) delete next.api;
+    else next.api = api;
+  }
   if (doc.metadata !== undefined) next.metadata = doc.metadata;
   if (doc.v2_only !== undefined) next.v2_only = doc.v2_only;
   return next;
@@ -181,6 +185,26 @@ function mergeModalities(current: string[] | undefined, synced: string[]) {
     const own = current.filter((item) => toV1Modality(item) === toV1Modality(value));
     return own.length > 0 ? own : [value];
   });
+}
+
+// A synced change to v1's `provider` or `interleaved` rewrites the file's first
+// API table, which is what v1 reads. The table's OpenCode package and the file's
+// other tables are v2-only, so they are kept.
+function patchApis(first: Doc | undefined, current: Doc) {
+  const [protocol, ...rest] = Object.keys(current);
+  if (protocol === undefined) return first;
+  const opencodeai = current[protocol]?.sdk?.opencodeai;
+  let head = first;
+  if (opencodeai !== undefined || rest.length > 0) {
+    const [key, entry] = Object.entries<Doc>(first ?? { [protocol]: {} })[0]!;
+    const keep = opencodeai !== undefined && key === protocol;
+    head = { [key]: keep ? { ...entry, sdk: { ...entry.sdk, opencodeai } } : entry };
+  }
+  if (rest.length === 0) return head;
+  return {
+    ...head,
+    ...Object.fromEntries(rest.filter((key) => !(key in head!)).map((key) => [key, current[key]])),
+  };
 }
 
 // Modes priced by a multiplier in the v2 file whose v1 price sync only carried

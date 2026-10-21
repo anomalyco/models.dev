@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 import { generate } from "../src/generate.js";
+import { providerTomlToV1 } from "../src/translate.js";
 import { AuthoredModel, AuthoredModelShape, Model, Provider } from "../src/schema.js";
 
 const root = path.join(import.meta.dirname, "..", "..", "..");
@@ -199,8 +200,8 @@ async function generateLegacyExtends(directory: string) {
     absolute: true,
   })) {
     const providerID = path.basename(path.dirname(providerPath));
-    const toml = await import(providerPath, { with: { type: "toml" } }).then(
-      (mod) => mod.default,
+    const toml = providerTomlToV1(
+      await import(providerPath, { with: { type: "toml" } }).then((mod) => mod.default),
     );
     toml.id = providerID;
     toml.models = {};

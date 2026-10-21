@@ -437,6 +437,110 @@ price = 2
   });
 });
 
+describe("model API tables", () => {
+  const model = (api = "") => `schema = 2
+name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
+open_weights = true
+release_date = "2026-01-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+
+[limit]
+context = 400_000
+output = 128_000
+${api}
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
+`;
+  const provider = (extra = "") => `name = "Gateway"
+npm = "@ai-sdk/openai-compatible"
+api = "https://example.com/v1"
+env = ["API_KEY"]
+doc = "https://example.com/models"
+${extra}`;
+
+  test("every table is published in order, filled in from the provider default", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/providers/openai-compatible"\n'));
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(`
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.images]
+base_url = "https://images.example.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-images" }
+`),
+      );
+      await write(root, "providers/gateway/models/plain.toml", model());
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      const api = providersV2.gateway?.models.model?.api;
+      expect(Object.entries(api ?? {})).toEqual([
+        [
+          "chat-completions",
+          {
+            base_url: "https://example.com/v1",
+            sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" },
+            compatibility: { reasoning_field: "reasoning_content" },
+          },
+        ],
+        [
+          "images",
+          {
+            base_url: "https://images.example.com/v1",
+            sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" },
+          },
+        ],
+      ]);
+      // A model without tables keeps the provider's default API.
+      expect(providersV2.gateway?.models.plain?.api).toEqual({
+        "chat-completions": {
+          base_url: "https://example.com/v1",
+          sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" },
+        },
+      });
+
+      // v1 reads the provider as before and only the model's first table.
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.gateway).not.toHaveProperty("opencodeai");
+      expect(providers.gateway?.models.model?.interleaved).toEqual({ field: "reasoning_content" });
+      expect(providers.gateway?.models.model?.provider).toBeUndefined();
+    });
+  });
+
+  test("without a provider opencodeai, a table's OpenCode package is guessed as before", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/openai/provider.toml", providerToml("OpenAI"));
+      await write(root, "providers/openai/models/model.toml", model("\n[api.chat-completions]\n\n[api.responses]\n"));
+
+      const api = (await generateV2(path.join(root, "providers"))).openai?.models.model?.api;
+      expect(api?.["chat-completions"]?.sdk?.opencodeai).toBe("@opencode/ai/providers/openai/chat");
+      expect(api?.responses?.sdk?.opencodeai).toBe("@opencode/ai/providers/openai/responses");
+    });
+  });
+
+  test("rejects an opencodeai that isn't an @opencode/ai entry point", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/openai"\n'));
+      await write(root, "providers/gateway/models/model.toml", model());
+      await expect(generateV2(path.join(root, "providers"))).rejects.toThrow("@opencode/ai/providers/");
+    });
+  });
+});
+
 function providerToml(name: string) {
   return `name = "${name}"
 npm = "@ai-sdk/openai"

@@ -15,7 +15,9 @@ import {
   AuthoredModelV2,
   LabModelV2,
   ProviderV2,
+  OpencodePackageV2,
   type ApiEntryV2,
+  type AuthoredApiEntryV2,
   type ApiProtocolV2,
   type ApiV2,
   type CompatibilityV2,
@@ -28,7 +30,7 @@ import {
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
-import { isSchemaV2, modelV2ToV1 } from "./translate.js";
+import { isSchemaV2, modelV2ToV1, providerTomlToV1 } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -76,7 +78,12 @@ async function loadProviderV2(
 ): Promise<ProviderV2> {
   const providerDir = path.dirname(providerPath);
   const providerID = path.basename(providerDir);
-  const rawProvider = { ...(await readToml(providerPath)), id: providerID, models: {} };
+  const toml = await readToml(providerPath);
+  const opencodeai =
+    toml.opencodeai === undefined
+      ? undefined
+      : parseWithCause(OpencodePackageV2, toml.opencodeai, { providerPath, toml });
+  const rawProvider = { ...providerTomlToV1(toml), id: providerID, models: {} };
   const v1Provider = parseWithCause(Provider, rawProvider, {
     providerPath,
     toml: rawProvider,
@@ -99,12 +106,10 @@ async function loadProviderV2(
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
     const v1Model = isSchemaV2(rawModel) ? modelV2ToV1(rawModel, { modelPath }) : rawModel;
     const resolved = resolveV1Model(v1Model, baseModels, modelPath);
-    models[modelID] = withV2Fields(
-      toModelV2(resolved, v1Provider),
-      rawModel,
-      labsV2,
-      modelPath,
-    );
+    const model = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
+    const tables = isSchemaV2(rawModel) ? ((rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined) : undefined;
+    if (tables !== undefined) model.api = toModelApis(tables, resolved, v1Provider, opencodeai);
+    models[modelID] = model;
   }
 
   if (Object.keys(models).length === 0) {
@@ -530,6 +535,36 @@ export function resolveProtocol(
   }
 
   return shape === "responses" ? "responses" : "chat-completions";
+}
+
+// A model's own `[api.<protocol>]` tables, in order. Whatever a table leaves out
+// comes from the provider's default API: `base_url` from its `api` (or the SDK's
+// default URL), `sdk.aisdk` from its `npm`, `sdk.opencodeai` from its
+// `opencodeai`. Until providers author `opencodeai`, the package is guessed as
+// for the default API.
+function toModelApis(
+  tables: Record<string, AuthoredApiEntryV2>,
+  model: Model,
+  provider: Provider,
+  opencodeai: string | undefined,
+): ApiV2 {
+  return Object.fromEntries(
+    Object.entries(tables).map(([protocol, table]) => {
+      const npm = table.sdk?.aisdk ?? provider.npm;
+      const base_url = (table.base_url ?? provider.api ?? DEFAULT_NPM_BASE_URLS[npm] ?? "").replace(/\/+$/, "");
+      const shape = protocol === "responses" ? "responses" : protocol === "chat-completions" ? "completions" : undefined;
+      const sdk = {
+        aisdk: npm,
+        opencodeai: table.sdk?.opencodeai ?? opencodeai ?? resolveOpencodePackage(model, provider, npm, shape),
+      };
+      const entry: ApiEntryV2 = {
+        base_url,
+        sdk: Object.fromEntries(Object.entries(sdk).filter(([, value]) => value !== undefined)),
+        ...(table.compatibility !== undefined ? { compatibility: table.compatibility } : {}),
+      };
+      return [protocol, entry];
+    }),
+  ) as ApiV2;
 }
 
 function resolveOpencodePackage(

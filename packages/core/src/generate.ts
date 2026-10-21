@@ -10,7 +10,7 @@ import {
   AuthoredModelShape,
   ModelMetadata,
 } from "./schema.js";
-import { isSchemaV2, labModelV2ToV1, modelV2ToV1 } from "./translate.js";
+import { isSchemaV2, labModelV2ToV1, modelV2ToV1, providerTomlToV1 } from "./translate.js";
 
 const BaseModel = AuthoredModelShape
   .deepPartial()
@@ -101,11 +101,12 @@ async function generateProviders(
     absolute: true,
   })) {
     const providerID = path.basename(path.dirname(providerPath));
-    const { v1_alias, ...toml } = await import(providerPath, {
+    const { v1_alias, ...raw } = await import(providerPath, {
       with: {
         type: "toml",
       },
     }).then((mod) => mod.default);
+    const toml = providerTomlToV1(raw);
     toml.id = providerID;
     toml.models = {};
     const provider = Provider.safeParse(toml);
