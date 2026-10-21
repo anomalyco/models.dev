@@ -2,6 +2,7 @@
 # Not represented: no price in the catalog (prompt and completion are 0).
 # Limits: context is the catalog's context_length (4096; max_completion_tokens 4096).
 # Input: text only per GET https://go.fastrouter.ai/api/v1/models (2026-10-21).
+# API: POST /api/v1/images/generations, async taskId (https://docs.fastrouter.ai/api-reference/image/image-generation.md).
 schema = 2
 name = "Lucid Origin"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
@@ -21,3 +22,6 @@ temperature = false
 [limit]
 context = 4_096
 output = 0
+
+[api.images]
+sdk = { aisdk = "none", opencodeai = "none" }

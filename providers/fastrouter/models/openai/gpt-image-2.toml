@@ -3,12 +3,16 @@
 # Not represented: web search $0.01 per request (no v2 per-request field).
 # temperature inherits the lab (false): the catalog lists no temperature parameter for this route.
 # Limits: context is the catalog's context_length (128000; max_completion_tokens 4096).
+# API: POST /api/v1/images/generations (https://docs.fastrouter.ai/api-reference/image/image-generation.md).
 schema = 2
 base_model = "openai/gpt-image-2"
 name = "GPT Image 2"
 
 [limit]
 context = 128_000
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.image.input]
 price = 8
