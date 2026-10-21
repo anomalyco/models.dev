@@ -15,14 +15,13 @@ effort_updates = false
 
 [limit]
 context = 204_800
-output = 128_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.966
-cache = { read = 0.1794 }
+price = 1.4
+cache = { read = 0.26 }
 
 [cost.text.output]
-price = 3.036
+price = 4.4

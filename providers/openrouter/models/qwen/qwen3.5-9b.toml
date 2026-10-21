@@ -15,11 +15,9 @@ structured_output = true
 system_updates = false
 effort_updates = false
 
-[limit]
-output = 32_768
-
 [cost.text.input]
-price = 0.1
+price = 0.08
+cache = { read = 0.04 }
 
 [cost.text.output]
-price = 0.15
+price = 0.13
