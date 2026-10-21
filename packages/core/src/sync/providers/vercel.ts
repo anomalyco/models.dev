@@ -471,8 +471,13 @@ const MEDIA_PROTOCOLS: Record<MediaType, string> = {
   realtime: "realtime",
 };
 // GPT-Live has its own Live endpoint (wss .../v4/ai/live-model), not the
-// realtime one: https://vercel.com/docs/ai-gateway/modalities/realtime/gpt-live
+// realtime one, and @ai-sdk/gateway has no Live model:
+// https://vercel.com/docs/ai-gateway/modalities/realtime/gpt-live
 const LIVE_MODELS = new Set(["openai/gpt-live-1"]);
+// OpenCode's vercel-ai-gateway entry point only speaks the chat APIs, not
+// these endpoints.
+const MEDIA_SDK = { opencodeai: "none" };
+const LIVE_SDK = { aisdk: "none", opencodeai: "none" };
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
   image: "# Synced from https://ai-gateway.vercel.sh/v1/models (type image)\n# https://vercel.com/docs/ai-gateway/modalities/image-generation\n",
@@ -599,7 +604,9 @@ export function buildVercelMediaModel(
     doc.limit = mediaLimit(model, type, undefined, existing?.limit?.context);
   }
 
-  doc.api = { [LIVE_MODELS.has(model.id) ? "live" : MEDIA_PROTOCOLS[type]]: { base_url: MEDIA_BASE_URL } };
+  doc.api = LIVE_MODELS.has(model.id)
+    ? { live: { base_url: MEDIA_BASE_URL, sdk: { ...LIVE_SDK } } }
+    : { [MEDIA_PROTOCOLS[type]]: { base_url: MEDIA_BASE_URL, sdk: { ...MEDIA_SDK } } };
   const { cost, issue } = vercelMediaCost(model, type);
   if (issue !== undefined) console.warn(`Vercel ${model.id}: no cost written, ${issue}`);
   if (cost !== undefined) doc.cost = cost;

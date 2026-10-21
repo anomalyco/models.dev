@@ -6262,14 +6262,18 @@ test("Vercel sync maps every catalog type and serves media models on their own e
   for (const [catalogType, type, protocol] of cases) {
     const translated = vercel.translateModel(vercelMedia({ id: `example/${catalogType}-model`, type: catalogType }), context) as any;
     expect(translated.v2.type).toBe(type);
-    expect(translated.v2.api).toEqual({ [protocol]: { base_url: "https://ai-gateway.vercel.sh/v4/ai" } });
+    expect(translated.v2.api).toEqual({
+      [protocol]: { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { opencodeai: "none" } },
+    });
     expect(translated.model).toBeUndefined();
     // The written file reads back as a typed v1 model.
     expect(modelV2ToV1({ ...translated.v2, id: "x" }).type).toBe(type);
   }
   // GPT-Live uses the Live endpoint; language and evaluation stay on the chat path.
   const live = vercel.translateModel(vercelMedia({ id: "openai/gpt-live-1", type: "realtime" }), context) as any;
-  expect(Object.keys(live.v2.api)).toEqual(["live"]);
+  expect(live.v2.api).toEqual({
+    live: { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { aisdk: "none", opencodeai: "none" } },
+  });
   for (const catalogType of ["language", "evaluation", "something-new"]) {
     const translated = vercel.translateModel(vercelMedia({ id: "example/chat-model", type: catalogType }), context) as any;
     expect(translated.v2).toBeUndefined();
@@ -6743,7 +6747,7 @@ test("syncs OpenRouter media models with no supported parameters and skips negat
       modalities: { input: ["text"], output: ["audio/mpeg", "audio/pcm"] },
       capabilities: { tools: { supported: false }, reasoning: { supported: false } },
       limit: { context: 0, output: 0 },
-      api: { speech: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/openai" } } },
+      api: { speech: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-speech" } } },
       cost: { text: { input: { unit: "character", price: 15 } } },
     },
   });
@@ -6771,8 +6775,29 @@ test("factors OpenRouter media models onto lab files and authors their API proto
     schema: 2,
     v2_only: true,
     base_model: "openai/whisper-1",
-    api: { transcriptions: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/openai" } } },
+    api: {
+      transcriptions: {
+        base_url: "https://openrouter.ai/api/v1",
+        sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-transcription" },
+      },
+    },
     cost: { audio: { input: { unit: "second", price: 0.0001 } } },
+  });
+});
+
+test("OpenRouter rerank and embedding files name the packages that speak their endpoint", () => {
+  const media = (id: string, output: string, type: "reranking" | "embedding") =>
+    buildOpenRouterMediaModel(openRouterMediaModel({
+      id,
+      architecture: { input_modalities: ["text"], output_modalities: [output] },
+      pricing: { prompt: "0", completion: "0" },
+    }), type).api;
+
+  expect(media("examplelab/rerank-1", "rerank", "reranking")).toEqual({
+    rerank: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
+  });
+  expect(media("examplelab/embed-1", "embeddings", "embedding")).toEqual({
+    embeddings: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" } },
   });
 });
 
@@ -6803,7 +6828,12 @@ test("OpenRouter transcription routes on chat labs take the endpoint's capabilit
     modalities: { input: ["audio/wav", "audio/mpeg"], output: ["text"] },
     capabilities: { tools: { supported: false } },
     limit: { context: 0, output: 0 },
-    api: { transcriptions: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/openai" } } },
+    api: {
+      transcriptions: {
+        base_url: "https://openrouter.ai/api/v1",
+        sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-transcription" },
+      },
+    },
   });
   // Transcription takes temperature, as the chat lab does, so it isn't restated.
   expect(doc.capabilities).not.toHaveProperty("temperature");
@@ -6933,7 +6963,12 @@ test("factors OpenRouter image models onto lab files with the Images API protoco
     schema: 2,
     v2_only: true,
     base_model: "black-forest-labs/flux-2-pro",
-    api: { images: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider" } } },
+    api: {
+      images: {
+        base_url: "https://openrouter.ai/api/v1",
+        sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/protocols/openai-images" },
+      },
+    },
     cost: { image: { output: { unit: "megapixel", price: 0.03 } } },
   });
 
@@ -7112,7 +7147,7 @@ test("factors OpenRouter video models onto lab files with the videos protocol", 
     v2_only: true,
     base_model: "google/veo-3.1-generate-preview",
     name: "Veo 3.1",
-    api: { videos: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider" } } },
+    api: { videos: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" } } },
     cost: {
       video: { output: { unit: "second", price: 0.4, overrides: [{ when: { generate_audio: { equals: false } }, price: 0.2 }] } },
     },

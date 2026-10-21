@@ -295,8 +295,10 @@ const BASE_URL = "https://openrouter.ai/api/v1";
 
 // Each type has its own OpenRouter endpoint. Speech and transcription follow
 // OpenAI's audio API ("compatible with the OpenAI SDK"), and the OpenRouter AI
-// SDK provider implements embeddings. No AI SDK package speaks OpenRouter's
-// rerank API.
+// SDK provider implements embeddings. Rerank takes and returns Cohere's rerank
+// shape, so @ai-sdk/cohere works against it. Images also answer OpenAI's
+// /images/generations, so OpenCode uses its OpenAI media protocols for images,
+// speech and transcription; it has none for video, embeddings or rerank.
 // https://openrouter.ai/docs/api/api-reference/tts/create-speech (POST /audio/speech)
 // https://openrouter.ai/docs/api/api-reference/stt/create-transcription (POST /audio/transcriptions)
 // https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request (POST /embeddings)
@@ -305,13 +307,17 @@ const BASE_URL = "https://openrouter.ai/api/v1";
 // AI SDK provider's imageModel)
 // https://openrouter.ai/docs/guides/overview/multimodal/video-generation (POST /videos; the OpenRouter
 // AI SDK provider's videoModel)
-const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk?: string }> = {
-  speech: { protocol: "speech", aisdk: "@ai-sdk/openai" },
-  transcription: { protocol: "transcriptions", aisdk: "@ai-sdk/openai" },
-  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider" },
-  reranking: { protocol: "rerank" },
-  image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider" },
-  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider" },
+const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodeai: string }> = {
+  speech: { protocol: "speech", aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-speech" },
+  transcription: {
+    protocol: "transcriptions",
+    aisdk: "@ai-sdk/openai",
+    opencodeai: "@opencode/ai/protocols/openai-transcription",
+  },
+  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
+  reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
+  image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/protocols/openai-images" },
+  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
 };
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
@@ -722,10 +728,7 @@ export function buildOpenRouterMediaModel(
   }
 
   doc.api = {
-    [api.protocol]: {
-      base_url: BASE_URL,
-      ...(api.aisdk !== undefined ? { sdk: { aisdk: api.aisdk } } : {}),
-    },
+    [api.protocol]: { base_url: BASE_URL, sdk: { aisdk: api.aisdk, opencodeai: api.opencodeai } },
   };
   const cost = mediaCost(model, type);
   if (cost !== undefined) doc.cost = cost;
