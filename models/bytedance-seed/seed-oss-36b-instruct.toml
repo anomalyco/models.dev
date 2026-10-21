@@ -1,0 +1,32 @@
+# Model card: https://huggingface.co/ByteDance-Seed/Seed-OSS-36B-Instruct (released 2025/08/20, Apache-2.0; thinking
+# budget control, tool use). Context 524,288: config.json max_position_embeddings ("long context up to 512K" on NVIDIA's
+# card, https://build.nvidia.com/bytedance/seed-oss-36b-instruct, which also gives "Knowledge Cutoff: July 2024" and output
+# "Configurable based on remaining context", so output = context).
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Seed-OSS-36B-Instruct"
+description = "Open ByteDance Seed model for long-context reasoning, tool use, and agents"
+family = "seed"
+open_weights = true
+knowledge = "2024-07"
+release_date = "2025-08-20"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 524_288
+output = 524_288
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ByteDance-Seed/Seed-OSS-36B-Instruct"
