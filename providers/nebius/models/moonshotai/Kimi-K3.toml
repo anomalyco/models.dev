@@ -13,23 +13,27 @@
 # cache-hit rate. cache_read is set equal to input to reflect that cached and fresh input
 # tokens are billed identically, instead of leaving it unset (which downstream consumers
 # such as opencode were treating as $0/M, undercounting cost by ~18x on cache-heavy sessions).
+schema = 2
 base_model = "moonshotai/kimi-k3"
-attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 3
-output = 15
-cache_read = 3
 
 [limit]
 context = 1_048_576
 output = 8_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 3 }
+
+[cost.text.output]
+price = 15

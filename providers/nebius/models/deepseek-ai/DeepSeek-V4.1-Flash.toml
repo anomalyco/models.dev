@@ -14,18 +14,23 @@
 # No discounted prompt-cache tier is published in the public catalog: cached and fresh
 # input are billed identically, so cache_read = input (same rationale as
 # DeepSeek-V4-Flash-0731 / Kimi-K3 / GLM-5.3-Flash).
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.3
 
 [limit]
 context = 1_048_000
 output = 1_048_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 1.2

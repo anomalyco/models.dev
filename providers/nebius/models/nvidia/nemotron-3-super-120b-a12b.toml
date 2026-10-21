@@ -1,25 +1,28 @@
-name = "Nemotron-3-Super-120B-A12B"
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
-structured_output = true
-temperature = true
+name = "Nemotron-3-Super-120B-A12B"
+open_weights = true
 knowledge = "2026-02"
 release_date = "2026-03-11"
 last_updated = "2026-03-12"
-open_weights = true
 
-[cost]
-input = 0.30
-output = 0.90
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.9

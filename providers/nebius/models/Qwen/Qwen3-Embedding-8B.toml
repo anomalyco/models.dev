@@ -1,25 +1,29 @@
+schema = 2
 name = "Qwen3-Embedding-8B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-temperature = false
+open_weights = true
 knowledge = "2025-10"
 release_date = "2026-01-10"
 last_updated = "2026-02-04"
-open_weights = true
 
-[cost]
-input = 0.01
-output = 0.00
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 40_960
 input = 40_960
 output = 0
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

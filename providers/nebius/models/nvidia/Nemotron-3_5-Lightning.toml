@@ -10,19 +10,20 @@
 # are not exposed.
 # Served window: models_info max_model_len = 1_048_576 with no separate output cap, so
 # context and output both take the full served window.
-
+schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.06
-output = 0.24
-cache_read = 0.06
 
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.24

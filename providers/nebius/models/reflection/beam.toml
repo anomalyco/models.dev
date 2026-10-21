@@ -16,17 +16,19 @@
 # input are billed identically, so cache_read = input (same rationale as Kimi-K3 / GLM-5.3).
 # Limits are inherited from the lab entry (1_048_576 context, matching models_info
 # max_model_len; 131_072 output).
+schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.25
+cache = { read = 0.25 }
 
-[cost]
-input = 0.25
-output = 1
-cache_read = 0.25
+[cost.text.output]
+price = 1
