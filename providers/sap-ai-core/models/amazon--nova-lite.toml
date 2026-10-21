@@ -1,9 +1,10 @@
 # Deployed as version "2" (latest) on SAP AI Core; version "1" (context = 300_000, no reasoning) is also available and can be selected at deployment time.
 # Reasoning support: https://help.sap.com/docs/sap-ai-core/generative-ai/reasoning?locale=en-US (accessed 2026-07-14)
 # Nova 2 Lite: reasoning_effort = "low"|"medium"|"high" via additionalModelRequestFields.output_config.effort; toggle via additionalModelRequestFields.thinking.type = "enabled"|"disabled".
-# Cost: Amazon Bedrock list price (https://aws.amazon.com/bedrock/pricing/, as in providers/amazon-bedrock), used as a USD proxy.
+# Cost: Amazon Bedrock list price, global cross-Region rate (https://aws.amazon.com/bedrock/pricing/, as in providers/amazon-bedrock/global.amazon.nova-2-lite-v1:0), used as a USD proxy.
 #   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
 #   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Input: text, image and video; the SAP AI Core calculator lists no document (PDF) input for this model.
 schema = 2
 base_model = "amazon/nova-2-lite"
 name = "amazon--nova-lite"
