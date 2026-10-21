@@ -1,8 +1,10 @@
 # Toggle: chat_template_kwargs.thinking true|false
 # Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
 # Limits: GET https://api.jalapeno-cloud.ai/v1/models id=Hy3 (2026-08-17)
+# Deprecated: no longer in the public catalog GET https://www.jalapeno-cloud.ai/token-api/v1/models (2026-10-21)
 schema = 2
 base_model = "tencent/hy3"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

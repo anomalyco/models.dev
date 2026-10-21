@@ -1,6 +1,7 @@
 # Toggle: chat_template_kwargs.thinking true|false
 # Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
 # Limits: GET https://api.jalapeno-cloud.ai/v1/models id=DeepSeek-V4-Pro (2026-08-17)
+# Prices: GET https://www.jalapeno-cloud.ai/token-api/v1/models/<modelId> priceRows (USD per 1M, 2026-10-21)
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
@@ -16,6 +17,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1.6
+cache = { read = 0.14 }
 
 [cost.text.output]
 price = 3.38

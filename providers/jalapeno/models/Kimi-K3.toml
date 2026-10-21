@@ -1,6 +1,7 @@
 # Toggle: chat_template_kwargs.thinking true|false
 # Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
 # Limits: GET https://api.jalapeno-cloud.ai/v1/models id=Kimi-K3 (2026-08-17)
+# Prices: GET https://www.jalapeno-cloud.ai/token-api/v1/models/<modelId> priceRows (USD per 1M, 2026-10-21)
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -13,6 +14,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 3
+cache = { read = 0.3 }
 
 [cost.text.output]
 price = 15
