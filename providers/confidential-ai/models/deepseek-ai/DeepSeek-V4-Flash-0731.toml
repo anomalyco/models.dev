@@ -1,17 +1,15 @@
+# Toggle: chat_template_kwargs.thinking = true|false (default false)
 # Sources (accessed 2026-10-20):
 # - https://confidential.ai/pricing (DeepSeek V4 Flash: input 0.20 / cached input 0.018 / output 0.40 per 1M)
 # - https://confidential.ai/docs/inference-api/reference (model id deepseek-ai/DeepSeek-V4-Flash-0731; tools and json_schema structured output supported)
-# Served inside Intel TDX + NVIDIA confidential computing; attestation at https://api.confidential.ai/attestation
+# - Thinking toggle verified live against https://api.confidential.ai/v1/chat/completions by the provider team
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-tools = { supported = true, updates = false }
-reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.20
