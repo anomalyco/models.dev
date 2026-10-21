@@ -1,6 +1,7 @@
-# https://sichang.xyz/docs/models/chat/z-ai--glm-5.3-uncensored (accessed 2026-10-20)
-# Always reasons on this API at a fixed effort: reasoning, reasoning_effort and thinking
-# request fields are ignored, so there is no toggle or effort control to expose.
+# https://sichang.xyz/docs/models/chat/z-ai--glm-5.3-uncensored (accessed 2026-10-21)
+# That page lists the served context and max output (max_tokens is capped to it) and states that
+# reasoning / reasoning_effort / thinking request fields are ignored.
+# Always reasons at a fixed effort, so there is no toggle or effort control to expose.
 # Image parts are replaced by a text placeholder (the upstream rejects images).
 name = "GLM 5.3 Uncensored"
 description = "Uncensored GLM-5.3 that always reasons, for complex fiction, worldbuilding, and agentic work"

@@ -1,6 +1,8 @@
-# https://sichang.xyz/docs/models/chat/deepseek-v4-1-flash (accessed 2026-10-20)
-# Served with reasoning disabled (request reasoning fields are ignored) and without
-# response_format; image input is inherited from the base model.
+# https://sichang.xyz/docs/models/chat/deepseek-v4-1-flash (accessed 2026-10-21)
+# That page lists the served context and max output (max_tokens is capped to it) and states that
+# reasoning / reasoning_effort / thinking request fields are ignored.
+# Served with reasoning disabled and without response_format; image input is inherited
+# from the base model.
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning = false
 structured_output = false
