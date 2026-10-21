@@ -1,21 +1,24 @@
+schema = 2
 name = "Qwen3 Reranker 4B"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
 family = "qwen"
-release_date = "2025-07-30"
-last_updated = "2025-07-30"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = true
+release_date = "2025-07-30"
 
-[cost]
-input = 0.0575
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 32_000
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.0575
+
+[cost.text.output]
+price = 0

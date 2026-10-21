@@ -1,7 +1,12 @@
+# per audio minute
+schema = 2
 base_model = "openai/whisper-large-v3"
 
-[cost]
-# per audio minute
-input = 0.0023
-output = 0.0023
-output_audio = 2.3
+[cost.text.input]
+price = 0.0023
+
+[cost.text.output]
+price = 0.0023
+
+[cost.audio.output]
+price = 2.3

@@ -1,25 +1,24 @@
+schema = 2
 name = "GPT OSS 120B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-tool_call = true
 open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.23
-output = 0.92
-
-[limit]
-context = 65536
-output = 65536
+release_date = "2025-08-05"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+context = 65_536
+output = 65_536
+
+[cost.text.input]
+price = 0.23
+
+[cost.text.output]
+price = 0.92
