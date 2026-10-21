@@ -1,5 +1,6 @@
 # NVIDIA API: HTTP 410 Gone on POST /v1/embeddings — end of life 2026-05-18T00:00:00Z (probed 2026-10-21 against
 # integrate.api.nvidia.com)
+# API: POST https://integrate.api.nvidia.com/v1/embeddings (probed 2026-10-21).
 schema = 2
 type = "embedding"
 name = "llama-3_2-nemoretriever-300m-embed-v1"
@@ -20,6 +21,9 @@ temperature = false
 [limit]
 context = 32_768
 output = 2_048
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0
