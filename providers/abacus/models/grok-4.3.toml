@@ -7,20 +7,24 @@
 # RouteLLM output_token_rate: 0.0000025
 # RouteLLM cached_input_token_rate: 0.0000002
 # RouteLLM thinking: True
+schema = 2
 base_model = "xai/grok-4.3"
-structured_output = true
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_000_000
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.5

@@ -5,17 +5,22 @@
 # RouteLLM max_completion_tokens: 8192
 # RouteLLM input_token_rate: 0.00000014
 # RouteLLM output_token_rate: 0.00000059
+schema = 2
 base_model = "meta/llama-4-maverick-17b-instruct"
-reasoning = false
 
-[cost]
-input = 0.14
-output = 0.59
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 1_048_576
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.59

@@ -7,20 +7,24 @@
 # RouteLLM input_token_rate: 0.0000014
 # RouteLLM output_token_rate: 0.0000044
 # RouteLLM cached_input_token_rate: 0.00000026
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

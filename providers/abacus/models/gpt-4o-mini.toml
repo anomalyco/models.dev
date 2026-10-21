@@ -1,15 +1,20 @@
+schema = 2
 base_model = "openai/gpt-4o-mini"
-structured_output = true
-reasoning = false
 
-[cost]
-input = 0.15
-output = 0.6
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

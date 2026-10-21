@@ -1,23 +1,25 @@
+schema = 2
 name = "Claude Sonnet 4"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
-release_date = "2025-05-14"
-last_updated = "2025-05-14"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2025-05-14"
 
-[cost]
-input = 3.00
-output = 15.00
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 200_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

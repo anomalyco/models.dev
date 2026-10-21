@@ -6,13 +6,18 @@
 # RouteLLM input_token_rate: 0.000005
 # RouteLLM output_token_rate: 0.000025
 # RouteLLM thinking: True
+schema = 2
 base_model = "anthropic/claude-opus-5"
-reasoning_options = []
-
-[cost]
-input = 5
-output = 25
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 25

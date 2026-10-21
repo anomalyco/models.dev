@@ -7,20 +7,24 @@
 # RouteLLM output_token_rate: 0.00000348
 # RouteLLM cached_input_token_rate: 0.00000015
 # RouteLLM thinking: True
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-structured_output = true
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.15
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_000_000
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.74
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.48

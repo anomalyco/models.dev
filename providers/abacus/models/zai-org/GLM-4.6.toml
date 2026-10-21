@@ -6,18 +6,22 @@
 # RouteLLM max_completion_tokens: 131072
 # RouteLLM input_token_rate: 0.0000006
 # RouteLLM output_token_rate: 0.0000022
+schema = 2
 base_model = "zhipuai/glm-4.6"
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 0.6
-output = 2.2
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 202_752
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.2

@@ -5,25 +5,29 @@
 # RouteLLM max_completion_tokens: 64000
 # RouteLLM input_token_rate: 0.000003
 # RouteLLM output_token_rate: 0.000015
+schema = 2
 name = "RouteLLM"
 description = "RouteLLM routes prompts to an appropriate Abacus-backed text-generation model"
 family = "gpt"
+open_weights = false
 release_date = "2024-01-01"
 last_updated = "2026-07-10"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
 
-[cost]
-input = 3
-output = 15
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 64_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

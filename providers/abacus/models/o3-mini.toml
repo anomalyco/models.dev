@@ -7,20 +7,24 @@
 # RouteLLM input_token_rate: 0.0000011
 # RouteLLM output_token_rate: 0.0000044
 # RouteLLM cached_input_token_rate: 0.00000055
+schema = 2
 base_model = "openai/o3-mini"
-structured_output = true
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.55
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 200_000
 output = 100_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4

@@ -1,17 +1,21 @@
 # Source: https://routellm.abacus.ai/v1/models
 # RouteLLM API does not report thinking: true for this ID.
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 1.2
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

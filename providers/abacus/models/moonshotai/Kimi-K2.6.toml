@@ -7,20 +7,24 @@
 # RouteLLM output_token_rate: 0.000004
 # RouteLLM cached_input_token_rate: 0.00000019
 # RouteLLM thinking: True
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-reasoning = true
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.19
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

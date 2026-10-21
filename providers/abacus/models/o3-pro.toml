@@ -6,19 +6,23 @@
 # RouteLLM max_completion_tokens: 100000
 # RouteLLM input_token_rate: 0.00002
 # RouteLLM output_token_rate: 0.00004
+schema = 2
 base_model = "openai/o3-pro"
-structured_output = true
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 20.00
-output = 40.00
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 200_000
 output = 100_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 20
+
+[cost.text.output]
+price = 40

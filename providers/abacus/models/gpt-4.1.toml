@@ -6,19 +6,24 @@
 # RouteLLM input_token_rate: 0.000002
 # RouteLLM output_token_rate: 0.000008
 # RouteLLM cached_input_token_rate: 0.0000005
+schema = 2
 base_model = "openai/gpt-4.1"
-structured_output = true
-reasoning = false
 
-[cost]
-input = 2.00
-output = 8.00
-cache_read = 0.5
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 1_047_576
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8

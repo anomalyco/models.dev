@@ -7,15 +7,20 @@
 # RouteLLM output_token_rate: 0.0000075
 # RouteLLM cached_input_token_rate: 0.00000015
 # RouteLLM thinking: True
+schema = 2
 base_model = "google/gemini-3.6-flash"
-structured_output = true
-reasoning_options = []
-
-[cost]
-input = 1.5
-output = 7.5
-cache_read = 0.15
 
 [modalities]
 input = ["text", "image", "audio"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

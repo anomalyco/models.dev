@@ -1,23 +1,25 @@
+schema = 2
 name = "Grok 4"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2025-07-09"
-last_updated = "2025-07-09"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2025-07-09"
 
-[cost]
-input = 3.00
-output = 15.00
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 256_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15
