@@ -3,8 +3,8 @@
 # any other reasoning_effort value -> on; reasoning.enabled; thinking.type = enabled|disabled.
 # No graded effort: reasoning_effort levels (low/medium/xhigh) all map to "on"; there is no reasoning budget field.
 # Qwen3.8 27B served by Heabsy on dedicated GPUs in the EEA (EEA tier, zero data retention).
-# Pricing (USD per 1M tokens: input 0.40, cached input 0.05, output 3.00) and limits:
-# https://heabsy.com/models (accessed 2026-09-28). API: https://api.heabsy.com/docs
+# Pricing (USD per 1M tokens: input 1.00, cached input 0.0761, output 3.00) and limits:
+# https://heabsy.com/models (accessed 2026-10-21). API: https://api.heabsy.com/docs
 
 base_model = "alibaba/qwen3.8-27b"
 
@@ -12,9 +12,9 @@ base_model = "alibaba/qwen3.8-27b"
 type = "toggle"
 
 [cost]
-input = 0.40
+input = 1.00
 output = 3.00
-cache_read = 0.05
+cache_read = 0.0761
 
 [modalities]
 input = ["text", "image"]
