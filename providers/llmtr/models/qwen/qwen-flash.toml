@@ -4,6 +4,7 @@
 # Budget: $.thinking_budget (integer reasoning tokens).
 # Measured: `thinking_budget` is honoured exactly: 64 -> 64 reasoning tokens, 600 -> 600.
 # The bare `$.reasoning` boolean is inert on this route (no reasoning output with it set); `enable_thinking` is the control that works.
+# Cache read price: GET https://llmtr.com/v1/models pricing.input_cache_read (accessed 2026-10-21).
 schema = 2
 base_model = "alibaba/qwen-flash"
 
@@ -12,6 +13,7 @@ reasoning = { supported = true, toggle = true, budget = {} }
 
 [cost.text.input]
 price = 0.05
+cache = { read = 0.01 }
 
 [cost.text.output]
 price = 0.4

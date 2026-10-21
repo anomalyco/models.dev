@@ -7,8 +7,10 @@
 #   usage.completion_tokens_details.reasoning_tokens.
 # The same harness detected reasoning on six Qwen routes in the same run, so [] here means
 # "no caller control", not "untested".
+# Deprecated: no longer listed in GET https://llmtr.com/v1/models (379 models, checked 2026-10-21).
 schema = 2
 base_model = "google/gemini-2.5-flash-lite"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }

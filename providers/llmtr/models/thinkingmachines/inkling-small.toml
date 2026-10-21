@@ -1,6 +1,7 @@
 # Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
 # reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
 # Effort: $.reasoning.effort = none|minimal|low|medium|high|xhigh
+# Cache read price: GET https://llmtr.com/v1/models pricing.input_cache_read (accessed 2026-10-21).
 schema = 2
 base_model = "thinkingmachines/inkling-small"
 
@@ -13,6 +14,7 @@ output = 262_144
 
 [cost.text.input]
 price = 0.58
+cache = { read = 0.116 }
 
 [cost.text.output]
 price = 1.44

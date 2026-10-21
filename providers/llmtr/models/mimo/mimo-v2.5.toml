@@ -5,8 +5,10 @@
 #   :fast, reasoning.max_tokens, enable_thinking and thinking.type all return no
 #   reasoning_content and no usage.completion_tokens_details.reasoning_tokens.
 # Xiaomi's first-party host exposes a toggle; this gateway does not forward it.
+# Deprecated: no longer listed in GET https://llmtr.com/v1/models (379 models, checked 2026-10-21).
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }
