@@ -18,3 +18,7 @@ reasoning = { supported = false }
 context = 1_050_000
 input = 1_050_000
 output = 0
+
+[api.evaluate]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/vercel-ai-gateway" }
