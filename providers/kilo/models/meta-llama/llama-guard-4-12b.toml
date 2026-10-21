@@ -2,25 +2,17 @@
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
+base_model = "meta/llama-guard-4-12b"
 name = "Meta: Llama Guard 4 12B"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
-family = "llama"
-open_weights = false
-release_date = "2025-04-30"
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
 effort_updates = false
 
 [limit]
-context = 163_840
 output = 16_384
 
 [cost.text.input]
