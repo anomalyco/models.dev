@@ -1,10 +1,13 @@
 # Version-tracking standard-path router for current DeepSeek Flash
-# (tracks the live Flash SKU; currently DeepSeek V4.1 Flash).
+# (tracks the live Flash SKU; currently DeepSeek V4.1 Flash 1017).
+# Target: GET https://api.fireworks.ai/v1/serverless/models (2026-10-21) lists
+#   accounts/fireworks/routers/deepseek-flash-latest in the `aliases` of
+#   accounts/fireworks/models/deepseek-v4p1-flash-1017 (previously deepseek-v4p1-flash).
 # Short ID: deepseek-flash-latest
 # Full model: accounts/fireworks/routers/deepseek-flash-latest
 # FireConnect: https://docs.fireworks.ai/ecosystem/fireconnect/models
 #   (latest vs fast; pinned deepseek-v4-flash deprecated → deepseek-flash-latest)
-# Underlying serverless model: accounts/fireworks/models/deepseek-v4p1-flash
+# Underlying serverless model (2026-09-15): accounts/fireworks/models/deepseek-v4p1-flash
 # Pricing (Standard / Priority, input / cached / output per 1M):
 #   https://docs.fireworks.ai/serverless/pricing (accessed 2026-09-15)
 #   https://fireworks.ai/models/deepseek-ai/deepseek-v4p1-flash (accessed 2026-09-15)
@@ -14,7 +17,7 @@
 #   Same surface as accounts/fireworks/models/deepseek-v4p1-flash (verified peer 2026-09-10).
 # Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
 schema = 2
-base_model = "deepseek/deepseek-v4.1-flash"
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek Flash Latest"
 
 [capabilities]
