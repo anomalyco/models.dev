@@ -1,31 +1,31 @@
 # Toggle: thinking.type = enabled|disabled
 # Sources: https://mimo.mi.com/models/zh-CN/mimo-v2.6-pro and https://mimo.mi.com/docs/zh-CN/api/chat/openai-api
+schema = 2
 name = "MiMo-V2.6-Pro"
 description = "MiMo Pro model for multimodal coding agents and long-context automation"
 family = "mimo"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.435
-output = 0.87
-cache_read = 0.0036
-
-[limit]
-context = 1_048_576
-output = 131_072
+release_date = "2026-09-22"
 
 [modalities]
 input = ["text", "image", "audio", "video"]
 output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.435
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.87

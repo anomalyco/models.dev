@@ -1,31 +1,32 @@
+schema = 2
 name = "MiMo-V2.5"
 description = "Open MiMo model for multimodal coding agents and long-context automation"
 family = "mimo"
+open_weights = true
+knowledge = "2024-12"
 release_date = "2026-04-22"
 last_updated = "2026-06-24"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
 status = "deprecated"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
-
-[limit]
-context = 1_048_576
-output = 131_072
 
 [modalities]
 input = ["text", "image", "audio", "video"]
 output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

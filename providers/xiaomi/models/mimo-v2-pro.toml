@@ -1,31 +1,32 @@
+schema = 2
 name = "MiMo-V2-Pro"
 description = "Earlier MiMo Pro model for multimodal agents, reasoning, and code tasks"
 family = "mimo"
+open_weights = false
+knowledge = "2024-12"
 release_date = "2026-03-18"
 last_updated = "2026-06-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = false
 status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.435
-output = 0.87
-cache_read = 0.0036
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.435
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.87

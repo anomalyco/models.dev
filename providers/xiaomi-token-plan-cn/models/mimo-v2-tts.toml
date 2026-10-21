@@ -1,21 +1,24 @@
+schema = 2
 name = "MiMo-V2-TTS"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "mimo"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = true
+release_date = "2026-03-18"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 8_192
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["audio"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
