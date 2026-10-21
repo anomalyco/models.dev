@@ -1,18 +1,25 @@
-base_model = "xai/grok-4.3"
-structured_output = true
-
 # Grok 4.3 meaningfully supports native low/medium/high; xhigh/max normalize to
 # high, and "off" is Auriko's normalized disable value.
 # https://docs.auriko.ai/guides/extensions-and-thinking
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+schema = 2
+base_model = "xai/grok-4.3"
 
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2.5
-output = 5
-cache_read = 0.4
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5

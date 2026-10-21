@@ -1,12 +1,15 @@
-base_model = "anthropic/claude-sonnet-4-6"
-
 # Claude 4.6 uses adaptive thinking; Auriko maps effort and "off" to its native
 # control. No caller-selected token budget is exposed.
 # https://docs.auriko.ai/guides/extensions-and-thinking
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }]
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15
