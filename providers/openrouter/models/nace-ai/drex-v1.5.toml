@@ -7,6 +7,13 @@ structured_output = true
 [limit]
 context = 131_072
 
+[api.systemone]
+sdk = { aisdk = "none" }
+
+[api.decisions]
+base_url = "https://openrouter.ai/api/alpha"
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 0.04
 

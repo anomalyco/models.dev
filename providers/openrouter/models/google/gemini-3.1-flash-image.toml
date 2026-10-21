@@ -14,6 +14,11 @@ structured_output = true
 system_updates = false
 effort_updates = false
 
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
 [cost.text.input]
 price = 0.5
 

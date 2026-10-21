@@ -12,6 +12,11 @@ effort_updates = false
 [limit]
 output = 8_192
 
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
 [cost.text.input]
 price = 0.3
 cache = { read = 0.03, write = 0.083333 }

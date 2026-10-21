@@ -9,6 +9,7 @@ output = ["image/png", "image/jpeg", "image/webp"]
 
 [api.images]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 2

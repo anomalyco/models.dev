@@ -12,6 +12,11 @@ system_updates = true
 effort_updates = false
 cache = { supported = true, implicit = { min_tokens = 1_024 } }
 
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
 [cost.text.input]
 price = 8
 cache = { read = 2 }

@@ -5,6 +5,7 @@ base_model = "openai/text-embedding-ada-002"
 
 [api.embeddings]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.1

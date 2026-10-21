@@ -9,6 +9,7 @@ name = "Llama Nemotron Rerank VL 1B V2 (free)"
 
 [api.rerank]
 base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/cohere", opencodeai = "none" }
 
 [cost.text.input]
 price = 0

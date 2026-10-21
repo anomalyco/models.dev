@@ -10,7 +10,7 @@ base_model = "black-forest-labs/flux-video-edit"
 
 [api.videos]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
 
 [cost.video.output]
 unit = "second"

@@ -19,6 +19,13 @@ temperature = false
 context = 32_768
 output = 0
 
+[api.systemone]
+sdk = { aisdk = "none" }
+
+[api.decisions]
+base_url = "https://openrouter.ai/api/alpha"
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 0.042
 

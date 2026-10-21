@@ -24,6 +24,11 @@ effort_updates = false
 context = 65_536
 output = 58_982
 
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
 [cost.text.input]
 price = 1.5
 

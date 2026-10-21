@@ -10,7 +10,7 @@ base_model = "bytedance-seed/seedance-2.0"
 
 [api.videos]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
 
 [cost.video.output]
 price = 7

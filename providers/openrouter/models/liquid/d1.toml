@@ -4,6 +4,13 @@ base_model = "liquid/d1"
 [capabilities]
 structured_output = true
 
+[api.systemone]
+sdk = { aisdk = "none" }
+
+[api.decisions]
+base_url = "https://openrouter.ai/api/alpha"
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 0.02
 cache = { read = 0.02 }

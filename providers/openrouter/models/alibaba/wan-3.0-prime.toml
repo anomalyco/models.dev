@@ -11,7 +11,7 @@ name = "Wan 3.0 Prime"
 
 [api.videos]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
 
 [cost.video.output]
 unit = "second"
