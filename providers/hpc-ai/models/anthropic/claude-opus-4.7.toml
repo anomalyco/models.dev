@@ -1,12 +1,17 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-7"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 25
