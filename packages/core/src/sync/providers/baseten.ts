@@ -175,7 +175,9 @@ export function buildBasetenModel(
     temperature: samplingParameters.has("temperature"),
     tool_call: features.has("tools") || existing?.tool_call,
     structured_output: features.has("structured_outputs") || existing?.structured_output,
-    knowledge: facts?.knowledge,
+    // A base_model file may keep its own knowledge cutoff (e.g. an unsourced
+    // host value where the lab states none); the sync never adds one.
+    knowledge: baseModel === undefined ? existing?.knowledge : authored?.knowledge,
     open_weights: facts?.open_weights,
     status: existing?.status,
     interleaved: existing?.interleaved,

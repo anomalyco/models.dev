@@ -132,3 +132,13 @@ test("Baseten price updates keep v2 data in migrated files", async () => {
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("keeps an authored Baseten knowledge override on base_model entries", () => {
+  const built = buildBasetenModel(
+    basetenModel({ id: "zai-org/GLM-5", name: "GLM 5" }),
+    { base_model: "zhipuai/glm-5", knowledge: "2026-01" },
+    "zhipuai/glm-5",
+    { base_model: "zhipuai/glm-5", knowledge: "2026-01" },
+  );
+  expect(built).toMatchObject({ knowledge: "2026-01" });
+});
