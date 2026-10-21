@@ -1,19 +1,25 @@
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 name = "Qwen3.6 35B A3B"
+knowledge = "2025-04"
 release_date = "2026-05-01"
 last_updated = "2026-05-22"
-structured_output = true
-knowledge = "2025-04"
 status = "beta"
 
-[cost]
-input = 0.25
-output = 1.5
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 1.5

@@ -1,12 +1,17 @@
+schema = 2
 base_model = "mistral/mistral-medium-2604"
-structured_output = true
 name = "Mistral Medium 3.5 128B"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 1.5
-output = 7.5
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 16_384
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5
