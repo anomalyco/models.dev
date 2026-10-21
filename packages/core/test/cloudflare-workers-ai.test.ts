@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { cloudflareWorkersAi } from "../src/sync/providers/cloudflare-workers-ai.js";
+import { buildWorkersAiModel, cloudflareWorkersAi } from "../src/sync/providers/cloudflare-workers-ai.js";
 
 test("preserves OpenRouter pricing overrides as context tiers", () => {
   const [source] = cloudflareWorkersAi.parseModels({
@@ -125,4 +125,11 @@ test("lists search efforts weakest first so v2 files stay unchanged", () => {
     existing: () => undefined,
     authored: () => undefined,
   })?.model.reasoning_options).toEqual([{ type: "effort", values: ["none", "low", "high", "max"] }]);
+});
+
+test("keeps the file's own API address, which search does not report", () => {
+  const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow("@cf/test/run-api", 65_536)] } });
+  const provider = { api: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run" };
+  expect(buildWorkersAiModel(source!, { provider }).provider).toEqual(provider);
+  expect(buildWorkersAiModel(source!, undefined).provider).toBeUndefined();
 });
