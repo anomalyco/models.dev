@@ -1,26 +1,11 @@
 # Modalities: GPT Image output_format png | jpeg | webp, https://platform.openai.com/docs/guides/image-generation
 schema = 2
-type = "image"
+base_model = "openai/gpt-image-1-mini"
 name = "GPT Image 1 Mini"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "gpt-image"
-open_weights = false
-release_date = "2025-10-06"
 
 [modalities]
 input = ["text"]
 output = ["image/png", "image/jpeg", "image/webp"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-top_p = false
-top_k = false
-
-[limit]
-context = 0
-output = 0
 
 [api.images]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

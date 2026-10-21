@@ -2,27 +2,12 @@
 # Inputs: AI Gateway's catalog video_capabilities.input_limits (kinds and supported_formats), https://ai-gateway.vercel.sh/v1/models
 # Video input: "Source video .mp4 with a supported codec such as H.264, H.265, or AV1", https://docs.x.ai/developers/model-capabilities/video/editing
 schema = 2
-type = "video"
+base_model = "xai/grok-imagine-video"
 name = "Grok Imagine"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
-family = "grok"
-open_weights = false
-release_date = "2026-01-28"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif", "image/avif", "video/mp4"]
 output = ["video/mp4"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-top_p = false
-top_k = false
-
-[limit]
-context = 0
-output = 0
 
 [api.videos]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
