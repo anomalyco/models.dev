@@ -1,21 +1,15 @@
 # Top-level `thinking.type` accepts enabled/disabled and defaults enabled
 # (accessed 2026-06-25).
 # https://cloud.tencent.com/document/product/1823/132061
+# Deprecated: the Coding Plan overview (updated 2026-10-15, checked 2026-10-21) lists only
+# Auto (tc-code-latest) as a plan model: https://cloud.tencent.com/document/product/1772/128947
 schema = 2
-name = "GLM-5"
+base_model = "zhipuai/glm-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-open_weights = false
-release_date = "2026-02-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-temperature = true
 
 [limit]
 context = 202_752

@@ -1,21 +1,14 @@
+# Deprecated: the Coding Plan overview (updated 2026-10-15, checked 2026-10-21) lists only
+# Auto (tc-code-latest) as a plan model: https://cloud.tencent.com/document/product/1772/128947
 schema = 2
-name = "MiniMax-M2.5"
+base_model = "minimax/MiniMax-M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-open_weights = true
-release_date = "2026-02-12"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 
 [limit]
-context = 204_800
 output = 32_768
 
 [api.chat-completions]
