@@ -1,14 +1,19 @@
 # Toggle: chat_template_kwargs.thinking = true|false (default false)
-# Sources (accessed 2026-10-20):
+# Effort: not supported. reasoning_effort is accepted but ignored (live probe 2026-10-21, thinking on, same prompt:
+#   none 232 / low 215 / high 144 / max 179 completion tokens; "none" still returns reasoning, no ordering by level)
+# Reasoning is returned in message.reasoning_content (same probe).
+# Sources (accessed 2026-10-21):
 # - https://confidential.ai/pricing (DeepSeek V4 Flash: input 0.20 / cached input 0.018 / output 0.40 per 1M)
 # - https://confidential.ai/docs/inference-api/reference (model id deepseek-ai/DeepSeek-V4-Flash-0731; tools and json_schema structured output supported)
-# - Thinking toggle verified live against https://api.confidential.ai/v1/chat/completions by the provider team
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.20
