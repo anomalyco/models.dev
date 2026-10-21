@@ -4,12 +4,14 @@
 # IDR prices were converted to USD per 1M tokens by dividing by that rate.
 # Billed per unit, not per token, so the per-token `cost` above is 0:
 #   USD 0.0143 per output image - output_image on the images endpoint
+schema = 2
 base_model = "google/gemini-3.1-flash-image"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
 
-[cost]
-input = 0
-output = 0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

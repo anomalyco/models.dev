@@ -1,11 +1,12 @@
+schema = 2
 base_model = "openai/gpt-5.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 0
 
-[cost]
-input = 0
-output = 0
-
+[cost.text.output]
+price = 0

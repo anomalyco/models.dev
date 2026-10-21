@@ -1,25 +1,24 @@
+schema = 2
 name = "GPT OSS 20B"
 description = "Open-weight GPT reasoning model for self-hosted agents and controllable deployments"
 family = "gpt-oss"
-attachment = false
-reasoning = true
-tool_call = true
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
 open_weights = true
+release_date = "2025-08-05"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 131_072
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

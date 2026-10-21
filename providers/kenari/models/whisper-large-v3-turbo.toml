@@ -1,5 +1,8 @@
+schema = 2
 base_model = "openai/whisper-large-v3-turbo"
 
-[cost]
-input = 0
-output = 0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

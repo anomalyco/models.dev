@@ -1,12 +1,14 @@
 # Source: https://kenari.id/v1/models (id deepseek-v4-1-flash, reasoning low/high/max)
 # Kenari convention: subscription pricing, cost 0/0 like other Kenari entries.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 0
 
-[cost]
-input = 0
-output = 0
+[cost.text.output]
+price = 0

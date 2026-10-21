@@ -6,12 +6,14 @@
 #   USD 0.02 per output image - output_image on the images endpoint
 # kenari publishes no reasoning options for this id; the baseline is the model's
 # own lab entry (providers/google/models/gemini-3-pro-image.toml), per AGENTS.md.
+schema = 2
 base_model = "google/gemini-3-pro-image"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
 
-[cost]
-input = 0
-output = 0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
