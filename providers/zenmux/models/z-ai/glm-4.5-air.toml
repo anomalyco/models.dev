@@ -1,23 +1,29 @@
 # Toggle: reasoning.enabled = true|false
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+schema = 2
 base_model = "zhipuai/glm-4.5-air"
 name = "GLM 4.5 Air"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.1165
-output = 0.2911
-cache_read = 0.0233
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.1747
-output = 1.1645
-cache_read = 0.0349
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 128_000
 output = 96_000
+
+[cost.text.input]
+price = 0.1165
+cache = { read = 0.0233 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1747
+cache = { read = 0.0349 }
+
+[cost.text.output]
+price = 0.2911
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.1645

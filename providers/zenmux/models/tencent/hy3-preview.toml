@@ -1,8 +1,12 @@
+schema = 2
 base_model = "tencent/hy3-preview"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
 
-[cost]
-input = 0.172
-output = 0.572
-cache_read = 0.058
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[cost.text.input]
+price = 0.172
+cache = { read = 0.058, write = 0 }
+
+[cost.text.output]
+price = 0.572

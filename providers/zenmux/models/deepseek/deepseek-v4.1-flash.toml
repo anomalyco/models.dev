@@ -3,20 +3,19 @@
 # Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
 # ZenMux's time-of-day promotional rates are intentionally omitted from static token costs.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.003
+[cost.text.output]
+price = 0.6

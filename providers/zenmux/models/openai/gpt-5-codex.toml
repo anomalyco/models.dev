@@ -1,28 +1,30 @@
+schema = 2
 name = "GPT-5 Codex"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
-release_date = "2025-09-23"
-last_updated = "2025-09-23"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
 open_weights = false
-
-[cost]
-input = 1.25
-output = 10.00
-cache_read = 0.12
-
-[limit]
-context = 400_000
-output = 64_000
+knowledge = "2025-01-01"
+release_date = "2025-09-23"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://zenmux.ai/api/v1"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
+
+[limit]
+context = 400_000
+output = 64_000
+
+[api.responses]
+base_url = "https://zenmux.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 10

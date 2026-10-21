@@ -1,21 +1,23 @@
 # Effort: reasoning_effort = high|max
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
 name = "GLM 5.2"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
-
-[cost]
-input = 0.98
-output = 3.08
-cache_read = 0.182
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.98
+cache = { read = 0.182 }
+
+[cost.text.output]
+price = 3.08

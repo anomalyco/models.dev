@@ -1,24 +1,27 @@
+schema = 2
 name = "DeepSeek-V3.2 (Non-thinking Mode)"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
 open_weights = false
+knowledge = "2025-01-01"
+release_date = "2025-12-01"
 status = "deprecated"
 
-[cost]
-input = 0.28
-output = 0.42
-cache_read = 0.03
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.28
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.42

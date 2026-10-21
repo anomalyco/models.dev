@@ -1,10 +1,15 @@
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.60
-output = 2.40
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://zenmux.ai/api/anthropic/v1"
+[api.messages]
+base_url = "https://zenmux.ai/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.4

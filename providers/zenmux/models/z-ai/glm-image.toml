@@ -2,8 +2,9 @@
 # image editing exists in the lab model but is unavailable on this hosted route.
 # ZenMux pricing is non-token-denominated for this route and is intentionally omitted.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
+schema = 2
 base_model = "zhipuai/glm-image"
-attachment = false
 
 [modalities]
 input = ["text"]
+output = ["image"]

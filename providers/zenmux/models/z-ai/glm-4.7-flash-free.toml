@@ -1,19 +1,22 @@
 # Toggle: reasoning.enabled = true|false
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 name = "GLM 4.7 Flash (Free)"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

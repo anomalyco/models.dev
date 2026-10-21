@@ -1,29 +1,30 @@
+schema = 2
 name = "Claude Opus 4.5"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-release_date = "2025-11-24"
-last_updated = "2025-11-24"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
 open_weights = false
+knowledge = "2025-01-01"
+release_date = "2025-11-24"
 
-[cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+[modalities]
+input = ["application/pdf", "image", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
 
 [limit]
 context = 200_000
 output = 64_000
 
-[modalities]
-input = ["pdf", "image", "text"]
-output = ["text"]
+[api.messages]
+base_url = "https://zenmux.ai/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://zenmux.ai/api/anthropic/v1"
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25

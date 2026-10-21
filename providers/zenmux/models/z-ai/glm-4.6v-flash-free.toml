@@ -2,26 +2,33 @@
 # Host modalities: the live free route includes file/PDF input; the paid route omits it.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+schema = 2
 base_model = "zhipuai/glm-4.6v-flash"
 name = "GLM 4.6V Flash (Free)"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 200_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0

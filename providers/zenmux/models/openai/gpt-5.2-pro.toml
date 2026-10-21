@@ -1,27 +1,29 @@
+schema = 2
 name = "GPT-5.2-Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
-release_date = "2025-12-11"
-last_updated = "2025-12-11"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
-temperature = false
-tool_call = true
-knowledge = "2025-08-31"
 open_weights = false
+knowledge = "2025-08-31"
+release_date = "2025-12-11"
 
-[cost]
-input = 21.00
-output = 168.00
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+temperature = false
 
 [limit]
 context = 400_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.responses]
+base_url = "https://zenmux.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://zenmux.ai/api/v1"
+[cost.text.input]
+price = 21
+
+[cost.text.output]
+price = 168

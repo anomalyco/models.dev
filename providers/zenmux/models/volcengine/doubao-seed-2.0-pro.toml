@@ -1,25 +1,26 @@
+schema = 2
 name = "Doubao-Seed-2.0-pro"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-02-14"
-last_updated = "2026-02-14"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-knowledge = "2026-02-14"
 open_weights = false
+knowledge = "2026-02-14"
+release_date = "2026-02-14"
 
-[cost]
-input = 0.45
-output = 2.24
-cache_read = 0.09
-cache_write = 0.0024
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
 
 [limit]
 context = 256_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.45
+cache = { read = 0.09, write = 0.0024 }
+
+[cost.text.output]
+price = 2.24

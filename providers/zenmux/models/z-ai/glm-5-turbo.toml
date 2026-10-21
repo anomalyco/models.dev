@@ -1,26 +1,32 @@
 # Toggle: reasoning.enabled = true|false
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+schema = 2
 base_model = "zhipuai/glm-5-turbo"
-structured_output = true
 name = "GLM 5 Turbo"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.73
-output = 3.19
-cache_read = 0.174
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 1.02
-output = 3.77
-cache_read = 0.261
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.73
+cache = { read = 0.174 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.02
+cache = { read = 0.261 }
+
+[cost.text.output]
+price = 3.19
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.77

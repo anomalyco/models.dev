@@ -4,17 +4,19 @@
 # (always-on, same class as minimax-m3 and gpt-5). Upstream thinking cannot be
 # disabled; depth is set by effort = low|medium|high|xhigh|max.
 # https://platform.minimax.io/docs/api-reference/text-anthropic-api
+schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.015
+[api.messages]
+base_url = "https://zenmux.ai/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://zenmux.ai/api/anthropic/v1"
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

@@ -1,14 +1,20 @@
 # ZenMux's 2026-09-19 page has supports_reasoning=0 and both live OpenAI- and
 # Anthropic-compatible entries have capabilities.reasoning=false for this id.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
+schema = 2
 base_model = "xai/grok-build-0.1"
-structured_output = true
-reasoning = false
-
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2

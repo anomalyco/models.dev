@@ -2,21 +2,20 @@
 # reasoning depth is set by output_config.effort, which only accepts "max".
 # Pricing: free tier via ZenMux (accessed 2026-07-20).
 # https://docs.zenmux.ai
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 (Free)"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["max"]
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.output]
+price = 0
