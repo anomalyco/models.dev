@@ -1,19 +1,24 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-reasoning_options = [{ type = "toggle" }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.9
-output = 7.999
-cache_read = 0.32167
 
 [limit]
 context = 262_144
 output = 32_768
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.9
+cache = { read = 0.32167 }
+
+[cost.text.output]
+price = 7.999

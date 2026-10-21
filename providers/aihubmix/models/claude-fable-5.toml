@@ -1,18 +1,24 @@
+schema = 2
 base_model = "anthropic/claude-fable-5"
-structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-interleaved = true
 
-[cost]
-input = 11
-output = 55
-cache_read = 1.1
-cache_write = 13.75
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 11
+cache = { read = 1.1, write = 13.75 }
+
+[cost.text.output]
+price = 55

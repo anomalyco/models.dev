@@ -3,13 +3,15 @@
 # https://dev.meta.ai/docs/overview/
 # Effort: reasoning_effort = minimal|low|medium|high|xhigh on /v1/chat/completions.
 # https://docs.aihubmix.com/cn/api/unified-inference
+schema = 2
 base_model = "meta/muse-spark-1.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 1.375
 
-[cost]
-input = 1.375
-output = 4.675
+[cost.text.output]
+price = 4.675

@@ -7,23 +7,28 @@
 # billing_config context tier at 100000 tokens (USD/MTok): input=0.5, output=2.5, cache_read=0.05, cache_write=0.625
 # Toggle: $.thinking.type = "enabled"|"disabled" on /v1/messages.
 # Effort: $.output_config.effort = low|medium|high|xhigh|max on /v1/messages.
+schema = 2
 base_model = "anthropic/claude-haiku-5-5"
-structured_output = true
-interleaved = true
-[[reasoning_options]]
-type = "toggle"
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
 
-[[cost.tiers]]
-tier = { type = "context", size = 100000 }
-input = 0.5
-output = 2.5
-cache_read = 0.05
-cache_write = 0.625
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

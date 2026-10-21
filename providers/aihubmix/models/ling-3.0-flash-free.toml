@@ -4,10 +4,15 @@
 # Catalog: https://aihubmix.com/api/v1/models?type=llm&sort_by=order
 # Canon export SHA: 3aad098cb65aaeb3948bd8ee13ce1338d7c7f5a0
 # Toggle: $.enable_thinking = true|false on /v1/chat/completions.
+schema = 2
 base_model = "inclusionai/ling-3.0-flash"
 name = "Ling 3.0 Flash (free)"
-[[reasoning_options]]
-type = "toggle"
-[cost]
-input = 0
-output = 0
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

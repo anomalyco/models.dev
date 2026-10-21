@@ -4,16 +4,19 @@
 # Effort: reasoning_effort = minimal|high on /v1/chat/completions.
 # Gemini native: generationConfig.thinkingConfig.thinkingLevel uses the corresponding uppercase levels.
 # https://docs.aihubmix.com/cn/api/unified-inference
+schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
 structured_output = false
 
-interleaved = true
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
 
-[cost]
-input = 0.25
-output = 1.5
-cache_read = 0.025
+[cost.text.output]
+price = 1.5

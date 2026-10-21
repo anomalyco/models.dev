@@ -5,14 +5,19 @@
 # Canon export SHA: 61075902f1744ed202e0fdf3d8b1f4f2432a7289
 # Reasoning: live-tested on AIHubMix 2026-10-09; thinking cannot be switched off and its text returns in reasoning_content.
 # Effort: $.reasoning_effort = low|high|max on /v1/chat/completions.
+schema = 2
 base_model = "zhipuai/glm-5.3"
-structured_output = true
 name = "GLM-5.3 (Coding, free)"
-[interleaved]
-field = "reasoning_content"
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-[cost]
-input = 0
-output = 0
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

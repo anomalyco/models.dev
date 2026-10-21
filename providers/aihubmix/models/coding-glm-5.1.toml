@@ -1,28 +1,30 @@
+schema = 2
 name = "Coding GLM 5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
-release_date = "2026-04-11"
-last_updated = "2026-04-11"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-04-11"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.06
-output = 0.22
-cache_read = 0.013
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 200_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.013 }
+
+[cost.text.output]
+price = 0.22

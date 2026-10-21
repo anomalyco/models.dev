@@ -5,13 +5,19 @@
 # Catalog: https://aihubmix.com/api/v1/models?type=llm&sort_by=order
 # Canon export SHA: ac27edad066da809395ffa045560961a513aadb3
 # Effort: $.generationConfig.thinkingConfig.thinkingLevel = low|medium|high.
+schema = 2
 base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-[cost]
-input = 2
-output = 10
-cache_read = 0.1
-input_audio = 2
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 2

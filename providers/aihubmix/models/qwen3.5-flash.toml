@@ -6,30 +6,37 @@
 # Canon export SHA: 00fb309c0dba28a9e4c9a3a6569d418db947cafc
 # Toggle: $.enable_thinking = true|false on /v1/chat/completions.
 # Budget: integer $.reasoning.max_tokens on /v1/chat/completions.
+schema = 2
 base_model = "alibaba/qwen3.5-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
-[interleaved]
-field = "reasoning_content"
-[[reasoning_options]]
-type = "toggle"
-[[reasoning_options]]
-type = "budget_tokens"
-[cost]
-input = 0.0282
-output = 0.282
-cache_read = 0.00282
-cache_write = 0.03525
 
-[[cost.tiers]]
-tier = { type = "context", size = 128000 }
-input = 0.1126
-output = 1.126
-cache_read = 0.01126
-cache_write = 0.14075
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[cost.tiers]]
-tier = { type = "context", size = 256000 }
-input = 0.169
-output = 1.69
-cache_read = 0.0169
-cache_write = 0.21125
+[cost.text.input]
+price = 0.0282
+cache = { read = 0.00282, write = 0.03525 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.1126
+cache = { read = 0.01126, write = 0.14075 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.169
+cache = { read = 0.0169, write = 0.21125 }
+
+[cost.text.output]
+price = 0.282
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.126
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 1.69

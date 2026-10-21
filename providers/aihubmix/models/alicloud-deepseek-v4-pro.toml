@@ -1,29 +1,31 @@
+schema = 2
 name = "DeepSeek V4 Pro (Alibaba Cloud)"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-05"
 open_weights = true
+knowledge = "2025-05"
+release_date = "2026-04-24"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 1.69
-output = 3.38
-cache_read = 0.13
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 384_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.69
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 3.38

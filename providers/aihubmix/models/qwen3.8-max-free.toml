@@ -6,17 +6,18 @@
 # Toggle: $.enable_thinking = true|false on /v1/chat/completions.
 # Effort: $.reasoning_effort = low|medium|xhigh on /v1/chat/completions.
 # Budget: integer $.reasoning.max_tokens on /v1/chat/completions.
+schema = 2
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen3.8 Max (free)"
-[interleaved]
-field = "reasoning_content"
-[[reasoning_options]]
-type = "toggle"
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-[[reasoning_options]]
-type = "budget_tokens"
-[cost]
-input = 0
-output = 0
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

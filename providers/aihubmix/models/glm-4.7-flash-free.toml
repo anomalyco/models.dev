@@ -4,12 +4,18 @@
 # Catalog: https://aihubmix.com/api/v1/models?type=llm&sort_by=order
 # Canon export SHA: 464fb99a02c6d36ae3ba87efd08c8b7649e4d785
 # Toggle: $.enable_thinking = true|false on /v1/chat/completions.
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 name = "GLM-4.7-Flash (free)"
-[interleaved]
-field = "reasoning_content"
-[[reasoning_options]]
-type = "toggle"
-[cost]
-input = 0
-output = 0
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -5,12 +5,16 @@
 # Catalog: https://aihubmix.com/api/v1/models?type=llm&sort_by=order
 # Currency proof: https://aihubmix.com/models/step-5-preview
 # Canon export SHA: 826aa9e2dab1b2920959957c5a0222873f3f5f38
+schema = 2
 base_model = "stepfun/step-5-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-[cost]
-input = 1.08
-output = 3.0888
-cache_read = 0.054
+
+[cost.text.input]
+price = 1.08
+cache = { read = 0.054 }
+
+[cost.text.output]
+price = 3.0888
