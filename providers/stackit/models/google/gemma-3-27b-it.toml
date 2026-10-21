@@ -1,23 +1,26 @@
+schema = 2
 name = "Gemma 3 27B"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 family = "gemma"
-release_date = "2025-05-17"
-last_updated = "2025-05-17"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-05-17"
 
-[cost]
-input = 0.53
-output = 0.76
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
 
 [limit]
 context = 37_000
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.53
+
+[cost.text.output]
+price = 0.76

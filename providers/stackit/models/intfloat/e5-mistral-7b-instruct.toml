@@ -1,23 +1,26 @@
+schema = 2
 name = "E5 Mistral 7B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "mistral"
-release_date = "2023-12-11"
-last_updated = "2023-12-11"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2023-12-11"
 
-[cost]
-input = 0.02
-output = 0.02
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 4_096
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0.02
