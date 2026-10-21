@@ -1,6 +1,7 @@
 # Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Limit: the catalog's context_size 20000 is a typo for the model's 200000 (lab, providers/anthropic); the lab value is inherited.
 # Cache: explicit cache_control {"type":"ephemeral"} on chat/completions and /anthropic/v1/messages; minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
-# Budget: thinking.budget_tokens on /anthropic/v1/messages (only route with thinking control), minimum 1024 and below max_tokens; https://docs.jiekou.ai/docs/providers/anthropic.
+# Budget: thinking.type = "enabled" + thinking.budget_tokens on /anthropic/v1/messages, the only route with thinking control (https://docs.jiekou.ai/docs/providers/anthropic); minimum 1024, as providers/anthropic.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5-20251001"
 name = "claude-haiku-4-5-20251001"
@@ -10,12 +11,9 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, budget = { min = 1_024, max = 63_999 } }
+reasoning = { supported = true, budget = { min = 1_024 } }
 cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 2_048 } }
 structured_output = true
-
-[limit]
-context = 20_000
 
 [cost.text.input]
 price = 1

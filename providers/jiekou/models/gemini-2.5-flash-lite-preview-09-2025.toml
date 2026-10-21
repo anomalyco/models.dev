@@ -2,27 +2,18 @@
 # Cache: Gemini is implicit-only (no cache_control); minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
 # Effort: top-level reasoning_effort, converted to a Gemini thinking budget (none/disable 0, low 1024, medium 2048, high 4096); https://docs.jiekou.ai/docs/providers/gemini.
 schema = 2
+base_model = "google/gemini-2.5-flash-lite-preview-09-2025"
 name = "gemini-2.5-flash-lite-preview-09-2025"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-family = "gemini-flash-lite"
-open_weights = false
-release_date = "2026-01"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 cache = { supported = true, implicit = true }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 0.09
