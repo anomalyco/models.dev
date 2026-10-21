@@ -6,7 +6,7 @@ name = "Mistral Medium (latest) (EU)"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 system_updates = true
 effort_updates = false

@@ -5,7 +5,7 @@ base_model = "anthropic/claude-sonnet-4-5"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+reasoning = { supported = false }
 structured_output = true
 system_updates = false
 effort_updates = false

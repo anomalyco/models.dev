@@ -9,7 +9,7 @@ base_model = "xai/grok-4.20-0309-reasoning"
 
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+reasoning = { supported = false }
 structured_output = true
 system_updates = true
 effort_updates = false
