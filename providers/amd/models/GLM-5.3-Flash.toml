@@ -2,7 +2,8 @@
 # Section "Public Free Model APIs"; pricing note "Free to use. Points show relative usage, not a charge.", so every price is 0.
 # vision: false, context_length 262144, tools and reasoning true; supported_parameters temperature, max_tokens, top_p,
 #   stream, response_format, tools, tool_choice (no top_k). Input is text only.
-# reasoning_effort values are unverified on this host (no key), so no effort list is published.
+# Effort: reasoning_effort = low|high|max, assumed from Z.ai's own API (providers/zai) and the Modal endpoint; the AMD gateway
+#   validates reasoning_effort per model and ignores thinking.* (see the AMD DeepSeek files). Unverified here (no key).
 # APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models.
 schema = 2
 v2_only = true
@@ -13,7 +14,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false
 

@@ -6,7 +6,8 @@
 #   Tool fees (web_search $0.0025 per call, etc.) have no v2 field.
 # Also on the Orchestrator API (private preview, https://docs.perplexity.ai/docs/router/models.md): same id and prices on
 #   /router/v1/chat/completions and /router/v1/messages (and /router/v1/responses).
-# Kimi K3 accepts minimal through max ("minimal uses low effort, while xhigh and max use maximum effort").
+# Kimi K3 accepts minimal through max, but "minimal uses low effort, while xhigh and max use maximum effort", so only
+#   the distinct levels are listed (Moonshot's own low|high|max).
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k3"
@@ -16,7 +17,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.responses]
