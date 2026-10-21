@@ -1,3 +1,5 @@
+# Pricing: https://www.sarvam.ai/api-pricing (LLM, accessed 2026-10-21): Sarvam 105B INR 15.00 input / 5.00 cached input / 60.00 output per 1M tokens.
+# INR->USD at 94.995216 INR per USD (2026-10-21, https://open.er-api.com/v6/latest/USD), rounded to 8 decimals.
 schema = 2
 base_model = "sarvam/sarvam-105b"
 name = "Sarvam-105B"
@@ -7,3 +9,10 @@ reasoning = { supported = true, effort = ["default", "low", "medium", "high"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15790269
+cache = { read = 0.05263423 }
+
+[cost.text.output]
+price = 0.63161075

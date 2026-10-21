@@ -1,6 +1,8 @@
+# Deprecated: the Sarvam docs nav lists "Sarvam 30B (Deprecated)" (https://docs.sarvam.ai/api-reference-docs/getting-started/pricing, accessed 2026-10-21), and GET https://api.sarvam.ai/v1/models lists only sarvam-105b and sarvam-105b-conversations.
 schema = 2
 base_model = "sarvam/sarvam-30b"
 name = "Sarvam-30B"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["default", "low", "medium", "high"] }
