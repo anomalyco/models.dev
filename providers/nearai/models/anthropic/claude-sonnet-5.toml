@@ -6,7 +6,6 @@
 # every range overlapping. No reply carries reasoning_content.
 # Text and image only: the lab entry adds pdf, and a type: "file" content part fails
 # schema deserialisation on every route.
-# structured_output: https://cloud-api.near.ai/v1/models supported_features lists structured_outputs.
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
@@ -16,7 +15,6 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true }
-structured_output = true
 
 [cost.text.input]
 price = 2

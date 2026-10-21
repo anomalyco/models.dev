@@ -1,10 +1,8 @@
-# structured_output: https://cloud-api.near.ai/v1/models supported_features lists structured_outputs.
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
-structured_output = true
 
 [limit]
 context = 200_000

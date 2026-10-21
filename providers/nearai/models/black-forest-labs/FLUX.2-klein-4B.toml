@@ -3,15 +3,11 @@
 #   The catalog's per-token input/output (1.0/1.0) is not what an image request is billed.
 # Input: text plus images, as the lab: POST /v1/images/generations and /v1/images/edits (https://docs.near.ai/cloud/guides/specialized-endpoints).
 # Temperature: inherits the lab's false; the catalog's supported_sampling_parameters lists only seed.
-# Limit: context 128,000 and output kept from the earlier file (catalog max_output_length = 1).
+# Limit: inherits the lab's 0/0; the earlier 128,000/128,000 were chat-style token limits (catalog max_output_length = 1).
 schema = 2
 base_model = "black-forest-labs/flux-2-klein-4b"
 name = "FLUX.2 Klein 4B"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-
-[limit]
-context = 128_000
-output = 128_000
 
 [cost.image.output]
 unit = "image"

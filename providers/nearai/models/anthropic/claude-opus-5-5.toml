@@ -12,13 +12,11 @@
 # Peer baseline: providers/anthropic/models/claude-opus-5-5.toml and
 # providers/openrouter/models/anthropic/claude-opus-5.5.toml both use effort
 # low|medium|high|xhigh|max with no toggle and no budget.
-# structured_output: https://cloud-api.near.ai/v1/models supported_features lists structured_outputs.
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-structured_output = true
 
 [cost.text.input]
 price = 4
