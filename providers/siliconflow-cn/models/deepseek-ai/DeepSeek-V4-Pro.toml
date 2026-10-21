@@ -2,13 +2,18 @@
 # converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
 # source: https://open.er-api.com/v6/latest/USD
 # CNY: input 12, output 24, cache read 1.0
+# Effort: reasoning_effort = "high"|"max" (default high; low|medium map to high, xhigh to max). The China
+# schema lists the field for "Pro/deepseek-ai/DeepSeek-V4", deepseek-ai/DeepSeek-V4-Flash and Pro/zai-org/GLM-5.2;
+# DeepSeek-V4-Pro is the only V4 Pro model in the catalog.
+# Budget: thinking_budget = 128..32768 ("most reasoning models").
+# https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions (accessed 2026-10-21)
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 name = "deepseek-ai/DeepSeek-V4-Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["high", "max"], budget = { min = 128, max = 32_768 } }
 structured_output = false
 
 [limit]

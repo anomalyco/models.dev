@@ -2,6 +2,9 @@
 # converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
 # source: https://open.er-api.com/v6/latest/USD
 # CNY: input 0.5, output 2
+# Toggle: enable_thinking = true|false (top-level request field)
+# Budget: thinking_budget = 128..32768 (top-level request field)
+# https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions
 schema = 2
 name = "Qwen/Qwen3-14B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
