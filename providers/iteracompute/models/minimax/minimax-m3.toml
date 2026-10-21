@@ -7,11 +7,12 @@
 # /v1/models data[id].reasoning: mandatory=true, supports_enable_disable=false,
 # effort_support="not_supported", supported_efforts=[]. These affirm no caller control.
 # /openrouter/v1/models data[id].description: "Reasoning cannot be disabled on this route".
+# Prices updated 2026-10-21 from the public GET https://api.iteracompute.com/v1/models pricing object (USD per 1M tokens).
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
@@ -22,8 +23,8 @@ structured_output = false
 output = 524_288
 
 [cost.text.input]
-price = 0.299
-cache = { read = 0.045 }
+price = 0.3
+cache = { read = 0.05 }
 
 [cost.text.output]
 price = 1.19

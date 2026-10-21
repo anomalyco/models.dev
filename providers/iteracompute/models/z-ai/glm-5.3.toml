@@ -4,6 +4,7 @@
 # https://iteracompute.com/models/glm-5-3/ (retail USD/MTok prices, context, and vision)
 # Effort wire path: reasoning_effort = low|high|max; reasoning.effort is also accepted.
 # The host advertises mandatory = true and supports_enable_disable = false.
+# Prices updated 2026-10-21 from the public GET https://api.iteracompute.com/v1/models pricing object (USD per 1M tokens).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
@@ -15,8 +16,8 @@ structured_output = false
 context = 1_048_576
 
 [cost.text.input]
-price = 0.99
-cache = { read = 0.245 }
+price = 0.82
+cache = { read = 0.2 }
 
 [cost.text.output]
-price = 3.45
+price = 2.88
