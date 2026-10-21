@@ -2,26 +2,28 @@
 # The Moark raw Chat schema exposes no user-selectable reasoning control for
 # this reasoning-only model.
 # https://moark.com/docs/openapi/v1 (accessed 2026-06-25)
+schema = 2
 name = "MiniMax-M2.1"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
-release_date = "2025-12-23"
-last_updated = "2025-12-23"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-12-23"
 
-[cost]
-input = 0.29
-output = 1.20
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 204_800
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.29
+
+[cost.text.output]
+price = 1.2
