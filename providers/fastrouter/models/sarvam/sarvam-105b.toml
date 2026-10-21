@@ -1,6 +1,11 @@
+schema = 2
 base_model = "sarvam/sarvam-105b"
-reasoning_options = []
 
-[cost]
-input = 0.04
-output = 0.16
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.16

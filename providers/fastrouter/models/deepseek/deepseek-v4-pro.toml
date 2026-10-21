@@ -1,7 +1,12 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-structured_output = true
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 1.74
-output = 3.48
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.74
+
+[cost.text.output]
+price = 3.48

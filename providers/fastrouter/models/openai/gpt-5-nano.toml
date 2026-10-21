@@ -1,26 +1,27 @@
+schema = 2
 name = "GPT-5 Nano"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt-nano"
-release_date = "2025-08-07"
-last_updated = "2025-08-07"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-knowledge = "2024-10-01"
-tool_call = true
 open_weights = false
+knowledge = "2024-10-01"
+release_date = "2025-08-07"
 
-[cost]
-input = 0.05
-output = 0.40
-cache_read = 0.005
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
 
 [limit]
 context = 400_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.4

@@ -1,17 +1,18 @@
+schema = 2
 name = "Wan 2.6"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = true
-
-[limit]
-context = 400_000
-output = 0
+release_date = "2025-12-01"
 
 [modalities]
 input = ["text", "image"]
 output = ["video"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 400_000
+output = 0

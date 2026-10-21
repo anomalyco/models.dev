@@ -1,6 +1,11 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.7-highspeed"
-reasoning_options = []
 
-[cost]
-input = 0.60
-output = 2.40
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.4
