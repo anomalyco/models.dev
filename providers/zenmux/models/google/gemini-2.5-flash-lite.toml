@@ -1,7 +1,7 @@
 # Vertex `thinkingBudget`: -1 (dynamic) or 512..24576; no disable sentinel is listed.
 # https://docs.zenmux.ai/api/vertexai/generate-content.html (accessed 2026-06-25)
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
-# Reasoning: catalog capabilities.reasoning = true; controls as on ZenMux google/gemini-2.5-flash.
+# Reasoning: catalog capabilities.reasoning = true. Toggle + budget: Vertex thinking_budget 512..24,576, 0 disables (ZenMux reasoning guide table); Chat reasoning.enabled / reasoning.max_tokens.
 # Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "google/gemini-2.5-flash-lite"
@@ -9,7 +9,7 @@ name = "Gemini 2.5 Flash Lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, toggle = true, budget = { min = 512, max = 24_576 } }
 cache = { supported = true, implicit = true, explicit = true }
 
 [limit]

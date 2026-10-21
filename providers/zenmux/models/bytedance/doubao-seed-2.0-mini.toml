@@ -1,5 +1,6 @@
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
 # Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Effort: Chat reasoning_effort = minimal|low|medium|high (https://docs.zenmux.ai/guide/advanced/reasoning.html).
 schema = 2
 base_model = "bytedance-seed/seed-2.0-mini"
 name = "Doubao-Seed-2.0-mini"
@@ -10,7 +11,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 cache = { supported = true }
 
 [cost.text.input]

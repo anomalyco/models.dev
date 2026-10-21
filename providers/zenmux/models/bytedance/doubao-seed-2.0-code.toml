@@ -1,13 +1,14 @@
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
 # Reasoning: catalog capabilities.reasoning = true; controls as on ZenMux bytedance/doubao-seed-2.0-pro.
 # Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Effort: Chat reasoning_effort = minimal|low|medium|high (https://docs.zenmux.ai/guide/advanced/reasoning.html).
 schema = 2
 base_model = "bytedance-seed/seed-2.0-code"
 name = "Doubao Seed 2.0 Code"
 description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 cache = { supported = true }
 
 [limit]

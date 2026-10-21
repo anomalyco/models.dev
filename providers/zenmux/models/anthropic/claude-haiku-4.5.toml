@@ -1,5 +1,5 @@
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
-# Reasoning: catalog capabilities.reasoning = true; controls as on ZenMux anthropic/claude-sonnet-4.5.
+# Reasoning: catalog capabilities.reasoning = true. Budget: Messages thinking.budget_tokens >= 1024 / Chat reasoning.max_tokens (ZenMux reasoning guide lists Haiku 4.5 for Extended Thinking); as first-party Anthropic.
 # Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
@@ -7,7 +7,7 @@ name = "Claude Haiku 4.5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, budget = { min = 1_024 } }
 cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
 
 [api.messages]
