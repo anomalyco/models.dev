@@ -7,8 +7,10 @@
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = minimal|low|medium|high
+# Deprecated: retired in Ark's 9th deprecation batch (EOS 2026-09-21 14:00 UTC+8). https://www.volcengine.com/docs/ark/model-deprecation-notice
 schema = 2
 base_model = "bytedance-seed/seed-1-6"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }

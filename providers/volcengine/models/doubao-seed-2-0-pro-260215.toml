@@ -4,8 +4,10 @@
 # Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
 # none/minimal disable thinking, so no separate toggle: sending effort alone
 # already enables it, and thinking.type=disabled + a graded effort is rejected.
+# Deprecated: in Ark's 10th deprecation batch (no new purchases from 2026-09-24, EOS 2026-11-24 14:00 UTC+8). https://www.volcengine.com/docs/ark/model-deprecation-notice
 schema = 2
 base_model = "bytedance-seed/seed-2.0-pro"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }

@@ -9,8 +9,10 @@
 # level, none 895/927/670/736, low 550/901/775/598, high 578/738/787/1031,
 # max 852/813/1011/699 -- fully overlapping, and 'none' does not switch thinking off,
 # so thinking.type is the only real control.
+# Deprecated: retired in Ark's 9th deprecation batch (EOS 2026-09-21 14:00 UTC+8). https://www.volcengine.com/docs/ark/model-deprecation-notice
 schema = 2
 base_model = "bytedance-seed/seed-1-6-vision"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
