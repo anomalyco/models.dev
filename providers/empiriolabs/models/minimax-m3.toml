@@ -1,11 +1,11 @@
 schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
-last_updated = "2026-06-12"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-structured_output = true
+structured_output = false
+cache = { supported = true }
 
 [limit]
 context = 1_000_000

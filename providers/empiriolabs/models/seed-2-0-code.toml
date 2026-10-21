@@ -6,7 +6,7 @@ base_model = "bytedance-seed/seed-2.0-code"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
-structured_output = true
+structured_output = false
 
 [limit]
 context = 256_000

@@ -1,7 +1,6 @@
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 name = "Gemma 4 26B-A4B"
-last_updated = "2026-06-12"
 
 [modalities]
 input = ["text", "image", "video"]
@@ -10,6 +9,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 128, max = 32_768 } }
 structured_output = true
+cache = { supported = true }
 
 [cost.text.input]
 price = 0.05

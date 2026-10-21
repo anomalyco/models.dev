@@ -1,11 +1,11 @@
 schema = 2
 base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1"
-last_updated = "2026-06-12"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 38_912 } }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 context = 202_000

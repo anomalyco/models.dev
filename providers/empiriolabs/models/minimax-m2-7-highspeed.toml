@@ -1,10 +1,11 @@
 schema = 2
 base_model = "minimax/MiniMax-M2.7-highspeed"
 name = "MiniMax M2.7 Highspeed"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }
-structured_output = true
+structured_output = false
 
 [limit]
 context = 200_000

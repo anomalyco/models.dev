@@ -13,6 +13,7 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1_024, max = 32_768 } }
 structured_output = true
 temperature = true
+cache = { supported = true }
 
 [limit]
 context = 262_144

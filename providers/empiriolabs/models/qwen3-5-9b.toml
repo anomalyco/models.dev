@@ -4,6 +4,7 @@ base_model = "alibaba/qwen3.5-9b"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1_024, max = 32_768 } }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 output = 32_768

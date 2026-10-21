@@ -1,10 +1,10 @@
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
-last_updated = "2026-06-12"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 81_920 } }
 structured_output = true
+cache = { supported = true }
 
 [limit]
 context = 256_000

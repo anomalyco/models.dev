@@ -4,6 +4,7 @@ base_model = "alibaba/qwen3.8-27b"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
+cache = { supported = true }
 
 [cost.text.input]
 price = 0.17
