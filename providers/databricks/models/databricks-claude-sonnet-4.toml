@@ -4,6 +4,7 @@
 # Budget: Chat `thinking = { type = "enabled", budget_tokens = N }`; N >= 1024 and must be less than `max_tokens`.
 # Pricing (accessed 2026-10-20): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google and OpenAI on AWS Premium/Enterprise, every region).
 # Batch inference is billed per DBU-hour, not per token; not modeled.
+# Images: the vision page no longer lists this retired endpoint, so no image limit is set.
 # Cache: `cache_control` on Databricks-hosted Claude (https://docs.databricks.com/aws/en/machine-learning/model-serving/score-foundation-models#prompt-caching); the pricing page lists only the default (5m) write price.
 # structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
 # system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).

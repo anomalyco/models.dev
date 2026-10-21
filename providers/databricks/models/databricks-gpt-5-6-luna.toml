@@ -7,7 +7,8 @@
 # Priority: request `service_tier = "priority"` (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/priority-mode); priority DBU rates are 2x standard. The priority table has no long-context row; the multiplier is applied to it as well.
 # Batch inference is billed per DBU-hour, not per token; not modeled.
 # Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
-# The pricing page also lists a cache-write rate for this model, but Databricks documents no write control for OpenAI models.
+# Cache writes: the pricing page lists a cache-write rate for this model, and the OpenAI Responses path is a native passthrough that "supports the full set of OpenAI Responses parameters" (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-open-responses-models), so the write price is kept; no Databricks-specific write control is documented, so only implicit caching is recorded.
+# Limits: supported-models says "For OpenAI, Google Gemini, and Anthropic models, the context window and maximum output tokens match the values published by the respective model provider", so the earlier 400K/272K override is dropped and the lab's limits apply.
 # Images: JPEG, PNG, WebP, non-animated GIF, up to 500 per request (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-vision-models); formats match the lab.
 # structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
 # store = false: "Stored responses is not supported" (Responses API reference above).
