@@ -1,9 +1,11 @@
-# Toggle: thinking enabled|disabled
+# Effort: reasoning.effort = minimal|high
+#   FastRouter sends Gemini 3 series thinkingLevel (minimal|low|medium|high, per model); this model takes
+#   minimal|high (providers/google gemini-3.1-flash-lite-image). Reasoning cannot be disabled on Gemini 3
+#   (docs map effort none to the lowest supported level), so no toggle and no none.
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists thinking (schema empty, no enum).
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "google/gemini-3.1-flash-lite-image"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["minimal", "high"] },
-]
+reasoning_options = [{ type = "effort", values = ["minimal", "high"] }]
 
 [cost]
 input = 0.25

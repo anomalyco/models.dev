@@ -1,9 +1,12 @@
-# Toggle: reasoning true|false
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+#   FastRouter sends Claude 4.6+ and Claude 5 adaptive-thinking effort (low|medium|high|xhigh|max, per
+#   model); effort = none disables reasoning (same as reasoning.enabled = false), so no separate toggle.
+#   Lab set is low|medium|high|xhigh|max (providers/anthropic claude-opus-5); providers/openrouter
+#   claude-opus-5 is none|low|medium|high|xhigh|max.
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and include_reasoning (schemas empty, no enum).
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "anthropic/claude-opus-5"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
-]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 5

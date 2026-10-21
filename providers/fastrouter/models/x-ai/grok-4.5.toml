@@ -1,3 +1,9 @@
+# Effort: reasoning.effort = low|medium|high
+#   FastRouter docs: xAI Grok 4.5 and later take reasoning_effort low|medium|high (default high), with xhigh
+#   only on Grok 4.6 and later; the docs' own example maps effort xhigh on Grok 4.5 to high.
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): this route lists no reasoning parameter in supported_parameters (the sibling x-ai/grok-4.6 route
+#   lists reasoning_effort with enum low|medium|high|xhigh), so xhigh is intentionally omitted here.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "xai/grok-4.5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 

@@ -1,4 +1,11 @@
-# Effort: reasoning = between_tools|low|medium|high. between_tools is not an effort level.
+# Effort: reasoning.effort = low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_params_details.reasoning enum is exactly
+#   between_tools|low|medium|high (default high). xhigh and max are not in this route's enum, so they are
+#   not forwarded here; FastRouter maps an unsupported level to the nearest accepted one. between_tools only
+#   turns off up-front thinking between tool calls and is not an effort level, so it is not listed.
+#   Lab/peer set is low|medium|high|xhigh|max (providers/anthropic claude-sonnet-5-5, providers/openrouter
+#   claude-sonnet-5.5); this route exposes the truncated enum above.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "anthropic/claude-sonnet-5-5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 

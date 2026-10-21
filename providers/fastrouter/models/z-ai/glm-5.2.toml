@@ -1,8 +1,14 @@
-# Toggle: reasoning true|false
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = high|max
+#   Lab set is thinking.type enabled|disabled + reasoning_effort high|max (providers/zhipuai glm-5.2). The
+#   top Z.ai level on this host is max, not xhigh: the sibling z-ai/glm-5.3-flashx route publishes the enum
+#   low|high|max (default max). Peers: providers/fastrouter glm-5 and glm-5.1 toggle.
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and include_reasoning (schemas empty, no enum).
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "zhipuai/glm-5.2"
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["high", "xhigh"] },
+  { type = "effort", values = ["high", "max"] },
 ]
 
 [cost]
