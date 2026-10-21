@@ -1,15 +1,20 @@
-base_model = "xiaomi/mimo-v2-flash"
 # No model-specific Qiniu documentation maps the generic reasoning_effort or
 # thinking fields to this catalog alias (accessed 2026-06-25).
 # https://developer.qiniu.com/aitokenapi/13390/chat-completions
-reasoning_options = []
+schema = 2
+base_model = "xiaomi/mimo-v2-flash"
 name = "Mimo-V2-Flash"
 
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.01
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 256_000
 output = 256_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.3
