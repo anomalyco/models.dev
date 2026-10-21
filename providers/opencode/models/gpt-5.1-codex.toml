@@ -1,5 +1,5 @@
 # Docs: listed under Deprecated models (July 23, 2026) (https://opencode.ai/v2/docs/console/models/#deprecated-models, accessed 2026-10-21).
-# status left unset: GET https://opencode.ai/inference/v1/models still lists this ID (2026-10-21), and OpenCode hides deprecated models, so marking it would drop a model Zen still serves.
+# status left unset: GET https://opencode.ai/inference/v1/models still lists this ID (2026-10-21) and requests return 403 "Model access is disabled" (a workspace toggle), not the 410 Zen returns for retired IDs, and OpenCode hides deprecated models, so marking it would drop a model Zen still serves.
 # Effort: reasoning.effort = low|medium|high (deprecated; not re-verified on Zen)
 schema = 2
 base_model = "openai/gpt-5.1-codex"

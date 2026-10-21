@@ -1,4 +1,4 @@
-# Docs: listed under Deprecated models (May 14, 2026); the ID now answers as GLM-5.3 (live 400 message, 2026-10-21) (https://opencode.ai/v2/docs/console/models/#deprecated-models, accessed 2026-10-21).
+# Docs: listed under Deprecated models (May 14, 2026); plain requests still succeed (live 200, 2026-10-21), but the ID is now served by GLM-5.3 (disabling thinking returns 400 naming GLM-5.3) (https://opencode.ai/v2/docs/console/models/#deprecated-models, accessed 2026-10-21).
 # status left unset: GET https://opencode.ai/inference/v1/models still lists this ID (2026-10-21), and OpenCode hides deprecated models, so marking it would drop a model Zen still serves.
 # Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
 # The deprecated glm-5 ID now answers as GLM-5.3, which rejects thinking.type = disabled (live 400 "GLM-5.3 is a thinking-only model").
