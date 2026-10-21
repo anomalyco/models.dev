@@ -1,21 +1,23 @@
 # Baseten documents top-level reasoning_effort = none | low | high | max for
 # DeepSeek V4 Pro 0813. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-structured_output = true
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 1.32
-output = 3.96
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.32
+
+[cost.text.output]
+price = 3.96
