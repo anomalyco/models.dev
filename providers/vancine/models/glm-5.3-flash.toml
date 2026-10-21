@@ -10,14 +10,16 @@
 # output = input * completion_ratio = 0.40, cache_read = input * cache_ratio
 # = 0.024, cache_write 0 (no create_cache_ratio configured).
 # Thinking is always enabled, so no toggle.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 0.12
+cache = { read = 0.024 }
 
-[cost]
-input = 0.12
-output = 0.40
-cache_read = 0.024
+[cost.text.output]
+price = 0.4
