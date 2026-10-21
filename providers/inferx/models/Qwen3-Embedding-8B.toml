@@ -1,22 +1,8 @@
+# Lab identity: https://huggingface.co/Qwen/Qwen3-Embedding-8B (embedding model).
 schema = 2
+base_model = "alibaba/qwen3-embedding-8b"
 name = "Qwen3-Embedding-8B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "text-embedding"
-open_weights = true
-release_date = "2025-06-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-
-[limit]
-context = 32_768
-output = 0
 
 [cost.text.input]
 price = 0
