@@ -2,7 +2,7 @@ schema = 2
 base_model = "google/gemini-3.5-flash"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

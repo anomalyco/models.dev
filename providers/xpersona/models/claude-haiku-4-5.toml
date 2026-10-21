@@ -2,14 +2,13 @@ schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
-context = 200_000
 output = 128_000
 
 [api.chat-completions]
