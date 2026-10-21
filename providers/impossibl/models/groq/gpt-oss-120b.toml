@@ -1,6 +1,12 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Status: not listed in GET https://api.impossibl.com/v1/models on 2026-10-21 (withdrawn IDs return 404).
 schema = 2
 base_model = "openai/gpt-oss-120b"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
