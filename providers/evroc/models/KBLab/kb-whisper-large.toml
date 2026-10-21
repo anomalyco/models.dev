@@ -1,23 +1,27 @@
+# Type: listed under Transcription on https://evroc.com/ai-services/think-models (accessed 2026-10-21).
+# Price: 0.0023 per audio minute, kept from the previous file; evroc publishes no price page, so it is unsourced.
+# The old v1 output price (0.0023) and output_audio (2.3) had no unit meaning for a transcription model and were dropped.
+# v1 has no per-minute price, so v1 shows no cost. The host lists no audio formats, so modalities stay generic.
+schema = 2
+type = "transcription"
 name = "KB Whisper"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "whisper"
-release_date = "2024-10-01"
-last_updated = "2024-10-01"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = true
+release_date = "2024-10-01"
 
-[cost]
-# per audio minute
-input = 0.0023
-output = 0.0023
-output_audio = 2.3
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 448
 output = 448
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[cost.audio.input]
+unit = "minute"
+price = 0.0023
