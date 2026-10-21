@@ -1,7 +1,9 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+# family: kept as "mimo-v2.5-pro" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
 schema = 2
 base_model = "xiaomi/mimo-v2.5-pro"
+family = "mimo-v2.5-pro"
 name = "MiMo V2.5 Pro"
 description = "MiMo pro model for strong multimodal reasoning and agent execution"
 

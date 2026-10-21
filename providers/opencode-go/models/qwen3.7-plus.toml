@@ -2,8 +2,10 @@
 # Toggle: thinking.type = enabled|disabled (not verified on Go: no Go subscription key was available)
 # Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+# family: kept as "qwen3.7-plus" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
+family = "qwen3.7-plus"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]

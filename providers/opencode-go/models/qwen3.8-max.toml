@@ -6,8 +6,10 @@
 # Modalities: image and video input as the file already listed (not PDF); MIME types from the lab.
 # Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+# family: kept as "qwen3.8-max" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
+family = "qwen3.8-max"
 description = "2.4-trillion-parameter multimodal flagship for coding, professional work, and long-horizon agentic workflows"
 
 [modalities]
