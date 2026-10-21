@@ -1,3 +1,7 @@
+# Effort: reasoning.effort = low|medium|high|xhigh|max
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning (schemas empty, no enum).
+#   Baseline: lab providers/openai gpt-6-astra = effort low|medium|high|xhigh|max; peer providers/openrouter openai/gpt-6-astra = effort low|medium|high|xhigh|max.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "openai/gpt-6-astra"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 

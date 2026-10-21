@@ -1,4 +1,9 @@
-# Effort: reasoning = none|low|medium|high|xhigh|max
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_params_details.reasoning publishes the enum
+#   none|low|medium|high|xhigh|max for this route, so none is accepted here even though the lab set
+#   (providers/openai gpt-6.1-sol) and providers/openrouter gpt-6.1-sol are low|medium|high|xhigh|max.
+#   FastRouter's effort table lists none as "reasoning disabled" and sends reasoning_effort for GPT-6 models.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "openai/gpt-6.1-sol"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 

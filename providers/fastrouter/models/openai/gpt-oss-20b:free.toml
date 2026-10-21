@@ -1,3 +1,7 @@
+# Effort: reasoning.effort = low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning, reasoning_effort (schemas empty, no enum).
+#   Baseline: peer providers/openrouter openai/gpt-oss-20b = effort low|medium|high.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "openai/gpt-oss-20b"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 

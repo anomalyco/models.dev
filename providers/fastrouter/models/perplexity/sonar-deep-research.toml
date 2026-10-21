@@ -1,3 +1,7 @@
+# Effort: reasoning.effort = minimal|low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning, include_reasoning (schemas empty, no enum).
+#   Baseline: lab providers/perplexity sonar-deep-research = effort minimal|low|medium|high; peer providers/openrouter perplexity/sonar-deep-research = toggle.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "perplexity/sonar-deep-research"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 

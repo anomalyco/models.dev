@@ -1,3 +1,6 @@
+# Effort: reasoning.effort = null|low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning, reasoning_effort, include_reasoning (schemas empty, no enum).
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "sarvam/sarvam-105b"
 reasoning_options = [{ type = "effort", values = ["null", "low", "medium", "high"] }]
 

@@ -1,3 +1,7 @@
+# Effort: reasoning.effort = minimal|low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists include_reasoning, reasoning (schemas empty, no enum).
+#   Baseline: lab providers/google gemini-3-flash-preview = effort minimal|low|medium|high; peer providers/openrouter google/gemini-3-flash-preview = effort none|minimal|low|medium|high.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 # Limit: max_completion_tokens 65535
 base_model = "google/gemini-3-flash-preview"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]

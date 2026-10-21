@@ -1,9 +1,13 @@
-# No caller reasoning control on this route (affirmative):
-#   FastRouter sends reasoning_effort only for Grok 4.5 and later; models not in its reasoning table have
-#   the reasoning parameter dropped rather than forwarded (https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)).
-#   xAI's reasoning guide documents reasoning_effort for grok-4.5, grok-4.6 and grok-4.7 only
-#   (https://docs.x.ai/developers/model-capabilities/text/reasoning, accessed 2026-10-21).
-#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and include_reasoning (schemas empty, no enum).
+# No caller reasoning control on this route (affirmative, matching the FastRouter docs):
+#   FastRouter's reasoning table sends reasoning_effort to xAI only for Grok 4.5 and later, and states that
+#   models not in the table ignore the reasoning parameter: FastRouter drops it rather than failing the
+#   request. Grok 3 Mini is not in the table, so reasoning.effort and reasoning.enabled are dropped here.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
+#   xAI's current reasoning guide documents reasoning_effort for grok-4.5, grok-4.6 and grok-4.7 only and
+#   says reasoning cannot be disabled on its reasoning models (https://docs.x.ai/developers/model-capabilities/text/reasoning (accessed 2026-10-21)).
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and include_reasoning with empty
+#   schemas; include_reasoning only selects whether the reasoning trace is returned in the response and is
+#   not a control over how much the model reasons.
 base_model = "xai/grok-3-mini-beta"
 reasoning_options = []
 

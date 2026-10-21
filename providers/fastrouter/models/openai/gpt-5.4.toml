@@ -1,3 +1,8 @@
+# Effort: reasoning.effort = none|low|medium|high|xhigh
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists include_reasoning, reasoning (schemas empty, no enum).
+#   Baseline: lab providers/openai gpt-5.4 = effort none|low|medium|high|xhigh; peer providers/openrouter openai/gpt-5.4 = effort none|low|medium|high|xhigh.
+#   effort = none disables reasoning on FastRouter (same as reasoning.enabled = false), so no separate toggle.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "openai/gpt-5.4"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 

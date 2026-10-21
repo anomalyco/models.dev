@@ -1,3 +1,7 @@
+# Effort: reasoning.effort = low|high|max
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning (schemas empty, no enum).
+#   Baseline: lab providers/zhipuai glm-5.3 = effort low|high|max; peer providers/openrouter z-ai/glm-5.3 = effort low|high|max.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "zhipuai/glm-5.3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 

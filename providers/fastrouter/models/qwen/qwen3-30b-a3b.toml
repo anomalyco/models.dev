@@ -1,5 +1,8 @@
+# Toggle: reasoning.enabled = true|false
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists no reasoning field.
+#   Baseline: peer providers/openrouter qwen/qwen3-30b-a3b = toggle.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 # Limit: context_length 40960, max_completion_tokens 40960
-# Toggle: reasoning true|false
 base_model = "alibaba/qwen3-30b-a3b"
 reasoning_options = [{ type = "toggle" }]
 

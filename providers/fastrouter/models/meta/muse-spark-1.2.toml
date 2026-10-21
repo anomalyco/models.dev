@@ -1,3 +1,7 @@
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning, include_reasoning (schemas empty, no enum).
+#   Baseline: lab providers/meta muse-spark-1.2 = effort minimal|low|medium|high|xhigh; peer providers/openrouter meta/muse-spark-1.2 = effort minimal|low|medium|high|xhigh.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
 base_model = "meta/muse-spark-1.2"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
 
