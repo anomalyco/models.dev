@@ -1,19 +1,11 @@
+# Deprecated: not in Inference.net's public model list (GET https://api.inference.net/v1/models, checked 2026-10-21).
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
+base_model = "mistral/mistral-nemo"
 name = "Mistral Nemo 12B Instruct"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-family = "mistral-nemo"
-open_weights = true
 knowledge = "2024-12"
-release_date = "2025-01-01"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
-temperature = true
+status = "deprecated"
 
 [limit]
 context = 16_000
