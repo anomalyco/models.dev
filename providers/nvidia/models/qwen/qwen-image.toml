@@ -4,8 +4,7 @@
 # Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
 # image generation takes steps and guidance, not sampling temperature.
 # Output: the hosted endpoint returns a base64 JPEG artifact (https://docs.nvidia.com/nim/visual-genai/latest/api/qwen-image.html).
-# Input: text only. The API spec's image field says "Image input is not supported in the current version. Only
-# `null` value is accepted." (https://docs.nvidia.com/nim/visual-genai/latest/_static/_static/yaml/qwen-image.openapi.yaml).
+# Input: text only; image accepts only null (https://docs.nvidia.com/nim/visual-genai/latest/_static/_static/yaml/qwen-image.openapi.yaml).
 schema = 2
 type = "image"
 name = "Qwen Image"
