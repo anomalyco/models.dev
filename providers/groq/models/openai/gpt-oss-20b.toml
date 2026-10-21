@@ -2,28 +2,31 @@
 # POST https://api.groq.com/openai/v1/chat/completions
 # JSON reasoning_effort: "low" | "medium" | "high".
 # Sources: https://console.groq.com/docs/reasoning#options-for-reasoning-effort-gptoss
+schema = 2
 name = "GPT OSS 20B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
+open_weights = true
 release_date = "2025-08-05"
 last_updated = "2025-09-25"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
-[cost]
-input = 0.075
-output = 0.30
-cache_read = 0.0375
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 131_072
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.075
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 0.3

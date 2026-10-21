@@ -1,7 +1,10 @@
 # ALLaM-2-7B is provided unbilled via the Groq developer tier.
 # Verified via Groq Models API (no pricing object) and https://groq.com/pricing
+schema = 2
 base_model = "sdaia/allam-2-7b"
 
-[cost]
-input = 0
-output = 0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
