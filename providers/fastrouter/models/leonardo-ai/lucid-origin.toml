@@ -1,6 +1,6 @@
 # Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
 # Not represented: no price in the catalog (prompt and completion are 0).
-# Limits: context is the catalog's context_length.
+# Limits: context is the catalog's context_length (4096; max_completion_tokens 4096).
 schema = 2
 name = "Lucid Origin"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
