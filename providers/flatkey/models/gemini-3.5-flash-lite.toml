@@ -1,10 +1,10 @@
 # Pricing: https://flatkey.ai/models (accessed 2026-10-21), USD per 1M tokens; "Cache" column = cache read.
-# Reasoning controls mirror the first-party API; Flatkey relays OpenAI-compatible Chat Completions.
+# Effort: reasoning_effort on /v1/chat/completions; levels match the same-surface peer providers/openrouter/models/google/gemini-3.5-flash-lite.toml.
 schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 
 [cost.text.input]
 price = 0.24

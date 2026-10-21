@@ -1,13 +1,10 @@
 # Pricing: https://flatkey.ai/models (accessed 2026-10-21), USD per 1M tokens; "Cache" column = cache read.
-# Reasoning controls mirror the first-party API on Flatkey's OpenAI-compatible Chat Completions relay.
-# Flatkey forwards these provider request fields unchanged to the upstream API.
-# Toggle: thinking.type = enabled|disabled (default enabled)
-# Effort: reasoning_effort = high|max (default max)
+# Effort: reasoning_effort on /v1/chat/completions; levels match the same-surface peer providers/openrouter/models/z-ai/glm-5.2.toml.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
 
 [cost.text.input]
 price = 0.84
