@@ -2,21 +2,11 @@
 schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "nemotron-3-super"
-family = "nemotron"
-open_weights = true
-release_date = "2026-03-11"
-last_updated = "2026-03-12"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 
 [limit]
-context = 262_144
 output = 65_536
 
 [cost.text.input]

@@ -1,19 +1,8 @@
+# Lab identity: minimax/MiniMax-M2.5 (Ollama library page https://ollama.com/library/minimax-m2.5).
 schema = 2
+base_model = "minimax/MiniMax-M2.5"
 name = "minimax-m2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-open_weights = true
-knowledge = "2025-01"
-release_date = "2026-02-12"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
-
-[limit]
-context = 204_800
-output = 131_072

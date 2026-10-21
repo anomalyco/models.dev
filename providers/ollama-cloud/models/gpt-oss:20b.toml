@@ -1,23 +1,12 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+# Lab identity: openai/gpt-oss-20b (Ollama library page https://ollama.com/library/gpt-oss).
 schema = 2
+base_model = "openai/gpt-oss-20b"
 name = "gpt-oss:20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-open_weights = true
-release_date = "2025-08-05"
-last_updated = "2026-01-19"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-
-[limit]
-context = 131_072
-output = 32_768
 
 [cost.text.input]
 price = 0.07

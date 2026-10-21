@@ -1,17 +1,11 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+# Lab identity: minimax/MiniMax-M2.7 (Ollama library page https://ollama.com/library/minimax-m2.7).
 schema = 2
+base_model = "minimax/MiniMax-M2.7"
 name = "minimax-m2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-open_weights = true
-release_date = "2026-03-18"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 
 [limit]

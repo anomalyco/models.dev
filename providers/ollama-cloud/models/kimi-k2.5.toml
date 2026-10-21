@@ -1,18 +1,12 @@
+# Lab identity: moonshotai/kimi-k2.5 (Ollama library page https://ollama.com/library/kimi-k2.5).
 schema = 2
+base_model = "moonshotai/kimi-k2.5"
 name = "kimi-k2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-open_weights = true
-release_date = "2026-01-27"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-
-[limit]
-context = 262_144
-output = 262_144

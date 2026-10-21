@@ -2,19 +2,13 @@
 # Base (off-peak) and Peak (2x, 12:00-18:00 UTC Mon-Fri) rates; the schema
 # cannot express time-based tiers, so the Base rate is recorded. See
 # https://github.com/anomalyco/models.dev/issues/5913.
+# Lab identity: deepseek/deepseek-v4-pro (Ollama library page https://ollama.com/library/deepseek-v4-pro).
 schema = 2
+base_model = "deepseek/deepseek-v4-pro"
 name = "deepseek-v4-pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek-thinking"
-open_weights = true
-release_date = "2026-04-24"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 
 [limit]
