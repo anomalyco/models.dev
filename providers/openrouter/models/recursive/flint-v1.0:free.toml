@@ -1,0 +1,26 @@
+schema = 2
+name = "Flint (free)"
+description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
+family = "flint"
+open_weights = true
+release_date = "2026-10-19"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 235_929
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
