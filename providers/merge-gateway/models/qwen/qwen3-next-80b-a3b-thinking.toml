@@ -8,6 +8,9 @@ reasoning = { supported = true }
 structured_output = false
 effort_updates = false
 
+[limit]
+context = 131_072
+
 [cost.text.input]
 price = 0.15
 
