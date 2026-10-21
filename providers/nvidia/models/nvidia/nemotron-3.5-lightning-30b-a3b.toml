@@ -3,10 +3,15 @@
 # - https://integrate.api.nvidia.com/v1/models
 # Toggle: chat_template_kwargs.enable_thinking = true|false
 # https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4
+schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
-reasoning_options = [{ type = "toggle" }]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

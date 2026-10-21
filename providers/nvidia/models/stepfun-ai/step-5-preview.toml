@@ -18,23 +18,28 @@
 # rate is published for this ID. Source: this model's catalog card,
 # https://build.nvidia.com/stepfun-ai/step-5-preview (governed by the
 # NVIDIA API Trial Terms of Service).
+schema = 2
 base_model = "stepfun/step-5-preview"
 
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
 temperature = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.0
-output = 0.0
 
 [limit]
 context = 1_048_576
 input = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

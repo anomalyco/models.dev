@@ -1,21 +1,24 @@
-name = "llama-nemotron-embed-vl-1b-v2"
+schema = 2
 base_model = "nvidia/llama-nemotron-embed-vl-1b-v2"
-release_date = "2026-02-10"
-last_updated = "2026-02-10"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
+name = "llama-nemotron-embed-vl-1b-v2"
 open_weights = true
+release_date = "2026-02-10"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 32_768
 output = 2_048
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

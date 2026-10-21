@@ -1,15 +1,19 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-08-21T09:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 # NIM Chat schema: `chat_template_kwargs.enable_thinking = true|false`.
 # https://docs.api.nvidia.com/nim/reference/z-ai-glm-5.2-infer
-status = "deprecated"
+schema = 2
 base_model = "zhipuai/glm-5.2"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-reasoning_options = [{ type = "toggle" }]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.output]
+price = 0

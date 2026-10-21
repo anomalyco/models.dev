@@ -1,24 +1,26 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-08-28T08:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
+schema = 2
 name = "Step 3.7 Flash"
-status = "deprecated"
 description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
-release_date = "2026-05-28"
-last_updated = "2026-05-28"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }]
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-05-28"
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+temperature = true
 
 [limit]
 context = 256_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

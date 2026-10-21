@@ -1,25 +1,28 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
+schema = 2
 name = "MiniMax-M2.7"
-status = "deprecated"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
+open_weights = true
 release_date = "2026-03-18"
 last_updated = "2026-04-11"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.0
-output = 0.0
-
-[limit]
-context = 204800
-output = 131072
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 204_800
+output = 131_072
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

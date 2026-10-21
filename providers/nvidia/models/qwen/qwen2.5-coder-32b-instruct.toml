@@ -1,24 +1,27 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-05-12T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
+schema = 2
 name = "Qwen2.5 Coder 32b Instruct"
-status = "deprecated"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-release_date = "2024-11-06"
-last_updated = "2024-11-06"
 open_weights = true
-
-[cost]
-input = 0.00
-output = 0.00
-
-[limit]
-context = 128000
-output = 4096
+release_date = "2024-11-06"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 128_000
+output = 4_096
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

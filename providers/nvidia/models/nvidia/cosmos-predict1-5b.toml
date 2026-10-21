@@ -1,21 +1,24 @@
+schema = 2
 name = "cosmos-predict1-5b"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
-release_date = "2025-03-18"
-last_updated = "2025-03-18"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = true
+release_date = "2025-03-18"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 0
 output = 4_096
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["video"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

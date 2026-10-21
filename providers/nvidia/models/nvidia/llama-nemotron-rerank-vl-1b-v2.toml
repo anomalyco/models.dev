@@ -1,21 +1,24 @@
-name = "llama-nemotron-rerank-vl-1b-v2"
+schema = 2
 base_model = "nvidia/llama-nemotron-rerank-vl-1b-v2"
-release_date = "2026-03-31"
-last_updated = "2026-03-31"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
+name = "llama-nemotron-rerank-vl-1b-v2"
 open_weights = true
+release_date = "2026-03-31"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 128_000
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

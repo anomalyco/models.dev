@@ -1,17 +1,18 @@
 # NIM wire syntax (verified against integrate.api.nvidia.com/v1, 2026-08-22):
 #   on/off: chat_template_kwargs = { "thinking": true | false }  (default: true)
 #   effort: top-level "reasoning_effort" = "low" | "high" | "max"
+schema = 2
 base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.output]
+price = 0

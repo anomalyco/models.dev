@@ -2,14 +2,18 @@
 # (verified 2026-09-16). Thinking is always enabled; reasoning budget controlled
 # with top-level `reasoning_effort`: low|high|max, default max.
 # https://docs.nvidia.com/nim/large-language-models/2.0.11/get-started/advanced/get-started-glm-5.3.html
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.output]
+price = 0

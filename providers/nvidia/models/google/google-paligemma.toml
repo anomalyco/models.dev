@@ -1,21 +1,25 @@
+schema = 2
 name = "paligemma"
 description = "Gemini multimodal model for text, image, audio, video, and document tasks"
+open_weights = true
 release_date = "2024-05-14"
 last_updated = "2024-08-26"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

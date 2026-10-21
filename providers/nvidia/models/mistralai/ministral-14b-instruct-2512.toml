@@ -1,26 +1,29 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 # https://docs.api.nvidia.com/nim/reference/mistralai-ministral-14b-instruct-2512-infer
 # https://build.nvidia.com/mistralai/ministral-14b-instruct-2512
+schema = 2
 name = "Ministral 3 14B Instruct 2512"
-status = "deprecated"
 description = "Compact Mistral VLM for chat and instruction-based workloads"
 family = "ministral"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-12-02"
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 262_144
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,25 +1,28 @@
 # NVIDIA API: HTTP 410 Gone — end of life 2026-07-27T00:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
+schema = 2
 name = "Gemma 3n E4b It"
-status = "deprecated"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-06"
-tool_call = true
-structured_output = true
-release_date = "2025-06-03"
-last_updated = "2025-06-03"
 open_weights = true
-
-[cost]
-input = 0.00
-output = 0.00
-
-[limit]
-context = 128000
-output = 4096
+knowledge = "2024-06"
+release_date = "2025-06-03"
+status = "deprecated"
 
 [modalities]
-input = ["text","image"]
+input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 128_000
+output = 4_096
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

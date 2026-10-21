@@ -5,13 +5,18 @@
 # - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.3-nemotron-super-49b-v1.5
 # Toggle: empty system prompt = reasoning ON; system content `/no_think` = OFF.
 # Infer OpenAPI: max_tokens 1..65536 (no JSON reasoning field; control is system prompt).
-status = "deprecated"
+schema = 2
 base_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
-reasoning_options = [{ type = "toggle" }] # API: system message "/no_think" vs default empty
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

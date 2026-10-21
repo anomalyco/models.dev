@@ -7,13 +7,18 @@
 # NVIDIA model card Input Types: Text, Image, Audio (WAV 16 kHz).
 # Infer OpenAPI: max_tokens 1..16384; no documented reasoning control field on NIM.
 # Upstream evals use continuous effort (e.g. effort=0.99); not mapped to discrete NIM enum.
-status = "deprecated"
+schema = 2
 base_model = "thinkingmachines/inkling"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 output = 16_384
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

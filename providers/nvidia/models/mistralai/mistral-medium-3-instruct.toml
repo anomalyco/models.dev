@@ -1,23 +1,26 @@
+schema = 2
 name = "Mistral Medium 3"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral-medium"
-release_date = "2025-09-25"
-last_updated = "2025-09-25"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-09-25"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 131_072
 input = 131_072
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

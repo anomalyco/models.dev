@@ -4,13 +4,17 @@
 # Limit: the endpoint rejects requests above max_total_tokens = 250000.
 # Pricing: free endpoint on NVIDIA's API trial tier; no list rate is published.
 # https://build.nvidia.com/google/diffusiongemma-26b-a4b-it
+schema = 2
 base_model = "google/diffusiongemma-26b-a4b-it"
 
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
-
-[cost]
-input = 0.0
-output = 0.0
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 250_000
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
