@@ -135,6 +135,26 @@ describe("provider schema", () => {
 
     expect(Provider.safeParse(providerWithoutApi).success).toBe(false);
   });
+
+  const aihubmixProvider = {
+    id: "aihubmix",
+    name: "AIHubMix",
+    env: ["AIHUBMIX_API_KEY"],
+    npm: "@aihubmix/ai-sdk-provider",
+    api: "https://aihubmix.com/v1",
+    doc: "https://docs.aihubmix.com",
+    models: {},
+  };
+
+  test("accepts AIHubMix's native package with its OpenAI-compatible API", () => {
+    expect(Provider.safeParse(aihubmixProvider).success).toBe(true);
+  });
+
+  test("requires the compatibility API for the AIHubMix package", () => {
+    const { api: _api, ...providerWithoutApi } = aihubmixProvider;
+
+    expect(Provider.safeParse(providerWithoutApi).success).toBe(false);
+  });
 });
 
 function baseModel(overrides: Partial<AuthoredModelData>) {
