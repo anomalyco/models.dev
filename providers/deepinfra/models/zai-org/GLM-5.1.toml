@@ -1,23 +1,14 @@
 # https://deepinfra.com/zai-org/GLM-5.1
 # https://deepinfra.com/docs/advanced/max_tokens_limit
+# Lab identity: https://deepinfra.com/zai-org/GLM-5.1 (Hugging Face repo zai-org/GLM-5.1)
 schema = 2
-name = "GLM-5.1"
+base_model = "zhipuai/glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-open_weights = true
-knowledge = "2025-04"
-release_date = "2026-04-07"
 status = "deprecated"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]

@@ -1,23 +1,14 @@
+# Lab identity: https://deepinfra.com/openai/gpt-oss-20b (Hugging Face repo openai/gpt-oss-20b)
 schema = 2
-name = "GPT OSS 20B"
+base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-open_weights = true
-release_date = "2025-08-05"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-temperature = true
 service_tier = ["flex", "priority"]
 
 [limit]
-context = 131_072
 output = 16_384
 
 [cost.text.input]

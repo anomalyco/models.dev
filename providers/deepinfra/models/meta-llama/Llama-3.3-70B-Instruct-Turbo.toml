@@ -1,17 +1,10 @@
+# Lab identity: https://deepinfra.com/meta-llama/Llama-3.3-70B-Instruct-Turbo (Hugging Face repo meta-llama/Llama-3.3-70B-Instruct-Turbo)
 schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B Turbo"
 description = "Compact Llama instruction model for fast chat and local deployment"
-family = "llama"
-open_weights = true
-release_date = "2024-12-06"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
 service_tier = ["flex"]
 

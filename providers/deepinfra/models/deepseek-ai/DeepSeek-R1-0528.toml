@@ -1,25 +1,17 @@
+# Lab identity: https://deepinfra.com/deepseek-ai/DeepSeek-R1-0528 (Hugging Face repo deepseek-ai/DeepSeek-R1-0528)
 schema = 2
+base_model = "deepseek/deepseek-r1-0528"
 name = "DeepSeek-R1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-open_weights = false
-knowledge = "2024-07"
-release_date = "2025-05-28"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-temperature = true
 cache = { supported = true, implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]
 
 [limit]
-context = 163_840
 output = 64_000
 
 [api.chat-completions]
