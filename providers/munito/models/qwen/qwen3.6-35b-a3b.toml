@@ -1,4 +1,7 @@
 # Source: https://api.munito.ai/inference/v1/models/openrouter (public), standard tier on the global host.
+# Limits: the feed gives max_context_length 262144 and max_length 235929 (max_tokens.max 235929) for this ID.
+# Price: the feed quotes prompt 0.00000013, completion 0.00000051 and cached_prompt 0.000000078 USD per token
+# for this ID. Munito sells Kolibri 1 and Qwen3.6 35B A3B at the same price.
 # Toggle: chat_template_kwargs.enable_thinking = true|false
 base_model = "alibaba/qwen3.6-35b-a3b"
 attachment = false

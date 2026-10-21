@@ -1,5 +1,6 @@
 # Source: https://api.munito.ai/inference/v1/models/openrouter (public), standard tier on the global host.
-# Toggle: chat_template_kwargs.thinking = true|false
+# Limits: the feed gives max_context_length 1048576 and max_length 943718 (max_tokens.max 943718) for this ID.
+# Toggle: chat_template_kwargs.thinking = true|false (the only switch that the feed lists for this ID)
 # Effort: reasoning_effort = low|high|max
 base_model = "deepseek/deepseek-v4-flash"
 structured_output = true

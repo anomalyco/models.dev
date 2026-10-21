@@ -1,4 +1,5 @@
 # Source: https://api.munito.ai/inference/v1/models/openrouter (public), standard tier on the global host.
+# Limits: the feed gives max_context_length 1048576 and max_length 943718 (max_tokens.max 943718) for this ID.
 # Effort: reasoning_effort = low|high|max
 base_model = "zhipuai/glm-5.3-flash"
 structured_output = true
