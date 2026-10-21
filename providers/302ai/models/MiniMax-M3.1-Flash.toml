@@ -1,0 +1,12 @@
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (none rejected)
+base_model = "minimax/MiniMax-M3.1-Flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.18
+output = 0.72
+cache_read = 0.018
+cache_write = 0.018
