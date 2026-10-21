@@ -1,11 +1,7 @@
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
+base_model = "meta/llama-3.2-3b-instruct"
 name = "Llama 3.2 3b Instruct"
-description = "Open Llama multimodal model for image understanding and text reasoning"
-family = "llama"
-open_weights = true
-release_date = "2024-01-01"
-last_updated = "2024-09-25"
 
 [modalities]
 input = ["text", "application/pdf"]
@@ -18,7 +14,6 @@ structured_output = false
 effort_updates = false
 
 [limit]
-context = 131_072
 input = 131_072
 output = 8_192
 

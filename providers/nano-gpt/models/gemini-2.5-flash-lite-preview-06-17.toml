@@ -3,11 +3,8 @@
 # Cache: implicit (automatic) for Gemini models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
 # Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
+base_model = "google/gemini-2.5-flash-lite-preview-06-17"
 name = "Gemini 2.5 Flash Lite Preview"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gemini"
-open_weights = false
-release_date = "2025-06-17"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "audio"]
@@ -22,9 +19,7 @@ system_updates = false
 cache = { supported = true, implicit = true }
 
 [limit]
-context = 1_048_576
 input = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 0.15
