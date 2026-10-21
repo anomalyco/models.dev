@@ -1,4 +1,6 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Toggle: {"generationConfig":{"thinkingConfig":{"thinkingBudget":0}}}
+# Budget: {"generationConfig":{"thinkingConfig":{"thinkingBudget":<n>}}}
 base_model = "google/gemini-2.5-flash"
 structured_output = true
 
@@ -8,9 +10,9 @@ output = 2.50
 cache_read = 0.03
 
 [[reasoning_options]]
-type = "toggle" # API: {"generationConfig":{"thinkingConfig":{"thinkingBudget":0}}}
+type = "toggle"
 
 [[reasoning_options]]
-type = "budget_tokens" # API: {"generationConfig":{"thinkingConfig":{"thinkingBudget":<n>}}}
+type = "budget_tokens"
 min = 0
 max = 24576
