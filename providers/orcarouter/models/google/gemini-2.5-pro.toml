@@ -1,3 +1,6 @@
+# Prices (accessed 2026-10-21): OrcaRouter lists one flat rate with no context tiers
+# (https://api.orcarouter.ai/v1/models and https://api.orcarouter.ai/api/pricing,
+# tiered_pricing off), equal to Google's above-200K rate.
 schema = 2
 base_model = "google/gemini-2.5-pro"
 
@@ -6,17 +9,8 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [cost.text.input]
-price = 1.25
-cache = { read = 0.125 }
-
-[[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
 price = 2.5
 cache = { read = 0.25 }
 
 [cost.text.output]
-price = 10
-
-[[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
 price = 15
