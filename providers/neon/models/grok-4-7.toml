@@ -22,6 +22,7 @@ cache = { supported = true, implicit = true }
 [api.responses]
 base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
 sdk = { aisdk = "@ai-sdk/openai" }
+legacy_shape = "responses"
 
 [cost.text.input]
 price = 2.5
