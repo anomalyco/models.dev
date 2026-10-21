@@ -1,3 +1,4 @@
+# Modalities (image, video: the Gemini API's formats, as on models/google/deep-research-preview-04-2026; Poe lists none): https://ai.google.dev/gemini-api/docs/image-understanding, https://ai.google.dev/gemini-api/docs/video-understanding#supported-formats
 schema = 2
 name = "gemini-deep-research"
 description = "Legacy model retained for compatibility with older integrations"
@@ -6,7 +7,7 @@ release_date = "2025-12-11"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
 
 [capabilities]

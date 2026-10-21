@@ -1,6 +1,7 @@
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 # tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
 # Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+# Modalities (video, audio: Meta's Muse Spark formats; NanoGPT lists none): https://dev.meta.ai/docs/video-understanding#supported-formats
 schema = 2
 name = "Muse Spark 1.3 Contributor"
 description = "Meta's Muse Spark 1.3 Contributor is a frontier multimodal reasoning model for long-horizon coding and agentic workflows, with strong gains in computer use, browsing, professional tool use, codebase understanding, and million-token retrieval. It accepts text, images, audio, video, and files, supports tool calling and structured output, and always reasons before answering. Prompts and outputs may be used by Meta for training and to improve its products."
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-09-02"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "video", "audio", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video/mp4", "audio/mpeg", "audio/wav", "application/pdf"]
 output = ["text"]
 
 [capabilities]

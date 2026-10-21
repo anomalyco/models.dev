@@ -1,4 +1,5 @@
 # Status: https://poe.com/Runway is titled "Runway_DEPRECATED" (2026-10-21).
+# Modalities (image: Runway takes JPEG, PNG or WebP; output: MP4; Poe lists none): https://docs.dev.runwayml.com/assets/inputs/, https://docs.dev.runwayml.com/assets/outputs/
 schema = 2
 type = "video"
 name = "Runway"
@@ -9,8 +10,8 @@ release_date = "2024-10-11"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = true }

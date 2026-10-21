@@ -4,6 +4,7 @@
 # Cache: implicit (automatic) for Gemini models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
 # status = deprecated: NanoGPT's catalog says "Deprecated compatibility alias. Requests route to Gemini 2.5 Flash Lite with the stable thinking path." (https://nano-gpt.com/api/v1/models?detailed=true)
 # Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+# Modalities (audio: the Gemini API's formats; NanoGPT lists none): https://ai.google.dev/gemini-api/docs/audio#supported-formats
 schema = 2
 name = "Gemini 2.5 Flash Lite Preview (09/2025) – Thinking"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
@@ -13,7 +14,7 @@ release_date = "2025-09-25"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "audio", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
 output = ["text"]
 
 [capabilities]
