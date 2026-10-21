@@ -2,16 +2,21 @@
 # also publishes no caller control). Interleaved as reasoning_content.
 # Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
 # Limits: GET https://api.jalapeno-cloud.ai/v1/models id=Kimi-K2.7-Code (2026-08-17)
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.95
-output = 4.00
 
 [limit]
 context = 271_360
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.95
+
+[cost.text.output]
+price = 4
