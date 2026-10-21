@@ -1,17 +1,6 @@
 schema = 2
-name = "Qwen3 Embedding 8B"
+base_model = "alibaba/qwen3-embedding-8b"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "text-embedding"
-open_weights = true
-release_date = "2025-07-30"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 
 [limit]
 context = 40_960
