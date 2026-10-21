@@ -26,6 +26,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync inference` syncs only Inference.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -325,6 +326,19 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A new model whose lab entry has `reasoning = true` is not created. The endpoint says nothing about how a route turns reasoning on, off or up, so the run opens a deduped GitHub issue asking for the route's controls to be researched and its `reasoning_options` hand-authored. Once that file exists, the sync keeps it priced like any other. Reasoning is judged from the lab entry, never from `supported_features`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
+
+## Inference Notes
+
+- Inference is implemented in `packages/core/src/sync/providers/inference.ts`.
+- Source endpoint: `https://api.inference.net/v1/models`. No authentication is required.
+- Price (`pricing.*`, USD per token, scaled to per million), `context_length`, `input_modalities`, and `reasoning_efforts` are authoritative for this host. Other capabilities are inherited from the lab entry.
+- `max_completion_tokens` is advisory: several routes report the whole context window. `limit.output` is the lowest of it, the context window, and the lab figure.
+- `reasoning_efforts` is the exact set `reasoning_effort` accepts on this host, and `none` turns reasoning off, so it maps to one `effort` option. Routes without `none` are not known to expose a separate off switch, so no toggle is published. Levels the schema cannot describe are dropped.
+- A cache-read price no lower than the input price is not published.
+- A live model with no price or limits keeps its existing file unchanged.
+- New models are created as `base_model` overlays. Most IDs carry no namespace, so the lab is read from the family prefix (`claude-` → `anthropic`, `glm-` → `zhipuai`, …). A model with no lab entry opens a missing-model issue.
+- A reasoning model without `reasoning_efforts` keeps hand-authored `reasoning_options`, or fails for manual review.
+- The fetch refuses a response with fewer than twenty models, so a truncated list is not read as a mass retirement.
 
 ## OpenAI Notes
 

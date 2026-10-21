@@ -1,9 +1,9 @@
 name = "Inference"
 env = ["INFERENCE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Reasoning HTTP format (accessed 2026-06-25): POST /v1/chat/completions. The
-# provider's supported-parameter table documents no toggle, effort, or numeric
-# reasoning-token budget field; it directs users to request unlisted fields.
-# https://docs.inference.net/api/api-quickstart
-api = "https://inference.net/v1"
-doc = "https://inference.net/models"
+# Models are synced from https://api.inference.net/v1/models (public). Reasoning
+# is controlled with reasoning_effort on POST /v1/chat/completions; each model's
+# accepted levels are its `reasoning_efforts`, where `none` turns reasoning off.
+# https://docs.inference.net/api/reasoning
+api = "https://api.inference.net/v1"
+doc = "https://docs.inference.net/api/api-quickstart"
