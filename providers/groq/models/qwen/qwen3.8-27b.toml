@@ -7,20 +7,24 @@
 # GET /openai/v1/models context_window, accessed 2026-10-21). Up to 3 input images, 20 MB max file size.
 # Modalities on Groq: text + images in, text out (no video).
 # Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
-# Stays v1: the effort value "default" has no v2 round trip.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-structured_output = true
 status = "beta"
-reasoning_options = [{ type = "effort", values = ["none", "default", "low", "medium", "high"] }]
 
-[cost]
-input = 0.80
-output = 4.00
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "default", "low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 131_072
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.8
+
+[cost.text.output]
+price = 4
