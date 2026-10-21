@@ -1,10 +1,11 @@
 # Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 # Capabilities and limits verified against the GitHub Copilot /models API on 2026-08-12.
+# Input MIME types: capabilities.limits.vision.supported_media_types from authenticated GET https://api.githubcopilot.com/models (2026-10-21).
 schema = 2
 base_model = "microsoft/mai-code-1.1-flash"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]

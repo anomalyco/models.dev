@@ -1,11 +1,13 @@
 # Sources:
 # - https://github.blog/changelog/2026-09-01-claude-fable-5-1-generally-available-in-github-copilot
 # - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# structured_output: capabilities.supports.structured_outputs = true (authenticated GET https://api.githubcopilot.com/models (2026-10-21)).
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [api.messages]
 base_url = "https://api.githubcopilot.com/v1"

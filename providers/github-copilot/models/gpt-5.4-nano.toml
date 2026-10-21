@@ -1,8 +1,14 @@
+# Input MIME types: capabilities.limits.vision.supported_media_types from authenticated GET https://api.githubcopilot.com/models (2026-10-21).
+# Effort: reasoning_effort = none|low|medium|high|xhigh (capabilities.supports.reasoning_effort, authenticated GET https://api.githubcopilot.com/models (2026-10-21)).
 schema = 2
 base_model = "openai/gpt-5.4-nano"
 
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 
 [api.responses]

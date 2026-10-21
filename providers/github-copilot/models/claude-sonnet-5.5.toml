@@ -3,11 +3,13 @@
 # - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 # - https://www.anthropic.com/claude-sonnet-5-5
 # - https://platform.claude.com/docs/en/models/sonnet-5-5/overview
+# structured_output: capabilities.supports.structured_outputs = true (authenticated GET https://api.githubcopilot.com/models (2026-10-21)).
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [api.messages]
 base_url = "https://api.githubcopilot.com/v1"

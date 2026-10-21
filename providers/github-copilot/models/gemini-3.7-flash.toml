@@ -1,11 +1,13 @@
 # Sources:
 # - https://api.githubcopilot.com/models
 # - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# Deprecated: retired from Copilot on 2026-10-19 (https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history).
 schema = 2
 base_model = "google/gemini-3.7-flash"
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]

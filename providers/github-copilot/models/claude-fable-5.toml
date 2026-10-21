@@ -1,8 +1,10 @@
+# structured_output: capabilities.supports.structured_outputs = true (authenticated GET https://api.githubcopilot.com/models (2026-10-21)).
 schema = 2
 base_model = "anthropic/claude-fable-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_000_000

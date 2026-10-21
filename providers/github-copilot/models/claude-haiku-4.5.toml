@@ -1,5 +1,10 @@
+# Input MIME types: capabilities.limits.vision.supported_media_types from authenticated GET https://api.githubcopilot.com/models (2026-10-21).
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "application/pdf"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, budget = { min = 1_024, max = 32_000 } }
