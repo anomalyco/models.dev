@@ -1,0 +1,23 @@
+# Source: https://api.munito.ai/inference/v1/models/openrouter (public), standard tier on the global host.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+base_model = "alibaba/qwen3.8-27b"
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.23
+output = 2.5
+cache_read = 0.05
+
+[limit]
+output = 235_929
