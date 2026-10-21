@@ -1,5 +1,8 @@
+# Status: GET https://api.orcarouter.ai/v1/models/openai/gpt-oss-120b returns model_not_found, and the id is
+# absent from /v1/models and /api/pricing (accessed 2026-10-21).
 schema = 2
 base_model = "openai/gpt-oss-120b"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
