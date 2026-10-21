@@ -1,8 +1,10 @@
 # knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+# Deprecated: not in GET https://pass.wafer.ai/v1/models (checked 2026-10-21), which lists GLM-5.2, GLM-5.3, GLM-5.3-Flash, Kimi-K3, Qwen3.8-27B and the DeepSeek V4 models.
 schema = 2
 base_model = "zhipuai/glm-5.1"
 description = "General Language Model 5.1 — high-quality bilingual (EN/ZH) generation with strong coding and reasoning capabilities."
 knowledge = "2025-04"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

@@ -1,9 +1,11 @@
 # Sources (accessed 2026-07-11):
 # - Pricing and model details: https://app.wafer.ai/models
 # - Temperature behavior: https://docs.wafer.ai/serverless/api-reference#kimi-k26-sampling-params-are-stripped
+# Deprecated: not in GET https://pass.wafer.ai/v1/models (checked 2026-10-21), which lists GLM-5.2, GLM-5.3, GLM-5.3-Flash, Kimi-K3, Qwen3.8-27B and the DeepSeek V4 models.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi K2.6 sparse MoE model with a 262K context window. Available serverless and not included in standard Wafer Pass. Non-ZDR only: requests with `Wafer-ZDR: required` are rejected."
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

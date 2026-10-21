@@ -1,8 +1,10 @@
 # Sources (accessed 2026-07-11):
 # - Pricing and model details: https://app.wafer.ai/models
 # - Reasoning controls: https://docs.wafer.ai/serverless/api-reference#reasoning-controls
+# Deprecated: not in GET https://pass.wafer.ai/v1/models (checked 2026-10-21), which lists GLM-5.2, GLM-5.3, GLM-5.3-Flash, Kimi-K3, Qwen3.8-27B and the DeepSeek V4 models.
 schema = 2
 base_model = "minimax/MiniMax-M3"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]

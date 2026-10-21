@@ -2,9 +2,11 @@
 # template ignores $.chat_template_kwargs.thinking when sent alone.
 # https://docs.getlilac.com/inference/chat-completions#reasoning (accessed 2026-06-25)
 # knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+# Deprecated: Lilac discontinued inference. GET https://api.getlilac.com/v1/models returns HTTP 410 "Lilac inference has been discontinued." (checked 2026-10-21); https://getlilac.com now sells GPU cluster operations.
 schema = 2
 base_model = "google/gemma-4-31b-it"
 knowledge = "2025-01"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video"]

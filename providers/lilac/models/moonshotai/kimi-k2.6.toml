@@ -1,8 +1,10 @@
 # $.chat_template_kwargs.thinking = true|false; default true. The similarly
 # named enable_thinking key is ignored by this Moonshot template.
 # https://docs.getlilac.com/inference/chat-completions#reasoning (accessed 2026-06-25)
+# Deprecated: Lilac discontinued inference. GET https://api.getlilac.com/v1/models returns HTTP 410 "Lilac inference has been discontinued." (checked 2026-10-21); https://getlilac.com now sells GPU cluster operations.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
