@@ -96,7 +96,7 @@ body = { speed = "fast" }
 
 ### APIs (`[api.<protocol>]`)
 
-A model's `[api.<protocol>]` tables (`chat-completions`, `responses`, `messages`, …) are its complete list of APIs, in order, and replace the provider's default API. Each table can set `base_url`, `sdk = { aisdk, opencodeai }` and `compatibility.reasoning_field` / `replay_reasoning`; anything left out comes from the provider (`base_url` from `api` or the SDK's default URL, `sdk.aisdk` from `npm`, `sdk.opencodeai` from the provider's `opencodeai`). v1 only reads the first table, as its `provider` and `interleaved` fields.
+A model's `[api.<protocol>]` tables (`chat-completions`, `responses`, `messages`, …) are its complete list of APIs, in order, and replace the provider's default API. Each table can set `base_url`, `sdk = { aisdk, opencodeai }` and `compatibility.reasoning_field` / `replay_reasoning`; anything left out comes from the provider (`base_url` from `api` or the SDK's default URL, `sdk.aisdk` from `npm`, `sdk.opencodeai` from the provider's `opencodeai`, but only when the table takes the provider's `npm`: a table naming another `aisdk` must name its own `opencodeai` or gets none). v1 only reads the first table, as its `provider` and `interleaved` fields.
 
 ```toml
 [api.chat-completions]
@@ -160,10 +160,13 @@ providers/<provider-id>/
 ```toml
 name = "Example"
 npm = "@ai-sdk/openai-compatible"   # or the native AI SDK package
+opencodeai = "@opencode/ai/providers/openai-compatible" # the host's own entry point if @opencode/ai has one
 env = ["EXAMPLE_API_KEY"]
 api = "https://api.example.com/v1" # required for openai-compatible
 doc = "https://example.com/docs"
 ```
+
+Every provider sets `opencodeai` for its default API (`npm` + `api`); the generator doesn't guess it. Use the host's own `@opencode/ai/providers/<host>` entry when there is one, else the generic one for the protocol (`openai-compatible`, `openai-compatible/responses`, `anthropic-compatible`), or `"none"`.
 
 A v1-only alias provider (for example `azure-cognitive-services`) has a `provider.toml` with `[v1_alias] provider = "<id>"`, plus optional `env` renames for `${VAR}` templates, and no `models/` directory. Edit models in the target provider.
 
