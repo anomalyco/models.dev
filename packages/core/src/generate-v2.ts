@@ -30,7 +30,7 @@ import {
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
-import { modelV2ToV1, providerTomlToV1 } from "./translate.js";
+import { modelV2ToV1, providerTomlToV1, withoutV1ReasoningCost } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -690,7 +690,7 @@ function resolveV1Model(
   );
   omitPaths(merged, omit ?? []);
 
-  const authored = parseWithCause(AuthoredModel, merged, {
+  const authored = parseWithCause(AuthoredModel, withoutV1ReasoningCost(merged), {
     modelPath,
     toml: merged,
   });

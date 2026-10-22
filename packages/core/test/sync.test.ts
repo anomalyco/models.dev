@@ -101,6 +101,7 @@ import { buildVercelMediaModel, buildVercelModel, realtimePriceNote, vercel, ver
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
+import { generate } from "../src/generate.js";
 import { buildWandbModel, mergeReasoningOptions, type WandbModel } from "../src/sync/providers/wandb.js";
 import { buildChutesModel } from "../src/sync/providers/chutes.js";
 import { buildXAIModel, xai } from "../src/sync/providers/xai.js";
@@ -2751,15 +2752,23 @@ test("OpenRouter image and reasoning prices map to v2; audio and per-call prices
     "lab/model: video_seconds not synced: no known v2 field",
   ]);
 
-  // google/gemini-2.5-flash-image lists a reasoning price but no reasoning parameter.
-  const noReasoning = catalogCost(openRouterModel({
+  // google/gemini-2.5-flash-image lists a reasoning price but no reasoning parameter:
+  // the price still goes to v2, as reasoning tokens are billed whenever the model
+  // reasons. v1 has no reasoning price without reasoning.
+  const noReasoningModel = openRouterModel({
     id: "lab/model",
     supported_parameters: ["tools"],
     pricing: { prompt: "0.0000003", completion: "0.0000025", internal_reasoning: "0.0000025" },
-  }));
-  expect(noReasoning.notices).toEqual([
-    "lab/model: internal_reasoning not synced: the model takes no reasoning parameter, so v1 carries no reasoning price",
-  ]);
+  });
+  const noReasoning = catalogCost(noReasoningModel);
+  expect(noReasoning.reasoning).toBe(2.5);
+  expect(noReasoning.notices).toEqual([]);
+  const translated = openrouter.translateModel(noReasoningModel, translateContext) as {
+    model: SyncedModel;
+    v2Set: Record<string, unknown>;
+  };
+  expect(translated.model.cost?.reasoning).toBeUndefined();
+  expect(translated.v2Set["cost.text.output.reasoning"]).toBe(2.5);
 });
 
 test("OpenRouter overrides replace only the file's overrides the catalog owns", () => {
@@ -2905,6 +2914,28 @@ test("syncs every OpenRouter price into v2 files without changing v1", async () 
     expect(doc.cost).not.toHaveProperty("fees");
     expect(v1.cost).toEqual(before.cost);
     expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1 });
+
+    // A reasoning price on a model without reasoning (lab/chat has none): v2 gets
+    // it, v1 leaves it out.
+    source = openRouterModel({
+      supported_parameters: ["tools"],
+      pricing: { prompt: "0.0000003", completion: "0.0000012", internal_reasoning: "0.0000025" },
+    });
+    await write(["[cost.text.input]", "price = 0.3", "", "[cost.text.output]", "price = 1.2", ""]);
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1, notices: [] });
+    ({ doc } = await read());
+    expect(doc.cost.text.output).toEqual({ price: 1.2, reasoning: 2.5 });
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1 });
+    await writeFile(path.join(root, "providers", "example", "provider.toml"), [
+      'name = "Example"',
+      'npm = "@ai-sdk/openai-compatible"',
+      'env = ["EXAMPLE_API_KEY"]',
+      'api = "https://example.com/v1"',
+      'doc = "https://example.com"',
+      "",
+    ].join("\n"));
+    const providers = await generate(path.join(root, "providers"));
+    expect(providers.example!.models["lab/chat"]!.cost).toEqual({ input: 0.3, output: 1.2 });
   } finally {
     await rm(root, { recursive: true, force: true });
   }

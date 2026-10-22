@@ -1049,7 +1049,6 @@ function writeTtls(current: Record<string, unknown> | undefined) {
  * OpenRouter's overrides do. Prices with no exact v2 form get a notice.
  */
 export function catalogCost(model: OpenRouterModel, current?: Record<string, unknown>) {
-  const reasoning = hasReasoning(model);
   const has1h = [model.pricing, ...(model.pricing.overrides ?? [])]
     .some((prices) => (prices as Record<string, unknown>).input_cache_write_1h !== undefined);
   const defaultTtl = has1h ? writeTtls(current) : undefined;
@@ -1065,10 +1064,6 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
         note(UNITLESS_PRICES.has(key)
           ? "the catalog gives no unit (per token on some models, per minute on others)"
           : PER_CALL_PRICES.has(key) ? "v2 has no per-call price" : "no known v2 field", key);
-        continue;
-      }
-      if (key === "internal_reasoning" && !reasoning) {
-        note("the model takes no reasoning parameter, so v1 carries no reasoning price", key);
         continue;
       }
       if (target.ttl !== undefined && defaultTtl === undefined) {
@@ -1130,6 +1125,7 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
   };
   const write = base.text?.input?.cache?.write;
   return {
+    reasoning: base.text?.output?.reasoning as number | undefined,
     write: typeof write === "object" ? write as Record<string, number> : undefined,
     overrides: { input: overrides["text.input"] ?? [], output: overrides["text.output"] ?? [] },
     ownsContext,
@@ -1138,13 +1134,16 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
   };
 }
 
-// v2 values the v1 patch can't write: the 1h cache write price, override lists
-// and image prices.
+// v2 values the v1 patch can't write: the 1h cache write price, override lists,
+// image prices, and the reasoning price of a model without reasoning (which v1
+// leaves out). Reasoning tokens are billed whenever the model reasons.
 function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> | undefined) {
   const cost = catalogCost(model, current);
+  const priced = price(model.pricing.prompt) !== undefined && price(model.pricing.completion) !== undefined;
   return {
     notices: cost.notices,
     v2Set: {
+      ...(priced ? { "cost.text.output.reasoning": cost.reasoning } : {}),
       ...(cost.write === undefined ? {} : { "cost.text.input.cache.write": cost.write }),
       "cost.text.input.overrides": withCatalogOverrides(cost.overrides.input, cost.ownsContext),
       "cost.text.output.overrides": withCatalogOverrides(cost.overrides.output, cost.ownsContext),

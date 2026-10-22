@@ -87,9 +87,17 @@ export const kilo = {
     return {
       id: model.id,
       model: buildKiloModel(model, context.existing(model.id), undefined, context.authored(model.id)),
+      v2Set: reasoningPriceV2Set(model),
     };
   },
 } satisfies SyncProvider<KiloModel>;
+
+// v1 leaves out the reasoning price of a model without reasoning, so v2 takes it
+// directly: reasoning tokens are billed whenever the model reasons.
+function reasoningPriceV2Set(model: KiloModel) {
+  if (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined) return undefined;
+  return { "cost.text.output.reasoning": price(model.pricing.internal_reasoning) };
+}
 
 function isUnavailable(model: KiloModel) {
   return (

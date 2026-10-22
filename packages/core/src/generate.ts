@@ -10,7 +10,7 @@ import {
   AuthoredModelShape,
   ModelMetadata,
 } from "./schema.js";
-import { labModelV2ToV1, modelV2ToV1, providerTomlToV1 } from "./translate.js";
+import { labModelV2ToV1, modelV2ToV1, providerTomlToV1, withoutV1ReasoningCost } from "./translate.js";
 
 const BaseModel = AuthoredModelShape
   .deepPartial()
@@ -235,7 +235,7 @@ function mergeBaseModel(
   );
 
   applyOmit(merged, omit ?? []);
-  return merged;
+  return withoutV1ReasoningCost(merged);
 }
 
 function inheritableModelMetadata(model: ModelMetadata) {

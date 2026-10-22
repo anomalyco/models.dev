@@ -15,7 +15,7 @@ import {
   sameV1Model,
   withoutModeCosts,
 } from "../model-file-v2.js";
-import { isSchemaV2, labModelV2ToV1, modelV2ToV1 } from "../translate.js";
+import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
@@ -448,15 +448,17 @@ export async function syncProvider<SourceModel>(
 
     if (current === undefined) {
       modelMetadata ??= await readModelMetadata(provider.modelsDir);
+      const model = withBaseModalities(file.model, modelMetadata);
       const content = v2Content(
         relativePath,
         file.header,
         undefined,
         undefined,
-        withBaseModalities(file.model, modelMetadata),
+        model,
         v2Notices,
         await newModelProtocol(provider.modelsDir, file.model),
         undefined,
+        resolvedFlags(model, baseMetadata(model, modelMetadata)).reasoning,
         file.v2Set,
       );
       if (content === undefined) continue;
@@ -500,6 +502,7 @@ export async function syncProvider<SourceModel>(
       v2Notices,
       undefined,
       resolved,
+      resolved.after.reasoning,
       file.v2Set,
     );
     if (content === undefined || options.newOnly) {
@@ -625,8 +628,10 @@ function v2Content(
   before: ExistingModel | undefined,
   model: z.infer<typeof SyncedAuthoredModel>,
   notices: string[],
-  protocol?: string,
-  resolved?: { before: InheritedFlags; after: InheritedFlags },
+  protocol: string | undefined,
+  resolved: { before: InheritedFlags; after: InheritedFlags } | undefined,
+  // The model's resolved `reasoning`, as v1 leaves out a reasoning price without it.
+  reasoning: boolean | undefined,
   v2Set?: Record<string, unknown>,
 ) {
   const { id, ...synced } = model;
@@ -640,9 +645,9 @@ function v2Content(
       : patchModelV2(doc, withoutModeCosts(before, carried), after, resolved);
     for (const [key, value] of Object.entries(v2Set ?? {})) setPath(next, key, value);
     const content = header + formatModelV2(next);
-    const translated = modelV2ToV1(
-      { ...(Bun.TOML.parse(content) as Record<string, unknown>), id },
-      { modelPath: relativePath },
+    const translated = withoutV1ReasoningCost(
+      modelV2ToV1({ ...(Bun.TOML.parse(content) as Record<string, unknown>), id }, { modelPath: relativePath }),
+      reasoning,
     );
     if (sameV1Model(withoutModeCosts(translated, carried), after)) return content;
     throw new Error("the v2 file does not reproduce the synced fields");
@@ -849,13 +854,16 @@ async function readExisting(modelsDir: string) {
       throw parsed.error;
     }
 
-    const authored = parsed.data as ExistingModel;
-    if (authored.base_model !== undefined && modelMetadata === undefined) {
+    const own = parsed.data as ExistingModel;
+    if (own.base_model !== undefined && modelMetadata === undefined) {
       modelMetadata = await readModelMetadata(modelsDir);
     }
-    const toml = authored.base_model === undefined
-      ? authored
-      : resolveBaseModel(authored, modelMetadata ?? {}, filePath);
+    const resolved = own.base_model === undefined
+      ? own
+      : resolveBaseModel(own, modelMetadata ?? {}, filePath);
+    // As in the v1 output, no reasoning price when the resolved model doesn't reason.
+    const authored = withoutV1ReasoningCost(own, resolved.reasoning);
+    const toml = withoutV1ReasoningCost(resolved);
 
     existing.set(file, { authored, toml, header: leadingComments(text), text, symlink, v2 });
   }

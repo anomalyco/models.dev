@@ -95,7 +95,7 @@ export function modelV2ToV1(
   const input = model.modalities && toV1Modalities(model.modalities.input);
   const cost = model.cost && costV2ToV1(model.cost);
 
-  return withoutUndefined({
+  return withoutV1ReasoningCost(withoutUndefined({
     id: model.id,
     base_model: model.base_model,
     base_model_omit: model.base_model_omit,
@@ -128,7 +128,36 @@ export function modelV2ToV1(
     cost,
     experimental: toV1Experimental(model, cost),
     ...toV1Api(model.api),
-  });
+  }));
+}
+
+// v1 forbids a reasoning price on a model that doesn't reason, but a host can
+// still bill reasoning tokens, so v2 keeps the price and v1 leaves it out.
+// `reasoning` is the model's resolved value (its base model's when unset).
+export function withoutV1ReasoningCost<T extends Record<string, unknown>>(model: T, reasoning = model.reasoning): T {
+  if (reasoning !== false) return model;
+  const next: Record<string, unknown> = { ...model };
+  if (next.cost !== undefined) next.cost = withoutReasoningPrice(next.cost);
+  const experimental = next.experimental as { modes?: Record<string, Record<string, unknown>> } | undefined;
+  if (experimental?.modes !== undefined) {
+    next.experimental = {
+      ...experimental,
+      modes: Object.fromEntries(
+        Object.entries(experimental.modes).map(([name, mode]) => [
+          name,
+          mode.cost === undefined ? mode : { ...mode, cost: withoutReasoningPrice(mode.cost) },
+        ]),
+      ),
+    };
+  }
+  return next as T;
+}
+
+function withoutReasoningPrice(cost: unknown): unknown {
+  if (cost === null || typeof cost !== "object" || Array.isArray(cost)) return cost;
+  const { reasoning: _reasoning, ...rest } = cost as Record<string, unknown>;
+  if (Array.isArray(rest.tiers)) rest.tiers = rest.tiers.map(withoutReasoningPrice);
+  return rest;
 }
 
 // v1 models have one API: `provider` holds its SDK, base URL and shape, and
