@@ -138,9 +138,10 @@ export const OpenRouterModel = z.object({
   pricing: z.object({
     prompt: z.string(),
     completion: z.string(),
-    // Per-token image and audio input prices (multimodal embeddings).
+    // Per-token image and audio prices (audio is per second on TIME_BILLED_AUDIO models).
     image: z.string().optional(),
     audio: z.string().optional(),
+    audio_output: z.string().optional(),
     internal_reasoning: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
@@ -223,6 +224,12 @@ export const openrouter = {
   parseModels(raw) {
     // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
     return OpenRouterResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
+  },
+  sourceNotices(models) {
+    const ids = new Set(models.map((model) => model.id));
+    return [...TIME_BILLED_AUDIO]
+      .filter((id) => !ids.has(id))
+      .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`);
   },
   translateModel(model, context) {
     const type = mediaType(model);
@@ -922,9 +929,12 @@ function price(value: string | undefined) {
 // Where each catalog price goes in a v2 file. Prices are per token in the catalog
 // (per 1M in the file). `image` and `image_output` are per token too: OpenRouter's
 // model pages show "Image Input: $0.30/M tokens" and "Image Output: $60/M tokens".
+// So are the audio prices ("Price in USD per audio input token"), except on the
+// models in TIME_BILLED_AUDIO.
 // https://openrouter.ai/docs/guides/overview/models#pricing-object
+// https://openrouter.ai/docs/api/api-reference/models/get-models
 type PriceTarget = {
-  section: "text" | "image";
+  section: "text" | "image" | "audio";
   entry: string;
   field: "price" | "reasoning" | "read" | "write";
   ttl?: "1h";
@@ -939,12 +949,24 @@ const PRICE_TARGETS: Record<string, PriceTarget> = {
   internal_reasoning: { section: "text", entry: "output", field: "reasoning" },
   image: { section: "image", entry: "input", field: "price" },
   image_output: { section: "image", entry: "output", field: "price" },
+  audio: { section: "audio", entry: "input", field: "price" },
+  input_audio_cache: { section: "audio", entry: "input", field: "read" },
+  audio_output: { section: "audio", entry: "output", field: "price" },
 };
 
-// Audio prices carry no unit: OpenRouter's model pages show them per token on most
-// models ("Input Audio: $1/M tokens") and per minute on others (Voxtral Small:
-// "Input Audio at $0.006/minute"), so the catalog alone can't price them exactly.
-const UNITLESS_PRICES = new Set(["audio", "input_audio_cache", "audio_output"]);
+// Models whose catalog audio prices are per second of audio, not per token. They
+// are written per minute, the unit OpenRouter's model page bills them in.
+const TIME_BILLED_AUDIO = new Set([
+  // "Input audio is priced at $100 per million seconds" and "Input Audio at
+  // $0.006/minute": https://openrouter.ai/mistralai/voxtral-small-24b-2507
+  "mistralai/voxtral-small-24b-2507",
+]);
+
+// A time-billed catalog audio price (per second) as a price per minute.
+function perMinute(value: string) {
+  const number = Number(value);
+  return Number.isFinite(number) && number >= 0 ? roundPrice(number * 60) : undefined;
+}
 
 // Flat fee per call ("Fixed cost per API request"); v2 costs have no per-call price.
 const PER_CALL_PRICES = new Set(["request"]);
@@ -960,7 +982,6 @@ const WEB_SEARCH_CONTEXT_PRICES: Record<string, string> = {
 
 function isPriceKey(key: string) {
   return PRICE_TARGETS[key] !== undefined
-    || UNITLESS_PRICES.has(key)
     || PER_CALL_PRICES.has(key)
     || key === WEB_SEARCH_PRICE
     || WEB_SEARCH_CONTEXT_PRICES[key] !== undefined;
@@ -1083,21 +1104,21 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
       if (key === WEB_SEARCH_PRICE || WEB_SEARCH_CONTEXT_PRICES[key] !== undefined) continue;
       const target = PRICE_TARGETS[key];
       if (target === undefined) {
-        note(UNITLESS_PRICES.has(key)
-          ? "the catalog gives no unit (per token on some models, per minute on others)"
-          : PER_CALL_PRICES.has(key) ? "v2 has no per-call price" : "no known v2 field", key);
+        note(PER_CALL_PRICES.has(key) ? "v2 has no per-call price" : "no known v2 field", key);
         continue;
       }
       if (target.ttl !== undefined && defaultTtl === undefined) {
         note("the file's cache capability doesn't list a default and a 1h TTL", key);
         continue;
       }
-      const value = typeof raw === "string" ? price(raw) : undefined;
+      const timeBilled = target.section === "audio" && TIME_BILLED_AUDIO.has(model.id);
+      const value = typeof raw !== "string" ? undefined : timeBilled ? perMinute(raw) : price(raw);
       if (value === undefined) {
         note("not a price", key);
         continue;
       }
       const entry = ((cost[target.section] ??= {})[target.entry] ??= {});
+      if (timeBilled && !isOverride) entry.unit = "minute";
       if (target.field === "read") (entry.cache ??= {}).read = value;
       else if (target.field === "write" && defaultTtl !== undefined) {
         ((entry.cache ??= {}).write ??= {})[target.ttl ?? defaultTtl] = value;
@@ -1171,7 +1192,7 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
     ? undefined
     : { price: searchPrice, ...(searchOverrides.length > 0 ? { overrides: searchOverrides } : {}) };
 
-  const section = (name: "image") => {
+  const section = (name: "image" | "audio") => {
     const entries: Record<string, CostEntry> = Object.fromEntries(
       Object.entries(base[name] ?? {}).map(([entry, fields]) => {
         const list = overrides[`${name}.${entry}`];
@@ -1187,13 +1208,14 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
     overrides: { input: overrides["text.input"] ?? [], output: overrides["text.output"] ?? [] },
     ownsContext,
     image: section("image"),
+    audio: section("audio"),
     webSearch: webSearchCost,
     notices: [...issues].map(([reason, keys]) => `${model.id}: ${[...keys].join(", ")} not synced: ${reason}`),
   };
 }
 
 // v2 values the v1 patch can't write: the 1h cache write price, override lists,
-// image and web search prices, and the reasoning price of a model without
+// image, audio and web search prices, and the reasoning price of a model without
 // reasoning (which v1 leaves out). Reasoning tokens are billed whenever the model
 // reasons.
 function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> | undefined) {
@@ -1207,6 +1229,7 @@ function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> |
       "cost.text.input.overrides": withCatalogOverrides(cost.overrides.input, cost.ownsContext),
       "cost.text.output.overrides": withCatalogOverrides(cost.overrides.output, cost.ownsContext),
       "cost.image": cost.image,
+      "cost.audio": cost.audio,
       "cost.web_search": cost.webSearch,
     },
   };
@@ -1325,6 +1348,11 @@ export function buildOpenRouterModel(
         reasoning: reasoning ? price(model.pricing.internal_reasoning) : undefined,
         cache_read: price(model.pricing.input_cache_read),
         cache_write: price(model.pricing.input_cache_write),
+        // v1 audio prices are per token, so time-billed ones stay v2-only.
+        ...(TIME_BILLED_AUDIO.has(model.id) ? {} : {
+          input_audio: price(model.pricing.audio),
+          output_audio: price(model.pricing.audio_output),
+        }),
         tiers: costTiers(model, existing),
       }
     : existing?.cost;

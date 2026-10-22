@@ -36,5 +36,14 @@ price = 18
 [cost.image.input]
 price = 2
 
+[cost.audio.input]
+price = 2
+cache = { read = 0.2 }
+
+[[cost.audio.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
 [cost.web_search]
 price = 14

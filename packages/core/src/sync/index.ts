@@ -121,6 +121,8 @@ export interface SyncProvider<SourceModel> {
    */
   missingModelID?(model: SourceModel): string | undefined;
   skippedNotice?(ids: string[]): string[];
+  /** Notices about the source list as a whole, such as a model the module expects but the source lacks. */
+  sourceNotices?(models: SourceModel[]): string[];
   fetchModels(): Promise<unknown>;
   parseModels(raw: unknown): SourceModel[];
   translateModel(
@@ -327,6 +329,10 @@ export async function syncProvider<SourceModel>(
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
   const translateNotices: string[] = [];
+  for (const notice of provider.sourceNotices?.(sourceModels) ?? []) {
+    translateNotices.push(notice);
+    console.warn(notice);
+  }
 
   for (const sourceModel of sourceModels) {
     let translated: ReturnType<typeof provider.translateModel>;

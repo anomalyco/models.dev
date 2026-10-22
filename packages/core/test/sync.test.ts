@@ -2732,26 +2732,25 @@ test("OpenRouter 1h cache writes take the file's cache TTLs", () => {
   ]);
 });
 
-test("OpenRouter image, reasoning and web search prices map to v2; audio and per-call prices are reported", () => {
+test("OpenRouter image, audio, reasoning and web search prices map to v2; per-call prices are reported", () => {
   const cost = catalogCost(openRouterGeminiModel());
 
   // Per token, like the text prices.
   expect(cost.image).toEqual({ input: { price: 0.3 }, output: { price: 60 } });
+  expect(cost.audio).toEqual({ input: { price: 1, cache: { read: 0.1 } } });
   expect(cost).not.toHaveProperty("fees");
   // $0.014 per search, without float noise.
   expect(cost.webSearch).toEqual({ price: 14 });
-  expect(cost.notices).toEqual([
-    "google/gemini-2.5-flash: audio, input_audio_cache not synced: the catalog gives no unit (per token on some models, per minute on others)",
-  ]);
-  expect(buildOpenRouterModel(openRouterGeminiModel(), undefined).cost).toMatchObject({ reasoning: 2.5 });
+  expect(cost.notices).toEqual([]);
+  expect(buildOpenRouterModel(openRouterGeminiModel(), undefined).cost).toMatchObject({ reasoning: 2.5, input_audio: 1 });
 
   const perRequest = catalogCost(openRouterModel({
     id: "lab/model",
     pricing: { prompt: "0.000001", completion: "0.000002", request: "0.005", audio_output: "0.000064", video_seconds: "0.1" },
   }));
+  expect(perRequest.audio).toEqual({ output: { price: 64 } });
   expect(perRequest.notices).toEqual([
     "lab/model: request not synced: v2 has no per-call price",
-    "lab/model: audio_output not synced: the catalog gives no unit (per token on some models, per minute on others)",
     "lab/model: video_seconds not synced: no known v2 field",
   ]);
 
@@ -2773,6 +2772,70 @@ test("OpenRouter image, reasoning and web search prices map to v2; audio and per
   expect(translated.model.cost?.reasoning).toBeUndefined();
   expect(translated.v2Set["cost.text.output.reasoning"]).toBe(2.5);
 });
+
+test("OpenRouter audio prices keep their overrides; time-billed audio is per minute and v2-only", () => {
+  const gemini = openRouterModel({
+    id: "google/gemini-2.5-pro",
+    pricing: {
+      prompt: "0.00000125",
+      completion: "0.00001",
+      audio: "0.00000125",
+      input_audio_cache: "0.000000125",
+      overrides: [{
+        min_prompt_tokens: 200000,
+        prompt: "0.0000025",
+        completion: "0.000015",
+        audio: "0.0000025",
+        input_audio_cache: "0.00000025",
+      }],
+    },
+  });
+  const cost = catalogCost(gemini);
+  expect(cost.audio).toEqual({
+    input: {
+      price: 1.25,
+      cache: { read: 0.125 },
+      overrides: [{ when: { context: { gt: 200_000 } }, price: 2.5, cache: { read: 0.25 } }],
+    },
+  });
+  expect(cost.notices).toEqual([]);
+  // v1 tiers carry no audio price.
+  const v1 = buildOpenRouterModel(gemini, undefined).cost;
+  expect(v1).toMatchObject({ input_audio: 1.25 });
+  expect(v1?.tiers?.[0]).not.toHaveProperty("input_audio");
+
+  // $0.0001 per second is $0.006 per minute.
+  const voxtral = openRouterModel({
+    id: "mistralai/voxtral-small-24b-2507",
+    pricing: { prompt: "0.0000001", completion: "0.0000003", audio: "0.0001" },
+  });
+  expect(catalogCost(voxtral).audio).toEqual({ input: { unit: "minute", price: 0.006 } });
+  expect(buildOpenRouterModel(voxtral, undefined).cost).not.toHaveProperty("input_audio");
+  expect(modelV2ToV1({
+    id: "mistralai/voxtral-small-24b-2507",
+    ...VOXTRAL_V2,
+  }).cost).toEqual({ input: 0.1, output: 0.3 });
+
+  expect(openrouter.sourceNotices([voxtral])).toEqual([]);
+  expect(openrouter.sourceNotices([gemini])).toEqual([
+    "mistralai/voxtral-small-24b-2507: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog",
+  ]);
+});
+
+const VOXTRAL_V2 = {
+  schema: 2,
+  name: "Voxtral Small",
+  description: "Voxtral Small",
+  open_weights: true,
+  release_date: "2025-07-15",
+  modalities: { input: ["text", "audio/wav"], output: ["text"] },
+  capabilities: { tools: { supported: true }, reasoning: { supported: false } },
+  limit: { context: 32_000, output: 32_000 },
+  cost: {
+    text: { input: { price: 0.1 }, output: { price: 0.3 } },
+    audio: { input: { unit: "minute", price: 0.006 } },
+  },
+};
 
 test("OpenRouter overrides replace only the file's overrides the catalog owns", () => {
   const region = { when: { region: { equals: "eu" } }, price: 3 };

@@ -263,8 +263,9 @@ function costV2ToV1(cost: CostV2) {
     reasoning: output.reasoning,
     cache_read: input.cache?.read,
     cache_write: input.cache && firstPrice(input.cache.write),
-    input_audio: cost.audio?.input?.price,
-    output_audio: cost.audio?.output?.price,
+    // v1 audio prices are per token too; per-minute or per-second ones stay v2-only.
+    input_audio: perToken(cost.audio?.input?.unit) ? cost.audio?.input?.price : undefined,
+    output_audio: perToken(cost.audio?.output?.unit) ? cost.audio?.output?.price : undefined,
     tiers: tiers.length > 0 ? tiers : undefined,
   });
 }
