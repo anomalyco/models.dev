@@ -4,6 +4,7 @@ import {
   AuthoredModelV2,
   LabModelV2,
   type AuthoredApiEntryV2,
+  type CostFactorV2,
   type CostV2,
   type CostWhenV2,
   type ReasoningSupportV2,
@@ -301,7 +302,7 @@ function toV1Experimental(
         const modeCost =
           mode.cost !== undefined
             ? costV2ToV1(mode.cost)
-            : typeof factor === "number" && cost !== undefined
+            : factor !== undefined && cost !== undefined
               ? scaleCost(cost, factor)
               : undefined;
         if (modeCost !== undefined) delete modeCost.tiers;
@@ -318,11 +319,39 @@ function toV1Experimental(
   };
 }
 
-function scaleCost(cost: Record<string, unknown>, factor: number) {
+// Where each v1 price sits in a v2 cost, for reading an object factor.
+const V1_COST_PATHS: Record<string, string[]> = {
+  input: ["text", "input", "price"],
+  output: ["text", "output", "price"],
+  reasoning: ["text", "output", "reasoning"],
+  cache_read: ["text", "input", "cache", "read"],
+  cache_write: ["text", "input", "cache", "write"],
+  input_audio: ["audio", "input", "price"],
+  output_audio: ["audio", "output", "price"],
+};
+
+// A number scales every price below it; prices an object factor doesn't name keep factor 1.
+function factorAt(factor: CostFactorV2, path: string[]): number {
+  let node: CostFactorV2 | undefined = factor;
+  for (const key of path) {
+    if (typeof node === "number") return node;
+    node = node?.[key];
+  }
+  if (typeof node === "number") return node;
+  // An object at a cache write is keyed by TTL; v1 keeps the first one.
+  const first = node === undefined ? undefined : Object.values(node)[0];
+  return typeof first === "number" ? first : 1;
+}
+
+function scaleCost(cost: Record<string, unknown>, factor: CostFactorV2) {
   return Object.fromEntries(
     Object.entries(cost)
       .filter(([key]) => key !== "tiers")
-      .map(([key, value]) => [key, roundPrice((value as number) * factor)]),
+      .map(([key, value]) => {
+        const path = V1_COST_PATHS[key];
+        if (path === undefined) throw new Error(`no v2 path for v1 cost ${key}`);
+        return [key, roundPrice((value as number) * factorAt(factor, path))];
+      }),
   );
 }
 

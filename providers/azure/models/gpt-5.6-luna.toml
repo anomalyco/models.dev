@@ -38,8 +38,8 @@ price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }
-factor = 0.5
+factor = { text = 0.5 }
 
 [[cost.multipliers]]
 when = { region = { in = ["us", "eu"] } }
-factor = 1.1
+factor = { text = 1.1 }

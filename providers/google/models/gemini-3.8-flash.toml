@@ -47,4 +47,4 @@ factor = { text = { input = { price = 0.5, cache = { read = 0.5 } }, output = 0.
 
 [[cost.multipliers]]
 when = { date = { gte = "2027-01-01" } }
-factor = 2
+factor = { text = 2, audio = 2 }

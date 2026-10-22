@@ -49,7 +49,7 @@ price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }
-factor = 1.8
+factor = { text = 1.8, audio = 1.8 }
 
 [[cost.multipliers]]
 when = { not = { region = { equals = "global" } } }
@@ -57,4 +57,4 @@ factor = 1.1
 
 [[cost.multipliers]]
 when = { date = { gte = "2026-12-01" } }
-factor = 2
+factor = { text = 2, audio = 2 }

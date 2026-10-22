@@ -38,11 +38,11 @@ price = 10
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "fast" } }
-factor = 2
+factor = { text = 2 }
 
 [[cost.multipliers]]
 when = { region = { equals = "us" } }
-factor = 1.1
+factor = { text = 1.1 }
 
 [experimental.modes.fast]
 body = { speed = "fast" }

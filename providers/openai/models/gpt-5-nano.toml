@@ -40,7 +40,7 @@ price = 10
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }
-factor = 0.5
+factor = { text = 0.5 }
 
 [experimental.modes.flex]
 body = { service_tier = "flex" }

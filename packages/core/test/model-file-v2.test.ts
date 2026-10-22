@@ -241,3 +241,24 @@ test("web search prices are written to v2 files, kept by patches, and left out o
   expect(modelV2ToV1({ schema: 2, id: "x", cost: { web_search: { price: 10 } } }).cost).toBeUndefined();
   expect(() => modelV2ToV1({ schema: 2, id: "x", cost: { web_search: { price: 10, unit: "request" } } })).toThrow();
 });
+
+test("v1 mode prices come from an object factor the same way as from a plain number", () => {
+  const cost = {
+    text: { input: { price: 4, cache: { read: 0.4, write: { "5m": 5, "1h": 8 } } }, output: { price: 20 } },
+    audio: { input: { price: 6 } },
+    web_search: { price: 10 },
+  };
+  const mode = (factor: unknown) =>
+    (modelV2ToV1({
+      schema: 2,
+      id: "x",
+      cost: { ...cost, multipliers: [{ when: { service_tier: { equals: "fast" } }, factor }] },
+      experimental: { modes: { fast: { body: { speed: "fast" } } } },
+    }) as any).experimental.modes.fast.cost;
+
+  const expected = { input: 8, output: 40, cache_read: 0.8, cache_write: 10, input_audio: 12 };
+  expect(mode(2)).toEqual(expected);
+  expect(mode({ text: 2, audio: 2 })).toEqual(expected);
+  // Prices an object factor doesn't name keep their base price.
+  expect(mode({ text: { output: 2 } })).toEqual({ input: 4, output: 40, cache_read: 0.4, cache_write: 5, input_audio: 6 });
+});

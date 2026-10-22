@@ -642,6 +642,8 @@ export const WebSearchCostV2 = WebSearchPricesV2.extend({
 
 export type WebSearchCostV2 = z.infer<typeof WebSearchCostV2>;
 
+// A plain number multiplies every price in the cost, `web_search` included; an object
+// (e.g. `{ text = 2, audio = 2 }`) multiplies only the prices it names.
 export type CostFactorV2 = number | { [key: string]: CostFactorV2 };
 
 export const CostFactorV2: z.ZodType<CostFactorV2> = z.lazy(() =>
