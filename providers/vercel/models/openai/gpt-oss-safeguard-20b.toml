@@ -10,6 +10,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 system_updates = false
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 context = 128_000

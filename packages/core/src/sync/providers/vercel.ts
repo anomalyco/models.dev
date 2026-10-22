@@ -113,16 +113,37 @@ export const vercel = {
       existing,
       inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
     );
+    const cache = vercelCache(model.tags);
+    const v2Set = {
+      ...(model.type === "evaluation" ? { api: structuredClone(DECISION_APIS) } : {}),
+      ...(cache === undefined ? {} : { "capabilities.cache": cache }),
+    };
     return {
       id: model.id,
       model: translated,
       header: translated.reasoning_options?.some((option) => option.type === "toggle")
         ? "# Toggle: reasoning.enabled = true|false\n# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning\n"
         : undefined,
-      ...(model.type === "evaluation" ? { v2Set: { api: structuredClone(DECISION_APIS) } } : {}),
+      ...(Object.keys(v2Set).length > 0 ? { v2Set } : {}),
     };
   },
 } satisfies SyncProvider<VercelModel>;
+
+// The catalog tags each model `implicit-caching` and/or `explicit-caching`.
+// Details a file already has for a kind (TTLs, breakpoints) are kept; untagged
+// models keep whatever the file says.
+export function vercelCache(tags: string[]) {
+  const implicit = tags.includes("implicit-caching");
+  const explicit = tags.includes("explicit-caching");
+  if (!implicit && !explicit) return undefined;
+  const kind = (current: unknown, on: boolean) =>
+    on ? (current !== null && typeof current === "object" ? current : true) : false;
+  return (current: { implicit?: unknown; explicit?: unknown } | undefined) => ({
+    supported: true,
+    implicit: kind(current?.implicit, implicit),
+    explicit: kind(current?.explicit, explicit),
+  });
+}
 
 export function buildVercelModel(
   model: VercelModel,

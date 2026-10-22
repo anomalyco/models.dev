@@ -7,6 +7,7 @@ base_model = "quiverai/arrow-2-telos"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 context = 131_072

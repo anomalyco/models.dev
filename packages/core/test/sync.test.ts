@@ -97,7 +97,7 @@ import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { buildVeniceModel, resolveVeniceBaseModel, type VeniceModel } from "../src/sync/providers/venice.js";
-import { buildVercelMediaModel, buildVercelModel, realtimePriceNote, vercel, vercelMediaCost } from "../src/sync/providers/vercel.js";
+import { buildVercelMediaModel, buildVercelModel, realtimePriceNote, vercel, vercelCache, vercelMediaCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
@@ -8097,4 +8097,11 @@ test("Kilo web search prices go to v2 per 1,000", () => {
   // Kilo lists "0" on routes with no web search price.
   expect(v2Set("0")["cost.web_search"]).toBeUndefined();
   expect(v2Set()["cost.web_search"]).toBeUndefined();
+});
+
+test("Vercel cache tags set cache support and keep authored details", () => {
+  expect(vercelCache([])).toBeUndefined();
+  expect(vercelCache(["implicit-caching"])!(undefined)).toEqual({ supported: true, implicit: true, explicit: false });
+  expect(vercelCache(["implicit-caching", "explicit-caching"])!({ explicit: { ttl: ["5m", "1h"] } }))
+    .toEqual({ supported: true, implicit: true, explicit: { ttl: ["5m", "1h"] } });
 });

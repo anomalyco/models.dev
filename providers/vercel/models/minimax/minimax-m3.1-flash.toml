@@ -12,6 +12,7 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 system_updates = false
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 output = 524_288

@@ -18,6 +18,7 @@ reasoning = { supported = true, effort = ["low", "high"] }
 temperature = true
 system_updates = false
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 context = 1_000_000

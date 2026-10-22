@@ -18,6 +18,7 @@ reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
 system_updates = false
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 output = 128_000

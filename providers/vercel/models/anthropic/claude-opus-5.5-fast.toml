@@ -8,6 +8,7 @@ tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 system_updates = false
 effort_updates = true
+cache = { supported = true, implicit = false, explicit = true }
 
 [cost.text.input]
 price = 8

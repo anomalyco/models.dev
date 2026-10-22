@@ -12,6 +12,7 @@ output = ["text", "image/png", "image/jpeg"]
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "medium", "high"] }
 structured_output = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [cost.text.input]
 price = 1.5

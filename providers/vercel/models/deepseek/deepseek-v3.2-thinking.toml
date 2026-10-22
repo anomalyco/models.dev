@@ -9,6 +9,7 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 system_updates = false
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 output = 8_000

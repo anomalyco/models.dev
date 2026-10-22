@@ -8,6 +8,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 system_updates = true
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [cost.text.input]
 price = 0.076
