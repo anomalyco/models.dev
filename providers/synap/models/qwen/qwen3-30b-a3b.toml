@@ -1,0 +1,19 @@
+# Sources (accessed 2026-10-18, re-verified on the live feed 2026-10-22):
+# - Model id, USD pricing and context: https://pool.linkrra.com/v1/models?format=openrouter
+#   (cost_usd per token: 0.000000058512 prompt / 0.0000002438 completion; the feed names it
+#   "Qwen: Qwen3 30B A3B Instruct 2507", so the host serves the 2507 non-thinking weights).
+# - base_model: the instruct-2507 lab entry - this id does NOT serve the hybrid-thinking
+#   Qwen3-30B-A3B base model.
+# - limit.context 65,536: the deployment's window as declared by the live feed (below the
+#   lab model's 262k). limit.output is not restated (lab value inherited).
+schema = 2
+base_model = "alibaba/qwen3-30b-a3b-instruct-2507"
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 0.058512
+
+[cost.text.output]
+price = 0.2438

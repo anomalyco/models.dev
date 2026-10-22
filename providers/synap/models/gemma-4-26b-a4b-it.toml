@@ -1,0 +1,29 @@
+# Sources (accessed 2026-10-15, re-verified on the live feed 2026-10-22):
+# - Model id, USD pricing and limits: https://pool.linkrra.com/v1/models?format=openrouter
+#   (cost_usd is per token: 0.00000004 prompt / 0.00000021 completion).
+# - limit.context 131,072: the deployment's --max-model-len as declared by the live feed
+#   (below the lab model's 262k). limit.output is not overridden: the lab value (32,768)
+#   is inherited rather than claiming the feed's unverified ceiling.
+# - modalities input = ["text"]: live probe - a chat request with an image_url content part
+#   returns an upstream error while the same request with text only succeeds, so this
+#   deployment does not accept image input even though the lab model can.
+# - reasoning = false: live probes return no reasoning/reasoning_content field and the feed
+#   advertises no effort control; `reasoning_effort` is tolerated (HTTP 200) but not served,
+#   so it is not published as caller control.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[modalities]
+input = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.21
+
+[limit]
+context = 131_072
