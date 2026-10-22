@@ -1,0 +1,31 @@
+# Spot serverless for DeepSeek V4.1 Flash (30% below Standard, same OpenAI-compatible API; service_tier does not select Spot).
+# Sources: https://docs.fireworks.ai/guides/spot-serverless (Spot table: DeepSeek V4.1 Flash Standard $0.006 cached / $0.30 input / $1.20 output per 1M, Spot $0.0042 / $0.21 / $0.84; fallback to Standard billed at Standard).
+# Standard pricing: https://docs.fireworks.ai/serverless/pricing and https://fireworks.ai/models/deepseek-ai/deepseek-v4p1-flash (accessed 2026-10-22).
+# Lab identity: DeepSeek V4.1 Flash https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash (base deepseek-v4p1-flash, not the 1017 update).
+# Live catalog exposes accounts/fireworks/routers/deepseek-v4p1-flash-spot (issue #10907); docs table lists the Spot identifier under accounts/fireworks/models/deepseek-v4p1-flash-spot for the same offering — same underlying model and Spot rates applied here.
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|high|max (same surface as sibling accounts/fireworks/models/deepseek-v4p1-flash, verified 2026-09-10; native DeepSeek Flash effort set low|high|max: https://api-docs.deepseek.com/guides/thinking_mode/)
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash Spot"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { supported = true, implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.21
+cache = { read = 0.0042 }
+
+[cost.text.output]
+price = 0.84
