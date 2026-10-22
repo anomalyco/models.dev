@@ -463,10 +463,11 @@ LLMTR is implemented in `packages/core/src/sync/providers/llmtr.ts`.
 - Source endpoint: `https://llmtr.com/v1/models`; no auth required. Only `/v1/chat/completions` rows with text in and out are synced; `:think`-style aliases, the bring-your-own-key `evren/` routes and `together/tev1-4b-experimental` are skipped.
 - New routes are `base_model` overlays on the lab entry. `llmtr/` and inference-host namespaces (`engy`, `greenpt`, `heabsy`, `tensorx`) drop their host or region suffix; `-free`, `-unmetered` and `-<n>k` routes share the lab entry and are told apart by name. Routes with no lab entry are listed in the run's report.
 - Hand-authored files only get prices and limits; capabilities, reasoning controls and names stay as authored.
-- Reasoning on new routes comes from `reasoning` and `supported_parameters`, which match what the gateway enforces: `reasoning_effort` with `supported_efforts` is an effort ladder (`none` dropped when `mandatory`), the boolean `reasoning` on a non-mandatory route is a toggle, `mandatory` or `default_enabled` without a control is `[]`, and a route that is neither is published with reasoning off.
+- Reasoning on new routes comes from `reasoning` and `supported_parameters`, which describe the controls the gateway itself parses: `reasoning_effort` with `supported_efforts` is an effort ladder (`none` dropped when `mandatory`), the boolean `reasoning` on a non-mandatory route is a toggle, `mandatory` or `default_enabled` without a control is `[]`, and a route that is neither is published with reasoning off.
+- The gateway forwards other body fields unchanged, so the list is not the whole story for a reasoning route it says nothing about, or for the Alibaba relay (`qwen/`) and DeepSeek routes, which also take `enable_thinking`, `thinking_budget` or `thinking.type`. Those routes are not created: the run reports them through `MissingReasoningOptionsError` (no issues, `trackMissingModels` is off), and they are measured against `POST /v1/chat/completions` and hand-authored with the evidence in the header.
 - `max_completion_tokens` equal to the context window is a placeholder, so the lab's output limit applies.
 - Input kinds are the ones both LLMTR and the lab list (`file` maps to `pdf`).
-- Per-token USD string prices become per-1M, rounded to six decimals. A malformed price fails the run, and a list under 100 rows is refused rather than read as retirements.
+- Per-token USD string prices become per-1M, rounded to six decimals. A route without a quoted input or output price is not created, since unquoted is not free; an explicit `"0"` is published as `0`. A malformed price fails the run, and a list under 100 rows is refused rather than read as retirements.
 
 ## Standalone Generators
 

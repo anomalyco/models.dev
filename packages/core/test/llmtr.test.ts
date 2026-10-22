@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   fetchLLMTRModels,
   llmtr,
@@ -84,6 +85,22 @@ test("turns reasoning off where LLMTR serves the route without it", () => {
   expect(built?.model).not.toHaveProperty("reasoning_options");
 });
 
+test("leaves a reasoning route with no listed control to be measured", () => {
+  expect(() => translate(row({ reasoning: null }))).toThrow(MissingReasoningOptionsError);
+});
+
+test("leaves routes that forward the lab's own thinking fields to be measured", () => {
+  expect(() => translate(row({ id: "qwen/qwen3.7-max" }))).toThrow(MissingReasoningOptionsError);
+  expect(() => translate(row({ id: "greenpt/deepseek-v4.1-flash" }))).toThrow(MissingReasoningOptionsError);
+});
+
+test("creates a non-reasoning route the list says nothing about", () => {
+  const built = translate(row({ id: "openai/gpt-4.1-mini", reasoning: null }));
+
+  expect(built?.model).not.toHaveProperty("reasoning");
+  expect(built?.model).not.toHaveProperty("reasoning_options");
+});
+
 test("drops an output cap that only repeats the context window", () => {
   const built = translate(row({ top_provider: { context_length: 128_000, max_completion_tokens: 128_000 } }));
 
@@ -111,20 +128,30 @@ test("fails on a price that is not a non-negative number", () => {
   expect(() => translate(row({ pricing: { prompt: "-1", completion: "0.0000001" } }))).toThrow();
 });
 
+test("does not create a route whose price is not quoted", () => {
+  expect(translate(row({ pricing: { prompt: "0.000000135" } }))).toBeUndefined();
+});
+
+test("publishes an explicitly quoted zero price", () => {
+  const built = translate(row({ pricing: { prompt: "0", completion: "0" } }));
+
+  expect(built?.model).toMatchObject({ cost: { input: 0, output: 0 } });
+});
+
 test("refreshes only prices and limits on a hand-authored file", () => {
   const authored = {
     base_model: "zhipuai/glm-5.3-flash",
     reasoning: true,
     reasoning_options: [{ type: "toggle" }],
     structured_output: true,
-    cost: { input: 1, output: 2 },
+    cost: { input: 1, output: 2, cache_write: 0.5 },
   } as ExistingModel;
   const built = translate(row({ supported_parameters: [] }), authored);
 
   expect(built?.model).toMatchObject({
     reasoning_options: [{ type: "toggle" }],
     structured_output: true,
-    cost: { input: 0.135, output: 0.45, cache_read: 0.027 },
+    cost: { input: 0.135, output: 0.45, cache_read: 0.027, cache_write: 0.5 },
   });
   expect(built?.model).not.toHaveProperty("tool_call");
 });

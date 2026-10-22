@@ -4,6 +4,7 @@ import path from "node:path";
 import { z } from "zod";
 
 import { ReasoningOption } from "../../schema.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
 import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
@@ -110,15 +111,16 @@ export const llmtr = {
   id: "llmtr",
   name: "LLMTR",
   modelsDir: "providers/llmtr/models",
-  // A chat route is only skipped when no lab entry exists to base it on. They
-  // are listed in the run's report rather than opened as one issue each.
+  // Chat routes that cannot be created are listed in the run's report rather
+  // than opened as one issue each.
+  trackMissingModels: false,
   sourceID(model) {
     return chatRoute(model) ? model.id : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} LLMTR chat routes have no lab entry under models/ to base them on: `
+      `${ids.length} LLMTR chat routes have no lab entry under models/ or no quoted price: `
         + ids.map((id) => `\`${id}\``).join(", "),
     ];
   },
@@ -133,6 +135,8 @@ export const llmtr = {
     if (existing !== undefined) return { id, model: updateModel(model, existing) };
     const baseModel = resolveLLMTRBaseModel(model.id);
     if (baseModel === undefined) return undefined;
+    // An unquoted price is unknown, not free.
+    if (model.pricing.prompt === undefined || model.pricing.completion === undefined) return undefined;
     return createModel(model, id, baseModel);
   },
 } satisfies SyncProvider<LLMTRModel>;
@@ -193,7 +197,7 @@ function firstParty(id: string) {
 // lifecycle and reasoning controls stay as authored.
 function updateModel(model: LLMTRModel, existing: ExistingModel): SyncedModel {
   const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;
-  const limit = { ...current.limit, ...definedLimits(model) };
+  const limit = { ...current.limit, ...defined(served(model)) };
   const values = {
     ...current,
     cost: { ...current.cost, ...cost(model) },
@@ -203,7 +207,7 @@ function updateModel(model: LLMTRModel, existing: ExistingModel): SyncedModel {
 }
 
 function createModel(model: LLMTRModel, id: string, baseModel: string) {
-  const reasoning = reasoningControls(model, modelMetadata(baseModel).reasoning === true);
+  const reasoning = reasoningControls(model, id, baseModel);
   const limit = served(model);
   const input = inputKinds(model, baseModel);
   const parameters = model.supported_parameters;
@@ -218,7 +222,8 @@ function createModel(model: LLMTRModel, id: string, baseModel: string) {
       modalities: { input, output: ["text"] as SyncedFullModel["modalities"]["output"] },
       reasoning: reasoning.reasoning,
       reasoning_options: reasoning.options,
-      cost: cost(model),
+      // translateModel only creates routes with both prices quoted.
+      cost: cost(model) as SyncedFullModel["cost"],
       limit,
     }, limit),
     header: [
@@ -246,8 +251,9 @@ function served(model: LLMTRModel) {
   return { context, output: output === context ? undefined : output };
 }
 
-function definedLimits(model: LLMTRModel) {
-  return Object.fromEntries(Object.entries(served(model)).filter((entry) => entry[1] !== undefined));
+// Keys the list does not send are left out, so an update keeps the authored value.
+function defined<T extends Record<string, unknown>>(values: T) {
+  return Object.fromEntries(Object.entries(values).filter((entry) => entry[1] !== undefined)) as Partial<T>;
 }
 
 function positive(value: number | null | undefined) {
@@ -256,14 +262,14 @@ function positive(value: number | null | undefined) {
 
 function cost(model: LLMTRModel) {
   const pricing = model.pricing;
-  return {
-    input: perMillion(pricing.prompt) ?? 0,
-    output: perMillion(pricing.completion) ?? 0,
+  return defined({
+    input: perMillion(pricing.prompt),
+    output: perMillion(pricing.completion),
     cache_read: perMillion(pricing.input_cache_read),
     cache_write: perMillion(pricing.input_cache_write),
     input_audio: perMillion(pricing.audio),
     reasoning: perMillion(pricing.internal_reasoning),
-  };
+  });
 }
 
 // Per-token USD strings. A malformed price must fail the run, not be written
@@ -290,19 +296,26 @@ function displayName(id: string, baseModel: string) {
   return labels.length === 0 ? undefined : `${modelMetadata(baseModel).name} (${labels.join(", ")})`;
 }
 
-// The gateway validates both fields before dispatch: an effort outside
-// `supported_efforts` is rejected with the supported list, and an effort on a
-// route without a ladder with the control that route does have.
-function reasoningControls(model: LLMTRModel, baseReasons: boolean) {
+// The list describes the controls the gateway itself parses and validates: an
+// effort outside `supported_efforts` is rejected with the supported list, and
+// an effort on a route without a ladder with the control that route does have.
+// Other body fields reach the upstream unchanged, so a reasoning route the list
+// says nothing about may still have a control, and the Alibaba relay (`qwen/`)
+// and DeepSeek routes take their lab's own thinking fields (`enable_thinking`,
+// `thinking_budget`, `thinking.type`) on top of what the list shows. Those
+// routes are measured and hand-authored instead.
+function reasoningControls(model: LLMTRModel, id: string, baseModel: string) {
   const parameters = model.supported_parameters;
   const published = model.reasoning;
-  if (published == null) {
-    return {
-      reasoning: undefined,
-      options: baseReasons ? [] : undefined,
-      header: baseReasons ? ["# Reasoning: LLMTR exposes no reasoning control on this route."] : [],
-    };
+  if (modelMetadata(baseModel).reasoning === true && (published == null || forwardsLabThinking(model.id, baseModel))) {
+    throw new MissingReasoningOptionsError(
+      id,
+      published == null
+        ? "LLMTR lists no reasoning control for this reasoning model; measure the route and hand-author its controls"
+        : "this route forwards the lab's own thinking fields, which LLMTR's list does not describe; measure the route and hand-author its controls",
+    );
   }
+  if (published == null) return { reasoning: undefined, options: undefined, header: [] };
   const efforts = parameters.includes("reasoning_effort")
     ? published.supported_efforts
       .filter((value) => !(published.mandatory && value === "none"))
@@ -343,4 +356,8 @@ function reasoningControls(model: LLMTRModel, baseReasons: boolean) {
         options: undefined,
         header: ["# Reasoning: LLMTR serves this route with reasoning off and exposes no control."],
       };
+}
+
+function forwardsLabThinking(sourceID: string, baseModel: string) {
+  return sourceID.startsWith("qwen/") || baseModel.startsWith("deepseek/");
 }
