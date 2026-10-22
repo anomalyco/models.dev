@@ -6274,6 +6274,16 @@ test("Vercel sync maps every catalog type and serves media models on their own e
   expect(live.v2.api).toEqual({
     live: { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { aisdk: "none", opencodeai: "none" } },
   });
+  const evaluation = vercel.translateModel(vercelMedia({ id: "example/decision-model", type: "evaluation" }), context) as any;
+  expect(evaluation.v2Set).toEqual({
+    api: {
+      evaluate: {
+        base_url: "https://ai-gateway.vercel.sh/v1",
+        sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/vercel-ai-gateway" },
+      },
+    },
+  });
+  expect(vercel.translateModel(vercelMedia({ id: "example/chat-model", type: "language" }), context)).not.toHaveProperty("v2Set");
   for (const catalogType of ["language", "evaluation", "something-new"]) {
     const translated = vercel.translateModel(vercelMedia({ id: "example/chat-model", type: catalogType }), context) as any;
     expect(translated.v2).toBeUndefined();
@@ -7402,10 +7412,31 @@ test("syncs OpenRouter decision models with no supported parameters as decision 
     cost: { input: 0.15, output: 0 },
     limit: { context: 65_536, output: 0 },
   });
-  expect(openrouter.translateModel(openRouterModel(), {
+  // Both decision endpoints, each with its own packages.
+  expect(translated?.v2Set?.api).toEqual({
+    systemone: { sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/openrouter" } },
+    decisions: { base_url: "https://openrouter.ai/api/alpha", sdk: { opencodeai: "none" } },
+  });
+  const chat = openrouter.translateModel(openRouterModel(), {
     existing: () => undefined,
     authored: () => undefined,
-  })?.model.type).toBeUndefined();
+  });
+  expect(chat?.model.type).toBeUndefined();
+  expect(chat?.v2Set).not.toHaveProperty("api");
+});
+
+test("lists the Images API next to chat for OpenRouter chat models with an image lab", () => {
+  const translated = openrouter.translateModel(openRouterModel({
+    id: "google/gemini-2.5-flash-image",
+    name: "Google: Nano Banana (Gemini 2.5 Flash Image)",
+    architecture: { input_modalities: ["text", "image"], output_modalities: ["image", "text"] },
+  }), { existing: () => undefined, authored: () => undefined });
+
+  expect(translated?.model.base_model).toBe("google/gemini-2.5-flash-image");
+  expect(translated?.v2Set?.api).toEqual({
+    "chat-completions": {},
+    images: { sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
+  });
 });
 
 test("factors OpenRouter decision models onto decision lab metadata without a chat description", () => {

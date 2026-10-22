@@ -5,7 +5,7 @@ base_model = "nace-ai/drex-v2.0"
 structured_output = true
 
 [api.systemone]
-sdk = { aisdk = "none" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/openrouter" }
 
 [api.decisions]
 base_url = "https://openrouter.ai/api/alpha"

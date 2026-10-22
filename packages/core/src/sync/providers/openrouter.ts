@@ -251,13 +251,19 @@ export const openrouter = {
     const catalog = price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined
       ? undefined
       : catalogV2Set(model, context.v2?.(model.id));
+    const api = isDecisionModel(model)
+      ? DECISION_APIS
+      : typeof translated.base_model === "string" && rawLabModel(translated.base_model)?.type === "image"
+        ? IMAGE_CHAT_APIS
+        : undefined;
+    const v2Set = api === undefined ? catalog?.v2Set : { ...catalog?.v2Set, api: structuredClone(api) };
     return {
       id: model.id,
       model: translated,
       header: translated.reasoning_options?.some((option) => option.type === "toggle")
         ? "# Toggle: reasoning.enabled = true|false\n# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens\n"
         : undefined,
-      v2Set: catalog?.v2Set,
+      v2Set,
       notices: catalog?.notices,
     };
   },
@@ -275,6 +281,22 @@ function isUnavailable(model: OpenRouterModel) {
 function isDecisionModel(model: OpenRouterModel) {
   return model.architecture.output_modalities.includes("decisions");
 }
+
+// Decision models answer POST /api/v1/systemone, which OpenCode's openrouter
+// entry calls (experimental.evaluation), and POST /api/alpha/decisions, which
+// the OpenRouter AI SDK provider's evaluationModel calls.
+// https://openrouter.ai/docs/api/api-reference/systemone/submit-a-system-one-request
+// https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request
+const DECISION_APIS = {
+  systemone: { sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/openrouter" } },
+  decisions: { base_url: "https://openrouter.ai/api/alpha", sdk: { opencodeai: "none" } },
+};
+// Chat models whose lab is an image model are also served by the /images router
+// (https://openrouter.ai/api/v1/images/models), which answers OpenAI's format.
+const IMAGE_CHAT_APIS = {
+  "chat-completions": {},
+  images: { sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
+};
 
 // ---------------------------------------------------------------------------
 // Speech, transcription, embedding, rerank and image models (v2-only files)

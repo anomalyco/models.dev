@@ -119,6 +119,7 @@ export const vercel = {
       header: translated.reasoning_options?.some((option) => option.type === "toggle")
         ? "# Toggle: reasoning.enabled = true|false\n# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning\n"
         : undefined,
+      ...(model.type === "evaluation" ? { v2Set: { api: structuredClone(DECISION_APIS) } } : {}),
     };
   },
   sameModel(current, desired) {
@@ -477,6 +478,16 @@ const LIVE_MODELS = new Set(["openai/gpt-live-1"]);
 // OpenCode's vercel-ai-gateway entry point only speaks the chat APIs, not
 // these endpoints.
 const MEDIA_SDK = { opencodeai: "none" };
+// Decision models: POST /v1/evaluate, which OpenCode's vercel-ai-gateway entry
+// calls (experimental.evaluation). @ai-sdk/gateway's decisionModel uses its own
+// /v4/ai/decision-model endpoint instead.
+// https://vercel.com/docs/ai-gateway/modalities/decision
+const DECISION_APIS = {
+  evaluate: {
+    base_url: "https://ai-gateway.vercel.sh/v1",
+    sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/vercel-ai-gateway" },
+  },
+};
 const LIVE_SDK = { aisdk: "none", opencodeai: "none" };
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
