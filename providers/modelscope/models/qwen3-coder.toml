@@ -1,0 +1,35 @@
+schema = 2
+base_model = "qwen/qwen3-coder"
+
+name = "Qwen3 Coder via ModelScope"
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+temperature = true
+
+[capabilities.reasoning]
+supported = true
+toggle = true
+effort = ["low", "medium", "high"]
+
+[capabilities.tools]
+supported = true
+
+[cost.text]
+[cost.text.input]
+price = 0.5
+[cost.text.output]
+price = 1.5
+
+[api.chat-completions]
+base_url = "https://api-inference.modelscope.cn/v1"
+
+[api.chat-completions.sdk]
+aisdk = "@ai-sdk/openai-compatible"
