@@ -41,8 +41,6 @@ service_tier = ["priority"]
 context = 1_000_000
 output = 30_000
 
-[api.responses]
-
 [cost.text.input]
 price = 1.25
 cache = { read = 0.2 }
