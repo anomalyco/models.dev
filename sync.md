@@ -455,6 +455,27 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
 - Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
 - Modalities are sorted into catalogue order; wire order is arbitrary.
 
+## SiliconFlow Notes
+
+- SiliconFlow and SiliconFlow (China) share one factory in
+  `packages/core/src/sync/providers/siliconflow.ts`.
+- Source endpoints: `https://api.siliconflow.com/v1/models?sub_type=chat` and
+  `https://api.siliconflow.cn/v1/models?sub_type=chat`; required auth:
+  `SILICONFLOW_API_KEY` and `SILICONFLOW_CN_API_KEY`.
+- The list only reports IDs (`created` is always 0 and `owned_by` is empty), so
+  it is not authoritative for pricing, limits, capabilities, modalities or
+  dates. Existing TOMLs are preserved unchanged; new remote IDs are not
+  created (`skipCreates`) and open deduped missing-model issues instead.
+- `sub_type=chat` filters server-side and is validated by the API: an
+  unsupported value returns `{"object":"list","data":null}` with status 200.
+  The parser throws rather than treat that as an empty catalog.
+- `LoRA/...` rows are fine-tune presets over a catalog model, not routes of
+  their own, so they are ignored.
+- `deleteMissing` is `false`: keys can be scoped, and a filtered or truncated
+  response must not delete hand-priced files.
+- The first run after registration may open issues for older chat models the
+  catalog intentionally omits. Closing an issue suppresses it permanently.
+
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
