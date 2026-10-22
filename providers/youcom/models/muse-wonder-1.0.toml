@@ -1,0 +1,15 @@
+# Prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max
+# Meta's levels; none is rejected (400). Tested live 2026-10-22.
+schema = 2
+base_model = "meta/muse-wonder-1.0"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20

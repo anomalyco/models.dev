@@ -1,0 +1,15 @@
+# Prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = none|low|medium|xhigh
+# Alibaba's levels (low/medium/xhigh); none disables thinking (0 reasoning tokens). Tested live 2026-10-22.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 0.139
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.435

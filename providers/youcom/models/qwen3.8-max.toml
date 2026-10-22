@@ -1,0 +1,15 @@
+# Prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = low|medium|xhigh
+# Alibaba's levels (low/medium/xhigh); none errors on this endpoint (5xx), so it is not listed. Tested live 2026-10-22.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 1.85
+cache = { read = 0.231 }
+
+[cost.text.output]
+price = 5.55
