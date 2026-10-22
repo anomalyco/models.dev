@@ -10,7 +10,7 @@ structured_output = true
 
 [api.systemone]
 base_url = "https://opencode.ai/inference/systemone/v1"
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/opencode" }
 
 [cost.text.input]
 price = 0.042

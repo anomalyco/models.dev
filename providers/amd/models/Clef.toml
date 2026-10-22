@@ -11,7 +11,7 @@ structured_output = true
 
 [api.systemone]
 base_url = "https://developer.amd.com.cn/radeon/api/v1"
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
 
 [cost.text.input]
 price = 0

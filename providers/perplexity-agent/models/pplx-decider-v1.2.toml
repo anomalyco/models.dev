@@ -1,13 +1,14 @@
 # Decisions API (accessed 2026-10-21): https://docs.perplexity.ai/docs/decisions/quickstart and
 #   https://docs.perplexity.ai/docs/getting-started/pricing: billed per input token, output tokens free, no per-request fee.
 #   Alias pplx-decider-latest.
+# AI SDK: @ai-sdk/perplexity decisionModel posts to `${baseURL}/v1/decisions`, so base_url leaves out /v1.
 schema = 2
 v2_only = true
 base_model = "perplexity/pplx-decider-v1.2"
 
 [api.decisions]
-base_url = "https://api.perplexity.ai/v1"
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+base_url = "https://api.perplexity.ai"
+sdk = { aisdk = "@ai-sdk/perplexity", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.02

@@ -12,7 +12,7 @@ base_model = "cloudflare/clef"
 structured_output = true
 
 [api.systemone]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
 
 [cost.text.input]
 price = 0.24
