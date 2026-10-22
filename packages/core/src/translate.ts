@@ -9,8 +9,7 @@ import {
   type ReasoningSupportV2,
 } from "./schema-v2.js";
 
-// Files authored in the v2 format declare `schema = 2`. During the migration both
-// formats live side by side, and every reader translates v2 files back to v1.
+// Model files declare `schema = 2`; readers translate them back to v1.
 export function isSchemaV2(toml: Record<string, unknown>) {
   return toml.schema === 2;
 }
@@ -18,15 +17,12 @@ export function isSchemaV2(toml: Record<string, unknown>) {
 // Reads a lab model file (`models/<lab>/<model>.toml`) as v1 fields.
 export function readLabModel(filePath: string, modelID: string) {
   const toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
-  return isSchemaV2(toml)
-    ? labModelV2ToV1({ ...toml, id: modelID }, { modelPath: filePath })
-    : toml;
+  return labModelV2ToV1({ ...toml, id: modelID }, { modelPath: filePath });
 }
 
 // Reads a provider model file (`providers/<p>/models/<model>.toml`) as v1 fields.
 export function readProviderModel(filePath: string) {
   const toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
-  if (!isSchemaV2(toml)) return toml;
   const { id: _id, ...model } = modelV2ToV1({ ...toml, id: "" }, { modelPath: filePath });
   return model;
 }

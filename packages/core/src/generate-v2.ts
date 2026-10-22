@@ -30,7 +30,7 @@ import {
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
-import { isSchemaV2, modelV2ToV1, providerTomlToV1 } from "./translate.js";
+import { modelV2ToV1, providerTomlToV1 } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -104,15 +104,12 @@ async function loadProviderV2(
       .join("/")
       .slice(0, -5);
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
-    const v1Model = isSchemaV2(rawModel) ? modelV2ToV1(rawModel, { modelPath }) : rawModel;
+    const v1Model = modelV2ToV1(rawModel, { modelPath });
     const resolved = resolveV1Model(v1Model, baseModels, modelPath);
     const model = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
-    const tables = isSchemaV2(rawModel) ? ((rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined) : undefined;
+    const tables = (rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined;
     if (tables !== undefined) model.api = toModelApis(tables, resolved, v1Provider, opencodeai);
-    else if (opencodeai !== undefined) {
-      const npm = resolved.provider?.npm;
-      model.api = withOpencodePackage(model.api, npm === undefined || npm === v1Provider.npm ? opencodeai : "none");
-    }
+    else if (opencodeai !== undefined) model.api = withOpencodePackage(model.api, opencodeai);
     models[modelID] = model;
   }
 
@@ -140,7 +137,6 @@ async function loadLabsV2(modelsDir: string) {
   if (!existsSync(modelsDir)) return labs;
   for await (const modelPath of scanTomls(modelsDir, "**/*.toml")) {
     const raw = await readToml(modelPath);
-    if (!isSchemaV2(raw)) continue;
     const id = path.relative(modelsDir, modelPath).split(path.sep).join("/").slice(0, -5);
     labs[id] = parseWithCause(LabModelV2, { ...withoutSchema(raw), id }, { modelPath, toml: raw });
   }
@@ -157,9 +153,7 @@ function withV2Fields(
 ): ModelV2 {
   const lab =
     typeof rawModel.base_model === "string" ? labsV2[rawModel.base_model] : undefined;
-  const authored = isSchemaV2(rawModel)
-    ? parseWithCause(AuthoredModelV2, withoutSchema(rawModel), { modelPath, toml: rawModel })
-    : undefined;
+  const authored = parseWithCause(AuthoredModelV2, withoutSchema(rawModel), { modelPath, toml: rawModel });
   const omit = Array.isArray(rawModel.base_model_omit) ? rawModel.base_model_omit : [];
   const inheritsModalities =
     rawModel.modalities === undefined &&
@@ -168,16 +162,16 @@ function withV2Fields(
   const result: ModelV2 = {
     ...model,
     modalities:
-      authored?.modalities ??
+      authored.modalities ??
       (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities),
     capabilities: mergeDeep(
       mergeDeep(lab?.capabilities ?? {}, model.capabilities),
-      authored?.capabilities ?? {},
+      authored.capabilities ?? {},
     ) as ModelV2["capabilities"],
   };
-  if (authored?.cost !== undefined) result.cost = authored.cost;
-  if (authored?.experimental !== undefined) result.experimental = authored.experimental;
-  if (authored?.metadata !== undefined) result.metadata = authored.metadata;
+  if (authored.cost !== undefined) result.cost = authored.cost;
+  if (authored.experimental !== undefined) result.experimental = authored.experimental;
+  if (authored.metadata !== undefined) result.metadata = authored.metadata;
   return result;
 }
 

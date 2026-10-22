@@ -54,23 +54,30 @@ describe("catalog generation", () => {
         root,
         "providers/direct/models/model.toml",
         `${providerFieldsToml()}
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
 
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.125
+[cost.text.output]
+price = 2.50
 `,
       );
       await write(
         root,
         "providers/factored/models/model.toml",
-        `base_model = "lab/model"
-reasoning_options = []
+        `schema = 2
+base_model = "lab/model"
 
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.125
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 2.50
 `,
       );
 
@@ -116,13 +123,18 @@ cache_read = 0.125
       await write(
         root,
         "providers/provider/models/model.toml",
-        `base_model = "lab/model"
-base_model_omit = ["limit.input", "structured_output"]
-reasoning_options = []
+        `schema = 2
+base_model = "lab/model"
+base_model_omit = ["limit.input", "knowledge"]
 
-[cost]
-input = 1.25
-output = 2.50
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 2.50
 
 [limit]
 context = 200_000
@@ -133,7 +145,7 @@ output = 32_000
       const providers = await generate(path.join(root, "providers"));
       const model = providers.provider?.models.model;
 
-      expect(model?.structured_output).toBeUndefined();
+      expect(model?.knowledge).toBeUndefined();
       expect(model?.limit).toEqual({
         context: 200_000,
         output: 32_000,
@@ -148,19 +160,21 @@ output = 32_000
       await write(
         root,
         "providers/provider/models/model.toml",
-        `base_model = "lab/model"
+        `schema = 2
+base_model = "lab/model"
 open_weights = true
-reasoning_options = []
 
-[cost]
-input = 1.25
-output = 2.50
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 2.50
 
 [limit]
 context = 200_000
-
-[modalities]
-input = ["text"]
 `,
       );
 
@@ -173,10 +187,6 @@ input = ["text"]
         input: 272_000,
         output: 128_000,
       });
-      expect(model?.modalities).toEqual({
-        input: ["text"],
-        output: ["text"],
-      });
     });
   });
 
@@ -187,12 +197,14 @@ input = ["text"]
         root,
         "providers/target/models/model.toml",
         `${providerFieldsToml()}
-[cost]
-input = 1
-output = 2
+[api.responses]
+base_url = "https://\${TARGET_RESOURCE}.example.com/v1"
 
-[provider]
-api = "https://\${TARGET_RESOURCE}.example.com/v1"
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
 `,
       );
       await write(
@@ -230,9 +242,11 @@ doc = "https://example.com/models"
 `,
       );
       await write(root, "providers/target/models/plain.toml", `${providerFieldsToml()}
-[cost]
-input = 1
-output = 2
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
 `);
       const alias = `name = "Legacy"
 npm = "@ai-sdk/openai"
@@ -622,30 +636,6 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "none" }
 `),
       );
-      await write(
-        root,
-        "providers/gateway/models/v1-override.toml",
-        `${providerFieldsToml()}
-[provider]
-npm = "@ai-sdk/openai"
-
-[cost]
-input = 1
-output = 2
-`,
-      );
-      await write(
-        root,
-        "providers/gateway/models/v1-same.toml",
-        `${providerFieldsToml()}
-[provider]
-npm = "@ai-sdk/openai-compatible"
-
-[cost]
-input = 1
-output = 2
-`,
-      );
 
       const models = (await generateV2(path.join(root, "providers"))).gateway?.models;
       const inherited = { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" };
@@ -659,12 +649,6 @@ output = 2
         },
         // `aisdk = "none"` names the table's own (absent) package, so nothing is inherited.
         systemone: { base_url: "https://example.com/v1", sdk: {} },
-      });
-      expect(models?.["v1-override"]?.api).toEqual({
-        responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
-      });
-      expect(models?.["v1-same"]?.api).toEqual({
-        "chat-completions": { base_url: "https://example.com/v1", sdk: inherited },
       });
     });
   });
@@ -687,28 +671,31 @@ doc = "https://example.com/models"
 }
 
 function modelMetadataToml() {
-  return `name = "Lab Model"
+  return `schema = 2
+name = "Lab Model"
 description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
 knowledge = "2025-12"
 open_weights = true
 license = "Example License"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[links]]
 label = "Model card"
@@ -733,27 +720,28 @@ source = "https://example.com/benchmarks"
 }
 
 function providerFieldsToml() {
-  return `name = "Lab Model"
+  return `schema = 2
+name = "Lab Model"
 description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-tool_call = true
-structured_output = true
 knowledge = "2025-12"
 open_weights = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 `;
 }

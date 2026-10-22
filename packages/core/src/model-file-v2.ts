@@ -1,5 +1,4 @@
-// Builds, patches, and writes v2 provider model files from v1 fields. Shared by
-// the migration script and sync, so both write the same TOML.
+// Builds, patches, and writes v2 provider model files from v1 fields.
 
 import { toCostV2 } from "./generate-v2.js";
 import { ReasoningOption } from "./schema.js";
@@ -23,7 +22,7 @@ const IDENTITY = [
 
 // v1 fields → the v2 provider model file they stand for (without the header).
 // `protocol` is the API the model is served on, for `provider` and `interleaved`
-// fields that don't set a shape (the migration script resolves it).
+// fields that don't set a shape (the caller resolves it).
 export function providerModelToV2(model: Record<string, any>, protocol?: string): Doc {
   for (const field of ["body", "headers"]) {
     if (model.provider?.[field] !== undefined) throw new Error(`provider.${field} has no v2 field yet`);
