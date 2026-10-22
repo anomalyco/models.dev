@@ -10,6 +10,7 @@
 # changing reasoning effort or tools between turns drops the prompt cache, and there is no per-turn
 # mechanism (configuration_update/additional_tools return 422), checked live 2026-10-19.
 # Web search: $5 per 1,000 web_search tool calls: https://docs.x.ai/developers/pricing#tools-pricing
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Priority (https://docs.x.ai/developers/pricing).
 schema = 2
 name = "Grok 4.20 (Reasoning)"
 description = "Reasoning Grok for document-heavy analysis and long-horizon tool use"
