@@ -1,9 +1,10 @@
+# Modalities: image formats from the lab.
 schema = 2
 base_model = "meta/muse-wonder-1.0"
 name = "Muse Wonder (Meta)"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]

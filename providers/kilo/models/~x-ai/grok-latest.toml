@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; this alias redirects to the latest Grok, and every current Grok model in the lab catalog lists the same formats. xAI image inputs jpg/jpeg and png: https://docs.x.ai/docs/guides/image-understanding
 schema = 2
 name = "xAI: Grok Latest"
 description = "This model always redirects to the latest Grok model from xAI."
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-07-08"
 
 [modalities]
-input = ["text", "image", "application/pdf"]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]

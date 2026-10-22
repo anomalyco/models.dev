@@ -97,6 +97,58 @@ test("patchModelV2 keeps legacy_shape", () => {
   });
 });
 
+test("patchModelV2 keeps the file's exact formats for each kind the catalog still lists", () => {
+  const doc = {
+    schema: 2,
+    base_model: "openai/gpt-5.5",
+    modalities: {
+      input: ["text", "image/png", "image/jpeg", "application/pdf"],
+      output: ["text", "image/png"],
+    },
+    cost: { text: { input: { price: 1 }, output: { price: 2 } } },
+  };
+  const { id: _id, ...before } = modelV2ToV1({ ...doc, id: "m" });
+  expect(before.modalities).toEqual({ input: ["text", "image", "pdf"], output: ["text", "image"] });
+  const patch = (input: string[], output = ["text", "image"]) => {
+    const after = { ...before, modalities: { input, output } };
+    const next = patchModelV2(doc, before, after);
+    // The v1 view matches the catalog, so the next sync sees no change.
+    const back = modelV2ToV1({ ...(Bun.TOML.parse(formatModelV2(next)) as Record<string, unknown>), id: "m" });
+    expect(back.modalities).toEqual(after.modalities);
+    const { id: _, ...again } = back;
+    expect(patchModelV2(next, again, after)).toEqual(next);
+    return next.modalities;
+  };
+
+  // No change: the file is untouched.
+  expect(patch(["text", "image", "pdf"])).toBe(doc.modalities);
+  // A kind added: exact formats are kept, the new kind is generic.
+  expect(patch(["text", "image", "pdf", "audio"]).input).toEqual([
+    "text", "image/png", "image/jpeg", "application/pdf", "audio",
+  ]);
+  // A kind removed.
+  expect(patch(["text", "image"]).input).toEqual(["text", "image/png", "image/jpeg"]);
+  // A new order.
+  expect(patch(["pdf", "text", "image"]).input).toEqual(["application/pdf", "text", "image/png", "image/jpeg"]);
+  // A new pdf kind is written as application/pdf.
+  expect(patch(["text", "pdf"]).input).toEqual(["text", "application/pdf"]);
+  // Output is merged on its own; an unchanged input list is kept as is.
+  const output = patch(["text", "image", "pdf"], ["text", "image", "audio"]);
+  expect(output.input).toBe(doc.modalities.input);
+  expect(output.output).toEqual(["text", "image/png", "audio"]);
+});
+
+test("patchModelV2 writes the catalog's modalities when the file inherits them", () => {
+  const doc = { schema: 2, base_model: "openai/gpt-5.5", cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
+  const before = { base_model: "openai/gpt-5.5", modalities: { input: ["text", "image"], output: ["text"] }, cost: { input: 1, output: 2 } };
+  const after = { ...before, modalities: { input: ["text", "image", "pdf"], output: ["text"] } };
+
+  expect(patchModelV2(doc, before, after).modalities).toEqual({
+    input: ["text", "image", "application/pdf"],
+    output: ["text"],
+  });
+});
+
 test("formatTomlValue writes an empty inline table as {}", () => {
   expect(formatTomlValue({ budget: {} })).toBe("{ budget = {} }");
 });
@@ -112,4 +164,43 @@ test('v2 effort "default" stays the literal "default" in v1', () => {
 
   const back = modelV2ToV1({ ...(Bun.TOML.parse(formatModelV2(doc)) as Record<string, unknown>), id: "m" });
   expect(back.reasoning_options).toEqual([{ type: "effort", values: ["none", "default", "low"] }]);
+});
+
+test("patchModelV2 keeps a file's other API tables and OpenCode package", () => {
+  const api = {
+    "chat-completions": {
+      sdk: { opencodeai: "@opencode/ai/providers/openai-compatible" },
+      compatibility: { reasoning_field: "reasoning_details" },
+    },
+    images: { base_url: "https://images.example.com/v1", sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
+  };
+  const doc = { schema: 2, base_model: "moonshotai/kimi-k2.6", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
+  const before = modelV2ToV1({ ...doc, id: "m" });
+  const { id: _id, ...after } = { ...before, cost: { input: 3, output: 4 } };
+
+  // Unchanged v1 API fields: every table is kept as it is, in order.
+  expect(Object.entries(patchModelV2(doc, before, after).api)).toEqual(Object.entries(api));
+  // A synced change to v1's fields rewrites the first table and keeps the rest.
+  const changed = { ...after, interleaved: { field: "reasoning_content" } };
+  expect(Object.entries(patchModelV2(doc, before, changed).api)).toEqual([
+    [
+      "chat-completions",
+      {
+        sdk: { opencodeai: "@opencode/ai/providers/openai-compatible" },
+        compatibility: { reasoning_field: "reasoning_content" },
+      },
+    ],
+    ["images", api.images],
+  ]);
+});
+
+test('patchModelV2 keeps aisdk = "none" when sync rewrites the first table', () => {
+  const api = { systemone: { base_url: "https://example.com/v1", sdk: { aisdk: "none" } } };
+  const doc = { schema: 2, base_model: "typesafe/jev-1.13", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
+  const before = modelV2ToV1({ ...doc, id: "m" });
+  expect(before.provider).toEqual({ api: "https://example.com/v1" });
+  const { id: _id, ...after } = { ...before, provider: { api: "https://example.com/v2" } };
+  expect(patchModelV2(doc, before, after).api).toEqual({
+    systemone: { base_url: "https://example.com/v2", sdk: { aisdk: "none" } },
+  });
 });

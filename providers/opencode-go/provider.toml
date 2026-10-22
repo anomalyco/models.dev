@@ -1,6 +1,7 @@
 name = "OpenCode Go"
 env = ["OPENCODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Every model sets its own `provider.api` for its protocol (accessed 2026-10-15):
 # the `/inference/go/...` equivalents of the standard paths, billed against the Go
 # subscription. `api` here is required by the schema for

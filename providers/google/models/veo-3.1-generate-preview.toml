@@ -12,6 +12,9 @@ status = "beta"
 context = 480
 output = 8_192
 
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/protocols/google-video" }
+
 [cost.video.output]
 unit = "second"
 price = 0.4

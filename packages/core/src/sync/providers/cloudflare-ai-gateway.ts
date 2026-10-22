@@ -27,10 +27,13 @@ const MAX_CATALOG_PAGES = 1_000;
 const MAX_BACKOFF_DELAY_MS = 8_000;
 const MAX_RETRY_DELAY_MS = 60_000;
 
-const NATIVE_NPM: Record<string, string> = {
-  anthropic: "@ai-sdk/anthropic",
-  openai: "@ai-sdk/openai",
+// OpenAI and Anthropic models use their own SDK and API on the gateway's native
+// routes. The gateway's OpenCode entry point serves those routes too.
+const NATIVE_API: Record<string, { npm: string; protocol: string }> = {
+  anthropic: { npm: "@ai-sdk/anthropic", protocol: "messages" },
+  openai: { npm: "@ai-sdk/openai", protocol: "responses" },
 };
+const OPENCODE_PACKAGE = "@opencode/ai/providers/cloudflare-ai-gateway";
 
 const Price = z.number().nonnegative();
 const ProviderDetail = z.object({
@@ -250,6 +253,7 @@ export const cloudflareAiGateway = {
         ]),
       };
     }
+    const native = NATIVE_API[id.split("/")[0]!];
     return {
       id,
       model: buildCloudflareAiGatewayModel(
@@ -259,6 +263,7 @@ export const cloudflareAiGateway = {
         context.authored(id),
       ),
       header: noteHeader([...prefixNotes(id), ...curated.note ?? []]),
+      ...(native === undefined ? {} : { v2Set: { [`api.${native.protocol}.sdk.opencodeai`]: OPENCODE_PACKAGE } }),
     };
   },
 } satisfies SyncProvider<SourceModel>;
@@ -305,8 +310,8 @@ export function buildCloudflareAiGatewayModel(
   };
   if (Object.keys(limit).length > 0) model.limit = limit;
 
-  const npm = NATIVE_NPM[id.split("/")[0]!];
-  if (npm !== undefined) model.provider = { npm };
+  const native = NATIVE_API[id.split("/")[0]!];
+  if (native !== undefined) model.provider = { npm: native.npm };
   return model;
 }
 
@@ -317,8 +322,12 @@ export function buildCloudflareAiGatewayModel(
 // Third-party media models run on the REST API's universal endpoint: POST
 // `{base_url}/run` with `{ model, input }`, where `input` follows the model's catalog
 // schema. Generated media comes back as a URL (or a data URI), transcripts as text.
+// No @opencode/ai entry point speaks /ai/run, so there's no OpenCode package.
 const RUN_API = {
-  "workers-ai-run": { base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" },
+  "workers-ai-run": {
+    base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai",
+    sdk: { opencodeai: "none" },
+  },
 };
 
 const MEDIA_NOTES: Record<MediaType, string[]> = {

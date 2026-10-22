@@ -1,3 +1,4 @@
+# Modalities: image and audio formats from models/google/gemini-3.1-pro-preview.toml (same model)
 schema = 2
 name = "Gemini Pro Latest (Google AI Studio)"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
@@ -6,7 +7,7 @@ open_weights = false
 release_date = "2026-02-27"
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
 
 [capabilities]

@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; this alias redirects to the latest GPT Astra, and every current GPT Astra model in the lab catalog lists the same formats. OpenAI image inputs PNG, JPEG, WEBP, non-animated GIF: https://platform.openai.com/docs/guides/images-vision
 schema = 2
 name = "OpenAI: GPT Astra Latest ($$$$)"
 description = "This model always redirects to the latest model in the OpenAI GPT Astra family."
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-09-11"
 
 [modalities]
-input = ["application/pdf", "image", "text"]
+input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]
 output = ["text"]
 
 [capabilities]

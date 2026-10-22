@@ -4,7 +4,7 @@
 import { toCostV2 } from "./generate-v2.js";
 import { ReasoningOption } from "./schema.js";
 import type { CostV2, CostWhenV2, InputCostV2, OutputCostV2 } from "./schema-v2.js";
-import { roundPrice, toV1Shape } from "./translate.js";
+import { roundPrice, toV1Modalities, toV1Modality, toV1Shape } from "./translate.js";
 
 type Doc = Record<string, any>;
 
@@ -125,7 +125,15 @@ export function patchModelV2(
       return stable(before[key]) === stable(after[key]);
     });
 
-  if (same("modalities") && doc.modalities !== undefined) next.modalities = doc.modalities;
+  if (doc.modalities !== undefined) {
+    if (same("modalities")) next.modalities = doc.modalities;
+    else if (next.modalities !== undefined) {
+      next.modalities = {
+        input: mergeModalities(doc.modalities.input, next.modalities.input),
+        output: mergeModalities(doc.modalities.output, next.modalities.output),
+      };
+    }
+  }
 
   const capabilities: Doc = { ...doc.capabilities };
   const owned: Array<[string, string[]]> = [
@@ -158,10 +166,46 @@ export function patchModelV2(
       if (capabilities !== undefined) mode.capabilities = capabilities;
     }
   }
-  if (same("provider", "interleaved") && doc.api !== undefined) next.api = doc.api;
+  if (doc.api !== undefined) {
+    const api = same("provider", "interleaved") ? doc.api : patchApis(next.api, doc.api);
+    if (api === undefined) delete next.api;
+    else next.api = api;
+  }
   if (doc.metadata !== undefined) next.metadata = doc.metadata;
   if (doc.v2_only !== undefined) next.v2_only = doc.v2_only;
   return next;
+}
+
+// A synced modality list in the synced kinds and order, keeping the file's
+// exact formats (`image/png`, `application/pdf`) for each kind it already has.
+function mergeModalities(current: string[] | undefined, synced: string[]) {
+  if (current === undefined) return synced;
+  if (stable(toV1Modalities(current)) === stable(toV1Modalities(synced))) return current;
+  return synced.flatMap((value) => {
+    const own = current.filter((item) => toV1Modality(item) === toV1Modality(value));
+    return own.length > 0 ? own : [value];
+  });
+}
+
+// A synced change to v1's `provider` or `interleaved` rewrites the file's first
+// API table, which is what v1 reads. The table's OpenCode package, an
+// `aisdk = "none"` and the file's other tables are v2-only, so they are kept.
+function patchApis(first: Doc | undefined, current: Doc) {
+  const [protocol, ...rest] = Object.keys(current);
+  if (protocol === undefined) return first;
+  const { opencodeai, aisdk } = current[protocol]?.sdk ?? {};
+  const v2Only = { ...(opencodeai !== undefined ? { opencodeai } : {}), ...(aisdk === "none" ? { aisdk } : {}) };
+  let head = first;
+  if (Object.keys(v2Only).length > 0 || rest.length > 0) {
+    const [key, entry] = Object.entries<Doc>(first ?? { [protocol]: {} })[0]!;
+    const keep = Object.keys(v2Only).length > 0 && key === protocol;
+    head = { [key]: keep ? { ...entry, sdk: { ...v2Only, ...entry.sdk } } : entry };
+  }
+  if (rest.length === 0) return head;
+  return {
+    ...head,
+    ...Object.fromEntries(rest.filter((key) => !(key in head!)).map((key) => [key, current[key]])),
+  };
 }
 
 // Modes priced by a multiplier in the v2 file whose v1 price sync only carried
@@ -302,10 +346,11 @@ export function sameV1Model(a: Record<string, any>, b: Record<string, any>) {
 export function normalizeV1(model: Record<string, any>) {
   const { id: _id, ...copy } = structuredClone(model) as Doc;
   for (const tier of copy.cost?.tiers ?? []) tier.tier = { type: "context", ...tier.tier };
+  // v2 files don't keep the order of reasoning options.
   if (copy.reasoning_options !== undefined) {
-    copy.reasoning_options = copy.reasoning_options.map((option: unknown) =>
-      ReasoningOption.parse(option),
-    );
+    copy.reasoning_options = copy.reasoning_options
+      .map((option: unknown) => ReasoningOption.parse(option))
+      .sort((a: { type: string }, b: { type: string }) => a.type.localeCompare(b.type));
   }
   return copy;
 }

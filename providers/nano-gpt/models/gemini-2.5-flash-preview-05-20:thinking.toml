@@ -4,11 +4,8 @@
 # status = deprecated: NanoGPT's catalog says "Deprecated. Mapped to Gemini 2.5 Flash because this model is deprecated" (https://nano-gpt.com/api/v1/models?detailed=true)
 # Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
+base_model = "google/gemini-2.5-flash-preview-05-20"
 name = "Gemini 2.5 Flash 0520 Thinking"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gemini"
-open_weights = false
-release_date = "2025-05-20"
 status = "deprecated"
 
 [modalities]
@@ -26,7 +23,6 @@ cache = { supported = true, implicit = true }
 [limit]
 context = 1_048_000
 input = 1_048_000
-output = 65_536
 
 [cost.text.input]
 price = 0.15

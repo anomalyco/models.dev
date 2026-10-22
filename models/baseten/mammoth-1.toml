@@ -1,0 +1,32 @@
+# Sources (accessed 2026-10-22):
+# - https://huggingface.co/baselabs/mammoth-1 (MIT; created 2026-10-19; post-trained from Qwen3.5-27B, text only,
+#   max sequence length 16,384 tokens; returns a calibrated probability for every option, no generated text)
+# - https://docs.baseten.co/inference/model-apis/decision-models (POST /v1/systemone with a state and typed questions)
+# Sampling: GET https://inference.baseten.co/v1/models lists no supported sampling parameters.
+schema = 2
+v2_only = true
+type = "decision"
+name = "mammoth-1"
+description = "Base Labs' 27B open-weight decision model on Qwen3.5-27B that returns calibrated probabilities for typed choice, score and yes/no questions about text"
+open_weights = true
+release_date = "2026-10-19"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 16_384
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/baselabs/mammoth-1"

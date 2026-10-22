@@ -735,13 +735,38 @@ export const LabModelV2 = z
 
 export type LabModelV2 = z.infer<typeof LabModelV2>;
 
-// A provider model file's own API, when it differs from the provider's default:
-// another SDK, base URL or protocol, or a reasoning wire requirement. Omitted
-// parts come from the provider.
+// `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
+// point: `@opencode/ai/providers/<path>` for a provider's chat, responses or
+// messages model (`@opencode/ai/providers/openai/chat`), or
+// `@opencode/ai/protocols/<name>` for an API with no provider entry point, such
+// as media (`@opencode/ai/protocols/openai-images`, `openai-speech`,
+// `openai-transcription`). `"none"` (here or in `sdk.aisdk`) says no package
+// supports the API: nothing is filled in and the v2 output has no such key.
+export const OpencodePackageV2 = z.union([
+  z.literal("none"),
+  z
+    .string()
+    .regex(
+      /^@opencode\/ai\/(providers|protocols)\/[a-z0-9-]+(\/[a-z0-9-]+)*$/,
+      "Must be \"none\" or an @opencode/ai/providers/... or @opencode/ai/protocols/... entry point",
+    ),
+]);
+
+// A provider model file's APIs. Its `[api.<protocol>]` tables are the model's
+// complete list, in order, and replace the provider's default API. Anything a
+// table leaves out comes from the provider: `base_url` from `api` (or the SDK's
+// default URL), `sdk.aisdk` from `npm`, `sdk.opencodeai` from `opencodeai`.
+// `"none"` stops a package from being filled in. v1 only gets the first table.
 export const AuthoredApiEntryV2 = z
   .object({
     base_url: ApiBaseUrlV2.optional(),
-    sdk: z.object({ aisdk: z.string().min(1) }).strict().optional(),
+    sdk: z
+      .object({
+        aisdk: z.string().min(1).optional(),
+        opencodeai: OpencodePackageV2.optional(),
+      })
+      .strict()
+      .optional(),
     compatibility: CompatibilityV2.pick({ reasoning_field: true, replay_reasoning: true })
       .strict()
       .optional(),

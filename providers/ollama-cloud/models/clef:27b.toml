@@ -8,6 +8,9 @@
 schema = 2
 base_model = "cloudflare/clef"
 
+[api.systemone]
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
 [cost.text.input]
 price = 0.24
 

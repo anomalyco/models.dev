@@ -1,3 +1,6 @@
+# Image MIME types: this file serves Mistral's Ministral 3 3B Reasoning 2512; formats are the lab's, per
+#   https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF), as in
+#   models/mistral/ministral-3-3b-instruct-2512.toml. Clarifai lists no chat formats, so it is assumed to relay the lab's.
 schema = 2
 name = "Ministral 3 3B Reasoning 2512"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
@@ -7,7 +10,7 @@ release_date = "2025-12"
 last_updated = "2026-02-25"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

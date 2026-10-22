@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; this alias redirects to the latest Kimi, and every current Kimi model in the lab catalog lists the same formats. Kimi vision MIME types: https://platform.kimi.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats
 schema = 2
 name = "MoonshotAI: Kimi Latest"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-04-27"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
 
 [capabilities]

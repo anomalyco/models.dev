@@ -1,4 +1,5 @@
 # Status: https://poe.com/Veo-3-Fast is titled "Veo-3-Fast_DEPRECATED" (2026-10-21).
+# Modalities (video: Veo returns video/mp4; Poe lists none): https://ai.google.dev/gemini-api/docs/veo
 schema = 2
 type = "video"
 name = "Veo-3-Fast"
@@ -10,7 +11,7 @@ status = "deprecated"
 
 [modalities]
 input = ["text"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = true }

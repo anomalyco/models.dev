@@ -214,7 +214,9 @@ export function buildWorkersAiModel(
     existing?.base_model ?? resolveCloudflareBaseModel(model),
   );
   const type = DECISION_MODELS.has(model.id) ? "decision" : existing?.type;
-  const typed = type === undefined ? synced : { ...synced, type: "decision" as const };
+  const decision = type === undefined ? synced : { ...synced, type: "decision" as const };
+  // Workers AI search has no API address, so the file's own one (v1 `provider`) is kept.
+  const typed = existing?.provider === undefined ? decision : { ...decision, provider: existing.provider };
   if ("base_model" in typed) return typed;
   return {
     ...typed,

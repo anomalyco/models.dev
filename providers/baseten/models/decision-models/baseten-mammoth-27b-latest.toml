@@ -1,0 +1,10 @@
+# Decision model: POST /v1/systemone (https://docs.baseten.co/inference/model-apis/decision-models)
+schema = 2
+v2_only = true
+base_model = "baseten/mammoth-1"
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

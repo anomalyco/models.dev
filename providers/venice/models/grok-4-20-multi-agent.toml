@@ -5,6 +5,7 @@
 # on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
 # effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
 # Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+# Modalities: image from xai/grok-4.20-0309-reasoning. Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
 schema = 2
 name = "Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -14,7 +15,7 @@ release_date = "2026-03-12"
 last_updated = "2026-06-11"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

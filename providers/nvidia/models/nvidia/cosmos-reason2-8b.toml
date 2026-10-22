@@ -4,6 +4,8 @@
 # No verified NIM reasoning control field for this endpoint.
 # Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
 # and POST /v1/chat/completions returns 404 "Function ...: Not found for account" (probed 2026-10-21).
+# Image formats: JPG, JPEG and PNG (https://docs.nvidia.com/nim/vision-language-models/1.6.0/examples/cosmos-reason2/api.html);
+# the page shows mp4 examples but lists no supported video formats, so video stays generic.
 schema = 2
 name = "Cosmos Reason2 8B"
 description = "Vision language model for physical-world understanding with structured reasoning on video and images"
@@ -12,7 +14,7 @@ release_date = "2025-12-01"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video"]
 output = ["text"]
 
 [capabilities]

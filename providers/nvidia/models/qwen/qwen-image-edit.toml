@@ -3,6 +3,8 @@
 # releases (2025-08 and later versions) without saying which one the endpoint serves.
 # Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
 # image generation takes steps and guidance, not sampling temperature.
+# Formats: input images jpg, jpeg or png; output a base64 JPEG artifact
+# (https://docs.nvidia.com/nim/visual-genai/latest/api/qwen-image-edit.html).
 schema = 2
 type = "image"
 name = "Qwen Image Edit"
@@ -12,8 +14,8 @@ open_weights = false
 release_date = "2025-08-19"
 
 [modalities]
-input = ["text", "image"]
-output = ["image"]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image/jpeg"]
 
 [capabilities]
 tools = { supported = false }

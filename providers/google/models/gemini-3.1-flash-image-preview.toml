@@ -26,6 +26,11 @@ top_k = true
 context = 65_536
 output = 65_536
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
+
 [cost.text.input]
 price = 0.5
 

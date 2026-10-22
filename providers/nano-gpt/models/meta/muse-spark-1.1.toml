@@ -1,10 +1,11 @@
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 # Modalities (image: the lab's formats that NanoGPT Chat Completions accepts; video: the lab's formats): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+# Modalities (audio: Meta's Muse Spark formats; NanoGPT lists none): https://dev.meta.ai/docs/video-understanding#supported-formats
 schema = 2
 base_model = "meta/muse-spark-1.1"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4", "audio"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4", "audio/mpeg", "audio/wav"]
 output = ["text"]
 
 [capabilities]

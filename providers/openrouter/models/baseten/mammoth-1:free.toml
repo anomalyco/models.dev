@@ -1,0 +1,26 @@
+schema = 2
+type = "decision"
+name = "Mammoth 1 (free)"
+description = "Decision model for typed evaluation of shared state"
+open_weights = true
+release_date = "2026-10-21"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 16_384
+output = 0
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

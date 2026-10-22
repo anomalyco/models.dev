@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay Perceptron's perceptron-mk1.5. Perceptron Mk1.5 audio WAV, MP3, FLAC (audio/wav, audio/mpeg, audio/flac): https://docs.perceptron.inc/perceptron-mk1.5/guides/files. Its docs list no image or video formats, so those stay generic
 schema = 2
 name = "Perceptron: Perceptron Mk1.5"
 description = "Perceptron Mk1.5 is Perceptron's embodied reasoning model for physical agents. It accepts text, image, video, and audio input, and answers with text plus optional structured annotations: points, boxes, polygons, tracks,..."
@@ -8,7 +9,7 @@ open_weights = false
 release_date = "2026-09-25"
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image", "video", "audio/wav", "audio/mpeg", "audio/flac"]
 output = ["text"]
 
 [capabilities]

@@ -1,4 +1,6 @@
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Modalities: Baidu Qianfan's vision guide lists JPEG, PNG and BMP images and MP4 (video/mp4), AVI (video/avi, as
+# written) and MOV (video/quicktime) video (https://cloud.baidu.com/doc/qianfan-docs/s/fm8r1ndsm).
 schema = 2
 name = "ERNIE 5.0"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -7,7 +9,7 @@ knowledge = "2025-01-01"
 release_date = "2026-01-22"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "video/mp4", "video/avi", "video/quicktime"]
 output = ["text"]
 
 [capabilities]

@@ -10,6 +10,7 @@ output = ["audio/mpeg", "audio/opus"]
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 unit = "character"

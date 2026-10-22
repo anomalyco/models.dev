@@ -1,14 +1,7 @@
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
+base_model = "alibaba/qwen3-30b-a3b-instruct-2507"
 name = "Qwen3 30B A3B Instruct 2507"
-description = "Qwen3-30B-A3B-Instruct-2507 is a 30.5B-parameter mixture-of-experts language model from Qwen, with 3.3B active parameters per inference. Significant improvements in general capabilities, including instruction following, logical reasoning, text comprehension, mathematics, science, coding and tool usage."
-family = "qwen"
-open_weights = true
-release_date = "2025-02-20"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }

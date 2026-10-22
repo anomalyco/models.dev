@@ -22,7 +22,7 @@ context = 524_288
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"
-sdk = { aisdk = "@ai-sdk/mistral" }
+sdk = { aisdk = "@ai-sdk/mistral", opencodeai = "@opencode/ai/providers/mistral" }
 
 [cost.text.input]
 price = 0.68

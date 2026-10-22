@@ -1,4 +1,5 @@
 # Deprecated: not in Inference.net's public model list (GET https://api.inference.net/v1/models, checked 2026-10-21).
+# Image MIME types: https://docs.inference.net/api/vision (Limitations: "webp, png, gif and jpg/jpeg", accessed 2026-10-21).
 schema = 2
 name = "Qwen 2.5 7B Vision Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -9,7 +10,7 @@ release_date = "2025-01-01"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/webp", "image/png", "image/gif", "image/jpeg"]
 output = ["text"]
 
 [capabilities]

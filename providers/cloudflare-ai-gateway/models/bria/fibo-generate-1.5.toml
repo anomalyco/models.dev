@@ -6,6 +6,7 @@ base_model = "bria/fibo-generate-1.5"
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
 
 [cost.image.output]
 unit = "image"

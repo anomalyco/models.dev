@@ -22,7 +22,7 @@ effort_updates = false
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
 
 [cost.text.input]
 price = 0.15

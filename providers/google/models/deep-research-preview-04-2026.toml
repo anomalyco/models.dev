@@ -22,6 +22,9 @@ effort_updates = false
 [limit]
 context = 131_072
 
+[api.interactions]
+sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
+
 [cost.text.input]
 price = 2
 cache = { read = 0.2 }

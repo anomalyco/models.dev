@@ -1,3 +1,4 @@
+# Modalities: image formats JPEG, PNG, WebP, GIF (https://docs.llmgateway.io/features/vision)
 schema = 2
 name = "Nemotron 3 Ultra 550B (DeepInfra)"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
@@ -6,7 +7,7 @@ open_weights = false
 release_date = "2026-06-01"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]

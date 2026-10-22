@@ -12,14 +12,13 @@ system_updates = true
 effort_updates = false
 
 [limit]
-output = 98_304
+output = 235_929
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_details" }
 
 [cost.text.input]
 price = 0.6
-cache = { read = 0.15 }
 
 [cost.text.output]
 price = 2.5

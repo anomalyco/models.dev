@@ -1,6 +1,7 @@
 name = "Hugging Face"
 env = ["HF_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Reasoning HTTP format (accessed 2026-06-25): POST /v1/chat/completions accepts
 # top-level `reasoning_effort`; common values are none, minimal, low, medium,
 # high, and xhigh. Support, defaults, and meaningful values depend on both the

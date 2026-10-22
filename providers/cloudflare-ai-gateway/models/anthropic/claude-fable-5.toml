@@ -16,7 +16,7 @@ effort_updates = false
 context = 1_000_000
 
 [api.messages]
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
 
 [cost.text.input]
 price = 10

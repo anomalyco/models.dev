@@ -1,5 +1,6 @@
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 # Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+# Modalities (audio, video: Model Studio's Qwen-Omni formats, registered MIME types; NanoGPT lists none): https://www.alibabacloud.com/help/en/model-studio/qwen-omni
 schema = 2
 name = "Qwen3.5 Omni Flash"
 description = "Qwen3.5 Omni Flash is Qwen's fast multimodal model. We verified live support for text prompts, images, audio files, and direct video URLs on Alibaba's chat-completions-compatible API. Alibaba describes Flash as a fully evolved version of Qwen3 Omni with audio input support across 60+ languages."
@@ -8,7 +9,7 @@ open_weights = false
 release_date = "2026-03-30"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv", "audio/amr", "audio/wav", "audio/3gpp", "audio/aac", "audio/mpeg"]
 output = ["text"]
 
 [capabilities]

@@ -9,6 +9,10 @@ knowledge = "2024-07"
 [capabilities]
 structured_output = false
 
+[api.images]
+base_url = "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-schnell"
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 price = 0
 

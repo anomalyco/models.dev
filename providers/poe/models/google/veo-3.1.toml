@@ -1,3 +1,4 @@
+# Modalities (video: Veo returns video/mp4; Poe lists none): https://ai.google.dev/gemini-api/docs/veo
 schema = 2
 type = "video"
 name = "Veo-3.1"
@@ -8,7 +9,7 @@ release_date = "2025-10-15"
 
 [modalities]
 input = ["text"]
-output = ["video"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = true }

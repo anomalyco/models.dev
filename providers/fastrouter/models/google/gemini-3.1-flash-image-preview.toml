@@ -1,6 +1,20 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Not represented: no price in the catalog (prompt and completion are 0).
+# Reasoning: the catalog lists `reasoning`, `thinkingConfig` in supported_parameters; the control set is unchanged from v1 (not re-tested, no API key).
+# API: chat completions and POST /api/v1/images/generations (https://docs.fastrouter.ai/api-reference/image/image-generation.md).
+schema = 2
 base_model = "google/gemini-3.1-flash-image-preview"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.50
-output = 3
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3

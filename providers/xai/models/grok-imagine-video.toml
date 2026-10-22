@@ -1,4 +1,5 @@
 # Image and video MIME types: https://docs.x.ai/developers/rest-api-reference/inference/videos (image inputs JPEG, PNG or WebP; video inputs and generated videos are .mp4)
+# API: POST https://api.x.ai/v1/videos/generations (https://docs.x.ai/developers/rest-api-reference/inference/videos.md).
 schema = 2
 type = "video"
 name = "Grok Imagine Video"
@@ -21,3 +22,6 @@ top_k = false
 [limit]
 context = 1_024
 output = 0
+
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/protocols/xai-video" }

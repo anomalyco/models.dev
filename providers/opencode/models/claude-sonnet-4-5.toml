@@ -15,7 +15,7 @@ context = 1_000_000
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
 compatibility = { replay_reasoning = true }
 
 [cost.text.input]

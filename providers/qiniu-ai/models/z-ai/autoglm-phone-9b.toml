@@ -1,4 +1,5 @@
 # Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+# Modalities: autoglm-phone takes jpg, jpeg or png screenshots (https://docs.bigmodel.cn/api-reference/模型-api/对话补全).
 schema = 2
 name = "Z-Ai/Autoglm Phone 9b"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
@@ -7,7 +8,7 @@ release_date = "2025-12-23"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

@@ -26,6 +26,11 @@ effort_updates = false
 cache = { supported = true, implicit = true }
 service_tier = ["priority"]
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
+
 [cost.text.input]
 price = 1.5
 cache = { read = 0.15 }

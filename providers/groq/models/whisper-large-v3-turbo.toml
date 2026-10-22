@@ -4,9 +4,13 @@
 # https://console.groq.com/docs/model/whisper-large-v3-turbo), billed at least 10 seconds per request (not expressible in v2).
 # Stored per minute, rounded to 8 decimal places: $0.04 / 60 = $0.000666... -> 0.00066667 (v2 has no hour unit).
 # Limits: context_window and max_completion_tokens 448 in GET /openai/v1/models, same as the lab.
+# API: POST https://api.groq.com/openai/v1/audio/transcriptions (https://console.groq.com/docs/speech-to-text).
 schema = 2
 base_model = "openai/whisper-large-v3-turbo"
 name = "Whisper Large V3 Turbo"
+
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.audio.input]
 unit = "minute"

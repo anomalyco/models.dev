@@ -1,0 +1,26 @@
+schema = 2
+name = "Schattenblume 31B"
+description = "Nimbz's Gemma 4 31B merge for character roleplay, expressive prose, and creative dialogue. It combines Scotoma 2, Giftige-Blume v1, and MeroMero v2. This text-only deployment supports a 65,536-token context window and up to 8,192 output tokens."
+open_weights = true
+release_date = "2026-10-13"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[limit]
+context = 65_536
+input = 65_536
+output = 8_192
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.45

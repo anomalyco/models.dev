@@ -437,6 +437,247 @@ price = 2
   });
 });
 
+describe("model API tables", () => {
+  const model = (api = "") => `schema = 2
+name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
+open_weights = true
+release_date = "2026-01-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+
+[limit]
+context = 400_000
+output = 128_000
+${api}
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
+`;
+  const provider = (extra = "") => `name = "Gateway"
+npm = "@ai-sdk/openai-compatible"
+api = "https://example.com/v1"
+env = ["API_KEY"]
+doc = "https://example.com/models"
+${extra}`;
+
+  test("every table is published in order, filled in from the provider default", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/providers/openai-compatible"\n'));
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(`
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.images]
+base_url = "https://images.example.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-images" }
+`),
+      );
+      await write(root, "providers/gateway/models/plain.toml", model());
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      const api = providersV2.gateway?.models.model?.api;
+      expect(Object.entries(api ?? {})).toEqual([
+        [
+          "chat-completions",
+          {
+            base_url: "https://example.com/v1",
+            sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" },
+            compatibility: { reasoning_field: "reasoning_content" },
+          },
+        ],
+        [
+          "images",
+          {
+            base_url: "https://images.example.com/v1",
+            sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" },
+          },
+        ],
+      ]);
+      // A model without tables keeps the provider's default API.
+      expect(providersV2.gateway?.models.plain?.api).toEqual({
+        "chat-completions": {
+          base_url: "https://example.com/v1",
+          sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" },
+        },
+      });
+
+      // v1 reads the provider as before and only the model's first table.
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.gateway).not.toHaveProperty("opencodeai");
+      expect(providers.gateway?.models.model?.interleaved).toEqual({ field: "reasoning_content" });
+      expect(providers.gateway?.models.model?.provider).toBeUndefined();
+    });
+  });
+
+  test("without a provider opencodeai, a table's OpenCode package is guessed as before", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/openai/provider.toml", providerToml("OpenAI"));
+      await write(root, "providers/openai/models/model.toml", model("\n[api.chat-completions]\n\n[api.responses]\n"));
+
+      const api = (await generateV2(path.join(root, "providers"))).openai?.models.model?.api;
+      expect(api?.["chat-completions"]?.sdk?.opencodeai).toBe("@opencode/ai/providers/openai/chat");
+      expect(api?.responses?.sdk?.opencodeai).toBe("@opencode/ai/providers/openai/responses");
+    });
+  });
+
+  test('"none" leaves a package out instead of filling it in', async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/providers/openai-compatible"\n'));
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(`
+[api.systemone]
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[api.images]
+sdk = { opencodeai = "none" }
+`),
+      );
+      await write(root, "providers/silent/provider.toml", providerToml("Silent") + 'opencodeai = "none"\n');
+      await write(root, "providers/silent/models/model.toml", model("\n[api.chat-completions]\n"));
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(providersV2.gateway?.models.model?.api).toEqual({
+        systemone: { base_url: "https://example.com/v1", sdk: { opencodeai: "@opencode/ai/providers/typesafe-ai" } },
+        images: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai-compatible" } },
+      });
+      // A provider-level "none" also stops the guessed package.
+      expect(providersV2.silent?.models.model?.api).toEqual({
+        "chat-completions": { base_url: "https://api.openai.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+      });
+
+      // v1 never sees "none": the model keeps the provider's npm.
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.gateway?.models.model?.provider).toBeUndefined();
+      expect(JSON.stringify(providers)).not.toContain('"none"');
+    });
+  });
+
+  test("a provider's opencodeai applies to models without tables", async () => {
+    await withFixture(async (root) => {
+      // Cohere-like: the guess would be @opencode/ai/providers/cohere/chat.
+      await write(
+        root,
+        "providers/cohere/provider.toml",
+        `name = "Cohere"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.cohere.ai/compatibility/v1"
+env = ["COHERE_API_KEY"]
+doc = "https://docs.cohere.com/docs/models"
+opencodeai = "@opencode/ai/providers/cohere"
+`,
+      );
+      await write(root, "providers/cohere/models/model.toml", model());
+      await write(root, "providers/silent/provider.toml", providerToml("Silent") + 'opencodeai = "none"\n');
+      await write(root, "providers/silent/models/model.toml", model());
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(providersV2.cohere?.models.model?.api).toEqual({
+        "chat-completions": {
+          base_url: "https://api.cohere.ai/compatibility/v1",
+          sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/cohere" },
+        },
+      });
+      expect(providersV2.silent?.models.model?.api).toEqual({
+        responses: { base_url: "https://api.openai.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+      });
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.cohere).not.toHaveProperty("opencodeai");
+    });
+  });
+
+  test("a provider's opencodeai only fills APIs that take the provider's aisdk", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/providers/openai-compatible"\n'));
+      await write(
+        root,
+        "providers/gateway/models/tables.toml",
+        model(`
+[api.chat-completions]
+
+[api.completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.systemone]
+sdk = { aisdk = "none" }
+`),
+      );
+      await write(
+        root,
+        "providers/gateway/models/v1-override.toml",
+        `${providerFieldsToml()}
+[provider]
+npm = "@ai-sdk/openai"
+
+[cost]
+input = 1
+output = 2
+`,
+      );
+      await write(
+        root,
+        "providers/gateway/models/v1-same.toml",
+        `${providerFieldsToml()}
+[provider]
+npm = "@ai-sdk/openai-compatible"
+
+[cost]
+input = 1
+output = 2
+`,
+      );
+
+      const models = (await generateV2(path.join(root, "providers"))).gateway?.models;
+      const inherited = { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" };
+      expect(models?.tables?.api).toEqual({
+        "chat-completions": { base_url: "https://example.com/v1", sdk: inherited },
+        completions: { base_url: "https://example.com/v1", sdk: inherited },
+        messages: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/anthropic" } },
+        responses: {
+          base_url: "https://example.com/v1",
+          sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+        },
+        // `aisdk = "none"` names the table's own (absent) package, so nothing is inherited.
+        systemone: { base_url: "https://example.com/v1", sdk: {} },
+      });
+      expect(models?.["v1-override"]?.api).toEqual({
+        responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+      });
+      expect(models?.["v1-same"]?.api).toEqual({
+        "chat-completions": { base_url: "https://example.com/v1", sdk: inherited },
+      });
+    });
+  });
+
+  test("rejects an opencodeai that isn't an @opencode/ai entry point", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider('opencodeai = "@opencode/ai/openai"\n'));
+      await write(root, "providers/gateway/models/model.toml", model());
+      await expect(generateV2(path.join(root, "providers"))).rejects.toThrow("@opencode/ai/providers/");
+    });
+  });
+});
+
 function providerToml(name: string) {
   return `name = "${name}"
 npm = "@ai-sdk/openai"

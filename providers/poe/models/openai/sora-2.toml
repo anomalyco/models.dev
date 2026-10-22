@@ -1,4 +1,5 @@
 # Status: https://poe.com/Sora-2 is titled "Sora-2_DEPRECATED" (2026-10-21).
+# Modalities (image reference: image/jpeg, image/png, image/webp; output: MP4; Poe lists none): https://platform.openai.com/docs/guides/video-generation
 schema = 2
 type = "video"
 name = "Sora-2"
@@ -9,8 +10,8 @@ release_date = "2025-10-06"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = true }

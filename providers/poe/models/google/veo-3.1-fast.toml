@@ -1,3 +1,4 @@
+# Modalities (image: Veo takes image/jpeg or image/png; video: Veo returns video/mp4; Poe lists none): https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/veo-video-generation, https://ai.google.dev/gemini-api/docs/veo
 schema = 2
 type = "video"
 name = "Veo-3.1-Fast"
@@ -7,8 +8,8 @@ open_weights = false
 release_date = "2025-10-15"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = true }

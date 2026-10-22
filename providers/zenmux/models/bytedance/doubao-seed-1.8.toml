@@ -1,13 +1,14 @@
 # Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
 # Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
 # Effort: Chat reasoning_effort = minimal|low|medium|high (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+# Modalities: video formats from the Volcengine Ark video understanding, 视频格式说明 table (https://www.volcengine.com/docs/82379/1895586).
 schema = 2
 base_model = "bytedance-seed/seed-1-8"
 name = "Doubao-Seed-1.8"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video/mp4", "video/x-msvideo", "video/quicktime"]
 output = ["text"]
 
 [capabilities]

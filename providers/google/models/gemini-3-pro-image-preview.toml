@@ -8,6 +8,11 @@ reasoning = { supported = true }
 [limit]
 context = 131_072
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
+
 [cost.text.input]
 price = 2
 

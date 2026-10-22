@@ -1,3 +1,4 @@
+# Image MIME types: https://docs.inference.net/api/vision (Limitations: "webp, png, gif and jpg/jpeg", accessed 2026-10-21).
 schema = 2
 name = "Google Gemma 3"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
@@ -7,7 +8,7 @@ knowledge = "2024-12"
 release_date = "2025-01-01"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/webp", "image/png", "image/gif", "image/jpeg"]
 output = ["text"]
 
 [capabilities]

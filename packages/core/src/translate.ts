@@ -31,6 +31,13 @@ export function readProviderModel(filePath: string) {
   return model;
 }
 
+// Reads a provider.toml as v1 fields: `opencodeai` (the default API's OpenCode
+// package) is v2-only.
+export function providerTomlToV1(toml: Record<string, unknown>): Record<string, unknown> {
+  const { opencodeai: _opencodeai, ...v1 } = toml;
+  return v1;
+}
+
 export function labModelV2ToV1(
   toml: Record<string, unknown>,
   cause: Record<string, unknown> = {},
@@ -137,7 +144,8 @@ function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined) {
   const first = Object.entries(api ?? {})[0];
   if (first === undefined) return {};
   const [protocol, { base_url, sdk, compatibility, legacy_shape }] = first;
-  const npm = sdk?.aisdk;
+  // `aisdk = "none"` (no AI SDK package) is v2-only; v1 keeps the provider's npm.
+  const npm = sdk?.aisdk === "none" ? undefined : sdk?.aisdk;
   if (legacy_shape !== undefined && toProtocol(legacy_shape) !== protocol) {
     throw new Error(`legacy_shape = "${legacy_shape}" doesn't match [api.${protocol}]`);
   }
@@ -292,11 +300,11 @@ function scaleCost(cost: Record<string, unknown>, factor: number) {
   );
 }
 
-function toV1Modalities(modalities: string[]) {
+export function toV1Modalities(modalities: string[]) {
   return [...new Set(modalities.map(toV1Modality))];
 }
 
-function toV1Modality(modality: string) {
+export function toV1Modality(modality: string) {
   if (modality === "application/pdf") return "pdf";
   if (["decision", "embedding", "reranking"].includes(modality)) return "text";
   const base = modality.split("/")[0]!;

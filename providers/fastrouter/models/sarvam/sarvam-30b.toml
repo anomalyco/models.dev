@@ -1,6 +1,13 @@
+# Deprecated: absent from the catalog and https://fastrouter.ai/models/<id> returns 404 (2026-10-21).
+schema = 2
 base_model = "sarvam/sarvam-30b"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.02
-output = 0.10
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0.1

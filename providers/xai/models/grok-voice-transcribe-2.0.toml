@@ -5,6 +5,10 @@
 # REST POST /v1/stt and streaming wss://api.x.ai/v1/stt; default STT model.
 # Not listed by the models endpoints, so xAI sync keeps this file as authored.
 # Pricing is per audio hour, which v1 cost can't express; no [cost] authored.
+# API: POST https://api.x.ai/v1/stt (https://docs.x.ai/developers/rest-api-reference/inference/voice.md).
 schema = 2
 v2_only = true
 base_model = "xai/grok-voice-transcribe-2.0"
+
+[api.transcriptions]
+sdk = { opencodeai = "none" }

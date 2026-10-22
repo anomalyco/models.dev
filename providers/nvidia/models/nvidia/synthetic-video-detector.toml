@@ -1,5 +1,6 @@
 # Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21); temperature false:
 # a classifier with no sampling parameters.
+# Input format: video .mp4 (https://build.nvidia.com/nvidia/synthetic-video-detector.md).
 schema = 2
 name = "synthetic-video-detector"
 description = "Detects AI-generated (synthetic) video"
@@ -7,7 +8,7 @@ open_weights = true
 release_date = "2026-04-16"
 
 [modalities]
-input = ["video"]
+input = ["video/mp4"]
 output = ["text"]
 
 [capabilities]

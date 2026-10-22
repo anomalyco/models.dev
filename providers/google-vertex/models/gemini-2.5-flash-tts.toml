@@ -12,6 +12,9 @@ cache = { supported = false }
 [limit]
 input = 8_192
 
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/google-speech" }
+
 [cost.text.input]
 price = 0.5
 

@@ -1,6 +1,8 @@
 # Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
 # Billed at EUR 0.003 per audio minute; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20): USD 0.0033645/minute.
-# v1 has no per-minute price, so v1 shows no cost. The host lists no audio formats, so modalities stay generic.
+# v1 has no per-minute price, so v1 shows no cost.
+# Audio MIME types: Scaleway lists none; this ID serves Whisper Large v3 (models/openai/whisper-large-v3), so the lab's
+# formats apply: https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create
 schema = 2
 type = "transcription"
 name = "Whisper Large v3"
@@ -12,7 +14,7 @@ release_date = "2023-09-01"
 last_updated = "2026-03-17"
 
 [modalities]
-input = ["audio"]
+input = ["audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/webm"]
 output = ["text"]
 
 [capabilities]

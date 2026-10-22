@@ -1,3 +1,5 @@
+# Image MIME types: Cloudflare lists none; this ID serves DeepSeek V4.1 Flash 1017 (models/deepseek/deepseek-v4.1-flash-1017),
+# so the lab's formats apply: https://api-docs.deepseek.com/guides/vision (JPEG, PNG, GIF, WebP).
 schema = 2
 name = "Deepseek V4.1 Flash 1017"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
@@ -6,7 +8,7 @@ open_weights = true
 release_date = "2026-10-17"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

@@ -1,4 +1,4 @@
-# Modalities: Qiniu's model square lists video input, which the lab has no MIME types for, so the generic kind is kept.
+# Modalities: Qiniu's model square lists video input; video formats from the Volcengine Ark video understanding, 视频格式说明 table (https://www.volcengine.com/docs/82379/1895586).
 # Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
 # Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
 # Status: deprecated. Qiniu's model square lists retirement_at 2026-03-31 (retired).
@@ -10,7 +10,7 @@ name = "Doubao-Seed 1.6 Flash"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video/mp4", "video/x-msvideo", "video/quicktime"]
 output = ["text"]
 
 [capabilities]

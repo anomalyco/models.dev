@@ -1,0 +1,15 @@
+schema = 2
+base_model = "perplexity/pplx-decider-v1.2"
+name = "PPLX Decider v1.2"
+
+[capabilities]
+structured_output = false
+
+[limit]
+input = 262_144
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

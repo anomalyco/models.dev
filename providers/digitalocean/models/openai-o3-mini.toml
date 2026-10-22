@@ -2,13 +2,15 @@
 # and tools are per-request fields (effort_updates = false, tools.updates = false).
 # system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
 # Cache: automatic for prompts of 1024+ tokens. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+# Image MIME types: DigitalOcean's VLM docs, "Supported image formats are PNG, JPG, JPEG, and WEBP"
+#   (https://docs.digitalocean.com/products/inference/how-to/use-multimodal-inference/).
 schema = 2
 base_model = "openai/o3-mini"
 name = "OpenAI o3 mini"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]

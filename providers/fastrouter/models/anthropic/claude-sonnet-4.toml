@@ -1,8 +1,14 @@
+# Deprecated: absent from the catalog and https://fastrouter.ai/models/<id> returns 404 (2026-10-21).
+schema = 2
 base_model = "anthropic/claude-sonnet-4-20250514"
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 32_000 }]
+status = "deprecated"
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024, max = 32_000 } }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

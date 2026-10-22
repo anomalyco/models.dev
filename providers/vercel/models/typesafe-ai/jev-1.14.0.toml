@@ -14,6 +14,10 @@ output = ["text"]
 [limit]
 context = 32_000
 
+[api.evaluate]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/vercel-ai-gateway" }
+
 [cost.text.input]
 price = 0.042
 

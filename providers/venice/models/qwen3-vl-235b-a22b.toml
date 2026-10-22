@@ -3,6 +3,7 @@
 # on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
 # tools.updates = false: `tools` is request-level, with no tool addition/removal message.
 # Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+# Modalities: image from alibaba/qwen3-vl-235b-a22b-instruct. Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
 schema = 2
 name = "Qwen3 VL 235B"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
@@ -11,7 +12,7 @@ release_date = "2026-01-16"
 last_updated = "2026-06-11"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

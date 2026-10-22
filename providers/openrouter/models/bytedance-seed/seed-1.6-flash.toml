@@ -10,10 +10,6 @@ base_model = "bytedance-seed/seed-1-6-flash"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 status = "deprecated"
 
-[modalities]
-input = ["image/png", "image/jpeg", "image/webp", "image/gif", "text", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
-output = ["text"]
-
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }

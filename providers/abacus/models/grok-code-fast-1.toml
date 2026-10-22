@@ -1,13 +1,12 @@
 # Linked to models/xai/grok-code-fast-1.toml (same model).
 # Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+# Input: text only, inherited from the lab. xAI listed grok-code-fast-1 with inputModalities [TEXT] only
+#   (https://web.archive.org/web/20251222030703/https://docs.x.ai/docs/models/grok-code-fast-1).
 schema = 2
 base_model = "xai/grok-code-fast-1"
 name = "Grok Code Fast 1"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = false }

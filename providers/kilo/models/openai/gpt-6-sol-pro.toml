@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay OpenAI's GPT-6 Sol with pro reasoning (openai/gpt-6-sol). OpenAI image inputs PNG, JPEG, WEBP, non-animated GIF: https://platform.openai.com/docs/guides/images-vision
 schema = 2
 name = "OpenAI: GPT-6 Sol Pro"
 description = "GPT-6 Sol Pro is the same underlying model as [GPT-6 Sol](https://openrouter.ai/openai/gpt-6-sol), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks. Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode"
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-09-22"
 
 [modalities]
-input = ["application/pdf", "image", "text"]
+input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]
 output = ["text"]
 
 [capabilities]
