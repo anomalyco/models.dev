@@ -1,7 +1,10 @@
 import { expect, test } from "bun:test";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
 import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
-import { modelV2ToV1 } from "../src/translate.js";
+import { modelV2ToV1, readLabMetadata } from "../src/translate.js";
 
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
   const doc = {
@@ -261,4 +264,21 @@ test("v1 mode prices come from an object factor the same way as from a plain num
   expect(mode({ text: 2, audio: 2 })).toEqual(expected);
   // Prices an object factor doesn't name keep their base price.
   expect(mode({ text: { output: 2 } })).toEqual({ input: 4, output: 40, cache_read: 0.4, cache_write: 5, input_audio: 6 });
+});
+
+test("readLabMetadata reads a v2 lab.toml and rejects v1 or unknown fields", () => {
+  const dir = mkdtempSync(path.join(tmpdir(), "lab-metadata-"));
+  const write = (name: string, body: string) => {
+    const file = path.join(dir, name);
+    writeFileSync(file, body);
+    return file;
+  };
+  try {
+    expect(readLabMetadata(write("v2.toml", 'schema = 2\ndescription = "A lab."\n'))).toEqual({ description: "A lab." });
+    expect(() => readLabMetadata(write("v1.toml", 'description = "A lab."\n'))).toThrow("schema = 2");
+    expect(() => readLabMetadata(write("extra.toml", 'schema = 2\ndescription = "A lab."\nname = "Lab"\n'))).toThrow();
+    expect(() => readLabMetadata(write("empty.toml", 'schema = 2\ndescription = ""\n'))).toThrow();
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

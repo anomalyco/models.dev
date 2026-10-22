@@ -188,6 +188,15 @@ A v1-only alias provider (for example `azure-cognitive-services`) has a `provide
 
 If the provider has a rich catalog API that can populate model data or authoritatively remove models it no longer serves, add a sync module (see `sync.md`). Thin endpoints stay hand-authored. Sync patches files in place: it updates the fields it owns and keeps everything else (cache, overrides, multipliers, cache TTLs). If a patch can't reproduce the synced fields, sync leaves the file and reports a notice.
 
+## Lab pages (`labs/<lab-id>/`)
+
+A lab's `logo.svg` (same rules as provider logos) and optional `lab.toml` feed the website's lab pages only; neither is in the v1 or v2 API. `lab.toml` is v2 and holds just the lab's description:
+
+```toml
+schema = 2
+description = "One or two sentences on what the lab builds."
+```
+
 ## Cost (always USD)
 
 - **Token prices are USD per million tokens.** Never publish EUR, CNY, CHF, etc. as if they were USD. Convert and note rate/date in a **top-of-file** comment.

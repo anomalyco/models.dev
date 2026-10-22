@@ -766,6 +766,16 @@ export const LabModelV2 = z
 
 export type LabModelV2 = z.infer<typeof LabModelV2>;
 
+// Lab metadata file (`labs/<lab>/lab.toml`): facts about the lab itself, shown
+// on the website's lab pages. Not part of the v1 or v2 API output.
+export const LabMetadataV2 = z
+  .object({
+    description: z.string().min(1, "Lab description cannot be empty"),
+  })
+  .strict();
+
+export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
+
 // `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
 // point: `@opencode/ai/providers/<path>` for a provider's chat, responses or
 // messages model (`@opencode/ai/providers/openai/chat`), or

@@ -1,8 +1,8 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generateCatalog } from "@models.dev/core";
-import type { Model, ModelMetadata, Provider } from "@models.dev/core";
+import { generateCatalog, readLabMetadata } from "@models.dev/core";
+import type { LabMetadataV2, Model, ModelMetadata, Provider } from "@models.dev/core";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync, readFileSync, readdirSync } from "fs";
@@ -1592,7 +1592,7 @@ function countLinkedProviderEntries() {
 }
 
 function loadLabMetadata(root: string) {
-  const result = new Map<string, { description?: string }>();
+  const result = new Map<string, LabMetadataV2>();
   const labsPath = path.join(root, "labs");
   if (!existsSync(labsPath)) return result;
 
@@ -1600,18 +1600,7 @@ function loadLabMetadata(root: string) {
     const metadataPath = path.join(labsPath, labId, "lab.toml");
     if (!existsSync(metadataPath)) continue;
 
-    const metadata = Bun.TOML.parse(readFileSync(metadataPath, "utf8")) as Record<
-      string,
-      unknown
-    >;
-    if (
-      metadata.description !== undefined &&
-      (typeof metadata.description !== "string" || metadata.description.length === 0)
-    ) {
-      throw new Error(`Invalid lab description in ${metadataPath}`);
-    }
-
-    result.set(labId, { description: metadata.description });
+    result.set(labId, readLabMetadata(metadataPath));
   }
 
   return result;

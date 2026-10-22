@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 
 import {
   AuthoredModelV2,
+  LabMetadataV2,
   LabModelV2,
   type AuthoredApiEntryV2,
   type CostFactorV2,
@@ -26,6 +27,22 @@ export function readProviderModel(filePath: string) {
   const toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
   const { id: _id, ...model } = modelV2ToV1({ ...toml, id: "" }, { modelPath: filePath });
   return model;
+}
+
+// Reads a lab metadata file (`labs/<lab>/lab.toml`). It has no v1 form, so it
+// must declare `schema = 2`.
+export function readLabMetadata(filePath: string): LabMetadataV2 {
+  const toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+  if (!isSchemaV2(toml)) {
+    throw new Error(`Lab metadata must be v2. Add \`schema = 2\` to ${filePath}`);
+  }
+  const { schema: _schema, ...raw } = toml;
+  const parsed = LabMetadataV2.safeParse(raw);
+  if (!parsed.success) {
+    parsed.error.cause = { labPath: filePath, toml };
+    throw parsed.error;
+  }
+  return parsed.data;
 }
 
 // Reads a provider.toml as v1 fields: `opencodeai` (the default API's OpenCode
