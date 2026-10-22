@@ -25,7 +25,7 @@ context = 32_768
 output = 1
 
 [api.speech]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-speech" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
 
 [cost.text.input]
 unit = "character"

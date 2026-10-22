@@ -24,7 +24,7 @@ context = 448
 output = 448
 
 [api.transcriptions]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.audio.input]
 unit = "minute"

@@ -4,7 +4,7 @@ schema = 2
 base_model = "openai/whisper-large-v3-turbo"
 
 [api.transcriptions]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.text.input]
 price = 0.0023

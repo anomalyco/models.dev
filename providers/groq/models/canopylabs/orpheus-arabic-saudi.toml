@@ -11,7 +11,8 @@ description = "Speech generation model for controllable voice, narration, and au
 status = "beta"
 
 [api.speech]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-speech" }
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
 
 [cost.text.input]
 unit = "character"

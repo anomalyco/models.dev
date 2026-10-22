@@ -29,7 +29,7 @@ context = 0
 output = 0
 
 [api.speech]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-speech" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
 
 [cost.text.input]
 unit = "character"

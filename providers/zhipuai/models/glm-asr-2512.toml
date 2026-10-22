@@ -9,7 +9,7 @@ v2_only = true
 base_model = "zhipuai/glm-asr-2512"
 
 [api.transcriptions]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.audio.input]
 price = 2.39032
