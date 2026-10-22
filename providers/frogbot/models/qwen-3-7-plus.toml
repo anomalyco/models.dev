@@ -1,0 +1,25 @@
+# Relayed to Fireworks (accounts/fireworks/models/qwen3p7-plus).
+# FrogBot's LiteLLM proxy forwards reasoning_effort and thinking to Fireworks
+# unchanged (fireworks_ai chat config; litellm 1.94.0).
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking.budget_tokens. Fireworks documents the >= 1024 floor on this
+# field; FrogBot forwards it as sent.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
+# https://docs.frogbot.ai/api-reference/chat-completions
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+structured_output = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 1.6
