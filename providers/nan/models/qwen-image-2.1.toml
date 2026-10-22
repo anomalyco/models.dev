@@ -16,6 +16,9 @@ base_model = "alibaba/qwen-image-2.1"
 input = ["text"]
 output = ["image/png"]
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
 [cost.text.input]
 price = 0
 

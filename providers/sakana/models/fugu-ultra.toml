@@ -9,6 +9,7 @@ structured_output = true
 output = 1_000_000
 
 [api.responses]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 5

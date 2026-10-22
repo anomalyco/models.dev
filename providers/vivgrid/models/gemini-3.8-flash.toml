@@ -13,7 +13,7 @@ structured_output = true
 output = 128_000
 
 [api.chat-completions]
-sdk = { aisdk = "@ai-sdk/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 0.75

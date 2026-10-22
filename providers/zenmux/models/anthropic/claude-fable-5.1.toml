@@ -12,7 +12,7 @@ cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], m
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 10

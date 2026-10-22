@@ -55,5 +55,5 @@ input = 850_000
 output = 50_000
 
 [api.chat-completions]
-sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/providers/openrouter" }
 compatibility = { reasoning_field = "reasoning_details" }

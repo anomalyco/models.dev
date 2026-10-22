@@ -13,7 +13,7 @@ reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
-sdk = { aisdk = "@ai-sdk/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]

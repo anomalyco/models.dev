@@ -21,6 +21,9 @@ structured_output = true
 [limit]
 context = 16_384
 
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
 [cost.text.input]
 price = 0.2245
 

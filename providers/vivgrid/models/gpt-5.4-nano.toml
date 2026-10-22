@@ -18,7 +18,7 @@ structured_output = true
 temperature = false
 
 [api.chat-completions]
-sdk = { aisdk = "@ai-sdk/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 0.2

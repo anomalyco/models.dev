@@ -15,7 +15,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 context = 272_000
 
 [api.chat-completions]
-sdk = { aisdk = "@ai-sdk/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 0.25

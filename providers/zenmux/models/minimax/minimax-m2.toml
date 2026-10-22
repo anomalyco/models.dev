@@ -16,7 +16,7 @@ output = 128_000
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.3

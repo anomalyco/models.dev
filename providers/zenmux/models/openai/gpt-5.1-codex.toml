@@ -13,7 +13,7 @@ temperature = true
 
 [api.responses]
 base_url = "https://zenmux.ai/api/v1"
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 
 [cost.text.input]
 price = 1.25

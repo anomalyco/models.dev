@@ -14,7 +14,7 @@ structured_output = true
 output = 128_000
 
 [api.chat-completions]
-sdk = { aisdk = "@ai-sdk/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]

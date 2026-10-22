@@ -19,6 +19,9 @@ structured_output = false
 context = 32_000
 output = 2_560
 
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 0.1502
 

@@ -1,5 +1,6 @@
 name = "NEAR AI Cloud"
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Gateway and direct TEE hosts use the same POST `/v1/chat/completions` API.
 # Native GLM/Qwen controls use `chat_template_kwargs.enable_thinking = true|false`;
 # GPT-OSS uses `reasoning_effort = low|medium|high` and cannot be disabled.
