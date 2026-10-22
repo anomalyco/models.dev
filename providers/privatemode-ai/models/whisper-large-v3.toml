@@ -9,7 +9,7 @@ base_model = "openai/whisper-large-v3"
 name = "Whisper large-v3"
 
 [api.transcriptions]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.text.input]
 price = 0.01618

@@ -26,7 +26,7 @@ context = 32_000
 output = 32_000
 
 [api.transcriptions]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.text.input]
 price = 0.00462
