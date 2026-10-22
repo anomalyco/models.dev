@@ -1,0 +1,17 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "claude-opus-4-6-thinking" in OpenAI protocol (/v1), $0.0223713/$0.1118564 per MTok input/output.
+# Cache read: $0.0022371 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/anthropic/models/claude-opus-4-6.toml with the lab's on/off folded into `none`,
+#   the off value on this chat-completions surface (AGENTS.md toggle table: effort carrying `none` needs no `toggle`). No caller-set budget is published — /v1 has no budget field.
+schema = 2
+base_model = "anthropic/claude-opus-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+
+[cost.text.input]
+price = 0.0223713
+cache = { read = 0.0022371 }
+
+[cost.text.output]
+price = 0.1118564

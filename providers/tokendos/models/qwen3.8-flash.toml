@@ -1,0 +1,17 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "qwen3.8-flash" in OpenAI protocol (/v1), $0.119558/$0.4035082 per MTok input/output.
+# Cache read: $0.0149447 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/alibaba/models/qwen3.8-flash.toml with the lab's on/off folded into `none`,
+#   the off value on this chat-completions surface (AGENTS.md toggle table: effort carrying `none` needs no `toggle`). No caller-set budget is published — /v1 has no budget field.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 0.119558
+cache = { read = 0.0149447 }
+
+[cost.text.output]
+price = 0.4035082
