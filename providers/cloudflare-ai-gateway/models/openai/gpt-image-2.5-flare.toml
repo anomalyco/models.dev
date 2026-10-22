@@ -6,6 +6,7 @@ base_model = "openai/gpt-image-2.5-flare"
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 5

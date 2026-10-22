@@ -620,10 +620,15 @@ test("writes new native-route models as v2 files with their API protocol", async
     expect(result.notices ?? []).toEqual([]);
     const opus = await readFile(path.join(modelsDir, "anthropic", "claude-opus-4.7.toml"), "utf8");
     expect(opus).toContain("\nschema = 2\n");
-    expect(opus).toContain('[api.messages]\nsdk = { aisdk = "@ai-sdk/anthropic" }');
+    const opencodeai = 'opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway"';
+    expect(opus).toContain(`[api.messages]\nsdk = { aisdk = "@ai-sdk/anthropic", ${opencodeai} }`);
     const gpt = await readFile(path.join(modelsDir, "openai", "gpt-5.5.toml"), "utf8");
-    expect(gpt).toContain('[api.responses]\nsdk = { aisdk = "@ai-sdk/openai" }');
-    expect(await readFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), "utf8")).toContain("system_updates = true");
+    expect(gpt).toContain(`[api.responses]\nsdk = { aisdk = "@ai-sdk/openai", ${opencodeai} }`);
+    // An existing table gets the OpenCode package too, and keeps its other v2 data.
+    const updated = await readFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), "utf8");
+    expect(updated).toContain("system_updates = true");
+    expect(updated).toContain(`[api.responses]\nsdk = { aisdk = "@ai-sdk/openai", ${opencodeai} }`);
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0 });
   } finally {
     await rm(providerDir, { recursive: true, force: true });
   }
@@ -774,7 +779,12 @@ test("syncs speech, transcription, image and video tasks as media sources and le
       schema: 2,
       v2_only: true,
       base_model: "openai/tts-1",
-      api: { "workers-ai-run": { base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" } },
+      api: {
+        "workers-ai-run": {
+          base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai",
+          sdk: { opencodeai: "none" },
+        },
+      },
       cost: { text: { input: { unit: "character", price: 15 } } },
     });
     expect(speech.header).toContain("POST /ai/run");
@@ -917,6 +927,7 @@ test("writes media models as v2-only files and a second sync is a no-op", async 
     expect(tts).toContain('\nschema = 2\nv2_only = true\nbase_model = "openai/tts-1"\n');
     expect(tts).toContain('[modalities]\ninput = ["text"]\noutput = ["audio/mpeg", "audio/wav"]');
     expect(tts).toContain("[api.workers-ai-run]");
+    expect(tts).toContain('[api.workers-ai-run]\nbase_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"\nsdk = { opencodeai = "none" }\n');
     expect(tts).toContain('[cost.text.input]\nunit = "character"\nprice = 15\n');
     const second = await syncProvider(provider);
     expect(second).toMatchObject({ created: 0, updated: 0, deleted: 0 });
