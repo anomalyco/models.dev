@@ -1,0 +1,34 @@
+# Source: https://docs.mistral.ai/models/zai-glm-5-3-flash (accessed 2026-10-22; API ID zai-glm-5-3-flash;
+# $0.15 input / $0.03 cached input / $0.5 output; 1M context / 128k max output; multimodal, served without
+# Mistral modifications).
+# Effort: reasoning_effort = low|high|max (https://docs.mistral.ai/studio/conversations/reasoning lists
+# low, high, max for zai-glm-5-3; GLM-5.3-Flash native levels per lab entries providers/zai/models/glm-5.3-flash.toml).
+# Mistral API (api.mistral.ai), same surface as providers/mistral/models/zai-glm-5-3.toml:
+# - Prompt caching: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic prefix
+#   cache in 64-token blocks, no write price, optional prompt_cache_key).
+# - Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named
+#   function; function.strict).
+# - Structured output: https://docs.mistral.ai/studio/conversations/structured-output (json_schema
+#   response_format; model page lists Structured Outputs, Function Calling, Document QnA, Prefix).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+stream_usage = true
+prompt_cache_key = true
+cache = { supported = true, implicit = { min_tokens = 64 }, explicit = false }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
