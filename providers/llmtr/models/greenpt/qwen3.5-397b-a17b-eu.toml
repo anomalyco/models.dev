@@ -6,7 +6,7 @@ base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B-A17B (GreenPT, EU)"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

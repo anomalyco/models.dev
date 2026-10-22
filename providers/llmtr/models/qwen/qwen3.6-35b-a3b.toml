@@ -3,11 +3,12 @@
 # Toggle: $.enable_thinking = true|false (Alibaba native field, forwarded by the gateway).
 # Measured: enable_thinking = false and the gateway's $.reasoning = false both turn reasoning off.
 # thinking_budget is not honoured (64 -> 874 reasoning tokens), so no budget is listed.
+# reasoning_effort -> 400 "exposes thinking as an on/off mode", so no effort is listed.
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

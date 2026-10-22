@@ -118,6 +118,16 @@ test("keeps only the input kinds the lab model also reads", () => {
   expect(built?.model).not.toHaveProperty("modalities");
 });
 
+test("writes the lab's exact formats for a narrower set of input kinds", () => {
+  // The lab entry also reads PDFs; this route only takes text and images.
+  const built = translate(row({ id: "greenpt/mistral-medium-3.5-128b" }));
+  const input = (built as { v2Set?: Record<string, string[]> }).v2Set?.["modalities.input"];
+
+  expect(input).toContain("image/png");
+  expect(input).not.toContain("image");
+  expect(input).not.toContain("application/pdf");
+});
+
 test("converts per-token prices to dollars per million tokens", () => {
   const built = translate(row());
 

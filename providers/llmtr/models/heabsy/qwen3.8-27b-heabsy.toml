@@ -6,7 +6,7 @@ base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B (Heabsy)"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

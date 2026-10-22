@@ -2,6 +2,7 @@
 # Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-10-22).
 # Effort: reasoning_effort = none|high
 # Measured: no reasoning by default; reasoning_effort = high -> reasoning; thinking.type = enabled is inert.
+# reasoning_effort = low|medium|max -> 400 "does not support reasoning effort ... Supported: none, high".
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
