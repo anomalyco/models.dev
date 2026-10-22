@@ -43,6 +43,7 @@ export type ModelFamily =
   | "dreamshaper"
   | "elephant"
   | "elevenlabs"
+  | "enso"
   | "ernie"
   | "falcon"
   | "flint"
@@ -227,4 +228,5 @@ export type ModelFamily =
   | "voyage"
   | "whisper"
   | "yi"
+  | "zen"
   | "zephyr"
