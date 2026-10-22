@@ -209,7 +209,7 @@ test("runner preserves absent entries and headers, reports new models, and is id
   await mkdir(path.join(root, "models/alibaba"), { recursive: true });
   await Bun.write(path.join(root, "models/alibaba/qwen3.8-max.toml"), await Bun.file("models/alibaba/qwen3.8-max.toml").text());
   const header = "# Toggle: thinking.type = enabled|disabled\n# Curated source header\n";
-  const initial = header + 'base_model = "alibaba/qwen3.8-max"\nreasoning_options = [{ type = "toggle" }]\n[cost]\ninput = 2\noutput = 6\n';
+  const initial = header + 'schema = 2\nbase_model = "alibaba/qwen3.8-max"\n\n[capabilities]\nreasoning = { supported = true, toggle = true }\n\n[cost.text.input]\nprice = 2\n\n[cost.text.output]\nprice = 6\n';
   const file = path.join(modelsDir, "qwen/qwen3.8-max.toml");
   const absent = path.join(modelsDir, "qwen/unlisted.toml");
   await Bun.write(file, initial);
@@ -222,7 +222,7 @@ test("runner preserves absent entries and headers, reports new models, and is id
   expect(await Bun.file(path.join(modelsDir, "qwen/new-model.toml")).exists()).toBe(false);
   const content = await Bun.file(file).text();
   expect(content.startsWith(header)).toBe(true);
-  expect(Bun.TOML.parse(content)).toMatchObject({ base_model: "alibaba/qwen3.8-max", limit: { output: 64_000 }, reasoning_options: [{ type: "toggle" }] });
+  expect(Bun.TOML.parse(content)).toMatchObject({ base_model: "alibaba/qwen3.8-max", limit: { output: 64_000 }, capabilities: { reasoning: { supported: true, toggle: true } } });
   expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 2 });
 });
 

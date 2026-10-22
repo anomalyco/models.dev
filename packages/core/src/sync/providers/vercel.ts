@@ -122,9 +122,6 @@ export const vercel = {
       ...(model.type === "evaluation" ? { v2Set: { api: structuredClone(DECISION_APIS) } } : {}),
     };
   },
-  sameModel(current, desired) {
-    return sameVercelModel(current, desired);
-  },
 } satisfies SyncProvider<VercelModel>;
 
 export function buildVercelModel(
@@ -391,48 +388,6 @@ function inferFamily(modelID: string, name: string) {
       }
       return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
     });
-}
-
-function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
-  const desiredModel = desired as ExistingModel;
-  const fields: Array<[unknown, unknown, boolean?]> = [
-    [current.base_model, desiredModel.base_model],
-    [current.base_model_omit, desiredModel.base_model_omit],
-    [current.type, desiredModel.type],
-    [current.name, desiredModel.name],
-    [current.description, desiredModel.description],
-    [current.family, desiredModel.family],
-    [current.attachment, desiredModel.attachment],
-    [current.reasoning, desiredModel.reasoning],
-    [current.reasoning_options, desiredModel.reasoning_options],
-    [current.tool_call, desiredModel.tool_call],
-    [current.structured_output, desiredModel.structured_output],
-    [current.open_weights, desiredModel.open_weights],
-    [current.release_date, desiredModel.release_date],
-    [current.cost?.input, desiredModel.cost?.input, true],
-    [current.cost?.output, desiredModel.cost?.output, true],
-    [current.cost?.cache_read, desiredModel.cost?.cache_read, true],
-    [current.cost?.cache_write, desiredModel.cost?.cache_write, true],
-    [current.cost?.tiers, desiredModel.cost?.tiers],
-    [current.limit?.context, desiredModel.limit?.context],
-    [current.limit?.input, desiredModel.limit?.input],
-    [current.limit?.output, desiredModel.limit?.output],
-    [current.modalities?.input, desiredModel.modalities?.input],
-  ];
-
-  return fields.every(([currentValue, desiredValue, cost]) => {
-    if (cost && currentValue === 0 && desiredValue === undefined) return true;
-    if (cost && typeof currentValue === "number" && typeof desiredValue === "number") {
-      return Math.abs(currentValue - desiredValue) <= 0.001;
-    }
-    if (
-      (currentValue === 0 || desiredValue === 0)
-      && (typeof currentValue === "number" || typeof desiredValue === "number")
-    ) {
-      return true;
-    }
-    return JSON.stringify(currentValue) === JSON.stringify(desiredValue);
-  });
 }
 
 // ---------------------------------------------------------------------------

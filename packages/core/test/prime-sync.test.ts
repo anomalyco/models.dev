@@ -100,8 +100,8 @@ test("discovery generates an empty provider, updates prices, preserves incomplet
 
     data = [model({ context_window: 256_000, max_output_tokens: 16_384, pricing: { input_usd_per_mtok: 1, output_usd_per_mtok: 2 } })];
     expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
-    const updated = Bun.TOML.parse(await file.text()) as Record<string, unknown>;
-    expect(updated.cost).toEqual({ input: 1, output: 2 });
+    const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect(updated.cost.text).toEqual({ input: { price: 1 }, output: { price: 2 } });
     expect(updated.limit).toEqual({ context: 256_000, output: 16_384 });
     const previous = await file.text();
 

@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncedModel, type SyncProvider } from "../src/sync/index.js";
+import { preserveReasoningOptions, syncProvider, type ExistingModel, type SyncedModel, type SyncProvider } from "../src/sync/index.js";
 import {
   anthropic,
   buildAnthropicModel,
@@ -380,6 +380,10 @@ test("syncs authoritative Inceptron additions, updates, and removals", async () 
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-inceptron-"));
   const modelsDir = path.join(root, "providers", "inceptron", "models");
   await mkdir(modelsDir, { recursive: true });
+  await copyFile(
+    path.join(import.meta.dirname, "..", "..", "..", "providers", "inceptron", "provider.toml"),
+    path.join(root, "providers", "inceptron", "provider.toml"),
+  );
   for (const base of ["zhipuai/glm-5.2", "moonshotai/kimi-k2.6"]) {
     const destination = path.join(root, "models", `${base}.toml`);
     await mkdir(path.dirname(destination), { recursive: true });
@@ -955,8 +959,11 @@ test("NanoGPT sync drops stale descriptions while first factoring existing model
   await mkdir(path.dirname(modelPath), { recursive: true });
   await mkdir(path.dirname(metadataPath), { recursive: true });
   await Bun.write(modelPath, [
+    "schema = 2",
     'description = "Stale provider description"',
-    "reasoning = false",
+    "",
+    "[capabilities]",
+    "reasoning = { supported = false }",
     "structured_output = true",
     "",
     "[limit]",
@@ -966,8 +973,22 @@ test("NanoGPT sync drops stale descriptions while first factoring existing model
     "",
   ].join("\n"));
   await Bun.write(metadataPath, [
+    "schema = 2",
+    'name = "Claude Sonnet 4.6"',
     'description = "Canonical description"',
-    "reasoning = true",
+    "open_weights = false",
+    'release_date = "2026-02-17"',
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = true }",
+    "temperature = true",
+    "top_p = true",
+    "top_k = true",
     "",
     "[limit]",
     "context = 1_000_000",
@@ -995,7 +1016,7 @@ test("NanoGPT sync drops stale descriptions while first factoring existing model
     const content = await readFile(modelPath, "utf8");
     expect(content).toContain('base_model = "anthropic/claude-sonnet-4-6"');
     expect(content).not.toContain("Stale provider description");
-    expect(content).toContain("reasoning = false");
+    expect(content).toContain("reasoning = { supported = false }");
     expect(content).toContain("structured_output = true");
     expect(content).toContain("output = 128_000");
   } finally {
@@ -1246,25 +1267,28 @@ test("OpenAI availability sync retains models absent from a scoped response", as
   const dir = await mkdtemp(path.join(tmpdir(), "sync-openai-"));
   const modelsDir = path.join(dir, "providers", "openai", "models");
   await Bun.write(path.join(modelsDir, "gpt-existing.toml"), [
+    "schema = 2",
     'name = "Existing GPT"',
     'release_date = "2026-01-01"',
-    'last_updated = "2026-01-01"',
-    "attachment = false",
-    "reasoning = false",
-    "tool_call = true",
     "open_weights = false",
     "",
-    "[cost]",
-    "input = 1",
-    "output = 2",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
     "",
     "[limit]",
     "context = 1_000",
     "output = 100",
     "",
-    "[modalities]",
-    'input = ["text"]',
-    'output = ["text"]',
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
     "",
   ].join("\n"));
 
@@ -3533,119 +3557,6 @@ test("resolves Eden AI aliases to the model they point at", () => {
   ).toBe("anthropic/claude-opus-5");
 });
 
-test("preserves model type when formatting synced TOML", () => {
-  const content = formatToml({
-    id: "typesafe/jev-latest",
-    type: "decision",
-    name: "Jev",
-    description: "System One model for typed decisions",
-    release_date: "2026-09-15",
-    last_updated: "2026-09-15",
-    attachment: false,
-    reasoning: false,
-    tool_call: false,
-    open_weights: false,
-    limit: { context: 64_000, output: 0 },
-    modalities: { input: ["text"], output: ["text"] },
-  });
-
-  expect(Bun.TOML.parse(content)).toMatchObject({
-    type: "decision",
-    name: "Jev",
-  });
-});
-
-test("formats interleaved as a root field before reasoning option tables", () => {
-  const content = formatToml({
-    id: "example/model",
-    name: "Example Model",
-    description: "Example model for sync formatting regression tests",
-    release_date: "2026-01-01",
-    last_updated: "2026-01-01",
-    attachment: false,
-    reasoning: true,
-    reasoning_options: [{ type: "toggle" }],
-    tool_call: true,
-    interleaved: true,
-    open_weights: false,
-    cost: { input: 1, output: 2 },
-    limit: { context: 1_000, output: 100 },
-    modalities: { input: ["text"], output: ["text"] },
-  });
-
-  expect(Bun.TOML.parse(content)).toMatchObject({
-    interleaved: true,
-    reasoning_options: [{ type: "toggle" }],
-  });
-});
-
-test("formats empty reasoning options outside the interleaved table", () => {
-  const content = formatToml({
-    id: "example/model",
-    name: "Example Model",
-    description: "Example model for sync formatting regression tests",
-    release_date: "2026-01-01",
-    last_updated: "2026-01-01",
-    attachment: false,
-    reasoning: true,
-    reasoning_options: [],
-    tool_call: true,
-    interleaved: { field: "reasoning_content" },
-    open_weights: false,
-    cost: { input: 1, output: 2 },
-    limit: { context: 1_000, output: 100 },
-    modalities: { input: ["text"], output: ["text"] },
-  });
-
-  expect(Bun.TOML.parse(content)).toMatchObject({
-    interleaved: { field: "reasoning_content" },
-    reasoning_options: [],
-  });
-});
-
-test("formats provider overrides and experimental modes", () => {
-  const content = formatToml({
-    id: "example/model",
-    name: "Example Model",
-    description: "Example model for sync formatting regression tests",
-    release_date: "2026-01-01",
-    last_updated: "2026-01-01",
-    attachment: false,
-    reasoning: false,
-    tool_call: true,
-    open_weights: false,
-    limit: { context: 1_000, output: 100 },
-    modalities: { input: ["text"], output: ["text"] },
-    provider: { body: { custom_flag: true } },
-    experimental: {
-      modes: {
-        fast: {
-          cost: { input: 2, output: 4 },
-          provider: {
-            body: { speed: "fast" },
-            headers: { "anthropic-beta": "fast-mode-2026-02-01" },
-          },
-        },
-      },
-    },
-  });
-
-  expect(Bun.TOML.parse(content)).toMatchObject({
-    provider: { body: { custom_flag: true } },
-    experimental: {
-      modes: {
-        fast: {
-          cost: { input: 2, output: 4 },
-          provider: {
-            body: { speed: "fast" },
-            headers: { "anthropic-beta": "fast-mode-2026-02-01" },
-          },
-        },
-      },
-    },
-  });
-});
-
 test("resolves DeepInfra ByteDance IDs to canonical metadata", () => {
   expect(resolveDeepInfraBaseModel("ByteDance/Seed-2.0-code"))
     .toBe("bytedance-seed/seed-2.0-code");
@@ -3951,31 +3862,6 @@ test("Hyper writes effort levels from lowest to highest", () => {
   });
   expect(buildHyperModel(model, undefined, "zhipuai/glm-5.2").reasoning_options)
     .toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
-});
-
-test("formats reasoning efforts from lowest to highest", () => {
-  const content = formatToml({
-    id: "example/model",
-    name: "Example Model",
-    description: "Example model for sync formatting regression tests",
-    release_date: "2026-01-01",
-    last_updated: "2026-01-01",
-    attachment: false,
-    reasoning: true,
-    reasoning_options: [{
-      type: "effort",
-      values: ["max", "xhigh", "high", "medium", "low", "minimal", "none", "default"],
-    }],
-    tool_call: true,
-    open_weights: false,
-    cost: { input: 1, output: 2 },
-    limit: { context: 1_000, output: 100 },
-    modalities: { input: ["text"], output: ["text"] },
-  });
-
-  expect(content).toContain(
-    'values = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]',
-  );
 });
 
 test("defaults new reasoning models to empty reasoning options", () => {
@@ -5796,9 +5682,6 @@ test("translates Vercel pricing tiers with an implicit zero minimum", () => {
       }],
     },
   });
-  expect(vercel.sameModel?.({
-    cost: { input: 1, output: 6, cache_read: 0.1 },
-  }, synced)).toBe(false);
 });
 
 test("uses verified Vercel output limits over catalog metadata", () => {
@@ -6028,8 +5911,6 @@ test("Vercel sync preserves Liquid d1 as a decision model via its lab metadata",
   });
   expect(translated?.model).not.toHaveProperty("type"); // inherited from lab metadata
   expect(translated?.model).not.toHaveProperty("description"); // don't reintroduce a generic chat description
-  expect(vercel.sameModel?.({ name: "Liquid d1" },
-    { name: "Liquid d1", type: "decision" })).toBe(false);
 });
 
 test("Vercel family inference requires word boundaries", () => {
@@ -6170,7 +6051,6 @@ test("Vercel sync takes catalog reasoning controls over stale authored controls"
     base_model: "alibaba/qwen3.8-max-prime",
     reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high"] }],
   });
-  expect(vercel.sameModel?.({ reasoning_options: [] }, translated!.model)).toBe(false);
 });
 
 test("Vercel catalog budgets and toggles are synced when effort does not include none", () => {
@@ -6589,28 +6469,32 @@ test("skips LLM Gateway base_model factoring when no metadata entry exists", () 
 test("preserves the authored header comment block when rewriting a changed model", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "sync-header-"));
   const modelsDir = path.join(dir, "providers", "example", "models");
+  await mkdir(path.join(dir, "models"));
   await Bun.write(path.join(modelsDir, "example-model.toml"), [
     "# Documented quirk: this route needs a manual note.",
     "# https://example.com/docs (accessed 2026-06-25)",
+    "schema = 2",
     'name = "Example Model"',
     'release_date = "2026-01-01"',
-    'last_updated = "2026-01-01"',
-    "attachment = false",
-    "reasoning = false",
-    "tool_call = true",
     "open_weights = false",
     "",
-    "[cost]",
-    "input = 1",
-    "output = 2",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
     "",
     "[limit]",
     "context = 1_000",
     "output = 100",
     "",
-    "[modalities]",
-    'input = ["text"]',
-    'output = ["text"]',
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
     "",
   ].join("\n"));
 
@@ -6652,7 +6536,7 @@ test("preserves the authored header comment block when rewriting a changed model
     expect(written).toStartWith(
       "# Documented quirk: this route needs a manual note.\n# https://example.com/docs (accessed 2026-06-25)\n",
     );
-    expect(written).toContain("input = 3");
+    expect(written).toContain("[cost.text.input]\nprice = 3");
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
@@ -7749,10 +7633,33 @@ function caseFoldProvider(modelsDir: string, ids: string[]): SyncProvider<string
   };
 }
 
+test("skips a new model that can't be written as v2 and reports it", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-v2-skip-"));
+  const modelsDir = path.join(root, "providers", "v2-skip-test", "models");
+  await mkdir(modelsDir, { recursive: true });
+  await mkdir(path.join(root, "models"));
+  const provider = caseFoldProvider(modelsDir, ["alpha"]);
+  const translateModel = provider.translateModel;
+  provider.translateModel = (id, context) => {
+    const translated = translateModel(id, context) as { id: string; model: SyncedModel };
+    return { ...translated, model: { ...translated.model, interleaved: true } };
+  };
+
+  try {
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 0, updated: 0, deleted: 0 });
+    expect(result.notices).toEqual([expect.stringContaining("Could not write v2 model alpha.toml")]);
+    expect(await Bun.file(path.join(modelsDir, "alpha.toml")).exists()).toBe(false);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("rejects synced model paths that differ only in case", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-case-fold-"));
   const modelsDir = path.join(root, "providers", "case-fold-test", "models");
   await mkdir(modelsDir, { recursive: true });
+  await mkdir(path.join(root, "models"));
 
   try {
     await expect(

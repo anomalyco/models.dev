@@ -19,9 +19,10 @@ test("missing reasoning controls open issues without deleting existing models or
   const modelsDir = path.join(dir, "models");
   const ids = ["deepreinforce/ornith-1.0-9b", "deepreinforce/ornith-1.0-31b"];
   const file = path.join(modelsDir, `${ids[0]}.toml`);
-  const content = '# Keep authored controls\nbase_model = "deepreinforce/ornith-1.0-9b"\nreasoning_options = [{ type = "effort", values = ["high"] }]\n';
+  const content = '# Keep authored controls\nschema = 2\nbase_model = "deepreinforce/ornith-1.0-9b"\n\n[capabilities]\nreasoning = { supported = true, effort = ["high"] }\n';
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, content);
+  await writeFile(path.join(dir, "provider.toml"), 'name = "Test"\nnpm = "ai-gateway-provider"\nenv = []\n');
   const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
   const provider = {
     ...cloudflareAiGateway, modelsDir,
@@ -529,7 +530,7 @@ test("replaces a stale generated base-model mapping", async () => {
   const modelsDir = path.join(providerDir, "models");
   await mkdir(modelsDir);
   const file = path.join(modelsDir, "model.toml");
-  await writeFile(file, 'base_model = "anthropic/claude-opus-4-6"\n');
+  await writeFile(file, 'schema = 2\nbase_model = "anthropic/claude-opus-4-6"\n');
 
   try {
     const provider = {
@@ -559,7 +560,7 @@ test("reconciles authoritative generated headers", async () => {
   const modelsDir = path.join(providerDir, "models");
   await mkdir(modelsDir);
   const file = path.join(modelsDir, "gpt-4.1.toml");
-  await writeFile(file, "# Old note\n\nbase_model = \"openai/gpt-4.1\"\n");
+  await writeFile(file, "# Old note\n\nschema = 2\nbase_model = \"openai/gpt-4.1\"\n");
 
   try {
     const provider = {
@@ -584,7 +585,7 @@ test("reconciles authoritative generated headers", async () => {
     const result = await syncProvider(provider);
 
     expect(result.updated).toBe(1);
-    expect(await readFile(file, "utf8")).toStartWith("# New note\nbase_model");
+    expect(await readFile(file, "utf8")).toStartWith("# New note\nschema = 2\nbase_model");
     expect((await syncProvider(provider)).updated).toBe(0);
   } finally {
     await rm(providerDir, { recursive: true, force: true });
@@ -679,66 +680,6 @@ test("refuses a symlinked models root", async () => {
   } finally {
     await rm(providerDir, { recursive: true, force: true });
     await rm(outsideDir, { recursive: true, force: true });
-  }
-});
-
-test("refuses a symlinked metadata file", async () => {
-  const providersDir = path.join(import.meta.dirname, "..", "..", "..", "providers");
-  const providerDir = await mkdtemp(path.join(providersDir, ".sync-metadata-"));
-  const outsideDir = await mkdtemp(path.join(providersDir, ".sync-metadata-outside-"));
-  const modelsDir = path.join(providerDir, "models");
-  const namespace = `sync-symlink-${path.basename(providerDir).replaceAll(/[^a-z0-9-]/g, "")}`;
-  const metadataDir = path.join(providersDir, "..", "models", namespace);
-  const outsideFile = path.join(outsideDir, "model.toml");
-  await mkdir(modelsDir);
-  await mkdir(metadataDir);
-  await writeFile(outsideFile, "sentinel\n");
-  await symlink(outsideFile, path.join(metadataDir, "model.toml"));
-
-  try {
-    const provider = {
-      ...testSyncProvider(modelsDir, "provider-model"),
-      metadataNamespace: namespace,
-      translateModel(model: { id: string }) {
-        return {
-          id: model.id,
-          model: {
-            name: "Provider symlink test",
-            description: "Provider model used to test safe sync paths",
-            release_date: "2026-01-01",
-            last_updated: "2026-01-01",
-            attachment: false,
-            reasoning: false,
-            tool_call: false,
-            open_weights: false,
-            modalities: { input: ["text"], output: ["text"] },
-            limit: { context: 1_000, output: 100 },
-            cost: { input: 1, output: 2 },
-          },
-          metadata: {
-            id: `${namespace}/model`,
-            model: {
-              name: "Symlink test",
-              description: "Metadata used to test safe sync paths",
-              release_date: "2026-01-01",
-              last_updated: "2026-01-01",
-              attachment: false,
-              reasoning: false,
-              tool_call: false,
-              open_weights: false,
-              modalities: { input: ["text"], output: ["text"] },
-              limit: { context: 1_000, output: 100 },
-            },
-          },
-        };
-      },
-    };
-    await expect(syncProvider(provider)).rejects.toThrow("Refusing to sync through symlink");
-    expect(await readFile(outsideFile, "utf8")).toBe("sentinel\n");
-  } finally {
-    await rm(providerDir, { recursive: true, force: true });
-    await rm(outsideDir, { recursive: true, force: true });
-    await rm(metadataDir, { recursive: true, force: true });
   }
 });
 
