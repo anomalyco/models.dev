@@ -181,12 +181,16 @@ export function buildBasetenModel(
         tiers: existing?.cost?.tiers,
       }
     : existing?.cost;
+  // Explicit provider limits are serving overrides and sync pins. Baseten's
+  // catalog has returned a model's context window as its completion limit.
+  const outputLimit = authored?.limit?.output ?? model.max_completion_tokens;
+  if (outputLimit === undefined) {
+    throw new Error(`Baseten model ${model.id} has incomplete token limits required for sync`);
+  }
   const limit = {
     context: model.context_length,
     input: existing?.limit?.input,
-    // Explicit provider limits are serving overrides and sync pins. Baseten's
-    // catalog has returned a model's context window as its completion limit.
-    output: authored?.limit?.output ?? model.max_completion_tokens,
+    output: outputLimit,
   };
   // Model facts (family, dates, knowledge, open weights) belong to the lab file
   // that a base_model entry inherits; only standalone definitions carry them,
