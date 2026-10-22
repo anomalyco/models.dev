@@ -189,6 +189,16 @@ export const cloudflareAiGateway = {
   modelsDir: "providers/cloudflare-ai-gateway/models",
   preserveDescriptions: false,
   authoritativeHeaders: true,
+  sourceID(source) {
+    return source.catalog.model_id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} new catalog models were not created because they have no lab file and no curated base_model; map or skip them in curation.toml.`,
+      `Skipped catalog IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+    ];
+  },
   async fetchModels() {
     const catalog = CatalogEntry.array().parse(await loadCatalog());
     const catalogIDs = new Set(catalog.map((model) => model.model_id));
@@ -238,7 +248,12 @@ export const cloudflareAiGateway = {
   translateModel(source, context) {
     const id = source.catalog.model_id;
     const curated = curation.models[id] ?? {};
-    if (source.catalog.task !== TEXT_GENERATION) {
+    const isText = source.catalog.task === TEXT_GENERATION;
+    // A new model with no lab file is reported in the PR instead of failing
+    // the whole sync; an existing file still fails loudly if its lab is gone.
+    const base = curated.base_model ?? (isText ? resolveBaseModel(id) : resolveMediaBaseModel(id));
+    if (base === undefined && context.authored(id) === undefined) return undefined;
+    if (!isText) {
       const catalog = source.catalog as MediaCatalogModel;
       const type = MEDIA_TASKS[catalog.task]!;
       const { doc, unpriced } = buildCloudflareAiGatewayMediaModel(catalog, source.schemaInput, curated);

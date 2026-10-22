@@ -761,6 +761,14 @@ test("maps media catalog ids to labs of the task's type", () => {
   expect(() => build("example/unknown-voice", "Text-to-Speech")).toThrow("no lab file and no curated base_model");
 });
 
+test("skips a new catalog model with no lab file instead of failing the sync", () => {
+  const translate = (model_id: string, authored?: object) => cloudflareAiGateway.translateModel({
+    catalog: { model_id, task: "Text Generation" as const, provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }) },
+  }, { authored: () => authored as never, existing: () => undefined });
+  expect(translate("example/unknown-model")).toBeUndefined();
+  expect(() => translate("example/unknown-model", { base_model: "example/gone" })).toThrow("no lab file and no curated base_model");
+});
+
 test("reads route modalities from the media request schema", () => {
   const lab = { modalities: { input: ["text"], output: ["audio/wav", "audio/mpeg", "audio/ogg", "audio/flac"] } };
   // Format names map to the lab's own MIME spelling (Ogg Opus is audio/ogg here).

@@ -473,6 +473,10 @@ note = [
 ]
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
+# Catalog id is lowercase with dots; the lab file is MiniMax-M3.1-Flash.
+[models."minimax/m3.1-flash"]
+base_model = "minimax/MiniMax-M3.1-Flash"
+
 # Ember-1 is Fireworks' Kimi K3 derivative, served on the Fireworks route. The catalog
 # schema advertises a generic none|low|medium|high|xhigh|max enum, but Fireworks' K3 tiers
 # promote medium -> high and xhigh -> max, so the distinct levels are none|low|high|max
