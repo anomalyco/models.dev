@@ -1,0 +1,27 @@
+# Ultramarine 1 Flash by Paper Instruments.
+#   Post-trained on GLM-5.3 Flash for knowledge work. API available, weights promised.
+# Announcement: https://www.paperinstruments.com/blog/ultramarine
+schema = 2
+name = "Ultramarine 1 Flash"
+description = "Agentic model for professional knowledge work in finance, law, consulting and operations"
+family = "ultramarine"
+open_weights = false
+release_date = "2026-10-14"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[[links]]
+label = "Technical report"
+url = "https://www.paperinstruments.com/blog/ultramarine"
+type = "announcement"

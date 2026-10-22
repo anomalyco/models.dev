@@ -1,0 +1,33 @@
+# Indra OCR by Datalab.
+#   ~1M parameter OCR model running on CPU, open weights.
+# Announcement: https://www.datalab.to/blog/indra-ocr
+schema = 2
+name = "Indra OCR"
+description = "Compact 1M-parameter OCR model that runs at high speed on CPU"
+family = "indra"
+open_weights = true
+release_date = "2026-10-13"
+type = "transcription"
+license = "OpenRAIL"
+
+[modalities]
+input = ["image", "pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/datalab-to/indra-ocr"
+
+[[links]]
+label = "Blog post"
+url = "https://www.datalab.to/blog/indra-ocr"
+type = "announcement"

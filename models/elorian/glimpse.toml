@@ -1,0 +1,27 @@
+# Elorian Glimpse. Visual reasoning model.
+#   Text, image, video in; text out. Research preview, closed weights.
+# Announcement: https://techcrunch.com/2026/10/16/elorians-first-ai-model-wants-to-reason-with-images-not-just-about-them/
+schema = 2
+name = "Glimpse"
+description = "Visual thinking model that re-inspects images and video during reasoning"
+family = "glimpse"
+open_weights = false
+release_date = "2026-10-16"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 262_144
+output = 256_000
+
+[[links]]
+label = "Models page"
+url = "https://elorian.ai/models.html"
+type = "announcement"

@@ -1,0 +1,35 @@
+# Spark-X2.6-4B. Model card: https://huggingface.co/XHToken/Spark-X2.6-4B
+#   Dense ~4.4B parameter model for on-device agents; text in, text out;
+#   Native 1,048,576-token context; Apache 2.0. Controllable thinking (none/low/high).
+# Announcement: https://x.com/SparkLLM/status/2112614036227408363
+schema = 2
+name = "Spark-X2.6-4B"
+description = "Open-weight 4.4B dense model for on-device agents with 1M context and controllable thinking"
+family = "spark"
+open_weights = true
+release_date = "2026-10-20"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XHToken/Spark-X2.6-4B"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/XHToken/Spark-X2.6-4B"
+type = "model_card"
