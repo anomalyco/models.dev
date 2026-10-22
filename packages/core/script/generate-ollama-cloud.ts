@@ -84,7 +84,7 @@ const OllamaModelDetails = z.object({
     quantization_level: z.string(),
   }),
   model_info: z.record(z.union([z.string(), z.number()])),
-  capabilities: z.array(z.enum(["thinking", "completion", "tools", "vision"])),
+  capabilities: z.array(z.string()),
   thinking: z.object({ values: z.array(z.union([z.boolean(), z.string()])) }).nullish(),
 });
 
@@ -168,6 +168,12 @@ let skipped = 0;
 let needsControls = 0;
 for (const { name, data } of modelsData) {
   const fileName = modelFileName(name);
+  // Only chat models are generated; others (e.g. the decision model clef) are hand-authored.
+  if (!data.capabilities.includes("completion")) {
+    console.log(`Skipped (not a chat model: ${data.capabilities.join(", ")}): ${fileName}`);
+    skipped++;
+    continue;
+  }
   const filePath = path.join(modelsDir, fileName);
 
   let existingText: string | null = null;
