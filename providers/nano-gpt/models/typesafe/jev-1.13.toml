@@ -13,7 +13,7 @@ context = 32_000
 input = 32_000
 
 [api.systemone]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
 
 [api.decisions]
 sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
