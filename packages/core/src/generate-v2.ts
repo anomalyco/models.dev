@@ -109,7 +109,10 @@ async function loadProviderV2(
     const model = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
     const tables = isSchemaV2(rawModel) ? ((rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined) : undefined;
     if (tables !== undefined) model.api = toModelApis(tables, resolved, v1Provider, opencodeai);
-    else if (opencodeai !== undefined) model.api = withOpencodePackage(model.api, opencodeai);
+    else if (opencodeai !== undefined) {
+      const npm = resolved.provider?.npm;
+      model.api = withOpencodePackage(model.api, npm === undefined || npm === v1Provider.npm ? opencodeai : "none");
+    }
     models[modelID] = model;
   }
 
@@ -540,9 +543,11 @@ export function resolveProtocol(
 
 // A model's own `[api.<protocol>]` tables, in order. Whatever a table leaves out
 // comes from the provider's default API: `base_url` from its `api` (or the SDK's
-// default URL), `sdk.aisdk` from its `npm`, `sdk.opencodeai` from its
-// `opencodeai`. `"none"` stops a package from being filled in. Until providers
-// author `opencodeai`, the package is guessed as for the default API.
+// default URL), `sdk.aisdk` from its `npm`, and `sdk.opencodeai` from its
+// `opencodeai` only when the table takes the provider's `npm` too: a table
+// naming another `aisdk` names its own `opencodeai` or gets none. `"none"`
+// stops a package from being filled in. Until providers author `opencodeai`,
+// the package is guessed as for the default API.
 function toModelApis(
   tables: Record<string, AuthoredApiEntryV2>,
   model: Model,
@@ -557,7 +562,13 @@ function toModelApis(
       const shape = protocol === "responses" ? "responses" : protocol === "chat-completions" ? "completions" : undefined;
       const sdk = {
         aisdk,
-        opencodeai: table.sdk?.opencodeai ?? opencodeai ?? resolveOpencodePackage(model, provider, npm, shape),
+        opencodeai:
+          table.sdk?.opencodeai ??
+          (opencodeai === undefined
+            ? resolveOpencodePackage(model, provider, npm, shape)
+            : aisdk === provider.npm
+              ? opencodeai
+              : undefined),
       };
       const entry: ApiEntryV2 = {
         base_url,
@@ -572,6 +583,8 @@ function toModelApis(
 
 // A model without its own tables uses the provider's default API, so the
 // provider's `opencodeai` replaces the guessed package (`"none"` removes it).
+// A model naming another AI SDK package can't name an OpenCode one, so it gets
+// none.
 function withOpencodePackage(api: ApiV2, opencodeai: string): ApiV2 {
   return Object.fromEntries(
     Object.entries(api).map(([protocol, entry]) => {
