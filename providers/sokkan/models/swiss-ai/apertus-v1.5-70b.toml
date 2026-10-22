@@ -1,7 +1,8 @@
 # Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
 #   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
-# Zone: CH. Reasoning: the lab's thinking mode is opt-in (chat-template flag) and the gateway documents no field
-#   to enable it, so the model is served as non-reasoning on this host.
+# Zone: CH. Reasoning: the lab's thinking mode is opt-in (chat-template flag) and cannot be enabled on this host.
+# Live 2026-10-22 (max_tokens 64, one call per variant): omitted, reasoning_effort = "high" and
+#   chat_template_kwargs.enable_thinking = true all return a 2-token answer with no reasoning field.
 schema = 2
 base_model = "swiss-ai/apertus-v1.5-70b"
 

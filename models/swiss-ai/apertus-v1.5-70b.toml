@@ -6,7 +6,8 @@
 #   family with multimodal input (image + audio) and an optional, opt-in thinking mode (`enable_thinking=True` in
 #   the chat template). config.json max_position_embeddings = 262144.
 # Input modalities: the model card names image and audio input without listing MIME types, so generic types are used.
-# No vendor-published max output tokens; 32768 used as a conservative ceiling (hosts serve 8192-16384).
+# Output: no separate generation cap is published (generation_config.json sets no max_new_tokens/max_length),
+#   so output = context.
 # Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
 schema = 2
 name = "Apertus v1.5 70B"
@@ -29,7 +30,7 @@ top_k = true
 
 [limit]
 context = 262_144
-output = 32_768
+output = 262_144
 
 [[weights]]
 label = "Hugging Face"

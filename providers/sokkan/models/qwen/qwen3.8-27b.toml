@@ -1,13 +1,15 @@
 # Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
 #   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
-# Reasoning: the gateway documents no reasoning toggle, effort or budget field, so no caller-side
-#   control is declared here (reasoning_options = [] in v1 terms).
+# Effort: reasoning_effort = none|minimal|low|medium|high; none disables thinking (no separate toggle).
+# Live 2026-10-22 (max_tokens 64, one call per value): "none" -> 0 reasoning_tokens, answer in 2 tokens; "medium" ->
+#   64 reasoning_tokens; "bogus" -> HTTP 422 listing the accepted enum. The Qwen-native enable_thinking,
+#   chat_template_kwargs.enable_thinking and thinking_budget are rejected (HTTP 400), so no toggle or budget.
 # Zone: EU. Tools and structured outputs per the gateway's model catalogue.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
 
 [limit]

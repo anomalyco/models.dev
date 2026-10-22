@@ -1,7 +1,10 @@
 # Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
 #   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
-# Reasoning: the gateway documents no reasoning toggle, effort or budget field, so no caller-side
-#   control is declared here (reasoning_options = [] in v1 terms).
+# Effort: reasoning_effort = none|low|medium|high; none disables thinking (no separate toggle).
+# Live 2026-10-22 (max_tokens 64, one call per value): "none" -> 0 reasoning_tokens, answer in 2 tokens; low/medium/high
+#   and omitted -> 64 reasoning_tokens; "bogus" -> HTTP 400 literal_error on reasoning_effort. The Qwen-native
+#   enable_thinking, chat_template_kwargs.enable_thinking and thinking_budget are accepted but ignored (still 64
+#   reasoning_tokens), so no toggle or budget is declared.
 # Zone: EU, pay-per-token. The bare id "qwen/qwen3.6-35b-a3b" on the same endpoint is a committed-throughput
 #   offer (availability "committed", 403 without an active weekly commitment) and is deliberately not listed.
 # The model thinks by default on this route: leave room in max_tokens (>= 1024) for tool calls or JSON output.
@@ -10,7 +13,7 @@ base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B-A3B (EU)"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [limit]
