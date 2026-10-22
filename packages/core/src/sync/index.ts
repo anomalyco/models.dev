@@ -690,7 +690,7 @@ function setPath(doc: Record<string, unknown>, key: string, value: unknown) {
 }
 
 // A new v2 file puts `provider` and `interleaved` fields under the model's API
-// protocol, resolved from provider.toml the same way migrate-v2 does.
+// protocol, resolved from provider.toml.
 async function newModelProtocol(modelsDir: string, model: z.infer<typeof SyncedAuthoredModel>) {
   const file = Bun.file(path.join(path.dirname(modelsDir), "provider.toml"));
   if (!(await file.exists())) return undefined;
