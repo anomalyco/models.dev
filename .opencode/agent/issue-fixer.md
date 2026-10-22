@@ -25,15 +25,15 @@ Do not make code, schema, UI, documentation, or workflow changes. If the issue i
 
 When you do make a fix:
 
-- Follow `AGENTS.md` exactly (lab vs provider, **When to use `base_model`**, **Model fields**, **Reasoning options**, override-only hosts).
+- Follow `AGENTS.md` exactly (lab vs provider, **When to use `base_model`**, **Reasoning controls**, **Cost**, override-only hosts). Every model file is v2 (`schema = 2`).
 - Prefer the smallest correct change.
 - Verify every changed factual value against authoritative sources. Prefer first-party provider documentation, pricing pages, API references, model cards, or live provider catalog responses. Treat the issue as a lead, not sufficient verification by itself.
 - Do not broaden the issue's scope unless the additional changes are required for internal consistency and each one is independently verified.
 - Edit only `models/` and `providers/` TOML files.
 - If the host did not create the model: identify the lab model, **add** `models/<lab>/<model>.toml` when missing, then use `base_model`. Provider files are override-only — never restate identical description/modalities/structured_output/etc. Full inline only for first-party lab hosts or unique-to-host aliases per `AGENTS.md`.
-- Reasoning: classify first-party lab vs multi-model relay (**not** by npm). Copy the **lab/peer option set** for that model — do not force `low`/`medium`/`high` onto DeepSeek-style `high`/`max` (or other native sets). On relays, do not use `[]` from uncertainty when lab/peers have controls. No `toggle` beside effort that includes `none`. `toggle` + graded effort without `none` OK with a **leading top-of-file** wire comment. `budget_tokens` only per `AGENTS.md`. New lab `models/` files for inheritance must include dates, capability booleans, `limit`, and `modalities`.
-- Preserve provider-specific fields in provider TOMLs (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`).
-- Costs are USD per million tokens; convert other currencies and note rate/date in a leading comment. Context bands use `[[cost.tiers]]`, never authored `context_over_200k`.
+- Reasoning: classify first-party lab vs multi-model relay (**not** by npm). Copy the **lab/peer option set** for that model — do not force `low`/`medium`/`high` onto DeepSeek-style `low`/`high`/`max` (or other native sets). On relays, do not leave out `capabilities.reasoning` controls from uncertainty when lab/peers have controls. No `toggle` beside effort that includes `none`. `toggle` + graded effort without `none` OK with a **leading top-of-file** wire comment. `budget` only per `AGENTS.md`. New lab `models/` files for inheritance must be complete: `release_date`, `open_weights`, `[capabilities]` (`tools`, `reasoning.supported`, `temperature`, `top_p`, `top_k`), `[limit]`, and `[modalities]`.
+- Preserve provider-specific fields in provider TOMLs (`[cost.*]`, `capabilities.reasoning` controls, cache, `status`, `[api.*]`, `experimental`).
+- Costs are USD per million tokens; convert other currencies and note rate/date in a leading comment. Context bands use `[[cost.text.input.overrides]]` / `[[cost.text.output.overrides]]` with `when = { context = { gt = … } }`.
 - Put durable source URLs in a leading TOML comment block when adding or changing factual data. Never put source comments between TOML sections because sync serialization removes them.
 - Do not run shell commands or use Bash. The workflow handles commits and pull request creation after you finish. Do not claim validation unless you actually performed it.
 
