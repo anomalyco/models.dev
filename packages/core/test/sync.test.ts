@@ -7412,9 +7412,11 @@ test("syncs OpenRouter decision models with no supported parameters as decision 
     cost: { input: 0.15, output: 0 },
     limit: { context: 65_536, output: 0 },
   });
+  // v1 reads the first API's package (systemone's) as the provider npm.
+  expect(translated?.model.provider).toEqual({ npm: "@ai-sdk/typesafe-ai" });
   // Both decision endpoints, each with its own packages.
   expect(translated?.v2Set?.api).toEqual({
-    systemone: { sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/openrouter" } },
+    systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" } },
     decisions: { base_url: "https://openrouter.ai/api/alpha", sdk: { opencodeai: "none" } },
   });
   const chat = openrouter.translateModel(openRouterModel(), {

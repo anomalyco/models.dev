@@ -246,14 +246,19 @@ export const openrouter = {
       const authored = context.authored(model.id);
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
-    const translated = buildOpenRouterModel(model, context.existing(model.id));
+    const built = buildOpenRouterModel(model, context.existing(model.id));
+    // The decision model's first API (systemone) names its own AI SDK package,
+    // which v1 reads as the model's provider npm.
+    const translated = isDecisionModel(model)
+      ? { ...built, provider: { npm: DECISION_APIS.systemone.sdk.aisdk } }
+      : built;
     // Without a catalog price the file's cost is kept as is.
     const catalog = price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined
       ? undefined
       : catalogV2Set(model, context.v2?.(model.id));
     const api = isDecisionModel(model)
       ? DECISION_APIS
-      : typeof translated.base_model === "string" && rawLabModel(translated.base_model)?.type === "image"
+      : "base_model" in built && typeof built.base_model === "string" && rawLabModel(built.base_model)?.type === "image"
         ? IMAGE_CHAT_APIS
         : undefined;
     const v2Set = api === undefined ? catalog?.v2Set : { ...catalog?.v2Set, api: structuredClone(api) };
@@ -283,12 +288,13 @@ function isDecisionModel(model: OpenRouterModel) {
 }
 
 // Decision models answer POST /api/v1/systemone, which OpenCode's openrouter
-// entry calls (experimental.evaluation), and POST /api/alpha/decisions, which
+// entry (experimental.evaluation) and @ai-sdk/typesafe-ai's decisionModel (with
+// this baseURL) call, and POST /api/alpha/decisions, which
 // the OpenRouter AI SDK provider's evaluationModel calls.
 // https://openrouter.ai/docs/api/api-reference/systemone/submit-a-system-one-request
 // https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request
 const DECISION_APIS = {
-  systemone: { sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/openrouter" } },
+  systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" } },
   decisions: { base_url: "https://openrouter.ai/api/alpha", sdk: { opencodeai: "none" } },
 };
 // Chat models whose lab is an image model are also served by the /images router
