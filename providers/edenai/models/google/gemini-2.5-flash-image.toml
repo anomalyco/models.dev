@@ -11,7 +11,6 @@ input = ["audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audi
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-reasoning = { supported = true }
 structured_output = true
 
 [api.images]
@@ -23,7 +22,6 @@ cache = { read = 0.03, write = 0.083333 }
 
 [cost.text.output]
 price = 2.5
-reasoning = 2.5
 
 [cost.audio.input]
 price = 1

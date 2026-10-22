@@ -9,9 +9,6 @@ base_model = "google/gemini-2.5-flash-image"
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
 output = ["image/jpeg", "image/png", "image/webp"]
 
-[capabilities]
-reasoning = { supported = true }
-
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
 sdk = { opencodeai = "none" }

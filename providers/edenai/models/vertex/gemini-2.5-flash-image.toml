@@ -4,7 +4,6 @@ base_model = "google/gemini-2.5-flash-image"
 name = "Nano Banana (Vertex AI)"
 
 [capabilities]
-reasoning = { supported = true }
 structured_output = true
 
 [api.images]
@@ -16,7 +15,6 @@ cache = { read = 0.03, write = 0.083333 }
 
 [cost.text.output]
 price = 2.5
-reasoning = 2.5
 
 [cost.audio.input]
 price = 1
