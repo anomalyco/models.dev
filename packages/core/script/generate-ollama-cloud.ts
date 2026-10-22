@@ -14,9 +14,12 @@
 import { z } from "zod";
 import path from "node:path";
 
+import { formatModelV2, patchModelV2, providerModelToV2, resolvedFlags } from "../src/model-file-v2";
+import { modelV2ToV1, readLabModel } from "../src/translate";
 import type { Model } from "../src/schema";
 import type { ModelFamily } from "../src/family";
 
+const labsDir = path.join(import.meta.dirname, "..", "..", "..", "models");
 const modelsDir = path.join(
   import.meta.dirname,
   "..",
@@ -88,33 +91,14 @@ const OllamaModelDetails = z.object({
 
 type OllamaModelDetails = z.infer<typeof OllamaModelDetails>;
 
-function generateToml(modelName: string, model: OllamaModel): string {
+function leadingComments(text: string): string {
   const lines: string[] = [];
-
-  lines.push(`name = "${modelName}"`);
-  lines.push(`family = "${model.family}"`);
-  lines.push(`attachment = ${model.attachment}`);
-  lines.push(`reasoning = ${model.reasoning}`);
-  lines.push(`tool_call = ${model.tool_call}`);
-  if (model.release_date) {
-    lines.push(`release_date = "${model.release_date}"`);
+  for (const line of text.split("\n")) {
+    if (line.trim() !== "" && !line.trim().startsWith("#")) break;
+    lines.push(line);
   }
-  if (model.knowledge) {
-    lines.push(`knowledge = "${model.knowledge}"`);
-  }
-  lines.push(`last_updated = "${model.last_updated}"`);
-  lines.push(`open_weights = ${model.open_weights}`);
-  lines.push("");
-  lines.push("[limit]");
-  lines.push(`context = ${model.limit.context}`);
-  if (model.limit.output !== undefined) {
-    lines.push(`output = ${model.limit.output}`);
-  }
-  lines.push("");
-  lines.push("[modalities]");
-  lines.push(`input = ${JSON.stringify(model.modalities.input)}`);
-  lines.push(`output = ${JSON.stringify(model.modalities.output)}`);
-  return lines.join("\n") + "\n";
+  while (lines.length > 0 && lines.at(-1)!.trim() === "") lines.pop();
+  return lines.length > 0 ? `${lines.join("\n")}\n` : "";
 }
 
 const tagsResponse = await fetch("https://ollama.com/api/tags");
@@ -186,13 +170,27 @@ for (const { name, data } of modelsData) {
   const fileName = modelFileName(name);
   const filePath = path.join(modelsDir, fileName);
 
-  let existingData: Omit<Model, "id"> | null = null;
+  let existingText: string | null = null;
   try {
-    const existingToml = await Bun.file(filePath).text();
-    existingData = Bun.TOML.parse(existingToml) as Omit<Model, "id">;
+    existingText = await Bun.file(filePath).text();
   } catch {
     // File doesn't exist
   }
+
+  const doc = existingText === null ? null : (Bun.TOML.parse(existingText) as Record<string, any>);
+  const { id: _id, ...before }: Record<string, any> =
+    doc === null ? {} : modelV2ToV1({ ...doc, id: name });
+  const lab: Record<string, any> =
+    doc?.base_model === undefined
+      ? {}
+      : readLabModel(path.join(labsDir, `${doc.base_model}.toml`), doc.base_model);
+  const existingData = doc === null
+    ? null
+    : ({
+        ...lab,
+        ...before,
+        limit: { ...lab.limit, ...before.limit },
+      } as Omit<Model, "id">);
 
   const family = existingData?.family ?? (data.details.family as ModelFamily);
   const contextLength =
@@ -231,7 +229,27 @@ for (const { name, data } of modelsData) {
     }
   }
 
-  await Bun.write(filePath, generateToml(name, ollamaModel));
+  let content: string;
+  if (doc === null) {
+    content = formatModelV2(providerModelToV2(ollamaModel));
+  } else {
+    const after: Record<string, any> = { ...before };
+    const existing = normalizeForComparison(existingData!);
+    const incoming = normalizeForComparison(ollamaModel);
+    for (const key of ["name", "reasoning", "tool_call", "knowledge", "open_weights", "modalities"] as const) {
+      if (!Bun.deepEquals(existing[key], incoming[key])) after[key] = incoming[key];
+    }
+    if (existing.limit.context !== incoming.limit.context) {
+      after.limit = { ...after.limit, context: incoming.limit.context };
+    }
+    if (after.last_updated !== undefined) after.last_updated = ollamaModel.last_updated;
+    const next = patchModelV2(doc, before, after, {
+      before: resolvedFlags(before, lab),
+      after: resolvedFlags(after, lab),
+    });
+    content = leadingComments(existingText!) + formatModelV2(next);
+  }
+  await Bun.write(filePath, content);
   console.log(`Created: ${fileName}`);
   created++;
 }
