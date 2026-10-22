@@ -16,7 +16,7 @@ import path from "node:path";
 
 import { formatModelV2, patchModelV2, providerModelToV2, resolvedFlags } from "../src/model-file-v2";
 import { modelV2ToV1, readLabModel } from "../src/translate";
-import type { Model } from "../src/schema";
+import { ReasoningOption, type Model } from "../src/schema";
 import type { ModelFamily } from "../src/family";
 
 const labsDir = path.join(import.meta.dirname, "..", "..", "..", "models");
@@ -41,7 +41,6 @@ type OllamaModel = Omit<Model, "id" | "description" | "release_date" | "limit"> 
 };
 
 type ComparableModel = Pick<Model,
-  | "name"
   | "attachment"
   | "reasoning"
   | "tool_call"
@@ -54,7 +53,6 @@ type ComparableModel = Pick<Model,
 
 function normalizeForComparison(model: OllamaModel | Omit<Model, "id">): ComparableModel {
   return {
-    name: model.name,
     attachment: model.attachment,
     reasoning: model.reasoning,
     tool_call: model.tool_call,
@@ -87,6 +85,7 @@ const OllamaModelDetails = z.object({
   }),
   model_info: z.record(z.union([z.string(), z.number()])),
   capabilities: z.array(z.enum(["thinking", "completion", "tools", "vision"])),
+  thinking: z.object({ values: z.array(z.union([z.boolean(), z.string()])) }).nullish(),
 });
 
 type OllamaModelDetails = z.infer<typeof OllamaModelDetails>;
@@ -166,6 +165,7 @@ for (const existingName of existingModelNames) {
 
 let created = 0;
 let skipped = 0;
+let needsControls = 0;
 for (const { name, data } of modelsData) {
   const fileName = modelFileName(name);
   const filePath = path.join(modelsDir, fileName);
@@ -218,29 +218,36 @@ for (const { name, data } of modelsData) {
     },
   };
 
-  if (existingData) {
-    const normalizedExisting = normalizeForComparison(existingData);
-    const normalizedIncoming = normalizeForComparison(ollamaModel);
-
-    if (Bun.deepEquals(normalizedExisting, normalizedIncoming)) {
-      console.log(`Skipped (no changes): ${fileName}`);
-      skipped++;
-      continue;
-    }
-  }
-
   let content: string;
   if (doc === null) {
+    if (ollamaModel.reasoning) {
+      const values = data.thinking?.values;
+      if (values === undefined) {
+        console.warn(`Needs reasoning controls (no thinking values in /api/show), not written: ${fileName}`);
+        needsControls++;
+        continue;
+      }
+      const effort = values.filter((value): value is string => typeof value === "string");
+      ollamaModel.reasoning_options = [
+        ...(values.includes(false) ? [{ type: "toggle" as const }] : []),
+        ...(effort.length > 0 ? [{ type: "effort" as const, values: effort }] : []),
+      ].map((option) => ReasoningOption.parse(option));
+    }
     content = formatModelV2(providerModelToV2(ollamaModel));
   } else {
     const after: Record<string, any> = { ...before };
     const existing = normalizeForComparison(existingData!);
     const incoming = normalizeForComparison(ollamaModel);
-    for (const key of ["name", "reasoning", "tool_call", "knowledge", "open_weights", "modalities"] as const) {
+    for (const key of ["reasoning", "tool_call", "knowledge", "open_weights", "modalities"] as const) {
       if (!Bun.deepEquals(existing[key], incoming[key])) after[key] = incoming[key];
     }
     if (existing.limit.context !== incoming.limit.context) {
       after.limit = { ...after.limit, context: incoming.limit.context };
+    }
+    if (Bun.deepEquals(after, before)) {
+      console.log(`Skipped (no changes): ${fileName}`);
+      skipped++;
+      continue;
     }
     if (after.last_updated !== undefined) after.last_updated = ollamaModel.last_updated;
     const next = patchModelV2(doc, before, after, {
@@ -254,4 +261,6 @@ for (const { name, data } of modelsData) {
   created++;
 }
 
-console.log(`\nDone. Created: ${created}, Skipped: ${skipped}, Deleted: ${deleted}`);
+console.log(
+  `\nDone. Created: ${created}, Skipped: ${skipped}, Deleted: ${deleted}, Needs reasoning controls: ${needsControls}`
+);
