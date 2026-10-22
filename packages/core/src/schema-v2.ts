@@ -448,6 +448,12 @@ export const KnownUtcDayV2 = z.enum(UtcDayV2Values);
 export const UtcDayV2 = openEnum(UtcDayV2Values);
 export type UtcDayV2 = z.infer<typeof UtcDayV2>;
 
+export const SearchContextSizeV2Values = ["low", "medium", "high"] as const;
+
+export const KnownSearchContextSizeV2 = z.enum(SearchContextSizeV2Values);
+export const SearchContextSizeV2 = openEnum(SearchContextSizeV2Values);
+export type SearchContextSizeV2 = z.infer<typeof SearchContextSizeV2>;
+
 const PriceV2 = z.number().min(0, "Price cannot be negative");
 
 const CostConditionValueV2 = z.union([z.string(), z.number(), z.boolean()]);
@@ -495,6 +501,7 @@ export const CostConditionKeyV2Values = [
   "input_video",
   "fps",
   "steps",
+  "search_context_size",
 ] as const;
 
 export const KnownCostConditionKeyV2 = z.enum(CostConditionKeyV2Values);
@@ -523,6 +530,7 @@ const KnownCostConditionsV2 = z
     input_video: CostConditionV2,
     fps: CostConditionV2,
     steps: CostConditionV2,
+    search_context_size: choiceCondition(SearchContextSizeV2),
   } satisfies Record<(typeof CostConditionKeyV2Values)[number], z.ZodTypeAny>)
   .partial();
 
@@ -614,6 +622,26 @@ export const ModalityCostV2 = z
 
 export type ModalityCostV2 = z.infer<typeof ModalityCostV2>;
 
+const WebSearchPricesV2 = z
+  .object({
+    price: PriceV2,
+  })
+  .strict();
+
+// USD per 1,000 web searches (or search requests, as the host bills them).
+export const WebSearchCostV2 = WebSearchPricesV2.extend({
+  overrides: z
+    .array(
+      z
+        .object({ when: CostWhenV2 })
+        .extend(WebSearchPricesV2.partial().shape)
+        .strict(),
+    )
+    .optional(),
+}).strict();
+
+export type WebSearchCostV2 = z.infer<typeof WebSearchCostV2>;
+
 export type CostFactorV2 = number | { [key: string]: CostFactorV2 };
 
 export const CostFactorV2: z.ZodType<CostFactorV2> = z.lazy(() =>
@@ -640,6 +668,7 @@ export const CostV2 = z
     image: ModalityCostV2.optional(),
     audio: ModalityCostV2.optional(),
     video: ModalityCostV2.optional(),
+    web_search: WebSearchCostV2.optional(),
     multipliers: z.array(CostMultiplierV2).optional(),
   })
   .strict();

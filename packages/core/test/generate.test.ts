@@ -449,6 +449,56 @@ price = 2
       expect(JSON.stringify(providersV2)).not.toContain("legacy_shape");
     });
   });
+
+  test("web search prices are published in v2 and never in v1", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        `schema = 2
+name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
+open_weights = true
+release_date = "2026-01-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+
+[limit]
+context = 400_000
+output = 128_000
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
+
+[cost.web_search]
+price = 10
+
+[[cost.web_search.overrides]]
+when = { search_context_size = { equals = "high" } }
+price = 25
+`,
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.provider?.models.model?.cost).toEqual({ input: 1, output: 2 });
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(providersV2.provider?.models.model?.cost?.web_search).toEqual({
+        price: 10,
+        overrides: [{ when: { search_context_size: { equals: "high" } }, price: 25 }],
+      });
+    });
+  });
 });
 
 describe("model API tables", () => {

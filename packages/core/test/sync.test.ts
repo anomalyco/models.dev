@@ -2680,7 +2680,7 @@ test("OpenRouter overrides keep catalog order and skip entries with unknown cond
         { utc_days: ["saturday", "sunday"], min_prompt_tokens: 200_000, prompt: "0.000002" },
         { region: "eu", prompt: "0.000003" },
         { utc_start: 100, prompt: "0.000001" },
-        // A per-call price is a price key, not an unknown condition.
+        // A web search price is a price key, not an unknown condition.
         { utc_days: ["monday"], prompt: "0.000003", web_search: "0.02" },
       ],
     },
@@ -2696,8 +2696,9 @@ test("OpenRouter overrides keep catalog order and skip entries with unknown cond
   expect(cost.notices).toEqual([
     'lab/model: overrides not synced: skipped override {"region":"eu","prompt":"0.000003"}: unknown fields region',
     'lab/model: overrides not synced: skipped override {"utc_start":100,"prompt":"0.000001"}: only one of utc_start and utc_end',
-    "lab/model: web_search not synced: v2 has no per-call price",
+    "lab/model: overrides not synced: an override prices web_search with no base price",
   ]);
+  expect(cost.webSearch).toBeUndefined();
 });
 
 test("OpenRouter 1h cache writes take the file's cache TTLs", () => {
@@ -2718,27 +2719,29 @@ test("OpenRouter 1h cache writes take the file's cache TTLs", () => {
     { when: { context: { gt: 100_000 } }, price: 0.5, cache: { read: 0.05, write: { "5m": 0.625, "1h": 1 } } },
   ]);
   expect(translated.v2Set).not.toHaveProperty("cost.fees");
-  expect(translated.notices).toEqual(["anthropic/claude-haiku-5.5: web_search not synced: v2 has no per-call price"]);
+  // $0.01 per search is $10 per 1,000.
+  expect(translated.v2Set["cost.web_search"]).toEqual({ price: 10 });
+  expect(translated.notices).toEqual([]);
 
   // Without the TTLs in the file, the 1h prices have no label.
   const unlabeled = catalogCost(openRouterClaudeModel(), {});
   expect(unlabeled.write).toBeUndefined();
   expect(unlabeled.overrides.input[0]).toMatchObject({ cache: { write: 0.625 } });
   expect(unlabeled.notices).toEqual([
-    "anthropic/claude-haiku-5.5: web_search not synced: v2 has no per-call price",
     "anthropic/claude-haiku-5.5: input_cache_write_1h not synced: the file's cache capability doesn't list a default and a 1h TTL",
   ]);
 });
 
-test("OpenRouter image and reasoning prices map to v2; audio and per-call prices are reported", () => {
+test("OpenRouter image, reasoning and web search prices map to v2; audio and per-call prices are reported", () => {
   const cost = catalogCost(openRouterGeminiModel());
 
   // Per token, like the text prices.
   expect(cost.image).toEqual({ input: { price: 0.3 }, output: { price: 60 } });
   expect(cost).not.toHaveProperty("fees");
+  // $0.014 per search, without float noise.
+  expect(cost.webSearch).toEqual({ price: 14 });
   expect(cost.notices).toEqual([
     "google/gemini-2.5-flash: audio, input_audio_cache not synced: the catalog gives no unit (per token on some models, per minute on others)",
-    "google/gemini-2.5-flash: web_search not synced: v2 has no per-call price",
   ]);
   expect(buildOpenRouterModel(openRouterGeminiModel(), undefined).cost).toMatchObject({ reasoning: 2.5 });
 
@@ -7967,4 +7970,68 @@ test("Hugging Face writes existing files back unchanged", () => {
     existing: () => undefined,
     authored: () => undefined,
   })).toBeUndefined();
+});
+
+test("OpenRouter web search prices become v2 prices per 1,000, by search context size where listed", () => {
+  const cost = catalogCost(openRouterModel({
+    id: "lab/model",
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.000008",
+      web_search: "0.0035",
+      web_search_per_1000_requests_low: "2.5",
+      web_search_per_1000_requests_high: "8",
+      overrides: [
+        { min_prompt_tokens: 200_000, prompt: "0.000004", web_search: "0.007" },
+        { utc_days: ["saturday"], web_search_per_1000_requests_high: "6" },
+      ],
+    },
+  } as Partial<OpenRouterModel>));
+  expect(cost.webSearch).toEqual({
+    price: 3.5,
+    overrides: [
+      { when: { search_context_size: { equals: "low" } }, price: 2.5 },
+      { when: { search_context_size: { equals: "high" } }, price: 8 },
+      { when: { context: { gt: 200_000 } }, price: 7 },
+      { when: { utc_days: { in: ["sat"] }, search_context_size: { equals: "high" } }, price: 6 },
+    ],
+  });
+  expect(cost.notices).toEqual([]);
+
+  // Without a flat price, the medium one is the base.
+  const sized = catalogCost(openRouterModel({
+    id: "lab/model",
+    pricing: { prompt: "0.000002", completion: "0.000008", web_search_per_1000_requests_medium: "10" },
+  } as Partial<OpenRouterModel>));
+  expect(sized.webSearch).toEqual({ price: 10, overrides: [{ when: { search_context_size: { equals: "medium" } }, price: 10 }] });
+
+  // Zero stands for no price; anything else unreadable is reported.
+  const free = catalogCost(openRouterModel({ id: "lab/model", pricing: { prompt: "0", completion: "0", web_search: "0" } }));
+  expect(free.webSearch).toBeUndefined();
+  expect(free.notices).toEqual([]);
+  const broken = catalogCost(openRouterModel({ id: "lab/model", pricing: { prompt: "0", completion: "0", web_search: "n/a" } }));
+  expect(broken.webSearch).toBeUndefined();
+  expect(broken.notices).toEqual(["lab/model: web_search not synced: not a price"]);
+});
+
+test("Kilo web search prices go to v2 per 1,000", () => {
+  const kiloModel = (web_search?: string) => kilo.parseModels({
+    data: [{
+      id: "openai/gpt-5.5",
+      name: "OpenAI: GPT-5.5",
+      created: 1_790_000_000,
+      context_length: 400_000,
+      architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+      pricing: { prompt: "0.000005", completion: "0.00003", ...(web_search === undefined ? {} : { web_search }) },
+      top_provider: { context_length: 400_000, max_completion_tokens: 128_000 },
+      supported_parameters: ["tools"],
+    }],
+  })[0]!;
+  const v2Set = (web_search?: string) =>
+    (kilo.translateModel(kiloModel(web_search), translateContext) as { v2Set: Record<string, unknown> }).v2Set;
+
+  expect(v2Set("0.028000000000")["cost.web_search"]).toEqual({ price: 28 });
+  // Kilo lists "0" on routes with no web search price.
+  expect(v2Set("0")["cost.web_search"]).toBeUndefined();
+  expect(v2Set()["cost.web_search"]).toBeUndefined();
 });

@@ -405,27 +405,25 @@ export function formatModelV2(doc: Doc) {
 
 function costLines(cost: CostV2, prefix = "cost") {
   const out: string[] = [];
+  const entryLines = (table: string, entry: Doc) => {
+    const { overrides, ...rest } = entry;
+    out.push("", `[${table}]`, ...tableLines(rest));
+    for (const override of overrides ?? []) {
+      const { when, ...fields } = override as { when: CostWhenV2 };
+      out.push("", `[[${table}.overrides]]`, `when = ${formatTomlValue(when)}`, ...tableLines(fields));
+    }
+  };
   for (const [modality, prices] of Object.entries(cost)) {
-    if (modality === "multipliers" || prices === undefined) continue;
+    if (modality === "multipliers" || modality === "web_search" || prices === undefined) continue;
     const { input, output } = prices as { input?: InputCostV2; output?: OutputCostV2 };
     for (const [direction, entry] of [
       ["input", input],
       ["output", output],
     ] as const) {
-      if (entry === undefined) continue;
-      const { overrides, ...rest } = entry as Doc;
-      out.push("", `[${prefix}.${modality}.${direction}]`, ...tableLines(rest));
-      for (const override of overrides ?? []) {
-        const { when, ...fields } = override as { when: CostWhenV2 };
-        out.push(
-          "",
-          `[[${prefix}.${modality}.${direction}.overrides]]`,
-          `when = ${formatTomlValue(when)}`,
-          ...tableLines(fields),
-        );
-      }
+      if (entry !== undefined) entryLines(`${prefix}.${modality}.${direction}`, entry);
     }
   }
+  if (cost.web_search !== undefined) entryLines(`${prefix}.web_search`, cost.web_search);
   for (const multiplier of cost.multipliers ?? []) {
     out.push("", `[[${prefix}.multipliers]]`, ...tableLines(multiplier));
   }

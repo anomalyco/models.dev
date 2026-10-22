@@ -255,6 +255,7 @@ function costV2ToV1(cost: CostV2) {
   }
 
   const tiers = [...contextTiers.values()];
+  // v1 has no web search price, so `web_search` stays v2-only.
   return withoutUndefined({
     input: input.price,
     output: output.price,

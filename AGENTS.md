@@ -92,6 +92,7 @@ body = { speed = "fast" }
 
 - Mid-conversation flags record what the API accepts (per its docs, confirmed live), not whether the model obeys: `system_updates` (system/developer messages after the conversation starts, sent in place), `effort_updates` (a per-turn effort change that keeps the cache, e.g. OpenAI `configuration_update`, Anthropic per-message `output_config`), `tools.updates` (adding/removing tools mid-conversation while keeping the cache, e.g. Anthropic `tool_addition`/`tool_removal`, OpenAI Responses `additional_tools`). Tool search is `tools.search`.
 - A mode without a cost takes the base prices times the multiplier for its service tier: the mode's `service_tier`, or its name when unset (OpenAI's `fast` mode sets `service_tier = "priority"`).
+- Web search fees go in `[cost.web_search]`: `price` is USD per 1,000 searches (or search requests, as the host bills them). Prices by search depth are `[[cost.web_search.overrides]]` with `when = { search_context_size = { equals = "high" } }`. v1 has no web search price.
 - Models v1 shouldn't publish (e.g. realtime, audio, transcription and speech models) set `v2_only = true` in their lab and provider files. v1 output leaves them out; v2-only labs still work as `base_model`.
 
 ### APIs (`[api.<protocol>]`)

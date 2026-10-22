@@ -946,12 +946,33 @@ const PRICE_TARGETS: Record<string, PriceTarget> = {
 // "Input Audio at $0.006/minute"), so the catalog alone can't price them exactly.
 const UNITLESS_PRICES = new Set(["audio", "input_audio_cache", "audio_output"]);
 
-// Flat fees per call ("Cost per web search operation", "Fixed cost per API request");
-// v2 costs have no per-call price.
-const PER_CALL_PRICES = new Set(["web_search", "request"]);
+// Flat fee per call ("Fixed cost per API request"); v2 costs have no per-call price.
+const PER_CALL_PRICES = new Set(["request"]);
+
+// "Cost per web search operation", in USD per search; v2 prices web search per 1,000.
+const WEB_SEARCH_PRICE = "web_search";
+// Per 1,000 requests by search context size, where the catalog lists them.
+const WEB_SEARCH_CONTEXT_PRICES: Record<string, string> = {
+  web_search_per_1000_requests_low: "low",
+  web_search_per_1000_requests_medium: "medium",
+  web_search_per_1000_requests_high: "high",
+};
 
 function isPriceKey(key: string) {
-  return PRICE_TARGETS[key] !== undefined || UNITLESS_PRICES.has(key) || PER_CALL_PRICES.has(key);
+  return PRICE_TARGETS[key] !== undefined
+    || UNITLESS_PRICES.has(key)
+    || PER_CALL_PRICES.has(key)
+    || key === WEB_SEARCH_PRICE
+    || WEB_SEARCH_CONTEXT_PRICES[key] !== undefined;
+}
+
+// A catalog web search price as USD per 1,000. Zero stands for no price.
+export function webSearchPrice(value: unknown, perSearch: boolean) {
+  if (typeof value !== "string") return undefined;
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0
+    ? Math.round(number * (perSearch ? 1000 : 1) * 1e6) / 1e6
+    : undefined;
 }
 
 // Override conditions this module reads. The docs ask consumers to skip entries
@@ -1059,6 +1080,7 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
     const cost: Record<string, Record<string, CostEntry>> = {};
     for (const [key, raw] of Object.entries(source)) {
       if (key === "overrides" || (isOverride && CONDITION_KEYS.has(key))) continue;
+      if (key === WEB_SEARCH_PRICE || WEB_SEARCH_CONTEXT_PRICES[key] !== undefined) continue;
       const target = PRICE_TARGETS[key];
       if (target === undefined) {
         note(UNITLESS_PRICES.has(key)
@@ -1090,7 +1112,33 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
     return cost;
   };
 
+  // Web search prices, each with the search context size it applies to (if any).
+  const webSearch = (source: Record<string, unknown>) => {
+    const keys: Array<[string, string | undefined]> = [
+      [WEB_SEARCH_PRICE, undefined],
+      ...Object.entries(WEB_SEARCH_CONTEXT_PRICES),
+    ];
+    const entries: Array<{ size?: string; price: number }> = [];
+    for (const [key, size] of keys) {
+      const raw = source[key];
+      if (raw === undefined) continue;
+      const value = webSearchPrice(raw, key === WEB_SEARCH_PRICE);
+      if (value !== undefined) entries.push({ size, price: value });
+      else if (Number(raw) !== 0) note("not a price", key);
+    }
+    return entries;
+  };
+  const sized = (when: Record<string, unknown>, size: string | undefined) =>
+    size === undefined ? when : { ...when, search_context_size: { equals: size } };
+
   const base = prices(model.pricing, false);
+  const baseSearch = webSearch(model.pricing);
+  // Without a flat price, the base is the medium one (OpenAI's default search context size).
+  const searchPrice = baseSearch.find((entry) => entry.size === undefined)?.price
+    ?? baseSearch.find((entry) => entry.size === "medium")?.price;
+  const searchOverrides: CostOverride[] = baseSearch
+    .filter((entry) => entry.size !== undefined)
+    .map((entry) => ({ when: sized({}, entry.size), price: entry.price }));
   const overrides: Record<string, CostOverride[]> = {};
   let ownsContext = false;
   for (const override of model.pricing.overrides ?? []) {
@@ -1112,7 +1160,16 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
         (overrides[`${section}.${entry}`] ??= []).push({ when, ...fields });
       }
     }
+    const search = webSearch(override);
+    if (search.length > 0 && searchPrice === undefined) {
+      note("an override prices web_search with no base price", "overrides");
+    } else {
+      searchOverrides.push(...search.map((entry) => ({ when: sized(when, entry.size), price: entry.price })));
+    }
   }
+  const webSearchCost = searchPrice === undefined
+    ? undefined
+    : { price: searchPrice, ...(searchOverrides.length > 0 ? { overrides: searchOverrides } : {}) };
 
   const section = (name: "image") => {
     const entries: Record<string, CostEntry> = Object.fromEntries(
@@ -1130,13 +1187,15 @@ export function catalogCost(model: OpenRouterModel, current?: Record<string, unk
     overrides: { input: overrides["text.input"] ?? [], output: overrides["text.output"] ?? [] },
     ownsContext,
     image: section("image"),
+    webSearch: webSearchCost,
     notices: [...issues].map(([reason, keys]) => `${model.id}: ${[...keys].join(", ")} not synced: ${reason}`),
   };
 }
 
 // v2 values the v1 patch can't write: the 1h cache write price, override lists,
-// image prices, and the reasoning price of a model without reasoning (which v1
-// leaves out). Reasoning tokens are billed whenever the model reasons.
+// image and web search prices, and the reasoning price of a model without
+// reasoning (which v1 leaves out). Reasoning tokens are billed whenever the model
+// reasons.
 function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> | undefined) {
   const cost = catalogCost(model, current);
   const priced = price(model.pricing.prompt) !== undefined && price(model.pricing.completion) !== undefined;
@@ -1148,6 +1207,7 @@ function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> |
       "cost.text.input.overrides": withCatalogOverrides(cost.overrides.input, cost.ownsContext),
       "cost.text.output.overrides": withCatalogOverrides(cost.overrides.output, cost.ownsContext),
       "cost.image": cost.image,
+      "cost.web_search": cost.webSearch,
     },
   };
 }

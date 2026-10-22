@@ -204,3 +204,40 @@ test('patchModelV2 keeps aisdk = "none" when sync rewrites the first table', () 
     systemone: { base_url: "https://example.com/v2", sdk: { aisdk: "none" } },
   });
 });
+
+test("web search prices are written to v2 files, kept by patches, and left out of v1", () => {
+  const doc = {
+    schema: 2,
+    base_model: "openai/gpt-5.4",
+    cost: {
+      text: { input: { price: 2.5 }, output: { price: 15 } },
+      web_search: {
+        price: 10,
+        overrides: [
+          { when: { search_context_size: { equals: "low" } }, price: 5 },
+          { when: { search_context_size: { in: ["high"] } }, price: 25 },
+        ],
+      },
+    },
+  };
+  const toml = formatModelV2(doc);
+  expect(toml).toContain([
+    "[cost.web_search]",
+    "price = 10",
+    "",
+    "[[cost.web_search.overrides]]",
+    'when = { search_context_size = { equals = "low" } }',
+    "price = 5",
+  ].join("\n"));
+  const parsed = { ...(Bun.TOML.parse(toml) as Record<string, unknown>), id: "gpt-5.4" };
+  expect(parsed.cost).toEqual(doc.cost);
+  expect(modelV2ToV1(parsed).cost).toEqual({ input: 2.5, output: 15 });
+
+  const before = { base_model: "openai/gpt-5.4", cost: { input: 2.5, output: 15 } };
+  const after = { base_model: "openai/gpt-5.4", cost: { input: 3, output: 15 } };
+  expect(patchModelV2(doc, before, after).cost.web_search).toEqual(doc.cost.web_search);
+
+  // A web search price alone has no v1 cost.
+  expect(modelV2ToV1({ schema: 2, id: "x", cost: { web_search: { price: 10 } } }).cost).toBeUndefined();
+  expect(() => modelV2ToV1({ schema: 2, id: "x", cost: { web_search: { price: 10, unit: "request" } } })).toThrow();
+});

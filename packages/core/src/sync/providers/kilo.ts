@@ -2,7 +2,7 @@ import { z } from "zod";
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveCanonicalBaseModel, webSearchPrice } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.kilo.ai/api/gateway/models";
 
@@ -26,6 +26,8 @@ export const KiloModel = z.object({
     internal_reasoning: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
+    // USD per web search.
+    web_search: z.string().optional(),
   }),
   top_provider: z.object({
     context_length: z.number().nullable(),
@@ -87,16 +89,21 @@ export const kilo = {
     return {
       id: model.id,
       model: buildKiloModel(model, context.existing(model.id), undefined, context.authored(model.id)),
-      v2Set: reasoningPriceV2Set(model),
+      v2Set: kiloV2Set(model),
     };
   },
 } satisfies SyncProvider<KiloModel>;
 
-// v1 leaves out the reasoning price of a model without reasoning, so v2 takes it
-// directly: reasoning tokens are billed whenever the model reasons.
-function reasoningPriceV2Set(model: KiloModel) {
+// v2 values the v1 patch can't write: the web search price, and the reasoning
+// price of a model without reasoning (which v1 leaves out). Reasoning tokens are
+// billed whenever the model reasons.
+function kiloV2Set(model: KiloModel) {
   if (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined) return undefined;
-  return { "cost.text.output.reasoning": price(model.pricing.internal_reasoning) };
+  const webSearch = webSearchPrice(model.pricing.web_search, true);
+  return {
+    "cost.text.output.reasoning": price(model.pricing.internal_reasoning),
+    "cost.web_search": webSearch === undefined ? undefined : { price: webSearch },
+  };
 }
 
 function isUnavailable(model: KiloModel) {
