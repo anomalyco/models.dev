@@ -1,6 +1,4 @@
 # Model: https://docs.mistral.ai/models/mistral-large-4-0 (accessed 2026-10-19). Public preview.
-# Cost is the current 50%-off launch price (API billing model "mistral-large-4-0-launch-discount");
-# list price is $1.36 input / $4.18 output / $0.14 cached input per MTok.
 # Limits: /v1/models reports max_context_length 1048576 (2026-10-19); max_tokens above 262144 was
 # rejected on 2026-10-06.
 # Default: reasoning is on when reasoning_effort is omitted (live 2026-10-19: thinking chunk and
@@ -41,8 +39,8 @@ prompt_cache_key = true
 cache = { supported = true, implicit = { min_tokens = 64 }, explicit = false }
 
 [cost.text.input]
-price = 0.68
-cache = { read = 0.07 }
+price = 1.36
+cache = { read = 0.14 }
 
 [cost.text.output]
-price = 2.09
+price = 4.18
