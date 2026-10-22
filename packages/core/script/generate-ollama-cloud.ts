@@ -168,12 +168,6 @@ let skipped = 0;
 let needsControls = 0;
 for (const { name, data } of modelsData) {
   const fileName = modelFileName(name);
-  // Only chat models are generated; others (e.g. the decision model clef) are hand-authored.
-  if (!data.capabilities.includes("completion")) {
-    console.log(`Skipped (not a chat model: ${data.capabilities.join(", ")}): ${fileName}`);
-    skipped++;
-    continue;
-  }
   const filePath = path.join(modelsDir, fileName);
 
   let existingText: string | null = null;
@@ -184,6 +178,35 @@ for (const { name, data } of modelsData) {
   }
 
   const doc = existingText === null ? null : (Bun.TOML.parse(existingText) as Record<string, any>);
+
+  // Decision models are served on POST /v1/systemone, not chat completions, so
+  // they're v2-only with a `decision` output and no output tokens.
+  if (data.capabilities.includes("decision")) {
+    const next = doc === null
+      ? {
+          schema: 2,
+          v2_only: true,
+          type: "decision",
+          name,
+          modalities: {
+            input: data.capabilities.includes("vision") ? ["text", "image"] : ["text"],
+            output: ["decision"],
+          },
+          capabilities: { tools: { supported: false }, reasoning: { supported: false } },
+          limit: { context: (data.model_info[`${data.details.family}.context_length`] as number) ?? 0, output: 0 },
+        }
+      : { ...doc, v2_only: true };
+    const content = (existingText === null ? "" : leadingComments(existingText)) + formatModelV2(next);
+    if (content === existingText) {
+      console.log(`Skipped (no changes): ${fileName}`);
+      skipped++;
+      continue;
+    }
+    await Bun.write(filePath, content);
+    console.log(`Created: ${fileName}`);
+    created++;
+    continue;
+  }
   const { id: _id, ...before }: Record<string, any> =
     doc === null ? {} : modelV2ToV1({ ...doc, id: name });
   const lab: Record<string, any> =
