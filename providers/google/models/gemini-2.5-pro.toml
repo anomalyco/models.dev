@@ -7,6 +7,7 @@
 # Flex halves input/output only; cache reads and storage stay at Standard rates.
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $35 per 1,000 grounded prompts (one charge per prompt, however many queries it runs): https://ai.google.dev/gemini-api/docs/pricing
 schema = 2
 base_model = "google/gemini-2.5-pro"
 
@@ -34,6 +35,9 @@ price = 10
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_000 } }
 price = 15
+
+[cost.web_search]
+price = 35
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

@@ -1,3 +1,4 @@
+# Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
 schema = 2
 name = "Claude Haiku 4.5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
@@ -29,3 +30,6 @@ cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
 
 [cost.text.output]
 price = 5
+
+[cost.web_search]
+price = 10

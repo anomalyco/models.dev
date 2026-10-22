@@ -1,3 +1,4 @@
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed): https://ai.google.dev/gemini-api/docs/pricing
 schema = 2
 base_model = "google/gemini-3-pro-image-preview"
 name = "Nano Banana Pro"
@@ -18,3 +19,6 @@ price = 2
 
 [cost.text.output]
 price = 120
+
+[cost.web_search]
+price = 14

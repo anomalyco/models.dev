@@ -3,6 +3,7 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://firebase.google.com/docs/ai-logic/thinking
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed): https://ai.google.dev/gemini-api/docs/pricing
 schema = 2
 base_model = "google/gemini-3-pro-image"
 
@@ -23,3 +24,6 @@ price = 120
 
 [cost.image.output]
 price = 120
+
+[cost.web_search]
+price = 14

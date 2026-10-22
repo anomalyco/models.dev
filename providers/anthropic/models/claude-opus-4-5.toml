@@ -1,3 +1,4 @@
+# Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
 schema = 2
 base_model = "anthropic/claude-opus-4-5"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
@@ -16,3 +17,6 @@ cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
 [cost.text.output]
 price = 25
+
+[cost.web_search]
+price = 10

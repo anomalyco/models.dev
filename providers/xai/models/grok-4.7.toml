@@ -10,6 +10,7 @@
 # Mid-conversation: system/developer messages are accepted in any order (docs.x.ai/developers/models);
 # changing reasoning effort or tools between turns drops the prompt cache, and there is no per-turn
 # mechanism (configuration_update/additional_tools return 422), checked live 2026-10-19.
+# Web search: $5 per 1,000 web_search tool calls: https://docs.x.ai/developers/pricing#tools-pricing
 schema = 2
 base_model = "xai/grok-4.7"
 
@@ -40,6 +41,9 @@ price = 6
 [[cost.text.output.overrides]]
 when = { context = { gte = 200_000 } }
 price = 12
+
+[cost.web_search]
+price = 5
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

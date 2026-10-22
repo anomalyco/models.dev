@@ -4,6 +4,7 @@
 # Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
 # system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
 # `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
+# Web search: billed as Grounding with Bing Search, $14 per 1,000 Bing search requests (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing): https://www.microsoft.com/en-us/bing/apis/grounding-pricing
 schema = 2
 name = "GPT-5.1"
 description = "Sharper GPT-5 generation for coding, product work, and tool-assisted tasks"
@@ -38,6 +39,9 @@ cache = { read = 0.125 }
 
 [cost.text.output]
 price = 10
+
+[cost.web_search]
+price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

@@ -1,3 +1,4 @@
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 schema = 2
 name = "GPT-5.2 Pro"
 description = "Higher-accuracy GPT-5.2 variant for tougher reasoning and review workflows"
@@ -30,3 +31,6 @@ price = 21
 
 [cost.text.output]
 price = 168
+
+[cost.web_search]
+price = 10

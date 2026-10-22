@@ -1,3 +1,4 @@
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 schema = 2
 name = "GPT-4.1"
 description = "Long-lived GPT workhorse for coding, instruction following, and production apps"
@@ -32,6 +33,9 @@ cache = { read = 0.5 }
 
 [cost.text.output]
 price = 8
+
+[cost.web_search]
+price = 10
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

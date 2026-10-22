@@ -11,6 +11,7 @@
 # so those multipliers scale cache.read by 5/3 and 2/3. Cache storage is not scaled.
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed): https://ai.google.dev/gemini-api/docs/pricing
 schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 
@@ -29,6 +30,9 @@ cache = { read = 0.03, storage = 1 }
 
 [cost.text.output]
 price = 2.5
+
+[cost.web_search]
+price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

@@ -8,6 +8,7 @@
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed): https://ai.google.dev/gemini-api/docs/pricing
 schema = 2
 name = "Gemini 3.1 Flash Lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
@@ -46,6 +47,9 @@ price = 1.5
 [cost.audio.input]
 price = 0.5
 cache = { read = 0.05, storage = 1 }
+
+[cost.web_search]
+price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

@@ -10,6 +10,7 @@
 # system_updates = false: Anthropic's mid-conversation system message docs, which cover Google Cloud, say the feature
 # isn't available on Sonnet 5, and Google Cloud's Claude docs don't mention it. The first-party API accepting it live
 # isn't documented for Vertex, and Vertex Claude can't be tested with an API key (rawPredict needs OAuth).
+# Web search: $10 per 1,000 searches: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (supported models: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search)
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
@@ -32,6 +33,9 @@ price = 2
 cache = { read = 0.2, write = { "5m" = 2.5, "1h" = 4 } }
 
 [cost.text.output]
+price = 10
+
+[cost.web_search]
 price = 10
 
 [[cost.multipliers]]

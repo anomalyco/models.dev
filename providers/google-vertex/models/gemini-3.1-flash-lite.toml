@@ -10,6 +10,7 @@
 # fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite
 # The documented text/plain document type is covered by `text`.
+# Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed): https://cloud.google.com/vertex-ai/generative-ai/pricing
 schema = 2
 base_model = "google/gemini-3.1-flash-lite"
 
@@ -36,6 +37,9 @@ price = 1.5
 [cost.audio.input]
 price = 0.5
 cache = { read = 0.05, storage = 1 }
+
+[cost.web_search]
+price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

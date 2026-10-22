@@ -3,6 +3,7 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://ai.google.dev/gemini-api/docs/image-generation (thinking minimal|medium|high, default medium)
 # - Output: $7.50 text and thinking, $30.00 images. v1 output carries the image rate, like other image models.
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed): https://ai.google.dev/gemini-api/docs/pricing
 schema = 2
 v2_only = true
 base_model = "google/gemini-nano-banana-2.1"
@@ -28,3 +29,6 @@ price = 30
 
 [cost.image.output]
 price = 30
+
+[cost.web_search]
+price = 14

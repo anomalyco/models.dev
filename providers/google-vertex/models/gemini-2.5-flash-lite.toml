@@ -12,6 +12,7 @@
 # Thinking is off unless a thinking_budget is set (verified live 2026-10-19).
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-lite
 # The documented text/plain document type is covered by `text`.
+# Grounding with Google Search: $35 per 1,000 grounded prompts (one charge per prompt, however many queries it runs): https://cloud.google.com/vertex-ai/generative-ai/pricing
 schema = 2
 base_model = "google/gemini-2.5-flash-lite"
 status = "deprecated"
@@ -39,6 +40,9 @@ price = 0.4
 [cost.audio.input]
 price = 0.3
 cache = { read = 0.03, storage = 1 }
+
+[cost.web_search]
+price = 35
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

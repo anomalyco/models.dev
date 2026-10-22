@@ -4,6 +4,7 @@
 # https://developers.openai.com/api/docs/pricing
 # Reasoning: no caller control. Live /v1/responses (2026-10-19) accepts only reasoning.effort
 # "medium"; none/minimal/low/high/xhigh/max return "Supported values are: 'medium'".
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 schema = 2
 v2_only = true
 base_model = "openai/gpt-5.5-instant"
@@ -28,3 +29,6 @@ cache = { read = 0.5 }
 
 [cost.text.output]
 price = 30
+
+[cost.web_search]
+price = 10

@@ -1,3 +1,4 @@
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 schema = 2
 name = "o3-pro"
 description = "High-effort o3 tier for difficult technical reasoning and careful answers"
@@ -29,3 +30,6 @@ price = 20
 
 [cost.text.output]
 price = 80
+
+[cost.web_search]
+price = 10

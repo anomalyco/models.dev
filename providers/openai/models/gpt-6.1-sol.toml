@@ -2,6 +2,7 @@
 # Reasoning: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6.1-sol
 # Ultrafast: https://developers.openai.com/api/docs/guides/ultrafast-mode
 # Ultrafast pricing: https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
@@ -31,6 +32,9 @@ price = 10
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 15
+
+[cost.web_search]
+price = 10
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

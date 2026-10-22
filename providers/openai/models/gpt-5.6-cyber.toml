@@ -3,6 +3,7 @@
 # https://developers.openai.com/api/docs/pricing
 # Access requires Daybreak approval (https://openai.com/daybreak/), so unapproved keys get
 # "does not exist or you do not have access". Capabilities match gpt-daybreak-red-latest.
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 schema = 2
 v2_only = true
 base_model = "openai/gpt-5.6-cyber"
@@ -23,3 +24,6 @@ cache = { read = 1.25, write = 15.625 }
 
 [cost.text.output]
 price = 75
+
+[cost.web_search]
+price = 10

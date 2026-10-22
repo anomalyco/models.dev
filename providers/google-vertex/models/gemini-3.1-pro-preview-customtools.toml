@@ -6,6 +6,7 @@
 # Implicit cache hits verified live 2026-10-19. Flex is rejected and Priority requests are served as Standard (ON_DEMAND).
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-pro
 # The documented text/plain document type is covered by `text`.
+# Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed): https://cloud.google.com/vertex-ai/generative-ai/pricing
 schema = 2
 base_model = "google/gemini-3.1-pro-preview-customtools"
 status = "beta"
@@ -37,3 +38,6 @@ price = 12
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_000 } }
 price = 18
+
+[cost.web_search]
+price = 14

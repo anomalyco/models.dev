@@ -1,4 +1,5 @@
 # tools.updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
+# Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
@@ -17,6 +18,9 @@ cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
 
 [cost.text.output]
 price = 20
+
+[cost.web_search]
+price = 10
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "fast" } }

@@ -1,3 +1,4 @@
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 schema = 2
 name = "GPT-5.5"
 description = "Default frontier GPT for coding, computer use, research, and knowledge work"
@@ -42,6 +43,9 @@ price = 30
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 45
+
+[cost.web_search]
+price = 10
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }

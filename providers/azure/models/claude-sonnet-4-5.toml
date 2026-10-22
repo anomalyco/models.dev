@@ -2,6 +2,7 @@
 # Mid-conversation: Foundry lists "Mid-conversation role: system" (haiku-5-5, opus-5-5, opus-5, sonnet-5-5, sonnet-5) and "Per-turn effort controls" (opus-5-5, opus-5) as Beta:
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#available-claude-models. Anthropic lists mid-conversation system messages, per-message effort and
 # the tool-change beta (tool_addition/tool_removal) for the Claude API, Bedrock and Google Cloud only, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
+# Web search: $10 per 1,000 searches; Foundry bills Claude in CCUs at Anthropic's standard per-feature rates: https://platform.claude.com/docs/en/about-claude/pricing#claude-in-microsoft-foundry-pricing
 schema = 2
 name = "Claude Sonnet 4.5"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
@@ -37,3 +38,6 @@ cache = { read = 0.3, write = 3.75 }
 
 [cost.text.output]
 price = 15
+
+[cost.web_search]
+price = 10
