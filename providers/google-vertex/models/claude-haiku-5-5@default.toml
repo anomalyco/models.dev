@@ -12,6 +12,7 @@
 # - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
 # - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
 # Web search: $10 per 1,000 searches: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (supported models: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search)
+# Token-only multipliers (object factor, so cost.web_search is unscaled): non-global regional premium: Vertex lists one web search price ($10 per 1,000 searches) for every endpoint, a separate SKU the regional premium doesn't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models).
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
@@ -47,4 +48,4 @@ price = 10
 
 [[cost.multipliers]]
 when = { not = { region = { equals = "global" } } }
-factor = 1.1
+factor = { text = 1.1 }

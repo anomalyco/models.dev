@@ -10,6 +10,7 @@
 # status = "deprecated": Vertex publishes a retirement date of "not sooner than September 29, 2026", which has passed
 # (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/sonnet-4-5).
 # Web search: $10 per 1,000 searches: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (supported models: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search)
+# Token-only multipliers (object factor, so cost.web_search is unscaled): non-global regional premium: Vertex lists one web search price ($10 per 1,000 searches) for every endpoint, a separate SKU the regional premium doesn't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5-20250929"
 status = "deprecated"
@@ -37,4 +38,4 @@ price = 10
 
 [[cost.multipliers]]
 when = { not = { region = { equals = "global" } } }
-factor = 1.1
+factor = { text = 1.1 }

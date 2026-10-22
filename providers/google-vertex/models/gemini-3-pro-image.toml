@@ -8,8 +8,8 @@
 # fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image
 # The documented text/plain document type is covered by `text`.
-# Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed): https://cloud.google.com/vertex-ai/generative-ai/pricing
-# Token-only multipliers (object factor, so cost.web_search is unscaled): Priority PayGo (https://cloud.google.com/vertex-ai/generative-ai/docs/priority-paygo).
+# Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed). Price: https://cloud.google.com/vertex-ai/generative-ai/pricing; support (supported models list): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/grounding-with-google-search
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Priority PayGo (https://cloud.google.com/vertex-ai/generative-ai/docs/priority-paygo); Flex PayGo: Vertex bills Grounding with Google Search as a separate per-query SKU ($14 per 1,000 grounding queries) that these tiers don't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing).
 schema = 2
 base_model = "google/gemini-3-pro-image"
 
@@ -48,4 +48,4 @@ factor = { text = 1.8, image = 1.8 }
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }
-factor = 0.5
+factor = { text = 0.5, image = 0.5 }

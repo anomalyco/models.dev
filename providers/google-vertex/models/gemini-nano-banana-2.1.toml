@@ -11,7 +11,7 @@
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/nano-banana-2-1
 # The documented text/plain document type is covered by `text`.
 # PDF input is documented on the model page (the lab entry lists text, image and video).
-# Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed): https://cloud.google.com/vertex-ai/generative-ai/pricing
+# Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed). Price: https://cloud.google.com/vertex-ai/generative-ai/pricing; support (supported models list): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/grounding-with-google-search
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Priority PayGo (https://cloud.google.com/vertex-ai/generative-ai/docs/priority-paygo).
 schema = 2
 base_model = "google/gemini-nano-banana-2.1"
