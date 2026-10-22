@@ -1,0 +1,36 @@
+# Sources (accessed 2026-10-22):
+# https://huggingface.co/swiss-ai/Apertus-v1.5-70B (gated; README + config.json)
+# https://huggingface.co/api/models/swiss-ai/Apertus-v1.5-70B (createdAt 2026-07-24, lastModified 2026-10-14)
+# https://apertus-ai.org/pages/documentation/
+# Continued pretraining of Apertus 1.0 (same decoder-only architecture, xIELU + AdEMAMix); first release in the
+#   family with multimodal input (image + audio) and an optional, opt-in thinking mode (`enable_thinking=True` in
+#   the chat template). config.json max_position_embeddings = 262144.
+# Input modalities: the model card names image and audio input without listing MIME types, so generic types are used.
+# No vendor-published max output tokens; 32768 used as a conservative ceiling (hosts serve 8192-16384).
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+name = "Apertus v1.5 70B"
+description = "Fully open 70B multilingual, multimodal LLM with a 262K-token context and an optional thinking mode, trained only on compliant open data"
+open_weights = true
+release_date = "2026-07-24"
+last_updated = "2026-10-14"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/swiss-ai/Apertus-v1.5-70B"

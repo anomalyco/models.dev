@@ -1,0 +1,21 @@
+# Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
+#   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
+# Reasoning: the gateway documents no reasoning toggle, effort or budget field, so no caller-side
+#   control is declared here (reasoning_options = [] in v1 terms).
+# Zone: CH (Geneva). Structured outputs per the gateway's model catalogue.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 0.015
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 0.075

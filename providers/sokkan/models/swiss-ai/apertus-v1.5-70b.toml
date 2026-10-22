@@ -1,0 +1,20 @@
+# Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
+#   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
+# Zone: CH. Reasoning: the lab's thinking mode is opt-in (chat-template flag) and the gateway documents no field
+#   to enable it, so the model is served as non-reasoning on this host.
+schema = 2
+base_model = "swiss-ai/apertus-v1.5-70b"
+
+[capabilities]
+reasoning = { supported = false }
+
+[limit]
+context = 65_536
+output = 16_384
+
+[cost.text.input]
+price = 0.875
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 3.125

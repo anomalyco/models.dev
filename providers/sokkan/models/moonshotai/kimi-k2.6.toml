@@ -1,0 +1,21 @@
+# Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
+#   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
+# Reasoning: the gateway documents no reasoning toggle, effort or budget field, so no caller-side
+#   control is declared here (reasoning_options = [] in v1 terms).
+# Zone: CH. Cached input is billed at the input price.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 131_072
+output = 32_768
+
+[cost.text.input]
+price = 0.85
+cache = { read = 0.85 }
+
+[cost.text.output]
+price = 4.15
