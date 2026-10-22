@@ -1,0 +1,27 @@
+# Stable Hy4, the production follow-up to Hy4 preview (Tencent iterates a preview first, then
+#   ships the stable version ~2 months later). Context/output limits follow the Hy4 preview lab
+#   entry; Tencent has not published a separate spec page for the stable id yet.
+# open_weights = false: Hy4 preview shipped Apache-2.0 weights on Hugging Face, but no weights
+#   release exists for the stable id. Flip to true and add [[weights]] once one does.
+# Sampling: same knobs as the rest of the Hy family (temperature/top_p/top_k accepted).
+schema = 2
+name = "Hy4"
+description = "A next-generation productivity model with significantly enhanced Agent and complex task execution capabilities."
+family = "Hy"
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_024_000
+output = 64_000
