@@ -109,6 +109,9 @@ export function basetenV2Set(cacheRead: number | undefined, current: Record<stri
   };
 }
 
+// Both packages post to `${baseURL}/systemone`.
+const SYSTEMONE_SDK = { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/typesafe-ai" };
+
 // Decision models are served on POST /v1/systemone, not chat completions, so
 // they are v2-only. The catalog's `name` is the Base Labs lab model ID.
 export function buildBasetenDecisionModel(
@@ -126,6 +129,8 @@ export function buildBasetenDecisionModel(
   if (model.context_length !== (lab.limit as { context?: number } | undefined)?.context) {
     doc.limit = { context: model.context_length };
   }
+  const api = lab.type === "decision" ? { systemone: { sdk: SYSTEMONE_SDK } } : current?.api;
+  if (api !== undefined) doc.api = api;
   doc.cost = { text: { input: { price: input }, output: { price: output } } };
   return doc;
 }
