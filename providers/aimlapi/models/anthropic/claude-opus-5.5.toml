@@ -10,8 +10,8 @@ tools = { supported = true, updates = false }
 cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
-price = 5.2
-cache = { read = 0.26, write = { "5m" = 6.5, "1h" = 10.4 } }
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
 
 [cost.text.output]
-price = 26
+price = 20

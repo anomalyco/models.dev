@@ -13,8 +13,8 @@ cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 13
-cache = { read = 1.3, write = { "5m" = 16.25, "1h" = 26 } }
+price = 10
+cache = { read = 1, write = { "5m" = 12.5, "1h" = 20 } }
 
 [cost.text.output]
-price = 65
+price = 50
