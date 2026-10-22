@@ -18,7 +18,7 @@ effort_updates = true
 
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 
 [cost.text.input]
 price = 10

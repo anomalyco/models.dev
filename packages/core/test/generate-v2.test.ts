@@ -134,9 +134,9 @@ describe("v2 catalog generation", () => {
     expect(providersV2.opencode?.models["jev-1.13"]?.api).toEqual({
       systemone: {
         base_url: "https://opencode.ai/inference/systemone/v1",
-        // Its [api.systemone] table says aisdk = "none".
+        // Its [api.systemone] table says aisdk = "none" and names OpenCode's own entry point.
         sdk: {
-          opencodeai: "@opencode/ai/providers/typesafe-ai",
+          opencodeai: "@opencode/ai/providers/opencode",
         },
       },
     });

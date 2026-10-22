@@ -15,7 +15,7 @@ effort_updates = false
 context = 128_000
 
 [api.responses]
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
 
 [cost.text.input]
 price = 0.25
