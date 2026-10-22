@@ -1,4 +1,5 @@
 schema = 2
+type = "embedding"
 name = "text-embedding-ada-002"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
@@ -7,7 +8,7 @@ release_date = "2022-12-15"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
 
 [capabilities]
 tools = { supported = false }
