@@ -536,7 +536,10 @@ export function buildVercelMediaModel(
     : authored?.base_model ?? resolveVercelBaseModel(model.id);
   const lab = base === undefined ? undefined : labDoc(base);
   const existing = current ?? (authored === undefined ? undefined : v1ToDoc(authored, lab));
-  const doc: Doc = { schema: 2 };
+  // New media files are v2-only; files already published in v1 stay there.
+  const doc: Doc = existing === undefined || existing.v2_only === true
+    ? { schema: 2, v2_only: true }
+    : { schema: 2 };
   const route = routeCapabilities(model, type);
 
   if (base !== undefined && lab !== undefined) {
@@ -561,6 +564,12 @@ export function buildVercelMediaModel(
       Object.entries(orderedCapabilities({ ...pickCapabilities(existing?.capabilities), ...route }))
         .filter(([key, value]) => !sameValue(value, lab.capabilities?.[key])),
     );
+    // Realtime session config has no reasoning control, so a reasoning lab model
+    // gets an explicit `supported = true` (no caller control) instead of
+    // inheriting the lab's, which leaves v1 without reasoning_options.
+    if (type === "realtime" && capabilities.reasoning === undefined && lab.capabilities?.reasoning?.supported === true) {
+      capabilities.reasoning = { supported: true };
+    }
     if (Object.keys(capabilities).length > 0) doc.capabilities = capabilities;
     const limit = Object.fromEntries(
       Object.entries(mediaLimit(model, type, lab.limit))
