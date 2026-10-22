@@ -1,3 +1,4 @@
+# API: POST /v1/rerank exists (401 without a key; unknown routes return 404, 2026-10-21).
 # evroc catalogue: https://docs.evroc.com/products/think/supported-models.html (2026-10-21) lists this under reranking.
 schema = 2
 type = "reranking"
@@ -18,6 +19,9 @@ reasoning = { supported = false }
 [limit]
 context = 32_000
 output = 4_096
+
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.0575
