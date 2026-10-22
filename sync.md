@@ -455,6 +455,19 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
 - Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
 - Modalities are sorted into catalogue order; wire order is arbitrary.
 
+## LLMTR Notes
+
+LLMTR is implemented in `packages/core/src/sync/providers/llmtr.ts`.
+
+- Run it with `bun models:sync llmtr` or `bun llmtr:sync`.
+- Source endpoint: `https://llmtr.com/v1/models`; no auth required. Only `/v1/chat/completions` rows with text in and out are synced; `:think`-style aliases, the bring-your-own-key `evren/` routes and `together/tev1-4b-experimental` are skipped.
+- New routes are `base_model` overlays on the lab entry. `llmtr/` and inference-host namespaces (`engy`, `greenpt`, `heabsy`, `tensorx`) drop their host or region suffix; `-free`, `-unmetered` and `-<n>k` routes share the lab entry and are told apart by name. Routes with no lab entry are listed in the run's report.
+- Hand-authored files only get prices and limits; capabilities, reasoning controls and names stay as authored.
+- Reasoning on new routes comes from `reasoning` and `supported_parameters`, which match what the gateway enforces: `reasoning_effort` with `supported_efforts` is an effort ladder (`none` dropped when `mandatory`), the boolean `reasoning` on a non-mandatory route is a toggle, `mandatory` or `default_enabled` without a control is `[]`, and a route that is neither is published with reasoning off.
+- `max_completion_tokens` equal to the context window is a placeholder, so the lab's output limit applies.
+- Input kinds are the ones both LLMTR and the lab list (`file` maps to `pdf`).
+- Per-token USD string prices become per-1M, rounded to six decimals. A malformed price fails the run, and a list under 100 rows is refused rather than read as retirements.
+
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.

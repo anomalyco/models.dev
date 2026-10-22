@@ -42,6 +42,7 @@ import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
+import { llmtr } from "./providers/llmtr.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
@@ -208,6 +209,7 @@ export const providers: {
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
+  llmtr: SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
   meta: SyncProvider<any>;
   mistral: SyncProvider<any>;
@@ -253,6 +255,7 @@ export const providers: {
   kilo,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
+  llmtr,
   "merge-gateway": mergeGateway,
   meta,
   mistral,
@@ -285,6 +288,7 @@ export const groups = {
     "kilo",
     "llmgateway",
     "llmgateway-providers",
+    "llmtr",
     "merge-gateway",
     "nano-gpt",
     "novita-ai",
