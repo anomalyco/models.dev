@@ -166,6 +166,7 @@ for (const existingName of existingModelNames) {
 let created = 0;
 let skipped = 0;
 let needsControls = 0;
+let needsManual = 0;
 for (const { name, data } of modelsData) {
   const fileName = modelFileName(name);
   const filePath = path.join(modelsDir, fileName);
@@ -179,24 +180,25 @@ for (const { name, data } of modelsData) {
 
   const doc = existingText === null ? null : (Bun.TOML.parse(existingText) as Record<string, any>);
 
+  // Only chat and decision models are synced; anything else needs a person.
+  if (!data.capabilities.includes("completion") && !data.capabilities.includes("decision")) {
+    console.warn(`Needs manual authoring (not a chat or decision model: ${data.capabilities.join(", ")}): ${fileName}`);
+    needsManual++;
+    continue;
+  }
+
   // Decision models are served on POST /v1/systemone, not chat completions, so
-  // they're v2-only with a `decision` output and no output tokens.
+  // they're v2-only. The catalog gives no lab identity, so only an existing
+  // hand-authored decision file is synced.
   if (data.capabilities.includes("decision")) {
-    const next = doc === null
-      ? {
-          schema: 2,
-          v2_only: true,
-          type: "decision",
-          name,
-          modalities: {
-            input: data.capabilities.includes("vision") ? ["text", "image"] : ["text"],
-            output: ["decision"],
-          },
-          capabilities: { tools: { supported: false }, reasoning: { supported: false } },
-          limit: { context: (data.model_info[`${data.details.family}.context_length`] as number) ?? 0, output: 0 },
-        }
-      : { ...doc, v2_only: true };
-    const content = (existingText === null ? "" : leadingComments(existingText)) + formatModelV2(next);
+    const type = doc?.type
+      ?? (doc?.base_model === undefined ? undefined : readLabModel(path.join(labsDir, `${doc.base_model}.toml`), doc.base_model).type);
+    if (doc === null || type !== "decision") {
+      console.warn(`Needs manual authoring (decision model without a decision file): ${fileName}`);
+      needsManual++;
+      continue;
+    }
+    const content = leadingComments(existingText!) + formatModelV2({ ...doc, v2_only: true });
     if (content === existingText) {
       console.log(`Skipped (no changes): ${fileName}`);
       skipped++;
@@ -291,5 +293,5 @@ for (const { name, data } of modelsData) {
 }
 
 console.log(
-  `\nDone. Created: ${created}, Skipped: ${skipped}, Deleted: ${deleted}, Needs reasoning controls: ${needsControls}`
+  `\nDone. Created: ${created}, Skipped: ${skipped}, Deleted: ${deleted}, Needs reasoning controls: ${needsControls}, Needs manual authoring: ${needsManual}`
 );
