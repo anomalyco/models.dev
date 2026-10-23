@@ -4,6 +4,7 @@
 # (https://learn.microsoft.com/en-us/rest/api/aifoundry/model-inference/get-chat-completions/get-chat-completions?view=rest-aifoundry-model-inference-2024-05-01-preview).
 # Azure names no image formats; these are the model card's (.jpg, .jpeg, .png, .ppm, .bmp, .pgm, .tif, .tiff, .webp):
 # https://huggingface.co/microsoft/Phi-4-multimodal-instruct#input-formats
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
 schema = 2
 name = "Phi-4-multimodal"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
@@ -13,18 +14,7 @@ knowledge = "2023-10"
 release_date = "2024-12-11"
 
 [modalities]
-input = [
-  "text",
-  "image/jpeg",
-  "image/png",
-  "image/x-portable-pixmap",
-  "image/bmp",
-  "image/x-portable-graymap",
-  "image/tiff",
-  "image/webp",
-  "audio/wav",
-  "audio/mpeg",
-]
+input = ["text", "image/jpeg", "image/png", "image/x-portable-pixmap", "image/bmp", "image/x-portable-graymap", "image/tiff", "image/webp", "audio/wav", "audio/mpeg"]
 output = ["text"]
 
 [capabilities]
@@ -37,6 +27,9 @@ effort_updates = false
 [limit]
 context = 128_000
 output = 4_096
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
 
 [cost.text.input]
 price = 0.08

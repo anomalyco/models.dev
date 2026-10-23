@@ -2,6 +2,7 @@
 # system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
 # `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
 # Modalities: Azure OpenAI vision chat image formats (JPEG, PNG, GIF first frame only, WEBP): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/gpt-with-vision
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
 schema = 2
 name = "GPT-4 Turbo Vision"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
@@ -27,6 +28,9 @@ effort_updates = false
 [limit]
 context = 128_000
 output = 4_096
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
 
 [cost.text.input]
 price = 10

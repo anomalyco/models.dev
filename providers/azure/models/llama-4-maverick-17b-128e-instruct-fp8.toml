@@ -1,6 +1,7 @@
 # Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
 # (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
 # Modalities: Azure names no image formats for Llama 4; these are Meta's (see models/meta/llama-4-maverick-17b-instruct.toml).
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
 schema = 2
 name = "Llama 4 Maverick 17B 128E Instruct FP8"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
@@ -23,6 +24,9 @@ effort_updates = false
 [limit]
 context = 1_000_000
 output = 16_384
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
 
 [cost.text.input]
 price = 0.25
