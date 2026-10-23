@@ -10,12 +10,10 @@
 # - https://ai.google.dev/gemini-api/docs/generate-content/caching
 # - https://ai.google.dev/gemini-api/docs/thinking
 # - https://generativelanguage.googleapis.com/v1beta/models (displayName, limits, topP/topK)
-# system_updates (live 2026-10-23, generateContent): a {"role": "system", "parts": [{"text": ...}]} entry in
-#   `contents` between the model reply and the next user turn is accepted, stays in place and is obeyed
-#   (answered in French). Cached tokens with it 7884/6919 vs 7891/7567 on the unchanged control (short
-#   systemInstruction, ~9k-token first user turn).
-#   Undocumented: the spec lists only "user" and "model" for Content.role
-#   (https://ai.google.dev/api/caching#Content). The Chat Completions endpoint moves a late system message to the top (0 cached) and Interactions rejects system_input.
+# system_updates: left out. Undocumented: the generateContent spec lists only "user" and "model" for
+#   Content.role (https://ai.google.dev/api/caching#Content). A {"role": "system"} entry in `contents` was
+#   accepted and kept the cache live (2026-10-23), but server behavior alone is not a documented mechanism.
+#   The Chat Completions endpoint moves a late system message to the top, and Interactions rejects it.
 # Thinking config and tools are request-level; changing the thinking level drops the cache (live 2026-10-23).
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 schema = 2
@@ -27,7 +25,6 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = { min_tokens = 4_096 }, explicit = true }
-system_updates = true
 effort_updates = false
 
 [api.generate-content]
