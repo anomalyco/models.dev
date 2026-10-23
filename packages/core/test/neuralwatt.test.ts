@@ -3,7 +3,8 @@ import { lstat, mkdir, mkdtemp, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
+import { groups, providers, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
+import { AuthoredModelV2 } from "../src/schema-v2.js";
 import {
   buildNeuralwattModel,
   fetchNeuralwattModels,
@@ -545,6 +546,24 @@ test("deprecates a delisted local model instead of deleting it", async () => {
     'base_model = "alibaba/qwen3.8-27b"',
     'name = "Old Model"',
     "",
+    "[capabilities]",
+    "reasoning = { supported = true, budget = {} }",
+    "structured_output = true",
+    "",
+    "[limit]",
+    "context = 1_000_000",
+    "output = 32_768",
+    "",
+    "[api.chat-completions]",
+    'compatibility = { reasoning_field = "reasoning_content" }',
+    "",
+    "[cost.text.input]",
+    "price = 1.25",
+    "cache = { read = 0.25 }",
+    "",
+    "[cost.text.output]",
+    "price = 4",
+    "",
   ].join("\n"));
 
   const provider = deprecatingProvider(modelsDir);
@@ -559,6 +578,16 @@ test("deprecates a delisted local model instead of deleting it", async () => {
     expect(deprecated).toContain('status = "deprecated"');
     expect(deprecated).toContain('name = "Old Model"');
     expect(deprecated).toContain('base_model = "alibaba/qwen3.8-27b"');
+    // The deprecation patch must keep every v2 field v1 cannot carry.
+    expect(deprecated).toContain("[cost.text.input]");
+    expect(deprecated).toContain("price = 1.25");
+    expect(deprecated).toContain("[api.chat-completions]");
+    expect(deprecated).toContain('reasoning_field = "reasoning_content"');
+    expect(deprecated).toContain("structured_output = true");
+    expect(deprecated).toContain("budget = {}");
+    const { schema: version, ...body } = Bun.TOML.parse(deprecated) as Record<string, unknown>;
+    expect(version).toBe(2);
+    expect(AuthoredModelV2.safeParse({ ...body, id: "old-model" }).success).toBe(true);
 
     const second = await syncProvider(provider);
     expect(second).toMatchObject({ created: 0, updated: 0, deleted: 0 });
@@ -566,6 +595,12 @@ test("deprecates a delisted local model instead of deleting it", async () => {
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test("registers neuralwatt in the direct sync group", () => {
+  expect(providers.neuralwatt.id).toBe("neuralwatt");
+  expect(groups.direct).toContain("neuralwatt");
+  expect(groups.direct).toContain("engy");
 });
 
 test("pins structured_output false when the host disables JSON mode", () => {
