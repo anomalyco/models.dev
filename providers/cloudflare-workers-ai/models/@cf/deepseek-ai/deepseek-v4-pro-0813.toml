@@ -6,6 +6,7 @@
 # Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message keeps the cached prefix and is honored;
 # changing reasoning_effort reads 0 cached tokens on the first request after the switch; adding or removing a tool drops the cached history (tools render ahead of it).
 # Live 2026-10-23 (~7k-token first user message): a system message after the assistant turn read 7424/7603 cached twice (warm 7424), French 2/2.
+# system_updates left out: undocumented. Neither Workers AI nor DeepSeek documents where a late system message goes on this model; the live results above are server behavior only.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
@@ -14,7 +15,6 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
-system_updates = true
 effort_updates = false
 
 [limit]
