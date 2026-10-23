@@ -6,6 +6,7 @@
 # https://dev.meta.ai/docs/pricing-rate-limits (Standard mode token pricing; Contributor mode not on Model API)
 # v2 capabilities: https://dev.meta.ai/docs/structured-output, https://dev.meta.ai/docs/prompt-caching,
 # https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/api-reference/chat-completions/schemas
+# APIs: Responses, Chat Completions and Messages (https://dev.meta.ai/docs/models, "Models at a glance"), all confirmed live 2026-10-22.
 schema = 2
 base_model = "meta/muse-wonder-1.0"
 
@@ -19,6 +20,14 @@ store = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = true }
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/meta/chat" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/meta/messages" }
 
 [cost.text.input]
 price = 4
