@@ -1,8 +1,11 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
 
 [api.messages]
 base_url = "https://api.saygm.com/v1"
@@ -10,7 +13,7 @@ sdk = { aisdk = "@ai-sdk/anthropic" }
 
 [cost.text.input]
 price = 4.5
-cache = { read = 0.45, write = 5.625 }
+cache = { read = 0.45, write = { "5m" = 5.625, "1h" = 9 } }
 
 [cost.text.output]
 price = 22.5

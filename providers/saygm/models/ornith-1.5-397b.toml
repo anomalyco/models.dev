@@ -1,15 +1,20 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
 # Toggle: chat_template_kwargs.enable_thinking = true|false
 # Source: https://huggingface.co/ornith-ai/Ornith-1.5-397B (chat template exposes enable_thinking;
-# the model card documents a 262,144-token context and evaluates with max_new_tokens=131072)
+# the model card documents a 262,144-token context)
+# Limits: served by KubeTEE, whose /v1/models lists ornith/ornith-1.5-397b with
+# max_input_tokens and max_output_tokens 262,144 (read 2026-10-23).
 schema = 2
 base_model = "deepreinforce/ornith-1.5-397b"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
-output = 131_072
+output = 262_144
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

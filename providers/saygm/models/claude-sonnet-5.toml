@@ -1,3 +1,5 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
 # Toggle: thinking.type = adaptive|disabled (Anthropic Messages wire; SayGM mirrors upstream)
 # Effort: output_config.effort = low|medium|high|xhigh|max
 schema = 2
@@ -5,6 +7,7 @@ base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [api.messages]
 base_url = "https://api.saygm.com/v1"
@@ -12,7 +15,7 @@ sdk = { aisdk = "@ai-sdk/anthropic" }
 
 [cost.text.input]
 price = 1.8
-cache = { read = 0.18, write = 2.25 }
+cache = { read = 0.18, write = { "5m" = 2.25, "1h" = 3.6 } }
 
 [cost.text.output]
 price = 9

@@ -1,3 +1,5 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
 # Confidential (TEE) id; served inside a TEE by the same enclave deployments as
 # https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
 # Toggle: chat_template_kwargs.thinking = true|false
@@ -8,6 +10,7 @@ name = "GLM 5.1 TEE"
 [capabilities]
 structured_output = true
 reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
 [limit]
 context = 202_752

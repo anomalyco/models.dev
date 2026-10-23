@@ -1,29 +1,32 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
 schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 
 [capabilities]
 structured_output = true
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
 
 [api.generate-content]
 base_url = "https://api.saygm.com/v1beta"
 sdk = { aisdk = "@ai-sdk/google" }
 
 [cost.text.input]
-price = 1.39
-cache = { read = 0.139 }
+price = 1.6
+cache = { read = 0.16 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 200_000 } }
-price = 2.78
-cache = { read = 0.278 }
+price = 3.2
+cache = { read = 0.32 }
 
 [cost.text.output]
-price = 8.34
+price = 9.6
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_000 } }
-price = 12.51
+price = 14.4
 
 [cost.audio.input]
-price = 1.39
+price = 1.6

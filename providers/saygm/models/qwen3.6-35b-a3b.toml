@@ -1,3 +1,5 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (integer reasoning tokens)
 # SayGM serves this id text-only (its /v1/models capabilities report vision: false).
@@ -12,13 +14,14 @@ output = ["text"]
 [capabilities]
 structured_output = true
 reasoning = { supported = true, toggle = true, budget = {} }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.24304
-cache = { read = 0.24304 }
+price = 0.1984
+cache = { read = 0.1984 }
 
 [cost.text.output]
-price = 1.4553
+price = 1.188

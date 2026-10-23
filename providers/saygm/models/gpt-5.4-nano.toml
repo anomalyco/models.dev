@@ -1,13 +1,16 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
 schema = 2
 base_model = "openai/gpt-5.4-nano"
 
 [capabilities]
 structured_output = true
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [cost.text.input]
-price = 0.1476
-cache = { read = 0.01476 }
+price = 0.18
+cache = { read = 0.018 }
 
 [cost.text.output]
-price = 0.9225
+price = 1.125

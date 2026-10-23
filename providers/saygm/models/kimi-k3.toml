@@ -1,3 +1,5 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
 # Effort: reasoning_effort = low|high|max
 # Source: https://platform.kimi.ai/docs/api/models-overview (K3 always reasons).
 schema = 2
@@ -6,6 +8,7 @@ base_model = "moonshotai/kimi-k3"
 [capabilities]
 structured_output = true
 reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

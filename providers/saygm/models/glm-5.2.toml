@@ -1,10 +1,14 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
+# Toggle: thinking.type = enabled|disabled (SayGM forwards it unchanged)
 # Effort: reasoning_effort = high|max (Z.ai maps low/medium to high and xhigh to max)
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true, effort = ["high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
