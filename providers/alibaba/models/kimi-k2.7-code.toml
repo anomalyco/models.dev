@@ -4,6 +4,7 @@
 # Cache: implicit (and explicit in China (Beijing)) per the context-cache model lists; implicit hits at 20% of input.
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the cache; thinking_budget changes kept it; adding tools missed it.
 # effort_updates: left out. Changing thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.7-code"
@@ -12,12 +13,12 @@ base_model = "moonshotai/kimi-k2.7-code"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, budget = {} }
 top_k = false
-system_updates = true
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.messages]
 base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"

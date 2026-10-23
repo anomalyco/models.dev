@@ -6,6 +6,7 @@
 # effort_updates: left out. Live 2026-10-23 (~8k-token first user message): changing thinking_budget for one turn (100 <-> 2048) keeps the cache (6.7k-9.2k cached, same as the control; the 100 cap holds reasoning at 100 vs 150-226 tokens), but that's a top-level change, not an in-history effort message, so it doesn't count. Changing reasoning_effort (xhigh <-> low) or flipping enable_thinking drops it to 0.
 # Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 # Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 12.5%, explicit creation 125%, explicit read 8.5% of input (https://www.qwencloud.com/models/qwen3.8-max-0902, accessed 2026-10-23).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3.8-max-0902"
@@ -14,12 +15,12 @@ base_model = "alibaba/qwen3.8-max-0902"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
 structured_output = true
-system_updates = true
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }

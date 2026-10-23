@@ -4,6 +4,7 @@
 # Re-checked live 2026-10-23 (~8k-token first user message): a late system message is accepted and followed; the control gets no cache hits (implicit or explicit), so there is no cached prefix to lose and system_updates stays.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 name = "Qwen3.5 35B-A3B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -22,7 +23,6 @@ structured_output = true
 temperature = true
 top_p = true
 top_k = true
-system_updates = true
 stream_usage = true
 cache = false
 
@@ -31,6 +31,7 @@ context = 262_144
 output = 65_536
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }

@@ -5,6 +5,7 @@
 # Cache: implicit (context-cache model lists); the hit price is not published ("see the console").
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache (hits observed although the model is not in the context-cache lists); enable_thinking and reasoning_effort changes missed it.
 # Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 v2_only = true
 base_model = "deepseek/deepseek-v4-pro-0813"
@@ -13,13 +14,13 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 top_k = false
-system_updates = true
 effort_updates = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
