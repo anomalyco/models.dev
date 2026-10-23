@@ -151,7 +151,7 @@ test("clears authored tiers and cache_write the table no longer lists", () => {
   expect(cost?.tiers).toBeUndefined();
 });
 
-test("resolves preview and alias filenames", () => {
+test("resolves preview filenames", () => {
   const preview = parseGitHubCopilotPricing([
     row({ model: "Example Model", release_status: "Public preview" }),
   ]);
@@ -159,20 +159,11 @@ test("resolves preview and alias filenames", () => {
     "example-model-preview": authoredTerra,
   }))?.id).toBe("example-model-preview");
 
-  const alias = parseGitHubCopilotPricing([row({ model: "MAI-Code-1-Flash", provider: "microsoft" })]);
-  expect(githubCopilot.translateModel(alias[0]!, translationContext({
-    "mai-code-1-flash-picker": authoredTerra,
-  }))?.id).toBe("mai-code-1-flash-picker");
-
-  // An exact slug match wins over both fallbacks.
+  // An exact slug match wins over the preview fallback.
   expect(githubCopilot.translateModel(preview[0]!, translationContext({
     "example-model": authoredTerra,
     "example-model-preview": authoredTerra,
   }))?.id).toBe("example-model");
-  expect(githubCopilot.translateModel(alias[0]!, translationContext({
-    "mai-code-1-flash": authoredTerra,
-    "mai-code-1-flash-picker": authoredTerra,
-  }))?.id).toBe("mai-code-1-flash");
 });
 
 test("skips ignored rows silently and unmatched rows with an ID", () => {
@@ -196,6 +187,7 @@ test.each([
   "GPT-4.1",
   "GPT-5.2",
   "GPT-5.2-Codex",
+  "MAI-Code-1-Flash",
   "Raptor mini",
 ])("ignores retired %s for translation and missing-model discovery", (name) => {
   const [model] = parseGitHubCopilotPricing([row({ model: name, release_status: "Public preview" })]);
