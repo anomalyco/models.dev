@@ -1,4 +1,4 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-23): on the novita route a mid-conversation system message is rendered (+26 to +30 prompt tokens) and followed (French 2 of 2), so system_updates is true although Google's own API hoists it; no cache read on any request, so nothing to lose. No per-turn effort or tool-change mechanism reaches this model on this API.
+# Mid-conversation: system_updates unset. Vercel and the novita route don't document mid-conversation system messages for this model, and Google's own API moves them to the top. The earlier true came from a live run only (@ai-sdk/gateway, 2026-10-23: the message was rendered and followed, with no cache to check where it landed). No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
@@ -10,7 +10,6 @@ output = ["text"]
 tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 

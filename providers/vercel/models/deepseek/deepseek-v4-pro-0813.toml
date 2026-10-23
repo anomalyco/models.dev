@@ -1,4 +1,4 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). No per-turn effort or tool-change mechanism reaches this model on this API.
+# Mid-conversation: system_updates unset. Vercel doesn't document mid-conversation system messages for this model, and it routes to third-party hosts that don't document it either. The earlier true came from one live run on the default route (cache prefix kept, @ai-sdk/gateway, 2026-10-19), which isn't enough on its own. DeepSeek's own API moves them to the leading prompt on V4 Pro (providers/deepseek). No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
@@ -7,7 +7,6 @@ description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
