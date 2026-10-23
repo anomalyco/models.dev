@@ -7,7 +7,7 @@
 # (DeepSeek V4 Flash works out to $0.028/$0.11 per MTok on a pass).
 # That no-pass rate is the gateway's own live billing row, compared field by field against each
 # lab's first-party entry in this repo: of the 23 paid entries, 21 have a lab rate to compare to,
-# 15 of those sit at or under it on every field, and 6 are above on 9 fields in total - three
+# 14 of those sit at or under it on every field, and 7 are above on 9 fields in total - three
 # cached-input rates (deepseek-v4-flash 0.014 vs 0.003, deepseek-v4-pro and its -thinking alias
 # 0.055 vs 0.022), two output rates (minimax-m3 and its -thinking alias 1.25 vs 1.2) and both
 # text rates of glm-5.3-flash and its -thinking alias (0.15 in vs 0.11952, 0.45 out vs 0.41831).
@@ -32,6 +32,7 @@
 # Source: https://github.com/QuantumNous/new-api (CrowLLM runs this gateway).
 name = "CrowLLM"
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 env = ["CROWLLM_API_KEY"]
 api = "https://crowllm.com/v1"
 doc = "https://crowllm.com/docs"
