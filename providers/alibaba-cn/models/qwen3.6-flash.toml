@@ -8,7 +8,7 @@ schema = 2
 base_model = "alibaba/qwen3.6-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 131_072 } }
 structured_output = true
 stream_usage = true

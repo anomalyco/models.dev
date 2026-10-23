@@ -9,7 +9,7 @@ v2_only = true
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false

@@ -6,7 +6,6 @@ base_model = "openai/gpt-oss-safeguard-20b"
 tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 128_000

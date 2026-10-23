@@ -18,12 +18,11 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text", "audio/wav"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 temperature = true
 top_p = true
 top_k = true
-effort_updates = false
 stream_usage = true
 cache = false
 

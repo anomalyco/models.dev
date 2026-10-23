@@ -14,12 +14,11 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
 top_p = true
 top_k = true
-effort_updates = false
 stream_usage = true
 
 [limit]
