@@ -1,0 +1,38 @@
+# Prices: https://zro.moonmath.ai/pricing (API tab, USD per 1M tokens, list price).
+# Limits and modalities: https://zro.moonmath.ai/models (context 1,048,576 tokens on every Zro model).
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers.
+# Effort: reasoning_effort = low|high|max on /v1/chat/completions; thinking is always on, no off level.
+# Zro's own uncensored fine-tune of GLM-5.3-Flash, served only on Zro, so it is defined inline (no lab entry).
+# Weights are not published.
+schema = 2
+name = "Dolly 1 Security"
+description = "Uncensored long-context model for security and agent workflows"
+open_weights = false
+release_date = "2026-09-14"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.50
