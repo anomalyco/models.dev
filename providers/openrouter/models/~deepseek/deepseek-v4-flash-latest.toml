@@ -24,7 +24,7 @@ effort_updates = false
 
 [limit]
 context = 1_048_576
-output = 943_718
+output = 131_072
 
 [api.chat-completions]
 
@@ -35,8 +35,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.0475
-cache = { read = 0.028 }
+price = 0.04708
+cache = { read = 0.001498 }
 
 [cost.text.output]
-price = 0.1568
+price = 0.14124
