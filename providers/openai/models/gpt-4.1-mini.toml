@@ -1,6 +1,7 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4.1-mini
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
 schema = 2
 name = "GPT-4.1 mini"
 description = "Affordable GPT-4.1 lane for fast coding help and structured extraction"
@@ -14,7 +15,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
@@ -30,6 +31,7 @@ context = 1_047_576
 output = 32_768
 
 [api.responses]
+capabilities = { tools = { updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }

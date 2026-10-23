@@ -1,4 +1,5 @@
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4.1-nano
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
 schema = 2
 name = "GPT-4.1 nano"
 description = "Tiny GPT-4.1 option for classification, routing, and very high-volume tasks"
@@ -13,7 +14,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
@@ -29,6 +30,7 @@ context = 1_047_576
 output = 32_768
 
 [api.responses]
+capabilities = { tools = { updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
