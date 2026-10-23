@@ -14,6 +14,14 @@ system_updates = true
 effort_updates = false
 cache = { supported = true, implicit = { min_tokens = 1_024 } }
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 1.75
 cache = { read = 0.175 }

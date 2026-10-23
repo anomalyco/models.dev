@@ -66,6 +66,7 @@ import {
   resolveCanonicalBaseModel,
   catalogCost,
   overrideWhen,
+  withTextApis,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
 import {
@@ -7405,7 +7406,30 @@ test("syncs OpenRouter decision models with no supported parameters as decision 
     authored: () => undefined,
   });
   expect(chat?.model.type).toBeUndefined();
-  expect(chat?.v2Set).not.toHaveProperty("api");
+  expect(chat?.v2Set?.api).toBe(withTextApis);
+});
+
+test("lists Responses and Messages after the first API for OpenRouter text-only models", () => {
+  const extra = {
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } },
+    messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } },
+  };
+  // A file with no table gets the provider's default Chat Completions API first.
+  expect(withTextApis(undefined)).toEqual({ "chat-completions": {}, ...extra });
+  // The existing first table is kept as is, and a second run changes nothing.
+  const first = { "chat-completions": { compatibility: { reasoning_field: "reasoning_details" } } };
+  const once = withTextApis(first);
+  expect(once).toEqual({ ...first, ...extra });
+  expect(Object.keys(once)).toEqual(["chat-completions", "responses", "messages"]);
+  expect(withTextApis(once)).toEqual(once);
+
+  // Models that also output images or audio stay on their own APIs.
+  const audio = openrouter.translateModel(openRouterModel({
+    id: "openai/gpt-audio",
+    name: "OpenAI: GPT Audio",
+    architecture: { input_modalities: ["text", "audio"], output_modalities: ["text", "audio"] },
+  }), translateContext);
+  expect(audio?.v2Set).not.toHaveProperty("api");
 });
 
 test("lists the Images API next to chat for OpenRouter chat models with an image lab", () => {

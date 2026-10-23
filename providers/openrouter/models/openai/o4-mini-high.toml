@@ -28,6 +28,14 @@ cache = { supported = true, implicit = { min_tokens = 1_024 } }
 context = 200_000
 output = 100_000
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 1.1
 cache = { read = 0.275 }

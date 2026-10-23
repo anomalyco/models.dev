@@ -264,11 +264,13 @@ export const openrouter = {
       ? undefined
       : catalogV2Set(model, context.v2?.(model.id));
     const api = isDecisionModel(model)
-      ? DECISION_APIS
+      ? structuredClone(DECISION_APIS)
       : "base_model" in built && typeof built.base_model === "string" && rawLabModel(built.base_model)?.type === "image"
-        ? IMAGE_CHAT_APIS
-        : undefined;
-    const v2Set = api === undefined ? catalog?.v2Set : { ...catalog?.v2Set, api: structuredClone(api) };
+        ? structuredClone(IMAGE_CHAT_APIS)
+        : isTextOnly(model)
+          ? withTextApis
+          : undefined;
+    const v2Set = api === undefined ? catalog?.v2Set : { ...catalog?.v2Set, api };
     return {
       id: model.id,
       model: translated,
@@ -310,6 +312,30 @@ const IMAGE_CHAT_APIS = {
   "chat-completions": {},
   images: { sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
 };
+// Text models are also served on POST /api/v1/responses (OpenAI Responses format, stateless) and
+// POST /api/v1/messages (Anthropic Messages format), which take any OpenRouter model ID. The catalog
+// has no per-model endpoint list. Models that also output images or audio stay on Chat Completions.
+// https://openrouter.ai/docs/api/reference/responses/overview
+// https://openrouter.ai/docs/api/api-reference/anthropic-messages/create-a-message
+// https://openrouter.ai/docs/cookbook/coding-agents/claude-code-integration ("Some picker entries route
+// to non-Anthropic providers")
+const TEXT_APIS = {
+  responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } },
+  messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } },
+};
+
+function isTextOnly(model: OpenRouterModel) {
+  const output = model.architecture.output_modalities;
+  return output.length === 1 && output[0] === "text";
+}
+
+// The file's API tables with Responses and Messages after them. The first table stays as it is
+// (v1 reads it), or is the provider's default Chat Completions API when the file has none.
+export function withTextApis(current: unknown) {
+  const tables = isPlainObject(current) ? current : {};
+  const first = Object.keys(tables)[0] ?? "chat-completions";
+  return { [first]: tables[first] ?? {}, ...tables, ...structuredClone(TEXT_APIS) };
+}
 
 // ---------------------------------------------------------------------------
 // Speech, transcription, embedding, rerank and image models (v2-only files)
