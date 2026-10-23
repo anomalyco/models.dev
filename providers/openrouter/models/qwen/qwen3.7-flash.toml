@@ -1,7 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Alibaba)
-# effort_updates = true: toggling reasoning.enabled for one turn keeps the cache (live 2026-10-23 pinned to Alibaba: control 6,016-6,400 cached; off -> on and on -> off turns read the full 6,016 in 4/4, reasoning 0 <-> 3,000 tokens); configuration_update itself is rejected with a 400
+# effort_updates: left out. Toggling reasoning.enabled on the next request keeps the cache (live 2026-10-23 pinned to Alibaba), but there's no in-history effort message (configuration_update is rejected with a 400), so it doesn't count.
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 base_model = "alibaba/qwen3.7-flash"
@@ -12,7 +12,6 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = false
 system_updates = true
-effort_updates = true
 
 [limit]
 output = 65_536
