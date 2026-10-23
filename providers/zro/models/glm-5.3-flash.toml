@@ -1,6 +1,9 @@
+# Wire: only OpenAI-style `reasoning_effort` is forwarded; thinking is always on.
+# Effort: reasoning_effort = low|high|max (no off level).
 # Pricing: https://zro.moonmath.ai/pricing API tab (USD / 1M tokens, list).
-# Host output cap is 64_000 vs lab 131_072.
+# Zro serves this model text-only (lab is multimodal); host output cap is 64_000.
 base_model = "zhipuai/glm-5.3-flash"
+attachment = false
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
@@ -9,8 +12,12 @@ field = "reasoning_content"
 [cost]
 input = 0.15
 output = 0.50
-cache_read = 0.03
+cache_read = 0.04
 
 [limit]
 context = 1_048_576
 output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

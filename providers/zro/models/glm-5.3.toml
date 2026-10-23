@@ -1,3 +1,5 @@
+# Wire: only OpenAI-style `reasoning_effort` is forwarded; thinking is always on.
+# Effort: reasoning_effort = low|high|max (no off level).
 # Pricing: https://zro.moonmath.ai/pricing API tab (USD / 1M tokens, list).
 base_model = "zhipuai/glm-5.3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
@@ -7,8 +9,9 @@ field = "reasoning_content"
 
 [cost]
 input = 1.40
-output = 4.40
-cache_read = 0.26
+output = 4.20
+cache_read = 0.30
 
 [limit]
 context = 1_048_576
+output = 131_000

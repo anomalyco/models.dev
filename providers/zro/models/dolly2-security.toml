@@ -1,0 +1,31 @@
+# Wire: only OpenAI-style `reasoning_effort` is forwarded; thinking is always on.
+# Effort: reasoning_effort = low|high|max (no off level).
+# Pricing: https://zro.moonmath.ai/pricing API tab (USD / 1M tokens, list).
+# Zro's own fine-tune of GLM-5.3 (no shared lab identity); public API id is dolly2-security.
+name = "Dolly 2 Security"
+description = "Uncensored long-context model for security and agent workflows"
+release_date = "2026-10-20"
+last_updated = "2026-10-20"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.10
+output = 6.30
+cache_read = 0.45
+
+[limit]
+context = 1_048_576
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
