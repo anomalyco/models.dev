@@ -1,1 +1,49 @@
-../../../google/models/gemini-2.5-pro.toml
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# Flex halves input/output only; cache reads and storage stay at Standard rates.
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $35 per 1,000 grounded prompts (one charge per prompt, however many queries it runs). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Grounding keeps its price under Priority, Flex and the scheduled increases (https://ai.google.dev/gemini-api/docs/pricing).
+schema = 2
+base_model = "google/gemini-2.5-pro"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
+structured_output = true
+cache = { implicit = { min_tokens = 2_048 }, explicit = true }
+service_tier = ["flex", "priority"]
+system_updates = false
+effort_updates = false
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125, storage = 4.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 15
+
+[cost.web_search]
+price = 35
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.8 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5 }, output = { price = 0.5 } } }

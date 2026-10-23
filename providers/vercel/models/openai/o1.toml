@@ -1,1 +1,20 @@
-../../../openai/models/o1.toml
+schema = 2
+base_model = "openai/o1"
+status = "deprecated"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+store = true
+cache = { implicit = { min_tokens = 1_024 } }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 15
+cache = { read = 7.5 }
+
+[cost.text.output]
+price = 60

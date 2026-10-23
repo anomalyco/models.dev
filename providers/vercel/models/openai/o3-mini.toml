@@ -1,1 +1,20 @@
-../../../openai/models/o3-mini.toml
+schema = 2
+base_model = "openai/o3-mini"
+status = "deprecated"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+store = true
+cache = { implicit = { min_tokens = 1_024 } }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4

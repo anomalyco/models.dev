@@ -1,3 +1,4 @@
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4.1-nano
 schema = 2
 name = "GPT-4.1 nano"
 description = "Tiny GPT-4.1 option for classification, routing, and very high-volume tasks"
@@ -26,6 +27,11 @@ service_tier = ["priority"]
 [limit]
 context = 1_047_576
 output = 32_768
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 0.1

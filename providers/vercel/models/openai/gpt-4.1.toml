@@ -1,1 +1,32 @@
-../../../openai/models/gpt-4.1.toml
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing).
+schema = 2
+base_model = "openai/gpt-4.1"
+
+[capabilities]
+tools = { supported = true, updates = true }
+structured_output = true
+system_updates = true
+effort_updates = false
+store = true
+cache = { implicit = { ttl = ["24h"], min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["priority"]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.75 }
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }

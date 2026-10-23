@@ -1,5 +1,6 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4.1
 schema = 2
 name = "GPT-4.1"
 description = "Long-lived GPT workhorse for coding, instruction following, and production apps"
@@ -27,6 +28,11 @@ service_tier = ["priority"]
 [limit]
 context = 1_047_576
 output = 32_768
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 2

@@ -1,5 +1,6 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Flex (https://developers.openai.com/api/docs/guides/flex-processing).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-5-nano
 schema = 2
 name = "GPT-5 Nano"
 description = "Tiny GPT-5 lane for routing, extraction, classification, and bulk jobs"
@@ -28,6 +29,11 @@ service_tier = ["flex"]
 context = 400_000
 input = 272_000
 output = 128_000
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 0.05

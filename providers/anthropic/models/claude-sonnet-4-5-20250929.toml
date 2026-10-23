@@ -1,4 +1,5 @@
 # Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
+# APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
 schema = 2
 name = "Claude Sonnet 4.5"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
@@ -23,6 +24,12 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 [limit]
 context = 200_000
 output = 64_000
+
+[api.messages]
+
+[api.chat-completions]
+base_url = "https://api.anthropic.com/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 3

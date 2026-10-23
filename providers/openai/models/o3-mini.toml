@@ -1,3 +1,4 @@
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/o3-mini
 schema = 2
 name = "o3-mini"
 description = "Smaller o-series reasoner for economical coding, math, and planning tasks"
@@ -26,6 +27,11 @@ prompt_cache_key = true
 [limit]
 context = 200_000
 output = 100_000
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 1.1

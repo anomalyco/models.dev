@@ -1,3 +1,4 @@
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/o1
 schema = 2
 name = "o1"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
@@ -25,6 +26,11 @@ prompt_cache_key = true
 [limit]
 context = 200_000
 output = 100_000
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 15

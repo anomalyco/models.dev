@@ -1,5 +1,6 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/o3
 schema = 2
 name = "o3"
 description = "Deliberate o-series reasoner for hard math, coding, and multi-step analysis"
@@ -27,6 +28,11 @@ service_tier = ["flex", "priority"]
 [limit]
 context = 200_000
 output = 100_000
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 2
