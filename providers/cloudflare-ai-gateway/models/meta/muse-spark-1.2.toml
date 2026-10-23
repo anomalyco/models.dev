@@ -6,12 +6,10 @@ schema = 2
 base_model = "meta/muse-spark-1.2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 cache = { implicit = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 

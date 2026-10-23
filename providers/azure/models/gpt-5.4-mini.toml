@@ -23,7 +23,6 @@ store = true
 cache = { implicit = { min_tokens = 1_024 } }
 service_tier = ["priority"]
 system_updates = true
-effort_updates = false
 
 [api.responses]
 capabilities = { tools = { updates = true } }

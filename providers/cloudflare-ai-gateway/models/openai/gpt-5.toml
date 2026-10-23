@@ -10,7 +10,6 @@ reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 cache = { implicit = { ttl = ["24h"], min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 128_000

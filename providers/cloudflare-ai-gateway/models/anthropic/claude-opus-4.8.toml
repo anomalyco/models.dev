@@ -10,7 +10,6 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_000_000

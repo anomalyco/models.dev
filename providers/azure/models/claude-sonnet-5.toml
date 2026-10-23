@@ -10,12 +10,11 @@ schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 system_updates = true
-effort_updates = false
 
 [api.messages]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

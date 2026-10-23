@@ -8,8 +8,7 @@ base_model = "zhipuai/glm-5.2"
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1, max = 50_000 } }
 structured_output = false
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = true, explicit = true }
 
 [api.chat-completions]

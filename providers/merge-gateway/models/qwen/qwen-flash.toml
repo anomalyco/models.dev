@@ -8,8 +8,7 @@ base_model = "alibaba/qwen-flash"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = true }
 
 [limit]
