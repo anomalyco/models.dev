@@ -78,17 +78,36 @@ test("a null reasoning flag on a new model is withheld like a true one", () => {
   ).toThrow(MissingReasoningOptionsError);
 });
 
-test("embeddings never reason, so null reasoning does not withhold them", () => {
-  const synced = buildTensorXModel(
+test("embeddings sync as v2-only models with the embeddings wire API", () => {
+  const result = tensorx.translateModel(
     model("qwen/qwen3-embedding-8b", {
       mode: "embedding",
       supports_reasoning: null,
       output_cost_per_token: null,
     }),
-    undefined,
-    undefined,
+    context({}),
   );
-  expect("base_model" in synced ? synced.base_model : undefined).toBe("alibaba/qwen3-embedding-8b");
+  expect(result && "v2" in result ? result.v2 : undefined).toMatchObject({
+    schema: 2,
+    v2_only: true,
+    base_model: "alibaba/qwen3-embedding-8b",
+    limit: { context: 262_144 },
+    api: {
+      embeddings: {
+        sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: "none" },
+      },
+    },
+    cost: { text: { input: { price: 1.5 }, output: { price: 0 } } },
+  });
+});
+
+test("an embedding without a token price is left to hand authoring", () => {
+  expect(
+    tensorx.translateModel(
+      model("qwen/qwen3-embedding-8b", { mode: "embedding", input_cost_per_token: null }),
+      context({}),
+    ),
+  ).toBeUndefined();
 });
 
 test("authored cache prices survive gateway-null cache flags", () => {
@@ -181,29 +200,14 @@ test("a new reasoning model without known controls raises MissingReasoningOption
   ).toThrow(MissingReasoningOptionsError);
 });
 
-test("embeddings sync as type embedding with lab-inherited limits", () => {
-  const synced = buildTensorXModel(
-    model("qwen/qwen3-embedding-8b", {
-      mode: "embedding",
-      max_input_tokens: 40_960,
-      max_output_tokens: null,
-      output_cost_per_token: null,
-      supports_reasoning: false,
-      supports_vision: false,
-    }),
-    { tool_call: false, structured_output: undefined, limit: { context: 40_960, output: 0 } },
-    undefined,
-  );
-  // Lab card already types it as an embedding model with output 0; the host
-  // file restates only cost and the wider read context.
-  expect(synced).toMatchObject({
-    cost: { input: 1.5, output: 0 },
-    limit: { context: 40_960 },
-  });
-  // The lab card (context 32_768, output 0) owns the output limit; the host
-  // file restates only the wider input context.
-  expect("limit" in synced && synced.limit !== undefined ? synced.limit.output : undefined).toBeUndefined();
-  if ("structured_output" in synced) expect(synced.structured_output).not.toBe(false);
+test("retained files and skipped modes surface in the sync report", () => {
+  expect(tensorx.missingNotice!(["providers/tensorx/models/z-ai/glm-5.toml"])).toEqual([
+    "1 local TensorX models are absent from /v1/model/info and were retained for manual lifecycle review.",
+    "Retained local paths: `providers/tensorx/models/z-ai/glm-5.toml`",
+  ]);
+  expect(tensorx.missingNotice!([])).toEqual([]);
+  expect(tensorx.skippedNotice!(["Systran/faster-whisper-large-v3"])).toHaveLength(2);
+  expect(tensorx.skippedNotice!([])).toEqual([]);
 });
 
 test("non-chat modes keep authored entries or get skipped", () => {
