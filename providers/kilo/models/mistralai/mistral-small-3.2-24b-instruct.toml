@@ -10,6 +10,9 @@ tools = { supported = true, updates = false }
 structured_output = true
 effort_updates = false
 
+[limit]
+context = 128_000
+
 [cost.text.input]
 price = 0.1
 cache = { read = 0.01 }
