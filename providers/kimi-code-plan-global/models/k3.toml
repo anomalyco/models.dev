@@ -21,6 +21,12 @@ cache = { implicit = true }
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/moonshot/messages" }
+
 [cost.text.input]
 price = 0
 cache = { read = 0, write = 0 }

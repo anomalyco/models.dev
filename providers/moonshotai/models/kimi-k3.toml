@@ -30,6 +30,13 @@ output = 1_048_576
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
+
+[api.messages]
+base_url = "https://api.moonshot.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/moonshot/messages" }
+
 [cost.text.input]
 price = 3
 cache = { read = 0.3, write = { "5m" = 3, "1h" = 6 } }

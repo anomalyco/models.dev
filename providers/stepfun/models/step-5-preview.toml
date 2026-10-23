@@ -27,6 +27,12 @@ output = 65_536
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 1.04613
 cache = { read = 0.10461 }

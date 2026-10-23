@@ -24,6 +24,12 @@ cache = { implicit = { min_tokens = 256 } }
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 0.20175
 cache = { read = 0.04035 }

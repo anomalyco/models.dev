@@ -30,6 +30,17 @@ cache = { implicit = { min_tokens = 512 }, explicit = true }
 context = 204_800
 output = 131_072
 
+[api.messages]
+
+[api.chat-completions]
+base_url = "https://api.minimax.cn/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/minimax/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://api.minimax.cn/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/minimax/responses" }
+
 [cost.text.input]
 price = 0.6275
 cache = { read = 0.0314, write = 0.3922 }

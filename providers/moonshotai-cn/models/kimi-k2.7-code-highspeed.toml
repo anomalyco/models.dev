@@ -19,6 +19,13 @@ cache = { implicit = true }
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
+
+[api.messages]
+base_url = "https://api.moonshot.cn/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/moonshot/messages" }
+
 [cost.text.input]
 price = 1.9421
 cache = { read = 0.3884 }

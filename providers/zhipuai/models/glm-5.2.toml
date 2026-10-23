@@ -27,6 +27,14 @@ cache = { implicit = true }
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.messages]
+base_url = "https://open.bigmodel.cn/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-coding-plan/messages" }
+
+[api.responses]
+base_url = "https://open.bigmodel.cn/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
+
 [cost.text.input]
 price = 1.19516
 cache = { read = 0.29879, write = 0 }

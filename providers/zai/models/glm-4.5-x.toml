@@ -23,6 +23,14 @@ cache = { implicit = true }
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.messages]
+base_url = "https://api.z.ai/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-coding-plan/messages" }
+
+[api.responses]
+base_url = "https://api.z.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
+
 [cost.text.input]
 price = 2.2
 cache = { read = 0.45, write = 0 }
