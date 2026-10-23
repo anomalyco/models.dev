@@ -30,7 +30,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel
 
 [cost.text.input]
 price = 4
-cache = { read = 0.2 }
+cache = { read = 0.2, write = 4 }
 
 [cost.text.output]
 price = 20
