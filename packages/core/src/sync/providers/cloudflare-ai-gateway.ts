@@ -35,6 +35,47 @@ const NATIVE_API: Record<string, { npm: string; protocol: string }> = {
 };
 const OPENCODE_PACKAGE = "@opencode/ai/providers/cloudflare-ai-gateway";
 
+// The REST API also serves POST /ai/v1/chat/completions, /ai/v1/responses and
+// /ai/v1/messages; the catalog's request_formats lists the ones each model takes.
+// https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+// The gateway's OpenCode entry point has no per-API entry points yet, so every
+// table names the main one.
+const REST_BASE_URL = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1";
+const REST_APIS: Record<string, { protocol: string; aisdk: string }> = {
+  "chat-completions": { protocol: "chat-completions", aisdk: "@ai-sdk/openai-compatible" },
+  responses: { protocol: "responses", aisdk: "@ai-sdk/openai" },
+  "anthropic-messages": { protocol: "messages", aisdk: "@ai-sdk/anthropic" },
+};
+
+// A text model's APIs: its first table (what v1 reads: the native route for OpenAI
+// and Anthropic, else the provider's default), then a REST table for every other
+// format the catalog lists.
+export function gatewayApis(
+  current: unknown,
+  nativeProtocol: string | undefined,
+  requestFormats: unknown,
+): Record<string, unknown> | undefined {
+  const tables = isRecord(current) ? current : {};
+  const [firstKey, firstValue] = Object.entries(tables)[0] ?? [nativeProtocol ?? "chat-completions", {}];
+  const first = isRecord(firstValue) ? firstValue : {};
+  const api: Record<string, unknown> = {
+    [firstKey]: firstKey === nativeProtocol
+      ? { ...first, sdk: { ...(isRecord(first.sdk) ? first.sdk : {}), opencodeai: OPENCODE_PACKAGE } }
+      : first,
+  };
+  for (const format of Array.isArray(requestFormats) ? requestFormats : []) {
+    const rest = typeof format === "string" ? REST_APIS[format] : undefined;
+    if (rest === undefined || rest.protocol in api) continue;
+    api[rest.protocol] = { base_url: REST_BASE_URL, sdk: { aisdk: rest.aisdk, opencodeai: OPENCODE_PACKAGE } };
+  }
+  if (Object.keys(tables).length === 0 && nativeProtocol === undefined && Object.keys(api).length === 1) return undefined;
+  return api;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 const Price = z.number().nonnegative();
 const ProviderDetail = z.object({
   id: z.string().min(1),
@@ -46,6 +87,7 @@ const CatalogEntry = z.object({
   task: z.string(),
   context_length: z.number().int().positive().nullish(),
   provider_details: z.array(ProviderDetail).nullish(),
+  request_formats: z.array(z.string()).nullish(),
 }).passthrough();
 // Some proxied rows (e.g. reflection-ai/beam-1.0-501b-a23b at launch) ship with
 // provider_details = null. Those need a curated cost; see catalogCost.
@@ -278,7 +320,7 @@ export const cloudflareAiGateway = {
         context.authored(id),
       ),
       header: noteHeader([...prefixNotes(id), ...curated.note ?? []]),
-      ...(native === undefined ? {} : { v2Set: { [`api.${native.protocol}.sdk.opencodeai`]: OPENCODE_PACKAGE } }),
+      v2Set: { api: (current: unknown) => gatewayApis(current, native?.protocol, source.catalog.request_formats) },
     };
   },
 } satisfies SyncProvider<SourceModel>;

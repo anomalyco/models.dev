@@ -10,6 +10,7 @@ import {
   buildCloudflareAiGatewayModel,
   cloudflareAiGateway,
   deriveReasoningOptions,
+  gatewayApis,
   mediaCost,
   routeModalities,
 } from "../src/sync/providers/cloudflare-ai-gateway.js";
@@ -1042,3 +1043,28 @@ function restoreEnv(name: string, value: string | undefined) {
   if (value === undefined) delete process.env[name];
   else process.env[name] = value;
 }
+
+test("lists a REST table for every other request format the catalog gives a gateway model", () => {
+  const main = "@opencode/ai/providers/cloudflare-ai-gateway";
+  const base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1";
+  // OpenAI: the native Responses route stays first; Chat Completions goes through REST.
+  const openai = gatewayApis({ responses: { sdk: { aisdk: "@ai-sdk/openai" } } }, "responses", ["responses", "chat-completions"]);
+  expect(openai).toEqual({
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main } },
+    "chat-completions": { base_url, sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: main } },
+  });
+  expect(gatewayApis(openai, "responses", ["responses", "chat-completions"])).toEqual(openai);
+  // A Responses-only model keeps its default Chat Completions table first.
+  expect(gatewayApis(undefined, undefined, ["responses"])).toEqual({
+    "chat-completions": {},
+    responses: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: main } },
+  });
+  expect(gatewayApis(undefined, undefined, ["chat-completions", "anthropic-messages"])).toEqual({
+    "chat-completions": {},
+    messages: { base_url, sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: main } },
+  });
+  // One format and no table: nothing to write. Decision tables are kept.
+  expect(gatewayApis(undefined, undefined, ["chat-completions"])).toBeUndefined();
+  const systemone = { systemone: { sdk: { aisdk: "none" } } };
+  expect(gatewayApis(systemone, undefined, null)).toEqual(systemone);
+});

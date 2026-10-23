@@ -17,6 +17,10 @@ context = 128_000
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
 
+[api.chat-completions]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
+
 [cost.text.input]
 price = 0.25
 cache = { read = 0.025 }
