@@ -8,11 +8,9 @@ base_model = "fireworks/ember-1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 943_718

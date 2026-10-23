@@ -18,13 +18,11 @@ schema = 2
 base_model = "google/gemini-3.6-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = { min_tokens = 4_096 }, explicit = true }
 service_tier = ["flex", "priority"]
-system_updates = false
-effort_updates = false
 
 [api.generate-content]
 

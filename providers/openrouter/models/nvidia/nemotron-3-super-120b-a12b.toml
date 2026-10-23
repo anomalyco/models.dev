@@ -8,10 +8,9 @@ schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium"], budget = {} }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 235_929

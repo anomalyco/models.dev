@@ -7,10 +7,9 @@ base_model = "aion-labs/aion-2.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
 
 [api.chat-completions]
 capabilities = { system_updates = true }

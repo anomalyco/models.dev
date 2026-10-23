@@ -7,10 +7,9 @@ base_model = "aion-labs/aion-3.0-mini"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
 
 [api.chat-completions]
 capabilities = { system_updates = true }

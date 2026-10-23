@@ -14,12 +14,10 @@ v2_only = true
 base_model = "google/gemini-robotics-er-2-preview"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true, explicit = true }
-system_updates = false
-effort_updates = false
 
 [api.generate-content]
 

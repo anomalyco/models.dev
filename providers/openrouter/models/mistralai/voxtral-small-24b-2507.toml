@@ -11,10 +11,8 @@ input = ["text", "audio/wav", "audio/mpeg", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 26_214

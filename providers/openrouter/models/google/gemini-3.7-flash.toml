@@ -7,11 +7,9 @@ base_model = "google/gemini-3.7-flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
 [api.chat-completions]

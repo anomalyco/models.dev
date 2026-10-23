@@ -16,11 +16,10 @@ description = "High-speed GLM-5.3-Flash serving option for coding and agent work
 release_date = "2026-09-18"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

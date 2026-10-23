@@ -19,14 +19,12 @@ schema = 2
 base_model = "google/gemini-4-argon"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
 cache = { implicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 32_768

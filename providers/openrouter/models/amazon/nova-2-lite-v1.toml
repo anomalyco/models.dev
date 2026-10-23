@@ -8,11 +8,9 @@ base_model = "amazon/nova-2-lite-v1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 

@@ -15,13 +15,11 @@ schema = 2
 base_model = "google/gemini-2.5-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 0, max = 24_576 } }
 structured_output = true
 cache = { implicit = { min_tokens = 2_048 }, explicit = true }
 service_tier = ["flex", "priority"]
-system_updates = false
-effort_updates = false
 
 [api.generate-content]
 

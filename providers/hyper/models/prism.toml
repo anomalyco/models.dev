@@ -11,9 +11,8 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
-effort_updates = false
 
 [limit]
 context = 1_000_000

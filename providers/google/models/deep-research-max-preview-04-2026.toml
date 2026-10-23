@@ -19,12 +19,10 @@ base_model = "google/deep-research-max-preview-04-2026"
 name = "Deep Research Max Preview (Apr-21-2026)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 cache = { implicit = true }
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 131_072

@@ -6,9 +6,8 @@ base_model = "meta/llama-3.1-70b-instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 131_072

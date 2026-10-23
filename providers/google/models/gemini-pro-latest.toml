@@ -21,11 +21,10 @@ base_model = "google/gemini-3.1-pro-preview"
 name = "Gemini Pro Latest"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = { min_tokens = 4_096 }, explicit = true }
-effort_updates = false
 
 [api.generate-content]
 

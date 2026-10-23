@@ -7,7 +7,7 @@ base_model = "anthropic/claude-fable-5-1"
 description = "Claude model for creative writing, analysis, and controlled agent workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

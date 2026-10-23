@@ -10,12 +10,10 @@ schema = 2
 base_model = "google/gemini-3.1-flash-live-preview"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = false
 cache = false
-system_updates = false
-effort_updates = false
 
 [api.bidi-generate-content]
 sdk = { opencodeai = "none" }

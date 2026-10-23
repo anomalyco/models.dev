@@ -23,7 +23,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 temperature = true
@@ -31,7 +31,6 @@ top_p = true
 top_k = true
 cache = { implicit = true, explicit = true }
 service_tier = ["flex", "priority"]
-effort_updates = false
 
 [limit]
 context = 1_048_576

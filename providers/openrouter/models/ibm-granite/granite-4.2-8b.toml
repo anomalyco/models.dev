@@ -7,10 +7,9 @@ base_model = "ibm/granite-4.2-8b"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 capabilities = { system_updates = true }

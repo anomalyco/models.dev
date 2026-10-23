@@ -6,10 +6,8 @@ base_model = "moonshotai/kimi-k2"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 

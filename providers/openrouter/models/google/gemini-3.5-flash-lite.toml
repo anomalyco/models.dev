@@ -7,11 +7,9 @@ base_model = "google/gemini-3.5-flash-lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
 [api.chat-completions]

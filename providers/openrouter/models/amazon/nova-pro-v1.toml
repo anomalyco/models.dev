@@ -6,11 +6,9 @@ base_model = "amazon/nova-pro-v1"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 

@@ -12,11 +12,10 @@ schema = 2
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = false
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 128_000

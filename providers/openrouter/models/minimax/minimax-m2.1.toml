@@ -5,11 +5,9 @@ schema = 2
 base_model = "minimax/MiniMax-M2.1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_details" }
