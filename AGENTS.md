@@ -11,7 +11,13 @@ bun run v1:check
 
 Run both after every catalog change. `bun validate` must pass before a PR is mergeable; it rejects any model file without `schema = 2`.
 
-`bun run v1:check` (or `bun run v1:check <ref>`) protects the published v1 API (`api.json`, etc.), which is still generated from these files. It compares the v1 output with the merge-base of `origin/dev`, lists every changed field, every model added to or removed from v1, and changed files that still use generic modalities, and exits 1 if v1 changed. Keep v1 changes to additive or clearly sourced fixes, and list them in the PR.
+`bun run v1:check` (or `bun run v1:check <ref>`) protects the published v1 API (`api.json`, etc.), which is still generated from these files. It compares the v1 output with the merge-base of `origin/dev`, lists every changed field, every model added to or removed from v1, and changed files that still use generic modalities, and exits 1 if v1 changed.
+
+**Never break v1.** The published v1 API (`api.json` and its views) must stay backward compatible:
+
+- **No new modalities in v1.** v1 only allows `text`, `audio`, `image`, `video` and `pdf` (`packages/core/src/schema.ts`). v2-only values (MIME types, `embedding`, `decision`, `reranking`) must translate to one of these or stay out of v1.
+- **No v1 schema changes.** Don't add, remove, rename or retype v1 fields, and don't add allowed values to existing v1 enums. Those changes go in v2.
+- **Data changes inside the v1 schema** (e.g. a corrected price or URL) must be clearly sourced fixes, listed in the PR, and approved by a maintainer. Run the full `bun run v1:check` and read its output.
 
 ## Two concepts: lab models vs providers
 
@@ -316,7 +322,8 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 - [ ] Provider `base_model` files are override-only (no duplicated identical fields; no provider-only keys like reasoning controls, cache or cost in `models/`)
 - [ ] Reasoning models have host-specific `capabilities.reasoning` controls per policy above
 - [ ] Costs are USD
-- [ ] `bun validate` passes; `bun run v1:check` changes are intended and listed
+- [ ] `bun validate` passes
+- [ ] v1 is not broken: no new v1 modalities, fields or enum values; every `bun run v1:check` change is a sourced fix, listed in the PR and maintainer-approved
 
 ### Strongly recommended
 
