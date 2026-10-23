@@ -1,9 +1,6 @@
 # Modalities: xAI image inputs are jpg/jpeg or png: https://docs.x.ai/docs/guides/image-understanding
-# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
-# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-23, Chat Completions) a system message between turns
-# keeps the cached prefix and is followed on DeepSeek-V4.1-Flash, Kimi-K2.7-Code and grok-4-1-fast-non-reasoning, and is followed on Llama-3.3/Llama-4-Maverick
-# (no cache on Llama); each Kimi, Grok and Llama family follows its tested model (DeepSeek models were tested one by one).
 # API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
 schema = 2
 name = "Grok 4.1 Fast (Non-Reasoning)"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
@@ -19,7 +16,6 @@ output = ["text"]
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
-system_updates = true
 effort_updates = false
 
 [limit]

@@ -10,10 +10,7 @@
 # Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
 # Its published request schema documents no toggle, effort, or reasoning budget.
 # https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-10-08)
-# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
-# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-23, Chat Completions) a system message between turns
-# keeps the cached prefix and is followed on DeepSeek-V4.1-Flash, Kimi-K2.7-Code and grok-4-1-fast-non-reasoning, and is followed on Llama-3.3/Llama-4-Maverick
-# (no cache on Llama); each Kimi, Grok and Llama family follows its tested model (DeepSeek models were tested one by one).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek-V4.1-Flash"
@@ -23,7 +20,6 @@ status = "beta"
 tools = { supported = true, updates = false }
 reasoning = { supported = true }
 structured_output = true
-system_updates = true
 effort_updates = false
 
 [limit]

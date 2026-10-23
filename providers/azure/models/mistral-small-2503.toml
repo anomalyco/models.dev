@@ -1,8 +1,6 @@
 # Modalities: Mistral vision accepts PNG, JPEG, WEBP, non-animated GIF: https://docs.mistral.ai/capabilities/vision/
-# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
-# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-23, Chat Completions) a system message between turns is
-# accepted in place and followed on mistral-small-2503 and cohere-command-a (Azure doesn't cache either); the Mistral and Cohere families follow them.
 # API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
 schema = 2
 name = "Mistral Small 3.1"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
@@ -19,7 +17,6 @@ output = ["text"]
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
-system_updates = true
 effort_updates = false
 
 [limit]
