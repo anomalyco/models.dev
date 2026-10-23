@@ -3,8 +3,8 @@
 # Checked live through the Chat Completions endpoint on 2026-10-23:
 # - Images: PNG, JPEG, WebP and GIF were read.
 # - low cut reasoning to about a quarter of high on the same prompt.
-# - Caching is automatic but not on every repeat: cached tokens are reported on production traffic,
-#   while five repeats of a 16k-token prefix on 2026-10-23 reported none.
+# - Caching is automatic but intermittent: of eight repeats of a 16k-token prefix, the 4th reported
+#   16,256 cached tokens and the 6th and 7th 14,336 each; the others none.
 # - A strict json_schema response_format was not followed (JSON under another key), so no structured output.
 # - top_k is not applied.
 schema = 2
