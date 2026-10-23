@@ -1,6 +1,7 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-5.6
+# effort_updates: a Responses `configuration_update` item between turns changes effort and keeps the cache (live 2026-10-19 and 2026-10-23; OpenAI's docs list only GPT-6).
 schema = 2
 base_model = "openai/gpt-5.6-sol"
 name = "GPT-5.6"
@@ -10,7 +11,7 @@ tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
+effort_updates = true
 store = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
