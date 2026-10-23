@@ -11,18 +11,22 @@
 # is NOT served here -- a video_url part is coerced to image_url and rejected,
 # and input_video returns 500 -- so the base entry's video input is overridden.
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "alibaba/qwen3.8-flash-next"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.0225
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.0225 }
+
+[cost.text.output]
+price = 0.47
