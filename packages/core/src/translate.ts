@@ -266,7 +266,7 @@ function costV2ToV1(cost: CostV2) {
       withoutUndefined({
         input: override.price,
         cache_read: override.cache?.read,
-        cache_write: override.cache && firstPrice(override.cache.write),
+        cache_write: cacheWrite(override.cache),
       }),
     );
   }
@@ -284,7 +284,7 @@ function costV2ToV1(cost: CostV2) {
     output: output.price,
     reasoning: output.reasoning,
     cache_read: input.cache?.read,
-    cache_write: input.cache && firstPrice(input.cache.write),
+    cache_write: cacheWrite(input.cache),
     // v1 audio prices are per token too; per-minute or per-second ones stay v2-only.
     input_audio: perToken(cost.audio?.input?.unit) ? cost.audio?.input?.price : undefined,
     output_audio: perToken(cost.audio?.output?.unit) ? cost.audio?.output?.price : undefined,
@@ -296,6 +296,13 @@ function costV2ToV1(cost: CostV2) {
 // region…) stay v2-only, like multipliers.
 function isV1Tier(override: { when: CostWhenV2 }) {
   return Object.keys(override.when).every((key) => key === "context");
+}
+
+// v1 has one cache write price. Implicit caching usually has no write fee, so a
+// file with only an explicit write price gives v1 that one.
+function cacheWrite(cache: { write?: number | Partial<Record<string, number>>; explicit?: { write?: number | Partial<Record<string, number>> } } | undefined) {
+  if (cache === undefined) return undefined;
+  return firstPrice(cache.write) ?? firstPrice(cache.explicit?.write);
 }
 
 // v1 has one cache write price: the first TTL listed (the provider's default).

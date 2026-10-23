@@ -36,7 +36,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibab
 
 [cost.text.input]
 price = 1.77744
-cache = { read = 0.22218, write = 2.22179, explicit = { read = 0.14812 } }
+cache = { read = 0.22218, explicit = { read = 0.14812, write = 2.22179 } }
 
 [cost.text.output]
 price = 5.33231

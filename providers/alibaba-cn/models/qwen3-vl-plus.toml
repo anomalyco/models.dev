@@ -39,17 +39,17 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibab
 
 [cost.text.input]
 price = 0.143353
-cache = { read = 0.028671, write = 0.179191, explicit = { read = 0.014335 } }
+cache = { read = 0.028671, explicit = { read = 0.014335, write = 0.179191 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 32_000 } }
 price = 0.215
-cache = { read = 0.043, write = 0.26875, explicit = { read = 0.0215 } }
+cache = { read = 0.043, explicit = { read = 0.0215, write = 0.26875 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128_000 } }
 price = 0.43
-cache = { read = 0.086, write = 0.5375, explicit = { read = 0.043 } }
+cache = { read = 0.086, explicit = { read = 0.043, write = 0.5375 } }
 
 [cost.text.output]
 price = 1.433525

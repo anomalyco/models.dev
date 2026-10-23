@@ -247,6 +247,16 @@ test("patchModelV2 keeps the first table's capabilities when sync rewrites it", 
   });
 });
 
+test("v1 cache_write falls back to the explicit write price", () => {
+  const doc = {
+    schema: 2,
+    base_model: "alibaba/qwen-plus",
+    cost: { text: { input: { price: 0.4, cache: { read: 0.08, explicit: { read: 0.04, write: 0.5 } } }, output: { price: 1.2 } } },
+  };
+  const v1 = modelV2ToV1({ ...doc, id: "m" });
+  expect(v1.cost).toMatchObject({ cache_read: 0.08, cache_write: 0.5 });
+});
+
 test("web search prices are written to v2 files, kept by patches, and left out of v1", () => {
   const doc = {
     schema: 2,
