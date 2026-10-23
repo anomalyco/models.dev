@@ -16,6 +16,7 @@
 #   the cache (prefix order is tools → system → messages).
 # Priority: service_tier = priority, billed at 1.5x standard (incl. cache reads).
 # Live checks on api.minimax.io, 2026-10-19 (no api.minimax.cn key; the CN docs describe the same API).
+# Per-API flags: system_updates sits on [api.messages] only. The late system message was checked in place on the Anthropic-compatible Messages endpoint (live 2026-10-23); Chat Completions dropped it in a passthrough test, and Responses has no documented or tested in-place system message.
 schema = 2
 name = "MiniMax-M3"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
@@ -35,7 +36,6 @@ structured_output = false
 temperature = true
 top_p = true
 top_k = false
-system_updates = true
 cache = { implicit = { min_tokens = 512 } }
 service_tier = ["priority"]
 
@@ -44,6 +44,7 @@ context = 1_000_000
 output = 524_288
 
 [api.messages]
+capabilities = { system_updates = true }
 
 [api.chat-completions]
 base_url = "https://api.minimax.cn/v1"
