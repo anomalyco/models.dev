@@ -22,6 +22,8 @@
 # input_cached_price_per_million_tokens listed.
 # Responses: POST https://api.tokenfactory.nebius.com/v1/responses (https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response); the public catalog
 #   https://tokenfactory.nebius.com/api/public/models_info lists "responses_api" in this model's use_cases (accessed 2026-10-22).
+# Cache read (2026-10-22): https://tokenfactory.nebius.com/api/public/models_info now lists input_cached_price_per_million_tokens = 0.06
+#   for this model, which replaces the earlier cache_read = input rule described above.
 schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 description = "NVIDIA vision-language reasoning model for coding, visual understanding, and agentic tool use"
@@ -41,7 +43,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.3 }
+cache = { read = 0.06 }
 
 [cost.text.output]
 price = 0.9

@@ -22,6 +22,8 @@
 # DeepSeek-V4-Flash-0731 / Kimi-K3 / GLM-5.3).
 # Responses: POST https://api.tokenfactory.nebius.com/v1/responses (https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response); the public catalog
 #   https://tokenfactory.nebius.com/api/public/models_info lists "responses_api" in this model's use_cases (accessed 2026-10-22).
+# Cache read (2026-10-22): https://tokenfactory.nebius.com/api/public/models_info now lists input_cached_price_per_million_tokens = 0.1
+#   for this model, which replaces the earlier cache_read = input rule described above.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
@@ -44,7 +46,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 
 [cost.text.input]
 price = 0.45
-cache = { read = 0.45 }
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 3
