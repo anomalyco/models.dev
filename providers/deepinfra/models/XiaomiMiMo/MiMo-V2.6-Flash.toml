@@ -5,6 +5,7 @@
 #   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 14880/14915 -> 0/14932; 14880/14915 -> 32/14932]
 #   changing reasoning_effort between turns keeps the cached prefix [cached/prompt tokens, control -> test: 15168/15216 -> 15200/15214 (reasoning tokens 0 -> 111); 14528/14576 -> 14560/14574 (reasoning tokens 0 -> 6)]
 #   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 14624/14651 -> 0/14711; 14944/14971 -> 64/15031]
+# effort_updates: left out. Changing reasoning_effort on the next request keeps the cache here, but there's no in-history effort message, so it doesn't count.
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 
@@ -15,7 +16,6 @@ structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
 system_updates = false
-effort_updates = true
 
 [cost.text.input]
 price = 0.14
