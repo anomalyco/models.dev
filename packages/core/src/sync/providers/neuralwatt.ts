@@ -11,10 +11,10 @@ const API_ENDPOINT = "https://api.neuralwatt.com/v1/models";
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
-// The live catalog carries 27 entries; the floor allows the largest observed
-// legitimate retirement batch (8 of 27, leaving 19) while still failing a
-// truncated response before deprecateMissing can act on it.
-const MIN_LIVE_MODELS = 19;
+// The live catalog carries 27 entries. Deprecations are sticky, so a partial or
+// truncated response is worse than a failed run: the floor tolerates at most
+// seven missing entries and refuses anything smaller.
+const MIN_LIVE_MODELS = 20;
 
 const REASONING_EFFORT_LADDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 

@@ -108,20 +108,20 @@ test("refuses a truncated catalog rather than deleting the models it omits", asy
     ));
 
   await expect(fetchNeuralwattModels(truncated as unknown as typeof fetch))
-    .rejects.toThrow(/below the 19 needed/);
+    .rejects.toThrow(/below the 20 needed/);
 });
 
 test("holds back a catalog that shrank below the safety floor", async () => {
   const shrunken = () =>
     Promise.resolve(new Response(
       JSON.stringify({
-        data: Array.from({ length: 18 }, (_, index) => neuralwattModel({ id: `model-${index}` })),
+        data: Array.from({ length: 19 }, (_, index) => neuralwattModel({ id: `model-${index}` })),
       }),
       { headers: { "content-type": "application/json" } },
     ));
 
   await expect(fetchNeuralwattModels(shrunken as unknown as typeof fetch))
-    .rejects.toThrow(/below the 19 needed/);
+    .rejects.toThrow(/below the 20 needed/);
 });
 
 test("normalizes API ids to the catalog's hyphen convention", () => {
