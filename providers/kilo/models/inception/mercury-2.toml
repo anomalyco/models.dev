@@ -6,10 +6,9 @@ base_model = "inception/mercury-2"
 name = "Inception: Mercury 2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.25

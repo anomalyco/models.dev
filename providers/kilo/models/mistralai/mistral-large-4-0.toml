@@ -7,10 +7,9 @@ name = "Mistral: Mistral Large 4"
 description = "Mistral Large 4 is a frontier multimodal (text and image input) model from Mistral AI built for reasoning, coding, and agentic workloads. It offers a 512K-token context window with up..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 1.36

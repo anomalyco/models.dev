@@ -6,9 +6,8 @@ base_model = "mistral/mistral-large"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 2

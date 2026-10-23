@@ -9,9 +9,8 @@ v2_only = true
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
-effort_updates = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 

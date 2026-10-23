@@ -14,10 +14,9 @@ schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["high", "max"] }
 structured_output = true
-effort_updates = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 

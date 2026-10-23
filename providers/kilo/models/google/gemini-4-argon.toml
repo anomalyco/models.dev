@@ -6,11 +6,10 @@ base_model = "google/gemini-4-argon"
 description = "Gemini 4 Argon is Google's flagship reasoning model, built for complex software engineering, deep mathematical and scientific problem solving, and autonomous multi-step agents. Google trained it to keep context across..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 output = 943_718

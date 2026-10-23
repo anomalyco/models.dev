@@ -5,10 +5,9 @@ schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 235_929

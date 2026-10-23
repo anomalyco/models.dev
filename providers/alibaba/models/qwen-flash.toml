@@ -18,13 +18,12 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = {} }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
-system_updates = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 

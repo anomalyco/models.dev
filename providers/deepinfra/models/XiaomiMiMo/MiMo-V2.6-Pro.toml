@@ -10,12 +10,11 @@ schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
-system_updates = false
 
 [cost.text.input]
 price = 0.43

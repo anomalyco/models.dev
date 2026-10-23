@@ -6,10 +6,9 @@ base_model = "google/gemini-3.1-pro-preview"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 1

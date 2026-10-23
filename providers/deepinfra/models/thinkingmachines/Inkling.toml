@@ -6,12 +6,11 @@ base_model = "thinkingmachines/inkling"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
-system_updates = false
 
 [limit]
 context = 524_288

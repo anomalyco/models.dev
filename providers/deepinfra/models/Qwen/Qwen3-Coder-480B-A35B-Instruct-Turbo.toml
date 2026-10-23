@@ -8,12 +8,11 @@ name = "Qwen3 Coder 480B A35B Instruct Turbo"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]
-system_updates = false
 
 [limit]
 output = 66_536

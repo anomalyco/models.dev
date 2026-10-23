@@ -6,10 +6,9 @@ base_model = "google/gemini-3.1-flash-lite"
 description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.125

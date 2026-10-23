@@ -15,10 +15,9 @@ schema = 2
 base_model = "alibaba/qwen3.8-omni-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
-effort_updates = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 

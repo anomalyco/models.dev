@@ -8,10 +8,9 @@ description = "Advanced Gemini model for complex reasoning, coding, and multimod
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.625
