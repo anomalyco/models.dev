@@ -1,7 +1,8 @@
 # Price: https://cloudcode.one/models.json (accessed 2026-10-23).
 # Effort: reasoning_effort = low|high|max (none is ignored, not a way to turn reasoning off)
 # Checked live through the Chat Completions endpoint on 2026-10-23:
-# - Images: PNG, JPEG, WebP and GIF were read.
+# - Input: PNG, JPEG, WebP and GIF images, MP4, MKV and MOV video, and PDF were all read (each video's single
+#   colour named correctly, red and blue; the one line of a PDF quoted back).
 # - low cut reasoning to about a quarter of high on the same prompt.
 # - Caching is automatic but intermittent: of eight repeats of a 16k-token prefix, the 4th reported
 #   16,256 cached tokens and the 6th and 7th 14,336 each; the others none.
@@ -11,7 +12,7 @@ schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/x-matroska", "video/quicktime", "application/pdf"]
 output = ["text"]
 
 [capabilities]

@@ -1,6 +1,8 @@
 # Price: https://cloudcode.one/models.json (accessed 2026-10-23).
 # Checked live through the Chat Completions endpoint on 2026-10-23:
-# - Images: PNG, JPEG and WebP were read; GIF was rejected (400).
+# - Input: PNG, JPEG and WebP images, MP4, MKV and MOV video, and PDF were read (each video's single colour
+#   named correctly, red and blue; a one-line PDF's secret word read back, less its last letter); GIF was
+#   rejected (400).
 # - Reasoning is always on: reasoning_effort none|low|medium|high|max left the reasoning length unchanged,
 #   and thinking.type is not forwarded (thinking disabled still reasoned 5.7k-6.5k chars, the same as
 #   with no thinking param), so there is no toggle.
@@ -10,7 +12,7 @@ schema = 2
 base_model = "zhipuai/glm-5v-turbo"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video/mp4", "video/x-matroska", "video/quicktime", "application/pdf"]
 output = ["text"]
 
 [capabilities]
