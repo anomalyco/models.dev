@@ -10,6 +10,7 @@
 # Live 2026-10-19: tool_choice "required" or a named function returns 400 ("incompatible with thinking enabled");
 # a system message after the first turn is accepted and keeps the prefix cache; dynamic tool messages fail
 # ("tokenization failed").
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked in place on Chat Completions (live 2026-10-23); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
@@ -17,13 +18,13 @@ base_model = "moonshotai/kimi-k2.7-code"
 tools = { supported = true, strict = true, choice = ["auto", "none"], updates = false }
 reasoning = { supported = true }
 structured_output = true
-system_updates = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
