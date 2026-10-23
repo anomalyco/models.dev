@@ -8,19 +8,21 @@
 # Context: 262_144 is the served window (GET /v1/models context_length, and the
 # server's max_tokens error states "maximum context length of 262144").
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "stepfun/step-3.7-flash"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.2
-output = 1.15
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 262_144
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.15

@@ -4,15 +4,18 @@
 # gateway for this model but produces no distinct effect, so no effort
 # levels are declared.
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
-[cost]
-input = 0.06
-output = 0.33
-cache_read = 0.009
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.06
+cache = { read = 0.009 }
+
+[cost.text.output]
+price = 0.33

@@ -3,16 +3,18 @@
 # value with "Unsupported reasoning_effort '<x>' for gpt-oss; expected one
 # of low, medium, high" (probed 2026-10-02).
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "openai/gpt-oss-20b"
 
-[cost]
-input = 0.02
-output = 0.1
-cache_read = 0.003
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.02
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.1
