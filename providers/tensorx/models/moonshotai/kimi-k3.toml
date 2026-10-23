@@ -8,6 +8,9 @@ base_model = "moonshotai/kimi-k3"
 reasoning = { supported = true }
 structured_output = true
 
+[limit]
+output = 64_000
+
 [cost.text.input]
 price = 3
 cache = { read = 0.75 }
