@@ -7,6 +7,7 @@ import { syncProvider, type ExistingModel } from "../src/sync/index.js";
 import * as missingIssues from "../src/sync/missing-issues.js";
 import {
   buildFireworksModel,
+  chatApis,
   expandFireworksModels,
   fetchFireworksInventory,
   fetchFireworksModels,
@@ -550,3 +551,17 @@ function existingModel(): ExistingModel {
     modalities: { input: ["text"], output: ["text"] },
   };
 }
+
+test("lists the Responses and Messages APIs after a Fireworks model's first table", () => {
+  const extra = {
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } },
+    messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } },
+  };
+  // No table: the provider's Chat Completions API comes first.
+  expect(chatApis(undefined)).toEqual({ "chat-completions": {}, ...extra });
+  const first = { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } };
+  const once = chatApis(first);
+  expect(Object.keys(once)).toEqual(["chat-completions", "responses", "messages"]);
+  expect(once).toEqual({ ...first, ...extra });
+  expect(chatApis(once)).toEqual(once);
+});
