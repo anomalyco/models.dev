@@ -9,6 +9,7 @@
 # `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
 # Web search: billed as Grounding with Bing Search, $14 per 1,000 Bing search requests (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing): https://www.microsoft.com/en-us/bing/apis/grounding-pricing
 # Token-only multipliers (object factor, so cost.web_search is unscaled): web search is billed separately as Grounding with Bing Search (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing).
+# APIs: Responses (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models) and Chat Completions (API and feature support tables at https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
@@ -22,6 +23,11 @@ prompt_cache_key = true
 service_tier = ["flex"]
 system_updates = true
 effort_updates = true
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
 
 [cost.text.input]
 price = 2
