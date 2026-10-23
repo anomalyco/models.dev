@@ -184,7 +184,7 @@ function withoutReasoningPrice(cost: unknown): unknown {
 // `interleaved` its reasoning requirement. With several `[api.<protocol>]`
 // tables, the first one in the file is the default and becomes the v1 API.
 // The protocol only becomes a v1 `shape` where it isn't the SDK's default
-// (OpenAI and Azure default to Responses), unless `legacy_shape` keeps one. A
+// (OpenAI, Azure and xAI default to Responses), unless `legacy_shape` keeps one. A
 // table without its own `aisdk` takes the provider's.
 function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNpm?: string) {
   const first = Object.entries(api ?? {})[0];
@@ -205,8 +205,9 @@ function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNp
 }
 
 // The v1 `shape` a protocol gets on an SDK: none where it's the SDK's default.
+// `@ai-sdk/openai`, `@ai-sdk/azure` and `@ai-sdk/xai` default to Responses.
 export function toV1Shape(protocol: string, npm: string | undefined) {
-  const responsesByDefault = npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure";
+  const responsesByDefault = npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure" || npm === "@ai-sdk/xai";
   if (protocol === "responses" && !responsesByDefault) return "responses";
   if (protocol === "chat-completions" && responsesByDefault) return "completions";
   return undefined;

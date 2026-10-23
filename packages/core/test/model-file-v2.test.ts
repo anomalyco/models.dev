@@ -79,7 +79,7 @@ test("an API table without its own aisdk takes the provider's npm for its v1 sha
   // On a Responses-default SDK, a leading Responses table is the default and has no v1 shape.
   expect(modelV2ToV1(toml, {}, "@ai-sdk/openai").provider).toBeUndefined();
   // Elsewhere it still publishes one.
-  expect(modelV2ToV1(toml, {}, "@ai-sdk/xai").provider).toEqual({ shape: "responses" });
+  expect(modelV2ToV1(toml, {}, "@ai-sdk/openai-compatible").provider).toEqual({ shape: "responses" });
   expect(modelV2ToV1(toml).provider).toEqual({ shape: "responses" });
 
   // The writer keeps a redundant v1 shape as legacy_shape, judged against the provider's npm.
