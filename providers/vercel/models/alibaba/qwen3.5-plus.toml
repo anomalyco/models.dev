@@ -1,4 +1,4 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-23): a mid-conversation system message stays in place (cache kept, followed: e.g. qwen3.7-flash 12142/12140 vs 12131/12129). Per-turn effort: a top-level reasoning effort change keeps the cache on the alibaba route, matching Alibaba's API (qwen3.7-flash low->high 6880 and high->low 6878 vs warm 6804/6802; reasoning 1024->4807 and 5512->1024), so effort_updates = true. No tool-change mechanism is forwarded.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-23): a mid-conversation system message stays in place (cache kept, followed: e.g. qwen3.7-flash 12142/12140 vs 12131/12129). effort_updates: left out. Changing reasoning effort on the next request keeps the cache on the alibaba route (qwen3.7-flash low->high 6880 and high->low 6878 vs warm 6804/6802; reasoning 1024->4807 and 5512->1024), but there's no in-history effort message, so it doesn't count. No tool-change mechanism is forwarded.
 schema = 2
 base_model = "alibaba/qwen3.5-plus"
 name = "Qwen 3.5 Plus"
@@ -11,7 +11,6 @@ output = ["text"]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"], budget = { min = 1, max = 81_920 } }
 system_updates = true
-effort_updates = true
 cache = { explicit = true }
 
 [limit]
