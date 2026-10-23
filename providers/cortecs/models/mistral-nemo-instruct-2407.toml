@@ -12,6 +12,10 @@ structured_output = true
 temperature = false
 effort_updates = false
 
+[limit]
+context = 118_000
+output = 118_000
+
 [cost.text.input]
 price = 0.145
 cache = { read = 0.014 }
