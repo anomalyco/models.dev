@@ -129,10 +129,32 @@ export const tensorx = {
       return authored === undefined ? undefined : { id, model: authored as SyncedModel };
     }
 
+    // Embedding files declare their wire endpoint explicitly: without an
+    // [api.embeddings] section they would inherit the provider's
+    // chat-completions default. New files stay v2_only, like every synced
+    // embedding model in this repo. Written as a raw v2 body, matching how
+    // baseten/nearai/vercel create typed models.
+    if (mode === "embedding") {
+      return buildEmbeddingModel(model, existing, context.authored(id));
+    }
     return {
       id,
       model: buildTensorXModel(model, existing, context.authored(id)),
     };
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} TensorX models were not created because the gateway reports no chat metadata for their mode.`,
+      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+    ];
+  },
+  missingNotice(paths) {
+    if (paths.length === 0) return [];
+    return [
+      `${paths.length} local TensorX models are absent from /v1/model/info and were retained for manual lifecycle review.`,
+      `Retained local paths: ${paths.map((file) => `\`${file}\``).join(", ")}`,
+    ];
   },
 } satisfies SyncProvider<TensorXModel>;
 
@@ -222,6 +244,41 @@ function price(perToken: number | null | undefined) {
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
+function buildEmbeddingModel(
+  model: TensorXModel,
+  existing: ExistingModel | undefined,
+  authored: ExistingModel | undefined,
+): { id: string; v2: Record<string, unknown> } | undefined {
+  const id = model.model_name;
+  const info = model.model_info;
+  const input = price(info.input_cost_per_token);
+  if (input === undefined) {
+    // No token price on the gateway: leave the embedding to hand authoring.
+    return undefined;
+  }
+  const canonical = existing?.base_model ?? authored?.base_model ?? resolveCanonicalBaseModel(id);
+  const contextLimit = info.max_input_tokens ?? existing?.limit?.context;
+  const v2: Record<string, unknown> = {
+    schema: 2,
+    v2_only: true,
+    ...(canonical !== undefined ? { base_model: canonical } : {}),
+    ...(existing?.base_model_omit !== undefined ? { base_model_omit: existing.base_model_omit } : {}),
+    limit: contextLimit !== undefined ? { context: contextLimit } : undefined,
+    api: {
+      embeddings: {
+        sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: "none" },
+      },
+    },
+    cost: {
+      text: {
+        input: { price: input },
+        output: { price: price(info.output_cost_per_token) ?? 0 },
+      },
+    },
+  };
+  return { id, v2 };
+}
+
 export function buildTensorXModel(
   model: TensorXModel,
   existing: ExistingModel | undefined,
@@ -229,7 +286,6 @@ export function buildTensorXModel(
 ): SyncedModel {
   const id = model.model_name;
   const info = model.model_info;
-  const embedding = info.mode === "embedding";
 
   const input: Modality[] = ["text"];
   if (info.supports_vision === true) input.push("image");
@@ -240,7 +296,7 @@ export function buildTensorXModel(
 
   const inPrice = price(info.input_cost_per_token);
   const outPrice = price(info.output_cost_per_token);
-  const cost = inPrice !== undefined && (outPrice !== undefined || embedding)
+  const cost = inPrice !== undefined && outPrice !== undefined
     ? {
         input: inPrice,
         output: outPrice ?? 0,
@@ -261,17 +317,15 @@ export function buildTensorXModel(
   };
 
   // A null flag means the gateway does not know; keep the authored value.
-  // Embeddings never reason, whatever the gateway claims.
-  const reasoning = embedding ? false : (info.supports_reasoning ?? existing?.reasoning);
-  const toolCall = embedding ? existing?.tool_call : (info.supports_function_calling ?? existing?.tool_call);
+  const reasoning = info.supports_reasoning ?? existing?.reasoning;
+  const toolCall = info.supports_function_calling ?? existing?.tool_call;
   const temperature = existing?.temperature;
-  const structuredOutput = embedding ? existing?.structured_output : (info.supports_response_schema ?? existing?.structured_output);
+  const structuredOutput = info.supports_response_schema ?? existing?.structured_output;
 
   // A new model needs researched controls when the flag is true — and when it
   // is unknown (null), because the lab card would then supply reasoning: true
-  // and the sync would publish it with no caller control. Embeddings never
-  // reason, so they are exempt.
-  if (!embedding && reasoning !== false && existing?.reasoning_options === undefined) {
+  // and the sync would publish it with no caller control.
+  if (reasoning !== false && existing?.reasoning_options === undefined) {
     throw new MissingReasoningOptionsError(
       id,
       "TensorX reasoning controls vary per model; author them before creating this model",
@@ -284,7 +338,7 @@ export function buildTensorXModel(
     return factorBaseModel(
       canonical,
       {
-        type: embedding ? ("embedding" as const) : existing?.type,
+        type: existing?.type,
         reasoning,
         reasoning_options: reasoning === true ? existing?.reasoning_options : undefined,
         temperature,
@@ -315,7 +369,7 @@ export function buildTensorXModel(
       : { input: ["text" as Modality], output: ["text" as Modality] });
 
   return {
-    type: embedding ? ("embedding" as const) : existing?.type,
+    type: existing?.type,
     name,
     description: existing?.description ?? describeModel({
       id,
