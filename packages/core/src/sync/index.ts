@@ -104,12 +104,6 @@ export interface SyncProvider<SourceModel> {
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
-  /**
-   * Rewrite local TOMLs absent from the source as status = "deprecated"
-   * instead of deleting or retaining them, so a delisted route leaves the
-   * catalog without losing its metadata.
-   */
-  deprecateMissing?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
   preserveDescriptions?: boolean;
@@ -565,57 +559,6 @@ export async function syncProvider<SourceModel>(
     }
     if (missingReasoning.has(relativePath.slice(0, -5))) {
       unchanged++;
-      continue;
-    }
-    if (provider.deprecateMissing === true) {
-      const current = existing.get(relativePath);
-      const authored = current?.authored;
-      if (current === undefined || authored === undefined || authored.status === "deprecated") {
-        unchanged++;
-        continue;
-      }
-      if (current.symlink && provider.preserveSymlinks) {
-        unchanged++;
-        continue;
-      }
-      if (options.newOnly) {
-        console.log(`Skipping deprecation in new-only mode: ${relativePath}`);
-        unchanged++;
-        continue;
-      }
-      const deprecated = SyncedAuthoredModel.safeParse(stripUndefined({
-        id: relativePath.slice(0, -5),
-        ...authored,
-        status: "deprecated",
-      }));
-      if (!deprecated.success) {
-        deprecated.error.cause = { provider: provider.id, path: relativePath };
-        throw deprecated.error;
-      }
-      // Write through the same v2 patch path as an update so the file keeps
-      // every field v1 does not carry (cache, multipliers, API protocols, …).
-      const today = new Date().toISOString().slice(0, 10);
-      const content = v2Content(
-        relativePath,
-        `# Deprecated: absent from ${provider.name} catalog since ${today}\n` + current.header,
-        current.v2,
-        current.authored,
-        deprecated.data,
-        v2Notices,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-      );
-      if (content === undefined) continue;
-      const filePath = await safeWritePath(provider.modelsDir, relativePath, true);
-      files.push({ status: "updated", path: filePath });
-      if (options.dryRun) {
-        console.log(`Would deprecate ${relativePath}`);
-      } else {
-        if (current.symlink) await rm(filePath, { force: true });
-        await Bun.write(filePath, content);
-      }
       continue;
     }
     if (provider.deleteMissing === false) {

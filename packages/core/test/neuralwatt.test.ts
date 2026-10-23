@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test";
-import { lstat, mkdir, mkdtemp, rm, symlink } from "node:fs/promises";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { groups, providers, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
+import { groups, providers, syncProvider, type ExistingModel } from "../src/sync/index.js";
 import { AuthoredModelV2 } from "../src/schema-v2.js";
 import {
   buildNeuralwattModel,
@@ -496,27 +496,21 @@ test("accepts null catalog limits and falls back to the authored ones", () => {
   expect(built).toMatchObject({ limit: { context: 111_111, output: 222_222 } });
 });
 
-type StubRemoteModel = { id: string };
-
-function deprecatingProvider(modelsDir: string) {
+function retiringProvider(modelsDir: string) {
   return {
-    id: "neuralwatt",
-    name: "Neuralwatt",
+    ...neuralwatt,
     modelsDir,
-    deprecateMissing: true,
     async fetchModels() {
-      return { data: [{ id: "kept-model" }] };
-    },
-    parseModels(raw: unknown) {
-      return (raw as { data: StubRemoteModel[] }).data;
-    },
-    translateModel(model: StubRemoteModel) {
       return {
-        id: model.id,
-        model: { base_model: "alibaba/qwen3.8-27b", name: "Kept Model" },
+        data: [neuralwattModel({
+          id: "kept-model",
+          metadata: neuralwattMetadata({
+            capabilities: { tools: true, json_mode: true, vision: false, audio_input: false, reasoning: false },
+          }),
+        })],
       };
     },
-  } satisfies SyncProvider<StubRemoteModel>;
+  };
 }
 
 async function writeLabFixture(basePath: string, name: string) {
@@ -584,7 +578,7 @@ test("deprecates a delisted local model instead of deleting it", async () => {
     "",
   ].join("\n"));
 
-  const provider = deprecatingProvider(modelsDir);
+  const provider = retiringProvider(modelsDir);
 
   try {
     const first = await syncProvider(provider);
@@ -713,51 +707,31 @@ test("keeps a live model's file when its reasoning controls are missing", async 
   }
 });
 
-test("leaves delisted files untouched in new-only mode", async () => {
-  const { root, modelsDir, oldPath } = await deprecationFixture("sync-neuralwatt-newonly-");
-  await Bun.write(oldPath, [
+test("keeps an already-deprecated delisted model byte-identical", async () => {
+  const { root, modelsDir } = await deprecationFixture("sync-neuralwatt-stable-");
+  const stablePath = path.join(modelsDir, "stable-model.toml");
+  const content = [
+    "# Deprecated: no longer listed in the public GET https://api.neuralwatt.com/v1/models (checked 2026-10-21).",
     "schema = 2",
     'base_model = "alibaba/qwen3.8-27b"',
-    'name = "Old Model"',
+    'name = "Stable Model"',
+    'status = "deprecated"',
     "",
-  ].join("\n"));
-  const before = await Bun.file(oldPath).text();
+    "[capabilities]",
+    "reasoning = { supported = true, budget = {} }",
+    "",
+    "[cost.text.input]",
+    "price = 1.25",
+    "",
+  ].join("\n");
+  await Bun.write(stablePath, content);
 
   try {
-    const result = await syncProvider(deprecatingProvider(modelsDir), { newOnly: true });
+    const result = await syncProvider(retiringProvider(modelsDir));
 
     expect(result).toMatchObject({ created: 1, updated: 0, deleted: 0 });
-    expect(await Bun.file(oldPath).text()).toBe(before);
-  } finally {
-    await rm(root, { recursive: true, force: true });
-  }
-});
-
-test("does not write through a leaf symlink when deprecating", async () => {
-  const { root, modelsDir, oldPath } = await deprecationFixture("sync-neuralwatt-symlink-");
-  const targetPath = path.join(root, "outside.toml");
-  await Bun.write(targetPath, [
-    "schema = 2",
-    'base_model = "alibaba/qwen3.8-27b"',
-    'name = "Outside Target"',
-    "",
-  ].join("\n"));
-  await symlink(targetPath, oldPath);
-
-  try {
-    const preserved = await syncProvider(
-      { ...deprecatingProvider(modelsDir), preserveSymlinks: true },
-    );
-    expect(preserved).toMatchObject({ updated: 0, deleted: 0 });
-    expect((await lstat(oldPath)).isSymbolicLink()).toBe(true);
-    expect(await Bun.file(targetPath).text()).not.toContain('status = "deprecated"');
-
-    const replaced = await syncProvider(deprecatingProvider(modelsDir));
-    expect(replaced).toMatchObject({ updated: 1, deleted: 0 });
-    expect((await lstat(oldPath)).isSymbolicLink()).toBe(false);
-    expect(await Bun.file(oldPath).text()).toContain('status = "deprecated"');
-    expect(await Bun.file(targetPath).text()).not.toContain('status = "deprecated"');
-    expect(await Bun.file(targetPath).text()).toContain('name = "Outside Target"');
+    expect(await Bun.file(stablePath).exists()).toBe(true);
+    expect(await Bun.file(stablePath).text()).toBe(content);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

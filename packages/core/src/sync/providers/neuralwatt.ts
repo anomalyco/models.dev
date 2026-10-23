@@ -1,4 +1,4 @@
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { z } from "zod";
@@ -61,6 +61,9 @@ const NeuralwattLimits = z.object({
 export const NeuralwattModel = z.object({
   id: z.string(),
   created: z.number(),
+  // Internal marker for a synthesized entry standing in for a local file that
+  // is absent from the live catalog; the API never sends it.
+  retired: z.literal(true).optional(),
   max_model_len: z.number().optional(),
   metadata: z.object({
     display_name: z.string(),
@@ -246,16 +249,24 @@ export const neuralwatt = {
   // The wire-path comments below are regenerated on every sync so a file
   // never keeps controls that this host's API stopped documenting.
   authoritativeHeaders: true,
-  // A model delisted from /v1/models is rewritten as status = "deprecated"
-  // instead of being deleted: the entry keeps its metadata and pricing for
-  // the deprecation window, and re-runs leave it untouched.
-  deprecateMissing: true,
   async fetchModels() {
     return fetchNeuralwattModels();
   },
-  parseModels,
+  parseModels(raw: unknown): NeuralwattModel[] {
+    return withRetiredLocalModels(parseModels(raw), this.modelsDir);
+  },
   translateModel(model: NeuralwattModel, context) {
     const id = neuralwattID(model.id);
+    // nw-* entries are Neuralwatt-branded aliases for lab models the host also
+    // serves under their own ids; the catalog does not author branded routes,
+    // so these are skipped without a missing-model issue: an intentional
+    // omission, not missing metadata (see missingModelID).
+    if (id.startsWith("nw-")) return undefined;
+    // A local file absent from the live catalog arrives here as a synthesized
+    // retired entry (see withRetiredLocalModels): the stock runner's update
+    // path then stamps status = "deprecated", and its default missing-local
+    // deletion can never touch the file.
+    if (model.retired === true) return retiredModelPatch(id, context, this.modelsDir);
     const resolved = context.existing(id);
     const local = context.authored(id);
     // The runner's existing(id) resolves the previous base and merges it with
@@ -269,11 +280,6 @@ export const neuralwatt = {
       release_date: local?.release_date,
       last_updated: local?.last_updated,
     };
-    // nw-* entries are Neuralwatt-branded aliases for lab models the host also
-    // serves under their own ids; the catalog does not author branded routes,
-    // so these are skipped without a missing-model issue: an intentional
-    // omission, not missing metadata (see missingModelID).
-    if (id.startsWith("nw-")) return undefined;
     // Variant ids (flex/fast/speed) may lack their own huggingface_id; fall
     // back to the sibling entry's resolved base so the variant still factors
     // onto the same lab model.
@@ -362,6 +368,84 @@ function neuralwattHeader(model: SyncedModel, id: string): string | undefined {
   lines.push(...OPERATIONAL_NOTES.filter((note) => note.pattern.test(id)).flatMap((note) => note.lines));
   lines.push(`# ${CHAT_COMPLETIONS_DOC_URL}`);
   return `${lines.join("\n")}\n`;
+}
+
+// Local files whose normalized id is absent from the live catalog are carried
+// through the source list as retired entries, so the stock runner updates them
+// like any other model (stamping status = "deprecated") and its default
+// missing-local deletion never runs for them. The fetch-level floor already
+// refused a truncated catalog before this synthesis happens.
+function withRetiredLocalModels(models: NeuralwattModel[], modelsDir: string): NeuralwattModel[] {
+  const live = new Set(models.map((model) => neuralwattID(model.id)));
+  let entries: string[];
+  try {
+    entries = readdirSync(modelsDir);
+  } catch {
+    return models;
+  }
+  const retired: NeuralwattModel[] = [];
+  for (const entry of entries) {
+    if (!entry.endsWith(".toml")) continue;
+    const id = entry.slice(0, -5);
+    if (id.startsWith("nw-") || live.has(neuralwattID(id))) continue;
+    retired.push({
+      id,
+      created: 0,
+      retired: true,
+      metadata: {
+        display_name: id,
+        huggingface_id: null,
+        pricing: {},
+        capabilities: {},
+        reasoning: {},
+        limits: {},
+        deprecated: true,
+      },
+    });
+  }
+  return [...models, ...retired];
+}
+
+// The runner's own header extraction, replicated so a returned header matches
+// the file's current one byte for byte and an already-deprecated file compares
+// unchanged instead of being rewritten.
+function leadingCommentBlock(text: string) {
+  const header: string[] = [];
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed === "" || trimmed.startsWith("#")) header.push(line);
+    else break;
+  }
+  while (header.length > 0 && header[header.length - 1]?.trim() === "") header.pop();
+  return header.length > 0 ? `${header.join("\n")}\n` : "";
+}
+
+// A retired entry's translation: the file's own authored fields with
+// status = "deprecated", so the runner's v2 patch changes exactly that and
+// keeps every v2-only value (cache, multipliers, API protocols, …). Files the
+// sync already deprecated are returned byte-identical and stay untouched.
+function retiredModelPatch(
+  id: string,
+  context: { authored(id: string): ExistingModel | undefined },
+  modelsDir: string,
+): { id: string; model: SyncedModel; header: string } | undefined {
+  const authored = context.authored(id);
+  if (authored === undefined) return undefined;
+  let text: string;
+  try {
+    text = readFileSync(path.join(modelsDir, `${id}.toml`), "utf8");
+  } catch {
+    return undefined;
+  }
+  const header = leadingCommentBlock(text);
+  const { id: _ignored, ...model } = authored;
+  return {
+    id,
+    model: { ...model, status: "deprecated" } as unknown as SyncedModel,
+    header: authored.status === "deprecated"
+      ? header
+      : `# Deprecated: absent from Neuralwatt catalog since ${new Date().toISOString().slice(0, 10)}\n${header}`,
+  };
 }
 
 // The endpoint returns artifacts like 1.4000000000000001, so every published
