@@ -1,5 +1,3 @@
-# Exact card/API publishes up to 4500 prompt-input tokens, not context:
-# https://docs.qwencloud.com/api-reference/image-generation/qwen-text-to-image
 # Current canonical Token Plan host and native route (accessed 2026-10-23):
 # https://docs.qwencloud.com/token-plan/best-practices/integrate-multimodal-gen
 # Token Plan lists qwen-image-3.0-pro as image generation:
@@ -16,16 +14,9 @@ schema = 2
 v2_only = true
 base_model = "alibaba/qwen-image-3.0-pro"
 
-[limit]
-input = 4_500
-
 [api.images]
 base_url = "https://token-plan.maas.qwencloudapi.com/api/v1"
 sdk = { aisdk = "none", opencodeai = "none" }
-
-[cost.image.input]
-price = 0
-unit = "image"
 
 [cost.image.output]
 price = 0

@@ -1,4 +1,7 @@
-# Additional exact-model formats: https://docs.qwencloud.com/developer-guides/speech/speech-to-text-models
+# Exact-model synchronous formats: AAC, FLAC, M4A, MP3, Ogg and WAV, as audio MIME types.
+# The wav/16000 request below is an example, not a WAV-only restriction.
+# Video containers are not advertised as visual inputs to this transcription model.
+# https://docs.qwencloud.com/developer-guides/speech/speech-to-text-models
 # Qwen-Audio-3.0-ASR Flash: Bailing ASR updated June 2026 with seven Chinese dialect
 # systems, 20+ regional Mandarin accents, 30 languages, context support and up to
 # 5-minute transcription:
@@ -22,7 +25,7 @@ open_weights = false
 release_date = "2026-06"
 
 [modalities]
-input = ["audio/aac", "audio/amr", "video/x-msvideo", "audio/flac", "video/x-flv", "audio/mp4", "video/x-matroska", "video/quicktime", "audio/mpeg", "video/mp4", "video/mpeg", "audio/ogg", "audio/opus", "audio/wav", "video/webm", "audio/x-ms-wma", "video/x-ms-wmv"]
+input = ["audio/aac", "audio/flac", "audio/mp4", "audio/mpeg", "audio/ogg", "audio/wav"]
 output = ["text"]
 
 [capabilities]
