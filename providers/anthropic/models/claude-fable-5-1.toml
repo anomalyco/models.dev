@@ -2,18 +2,18 @@
 # Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
 # Token-only multipliers (object factor, so cost.web_search is unscaled): US data residency (https://platform.claude.com/docs/en/manage-claude/data-residency#pricing).
 # APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
+# Per-API flags: mid-conversation system messages, per-message output_config and tool_addition/tool_removal are Messages API features, so they sit on [api.messages]. The OpenAI SDK compatibility endpoint hoists system messages to the top (https://platform.claude.com/docs/en/api/openai-sdk) and has no per-message effort or tool changes.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-system_updates = true
-effort_updates = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [api.messages]
+capabilities = { system_updates = true, effort_updates = true, tools = { updates = true } }
 
 [api.chat-completions]
 base_url = "https://api.anthropic.com/v1"
