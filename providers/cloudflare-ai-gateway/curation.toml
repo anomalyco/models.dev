@@ -88,6 +88,7 @@ skip = [
 "openai/" = [
   "Route: provider-native passthrough /openai (Responses body forwarded unchanged): https://developers.cloudflare.com/ai-gateway/usage/providers/openai/",
   "v2 capabilities and cache follow OpenAI's own API (providers/openai). Live via the gateway 2026-10-19: mid-conversation developer messages and additional_tools keep the cached prefix (gpt-4.1-nano, gpt-5-nano, gpt-5.4-nano), configuration_update is accepted on gpt-6-luna and gpt-5.6-luna, json_schema output is enforced.",
+  "Per-API flags: additional_tools and configuration_update exist only on the Responses API (the /openai passthrough), so tools.updates and effort_updates sit on [api.responses] for models that also list the REST chat-completions route. Developer messages are documented on both OpenAI APIs, so system_updates stays top-level.",
 ]
 "anthropic/" = [
   "Route: provider-native passthrough /anthropic (Messages body and anthropic-beta headers forwarded): https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/",
@@ -97,6 +98,7 @@ skip = [
 "alibaba/" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19 (qwen3.7-plus): a mid-conversation system message keeps the cached prefix (in place).",
+  "Per-API flags: for models that also list the REST /ai/v1/responses route, system_updates sits on [api.chat-completions] only; it was checked on Chat Completions and the Responses route has no documented or tested in-place system message.",
 ]
 "deepseek/" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
@@ -105,6 +107,7 @@ skip = [
 "fireworks/" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).",
+  "Per-API flags: for models that also list the REST /ai/v1/responses route, system_updates sits on [api.chat-completions] only; it was checked on Chat Completions and the Responses route has no documented or tested in-place system message.",
 ]
 "google/gemini-2" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI.",

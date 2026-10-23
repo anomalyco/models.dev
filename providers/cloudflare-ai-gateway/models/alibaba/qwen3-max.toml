@@ -1,5 +1,6 @@
 # Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
 # Live 2026-10-19 (qwen3.7-plus): a mid-conversation system message keeps the cached prefix (in place).
+# Per-API flags: for models that also list the REST /ai/v1/responses route, system_updates sits on [api.chat-completions] only; it was checked on Chat Completions and the Responses route has no documented or tested in-place system message.
 # system_updates: left out. Not tested live on this route (the REST route has no unified billing credit), and Alibaba's own API doesn't set it for Qwen3 Max (providers/alibaba).
 schema = 2
 base_model = "alibaba/qwen3-max"
