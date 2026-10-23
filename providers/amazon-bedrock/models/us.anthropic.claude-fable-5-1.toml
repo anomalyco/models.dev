@@ -3,7 +3,7 @@
 # v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 # Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html);
 # toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
-# Per-turn effort: AWS documents a per-turn output_config for Fable 5.1 (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html), and changing output_config.effort between turns keeps the cache on Anthropic's API and on Bedrock Converse for the 5.5 models (live 2026-10-23). Fable 5.1 itself couldn't be run on this account, so this follows the docs.
+# Per-turn effort: effort_updates = true from the in-history effort message, a per-turn system message carrying output_config on InvokeModel and Mantle Messages, which AWS documents for Fable 5.1 (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html). Fable 5.1 couldn't be run on this account, so this follows the docs. Converse has no per-message output_config.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 name = "Claude Fable 5.1 (US)"
