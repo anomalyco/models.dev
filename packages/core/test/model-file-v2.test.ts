@@ -236,6 +236,17 @@ test("patchModelV2 keeps the first table's path when sync rewrites it", () => {
   ]);
 });
 
+test("patchModelV2 keeps the first table's capabilities when sync rewrites it", () => {
+  const api = { messages: { base_url: "https://example.com/v1", capabilities: { effort_updates: true } } };
+  const doc = { schema: 2, base_model: "anthropic/claude-opus-5-5", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
+  const before = modelV2ToV1({ ...doc, id: "m" });
+  const { id: _id, ...after } = { ...before, provider: { ...before.provider, api: "https://example.com/v2" } };
+  expect(patchModelV2(doc, before, after).api.messages).toEqual({
+    base_url: "https://example.com/v2",
+    capabilities: { effort_updates: true },
+  });
+});
+
 test("web search prices are written to v2 files, kept by patches, and left out of v1", () => {
   const doc = {
     schema: 2,
