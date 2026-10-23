@@ -18,13 +18,11 @@ input = ["text", "image", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = {} }
 structured_output = true
 cache = { implicit = { min_tokens = 2_048 } }
 service_tier = ["flex", "priority"]
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 1_000_000

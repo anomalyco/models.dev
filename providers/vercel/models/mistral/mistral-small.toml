@@ -4,9 +4,8 @@ schema = 2
 base_model = "mistral/mistral-small-latest"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

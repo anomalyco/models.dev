@@ -5,7 +5,6 @@ base_model = "nvidia/nemotron-3-nano-30b-a3b"
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

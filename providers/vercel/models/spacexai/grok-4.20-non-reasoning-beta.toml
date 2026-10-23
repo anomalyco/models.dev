@@ -13,9 +13,8 @@ input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

@@ -4,10 +4,9 @@ schema = 2
 base_model = "inception/mercury-2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

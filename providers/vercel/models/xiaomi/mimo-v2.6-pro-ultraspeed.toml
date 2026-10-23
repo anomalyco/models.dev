@@ -12,7 +12,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 cache = { implicit = true }
 

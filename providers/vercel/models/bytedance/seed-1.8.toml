@@ -4,10 +4,9 @@ base_model = "bytedance-seed/seed-1-8"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

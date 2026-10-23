@@ -4,10 +4,8 @@ base_model = "zhipuai/glm-4.7-flash"
 name = "GLM 4.7 Flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

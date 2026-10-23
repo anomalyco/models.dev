@@ -12,10 +12,9 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

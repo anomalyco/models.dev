@@ -9,9 +9,8 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

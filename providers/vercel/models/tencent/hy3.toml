@@ -11,9 +11,8 @@ base_model = "tencent/hy3"
 base_model_omit = ["limit.input"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

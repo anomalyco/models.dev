@@ -3,10 +3,8 @@ schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = {} }
-system_updates = false
-effort_updates = false
 cache = { explicit = true }
 
 [limit]

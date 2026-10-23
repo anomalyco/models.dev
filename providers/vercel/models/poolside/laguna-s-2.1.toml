@@ -10,10 +10,9 @@ schema = 2
 base_model = "poolside/laguna-s-2.1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

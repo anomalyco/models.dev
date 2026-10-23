@@ -23,8 +23,6 @@ output = ["text", "image/png", "image/jpeg"]
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "medium", "high"] }
 structured_output = false
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 service_tier = ["priority"]
 

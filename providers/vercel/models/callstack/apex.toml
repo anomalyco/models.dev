@@ -11,9 +11,8 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

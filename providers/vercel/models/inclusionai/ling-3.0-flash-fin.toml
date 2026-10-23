@@ -7,9 +7,8 @@ schema = 2
 base_model = "inclusionai/ling-3.0-flash-fin"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

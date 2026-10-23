@@ -13,10 +13,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, budget = {} }
 temperature = true
-effort_updates = false
 cache = { implicit = true, explicit = true }
 
 [limit]

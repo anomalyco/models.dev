@@ -8,10 +8,8 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

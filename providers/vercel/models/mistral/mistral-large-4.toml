@@ -5,9 +5,8 @@ base_model = "mistral/mistral-large-4"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

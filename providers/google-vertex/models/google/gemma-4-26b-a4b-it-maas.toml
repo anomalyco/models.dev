@@ -12,11 +12,9 @@ base_model = "google/gemma-4-26b-a4b-it"
 status = "alpha"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = { min_tokens = 4_096 } }
 
 [limit]

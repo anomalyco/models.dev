@@ -10,9 +10,8 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

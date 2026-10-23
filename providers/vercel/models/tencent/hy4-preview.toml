@@ -10,9 +10,8 @@ base_model = "tencent/hy4-preview"
 name = "Tencent Hy4 Preview"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

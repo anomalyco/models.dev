@@ -6,7 +6,6 @@ base_model = "anthropic/claude-fable-5"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-effort_updates = false
 cache = { explicit = true }
 
 [api.chat-completions]

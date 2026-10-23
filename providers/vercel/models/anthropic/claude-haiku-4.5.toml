@@ -4,10 +4,8 @@ base_model = "anthropic/claude-haiku-4-5"
 name = "Claude Haiku 4.5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
-system_updates = false
-effort_updates = false
 cache = { explicit = true }
 
 [api.chat-completions]

@@ -3,9 +3,7 @@ schema = 2
 base_model = "mixedbread/toast-1"
 
 [capabilities]
-tools = { supported = true, updates = false }
-system_updates = false
-effort_updates = false
+tools = { supported = true }
 cache = { implicit = true }
 
 [api.chat-completions]

@@ -19,11 +19,9 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = { min_tokens = 4_096 }, explicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
 

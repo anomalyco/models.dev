@@ -8,9 +8,8 @@ schema = 2
 base_model = "quiverai/arrow-2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
-effort_updates = false
 temperature = false
 cache = { implicit = true }
 

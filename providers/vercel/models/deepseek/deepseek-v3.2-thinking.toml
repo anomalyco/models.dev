@@ -5,10 +5,8 @@ name = "DeepSeek V3.2 Thinking"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

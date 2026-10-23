@@ -5,9 +5,8 @@ name = "Beam 1.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-effort_updates = false
 structured_output = true
 cache = { implicit = true }
 

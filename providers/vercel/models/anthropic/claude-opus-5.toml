@@ -7,7 +7,6 @@ description = "Flagship Claude model for deep reasoning, coding, and long-horizo
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], budget = {} }
-effort_updates = false
 cache = { explicit = true }
 
 [api.chat-completions]
