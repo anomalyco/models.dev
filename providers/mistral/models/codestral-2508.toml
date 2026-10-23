@@ -14,6 +14,7 @@
 # - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
 #   keeps the cached prefix and is obeyed. Adding or removing tools between requests
 #   drops the cache after the system prompt (live 2026-10-22).
+# APIs: the /v1/models capabilities (completion_fim: POST /v1/fim/completions; moderation: /v1/moderations; ocr: /v1/ocr), https://docs.mistral.ai/api. No AI SDK or OpenCode package calls them.
 schema = 2
 base_model = "mistral/codestral-2508"
 
@@ -32,6 +33,11 @@ cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 256_000
+
+[api.chat-completions]
+
+[api.fim]
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.3
