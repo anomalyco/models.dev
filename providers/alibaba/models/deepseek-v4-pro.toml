@@ -3,7 +3,7 @@
 # Toggle: enable_thinking true|false (default on); Effort: reasoning_effort = high|max (default high) per the Chat API reference. top_k: the DeepSeek series does not support it.
 # Cache: implicit (context-cache model lists); the hit price is not published ("see the console").
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache; enable_thinking change kept it, reasoning_effort change missed it.
-# Effort updates (live 2026-10-23, ~8k-token first user message): flipping enable_thinking for one turn keeps the cache (7168 cached both directions, implicit and explicit, same as the control; reasoning 0 vs 50-95 tokens), so effort_updates = true. Changing reasoning_effort (high <-> max) drops it to 0.
+# effort_updates: left out. Live 2026-10-23 (~8k-token first user message): flipping enable_thinking for one turn keeps the cache (7168 cached both directions, implicit and explicit, same as the control; reasoning 0 vs 50-95 tokens), but that's a top-level change, not an in-history effort message, so it doesn't count. Changing reasoning_effort (high <-> max) drops it to 0.
 # Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 v2_only = true
@@ -15,7 +15,6 @@ reasoning = { supported = true, default = { type = "effort", value = "high" }, t
 structured_output = true
 top_k = false
 system_updates = true
-effort_updates = true
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 

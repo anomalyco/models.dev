@@ -3,6 +3,7 @@
 # Thinking only (deep-thinking doc; enable_thinking=false is ignored live); Budget: thinking_budget. preserve_thinking defaults to true on this model. top_k: the Kimi series does not support it.
 # Cache: implicit (and explicit in China (Beijing)) per the context-cache model lists; implicit hits at 20% of input.
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the cache; thinking_budget changes kept it; adding tools missed it.
+# effort_updates: left out. Changing thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.7-code"
@@ -12,7 +13,6 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, budget = {} }
 top_k = false
 system_updates = true
-effort_updates = true
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 
