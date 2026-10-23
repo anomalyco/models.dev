@@ -1,11 +1,14 @@
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: output_config.effort = low|medium|high|xhigh|max (not re-verified on Zen: the endpoint was unavailable during testing)
-# Mid-conversation flags unset: Zen documents none and this model wasn't testable (the endpoint was unavailable during testing).
+# system_updates / effort_updates unset: not tested (the endpoint was unavailable during the 2026-10-21 testing).
+# tools.updates = true: tool_addition / tool_removal with beta inline-tools-2026-09-15, as on Anthropic (providers/anthropic/models/claude-fable-5-1.toml).
+#   Live on Zen 2026-10-23, cached tokens on the next turn: control 11954/11956, add 11350/12256, remove 12256/12256 (full prefix every time).
 # Cache: explicit cache_control only, as on Anthropic (https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Zen forwards it: block and top-level cache_control and ttl 1h were honored, and no read happened without it (live on claude-haiku-5-5, claude-opus-5-5, claude-sonnet-5 and claude-sonnet-5-5). Zen lists only the 5m write price.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 

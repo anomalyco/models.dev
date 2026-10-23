@@ -4,13 +4,14 @@
 # Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
 #   system_updates = true: a contents entry with role system was kept in place and followed, 2 of 2 runs (cached 12083 -> 12102)
 #   effort_updates = true: thinkingConfig.thinkingLevel high -> low kept the cache (cached 12084 -> 12103)
-#   tools.updates = true: adding a function declaration kept the cache (cached 12128 -> 12196)
+#   tools.updates left out (false): re-tested 2026-10-23 with the bulk in the first user message, adding or removing a function declaration
+#     dropped the cache every time (add 0/0/0/0, remove 0/0) while the unchanged control kept it (7688, 7086, 6482; one miss). The 2026-10-21 "kept" was a fluke.
 # Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "google/gemini-4-argon"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }

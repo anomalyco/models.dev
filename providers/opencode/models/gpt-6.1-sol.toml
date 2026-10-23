@@ -6,7 +6,7 @@
 # Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
 #   system_updates = true: a developer message before the next user turn was kept in place (cached 9123 -> 9123)
 #   effort_updates = true: configuration_update item kept the cache (cached 9119 -> 9119)
-#   tools.updates = true: additional_tools item kept the cache (cached 9161 -> 9161)
+#   tools.updates = true (add only): additional_tools item kept the cache (cached 9161 -> 9161)
 # Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "openai/gpt-6.1-sol"

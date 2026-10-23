@@ -6,13 +6,15 @@
 # Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
 #   system_updates = true: a system message before the next user turn was kept in place (cached 9216 -> 9216)
 #   effort_updates = false: thinking.type enabled -> disabled dropped the cache (cached 9216 -> 0)
-#   tools.updates = false: adding a tool dropped the cache (cached 9216 -> 0)
+#   tools.updates = true (add only): Moonshot dynamic tools, a system message carrying `tools` (https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading).
+#     Live on Zen 2026-10-23: kept the cache (control 7040/7424 -> dynamic add 7936/7424 cached, 2 trials) and the model called the added tool;
+#     changing the top-level tools array dropped it (7680 -> 0, 2 trials). There is no removal mechanism.
 # Cache (live): implicit (cached tokens reported without cache markers).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, updates = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
