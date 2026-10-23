@@ -1,6 +1,8 @@
 # Context and prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
 # Reasoning: always on with no caller control on this endpoint. reasoning_effort is accepted
 # but doesn't change reasoning length, and none doesn't disable it (tested live).
+# Controls: reasoning_effort is the only documented reasoning parameter (https://you.com/docs/api-reference/inference-router/create-chat-completion);
+# thinking and enable_thinking are not part of the public API, and thinking.type=disabled doesn't stop reasoning_content (tested live 2026-10-22).
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
