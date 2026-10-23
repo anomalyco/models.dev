@@ -1,0 +1,55 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (Go list price at launch).
+# Release: Moonshot announcement (Oct 24, 2026 Beijing time); weights announced for release by Nov 4, 2026.
+# Context: 1,048,576 tokens. Image and video input, always-on thinking, reasoning_effort = low|high|max (default max)
+# and tool calls confirmed live upstream on 2026-10-23.
+schema = 2
+name = "Kimi K3.1 Pro"
+description = "Kimi K3.1 model with 1M context for long-horizon coding and agent work"
+family = "kimi-k3"
+open_weights = false
+release_date = "2026-10-24"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2 }
+
+[cost.text.output]
+price = 10
