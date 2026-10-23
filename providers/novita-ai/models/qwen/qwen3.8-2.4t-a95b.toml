@@ -19,6 +19,10 @@ context = 1_000_000
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 2
 cache = { read = 0.25 }
