@@ -6,7 +6,7 @@ base_model = "baidu/cobuddy"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 effort_updates = false
 
 [api.chat-completions]

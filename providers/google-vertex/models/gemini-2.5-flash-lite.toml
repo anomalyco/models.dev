@@ -27,7 +27,7 @@ reasoning = { supported = true, default = { type = "toggle", value = false }, to
 structured_output = true
 system_updates = false
 effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 2_048 }, explicit = { min_tokens = 2_048 } }
+cache = { implicit = { min_tokens = 2_048 }, explicit = { min_tokens = 2_048 } }
 service_tier = ["priority"]
 
 [cost.text.input]

@@ -13,7 +13,7 @@ base_model = "google/gemini-3.8-live-extended-thinking"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-cache = { supported = false }
+cache = false
 system_updates = false
 effort_updates = false
 

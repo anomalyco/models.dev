@@ -4,7 +4,7 @@ schema = 2
 base_model = "mistral/codestral-embed-2505"
 
 [capabilities]
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.embeddings]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

@@ -17,7 +17,7 @@ base_model = "tencent/hy4-preview"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"], budget = {} }
 structured_output = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

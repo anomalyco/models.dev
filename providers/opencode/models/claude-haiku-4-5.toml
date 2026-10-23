@@ -9,7 +9,7 @@ description = "Fast Claude model for responsive assistance, classification, and 
 
 [capabilities]
 reasoning = { supported = true, budget = { min = 1_024 } }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"

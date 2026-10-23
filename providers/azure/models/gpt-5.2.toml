@@ -25,7 +25,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 temperature = false
 store = true
-cache = { supported = true, implicit = { ttl = ["24h"], min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { ttl = ["24h"], min_tokens = 1_024 } }
 service_tier = ["priority"]
 system_updates = true
 effort_updates = false

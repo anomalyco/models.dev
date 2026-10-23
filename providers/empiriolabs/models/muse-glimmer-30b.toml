@@ -10,7 +10,7 @@ base_model = "meta/muse-glimmer-30b"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 output = 32_768

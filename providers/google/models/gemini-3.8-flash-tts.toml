@@ -10,7 +10,7 @@ base_model = "google/gemini-3.8-flash-tts"
 
 [capabilities]
 structured_output = false
-cache = { supported = false }
+cache = false
 service_tier = ["flex", "priority"]
 
 [api.speech]

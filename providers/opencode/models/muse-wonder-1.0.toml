@@ -15,7 +15,7 @@ base_model = "meta/muse-wonder-1.0"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
 effort_updates = false
 

@@ -8,7 +8,7 @@ name = "Claude Fable Latest (Claude Fable 5.1)"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-cache = { supported = true, implicit = { ttl = ["5m"] }, explicit = true }
+cache = { implicit = { ttl = ["5m"] }, explicit = true }
 structured_output = true
 effort_updates = false
 

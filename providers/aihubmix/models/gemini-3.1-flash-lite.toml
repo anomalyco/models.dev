@@ -7,7 +7,7 @@ base_model = "google/gemini-3.1-flash-lite"
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = true }
+cache = { implicit = true, explicit = true }
 
 [cost.text.input]
 price = 0.25

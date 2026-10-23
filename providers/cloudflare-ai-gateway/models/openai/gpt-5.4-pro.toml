@@ -6,7 +6,7 @@ base_model = "openai/gpt-5.4-pro"
 [capabilities]
 tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
-cache = { supported = false }
+cache = false
 structured_output = false
 system_updates = true
 effort_updates = false

@@ -21,7 +21,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
 system_updates = false
 effort_updates = false
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
+cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 prompt_cache_key = true
 
 [cost.text.input]

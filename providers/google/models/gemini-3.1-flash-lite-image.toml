@@ -9,7 +9,7 @@ base_model = "google/gemini-3.1-flash-lite-image"
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "high"] }
 structured_output = false
-cache = { supported = false }
+cache = false
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/protocols/google-images" }

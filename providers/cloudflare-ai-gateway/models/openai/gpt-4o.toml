@@ -5,7 +5,7 @@ base_model = "openai/gpt-4o"
 
 [capabilities]
 tools = { supported = true, updates = true }
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
 effort_updates = false

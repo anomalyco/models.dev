@@ -15,7 +15,7 @@ name = "Claude Sonnet 4.5 Thinking"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
+cache = { explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }

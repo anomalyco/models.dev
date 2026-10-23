@@ -90,10 +90,10 @@ test("reads Baseten cache-read prices from the catalog", () => {
   expect(built.cost).toMatchObject({ input: 0.3, output: 1.2, cache_read: 0.007 });
 
   expect(basetenV2Set(0.007, undefined)).toEqual({
-    "capabilities.cache": { supported: true, implicit: true },
+    "capabilities.cache": { implicit: true },
   });
   expect(basetenV2Set(undefined, undefined)).toBeUndefined();
-  expect(basetenV2Set(undefined, { capabilities: { cache: { supported: true } } })).toEqual({
+  expect(basetenV2Set(undefined, { capabilities: { cache: { implicit: true } } })).toEqual({
     "capabilities.cache": undefined,
   });
 });

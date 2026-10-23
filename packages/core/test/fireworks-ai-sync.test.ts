@@ -444,7 +444,7 @@ reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
 system_updates = true
 tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1
@@ -476,7 +476,7 @@ price = 2
     expect(text).toContain('name = "Example Host"');
     expect(text).toContain("# Host evidence stays in the header.");
     expect(text).toContain("system_updates = true");
-    expect(text).toContain("cache = { supported = true, implicit = true }");
+    expect(text).toContain("cache = { implicit = true }");
     expect(text).not.toContain("[modalities]");
 
     await syncProvider(provider);

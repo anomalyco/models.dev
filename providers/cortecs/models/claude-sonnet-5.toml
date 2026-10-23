@@ -9,7 +9,7 @@ base_model = "anthropic/claude-sonnet-5"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, explicit = true }
+cache = { explicit = true }
 structured_output = true
 effort_updates = false
 

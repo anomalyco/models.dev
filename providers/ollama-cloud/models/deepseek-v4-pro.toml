@@ -16,7 +16,7 @@ description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576

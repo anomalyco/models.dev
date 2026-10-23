@@ -9,7 +9,7 @@ base_model = "alibaba/qwen3.7-max"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, budget = {} }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 system_updates = true
 effort_updates = false

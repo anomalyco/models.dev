@@ -7,7 +7,7 @@ base_model = "deepseek/deepseek-r1-0528"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 system_updates = false
 effort_updates = false

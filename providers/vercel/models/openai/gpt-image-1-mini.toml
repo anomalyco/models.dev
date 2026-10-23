@@ -8,7 +8,7 @@ input = ["text"]
 output = ["image/png", "image/jpeg", "image/webp"]
 
 [capabilities]
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.images]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

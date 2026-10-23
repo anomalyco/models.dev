@@ -5,7 +5,7 @@ base_model = "alibaba/qwen3.8-27b"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
 

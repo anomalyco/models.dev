@@ -21,7 +21,7 @@ output = ["text", "image/png", "image/jpeg"]
 reasoning = { supported = true }
 system_updates = false
 effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 4_096 } }
+cache = { implicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
 
 [api.images]

@@ -15,7 +15,7 @@ base_model = "zhipuai/glm-5.2"
 reasoning = { supported = true, effort = ["none", "high", "max"] }
 structured_output = true
 system_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 service_tier = ["priority"]
 
 [cost.text.input]

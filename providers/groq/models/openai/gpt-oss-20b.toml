@@ -13,7 +13,7 @@ description = "Open-weight GPT model for self-hosted reasoning and instruction-f
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = { ttl = ["2h"] } }
+cache = { implicit = { ttl = ["2h"] } }
 service_tier = ["flex"]
 
 [limit]

@@ -12,7 +12,7 @@ description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 system_updates = true
 effort_updates = false

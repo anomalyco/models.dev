@@ -23,7 +23,7 @@ tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 temperature = false
 store = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 system_updates = true
 effort_updates = false
 

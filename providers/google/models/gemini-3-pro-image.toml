@@ -9,7 +9,7 @@ base_model = "google/gemini-3-pro-image"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high"] }
-cache = { supported = false }
+cache = false
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/protocols/google-images" }

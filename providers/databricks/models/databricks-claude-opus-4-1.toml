@@ -14,7 +14,7 @@ base_model = "anthropic/claude-opus-4-1"
 reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
 system_updates = false
-cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
 [limit]
 image = { max_per_request = 100, max_width = 8000, max_height = 8000 }

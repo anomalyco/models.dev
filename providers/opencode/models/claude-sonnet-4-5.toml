@@ -8,7 +8,7 @@ name = "Claude Sonnet 4.5"
 
 [capabilities]
 reasoning = { supported = true, budget = { min = 1_024 } }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000

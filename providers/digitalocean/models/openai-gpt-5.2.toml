@@ -10,7 +10,7 @@ description = "GPT model for general reasoning, writing, coding, and tool-assist
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 temperature = false
 system_updates = true

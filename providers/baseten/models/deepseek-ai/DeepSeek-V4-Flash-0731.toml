@@ -15,7 +15,7 @@ base_model = "deepseek/deepseek-v4-flash-0731"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
 effort_updates = false
 

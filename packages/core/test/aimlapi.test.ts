@@ -292,7 +292,7 @@ test("v2 files keep their mid-conversation flags, and the header cites them", ()
   expect(translated.header).not.toContain("# Cache:");
   const cached = aimlapi.translateModel(model!, {
     ...context,
-    v2: () => ({ ...doc, capabilities: { ...doc.capabilities, cache: { supported: true, explicit: { ttl: ["5m", "1h"] } } } }),
+    v2: () => ({ ...doc, capabilities: { ...doc.capabilities, cache: { explicit: { ttl: ["5m", "1h"] } } } }),
   }) as { header?: string };
   expect(cached.header).toContain("# Cache: the chat-completions catalog row prices cache writes at 5m");
   // Model facts and the lab's description stay with the lab.
@@ -341,7 +341,7 @@ test("cache write prices: one per TTL from the catalog, matched to the file's ex
       "",
       "[capabilities]",
       'reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }',
-      'cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }',
+      'cache = { explicit = { ttl = ["5m", "1h"] } }',
       "",
       "[cost.text.input]",
       "price = 4",
@@ -394,7 +394,7 @@ test("cache write prices: one per TTL from the catalog, matched to the file's ex
     const claudeDoc = Bun.TOML.parse(await readFile(claude, "utf8")) as Record<string, any>;
     const gptDoc = Bun.TOML.parse(await readFile(gpt, "utf8")) as Record<string, any>;
     expect(claudeDoc.cost.text.input.cache).toEqual({ read: 0.4, write: { "5m": 5, "1h": 8 } });
-    expect(claudeDoc.capabilities.cache).toEqual({ supported: true, explicit: { ttl: ["5m", "1h"] } });
+    expect(claudeDoc.capabilities.cache).toEqual({ explicit: { ttl: ["5m", "1h"] } });
     expect(gptDoc.cost.text.input.cache).toEqual({ read: 0.26, write: 3.25 });
     // v1 carries the first TTL only.
     expect(modelV2ToV1({ ...claudeDoc, id: "anthropic/claude-sonnet-4.6" }).cost?.cache_write).toBe(5);
@@ -422,7 +422,7 @@ test("TTL cache write prices that don't match the file's explicit cache TTLs fal
       ["low", "medium", "high", "max"],
     )],
   });
-  const doc = { schema: 2, base_model: "anthropic/claude-sonnet-4-6", capabilities: { cache: { supported: true, implicit: true } } };
+  const doc = { schema: 2, base_model: "anthropic/claude-sonnet-4-6", capabilities: { cache: { implicit: true } } };
   const translated = aimlapi.translateModel(model!, {
     existing: () => undefined,
     authored: () => undefined,

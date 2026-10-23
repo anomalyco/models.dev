@@ -19,7 +19,7 @@ base_model = "mistral/mistral-large-4"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.68

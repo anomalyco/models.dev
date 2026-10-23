@@ -7,7 +7,7 @@ base_model = "openai/gpt-4o"
 structured_output = true
 effort_updates = false
 tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 2.5

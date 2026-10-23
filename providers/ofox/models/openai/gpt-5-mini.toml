@@ -14,7 +14,7 @@ base_model_omit = ["limit.input"]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 256_000

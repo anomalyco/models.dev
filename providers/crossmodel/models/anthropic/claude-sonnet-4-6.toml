@@ -20,7 +20,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 output = 128_000

@@ -22,7 +22,7 @@ reasoning = { supported = true, default = { type = "effort", value = "max" }, to
 structured_output = true
 top_k = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 output = 1_048_576

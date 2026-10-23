@@ -12,7 +12,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 
 [api.chat-completions]

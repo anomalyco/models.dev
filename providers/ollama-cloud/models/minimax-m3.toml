@@ -15,7 +15,7 @@ description = "MiniMax multimodal coding model for long-context reasoning and ag
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 512_000

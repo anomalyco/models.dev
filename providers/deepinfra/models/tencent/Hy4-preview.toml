@@ -7,7 +7,7 @@ base_model = "tencent/hy4-preview"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 
 [limit]

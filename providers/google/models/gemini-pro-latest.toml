@@ -20,7 +20,7 @@ name = "Gemini Pro Latest"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = { min_tokens = 4_096 }, explicit = true }
+cache = { implicit = { min_tokens = 4_096 }, explicit = true }
 system_updates = false
 effort_updates = false
 

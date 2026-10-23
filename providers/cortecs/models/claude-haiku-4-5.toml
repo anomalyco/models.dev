@@ -9,7 +9,7 @@ description = "Fast Claude model for responsive assistance, classification, and 
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
-cache = { supported = true, explicit = true }
+cache = { explicit = true }
 structured_output = true
 effort_updates = false
 

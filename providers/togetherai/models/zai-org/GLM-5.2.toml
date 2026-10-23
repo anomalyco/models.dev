@@ -15,7 +15,7 @@ base_model = "zhipuai/glm-5.2"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 structured_output = true
 effort_updates = false
 prompt_cache_key = true

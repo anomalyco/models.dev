@@ -23,7 +23,7 @@ reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"
 structured_output = true
 system_updates = true
 effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -8,7 +8,7 @@ base_model = "alibaba/qwen3.8-2.4t-a95b"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"], budget = {} }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 system_updates = true
 effort_updates = false

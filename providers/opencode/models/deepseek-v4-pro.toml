@@ -13,7 +13,7 @@ base_model = "deepseek/deepseek-v4-pro"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
 effort_updates = false
 

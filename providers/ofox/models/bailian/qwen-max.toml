@@ -10,7 +10,7 @@ base_model = "alibaba/qwen-max"
 tools = { supported = true, updates = false }
 structured_output = true
 effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.35

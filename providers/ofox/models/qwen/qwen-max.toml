@@ -12,7 +12,7 @@ base_model = "alibaba/qwen-max"
 tools = { supported = true, updates = false }
 structured_output = true
 effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 32_000

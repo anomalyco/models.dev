@@ -14,7 +14,7 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 effort_updates = false
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [limit]
 context = 220_000

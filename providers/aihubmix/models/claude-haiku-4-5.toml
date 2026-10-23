@@ -13,7 +13,7 @@ base_model = "anthropic/claude-haiku-4-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = {} }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+cache = { explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }

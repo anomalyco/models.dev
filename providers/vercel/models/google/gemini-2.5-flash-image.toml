@@ -3,7 +3,7 @@ base_model = "google/gemini-2.5-flash-image"
 name = "Nano Banana (Gemini 2.5 Flash Image)"
 
 [capabilities]
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [limit]
 output = 65_535

@@ -10,7 +10,7 @@ base_model = "alibaba/qwen3-coder-plus"
 [capabilities]
 tools = { supported = true, updates = false }
 effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_000_000

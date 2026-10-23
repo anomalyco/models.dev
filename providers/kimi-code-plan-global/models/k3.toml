@@ -16,7 +16,7 @@ reasoning = { supported = true, default = { type = "effort", value = "high" }, e
 structured_output = true
 effort_updates = false
 prompt_cache_key = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

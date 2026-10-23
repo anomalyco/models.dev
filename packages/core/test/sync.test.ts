@@ -594,7 +594,7 @@ test("syncs CrossModel's prompt caching flag into v2 files only", () => {
     context,
   );
 
-  expect(caching).toMatchObject({ v2Set: { "capabilities.cache.supported": true } });
+  expect(caching).toMatchObject({ v2Set: { "capabilities.cache": expect.any(Function) } });
   expect(unknown && "v2Set" in unknown ? unknown.v2Set : undefined).toBeUndefined();
 });
 
@@ -2603,7 +2603,7 @@ function openRouterGeminiModel() {
   });
 }
 
-const CLAUDE_CACHE = { capabilities: { cache: { supported: true, explicit: { ttl: ["5m", "1h"] } } } };
+const CLAUDE_CACHE = { capabilities: { cache: { explicit: { ttl: ["5m", "1h"] } } } };
 const translateContext = { existing: () => undefined, authored: () => undefined };
 type OverridesSet = (current: unknown) => unknown;
 
@@ -2907,7 +2907,7 @@ test("syncs every OpenRouter price into v2 files without changing v1", async () 
     'base_model = "lab/chat"',
     "",
     "[capabilities]",
-    'cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }',
+    'cache = { explicit = { ttl = ["5m", "1h"] } }',
     "",
     ...cost,
   ].join("\n"));
@@ -3729,7 +3729,6 @@ test("DeepInfra writes service tiers, prompt caching and retention prices as v2 
 
   expect(deepInfraV2Set(model, { input: 0.75, cache_read: 0.15 }, undefined)).toEqual({
     "capabilities.cache": {
-      supported: true,
       implicit: true,
       explicit: { ttl: ["5m", "1h"], min_tokens: 1024 },
     },
@@ -3836,7 +3835,7 @@ test("DeepInfra clears stale caching and retention data when the catalog drops i
     });
     let text = await read();
     expect(text).toContain("cache = { read = 0.14 }");
-    expect(text).toContain("cache = { supported = true, implicit = true }");
+    expect(text).toContain("cache = { implicit = true }");
     expect(text).not.toContain("explicit");
     expect(text).not.toContain("service_tier");
 
@@ -7864,7 +7863,7 @@ test("Kilo sync keeps v2-only data and leaves model facts to the lab in v2 files
       reasoning: { supported: true, effort: ["low", "high", "max"] },
       structured_output: true,
       effort_updates: false,
-      cache: { supported: true, implicit: true },
+      cache: { implicit: true },
     },
     cost: { text: { input: { price: 4, cache: { read: 0.2, write: 5 } }, output: { price: 20 } } },
   };
@@ -7885,7 +7884,7 @@ test("Kilo sync keeps v2-only data and leaves model facts to the lab in v2 files
   expect(next.capabilities).toMatchObject({
     tools: { supported: true, updates: false },
     effort_updates: false,
-    cache: { supported: true, implicit: true },
+    cache: { implicit: true },
   });
   expect(next.cost.text.input.price).toBe(5);
   for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated"]) {
@@ -7939,7 +7938,7 @@ test("Ofox sync takes context tiers and audio prices from the catalog and keeps 
       tools: { supported: true, updates: false },
       structured_output: true,
       effort_updates: false,
-      cache: { supported: true, implicit: true },
+      cache: { implicit: true },
     },
     api: { responses: { base_url: "https://api.ofox.ai/v1", sdk: { aisdk: "@ai-sdk/openai" } } },
     cost: { text: { input: { price: 4, cache: { read: 0.4, write: { "5m": 5, "1h": 8 } } }, output: { price: 20 } } },
@@ -8103,11 +8102,11 @@ test("Vercel cache support comes from tags, else from a cache read price", () =>
   const cache = (tags: string[], id = "example/model", pricing?: object) =>
     vercelCache({ id, tags, pricing } as Parameters<typeof vercelCache>[0]);
   expect(cache([])).toBeUndefined();
-  expect(cache(["implicit-caching"])!(undefined)).toEqual({ supported: true, implicit: true, explicit: false });
+  expect(cache(["implicit-caching"])!(undefined)).toEqual({ implicit: true });
   expect(cache(["implicit-caching", "explicit-caching"])!({ explicit: { ttl: ["5m", "1h"] } }))
-    .toEqual({ supported: true, implicit: true, explicit: { ttl: ["5m", "1h"] } });
+    .toEqual({ implicit: true, explicit: { ttl: ["5m", "1h"] } });
   // Untagged but priced: implicit, or explicit for Anthropic.
-  expect(cache([], "mistral/codestral", { input_cache_read: "0.03" })!(undefined)).toEqual({ supported: true, implicit: true, explicit: false });
-  expect(cache([], "anthropic/claude-x", { input_cache_read: "0.3" })!(undefined)).toEqual({ supported: true, implicit: false, explicit: true });
+  expect(cache([], "mistral/codestral", { input_cache_read: "0.03" })!(undefined)).toEqual({ implicit: true });
+  expect(cache([], "anthropic/claude-x", { input_cache_read: "0.3" })!(undefined)).toEqual({ explicit: true });
   expect(cache([], "perplexity/sonar", { input_cache_write: "0.0625" })).toBeUndefined();
 });

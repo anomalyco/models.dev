@@ -18,7 +18,7 @@ reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 structured_output = true
 system_updates = false
 effort_updates = false
-cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [cost.text.input]
 price = 1.1

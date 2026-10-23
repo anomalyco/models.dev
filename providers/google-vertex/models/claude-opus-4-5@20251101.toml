@@ -18,7 +18,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { m
 structured_output = true
 system_updates = false
 effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/google-vertex/anthropic", opencodeai = "@opencode/ai/providers/google-vertex/messages" }

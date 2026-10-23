@@ -5,7 +5,7 @@ base_model = "inference-net/schematron-v2-small"
 [capabilities]
 structured_output = true
 effort_updates = false
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.05

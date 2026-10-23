@@ -19,7 +19,7 @@ output = ["text"]
 reasoning = { supported = true, budget = {} }
 structured_output = true
 store = false
-cache = { supported = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 
 [limit]
 request_bytes = 20_971_520

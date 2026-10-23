@@ -217,7 +217,7 @@ export const CacheTargetV2 = openEnum(CacheTargetV2Values);
 export type CacheTargetV2 = z.infer<typeof CacheTargetV2>;
 
 export const ImplicitCacheV2 = z.union([
-  z.boolean(),
+  z.literal(true),
   z
     .object({
       ttl: z.array(DurationStringV2).optional(),
@@ -229,7 +229,7 @@ export const ImplicitCacheV2 = z.union([
 export type ImplicitCacheV2 = z.infer<typeof ImplicitCacheV2>;
 
 export const ExplicitCacheV2 = z.union([
-  z.boolean(),
+  z.literal(true),
   z
     .object({
       ttl: z.array(DurationStringV2).optional(),
@@ -242,19 +242,17 @@ export const ExplicitCacheV2 = z.union([
 
 export type ExplicitCacheV2 = z.infer<typeof ExplicitCacheV2>;
 
-export const CacheSupportV2 = z.discriminatedUnion("supported", [
+export const CacheSupportV2 = z.union([
+  z.literal(false),
   z
     .object({
-      supported: z.literal(false),
-    })
-    .strict(),
-  z
-    .object({
-      supported: z.literal(true),
       implicit: ImplicitCacheV2.optional(),
       explicit: ExplicitCacheV2.optional(),
     })
-    .strict(),
+    .strict()
+    .refine((cache) => cache.implicit !== undefined || cache.explicit !== undefined, {
+      message: "List at least one cache kind (implicit or explicit), or set cache = false",
+    }),
 ]);
 
 export type CacheSupportV2 = z.infer<typeof CacheSupportV2>;

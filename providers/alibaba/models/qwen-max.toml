@@ -24,7 +24,7 @@ top_k = true
 system_updates = true
 effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 context = 32_768

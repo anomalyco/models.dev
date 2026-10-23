@@ -105,7 +105,7 @@ export function basetenV2Set(cacheRead: number | undefined, current: Record<stri
   const capabilities = current?.capabilities as Record<string, unknown> | undefined;
   if (cacheRead === undefined && capabilities?.cache === undefined) return undefined;
   return {
-    "capabilities.cache": cacheRead === undefined ? undefined : { supported: true, implicit: true },
+    "capabilities.cache": cacheRead === undefined ? undefined : { implicit: true },
   };
 }
 

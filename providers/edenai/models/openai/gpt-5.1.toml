@@ -13,7 +13,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
-cache = { supported = true, implicit = { ttl = ["24h"], min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { ttl = ["24h"], min_tokens = 1_024 } }
 structured_output = true
 effort_updates = false
 prompt_cache_key = true

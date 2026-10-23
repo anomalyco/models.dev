@@ -174,7 +174,6 @@ describe("v2 catalog generation", () => {
 
     expect(
       CacheSupportV2.safeParse({
-        supported: true,
         implicit: { ttl: ["30m"], min_tokens: 1024 },
         explicit: {
           ttl: ["5m", "1h"],
@@ -185,12 +184,11 @@ describe("v2 catalog generation", () => {
       }).success,
     ).toBe(true);
 
-    expect(
-      CacheSupportV2.safeParse({
-        supported: true,
-        implicit: true,
-        explicit: false,
-      }).success,
-    ).toBe(true);
+    expect(CacheSupportV2.safeParse({ implicit: true }).success).toBe(true);
+    expect(CacheSupportV2.safeParse(false).success).toBe(true);
+    expect(CacheSupportV2.safeParse(true).success).toBe(false);
+    expect(CacheSupportV2.safeParse({}).success).toBe(false);
+    expect(CacheSupportV2.safeParse({ implicit: true, explicit: false }).success).toBe(false);
+    expect(CacheSupportV2.safeParse({ supported: true, implicit: true }).success).toBe(false);
   });
 });

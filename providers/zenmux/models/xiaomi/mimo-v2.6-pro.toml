@@ -8,7 +8,7 @@ base_model = "xiaomi/mimo-v2.6-pro"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-cache = { supported = true }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

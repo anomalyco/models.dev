@@ -8,7 +8,7 @@ base_model = "alibaba/qwen3.7-max"
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 system_updates = false
 

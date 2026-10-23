@@ -9,7 +9,7 @@ base_model = "meta/muse-spark-open"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["low", "medium", "high", "xhigh"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 
 [api.chat-completions]

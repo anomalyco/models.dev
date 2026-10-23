@@ -15,7 +15,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 system_updates = true
 effort_updates = false
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 4_096 } }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 4_096 } }
 
 [limit]
 output = 1_000_000

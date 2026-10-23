@@ -12,7 +12,7 @@ test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the
     base_model: "xai/grok-4.7",
     capabilities: {
       reasoning: { supported: true, default: { type: "effort", value: "high" }, effort: ["low", "high"] },
-      cache: { supported: true, implicit: true, explicit: false },
+      cache: { implicit: true },
     },
     cost: {
       text: { input: { price: 9 }, output: { price: 6 } },

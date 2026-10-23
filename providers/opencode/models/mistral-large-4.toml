@@ -13,7 +13,7 @@ base_model = "mistral/mistral-large-4"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
 effort_updates = false
 

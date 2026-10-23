@@ -14,7 +14,7 @@ system_updates = true
 effort_updates = false
 stream_usage = true
 prompt_cache_key = true
-cache = { supported = true, implicit = { ttl = ["5m", "1h"] }, explicit = false }
+cache = { implicit = { ttl = ["5m", "1h"] } }
 
 [limit]
 output = 1_048_576

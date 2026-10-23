@@ -11,7 +11,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 system_updates = false
 effort_updates = false
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
+cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_details" }

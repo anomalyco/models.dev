@@ -18,7 +18,7 @@ name = "kimi-for-coding"
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "low", "high", "max"] }
 effort_updates = false
 prompt_cache_key = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [limit]
 output = 32_768

@@ -21,7 +21,7 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 32_768 } }
 temperature = true
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 context = 202_752

@@ -171,7 +171,7 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 - Pricing, context/output limits, modalities, and reasoning controls come from CrossModel's public catalog.
 - `structured_output` comes from `capabilities.json` (documented `/v1/models` shape) or `capabilities.structured_output.json_schema` (the public catalog); when both are absent or null, the sync preserves an existing authored override.
 - `identity.release_stage = "deprecated"` sets `status = "deprecated"`; otherwise an existing status is kept.
-- `capabilities.context.caching = true` sets only `capabilities.cache.supported = true` in v2 files (CrossModel documents no mechanism or TTL). Authored `implicit` / `explicit` details are kept.
+- `capabilities.context.caching = true` sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet (CrossModel documents no mechanism or TTL). Authored `implicit` / `explicit` details are kept.
 - Effort lists are sorted low to high, because v2 compares them in order.
 - Intrinsic model facts (`knowledge`, dates, `family`, `open_weights`) are never synced; they stay inherited from the canonical `base_model` metadata. Display names are not synced either, so v1 names remain the lab's.
 
@@ -192,7 +192,7 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - Prices, limits, modalities, `supported_parameters` reasoning controls (`enable_thinking`, `reasoning_effort`, `thinking_budget`) and display names come from the catalog. Effort lists are sorted low to high.
 - `structured_output` is `"json_schema"`, `"json_object"` or `"none"` (https://docs.empiriolabs.ai/compatibility.md); `"none"` syncs as false.
 - `deprecated = true` sets `status = "deprecated"`; otherwise an existing status is kept.
-- A `cache` or `prompt_cache` feature sets only `capabilities.cache.supported = true` in v2 files. Authored `implicit` / `explicit` details are kept.
+- A `cache` or `prompt_cache` feature sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet. Authored `implicit` / `explicit` details are kept.
 - `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
 
 ## OpenRouter Notes

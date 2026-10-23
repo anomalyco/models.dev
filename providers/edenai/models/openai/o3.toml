@@ -7,7 +7,7 @@ base_model = "openai/o3"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 effort_updates = false
 prompt_cache_key = true

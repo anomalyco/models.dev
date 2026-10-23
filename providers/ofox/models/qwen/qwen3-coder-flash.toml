@@ -12,7 +12,7 @@ base_model = "alibaba/qwen3-coder-flash"
 tools = { supported = true, updates = false }
 structured_output = true
 effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 output = 64_000

@@ -7,7 +7,7 @@ base_model = "anthropic/claude-opus-4-8"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 
 [api.messages]
 base_url = "https://api.ofox.ai/anthropic/v1"

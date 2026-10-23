@@ -28,7 +28,7 @@ reasoning = { supported = true, default = { type = "effort", value = "medium" },
 structured_output = true
 system_updates = false
 effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 4_096 }, explicit = { min_tokens = 4_096 } }
+cache = { implicit = { min_tokens = 4_096 }, explicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
 
 [cost.text.input]

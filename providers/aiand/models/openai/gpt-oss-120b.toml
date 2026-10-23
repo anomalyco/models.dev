@@ -11,7 +11,7 @@ base_model = "openai/gpt-oss-120b"
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 effort_updates = false
 

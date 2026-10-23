@@ -144,12 +144,10 @@ export function vercelCache(model: Pick<VercelModel, "id" | "tags" | "pricing">)
   const implicit = model.tags.includes("implicit-caching") || (priced && !anthropic);
   const explicit = model.tags.includes("explicit-caching") || (priced && anthropic);
   if (!implicit && !explicit) return undefined;
-  const kind = (current: unknown, on: boolean) =>
-    on ? (current !== null && typeof current === "object" ? current : true) : false;
-  return (current: { implicit?: unknown; explicit?: unknown } | undefined) => ({
-    supported: true,
-    implicit: kind(current?.implicit, implicit),
-    explicit: kind(current?.explicit, explicit),
+  const kind = (current: unknown) => (current !== null && typeof current === "object" ? current : true);
+  return (current: { implicit?: unknown; explicit?: unknown } | false | undefined) => ({
+    ...(implicit ? { implicit: kind(current && current.implicit) } : {}),
+    ...(explicit ? { explicit: kind(current && current.explicit) } : {}),
   });
 }
 

@@ -11,7 +11,7 @@ output = ["text", "audio/pcm", "audio/pcmu", "audio/pcma"]
 [capabilities]
 reasoning = { supported = false }
 temperature = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.realtime]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

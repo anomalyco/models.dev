@@ -16,7 +16,7 @@ base_model = "openai/gpt-oss-120b"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = { ttl = ["2h"] } }
+cache = { implicit = { ttl = ["2h"] } }
 system_updates = false
 effort_updates = false
 service_tier = ["flex"]

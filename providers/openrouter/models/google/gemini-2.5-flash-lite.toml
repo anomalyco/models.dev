@@ -15,7 +15,7 @@ reasoning = { supported = true, toggle = true }
 structured_output = true
 system_updates = false
 effort_updates = false
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
+cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
 [limit]
 output = 65_535

@@ -16,7 +16,7 @@ reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 system_updates = true
 effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 0.25

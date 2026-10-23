@@ -15,7 +15,7 @@ base_model = "stepfun/step-3.7-flash"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = { min_tokens = 256 }, explicit = false }
+cache = { implicit = { min_tokens = 256 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -25,7 +25,7 @@ reasoning = { supported = true, default = { type = "effort", value = "max" }, ef
 structured_output = false
 system_updates = true
 effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 512 }, explicit = false }
+cache = { implicit = { min_tokens = 512 } }
 
 [limit]
 output = 524_288

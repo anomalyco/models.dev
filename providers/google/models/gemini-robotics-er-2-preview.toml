@@ -16,7 +16,7 @@ base_model = "google/gemini-robotics-er-2-preview"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = true }
+cache = { implicit = true, explicit = true }
 system_updates = false
 effort_updates = false
 

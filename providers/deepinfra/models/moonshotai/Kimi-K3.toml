@@ -21,7 +21,7 @@ output = ["text"]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_536 } }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_536 } }
 prompt_cache_key = true
 system_updates = false
 effort_updates = false

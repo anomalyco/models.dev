@@ -9,7 +9,7 @@ base_model = "anthropic/claude-sonnet-4-6"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 system_updates = false
 effort_updates = false
 

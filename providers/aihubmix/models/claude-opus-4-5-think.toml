@@ -15,7 +15,7 @@ name = "Claude Opus 4.5 Thinking"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+cache = { explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = true }

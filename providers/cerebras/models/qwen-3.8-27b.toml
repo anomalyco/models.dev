@@ -32,7 +32,7 @@ system_updates = false
 effort_updates = false
 stream_usage = true
 prompt_cache_key = true
-cache = { supported = true, implicit = { ttl = ["5m"], min_tokens = 128 }, explicit = false }
+cache = { implicit = { ttl = ["5m"], min_tokens = 128 } }
 
 [limit]
 context = 131_072

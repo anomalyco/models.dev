@@ -22,7 +22,7 @@ structured_output = true
 temperature = false
 system_updates = true
 effort_updates = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_050_000

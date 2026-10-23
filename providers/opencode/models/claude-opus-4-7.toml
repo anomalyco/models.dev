@@ -8,7 +8,7 @@ description = "Flagship Claude model for deep reasoning, coding, and long-horizo
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"

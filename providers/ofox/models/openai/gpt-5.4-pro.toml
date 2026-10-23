@@ -9,7 +9,7 @@ base_model = "openai/gpt-5.4-pro"
 reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 structured_output = false
 effort_updates = false
-cache = { supported = false }
+cache = false
 
 [api.responses]
 base_url = "https://api.ofox.ai/v1"

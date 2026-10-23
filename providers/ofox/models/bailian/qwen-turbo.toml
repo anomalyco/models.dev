@@ -11,7 +11,7 @@ base_model = "alibaba/qwen-turbo"
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
 effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 128_000
