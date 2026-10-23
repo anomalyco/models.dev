@@ -1,0 +1,15 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-23. One flat price per model.
+# Effort: reasoning_effort = low|high|max
+# Controls follow providers/zhipuai/models/glm-5.3.toml (thinking cannot be turned off).
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and max accepted, max reasoned about 5x longer.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.663
+
+[cost.text.output]
+price = 1.2155
