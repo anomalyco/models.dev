@@ -7,6 +7,7 @@ description = "Flagship Mistral model for advanced reasoning, coding, and multil
 tools = { supported = false }
 system_updates = true
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 output = 256_000

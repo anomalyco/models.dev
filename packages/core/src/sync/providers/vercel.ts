@@ -98,9 +98,13 @@ export const vercel = {
   translateModel(model, context) {
     const mediaType = MEDIA_TYPES[model.type];
     if (mediaType !== undefined) {
+      const current = context.v2?.(model.id);
+      const v2 = buildVercelMediaModel(model, mediaType, current, context.authored(model.id));
+      const cache = vercelCache(model);
+      if (cache !== undefined) v2.capabilities = { ...v2.capabilities, cache: cache((current?.capabilities as Doc | undefined)?.cache) };
       return {
         id: model.id,
-        v2: buildVercelMediaModel(model, mediaType, context.v2?.(model.id), context.authored(model.id)),
+        v2,
         header: MEDIA_HEADERS[mediaType] + realtimePriceNote(model),
       };
     }
@@ -113,7 +117,7 @@ export const vercel = {
       existing,
       inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
     );
-    const cache = vercelCache(model.tags);
+    const cache = vercelCache(model);
     const v2Set = {
       ...(model.type === "evaluation" ? { api: structuredClone(DECISION_APIS) } : {}),
       ...(cache === undefined ? {} : { "capabilities.cache": cache }),
@@ -129,12 +133,16 @@ export const vercel = {
   },
 } satisfies SyncProvider<VercelModel>;
 
-// The catalog tags each model `implicit-caching` and/or `explicit-caching`.
-// Details a file already has for a kind (TTLs, breakpoints) are kept; untagged
-// models keep whatever the file says.
-export function vercelCache(tags: string[]) {
-  const implicit = tags.includes("implicit-caching");
-  const explicit = tags.includes("explicit-caching");
+// The catalog tags each model `implicit-caching` and/or `explicit-caching`. An
+// untagged model with a cache read price caches implicitly, except Anthropic's,
+// which only cache with explicit markers. Details a file already has for a kind
+// (TTLs, breakpoints) are kept; other untagged models keep whatever the file says.
+export function vercelCache(model: Pick<VercelModel, "id" | "tags" | "pricing">) {
+  const tagged = model.tags.includes("implicit-caching") || model.tags.includes("explicit-caching");
+  const priced = !tagged && model.pricing?.input_cache_read !== undefined;
+  const anthropic = model.id.startsWith("anthropic/");
+  const implicit = model.tags.includes("implicit-caching") || (priced && !anthropic);
+  const explicit = model.tags.includes("explicit-caching") || (priced && anthropic);
   if (!implicit && !explicit) return undefined;
   const kind = (current: unknown, on: boolean) =>
     on ? (current !== null && typeof current === "object" ? current : true) : false;

@@ -8099,9 +8099,15 @@ test("Kilo web search prices go to v2 per 1,000", () => {
   expect(v2Set()["cost.web_search"]).toBeUndefined();
 });
 
-test("Vercel cache tags set cache support and keep authored details", () => {
-  expect(vercelCache([])).toBeUndefined();
-  expect(vercelCache(["implicit-caching"])!(undefined)).toEqual({ supported: true, implicit: true, explicit: false });
-  expect(vercelCache(["implicit-caching", "explicit-caching"])!({ explicit: { ttl: ["5m", "1h"] } }))
+test("Vercel cache support comes from tags, else from a cache read price", () => {
+  const cache = (tags: string[], id = "example/model", pricing?: object) =>
+    vercelCache({ id, tags, pricing } as Parameters<typeof vercelCache>[0]);
+  expect(cache([])).toBeUndefined();
+  expect(cache(["implicit-caching"])!(undefined)).toEqual({ supported: true, implicit: true, explicit: false });
+  expect(cache(["implicit-caching", "explicit-caching"])!({ explicit: { ttl: ["5m", "1h"] } }))
     .toEqual({ supported: true, implicit: true, explicit: { ttl: ["5m", "1h"] } });
+  // Untagged but priced: implicit, or explicit for Anthropic.
+  expect(cache([], "mistral/codestral", { input_cache_read: "0.03" })!(undefined)).toEqual({ supported: true, implicit: true, explicit: false });
+  expect(cache([], "anthropic/claude-x", { input_cache_read: "0.3" })!(undefined)).toEqual({ supported: true, implicit: false, explicit: true });
+  expect(cache([], "perplexity/sonar", { input_cache_write: "0.0625" })).toBeUndefined();
 });

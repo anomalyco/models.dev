@@ -9,6 +9,7 @@ base_model = "mistral/codestral-latest"
 tools = { supported = true, updates = false }
 system_updates = false
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 context = 128_000

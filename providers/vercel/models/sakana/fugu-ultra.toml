@@ -9,6 +9,7 @@ reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
 temperature = true
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = false }
 
 [limit]
 output = 1_000_000
