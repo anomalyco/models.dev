@@ -12,6 +12,7 @@
 # mechanism (configuration_update/additional_tools return 422), checked live 2026-10-19.
 # Web search: $5 per 1,000 web_search tool calls: https://docs.x.ai/developers/pricing#tools-pricing
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Priority (https://docs.x.ai/developers/pricing); US regional endpoint (https://docs.x.ai/developers/pricing).
+# APIs: Responses and Chat Completions (https://docs.x.ai/developers/rest-api-reference/inference/chat-completions), both confirmed live 2026-10-22. The Anthropic-compatible /v1/messages is listed under Legacy & Deprecated, so it is left out.
 schema = 2
 base_model = "xai/grok-4.7"
 
@@ -26,6 +27,11 @@ stream_usage = true
 prompt_cache_key = true
 cache = { implicit = true }
 service_tier = ["priority"]
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 2
