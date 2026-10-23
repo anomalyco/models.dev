@@ -22,14 +22,22 @@ effort_updates = false
 context = 200_000
 output = 8_192
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 5
-cache = { read = 0.5, write = 6.25 }
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 200_000 } }
 price = 10
-cache = { read = 1, write = 12.5 }
+cache = { read = 1, write = { "5m" = 12.5, "1h" = 20 } }
 
 [cost.text.output]
 price = 25
@@ -37,3 +45,6 @@ price = 25
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_000 } }
 price = 37.5
+
+[cost.web_search]
+price = 0

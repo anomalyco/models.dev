@@ -23,9 +23,18 @@ prompt_cache_key = true
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 0.95
 cache = { read = 0.19 }
 
 [cost.text.output]
 price = 4
+
+[cost.web_search]
+price = 10

@@ -20,9 +20,20 @@ prompt_cache_key = true
 context = 128_000
 output = 4_096
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 0.05
 cache = { read = 0.01 }
 
 [cost.text.output]
 price = 0.45
+
+[cost.web_search]
+price = 10

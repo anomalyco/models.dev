@@ -17,6 +17,15 @@ cache = { supported = true, implicit = { min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
 effort_updates = false
+service_tier = ["flex", "priority", "ultrafast"]
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 10
@@ -27,9 +36,66 @@ when = { context = { gt = 272_000 } }
 price = 20
 cache = { read = 2 }
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 20
+cache = { read = 2 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "ultrafast" } }
+price = 60
+cache = { read = 6 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" }, context = { gt = 272_000 } }
+price = 40
+cache = { read = 4 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 10
+cache = { read = 1 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "ultrafast" }, context = { gt = 272_000 } }
+price = 120
+cache = { read = 12 }
+
 [cost.text.output]
 price = 50
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 75
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 100
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 25
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "ultrafast" } }
+price = 300
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" }, context = { gt = 272_000 } }
+price = 150
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 37.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "ultrafast" }, context = { gt = 272_000 } }
+price = 450
+
+[cost.web_search]
+price = 10

@@ -21,9 +21,20 @@ structured_output = true
 system_updates = true
 effort_updates = false
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 1.1
 cache = { read = 0.55 }
 
 [cost.text.output]
 price = 4.4
+
+[cost.web_search]
+price = 10

@@ -19,10 +19,40 @@ structured_output = true
 temperature = false
 system_updates = true
 effort_updates = false
+service_tier = ["flex", "priority"]
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.75
 cache = { read = 0.075 }
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 1.5
+cache = { read = 0.15 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.375
+cache = { read = 0.0375 }
+
 [cost.text.output]
 price = 4.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 9
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 2.25
+
+[cost.web_search]
+price = 10

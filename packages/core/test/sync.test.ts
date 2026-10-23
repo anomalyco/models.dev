@@ -28,6 +28,7 @@ import {
 import {
   buildDigitalOceanModel,
   digitalocean,
+  digitalOceanV2Set,
   fetchDigitalOceanModels,
   parseDigitalOceanModels,
   resolveDigitalOceanBaseModel,
@@ -1855,6 +1856,118 @@ test("maps DigitalOcean 1M catalog pricing to its 200K threshold", () => {
   });
 });
 
+function applyV2Set(set: Record<string, unknown>, doc: Record<string, unknown> = {}) {
+  const out: Record<string, unknown> = structuredClone(doc);
+  for (const [key, value] of Object.entries(set)) {
+    const parts = key.split(".");
+    let node = out;
+    for (const part of parts.slice(0, -1)) node = (node[part] ??= {}) as Record<string, unknown>;
+    const current = node[parts.at(-1)!];
+    const next = typeof value === "function" ? value(structuredClone(current)) : value;
+    if (next === undefined) delete node[parts.at(-1)!];
+    else node[parts.at(-1)!] = next;
+  }
+  return out;
+}
+
+test("lists DigitalOcean Responses and Messages APIs from catalog capabilities", () => {
+  const responses = { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } };
+  const messages = { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } };
+  const flagged = applyV2Set(digitalOceanV2Set(digitalOceanModel({ capabilities: ["responses"] })), {
+    api: { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } },
+  });
+  expect(flagged.api).toEqual({
+    "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } },
+    responses,
+    messages,
+  });
+  const hosted = applyV2Set(digitalOceanV2Set(digitalOceanModel({
+    endpoints: [{ capabilities: ["chat_completions", "responses"] }],
+  })));
+  expect(hosted.api).toEqual({ "chat-completions": {}, messages });
+  // OpenAI models answer Responses without the catalog flag.
+  expect(applyV2Set(digitalOceanV2Set(digitalOceanModel({ creator: "OpenAI" }))).api).toEqual({
+    "chat-completions": {},
+    responses,
+    messages,
+  });
+  // Neither flagged nor hosted: Chat Completions only, so no table is written.
+  expect(applyV2Set(digitalOceanV2Set(digitalOceanModel())).api).toBeUndefined();
+  // Image models get no chat APIs.
+  expect(applyV2Set(digitalOceanV2Set(digitalOceanModel({
+    type: "image",
+    capabilities: ["responses"],
+    modalities: { input: ["text"], output: ["image", "text"] },
+  }))).api).toBeUndefined();
+});
+
+test("prices DigitalOcean web search, cache TTLs and service tiers from the catalog", () => {
+  const [openai] = parseDigitalOceanModels({
+    models: [digitalOceanModel({ id: "openai-gpt-5.4", name: "GPT-5.4", pricing: undefined })],
+    catalog: [{
+      model_id: "openai-gpt-5.4",
+      name: "GPT-5.4",
+      creator: "OpenAI",
+      availability: ["serverless"],
+      modalities: { input: ["text"], output: ["text"] },
+      pricing: { input_price_per_million: 0.0000025, output_price_per_million: 0.000015 },
+      pricing_detail: {
+        variants: [
+          { tier: "MODEL_PRICING_TIER_STANDARD", label: "Standard", mode: "MODEL_BILLING_MODE_INTERACTIVE", prices: { input_price_per_million: 0.0000025, output_price_per_million: 0.000015 } },
+          { tier: "MODEL_PRICING_TIER_STANDARD", label: "Batch", mode: "MODEL_BILLING_MODE_BATCH", prices: { input_price_per_million: 0.00000125, output_price_per_million: 0.0000075 } },
+          { tier: "MODEL_PRICING_TIER_FAST_MODE", label: "Fast Mode", mode: "MODEL_BILLING_MODE_INTERACTIVE", prices: { input_price_per_million: 0.000005, output_price_per_million: 0.00003, cache_read_input_price_per_million: 5e-7 } },
+          { label: "Flex Mode (Prompts > 272K tokens)", mode: "MODEL_BILLING_MODE_INTERACTIVE", prices: { input_price_per_million: 0.0000025, output_price_per_million: 0.00001125 } },
+          { label: "Flex Mode", mode: "MODEL_BILLING_MODE_INTERACTIVE", prices: { input_price_per_million: 0.00000125, output_price_per_million: 0.0000075 } },
+          { tier: "MODEL_PRICING_TIER_EXTENDED_272K", label: "Long form context (> 272k)", mode: "MODEL_BILLING_MODE_INTERACTIVE", prices: { input_price_per_million: 0.000005, output_price_per_million: 0.0000225 } },
+        ],
+      },
+    }],
+  });
+  const context = { when: { context: { gt: 272_000 } }, price: 5 };
+  const doc = applyV2Set(digitalOceanV2Set(openai!), {
+    cost: { text: { input: { price: 2.5, overrides: [context] }, output: { price: 15, overrides: [{ when: context.when, price: 22.5 }] } } },
+  });
+  expect(doc.capabilities).toEqual({ service_tier: ["flex", "priority"] });
+  expect((doc.cost as any).web_search).toEqual({ price: 10 });
+  expect((doc.cost as any).text.input.overrides).toEqual([
+    context,
+    { when: { service_tier: { equals: "priority" } }, price: 5, cache: { read: 0.5 } },
+    { when: { service_tier: { equals: "flex" } }, price: 1.25 },
+    { when: { service_tier: { equals: "flex" }, context: { gt: 272_000 } }, price: 2.5 },
+  ]);
+  expect((doc.cost as any).text.output.overrides.at(-1)).toEqual({
+    when: { service_tier: { equals: "flex" }, context: { gt: 272_000 } },
+    price: 11.25,
+  });
+  // A second run replaces the tier prices instead of repeating them.
+  expect(applyV2Set(digitalOceanV2Set(openai!), doc)).toEqual(doc);
+
+  const [anthropic] = parseDigitalOceanModels({
+    models: [digitalOceanModel({ id: "anthropic-claude-opus-5", name: "Claude Opus 5", pricing: undefined })],
+    catalog: [{
+      model_id: "anthropic-claude-opus-5",
+      name: "Claude Opus 5",
+      creator: "Anthropic",
+      availability: ["serverless"],
+      modalities: { input: ["text"], output: ["text"] },
+      pricing: { input_price_per_million: 0.000005, output_price_per_million: 0.000025 },
+      pricing_detail: {
+        variants: [
+          { tier: "MODEL_PRICING_TIER_STANDARD", label: "Standard", mode: "MODEL_BILLING_MODE_INTERACTIVE", prices: { input_price_per_million: 0.000005, output_price_per_million: 0.000025, cache_write_5m_input_price_per_million: 0.00000625, cache_write_1h_input_price_per_million: 0.00001 } },
+          { tier: "MODEL_PRICING_TIER_FAST_MODE", label: "Fast Mode", mode: "MODEL_BILLING_MODE_INTERACTIVE", prices: { input_price_per_million: 0.00001, output_price_per_million: 0.00005, cache_write_5m_input_price_per_million: 0.0000125, cache_write_1h_input_price_per_million: 0.00002 } },
+        ],
+      },
+    }],
+  });
+  const claude = applyV2Set(digitalOceanV2Set(anthropic!), { cost: { text: { input: { price: 5, cache: { write: 6.25 } }, output: { price: 25 } } } });
+  expect(claude.capabilities).toEqual({ service_tier: ["fast"] });
+  expect((claude.cost as any).web_search).toEqual({ price: 0 });
+  expect((claude.cost as any).text.input.cache.write).toEqual({ "5m": 6.25, "1h": 10 });
+  expect((claude.cost as any).text.input.overrides).toEqual([
+    { when: { service_tier: { equals: "fast" } }, price: 10, cache: { write: { "5m": 12.5, "1h": 20 } } },
+  ]);
+});
+
 test("syncs DigitalOcean reasoning capability, efforts, and lifecycle status", () => {
   const model = buildDigitalOceanModel(digitalOceanModel({
     lifecycle_status: "deprecated",
@@ -2193,8 +2306,9 @@ test("new DigitalOcean Fable models emit only base metadata overrides", () => {
     }),
     { existing: () => undefined, authored: () => undefined },
   );
+  const { v2Set: _v2Set, ...rest } = translated as { v2Set?: unknown };
 
-  expect(translated).toEqual({
+  expect(rest).toEqual({
     id: "anthropic-claude-fable-5.1",
     model: {
       base_model: "anthropic/claude-fable-5-1",
