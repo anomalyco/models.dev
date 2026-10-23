@@ -6,11 +6,9 @@ base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 128_000

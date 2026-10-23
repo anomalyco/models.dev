@@ -14,7 +14,7 @@ schema = 2
 base_model = "zhipuai/glm-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 top_k = false
 cache = { implicit = true }

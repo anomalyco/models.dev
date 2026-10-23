@@ -9,7 +9,6 @@ description = "Image model for prompt-driven generation, editing, and visual des
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]

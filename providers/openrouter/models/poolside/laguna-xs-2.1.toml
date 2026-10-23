@@ -9,11 +9,9 @@ base_model = "poolside/laguna-xs-2.1"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 

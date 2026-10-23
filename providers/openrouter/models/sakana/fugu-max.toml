@@ -7,10 +7,9 @@ base_model = "sakana/fugu-max"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 capabilities = { system_updates = true }

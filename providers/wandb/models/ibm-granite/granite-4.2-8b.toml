@@ -4,10 +4,9 @@ base_model = "ibm/granite-4.2-8b"
 description = "Granite 4.2 8B is an instruct model capable of enhanced tool calling, instruction following, and chat capabilities."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 131_072

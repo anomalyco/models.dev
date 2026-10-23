@@ -6,11 +6,9 @@ base_model = "rekaai/reka-edge"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 

@@ -7,11 +7,9 @@ base_model = "zhipuai/glm-4.5"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 

@@ -12,7 +12,7 @@ base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron Ultra"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 cache = { implicit = true }

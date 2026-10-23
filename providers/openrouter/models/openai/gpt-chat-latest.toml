@@ -15,12 +15,11 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = false
 system_updates = true
-effort_updates = false
 cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]

@@ -6,10 +6,9 @@ schema = 2
 base_model = "openai/gpt-4o-mini"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]

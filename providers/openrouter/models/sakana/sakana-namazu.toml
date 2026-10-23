@@ -7,11 +7,10 @@ base_model = "sakana/sakana-namazu"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 temperature = false
-effort_updates = false
 
 [api.chat-completions]
 capabilities = { system_updates = true }

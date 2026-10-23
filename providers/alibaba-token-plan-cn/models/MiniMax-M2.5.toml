@@ -10,10 +10,9 @@ schema = 2
 base_model = "minimax/MiniMax-M2.5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 top_k = false
-effort_updates = false
 
 [limit]
 context = 196_608

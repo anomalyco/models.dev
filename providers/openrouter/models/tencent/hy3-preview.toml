@@ -5,11 +5,9 @@ schema = 2
 base_model = "tencent/hy3-preview"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 262_144

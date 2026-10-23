@@ -14,12 +14,11 @@ name = "DeepSeek V4.1 Flash 1017 Fast"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

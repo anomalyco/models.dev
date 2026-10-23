@@ -9,11 +9,9 @@ base_model = "alibaba/qwen3.5-9b"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 235_929

@@ -17,11 +17,10 @@ base_model = "moonshotai/kimi-k2.6"
 family = "kimi-k2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 top_k = false
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

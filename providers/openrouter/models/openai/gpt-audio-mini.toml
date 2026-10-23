@@ -6,10 +6,9 @@ base_model = "openai/gpt-audio-mini"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.6

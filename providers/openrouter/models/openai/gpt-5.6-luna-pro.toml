@@ -8,11 +8,10 @@ name = "GPT-5.6 Luna Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
 
 [api.chat-completions]

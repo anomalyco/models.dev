@@ -19,11 +19,10 @@ schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
 structured_output = true
 top_k = false
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

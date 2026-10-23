@@ -8,11 +8,9 @@ base_model = "upstage/solar-pro3"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 117_964

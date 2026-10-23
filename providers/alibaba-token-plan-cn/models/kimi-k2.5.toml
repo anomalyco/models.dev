@@ -16,12 +16,11 @@ base_model = "moonshotai/kimi-k2.5"
 family = "kimi-k2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
 top_k = false
-effort_updates = false
 
 [limit]
 output = 98_304

@@ -6,10 +6,9 @@ base_model = "zhipuai/glm-5"
 open_weights = false
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 202_752

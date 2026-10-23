@@ -6,11 +6,9 @@ base_model = "thinkingmachines/inkling"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 524_288

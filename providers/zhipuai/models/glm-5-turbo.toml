@@ -18,7 +18,7 @@ v2_only = true
 base_model = "zhipuai/glm-5-turbo"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
 top_k = false
