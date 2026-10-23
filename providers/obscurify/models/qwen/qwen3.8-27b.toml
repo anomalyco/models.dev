@@ -1,13 +1,12 @@
 # Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-23. One flat price per model.
-# Toggle: enable_thinking = true|false (reasoning.enabled = true|false is also accepted)
-# Effort: reasoning_effort = low|medium|xhigh
-# Controls follow providers/alibaba/models/qwen3.8-27b.toml, without the budget.
-# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: enable_thinking and reasoning.enabled switch reasoning on and off; low, medium and xhigh accepted, an unknown level is rejected. thinking_budget is not enforced here (a 64-token budget still produced hundreds of reasoning tokens), so budget is left out.
+# Effort: reasoning_effort = none|low|medium|xhigh (none turns thinking off)
+# Levels follow providers/alibaba/models/qwen3.8-27b.toml plus none; no budget.
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: none returned no reasoning (3/3) while low reasoned; low, medium and xhigh accepted, an unknown level is rejected. thinking_budget is not enforced here (a 64-token budget still produced hundreds of reasoning tokens), so budget is left out.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 
 [cost.text.input]
 price = 0.16575

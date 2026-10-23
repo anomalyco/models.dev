@@ -3,7 +3,7 @@
 # Effort: reasoning_effort = low|high|max
 # Controls follow the DeepSeek entries (providers/deepseek/models/deepseek-v4-pro.toml): toggle plus low|high|max.
 # Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: reasoning.enabled = false removed the reasoning (6/6) and true returned it (2/2); low and max accepted, max reasoned longer (3 runs each). thinking.type was not applied reliably here, so the toggle is reasoning.enabled.
-# Limits: /v1/models context_length is 1048576, the same as DeepSeek's own GET /models (context_window 1048576, max_output_tokens 393216).
+# Limits: GET https://obscurify.ai/v1/models reports context_length 1048576 (lab file: 1000000); it reports no max output, so output is inherited from the lab.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
@@ -12,7 +12,6 @@ reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_576
-output = 393_216
 
 [cost.text.input]
 price = 0.1183
