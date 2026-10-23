@@ -17,6 +17,12 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 structured_output = false
 cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
+[api.chat-completions]
+
+[api.messages]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 2
 cache = { read = 0.2, write = 2.5 }

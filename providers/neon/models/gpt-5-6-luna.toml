@@ -17,6 +17,8 @@ base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 legacy_shape = "responses"
 
+[api.chat-completions]
+
 [cost.text.input]
 price = 0.2
 cache = { read = 0.02, write = 0.25 }
