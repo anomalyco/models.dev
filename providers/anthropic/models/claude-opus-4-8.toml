@@ -1,6 +1,7 @@
 # tools.updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
 # Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
 # Token-only multipliers (object factor, so cost.web_search is unscaled): fast mode (https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing); US data residency (https://platform.claude.com/docs/en/manage-claude/data-residency#pricing).
+# APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
 schema = 2
 name = "Claude Opus 4.8"
 description = "Top Claude Opus tier for the hardest reasoning, coding, and long-horizon agents"
@@ -26,6 +27,12 @@ service_tier = ["fast"]
 [limit]
 context = 1_000_000
 output = 128_000
+
+[api.messages]
+
+[api.chat-completions]
+base_url = "https://api.anthropic.com/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 5
