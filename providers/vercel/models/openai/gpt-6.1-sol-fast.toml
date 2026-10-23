@@ -1,23 +1,25 @@
 # Live model and rates: https://ai-gateway.vercel.sh/v1/models/openai/gpt-6.1-sol-fast
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-23): developer messages stay in place (cache prefix kept, followed; e.g. gpt-5.4 6912/6912, gpt-4.1-mini 7552/7552). Per-turn effort: an empty system message with providerOptions.openai.reasoningEffortUpdate becomes a Responses configuration_update and keeps the cache (gpt-6-sol 12789 and 12783 both directions, gpt-6-luna 4505/4507; reasoning tokens move), so effort_updates = true. A top-level effort change misses (0).
 # Tool changes (@ai-sdk/gateway, live 2026-10-23): providerOptions.openai.additionalTools on a tool result reaches OpenAI as a Responses additional_tools item, the model sees the tool and the cached prefix is kept, so tools.updates = true (add only; https://ai-sdk.dev/providers/ai-sdk-providers/openai). The azure and bedrock routes drop it; the default route is openai.
+# Per API: tools.updates on [api.chat-completions] (@ai-sdk/gateway additionalTools) and [api.responses] (/v1/responses passes an additional_tools item through and the model calls the added tool, live 2026-10-23); /v1/messages has no tool-add item. effort_updates on [api.chat-completions] only: a configuration_update on /v1/responses neither kept the cache nor changed the input tokens on gpt-6-luna (live 2026-10-23), and /v1/messages has no such item. system_updates stays top level: a mid-conversation developer/system message stays in place on all three APIs (gpt-5.4-mini cache read 8832 with and without it on /v1/responses and /v1/messages, live 2026-10-23).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 name = "GPT-6.1 Sol (Fast)"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = true
 cache = { implicit = true, explicit = true }
 
 [api.chat-completions]
+capabilities = { effort_updates = true, tools = { updates = true } }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+capabilities = { tools = { updates = true } }
 
 [api.messages]
 base_url = "https://ai-gateway.vercel.sh/v1"

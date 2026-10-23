@@ -1,10 +1,11 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing).
+# Per API: tools.updates on [api.chat-completions] (@ai-sdk/gateway additionalTools) and [api.responses] (/v1/responses passes an additional_tools item through and the model calls the added tool, live 2026-10-23); /v1/messages has no tool-add item. system_updates stays top level: a mid-conversation developer/system message stays in place on all three APIs (gpt-5.4-mini cache read 8832 with and without it on /v1/responses and /v1/messages, live 2026-10-23).
 schema = 2
 base_model = "openai/gpt-4.1-mini"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 structured_output = true
 system_updates = true
 effort_updates = false
@@ -17,10 +18,12 @@ service_tier = ["priority"]
 input = 1_014_808
 
 [api.chat-completions]
+capabilities = { tools = { updates = true } }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+capabilities = { tools = { updates = true } }
 
 [api.messages]
 base_url = "https://ai-gateway.vercel.sh/v1"
