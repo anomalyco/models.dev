@@ -5,7 +5,7 @@
 # Effort: reasoning_effort = low|high|max
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/moonshotai/models/kimi-k3.toml (Zen passes requests through).
-#   tools.updates is add only: a system message carrying `tools` (Moonshot dynamic tools, https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading).
+#   tools.updates is add only: on Chat Completions, a system message carrying `tools` (Moonshot dynamic tools, https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 

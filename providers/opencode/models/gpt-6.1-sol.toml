@@ -5,7 +5,7 @@
 # Effort: reasoning.effort = low|medium|high|xhigh|max
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/openai/models/gpt-6.1-sol.toml (Zen passes requests through).
-#   tools.updates is add only: an in-history additional_tools item (OpenAI Responses).
+#   Surface: Responses carries the in-history messages (configuration_update for effort_updates; additional_tools for tools.updates, add only).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 

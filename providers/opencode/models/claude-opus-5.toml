@@ -2,6 +2,7 @@
 # Effort: output_config.effort = low|medium|high|xhigh|max (not re-verified on Zen: model access is disabled for the probe key)
 # Cache: explicit cache_control only, as on Anthropic (https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Zen forwards it: block and top-level cache_control and ttl 1h were honored, and no read happened without it (live on claude-haiku-5-5, claude-opus-5-5, claude-sonnet-5 and claude-sonnet-5-5). Zen lists only the 5m write price.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/anthropic/models/claude-opus-5.toml (Zen passes requests through).
+#   Surface: Messages carries the in-history messages (per-message output_config for effort_updates; tool_addition/tool_removal for tools.updates).
 schema = 2
 base_model = "anthropic/claude-opus-5"
 

@@ -1,7 +1,7 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Effort: reasoning_effort = max (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/moonshotai/models/kimi-k3.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
-#   tools.updates is add only: a system message carrying `tools` (Moonshot dynamic tools, https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading).
+#   tools.updates is add only: on Chat Completions, a system message carrying `tools` (Moonshot dynamic tools, https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
