@@ -15,10 +15,9 @@ base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]

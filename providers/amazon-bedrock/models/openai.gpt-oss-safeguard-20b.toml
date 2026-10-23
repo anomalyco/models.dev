@@ -11,11 +11,9 @@ schema = 2
 base_model = "openai/gpt-oss-safeguard-20b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]

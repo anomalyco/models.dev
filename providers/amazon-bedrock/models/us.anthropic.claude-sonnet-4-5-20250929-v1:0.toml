@@ -15,11 +15,9 @@ name = "Claude Sonnet 4.5 (US)"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [cost.text.input]

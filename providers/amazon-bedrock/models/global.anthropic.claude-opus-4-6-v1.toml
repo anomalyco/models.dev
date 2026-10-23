@@ -11,11 +11,9 @@ base_model = "anthropic/claude-opus-4-6"
 name = "Claude Opus 4.6 (Global)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [cost.text.input]

@@ -8,7 +8,7 @@ schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto", "none"] }
 reasoning = { supported = true }
 structured_output = true
 stream_usage = true

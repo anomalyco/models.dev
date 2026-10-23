@@ -10,10 +10,8 @@ base_model = "alibaba/qwen3-coder-next"
 last_updated = "2026-02-06"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [api.converse]

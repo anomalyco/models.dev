@@ -15,11 +15,9 @@ base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (Global)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 service_tier = ["flex", "priority"]
 

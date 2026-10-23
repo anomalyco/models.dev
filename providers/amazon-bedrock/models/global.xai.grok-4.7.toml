@@ -9,11 +9,9 @@ name = "Grok 4.7 (Global)"
 last_updated = "2026-09-28"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 
 [cost.text.input]

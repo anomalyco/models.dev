@@ -6,11 +6,10 @@ name = "mistral-nemo-instruct-2407"
 description = "A 12B parameter, instruct-tuned language model by Mistral AI and NVIDIA, designed for advanced instruction following, multi-turn conversations, and generating text and code across multiple languages."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = false
 structured_output = true
 temperature = false
-effort_updates = false
 
 [limit]
 context = 118_000

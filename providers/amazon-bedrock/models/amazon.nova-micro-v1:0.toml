@@ -8,9 +8,7 @@ schema = 2
 base_model = "amazon/nova-micro"
 
 [capabilities]
-tools = { supported = true, updates = false }
-system_updates = false
-effort_updates = false
+tools = { supported = true }
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 
 [cost.text.input]

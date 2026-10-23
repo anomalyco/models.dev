@@ -15,7 +15,6 @@ base_model = "openai/gpt-6-luna"
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
 prompt_cache_key = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 

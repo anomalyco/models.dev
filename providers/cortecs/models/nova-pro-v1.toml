@@ -10,10 +10,9 @@ input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = false
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 10_000

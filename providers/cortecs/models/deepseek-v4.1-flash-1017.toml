@@ -7,11 +7,10 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

@@ -5,10 +5,9 @@ base_model = "mistral/devstral-2512"
 description = "Mistral coding agent model for repository tasks and software engineering workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = false
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 256_000

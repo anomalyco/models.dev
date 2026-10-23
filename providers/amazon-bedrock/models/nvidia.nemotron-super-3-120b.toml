@@ -9,11 +9,9 @@ base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "NVIDIA Nemotron 3 Super 120B A12B"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]
