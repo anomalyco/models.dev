@@ -5,12 +5,11 @@ schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 output = 1_048_576

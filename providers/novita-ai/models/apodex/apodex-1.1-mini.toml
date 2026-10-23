@@ -6,11 +6,10 @@ schema = 2
 base_model = "apodex/apodex-1.1-mini"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

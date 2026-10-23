@@ -16,11 +16,9 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "audio/wav", "audio/mp
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
-system_updates = false
 cache = { implicit = true }
 
 [limit]
