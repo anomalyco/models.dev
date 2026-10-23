@@ -1,6 +1,11 @@
 import { expect, test } from "bun:test";
 
-import { buildWorkersAiModel, cloudflareWorkersAi } from "../src/sync/providers/cloudflare-workers-ai.js";
+import {
+  buildWorkersAiModel,
+  cloudflareWorkersAi,
+  takesResponsesBody,
+  workersAiApis,
+} from "../src/sync/providers/cloudflare-workers-ai.js";
 
 test("preserves OpenRouter pricing overrides as context tiers", () => {
   const [source] = cloudflareWorkersAi.parseModels({
@@ -132,4 +137,24 @@ test("keeps the file's own API address, which search does not report", () => {
   const provider = { api: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run" };
   expect(buildWorkersAiModel(source!, { provider }).provider).toEqual(provider);
   expect(buildWorkersAiModel(source!, undefined).provider).toBeUndefined();
+});
+
+test("detects Workers AI request schemas that take a Responses body", () => {
+  const prompt = { title: "Prompt", properties: { prompt: {}, max_tokens: {} } };
+  const messages = { title: "Messages", properties: { messages: {}, tools: {} } };
+  // GPT-OSS: a Responses variant with top-level `input` next to the chat variants.
+  expect(takesResponsesBody({ oneOf: [{ oneOf: [prompt, messages] }, { properties: { input: {}, reasoning: {} } }] })).toBe(true);
+  expect(takesResponsesBody({ anyOf: [{ oneOf: [prompt, messages] }, { properties: { requests: {} } }] })).toBe(false);
+});
+
+test("lists the Responses API after a Workers AI model's first table only when its schema takes it", () => {
+  const responses = { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } };
+  expect(workersAiApis(undefined, true)).toEqual({ "chat-completions": {}, responses });
+  const once = workersAiApis(undefined, true);
+  expect(workersAiApis(once, true)).toEqual(once);
+  // No Responses body: nothing is added, and a stale table is dropped.
+  expect(workersAiApis(undefined, false)).toBeUndefined();
+  expect(workersAiApis(once, false)).toEqual({ "chat-completions": {} });
+  const run = { "workers-ai-run": { base_url: "https://example.com/ai/run" } };
+  expect(workersAiApis(run, false)).toEqual(run);
 });

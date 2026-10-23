@@ -6,6 +6,8 @@
 # Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted and honored (+75 tokens),
 # but with no prefix cache its placement can't be confirmed, so system_updates is unset.
 # Effort and tools render in the leading system/developer messages; no cache to keep.
+# Responses: POST /ai/v1/responses (non-streaming), for Workers AI models whose schema takes a Responses body, such as GPT-OSS:
+# https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/ (live 200 on 2026-10-22; every other text model returned 400).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
@@ -19,6 +21,11 @@ effort_updates = false
 [limit]
 context = 128_000
 output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.35
