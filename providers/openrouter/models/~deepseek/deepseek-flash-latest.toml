@@ -4,6 +4,7 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on InferenceNet, Relace)
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 name = "DeepSeek Flash Latest"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
@@ -20,7 +21,6 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 temperature = true
-system_updates = true
 effort_updates = false
 
 [limit]
@@ -28,6 +28,7 @@ context = 1_048_576
 output = 943_718
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

@@ -3,6 +3,7 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Nvidia)
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "Nemotron 3.5 Super VL (free)"
@@ -12,7 +13,6 @@ description = "Nemotron multimodal model for visual reasoning and agentic AI wor
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = true
 effort_updates = false
 
 [limit]
@@ -20,6 +20,7 @@ context = 1_000_000
 output = 131_072
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

@@ -1,5 +1,6 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
 # effort_updates = false: no per-turn effort control
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 base_model = "alibaba/qwen2-5-vl-72b-instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -8,7 +9,6 @@ description = "Qwen vision-language model for visual reasoning, documents, and a
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
-system_updates = true
 effort_updates = false
 
 [limit]
@@ -16,6 +16,7 @@ context = 128_000
 output = 115_200
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

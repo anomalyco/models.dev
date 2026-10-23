@@ -1,5 +1,6 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
 # effort_updates = false: no per-turn effort control
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 base_model = "thedrummer/unslopnemo-12b"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
@@ -8,10 +9,10 @@ description = "Open-weight instruction model for adaptable chat and self-hosted 
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
-system_updates = true
 effort_updates = false
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

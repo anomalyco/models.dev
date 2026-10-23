@@ -1,6 +1,7 @@
 # Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Nex AGI)
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 name = "Nex-N2.5-Mini"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -17,7 +18,6 @@ tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "medium", "high"] }
 structured_output = true
 temperature = true
-system_updates = true
 effort_updates = false
 
 [limit]
@@ -25,6 +25,7 @@ context = 262_144
 output = 235_929
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
