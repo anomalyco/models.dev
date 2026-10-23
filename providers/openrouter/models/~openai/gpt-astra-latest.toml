@@ -1,7 +1,7 @@
 # Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live: cache prefix kept on gpt-4.1, gpt-5.4, gpt-6-sol)
 # effort_updates: configuration_update accepted, cache kept (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
-# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# tools.updates = true (Responses API /api/v1/responses only, add only): an `additional_tools` input item keeps the cache (live 2026-10-23). Chat Completions has no mechanism. https://developers.openai.com/api/docs/guides/prompt-caching
 # Cache: automatic from 1,024 tokens; GPT-5.6+ explicit prompt_cache_breakpoint, 30m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
 schema = 2
 name = "GPT Astra Latest"
@@ -15,7 +15,7 @@ input = ["application/pdf", "image/png", "image/jpeg", "image/webp", "image/gif"
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = false
