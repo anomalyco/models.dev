@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/TheDrummer/Nautilus-70B-v0.1
+name = "Nautilus-70B-v0.1"
+description = "TheDrummer special. RP community royalty."
+release_date = "2024-10-25"
+last_updated = "2024-10-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/TheDrummer/Nautilus-70B-v0.1"

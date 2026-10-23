@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/nekomajin/Qwen2.5-0.5B-Instruct-Gensyn-Swarm-spotted_pale_dolphin
+name = "Qwen2.5-0.5B-Instruct-Gensyn-Swarm-spotted_pale_dolphin"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "qwen"
+release_date = "2025-06-26"
+last_updated = "2025-06-29"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/nekomajin/Qwen2.5-0.5B-Instruct-Gensyn-Swarm-spotted_pale_dolphin"

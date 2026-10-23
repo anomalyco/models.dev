@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/baryen/Qwen2.5-0.5B-Instruct-Gensyn-Swarm-beaked_nasty_dolphin
+name = "Qwen2.5-0.5B-Instruct-Gensyn-Swarm-beaked_nasty_dolphin"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "qwen"
+release_date = "2025-06-27"
+last_updated = "2025-07-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/baryen/Qwen2.5-0.5B-Instruct-Gensyn-Swarm-beaked_nasty_dolphin"

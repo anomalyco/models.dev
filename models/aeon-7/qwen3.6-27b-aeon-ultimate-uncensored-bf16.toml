@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/AEON-7/Qwen3.6-27B-AEON-Ultimate-Uncensored-BF16
+name = "Qwen3.6-27B-AEON-Ultimate-Uncensored-BF16"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "qwen"
+release_date = "2026-04-24"
+last_updated = "2026-10-06"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/AEON-7/Qwen3.6-27B-AEON-Ultimate-Uncensored-BF16"

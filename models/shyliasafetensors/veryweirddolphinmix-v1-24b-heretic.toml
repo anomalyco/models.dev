@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/ShyliaSafetensors/VeryWeirdDolphinMix-V1-24B-Heretic
+name = "VeryWeirdDolphinMix-V1-24B-Heretic"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "phi"
+release_date = "2026-05-02"
+last_updated = "2026-05-11"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/ShyliaSafetensors/VeryWeirdDolphinMix-V1-24B-Heretic"

@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated
+name = "Huihui-Qwen3.8-27B-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "qwen"
+release_date = "2026-08-16"
+last_updated = "2026-08-24"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated"
