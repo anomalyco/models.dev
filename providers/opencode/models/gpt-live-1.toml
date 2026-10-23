@@ -5,8 +5,9 @@
 # Delegated Responses turns bill separately, at the backend model's price. https://developers.openai.com/api/docs/pricing
 # family: "gpt-live" (not the lab's "gpt"): the OpenCode app shows only the newest model per family by default, so a
 # voice model in "gpt" would hide OpenCode's newest GPT chat model.
-# Published in v1 (no v2_only): the OpenCode Console lists OpenCode's models from api.json?type=all.
+# v2_only, like other realtime models: it shouldn't appear in v1 model lists.
 schema = 2
+v2_only = true
 base_model = "openai/gpt-live-1"
 family = "gpt-live"
 
