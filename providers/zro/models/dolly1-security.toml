@@ -1,31 +1,38 @@
-# Wire: only OpenAI-style `reasoning_effort` is forwarded; thinking is always on.
-# Effort: reasoning_effort = low|high|max (no off level).
-# Pricing: https://zro.moonmath.ai/pricing API tab (USD / 1M tokens, list).
-# Zro's own fine-tune of GLM-5.3-Flash (no shared lab identity); public API id is dolly1-security.
+# Prices: https://zro.moonmath.ai/pricing (API tab, USD per 1M tokens, list price).
+# Limits and modalities: https://zro.moonmath.ai/models (context 1,048,576 tokens on every Zro model).
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers.
+# Effort: reasoning_effort = low|high|max on /v1/chat/completions; thinking is always on, no off level.
+# Zro's own uncensored fine-tune of GLM-5.3-Flash, served only on Zro, so it is defined inline (no lab entry).
+# Weights are not published.
+schema = 2
 name = "Dolly 1 Security"
 description = "Uncensored long-context model for security and agent workflows"
-release_date = "2026-09-14"
-last_updated = "2026-09-14"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+release_date = "2026-09-14"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.45
-output = 1.50
-cache_read = 0.12
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_048_576
 output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.50

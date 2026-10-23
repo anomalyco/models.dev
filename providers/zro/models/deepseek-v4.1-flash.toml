@@ -1,17 +1,26 @@
-# Wire: only OpenAI-style `reasoning_effort` is forwarded.
-# Off is effort=none (no separate toggle field). Graded levels: low|high|max.
-# Pricing: https://zro.moonmath.ai/pricing API tab (USD / 1M tokens, list; not the 50% promo).
+# Prices: https://zro.moonmath.ai/pricing (API tab, USD per 1M tokens, list price).
+# Limits and modalities: https://zro.moonmath.ai/models (context 1,048,576 tokens on every Zro model).
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers.
+# Effort: reasoning_effort = none|low|high|max on /v1/chat/completions; none turns thinking off, so no toggle.
+# Host output cap is 64,000 tokens (lab 384,000).
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.30
-output = 1.10
-cache_read = 0.01
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.30
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 1.10
