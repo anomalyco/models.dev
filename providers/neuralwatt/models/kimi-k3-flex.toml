@@ -1,5 +1,7 @@
 # Effort: reasoning_effort = "none" | "low" | "high" | "max"
 # Budget: thinking_token_budget (integer reasoning tokens)
+# Flex tier: request with the -flex id or service_tier = "flex"; requires stream = true.
+# Flex pricing is 0.65x the standard tier.
 # https://portal.neuralwatt.com/docs/api/chat-completions
 schema = 2
 base_model = "moonshotai/kimi-k3"

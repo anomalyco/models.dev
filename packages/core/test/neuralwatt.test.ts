@@ -108,20 +108,20 @@ test("refuses a truncated catalog rather than deleting the models it omits", asy
     ));
 
   await expect(fetchNeuralwattModels(truncated as unknown as typeof fetch))
-    .rejects.toThrow(/below the 20 needed/);
+    .rejects.toThrow(/below the 19 needed/);
 });
 
 test("holds back a catalog that shrank below the safety floor", async () => {
   const shrunken = () =>
     Promise.resolve(new Response(
       JSON.stringify({
-        data: Array.from({ length: 19 }, (_, index) => neuralwattModel({ id: `model-${index}` })),
+        data: Array.from({ length: 18 }, (_, index) => neuralwattModel({ id: `model-${index}` })),
       }),
       { headers: { "content-type": "application/json" } },
     ));
 
   await expect(fetchNeuralwattModels(shrunken as unknown as typeof fetch))
-    .rejects.toThrow(/below the 20 needed/);
+    .rejects.toThrow(/below the 19 needed/);
 });
 
 test("normalizes API ids to the catalog's hyphen convention", () => {
@@ -400,7 +400,25 @@ test("writes a leading wire-path header for every reasoning control on the file"
 
   expect(translated?.header).toContain(`# Effort: reasoning_effort = "low" | "high" | "max"`);
   expect(translated?.header).toContain("# Budget: thinking_token_budget");
+  expect(translated?.header).toContain("# Reasoning cannot be disabled");
   expect(translated?.header).toContain("https://portal.neuralwatt.com/docs/");
+});
+
+test("keeps flex-tier and budget provenance in the generated header", () => {
+  const model = parsedModel({
+    id: "deepseek-v4-flash-flex",
+    metadata: neuralwattMetadata({
+      huggingface_id: "deepseek-ai/DeepSeek-V4-Flash-0731",
+      reasoning: { supported_efforts: ["none", "high", "max"] },
+    }),
+  });
+
+  const translated = neuralwatt.translateModel(model, context({}));
+
+  expect(translated?.header).toContain('service_tier = "flex"');
+  expect(translated?.header).toContain("0.65x");
+  expect(translated?.header).toContain("thinking_token_budget is rejected");
+  expect(translated?.header).toContain("xhigh -> max");
 });
 
 test("renders the skipped notice with its ids", () => {

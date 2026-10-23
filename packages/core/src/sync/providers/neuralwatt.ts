@@ -11,10 +11,10 @@ const API_ENDPOINT = "https://api.neuralwatt.com/v1/models";
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
-// The live catalog carries ~27 entries; the floor sits just below the largest
-// observed retirement batch (8) so a truncated response fails the run before
-// deprecateMissing can act on it.
-const MIN_LIVE_MODELS = 20;
+// The live catalog carries 27 entries; the floor allows the largest observed
+// legitimate retirement batch (8 of 27, leaving 19) while still failing a
+// truncated response before deprecateMissing can act on it.
+const MIN_LIVE_MODELS = 19;
 
 const REASONING_EFFORT_LADDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 
@@ -285,7 +285,7 @@ export const neuralwatt = {
     // deleting the file.
     if (base === undefined) return undefined;
     const built = buildNeuralwattModel(model, existing, base);
-    return { id, model: built, header: neuralwattHeader(built) };
+    return { id, model: built, header: neuralwattHeader(built, id) };
   },
   sourceID(model: NeuralwattModel) {
     return neuralwattID(model.id);
@@ -311,7 +311,39 @@ export const neuralwatt = {
 // With authoritativeHeaders enabled, this header replaces whatever was on disk.
 const CHAT_COMPLETIONS_DOC_URL = "https://portal.neuralwatt.com/docs/api/chat-completions";
 
-function neuralwattHeader(model: SyncedModel): string | undefined {
+// Stable operational notes carried by the hand-authored headers this sync
+// replaced: how a tier is requested, why a budget control is absent, and which
+// effort values are aliases. Kept in the generated header because
+// authoritativeHeaders replaces whatever was on disk.
+const OPERATIONAL_NOTES: Array<{ pattern: RegExp; lines: string[] }> = [
+  {
+    pattern: /-flex$/,
+    lines: [
+      "# Flex tier: request with the -flex id or service_tier = \"flex\"; requires stream = true.",
+      "# Flex pricing is 0.65x the standard tier.",
+    ],
+  },
+  {
+    pattern: /^deepseek-v4-flash/,
+    lines: [
+      "# thinking_token_budget is rejected (HTTP 400) on the V4-Flash generation.",
+      "# reasoning_effort aliases: low/minimal/medium -> high, xhigh -> max.",
+    ],
+  },
+  {
+    pattern: /^deepseek-v4\.1-flash/,
+    lines: ["# thinking_token_budget is not documented for the V4.1-Flash generation."],
+  },
+  {
+    pattern: /^glm-5\.3/,
+    lines: [
+      "# Reasoning cannot be disabled: low, high and max are distinct;",
+      "# minimal, medium and xhigh alias onto them.",
+    ],
+  },
+];
+
+function neuralwattHeader(model: SyncedModel, id: string): string | undefined {
   const options = model.reasoning_options;
   if (options === undefined || options.length === 0) return undefined;
   const lines: string[] = [];
@@ -327,6 +359,7 @@ function neuralwattHeader(model: SyncedModel): string | undefined {
     }
   }
   if (lines.length === 0) return undefined;
+  lines.push(...OPERATIONAL_NOTES.filter((note) => note.pattern.test(id)).flatMap((note) => note.lines));
   lines.push(`# ${CHAT_COMPLETIONS_DOC_URL}`);
   return `${lines.join("\n")}\n`;
 }

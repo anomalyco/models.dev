@@ -1,5 +1,9 @@
 # Effort: reasoning_effort = "low" | "high" | "max"
 # Budget: thinking_token_budget (integer reasoning tokens)
+# Flex tier: request with the -flex id or service_tier = "flex"; requires stream = true.
+# Flex pricing is 0.65x the standard tier.
+# Reasoning cannot be disabled: low, high and max are distinct;
+# minimal, medium and xhigh alias onto them.
 # https://portal.neuralwatt.com/docs/api/chat-completions
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"

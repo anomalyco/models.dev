@@ -1,4 +1,7 @@
 # Effort: reasoning_effort = "none" | "low" | "high" | "xhigh" | "max"
+# Flex tier: request with the -flex id or service_tier = "flex"; requires stream = true.
+# Flex pricing is 0.65x the standard tier.
+# thinking_token_budget is not documented for the V4.1-Flash generation.
 # https://portal.neuralwatt.com/docs/api/chat-completions
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"

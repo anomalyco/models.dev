@@ -1,4 +1,6 @@
 # Effort: reasoning_effort = "none" | "high" | "max"
+# thinking_token_budget is rejected (HTTP 400) on the V4-Flash generation.
+# reasoning_effort aliases: low/minimal/medium -> high, xhigh -> max.
 # https://portal.neuralwatt.com/docs/api/chat-completions
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
