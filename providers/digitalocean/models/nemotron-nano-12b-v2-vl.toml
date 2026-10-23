@@ -7,11 +7,10 @@ base_model = "nvidia/nemotron-nano-12b-v2-vl"
 name = "Nemotron-nano 12b v2-vl"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 cache = { implicit = true }
 system_updates = true
-effort_updates = false
 prompt_cache_key = true
 
 [limit]

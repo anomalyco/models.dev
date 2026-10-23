@@ -8,12 +8,11 @@ name = "OpenAI GPT-5"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [api.chat-completions]

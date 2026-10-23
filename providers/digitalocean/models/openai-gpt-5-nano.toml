@@ -8,12 +8,11 @@ name = "OpenAI GPT-5 Nano"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
 service_tier = ["flex"]
 
 [api.chat-completions]

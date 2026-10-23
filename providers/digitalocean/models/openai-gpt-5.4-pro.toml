@@ -12,11 +12,10 @@ name = "OpenAI GPT-5.4 Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 cache = { implicit = { min_tokens = 1_024 } }
 system_updates = true
-effort_updates = false
 service_tier = ["flex"]
 
 [api.chat-completions]

@@ -12,12 +12,11 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [api.chat-completions]

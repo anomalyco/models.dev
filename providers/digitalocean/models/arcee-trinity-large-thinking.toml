@@ -7,11 +7,10 @@ base_model = "arcee-ai/trinity-large-thinking"
 name = "Arcee Trinity Large Thinking (Public Preview)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { implicit = true }
 system_updates = true
-effort_updates = false
 prompt_cache_key = true
 
 [limit]

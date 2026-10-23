@@ -3,11 +3,10 @@ schema = 2
 base_model = "sakana/fugu-ultra"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = false
 temperature = true
-effort_updates = false
 
 [limit]
 output = 1_000_000

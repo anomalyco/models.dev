@@ -16,7 +16,6 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
-system_updates = false
 cache = { explicit = { ttl = ["5m"] } }
 
 [api.chat-completions]

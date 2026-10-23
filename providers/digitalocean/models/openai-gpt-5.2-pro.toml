@@ -8,11 +8,10 @@ name = "OpenAI GPT-5.2 Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 cache = { implicit = { min_tokens = 1_024 } }
 system_updates = true
-effort_updates = false
 
 [api.chat-completions]
 

@@ -8,11 +8,10 @@ name = "Deepseek 3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 cache = { implicit = true }
 system_updates = true
-effort_updates = false
 prompt_cache_key = true
 
 [limit]

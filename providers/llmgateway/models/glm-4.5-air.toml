@@ -4,10 +4,9 @@ schema = 2
 base_model = "zhipuai/glm-4.5-air"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 131_000
