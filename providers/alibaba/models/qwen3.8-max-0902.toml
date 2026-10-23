@@ -3,6 +3,7 @@
 # Toggle: enable_thinking true|false (default on); Effort: reasoning_effort = low|medium|xhigh (default xhigh); Budget: thinking_budget 0-262144, not combinable with reasoning_effort.
 # Cache: explicit and implicit (context-cache model lists); creation bills at 125% of input; the hit price for this model is not published ("see the console"), so only the write price is set.
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the explicit cache; toggle and reasoning_effort changes missed it; adding tools missed it.
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3.8-max-0902"
@@ -32,3 +33,6 @@ cache = { write = 2.5 }
 
 [cost.text.output]
 price = 6
+
+[cost.web_search]
+price = 10

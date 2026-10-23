@@ -3,6 +3,8 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: $1.65/$4.951 (previously the Singapore prices). Cache: implicit hit 20%, explicit creation 125% of input.
+# Explicit cache read: 10% of the $1.65 Beijing input price (CNY 1.2 of CNY 12, https://www.qianwenai.com/models/qwen3.7-max, accessed 2026-10-23).
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 base_model = "alibaba/qwen3.7-max"
 
@@ -24,7 +26,10 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibab
 
 [cost.text.input]
 price = 1.65
-cache = { read = 0.33, write = 2.0625 }
+cache = { read = 0.33, write = 2.0625, explicit = { read = 0.165 } }
 
 [cost.text.output]
 price = 4.951
+
+[cost.web_search]
+price = 0.573411

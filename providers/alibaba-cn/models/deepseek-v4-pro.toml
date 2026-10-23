@@ -3,6 +3,7 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: $1.65/$3.301 (¥12/¥24 on the China site). The previous $0.435/$0.87 and cache price are not Model Studio prices; the cache-hit price is not published ("see the console").
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
@@ -29,3 +30,6 @@ price = 1.65
 
 [cost.text.output]
 price = 3.301
+
+[cost.web_search]
+price = 0.573411

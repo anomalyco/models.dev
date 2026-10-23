@@ -9,6 +9,7 @@
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache; toggle and reasoning_effort changes missed it; adding tools missed the cache.
 # JSON: json_object only (JSON Schema mode is not supported), per https://www.alibabacloud.com/help/en/model-studio/qwen-omni
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 base_model = "alibaba/qwen3.8-omni-flash"
 
@@ -37,3 +38,6 @@ cache = { read = 0.016 }
 
 [cost.text.output]
 price = 0.47
+
+[cost.web_search]
+price = 10

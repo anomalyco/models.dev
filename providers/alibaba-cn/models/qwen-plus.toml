@@ -3,6 +3,7 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) tiers: 0-128K $0.115 in, $0.287 out ($1.147 thinking); 128K-256K $0.345, $2.868 ($3.441); 256K-1M $0.689, $6.881 ($9.175).
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 name = "Qwen Plus"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -64,3 +65,6 @@ reasoning = 3.441
 when = { context = { gt = 256_000 } }
 price = 6.881
 reasoning = 9.175
+
+[cost.web_search]
+price = 0.573411

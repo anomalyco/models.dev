@@ -4,6 +4,7 @@
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: 0-256K $0.276/$1.651, 256K-1M $1.101/$6.602 (previously the Singapore prices). Explicit cache: read 10%, creation 125% of input.
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 name = "Qwen3.6 Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -54,3 +55,6 @@ price = 1.651
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }
 price = 6.602
+
+[cost.web_search]
+price = 0.573411

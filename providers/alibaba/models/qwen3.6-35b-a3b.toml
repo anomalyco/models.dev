@@ -4,6 +4,7 @@
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Prices (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19)
 # List price $0.375/$2.25 (the previous $0.248/$1.485 matched no listed rate).
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 name = "Qwen3.6 35B-A3B"
 description = "Open multimodal Qwen MoE for local agents that need vision, audio, and code"
@@ -44,3 +45,6 @@ price = 0.375
 
 [cost.text.output]
 price = 2.25
+
+[cost.web_search]
+price = 10
