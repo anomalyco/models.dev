@@ -1,6 +1,6 @@
 # Mid-conversation: system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live 2026-10-23 on gpt-4.1-nano pinned to OpenAI: cache kept and followed on Chat Completions, Responses and Messages)
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
-# tools.updates = true (Responses API /api/v1/responses only, add only): an `additional_tools` input item keeps the cache (live 2026-10-23, pinned to OpenAI). OpenRouter's Responses docs don't mention it (https://openrouter.ai/docs/api/reference/responses/overview); lab mechanism: https://developers.openai.com/api/docs/guides/prompt-caching. Chat Completions has no mechanism.
+# tools.updates = true on [api.responses] only (/api/v1/responses, add only): an `additional_tools` input item keeps the cache (live 2026-10-23, pinned to OpenAI). OpenRouter's Responses docs don't mention it (https://openrouter.ai/docs/api/reference/responses/overview); lab mechanism: https://developers.openai.com/api/docs/guides/prompt-caching. Chat Completions has no mechanism.
 # Cache: automatic from 1,024 tokens (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
 schema = 2
 name = "o3 Mini High"
@@ -15,7 +15,7 @@ input = ["text", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
 temperature = false
@@ -31,6 +31,7 @@ output = 100_000
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { updates = true } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
