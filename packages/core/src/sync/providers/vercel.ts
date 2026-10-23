@@ -118,8 +118,10 @@ export const vercel = {
       inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
     );
     const cache = vercelCache(model);
+    const type = existing?.type ?? (baseModel === undefined ? undefined : labDoc(baseModel)?.type);
     const v2Set = {
       ...(model.type === "evaluation" ? { api: structuredClone(DECISION_APIS) } : {}),
+      ...(model.type === "language" && (type ?? "chat") === "chat" ? { api: chatApis } : {}),
       ...(cache === undefined ? {} : { "capabilities.cache": cache }),
     };
     return {
@@ -473,6 +475,30 @@ const DECISION_APIS = {
   },
 };
 const LIVE_SDK = { aisdk: "none", opencodeai: "none" };
+// Every language model is also served on the OpenAI Responses and Anthropic
+// Messages endpoints, under the same model IDs:
+// https://vercel.com/docs/ai-gateway/sdks-and-apis
+// https://ai-sdk.dev/providers/ai-sdk-providers/open-responses
+const CHAT_EXTRA_APIS = {
+  responses: {
+    base_url: "https://ai-gateway.vercel.sh/v1",
+    sdk: { aisdk: "@ai-sdk/open-responses", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/responses" },
+  },
+  messages: {
+    base_url: "https://ai-gateway.vercel.sh/v1",
+    sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/messages" },
+  },
+};
+
+// A text model's APIs: its default one first (what v1 reads; an empty table
+// takes the provider's), then the extra endpoints.
+export function chatApis(current: Doc | undefined): Doc {
+  const { responses: _responses, messages: _messages, ...own } = current ?? {};
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    ...structuredClone(CHAT_EXTRA_APIS),
+  };
+}
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
   image: "# Synced from https://ai-gateway.vercel.sh/v1/models (type image)\n# https://vercel.com/docs/ai-gateway/modalities/image-generation\n",

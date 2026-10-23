@@ -97,7 +97,7 @@ import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { buildVeniceModel, resolveVeniceBaseModel, type VeniceModel } from "../src/sync/providers/venice.js";
-import { buildVercelMediaModel, buildVercelModel, realtimePriceNote, vercel, vercelCache, vercelMediaCost } from "../src/sync/providers/vercel.js";
+import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, vercel, vercelCache, vercelMediaCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
@@ -6260,12 +6260,35 @@ test("Vercel sync maps every catalog type and serves media models on their own e
       },
     },
   });
-  expect(vercel.translateModel(vercelMedia({ id: "example/chat-model", type: "language" }), context)).not.toHaveProperty("v2Set");
+  expect(vercel.translateModel(vercelMedia({ id: "example/chat-model", type: "language" }), context)).toHaveProperty("v2Set.api", chatApis);
+  // A language route for a model we type as image keeps only its default API.
+  const imageContext = { ...context, existing: () => ({ type: "image" }) as any };
+  expect(vercel.translateModel(vercelMedia({ id: "example/image-chat", type: "language" }), imageContext)).not.toHaveProperty("v2Set");
   for (const catalogType of ["language", "evaluation", "something-new"]) {
     const translated = vercel.translateModel(vercelMedia({ id: "example/chat-model", type: catalogType }), context) as any;
     expect(translated.v2).toBeUndefined();
     expect(translated.model).toBeDefined();
   }
+});
+
+test("Vercel text models keep their default API first and add Responses and Messages", () => {
+  const extra = {
+    responses: {
+      base_url: "https://ai-gateway.vercel.sh/v1",
+      sdk: { aisdk: "@ai-sdk/open-responses", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/responses" },
+    },
+    messages: {
+      base_url: "https://ai-gateway.vercel.sh/v1",
+      sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/messages" },
+    },
+  };
+  const fresh = chatApis(undefined);
+  expect(fresh).toEqual({ "chat-completions": {}, ...extra });
+  expect(Object.keys(fresh)).toEqual(["chat-completions", "responses", "messages"]);
+  const own = { "chat-completions": { compatibility: { replay_reasoning: true } } };
+  expect(chatApis(own)).toEqual({ ...own, ...extra });
+  // A second run changes nothing.
+  expect(chatApis(chatApis(own))).toEqual(chatApis(own));
 });
 
 test("Vercel media models drop chat capabilities and take exact MIME types", () => {

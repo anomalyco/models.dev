@@ -20,6 +20,16 @@ cache = { supported = true, implicit = true, explicit = false }
 context = 1_048_576
 output = 32_768
 
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
 [cost.text.input]
 price = 0.075
 cache = { read = 0.0015 }
