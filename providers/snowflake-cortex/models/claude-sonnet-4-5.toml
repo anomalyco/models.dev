@@ -8,6 +8,7 @@
 # structured_output: response_format json_schema only (compatibility chart).
 # Compatibility chart: `store` and `service_tier` return an error for every model family, so store = false and no service tier.
 # Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
+# APIs: Chat Completions (all models) and the Anthropic Messages API at /api/v2/cortex/v1/messages (Claude models only): https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
 
@@ -24,6 +25,12 @@ cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "
 [limit]
 request_bytes = 20_971_520
 image = { max_per_request = 20 }
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://${SNOWFLAKE_ACCOUNT}.snowflakecomputing.com/api/v2/cortex/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 3
