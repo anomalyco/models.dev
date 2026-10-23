@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = low|high|max
+# Source: https://platform.kimi.ai/docs/api/models-overview (K3 always reasons).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.7
+cache = { read = 0.27 }
+
+[cost.text.output]
+price = 13.5

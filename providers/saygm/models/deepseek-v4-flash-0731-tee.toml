@@ -1,0 +1,25 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Toggle: chat_template_kwargs.thinking = true|false
+# Reasoning output: reasoning_content
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 TEE"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.418
+cache = { read = 0.0418 }
+
+[cost.text.output]
+price = 1.254

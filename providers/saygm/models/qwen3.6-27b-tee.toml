@@ -1,0 +1,26 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Chutes input_modalities = ["text", "image"]; audio and video are not served.
+# Reasoning output: reasoning_content
+schema = 2
+base_model = "alibaba/qwen3.6-27b"
+name = "Qwen3.6 27B TEE"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.285
+cache = { read = 0.0285 }
+
+[cost.text.output]
+price = 1.9

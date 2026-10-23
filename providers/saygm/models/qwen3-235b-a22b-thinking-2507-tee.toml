@@ -1,0 +1,22 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Thinking-only model: reasoning is always on and has no request control.
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
+name = "Qwen3 235B A22B Thinking 2507 TEE"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.283955
+cache = { read = 0.0283955 }
+
+[cost.text.output]
+price = 1.135915

@@ -1,0 +1,13 @@
+schema = 2
+base_model = "openai/o3"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.476
+cache = { read = 0.369 }
+
+[cost.text.output]
+price = 5.904

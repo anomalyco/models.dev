@@ -1,0 +1,17 @@
+# Effort: reasoning_effort = high|max (Z.ai maps low/medium to high and xhigh to max)
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.26
+cache = { read = 0.234 }
+
+[cost.text.output]
+price = 3.96

@@ -1,0 +1,24 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Toggle: chat_template_kwargs.thinking = true|false
+schema = 2
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1 TEE"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 202_752
+output = 65_535
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.33
+cache = { read = 0.247 }
+
+[cost.text.output]
+price = 4.18

@@ -1,0 +1,17 @@
+# GLM-5.3-Flash reasons by default; effort low|high|max with default max.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

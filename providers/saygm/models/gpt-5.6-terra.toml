@@ -1,0 +1,29 @@
+# Routed over the Responses API: OpenAI rejects function tools combined with
+# reasoning_effort on /v1/chat/completions for this model.
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[api.responses]
+base_url = "https://api.saygm.com/v1"
+sdk = { aisdk = "@ai-sdk/openai" }
+legacy_shape = "responses"
+
+[cost.text.input]
+price = 1.476
+cache = { read = 0.1476, write = 1.845 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2.952
+cache = { read = 0.2952, write = 3.69 }
+
+[cost.text.output]
+price = 8.856
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 13.284

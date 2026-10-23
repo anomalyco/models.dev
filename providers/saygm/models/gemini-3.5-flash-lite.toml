@@ -1,0 +1,20 @@
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[api.generate-content]
+base_url = "https://api.saygm.com/v1beta"
+sdk = { aisdk = "@ai-sdk/google" }
+
+[cost.text.input]
+price = 0.2085
+cache = { read = 0.02085 }
+
+[cost.text.output]
+price = 1.7375
+
+[cost.audio.input]
+price = 0.2085

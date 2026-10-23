@@ -1,0 +1,16 @@
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[api.messages]
+base_url = "https://api.saygm.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic" }
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.09, write = 1.125 }
+
+[cost.text.output]
+price = 4.5
