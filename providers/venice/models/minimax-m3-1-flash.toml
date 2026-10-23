@@ -10,10 +10,8 @@ name = "MiniMax M3.1 Flash"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

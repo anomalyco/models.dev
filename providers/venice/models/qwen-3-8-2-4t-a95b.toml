@@ -10,11 +10,9 @@ name = "Qwen 3.8 2.4T"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

@@ -3,10 +3,9 @@ base_model = "ibm/granite-4.2-8b"
 name = "Granite 4.2 8B (Deep Infra)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
 price = 0.06

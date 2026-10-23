@@ -11,11 +11,9 @@ base_model = "alibaba/qwen3.6-plus"
 name = "Qwen 3.6 Plus Uncensored"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

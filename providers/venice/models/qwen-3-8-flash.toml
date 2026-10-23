@@ -9,11 +9,9 @@ base_model = "alibaba/qwen3.8-flash"
 name = "Qwen 3.8 Flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

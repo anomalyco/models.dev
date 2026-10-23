@@ -9,11 +9,9 @@ base_model = "aion-labs/aion-3.0-mini"
 name = "Aion 3.0 Mini"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

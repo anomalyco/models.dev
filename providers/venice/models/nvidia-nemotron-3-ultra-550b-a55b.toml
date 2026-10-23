@@ -11,11 +11,9 @@ base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "NVIDIA Nemotron 3 Ultra"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

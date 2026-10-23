@@ -9,11 +9,9 @@ base_model = "xai/grok-4.6"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

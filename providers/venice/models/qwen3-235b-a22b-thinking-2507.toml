@@ -11,11 +11,9 @@ name = "Qwen 3 235B A22B Thinking 2507"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 128_000
