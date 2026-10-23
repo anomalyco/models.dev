@@ -1,0 +1,27 @@
+# Sources (accessed 2026-10-23):
+# - https://build.nvidia.com/minimaxai/minimax-m3.1-flash (Free Endpoint: Available,
+#   Build.NVIDIA.com release 2026-10-22; Function Calling, Structured Output and
+#   Reasoning listed as Supported; reasoning_effort = low|medium|high|xhigh|max
+#   via the chat template, default max)
+# - Peer entries for this model (opencode, opencode-go, novita-ai) return thinking
+#   in `reasoning_content` on the Chat Completions path.
+# Pricing: hosted on NVIDIA's API trial tier; no per-token rate is published, so 0
+# (see providers/nvidia/provider.toml).
+# Note: the page sidebar lists Context Length 262,144 while the model card says
+# "up to 1,000,000 tokens" depending on serving configuration; no [limit] override
+# is set here — the hosted limit was not live-probed with an NVIDIA API key.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
