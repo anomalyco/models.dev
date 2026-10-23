@@ -15,6 +15,7 @@
 #   keeps the cached prefix and is obeyed. Adding or removing tools between requests
 #   drops the cache after the system prompt (live 2026-10-22).
 # APIs: the /v1/models capabilities (completion_fim: POST /v1/fim/completions; moderation: /v1/moderations; ocr: /v1/ocr), https://docs.mistral.ai/api. No AI SDK or OpenCode package calls them.
+# Per-API flags: system_updates sits on [api.chat-completions] only. FIM takes a prompt and suffix, not messages, so there is no system message to send.
 schema = 2
 name = "Codestral (latest)"
 description = "Mistral code model for completions, refactors, and developer IDE workflows"
@@ -35,7 +36,6 @@ structured_output = true
 temperature = true
 top_p = true
 top_k = false
-system_updates = true
 effort_updates = false
 stream_usage = true
 prompt_cache_key = true
@@ -46,6 +46,7 @@ context = 256_000
 output = 4_096
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.fim]
 sdk = { aisdk = "none", opencodeai = "none" }

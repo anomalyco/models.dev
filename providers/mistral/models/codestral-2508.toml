@@ -15,6 +15,7 @@
 #   keeps the cached prefix and is obeyed. Adding or removing tools between requests
 #   drops the cache after the system prompt (live 2026-10-22).
 # APIs: the /v1/models capabilities (completion_fim: POST /v1/fim/completions; moderation: /v1/moderations; ocr: /v1/ocr), https://docs.mistral.ai/api. No AI SDK or OpenCode package calls them.
+# Per-API flags: system_updates sits on [api.chat-completions] only. FIM takes a prompt and suffix, not messages, so there is no system message to send.
 schema = 2
 base_model = "mistral/codestral-2508"
 
@@ -25,7 +26,6 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = false }
 structured_output = true
-system_updates = true
 effort_updates = false
 stream_usage = true
 prompt_cache_key = true
@@ -35,6 +35,7 @@ cache = { implicit = { min_tokens = 64 } }
 context = 256_000
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.fim]
 sdk = { aisdk = "none", opencodeai = "none" }
