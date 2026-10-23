@@ -500,12 +500,20 @@ const CHAT_EXTRA_APIS = {
 };
 
 // A text model's APIs: its default one first (what v1 reads; an empty table
-// takes the provider's), then the extra endpoints.
+// takes the provider's), then the extra endpoints, keeping their hand-authored
+// per-API `capabilities`.
 export function chatApis(current: Doc | undefined): Doc {
-  const { responses: _responses, messages: _messages, ...own } = current ?? {};
+  const { responses, messages, ...own } = current ?? {};
+  const capabilities: Doc = { responses: responses?.capabilities, messages: messages?.capabilities };
+  const extra = Object.fromEntries(
+    Object.entries(structuredClone(CHAT_EXTRA_APIS)).map(([key, table]) => [
+      key,
+      capabilities[key] === undefined ? table : { ...table, capabilities: capabilities[key] },
+    ]),
+  );
   return {
     ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
-    ...structuredClone(CHAT_EXTRA_APIS),
+    ...extra,
   };
 }
 

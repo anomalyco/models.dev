@@ -6448,6 +6448,9 @@ test("Vercel text models keep their default API first and add Responses and Mess
   expect(chatApis(own)).toEqual({ ...own, ...extra });
   // A second run changes nothing.
   expect(chatApis(chatApis(own))).toEqual(chatApis(own));
+  // Per-API capabilities on the extra tables survive a sync.
+  const flagged = { ...chatApis(own), responses: { ...extra.responses, capabilities: { effort_updates: true } } };
+  expect(chatApis(flagged)).toEqual(flagged);
 });
 
 test("Vercel media models drop chat capabilities and take exact MIME types", () => {
@@ -7602,6 +7605,9 @@ test("lists Responses and Messages after the first API for OpenRouter text-only 
   expect(once).toEqual({ ...first, ...extra });
   expect(Object.keys(once)).toEqual(["chat-completions", "responses", "messages"]);
   expect(withTextApis(once)).toEqual(once);
+  // Per-API capabilities on the extra tables survive a sync.
+  const flagged = { ...once, messages: { ...extra.messages, capabilities: { tools: { updates: true } } } };
+  expect(withTextApis(flagged)).toEqual(flagged);
 
   // Models that also output images or audio stay on their own APIs.
   const audio = openrouter.translateModel(openRouterModel({

@@ -330,10 +330,18 @@ function isTextOnly(model: OpenRouterModel) {
 
 // The file's API tables with Responses and Messages after them. The first table stays as it is
 // (v1 reads it), or is the provider's default Chat Completions API when the file has none.
+// Hand-authored per-API `capabilities` on Responses and Messages are kept.
 export function withTextApis(current: unknown) {
   const tables = isPlainObject(current) ? current : {};
   const first = Object.keys(tables)[0] ?? "chat-completions";
-  return { [first]: tables[first] ?? {}, ...tables, ...structuredClone(TEXT_APIS) };
+  const extra = Object.fromEntries(
+    Object.entries(structuredClone(TEXT_APIS)).map(([key, table]) => {
+      const own = tables[key];
+      const capabilities = isPlainObject(own) ? own.capabilities : undefined;
+      return [key, capabilities === undefined ? table : { ...table, capabilities }];
+    }),
+  );
+  return { [first]: tables[first] ?? {}, ...tables, ...extra };
 }
 
 // ---------------------------------------------------------------------------
