@@ -463,9 +463,12 @@ function catalogPricing(model: DigitalOceanCatalogModel | undefined): ModelPrici
   )?.prices;
   const extended = model.pricing_detail?.variants.find((variant) =>
     variant.mode === "MODEL_BILLING_MODE_INTERACTIVE"
-    && variant.tier?.startsWith("MODEL_PRICING_TIER_EXTENDED_") === true
+    && (
+      variant.tier?.startsWith("MODEL_PRICING_TIER_EXTENDED_") === true
+      || longContextLabel(variant.label) !== undefined
+    )
   );
-  const extendedContext = pricingTierContext(extended?.tier);
+  const extendedContext = pricingTierContext(extended?.tier) ?? longContextLabel(extended?.label);
   const serviceTiers = (model.pricing_detail?.variants ?? []).flatMap((variant) =>
     variant.mode === "MODEL_BILLING_MODE_INTERACTIVE"
       && variant.label !== undefined
@@ -512,6 +515,13 @@ function serviceTierLabel(label: string) {
     mode: match[1]!.toLowerCase() as "fast" | "flex" | "ultrafast",
     context: match[2] === undefined ? undefined : Number(match[2]) * 1_000,
   };
+}
+
+// Untiered long-context variants carry the threshold in the label, e.g.
+// "Long form context (> 100k)".
+function longContextLabel(label: string | undefined) {
+  const match = label?.match(/^Long form context \(> (\d+)k\)$/i);
+  return match ? Number(match[1]) * 1_000 : undefined;
 }
 
 function pricingTierContext(tier: string | undefined) {

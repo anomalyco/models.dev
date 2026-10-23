@@ -1968,6 +1968,26 @@ test("prices DigitalOcean web search, cache TTLs and service tiers from the cata
   ]);
 });
 
+test("reads DigitalOcean long-context thresholds from untiered variant labels", () => {
+  const [model] = parseDigitalOceanModels({
+    models: [digitalOceanModel({ pricing: undefined })],
+    catalog: [{
+      model_id: "anthropic-claude-4.6-sonnet",
+      name: "Claude Sonnet 4.6",
+      availability: ["serverless"],
+      modalities: { input: ["text"], output: ["text"] },
+      pricing: { input_price_per_million: 1e-7, output_price_per_million: 5e-7 },
+      pricing_detail: {
+        variants: [
+          { label: "Long form context (> 100k) Batch", mode: "MODEL_BILLING_MODE_BATCH", prices: { input_price_per_million: 2.5e-7, output_price_per_million: 0.00000125 } },
+          { label: "Long form context (> 100k)", mode: "MODEL_BILLING_MODE_INTERACTIVE", prices: { input_price_per_million: 5e-7, output_price_per_million: 0.0000025 } },
+        ],
+      },
+    }],
+  });
+  expect(model?.pricing?.extended).toEqual({ context: 100_000, input: 0.5, output: 2.5 });
+});
+
 test("syncs DigitalOcean reasoning capability, efforts, and lifecycle status", () => {
   const model = buildDigitalOceanModel(digitalOceanModel({
     lifecycle_status: "deprecated",
