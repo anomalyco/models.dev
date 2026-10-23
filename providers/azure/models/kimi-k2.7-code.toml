@@ -9,10 +9,9 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
