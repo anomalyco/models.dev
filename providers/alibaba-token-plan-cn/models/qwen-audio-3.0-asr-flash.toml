@@ -1,3 +1,5 @@
+# Current canonical Token Plan host and native route (accessed 2026-10-23):
+# https://platform.qianwenai.com/docs/token-plan/best-practices/multimodal-generation
 # Token Plan lists qwen-audio-3.0-asr-flash as speech recognition:
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview
@@ -7,19 +9,17 @@
 # Native route is DashScope sync (multimodal-generation with input_audio), not OpenAI chat:
 # only the Qwen3-ASR-Flash series supports OpenAI-compatible chat
 # (https://www.alibabacloud.com/help/en/model-studio/non-realtime-speech-recognition-user-guide).
-# API on Token Plan China: POST https://token-plan.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation
-# Cost is prepaid Credits subscription, so per-token cost is 0; marketplace CNY 0.00022/sec is
+# API on Token Plan China: POST https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation
+# Cost is prepaid Credits subscription, so the applicable media-unit cost is 0; marketplace CNY 0.00022/sec is
 # pay-as-you-go and separate from unmeasured credit debit. Lab metadata via base_model.
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen-audio-3.0-asr-flash"
 
 [api.transcriptions]
-base_url = "https://token-plan.cn-beijing.maas.aliyuncs.com/api/v1"
+base_url = "https://token-plan.maas.qianwenaiapi.com/api/v1"
 sdk = { aisdk = "none", opencodeai = "none" }
 
-[cost.text.input]
+[cost.audio.input]
 price = 0
-
-[cost.text.output]
-price = 0
+unit = "second"

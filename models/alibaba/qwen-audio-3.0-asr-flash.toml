@@ -1,3 +1,4 @@
+# Additional exact-model formats: https://docs.qwencloud.com/developer-guides/speech/speech-to-text-models
 # Qwen-Audio-3.0-ASR Flash: Bailing ASR updated June 2026 with seven Chinese dialect
 # systems, 20+ regional Mandarin accents, 30 languages, context support and up to
 # 5-minute transcription:
@@ -21,7 +22,7 @@ open_weights = false
 release_date = "2026-06"
 
 [modalities]
-input = ["audio/aac", "audio/wav", "audio/mpeg"]
+input = ["audio/aac", "audio/amr", "video/x-msvideo", "audio/flac", "video/x-flv", "audio/mp4", "video/x-matroska", "video/quicktime", "audio/mpeg", "video/mp4", "video/mpeg", "audio/ogg", "audio/opus", "audio/wav", "video/webm", "audio/x-ms-wma", "video/x-ms-wmv"]
 output = ["text"]
 
 [capabilities]
