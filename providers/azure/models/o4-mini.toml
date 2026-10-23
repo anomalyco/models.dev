@@ -5,6 +5,7 @@
 # Web search: billed as Grounding with Bing Search, $14 per 1,000 Bing search requests (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing): https://www.microsoft.com/en-us/bing/apis/grounding-pricing
 # Token-only multipliers (object factor, so cost.web_search is unscaled): web search is billed separately as Grounding with Bing Search (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing).
 # APIs: Responses (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models) and Chat Completions (API and feature support tables at https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning).
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Mid-conversation developer messages work on both Responses and Chat Completions (OpenAI documents both; Azure Chat kept the cache live on 2026-10-23), so system_updates stays top-level.
 schema = 2
 base_model = "openai/o4-mini"
 base_model_omit = ["structured_output"]
@@ -15,7 +16,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 store = true
 cache = { implicit = { min_tokens = 1_024 } }
@@ -23,6 +24,7 @@ system_updates = true
 effort_updates = false
 
 [api.responses]
+capabilities = { tools = { updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }

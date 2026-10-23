@@ -3,6 +3,7 @@
 # system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
 # `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
 # APIs: Responses (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models) and Chat Completions (API and feature support tables at https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning).
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Mid-conversation developer messages work on both Responses and Chat Completions (OpenAI documents both; Azure Chat kept the cache live on 2026-10-23), so system_updates stays top-level.
 schema = 2
 base_model = "openai/gpt-4.1-nano"
 base_model_omit = ["structured_output"]
@@ -13,13 +14,14 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 store = true
 cache = { implicit = { min_tokens = 1_024 } }
 system_updates = true
 effort_updates = false
 
 [api.responses]
+capabilities = { tools = { updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
