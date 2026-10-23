@@ -1,0 +1,8 @@
+# Context: kiro-cli chat --list-models --format json reports 200000
+# Kiro exposes no caller-configurable reasoning control for GLM-5:
+# Source: https://kiro.dev/docs/cli/chat/effort/
+base_model = "zhipuai/glm-5"
+reasoning_options = []
+
+[limit]
+context = 200_000
