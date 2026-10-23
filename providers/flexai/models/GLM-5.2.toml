@@ -7,6 +7,7 @@
 # max saturates the budget. Only the two separable on-levels are declared.
 # medium and high are one measured band; it is named `high` here because
 # that is the name every peer entry for this model uses.
+# Context: 1_048_576 is the served window (GET /v1/models context_length, 2026-10-22).
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "zhipuai/glm-5.2"
@@ -15,14 +16,14 @@ base_model = "zhipuai/glm-5.2"
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 
 [limit]
-context = 131_072
+context = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.5625
-cache = { read = 0.0844 }
+price = 0.966
+cache = { read = 0.1449 }
 
 [cost.text.output]
-price = 1.8
+price = 3.036

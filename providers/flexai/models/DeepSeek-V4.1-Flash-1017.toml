@@ -1,0 +1,19 @@
+# Context: 1_048_576 is the served window (GET /v1/models context_length, 2026-10-22).
+# Toggle: /v1/models lists hybrid_thinking for this model (2026-10-22). Effort
+# levels are not yet measured on FlexAI for this snapshot, so none are declared.
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.0225 }
+
+[cost.text.output]
+price = 0.6
