@@ -6,16 +6,15 @@
 # https://www.anthropic.com/pricing and https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching (5% of $2 input)
 # Lowest thinking setting is between_tools, not disabled; no true off toggle.
 # v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
-# Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html);
-# toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
+# Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html).
 # Per-turn effort: left out. This file only lists Converse, where a per-message output_config is silently dropped and only a top-level effort change exists, which doesn't count. The in-history effort message (a per-turn system message carrying output_config, https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html) needs InvokeModel or Mantle Messages, which this file doesn't list.
-# tools.updates: AWS's tool-changes list omits Sonnet 5.5; Anthropic's docs include it and Converse accepted toolRemoval live (2026-10-19).
+# tools.updates: left out. This file only lists Converse, which has no field for tool_addition/tool_removal; AWS documents mid-conversation tool changes only for the Anthropic Messages body (InvokeModel, Mantle Messages). The 2026-10-19 Converse test only worked by passing the blocks and beta through additionalModelRequestFields, which isn't a documented Converse feature.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 name = "Claude Sonnet 5.5 (Global)"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
