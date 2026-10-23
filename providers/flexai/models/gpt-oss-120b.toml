@@ -5,16 +5,18 @@
 # (probed 2026-10-02), where every other served model reports a uniform
 # minimal|low|medium|high|max enum.
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "openai/gpt-oss-120b"
 
-[cost]
-input = 0.03
-output = 0.17
-cache_read = 0.0045
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.03
+cache = { read = 0.0045 }
+
+[cost.text.output]
+price = 0.17

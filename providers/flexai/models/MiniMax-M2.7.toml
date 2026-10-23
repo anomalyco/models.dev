@@ -2,15 +2,18 @@
 # effect, so no caller-facing
 # control is exposed and reasoning_options is empty.
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
 
+[capabilities]
+reasoning = { supported = true }
 
-reasoning_options = []
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.24
-output = 0.96
-cache_read = 0.036
+[cost.text.input]
+price = 0.24
+cache = { read = 0.036 }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 0.96
