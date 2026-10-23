@@ -17,6 +17,8 @@
 #   (+23 input tokens), is followed, and keeps the cache -> system_updates; switching thinking.type between turns
 #   (either direction) keeps the cache -> effort_updates; adding a tool drops the cache to 0-64 tokens while the
 #   same request with the old tool list keeps it -> tools.updates = false.
+# Web search plugin: $5 per 1,000 calls (Overseas Internet Connectivity Service; the domestic service, CNY 16 per 1,000,
+#   is not modeled): https://mimo.mi.com/static/docs/price/pay-as-you-go.md (accessed 2026-10-23)
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 
@@ -46,3 +48,6 @@ cache = { read = 0.0028 }
 
 [cost.text.output]
 price = 0.28
+
+[cost.web_search]
+price = 5
