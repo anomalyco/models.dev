@@ -21,6 +21,14 @@ reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
 cache = { implicit = true }
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 0.68
 cache = { read = 0.07 }
