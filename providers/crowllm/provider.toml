@@ -6,12 +6,18 @@
 # pass, so a pass holder's effective rate is a fifth of what is listed here
 # (DeepSeek V4 Flash works out to $0.028/$0.11 per MTok on a pass).
 # That no-pass rate is the gateway's own live billing row, compared field by field against each
-# lab's first-party entry in this repo: of the 23 paid entries, 21 have a lab rate to compare to,
-# 14 of those sit at or under it on every field, and 7 are above on 9 fields in total - three
-# cached-input rates (deepseek-v4-flash 0.014 vs 0.003, deepseek-v4-pro and its -thinking alias
-# 0.055 vs 0.022), two output rates (minimax-m3 and its -thinking alias 1.25 vs 1.2) and both
-# text rates of glm-5.3-flash and its -thinking alias (0.15 in vs 0.11952, 0.45 out vs 0.41831).
-# Those are what the gateway's live model_ratio/completion_ratio/cache_ratio actually charge.
+# lab's first-party entry in this repo: of the 110 paid entries, 95 have a lab rate to compare to,
+# 66 of those sit at or under it on every field, and 29 are above on some field (44 fields in total).
+# The above ones are the gateway's live model_ratio/completion_ratio/cache_ratio, not an estimate: the
+# larger gaps are a handful of cached-input and output rates (deepseek-v4-flash 0.014 vs 0.003,
+# deepseek-v4-pro and its -thinking alias 0.055 vs 0.022, minimax-m3 and its -thinking alias 1.25 vs 1.2,
+# glm-5.3-flash and its -thinking alias 0.15 in vs 0.11952 / 0.45 out vs 0.41831) and the always-on Claude
+# -thinking aliases. A pass holder pays a fifth of every one of these, which puts each under first-party.
+# 15 paid entries have no lab host cost to compare against at all.
+# Five served ids are left out as unpriceable rather than mispriced: two carry a zero model_ratio behind a
+# non-zero cache row (deepseek-v4-flash-thinking, kimi-k2.6-thinking) and three share one placeholder ratio
+# of 37.5 across unrelated vendors (qwen3.7-plus, gpt-5.4, gpt-5.5), which would list a relay at many times
+# its own first-party price; each is published only once the gateway sets a real per-model rate.
 # cost is converted from the gateway's live billing ratios at
 # USD/MTok = 2 x model_ratio, output = input x completion_ratio, cached input = input x cache_ratio
 # (service/text_quota.go: cached prompt tokens bill at cache_ratio of a fresh input token, so the
