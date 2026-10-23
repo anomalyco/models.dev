@@ -1,13 +1,15 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
-attachment = false
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
 structured_output = false
-reasoning_options = []
+effort_updates = false
 
-[cost]
-input = 1.9
-output = 8
-cache_read = 0.38
+[cost.text.input]
+price = 1.9
+cache = { read = 0.38 }
 
-[modalities]
-input = ["text"]
+[cost.text.output]
+price = 8

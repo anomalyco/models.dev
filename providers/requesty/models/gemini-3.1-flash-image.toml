@@ -1,14 +1,17 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 base_model = "google/gemini-3.1-flash-image"
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
 structured_output = false
+system_updates = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[cost.text.input]
+price = 0.5
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.5
-output = 2
+[cost.text.output]
+price = 2

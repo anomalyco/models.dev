@@ -1,0 +1,27 @@
+schema = 2
+name = "Gemma 4 Dark Thoughts V2 31B"
+description = "Ateron's second Dark Thoughts merge combines Dark Scarlett V2, MeroMero V2, and Scotoma 2 for creative dialogue and extended character roleplay. This text-only Gemma 4 31B deployment supports a 65,536-token context window and up to 8,192 output tokens."
+family = "gemma"
+open_weights = true
+release_date = "2026-10-13"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[limit]
+context = 65_536
+input = 65_536
+output = 8_192
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.45

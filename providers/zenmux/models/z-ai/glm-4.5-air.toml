@@ -1,24 +1,33 @@
+# Toggle: reasoning.enabled = true|false
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# catalog prices also vary by output length (completion_tokens); file keeps the cheapest band as base.
+schema = 2
+base_model = "zhipuai/glm-4.5-air"
 name = "GLM 4.5 Air"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2025-07-25"
-last_updated = "2025-07-25"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
 
-[cost]
-input = 0.11
-output = 0.56
-cache_read = 0.02
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
 [limit]
 context = 128_000
-output = 64_000
+output = 96_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1165
+cache = { read = 0.0233 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1747
+cache = { read = 0.0349 }
+
+[cost.text.output]
+price = 0.2911
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.1645

@@ -1,0 +1,14 @@
+# Effort: output_config.effort = low|medium|high|xhigh|max (lab-mapped, not probed on 302.AI)
+# Pricing: https://302.ai/product/detail/anthropic-claude-sonnet-5-5
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10

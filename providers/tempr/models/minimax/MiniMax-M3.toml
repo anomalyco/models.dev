@@ -1,0 +1,27 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# /v1/messages: thinking.type = enabled|disabled
+# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 2.4

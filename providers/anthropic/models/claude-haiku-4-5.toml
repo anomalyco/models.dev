@@ -1,13 +1,29 @@
+# Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
+# APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 description = "Fast Claude lane for lightweight agents, office tasks, and responsive chat"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
+system_updates = false
+effort_updates = false
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
+[api.messages]
 
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+[api.chat-completions]
+base_url = "https://api.anthropic.com/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
+
+[cost.text.output]
+price = 5
+
+[cost.web_search]
+price = 10

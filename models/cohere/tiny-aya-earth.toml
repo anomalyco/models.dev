@@ -1,0 +1,27 @@
+# https://docs.cohere.com/docs/tiny-aya
+# https://cohere.com/blog/cohere-labs-tiny-aya (February 17, 2026)
+schema = 2
+name = "Tiny Aya Earth"
+description = "Compact multilingual model specialized for West Asian and African languages"
+open_weights = true
+release_date = "2026-02-17"
+license = "CC-BY-NC-4.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8_000
+output = 8_000
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/tiny-aya-earth"

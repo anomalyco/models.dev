@@ -1,0 +1,25 @@
+# Lab metadata carried over from providers/openrouter/models/thedrummer/cydonia-24b-v4.1.toml (curated catalogue
+#   data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+name = "Cydonia 24B V4.1"
+description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
+open_weights = true
+knowledge = "2024-04-30"
+release_date = "2025-09-27"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 117_964

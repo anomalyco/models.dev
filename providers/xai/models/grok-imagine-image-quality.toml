@@ -1,18 +1,15 @@
-name = "Grok Imagine Image Quality"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "grok"
-release_date = "2026-04-03"
-last_updated = "2026-04-03"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = false
+# Sources:
+# - https://docs.x.ai/docs/models
+# - https://docs.x.ai/developers/models/grok-imagine-image-quality
+# - https://docs.x.ai/developers/pricing
+# Pricing: $0.05/image (1K), $0.07/image (2K); image input $0.01/image (not token-based; no [cost] authored)
+# Aliases: grok-imagine-image-quality-20260403, grok-imagine-image-quality-latest, grok-imagine-image-pro
+# Retires 2026-11-02; requests are then served by grok-imagine-image-2.0 (quality low).
+# https://docs.x.ai/developers/release-notes
+# API: POST https://api.x.ai/v1/images/generations (https://docs.x.ai/developers/rest-api-reference/inference/images.md).
+schema = 2
+base_model = "xai/grok-imagine-image-quality"
+status = "deprecated"
 
-[limit]
-context = 16_000
-output = 0
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["image", "pdf"]
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/xai-images" }

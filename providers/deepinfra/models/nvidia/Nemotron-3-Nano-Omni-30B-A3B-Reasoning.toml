@@ -1,11 +1,21 @@
+schema = 2
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
-structured_output = true
 status = "deprecated"
-reasoning_options = []
 
-[cost]
-input = 0.2
-output = 0.8
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+service_tier = ["priority"]
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5

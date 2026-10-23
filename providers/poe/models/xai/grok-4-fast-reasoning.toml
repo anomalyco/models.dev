@@ -1,24 +1,24 @@
+# Status: https://poe.com/Grok-4-Fast-Reasoning is titled "Grok-4-Fast-Reasoning_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "xai/grok-4-fast-reasoning"
 name = "Grok-4-Fast-Reasoning"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
 family = "grok"
-release_date = "2025-09-16"
-last_updated = "2025-09-16"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-open_weights = false
-tool_call = true
-
-[cost]
-input = 0.2
-output = 0.5
-cache_read = 0.05
-
-[limit]
-context = 2_000_000
-output = 128_000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+temperature = false
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5

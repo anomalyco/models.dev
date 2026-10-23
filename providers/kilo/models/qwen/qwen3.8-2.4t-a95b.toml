@@ -2,17 +2,25 @@
 # https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B
 # https://openrouter.ai/qwen/qwen3.8-2.4t-a95b
 # Kilo host pricing retained from prior catalog entry; lab metadata via base_model.
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
-cache_write = 2.5
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+effort_updates = false
 
 [limit]
-context = 1_000_000
+context = 1_010_000
+output = 909_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25, write = 2.5 }
+
+[cost.text.output]
+price = 6

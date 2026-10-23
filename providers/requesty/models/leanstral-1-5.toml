@@ -1,21 +1,29 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 name = "leanstral-1-5"
 description = "Leanstral 1.5 is an updated Lean 4 formal proof engineering model from Mistral AI, optimized for automated theorem proving and autoformalization. It has 119B total parameters with 6.5B active and supports a 256K token context window. It supports native function calling and structured output."
-release_date = "2026-05-27"
-last_updated = "2026-05-27"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
+family = "leanstral"
 open_weights = false
+release_date = "2026-05-27"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

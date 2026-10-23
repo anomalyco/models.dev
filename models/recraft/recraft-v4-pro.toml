@@ -1,0 +1,26 @@
+# Released in February 2026 (https://www.recraft.ai/docs/api-reference/models/recraft-v4); 2026-02-17 per https://vercel.com/ai-gateway/models/providers/recraft
+#   Inputs PNG, JPG or WEBP; raster output lossless WebP (default) or PNG, vector output SVG:
+#   https://www.recraft.ai/docs/api-reference/endpoints
+schema = 2
+v2_only = true
+type = "image"
+name = "Recraft V4 Pro"
+description = "2K Recraft V4 image model with finer detail"
+family = "recraft"
+open_weights = false
+release_date = "2026-02-17"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/webp", "image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

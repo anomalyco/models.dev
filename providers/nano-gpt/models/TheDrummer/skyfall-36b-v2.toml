@@ -1,24 +1,23 @@
 # Included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "thedrummer/skyfall-36b-v2"
 name = "TheDrummer Skyfall 36B V2"
-description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2025-03-10"
-last_updated = "2025-03-10"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = true
-
-[cost]
-input = 0.55
-output = 0.8
-cache_read = 0.25
-
-[limit]
-context = 32_768
-input = 32_768
-output = 29_491
 
 [modalities]
-input = ["text", "pdf"]
+input = ["text", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+structured_output = false
+effort_updates = false
+
+[limit]
+input = 32_768
+
+[cost.text.input]
+price = 0.55
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 0.8

@@ -1,24 +1,30 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 name = "Manta Pro 1.0"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "nova"
+open_weights = false
 release_date = "2025-09-20"
 last_updated = "2025-12-20"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
 
-[cost]
-input = 0.06
-output = 0.5
-cache_read = 0.03
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 65_536
 input = 65_536
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.06
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

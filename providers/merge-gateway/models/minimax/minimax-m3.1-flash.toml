@@ -1,0 +1,23 @@
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+name = "MiniMax M3.1 Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

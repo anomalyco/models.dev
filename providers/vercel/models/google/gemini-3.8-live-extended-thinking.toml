@@ -1,0 +1,27 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type realtime)
+# https://vercel.com/docs/ai-gateway/modalities/realtime
+schema = 2
+base_model = "google/gemini-3.8-live-extended-thinking"
+
+[modalities]
+input = ["text", "audio/pcm"]
+output = ["text", "audio/pcm"]
+
+[capabilities]
+reasoning = { supported = false }
+
+[api.realtime]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.75
+
+[cost.text.output]
+price = 4.5
+
+[cost.audio.input]
+price = 3
+
+[cost.audio.output]
+price = 12

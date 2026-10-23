@@ -1,0 +1,23 @@
+# Sources verified 2026-09-16:
+# Authenticated GET https://api.gmi-serving.com/v1/models returned
+# context_length=262144, quantization=fp8, and per-token USD pricing of
+# prompt=0.000002000, completion=0.000006000,
+# input_cache_read=0.000000250, input_cache_write=0.000002500.
+# https://www.gmicloud.ai/en/blog/qwen38-max-24t-parameters-available-now-open-weights-next-week
+# confirms the GMI model ID Qwen/Qwen3.8-Max.
+# Toggle: enable_thinking true|false
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25, write = 2.5 }
+
+[cost.text.output]
+price = 6

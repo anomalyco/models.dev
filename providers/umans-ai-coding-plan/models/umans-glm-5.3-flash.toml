@@ -1,0 +1,35 @@
+# Effort only: reasoning_effort = low|high|max — thinking is ALWAYS ON (the
+# checkpoint's chat template has no non-thinking mode; verified against the
+# released repo 2026-08-26 and the live lab card since then). The released
+# id's live metadata mirrors that shape: levels low/high/max, default max,
+# `can_disable=false`: https://api.code.umans.ai/v1/models/info
+# Coding-plan keys call the same pay-per-token catalog id (released
+# 2026-09-09, llm-gateway 00350); plan usage is flat-fee, so cost is 0 here.
+# limit.output is cap-1 on purpose: the gateway 400s max_tokens >=
+# max_completion_tokens (131072), so 131071 is the largest value that serves
+# (its advertised `recommended_max_tokens`).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_071
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

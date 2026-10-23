@@ -1,29 +1,26 @@
-name = "inkling-256k"
-description = "Inkling 256K is the extended context variant of Inkling, a large MoE hybrid reasoning model from Thinking Machines with audio and vision input support and a 256K context window."
-release_date = "2026-07-16"
-last_updated = "2026-07-16"
-attachment = true
-reasoning = true
-tool_call = true
+# Identity: hugging_face_id thinkingmachines/Inkling on https://router.requesty.ai/v1/models/managed (accessed 2026-10-20), the same
+#   weights as Requesty's inkling route. This route serves a 262,144-token context (lab 1,048,576) with max_output_tokens 32,768.
+#   Modalities come from the lab (text, PNG, JPEG, WAV). Requesty doesn't document an input-format restriction for this route.
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
+base_model = "thinkingmachines/inkling"
+name = "Inkling 256K"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = false
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 1.87
-output = 4.68
-cache_read = 0.374
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.87
+cache = { read = 0.374 }
+
+[cost.text.output]
+price = 4.68

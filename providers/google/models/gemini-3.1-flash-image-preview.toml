@@ -1,27 +1,46 @@
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
+# Image output formats: https://ai.google.dev/gemini-api/docs/image-generation (response_format mime_type image/png or image/jpeg).
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#pricing-for-tools ("Gemini 3 and newer models"); support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image-preview
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
+schema = 2
+type = "image"
 name = "Nano Banana 2"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "gemini-flash"
-release_date = "2026-02-26"
-last_updated = "2026-02-26"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-02-26"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
 
-[cost]
-input = 0.5
-output = 60
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["minimal", "high"] }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text", "image"]
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
+
+[api.interactions]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 60
+
+[cost.web_search]
+price = 14

@@ -1,18 +1,22 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Image tokens: catalog prompt / completion / input_cache_read (GPT Image 2 image-token prices); text-token input price not listed.
+# Not represented: web search $0.01 per request (no v2 per-request field).
+# temperature inherits the lab (false): the catalog lists no temperature parameter for this route.
+# Limits: context is the catalog's context_length (128000; max_completion_tokens 4096).
+# API: POST /api/v1/images/generations (https://docs.fastrouter.ai/api-reference/image/image-generation.md).
+schema = 2
+base_model = "openai/gpt-image-2"
 name = "GPT Image 2"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "gpt-image"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
 
 [limit]
 context = 128_000
-output = 0
 
-[modalities]
-input = ["text", "image"]
-output = ["image"]
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
+[cost.image.input]
+price = 8
+cache = { read = 2 }
+
+[cost.image.output]
+price = 30

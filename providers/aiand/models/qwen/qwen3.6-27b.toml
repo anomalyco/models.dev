@@ -1,22 +1,32 @@
-# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
-# 2026-07-28). The catalog Quick-picks section still lists this model as free,
-# but the live endpoint reports input = $0.32 / output = $3.20 per 1M tokens,
-# so pricing is taken from the API.
-# ai&'s deployment rejects image input ("does not support image input") and
-# the catalog lists no vision/video/audio capability, so modalities are
-# overridden from the shared base model's text+image+video+audio to text-only,
-# and attachment is set to false to match.
-# reasoning_effort verified by live probe on 2026-07-24: all six documented
-# values accepted; invalid values rejected with 400 (negative control).
+# Effort: reasoning_effort = none|high
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-14: none|high → 200; minimal|low|medium|xhigh|max → 400.
+# Modalities: image, video, and PDF accepted on this host (catalog vision|video|document).
+# Reasoning side channel: message.reasoning_content
+# Mid-conversation: ai& serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.aiand.com/api/chat-completions/
+# Input MIME types: vision image/png|jpeg|webp|gif, video video/mp4|webm|quicktime, document application/pdf (https://docs.aiand.com/api/file-purposes/).
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers (https://docs.aiand.com/models/pricing/#prompt-caching).
+schema = 2
 base_model = "alibaba/qwen3.6-27b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.32
-output = 3.2
-
 [modalities]
-input = ["text", "image", "video", "pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+structured_output = true
+effort_updates = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.32
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

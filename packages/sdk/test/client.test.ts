@@ -40,6 +40,17 @@ test("models() and catalog() hit their endpoints", async () => {
   expect(calls.map((call) => call.url.href)).toEqual(["https://models.dev/models.json", "https://models.dev/catalog.json"])
 })
 
+test("catalog endpoints encode model type filters", async () => {
+  const { calls, fetch } = stub({})
+  const client = Models.make({ fetch })
+  await client.providers({ modelTypes: ["decision"] })
+  await client.models({ modelTypes: "all" })
+  expect(calls.map((call) => call.url.href)).toEqual([
+    "https://models.dev/api.json?type=decision",
+    "https://models.dev/models.json?type=all",
+  ])
+})
+
 test("baseUrl with subpath is preserved, with or without trailing slash", async () => {
   const { calls, fetch } = stub({})
   await Models.make({ fetch, baseUrl: "https://example.com/mirror" }).providers()

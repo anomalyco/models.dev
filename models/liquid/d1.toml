@@ -1,0 +1,28 @@
+# https://ai-gateway.vercel.sh/v1/models (liquid/d1, type = evaluation)
+# https://docs.liquid.ai/lfm/models/d1 (decision API: model, state, questions and images; answers with zero generated tokens)
+# Sampling: the decision endpoint generates no tokens and takes no temperature, top_p or top_k.
+# Output: decision answers (v1 shows them as text).
+# Modalities: d1 "accepts text and image inputs"; Image Requirements lists JPEG (image/jpeg), PNG (image/png),
+# WebP (image/webp) and GIF (image/gif) (https://docs.liquid.ai/lfm/models/d1).
+schema = 2
+type = "decision"
+name = "Liquid d1"
+description = "System One decision model for typed classification, routing, and scoring over shared state"
+family = "liquid"
+open_weights = false
+release_date = "2026-09-29"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 65_536
+output = 0

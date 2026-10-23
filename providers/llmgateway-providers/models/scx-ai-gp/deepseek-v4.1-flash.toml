@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash (SCX.ai)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.6

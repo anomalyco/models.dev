@@ -1,29 +1,19 @@
-name = "qwen3.5-2b"
-description = "Qwen3.5-2B is a compact yet capable model from Alibaba's Qwen3.5 series. It features a 262K token context window, support for 201 languages, thinking/reasoning mode, and tool calling for agentic workflows. A strong choice for prototyping, fine-tuning, and efficient multilingual deployments."
-family = "qwen3.5"
-release_date = "2026-03-10"
-last_updated = "2026-03-10"
-attachment = true
-reasoning = true
-tool_call = true
+# Identity: hugging_face_id Qwen/Qwen3.5-2B on https://router.requesty.ai/v1/models/managed (accessed 2026-10-20); context 262,144 = lab.
+# limit.output: Requesty reports max_output_tokens = 0 (unknown), so the lab's 81,920 applies.
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
+base_model = "alibaba/qwen3.5-2b"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-open_weights = false
+system_updates = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[cost.text.input]
+price = 0.02
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.02
-output = 0.1
-
-[limit]
-context = 262_144
-output = 262_144
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 0.1

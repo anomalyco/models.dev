@@ -1,29 +1,19 @@
-name = "nvidia-nemotron-3-super-120b-a12b"
-description = "NVIDIA Nemotron 3 Super is a hybrid Mixture-of-Experts (MoE) model engineered for highest compute efficiency and accuracy in multi-agent applications and specialized agentic systems. It is optimized to run many collaborating agents per application on a single GPU, delivering high accuracy for reasoning, tool use, and instruction following."
-family = "nemotron"
-release_date = "2026-03-11"
-last_updated = "2026-03-11"
-attachment = false
-reasoning = true
-tool_call = true
+# Identity (https://router.requesty.ai/v1/models/managed (accessed 2026-10-20)): hugging_face_id nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8 (model_lab nvidia, open_weights true);
+#   context_window 262,144 = lab; created 2026-03-11 = lab release_date. max_output_tokens 0 (unknown), so the lab's limit applies.
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-open_weights = false
+system_updates = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[cost.text.input]
+price = 0.1
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.1
-output = 0.5
-
-[limit]
-context = 262_144
-output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.5

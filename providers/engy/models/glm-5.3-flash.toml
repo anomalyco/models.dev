@@ -1,0 +1,36 @@
+# Effort: reasoning_effort = low|high|max
+# Prices: https://api.engy.ai/v1/models (2026-08-28); limits: authed https://engy.ai/api/v1/models
+# (2026-10-16; max_input was 229,376 on 2026-08-30).
+# Launch discount: page lists 0.15/0.50, billed 0.135/0.45. Served text+image, so input is narrowed.
+# "(Ox Alpha)" is the codename it was served under before the name went public; status unset.
+# Live probe 2026-08-30 at 8k, n=40 for low/medium/high, 20 for xhigh/max: low = medium (p=0.41)
+# < high (p=1.8e-05) < xhigh = max; none/minimal/enable_thinking=false measure as low; 0/320 empty.
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
+# Input MIME types: the lab's image list; engy's catalog reports image input without formats (https://api.engy.ai/v1/models).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 327_680
+input = 294_912
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.135
+cache = { read = 0.027 }
+
+[cost.text.output]
+price = 0.45

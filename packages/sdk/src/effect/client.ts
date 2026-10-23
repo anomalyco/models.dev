@@ -1,6 +1,6 @@
 import { Context, Effect, Layer, Schema } from "effect"
 import { HttpClient, HttpClientResponse } from "effect/unstable/http"
-import type { Catalog, ModelMetadataMap, ProviderMap } from "../types.js"
+import type { Catalog, ModelMetadataMap, ModelType, ProviderMap } from "../types.js"
 
 /** The only error in the failure channel of client methods. Wraps the underlying `HttpClientError` as `cause`. */
 export class ModelsDevError extends Schema.TaggedErrorClass<ModelsDevError>()("ModelsDevError", {
@@ -12,6 +12,11 @@ export interface ClientOptions {
   readonly baseUrl?: string
   /** Extra headers sent with every request. */
   readonly headers?: Record<string, string>
+}
+
+export interface RequestOptions {
+  /** Specialized model types to include. Omit for standard models; use `"all"` for the complete catalog. */
+  readonly modelTypes?: "all" | readonly ModelType[]
 }
 
 /**
@@ -26,9 +31,17 @@ export const make = (options?: ClientOptions) =>
     const baseUrl = options?.baseUrl ?? "https://models.dev"
     const base = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/"
 
-    const get = <A>(path: string): Effect.Effect<A, ModelsDevError> =>
-      http
-        .get(new URL(path, base), {
+    const get = <A>(path: string, requestOptions?: RequestOptions): Effect.Effect<A, ModelsDevError> => {
+      const url = new URL(path, base)
+      const modelTypes = requestOptions?.modelTypes
+      if (modelTypes === "all") {
+        url.searchParams.set("type", "all")
+      } else if (modelTypes && modelTypes.length > 0) {
+        url.searchParams.set("type", modelTypes.join(","))
+      }
+
+      return http
+        .get(url, {
           headers: options?.headers,
         })
         .pipe(
@@ -37,14 +50,15 @@ export const make = (options?: ClientOptions) =>
           Effect.map((data) => data as A),
           Effect.mapError((cause) => new ModelsDevError({ cause })),
         )
+    }
 
     return {
       /** All providers with their models, pricing, and limits (`/api.json`). */
-      providers: () => get<ProviderMap>("api.json"),
+      providers: (options?: RequestOptions) => get<ProviderMap>("api.json", options),
       /** Provider-agnostic model metadata (`/models.json`). */
-      models: () => get<ModelMetadataMap>("models.json"),
+      models: (options?: RequestOptions) => get<ModelMetadataMap>("models.json", options),
       /** Providers and model metadata in a single request (`/catalog.json`). */
-      catalog: () => get<Catalog>("catalog.json"),
+      catalog: (options?: RequestOptions) => get<Catalog>("catalog.json", options),
     }
   })
 

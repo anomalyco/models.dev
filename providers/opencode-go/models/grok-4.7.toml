@@ -1,0 +1,29 @@
+# Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Effort: reasoning.effort = low|medium|high|xhigh (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[api.responses]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12

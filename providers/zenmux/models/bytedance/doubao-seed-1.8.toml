@@ -1,0 +1,44 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Effort: Chat reasoning_effort = minimal|low|medium|high (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+# Modalities: video formats from the Volcengine Ark video understanding, 视频格式说明 table (https://www.volcengine.com/docs/82379/1895586).
+schema = 2
+base_model = "bytedance-seed/seed-1-8"
+name = "Doubao-Seed-1.8"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video/mp4", "video/x-msvideo", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+cache = { implicit = true }
+
+[limit]
+output = 32_000
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.023, storage = 0.0024 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.17
+cache = { read = 0.023, storage = 0.0024 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.34
+cache = { read = 0.023, storage = 0.0024 }
+
+[cost.text.output]
+price = 0.28
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.27
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 3.41

@@ -2,16 +2,22 @@
 # none|minimal|low|medium|high|xhigh|max. No exact token budget documented.
 # https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
 # https://api.llmgateway.io/v1/models providers[].reasoning_efforts (accessed 2026-07-23)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.6
-output = 3.05
-cache_read = 0.13
+[cost.text.input]
+price = 0.6
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 3.05

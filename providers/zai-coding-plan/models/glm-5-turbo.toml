@@ -1,31 +1,26 @@
-name = "GLM-5-Turbo"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-family = "glm"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+# Sources (accessed 2026-10-19):
+# - Plan and supported models: https://docs.z.ai/devpack/overview, https://docs.z.ai/devpack/latest-model
+# - Thinking (Coding Plan effort mapping): https://docs.z.ai/guides/capabilities/thinking
+# Subscription plan billed in credits, so no per-token cost.
+# Deprecated: the plan now serves only GLM-5.3 and GLM-5.3-Flash (the CN plan docs route GLM-5-Turbo to GLM-5.3-Flash).
+# Toggle: thinking.type = enabled|disabled (default enabled)
+schema = 2
+base_model = "zhipuai/glm-5-turbo"
+status = "deprecated"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
-open_weights = false
+top_k = false
+cache = { implicit = true }
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
-
-[limit]
-context = 200000
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0

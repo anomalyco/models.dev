@@ -1,0 +1,44 @@
+# Sources (accessed 2026-09-24):
+# - https://fireworks.ai/models/fireworks/ember-1 — Ember-1 model card: specialized Fireworks model built on Kimi K3, ~40% fewer tokens, $3.00/$0.30/$15.00 per 1M, 1040k context, image input + function calling supported, MoE 2.78T, Created 9/22/2026, Provider Fireworks, Kind Base model.
+# - https://app.fireworks.ai/models/fireworks/ember-1 — Hugging Face N/A (no open weights), Context 1M, usage example max_tokens 131072, Research Preview Serverless, Function-calling/LLM/Vision tags.
+# - https://fireworks.ai/blog/ember-1 (published 9/23/2026) — Fireworks' own model from Fireworks Research, built on Kimi K3, shorter reasoning traces, Research Preview on Serverless.
+# - https://docs.fireworks.ai/api-reference/post-chatcompletions and https://docs.fireworks.ai/guides/reasoning — reasoning_effort low|medium|high|max|xhigh|none and thinking.type enabled|disabled with budget_tokens >= 1024; Kimi K3 tiers: low selects Low, medium promotes to high, high selects High, xhigh promotes to max, max selects Max.
+# - Peer surface: providers/fireworks-ai/models/accounts/fireworks/models/kimi-k3.toml (same Fireworks serverless reasoning API, built on Kimi K3).
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
+# Effort: reasoning_effort = low|medium|high|max; medium promotes to high, xhigh promotes to max
+# Budget: thinking.budget_tokens >= 1024 (integer reasoning-token cap)
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = true: after a system message sent after the first turn, 4096 of 8110 prompt tokens still came from the cache, so it stays in place.
+#   effort_updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
+#   tools.updates = false: adding a second tool on the last turn left 0/0 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
+base_model = "fireworks/ember-1"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

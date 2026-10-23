@@ -1,10 +1,24 @@
+schema = 2
 base_model = "alibaba/qwen3-32b"
-reasoning_options = []
-structured_output = true
 
-[cost]
-input = 0.08
-output = 0.28
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 40_960
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.28
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

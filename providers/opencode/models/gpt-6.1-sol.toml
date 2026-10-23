@@ -1,0 +1,40 @@
+# Availability and pricing: https://opencode.ai/docs/zen
+# Reasoning: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6.1-sol
+# Endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Pricing: matches OpenAI's gpt-6.1-sol rates ($0.10 cached input, 2x above 272K): https://developers.openai.com/api/docs/models/gpt-6.1-sol
+# Effort: reasoning.effort = low|medium|high|xhigh|max
+# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
+#   system_updates = true: a developer message before the next user turn was kept in place (cached 9123 -> 9123)
+#   effort_updates = true: configuration_update item kept the cache (cached 9119 -> 9119)
+#   tools.updates = true (add only): additional_tools item kept the cache (cached 9161 -> 9161)
+# Cache (live): implicit (cached tokens reported without cache markers).
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+system_updates = true
+effort_updates = true
+
+[api.responses]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15

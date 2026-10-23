@@ -42,6 +42,20 @@ test("models() and catalog() hit their endpoints, baseUrl subpath preserved", as
   ])
 })
 
+test("catalog endpoints encode model type filters", async () => {
+  const { requests, layer } = stub({})
+  const program = Effect.gen(function* () {
+    const client = yield* Models.make()
+    yield* client.providers({ modelTypes: ["decision"] })
+    yield* client.catalog({ modelTypes: "all" })
+  })
+  await program.pipe(Effect.provide(layer), Effect.runPromise)
+  expect(requests.map((request) => request.url)).toEqual([
+    "https://models.dev/api.json?type=decision",
+    "https://models.dev/catalog.json?type=all",
+  ])
+})
+
 test("custom headers are sent", async () => {
   const { requests, layer } = stub({})
   const program = Effect.gen(function* () {

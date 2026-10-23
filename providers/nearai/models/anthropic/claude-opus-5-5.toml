@@ -1,0 +1,26 @@
+# NEAR AI Cloud (multi-model relay) serves anthropic/claude-opus-5-5 as an Incognito
+# third-party route via the Anthropic-native Messages API (POST /v1/messages).
+# Pricing/context: $4 input / $20 output / $0.2 cache-read per MTok, 1000K context.
+# https://near.ai/models/anthropic/claude-opus-5-5 (accessed 2026-10-11)
+# Lab pricing/effort: $4/$20, 5m cache-write $5, cache-read $0.2; adaptive thinking
+# always on (thinking disabled/budget rejected); effort low|medium|high|xhigh|max, default medium.
+# https://platform.claude.com/docs/en/models/opus-5-5/overview (accessed 2026-10-11)
+# https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5 (accessed 2026-10-11)
+# https://platform.claude.com/docs/en/build-with-claude/effort (accessed 2026-10-11)
+# Relay rule: third-party Claude routes use provider-standard controls such as reasoning_effort.
+# https://docs.near.ai/cloud/reasoning-models (accessed 2026-10-11)
+# Peer baseline: providers/anthropic/models/claude-opus-5-5.toml and
+# providers/openrouter/models/anthropic/claude-opus-5.5.toml both use effort
+# low|medium|high|xhigh|max with no toggle and no budget.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20

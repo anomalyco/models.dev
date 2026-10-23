@@ -1,0 +1,26 @@
+# Beam on Ollama Cloud (model ID `beam`; Reflection Beam 1.0, 501B total / 23B active MoE, Apache-2.0).
+# Sources (accessed 2026-10-20):
+# - https://registry.ollama.com/library/beam:cloud (1M context, Text input, tools/thinking/cloud tags; text in/out; 501.3B total / 23.4B active; knowledge cutoff June 30, 2026)
+# - https://ollama.com/blog/reflection-beam (GA Oct 16, 2026; free for a limited time; 1M context; Apache-2.0; text-in text-out)
+# - https://ollama.com/v1/models (live catalog: slug `beam`, context_window 1048576, input_modalities ["text"], supported_reasoning_levels low|medium|high|xhigh|max default max, no none)
+# - https://ollama.com/pricing (no beam row as of 2026-10-20; free for a limited time, so no cost authored)
+# Effort: OpenAI POST /v1/chat/completions accepts `reasoning_effort` / `reasoning.effort` with low|medium|high|xhigh|max (no none, so no toggle).
+# Host docs: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
+# Host is a multi-model relay; options copy the live catalog set per AGENTS.md.
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

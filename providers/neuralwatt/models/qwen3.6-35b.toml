@@ -1,24 +1,26 @@
 # Budget: thinking_token_budget (integer reasoning tokens)
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B"
 
-interleaved = true
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.29
-output = 1.15
-cache_read = 0.029
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"], budget = {} }
+structured_output = true
 
 [limit]
 context = 131_056
 output = 131_056
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.29
+cache = { read = 0.029 }
+
+[cost.text.output]
+price = 1.15

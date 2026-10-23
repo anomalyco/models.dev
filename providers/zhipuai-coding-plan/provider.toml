@@ -1,8 +1,10 @@
 # OpenAI Chat endpoint: POST https://open.bigmodel.cn/api/coding/paas/v4/chat/completions.
-# GLM-5.2 maps low|medium|high to high and xhigh|max|ultracode to max.
-# https://docs.bigmodel.cn/cn/coding-plan/latest-model (accessed 2026-06-25)
+# Coding Plan models currently available: glm-5.3, glm-5.3-flash. Requests for glm-5.2/glm-5.1
+# are routed to glm-5.3 and glm-5-turbo/glm-4.7 to glm-5.3-flash.
+# https://docs.bigmodel.cn/cn/coding-plan/overview (accessed 2026-10-19)
 name = "Zhipu AI Coding Plan"
 env = ["ZHIPU_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/zai-coding-plan/chat"
 doc = "https://docs.bigmodel.cn/cn/coding-plan/overview"
 api = "https://open.bigmodel.cn/api/coding/paas/v4"

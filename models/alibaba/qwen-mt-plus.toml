@@ -1,0 +1,26 @@
+# https://www.qwencloud.com/models/qwen-mt-plus
+# https://www.alibabacloud.com/help/en/model-studio/qwen-mt-plus
+# https://qwenlm.github.io/blog/qwen-mt/
+# https://novita.ai/models/model-detail/qwen-qwen-mt-plus
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
+name = "Qwen MT Plus"
+description = "Flagship Qwen translation model with terminology control and support for 92 languages"
+family = "qwen"
+open_weights = false
+release_date = "2025-07-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+output = 8_192

@@ -1,21 +1,53 @@
 # Tracks the current Gemini Flash release (gemini-3.7-flash).
+schema = 2
 name = "Gemini Flash Latest"
 description = "High-efficiency Gemini model for agentic workflows, coding, and multimodal reasoning"
 family = "gemini-flash"
-release_date = "2026-08-13"
-last_updated = "2026-08-13"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2026-03"
 open_weights = false
+knowledge = "2026-03"
+release_date = "2026-08-13"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+  "audio/wav",
+  "audio/mp3",
+  "audio/aiff",
+  "audio/aac",
+  "audio/ogg",
+  "audio/flac",
+  "audio/mpeg",
+  "audio/m4a",
+  "audio/l16",
+  "audio/opus",
+  "audio/alaw",
+  "audio/mulaw",
+  "audio/webm",
+  "application/pdf",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_048_576
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]

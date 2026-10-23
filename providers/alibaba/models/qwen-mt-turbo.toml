@@ -1,23 +1,29 @@
+# Status: retired on Model Studio international. Live 2026-10-19 the API answers 404 and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
+schema = 2
 name = "Qwen-MT Turbo"
 description = "Translation model for multilingual conversion, localization, and cross-language workflows"
 family = "qwen"
-release_date = "2025-01"
-last_updated = "2025-01"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = false
 open_weights = false
+knowledge = "2024-04"
+release_date = "2025-01"
+status = "deprecated"
 
-[cost]
-input = 0.16
-output = 0.49
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+effort_updates = false
 
 [limit]
 context = 16_384
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.16
+
+[cost.text.output]
+price = 0.49

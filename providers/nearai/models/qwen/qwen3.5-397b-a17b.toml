@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-08:
+# reasoning_content present when on, absent when off
+# Accepts images, although /v1/models lists text only: on 2026-09-10 a two-colour test
+# image was read correctly, while the same prompt without it guessed wrong.
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 3.3

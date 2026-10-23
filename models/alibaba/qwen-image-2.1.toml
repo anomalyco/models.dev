@@ -1,0 +1,49 @@
+# Source: https://huggingface.co/Qwen/Qwen-Image-2.1 (accessed 2026-09-26)
+# Unified text-to-image generation and image editing model: 7B visual
+# generation component (32 single-stream DiT layers), native RGBA transparency,
+# editing with up to 10 reference images. Weights published under the Qwen
+# Research License Agreement. First published on 2026-09-14 (Hugging Face
+# createdAt); last updated 2026-09-21. Context follows the qwen-image-2.0 API
+# convention on Alibaba's first-party host (8,192 prompt tokens, no token
+# output budget); the number of output images is a request parameter, not a
+# token limit.
+# Type and sampling: a diffusion image model; its pipeline has no temperature, top_p or top_k (https://huggingface.co/Qwen/Qwen-Image-2.1).
+# MIME types: input images JPG, JPEG, PNG, BMP, TIFF, WEBP or GIF; output PNG, per https://www.alibabacloud.com/help/en/model-studio/qwen-image-edit-guide (covers the qwen-image-2.1 series).
+schema = 2
+type = "image"
+name = "Qwen-Image-2.1"
+description = "Unified text-to-image generation and image editing model with native RGBA transparency and reference-image editing"
+family = "qwen"
+open_weights = true
+release_date = "2026-09-14"
+last_updated = "2026-09-21"
+license = "qwen-research"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/tiff", "image/webp", "image/gif"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen-Image-2.1"
+
+[[links]]
+label = "Blog"
+url = "https://qwen.ai/blog?id=qwen-image-2.1"
+type = "announcement"
+
+[[links]]
+label = "GitHub"
+url = "https://github.com/QwenLM/Qwen-Image-2.1"
+type = "docs"

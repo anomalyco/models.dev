@@ -60,7 +60,7 @@ jobs:
             + "If it is a feature request, a request to track a new kind of information, a question, or any miscellaneous non-catalog-data request, do not edit files. Respond briefly that it needs maintainer review and no automated fix was opened."
           ' "$ISSUE_FILE" > "$PROMPT_FILE"
 
-          opencode run --agent issue-fixer -m opencode/grok-4.5 --format json < "$PROMPT_FILE" | tee "$EVENTS_FILE"
+          opencode run --agent issue-fixer -m opencode/muse-spark-1.3 --variant xhigh --format json < "$PROMPT_FILE" | tee "$EVENTS_FILE"
 
           if ! jq -ers 'map(select(.type == "text") | .part.text) | last | select(length > 0)' "$EVENTS_FILE" > "$RESPONSE_FILE"; then
             echo "Issue fixer did not produce a final response." >&2

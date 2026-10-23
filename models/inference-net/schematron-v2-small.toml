@@ -1,0 +1,28 @@
+# Lab metadata carried over from providers/openrouter/models/inference-net/schematron-v2-small.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Release: Inference.net launch post "Schematron V2: Frontier HTML-to-JSON extraction at a fraction of the cost",
+# published 2026-04-16 (https://inference.net/blog/schematron-v2). The 2026-09-12 date was OpenRouter's listing date.
+# Open weights: false. The same post says "The Schematron V2 Small and V2 Turbo model weights will remain closed-source
+# for now, available exclusively through our serverless API"; only the V1 3B and 8B models are on Hugging Face.
+# Sampling: Inference.net's API takes temperature and top_p, no top_k (https://docs.inference.net/llms-full.txt,
+# "Supported Request Parameters"); https://docs.inference.net/workhorse-models/schematron recommends temperature 0.
+schema = 2
+name = "Schematron V2 Small"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+open_weights = false
+release_date = "2026-04-16"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 128_000
+output = 4_096

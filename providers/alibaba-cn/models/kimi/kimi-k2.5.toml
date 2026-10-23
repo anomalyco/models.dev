@@ -1,31 +1,38 @@
+# v2 capabilities (docs for China (Beijing), accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling incl. top_k, which the DeepSeek, Kimi and MiniMax series do not support; enable_thinking defaults; stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
+# Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
+schema = 2
 name = "kimi/kimi-k2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi-k2"
+open_weights = true
+knowledge = "2025-01"
 release_date = "2026-01-27"
-last_updated = "2026-01-27"
-attachment = false
-reasoning = true
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = false
-tool_call = true
-knowledge = "2025-01"
-open_weights = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.6
-output = 3.0
-cache_read = 0.1
+top_k = false
+effort_updates = false
+stream_usage = true
 
 [limit]
 context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3

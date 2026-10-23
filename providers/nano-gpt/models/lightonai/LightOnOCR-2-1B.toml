@@ -1,22 +1,29 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "LightOnOCR 2"
 description = "LightOnOCR 2 hosted by IONOS in Berlin, Germany. Zero data retention."
-release_date = "2026-09-10"
-last_updated = "2026-09-10"
-attachment = true
-reasoning = false
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-09-10"
 
-[cost]
-input = 0.1785
-output = 0.3465
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 32_768
 input = 32_768
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1785
+
+[cost.text.output]
+price = 0.3465

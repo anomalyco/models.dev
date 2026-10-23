@@ -4,22 +4,29 @@
 # Field values mirror Upstage's own first-party host entry in this repo
 # (providers/upstage/models/solar-pro3.toml); host-scoped keys (cost,
 # reasoning_options) are intentionally left to the provider files.
+# Release, versions and cutoff: https://console.upstage.ai/docs/models/solar-pro-3 (solar-pro3-260126 released
+#   2026-01-26, solar-pro3-260323 released 2026-03-23, training data cut-off Jul 2025).
+# Sampling: the chat API reference (https://console.upstage.ai/api/chat) documents temperature and top_p; no top_k.
+schema = 2
 name = "Solar Pro 3"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "solar-pro"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2025-03"
-tool_call = true
 open_weights = false
-
-[limit]
-context = 131_072
-output = 8_192
+knowledge = "2025-07"
+release_date = "2026-01-26"
+last_updated = "2026-03-23"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 131_072
+output = 8_192

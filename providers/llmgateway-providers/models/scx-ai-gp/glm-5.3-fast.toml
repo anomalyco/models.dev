@@ -1,0 +1,18 @@
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Fast (SCX.ai)"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 2.8
+cache = { read = 0.56 }
+
+[cost.text.output]
+price = 8.8

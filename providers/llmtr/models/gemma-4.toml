@@ -3,15 +3,21 @@
 # accessed 2026-08-16). Tool calling and the reasoning toggle were verified
 # against POST https://llmtr.com/v1/chat/completions on the same date.
 # Toggle: reasoning = true|false
-name = "Gemma 4"
+schema = 2
 base_model = "google/gemma-4-31b-it"
-reasoning_options = [{ type = "toggle" }]
+name = "Gemma 4"
 
-[cost]
-input = 2.0
-output = 5.0
-cache_read = 0.5
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 131_072
 output = 131_072
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 5

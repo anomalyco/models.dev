@@ -1,22 +1,29 @@
+# Effort: reasoning_effort = medium|high (default medium)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+# Modalities (image: xAI's formats, jpg/jpeg and png; Poe lists none): https://docs.x.ai/docs/guides/image-understanding
+schema = 2
 name = "Grok-4.20-Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-release_date = "2026-03-13"
-last_updated = "2026-03-13"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2026-03-13"
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.2
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["medium", "high"] }
+temperature = false
 
 [limit]
 context = 128_000
 output = 0
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.2626
+cache = { read = 0.202 }
+
+[cost.text.output]
+price = 2.5253

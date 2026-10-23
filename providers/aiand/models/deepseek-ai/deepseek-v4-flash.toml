@@ -1,19 +1,30 @@
-# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
-# 2026-07-24). GET /v1/models reports context_window = 1048576 (the catalog
-# rounds this to "1M" and the shared base model to 1_000_000), so the exact
-# figure is overridden here.
-# reasoning_effort verified by live probe on 2026-07-24: all six documented
-# values accepted ("none" produces no reasoning content, "high" does);
-# invalid values rejected with 400 (negative control).
+# Effort: reasoning_effort = none|high|max
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-14: none|high|max → 200; minimal|low|medium|xhigh → 400.
+# context_window = 1048576 on this host overrides the lab's 1_000_000.
+# Reasoning side channel: message.reasoning_content
+# Mid-conversation: ai& serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.aiand.com/api/chat-completions/
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers (https://docs.aiand.com/models/pricing/#prompt-caching).
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.15
-output = 0.25
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 0.25

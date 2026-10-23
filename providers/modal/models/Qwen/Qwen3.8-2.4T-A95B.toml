@@ -6,20 +6,37 @@
 # https://modal.com/library/qwen/qwen3-8-max
 # https://modal.com/blog/qwen3-8-2-4t-a95b-now-available-on-modal
 # https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B
+# Modal Shared Endpoints (https://modal.com/docs/guide/endpoints, accessed 2026-10-21): text models are served on the
+#   OpenAI Chat Completions and Responses APIs and the Anthropic Messages API, billed per token. Serving engines cache
+#   the KV state of a prompt prefix automatically; the Modal-Routing-Affinity-Key header keeps a conversation on one
+#   container so the cached prefix is reused, and cached prompt tokens have their own price.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+# Library page (accessed 2026-10-21): prompt $2.00, cached prompt $0.25, completion $6.00 per MTok; modalities "Text";
+#   "262K native, up to 1.01M" context.
+schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 name = "Qwen3.8-Max"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 2.0
-output = 6.0
-cache_read = 0.25
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
 
 [limit]
 context = 1_010_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

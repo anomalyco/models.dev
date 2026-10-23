@@ -84,9 +84,18 @@ export const ModelFamilyValues = [
   "kimi-free",
   "kimi-thinking",
 
+  // Motif Technologies
+  "motif",
+
   // Poolside Laguna
   "laguna",
   "laguna-s",
+
+  // Reflection Beam
+  "beam",
+
+  // Recursive Flint
+  "flint",
 
   // Mistral family
   "mistral",
@@ -97,6 +106,7 @@ export const ModelFamilyValues = [
   "ministral",
   "codestral",
   "devstral",
+  "leanstral",
   "pixtral",
   "mixtral",
 

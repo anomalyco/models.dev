@@ -1,0 +1,26 @@
+schema = 2
+name = "kolibri-1"
+description = "Kolibri-1 is Aleph Alpha’s open-weight English-German MoE language model, designed for enterprise use with efficient inference and advanced reasoning."
+open_weights = false
+release_date = "2026-10-22"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = false
+
+[limit]
+context = 262_144
+output = 81_920
+
+[cost.text.input]
+price = 0.167
+cache = { read = 0.084 }
+
+[cost.text.output]
+price = 0.613

@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
@@ -11,6 +13,9 @@ import type {
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://inference.baseten.co/v1/models";
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const DECISION_PREFIX = "decision-models/";
+const DECISION_HEADER = "# Decision model: POST /v1/systemone (https://docs.baseten.co/inference/model-apis/decision-models)\n";
 
 const Price = z.union([z.string(), z.number()]);
 
@@ -18,12 +23,14 @@ export const BasetenModel = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   context_length: z.number().int().positive(),
-  max_completion_tokens: z.number().int().positive(),
+  // Decision models generate no text, so they list no completion limit.
+  max_completion_tokens: z.number().int().positive().optional(),
   input_modalities: z.array(z.string()),
   output_modalities: z.array(z.string()),
   pricing: z.object({
     prompt: Price,
     completion: Price,
+    input_cache_read: Price.optional(),
   }).passthrough(),
   supported_features: z.array(z.string()),
   supported_sampling_parameters: z.array(z.string()),
@@ -66,6 +73,10 @@ export const baseten = {
     return BasetenResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    if (model.id.startsWith(DECISION_PREFIX)) {
+      const v2 = buildBasetenDecisionModel(model, context.v2?.(model.id));
+      return v2 === undefined ? undefined : { id: model.id, v2, header: DECISION_HEADER };
+    }
     const existing = context.existing(model.id);
     const authored = context.authored(model.id);
     const baseModel = existing === undefined
@@ -77,12 +88,78 @@ export const baseten = {
       && (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined)
     ) return undefined;
 
+    const built = buildBasetenModel(model, existing, baseModel, authored);
     return {
       id: model.id,
-      model: buildBasetenModel(model, existing, baseModel, authored),
+      model: built,
+      // Model APIs cache prompt prefixes automatically and bill cached input
+      // at the catalog's input_cache_read price.
+      v2Set: { ...basetenV2Set(built.cost?.cache_read, context.v2?.(model.id)), api: chatApis },
     };
   },
 } satisfies SyncProvider<BasetenModel>;
+
+// Model APIs also serve the Anthropic Messages API (beta) at POST /v1/messages,
+// for the same model slugs: https://docs.baseten.co/inference/model-apis/overview
+const MESSAGES_API = {
+  sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" },
+};
+
+// A chat model's APIs: its own first table (what v1 reads; an empty table takes
+// the provider's Chat Completions API), then Messages.
+export function chatApis(current: unknown): Record<string, unknown> {
+  const { messages: _messages, ...own } = current !== null && typeof current === "object" && !Array.isArray(current)
+    ? current as Record<string, unknown>
+    : {};
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    messages: structuredClone(MESSAGES_API),
+  };
+}
+
+// Model APIs cache prompt prefixes automatically ("Caching is automatic and
+// requires no request flags") and bill cached input at input_cache_read.
+export function basetenV2Set(cacheRead: number | undefined, current: Record<string, unknown> | undefined) {
+  const capabilities = current?.capabilities as Record<string, unknown> | undefined;
+  if (cacheRead === undefined && capabilities?.cache === undefined) return undefined;
+  return {
+    "capabilities.cache": cacheRead === undefined ? undefined : { implicit: true },
+  };
+}
+
+// Both packages post to `${baseURL}/systemone`.
+const SYSTEMONE_SDK = { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/typesafe-ai" };
+
+// Decision models are served on POST /v1/systemone, not chat completions, so
+// they are v2-only. The catalog's `name` is the Base Labs lab model ID.
+export function buildBasetenDecisionModel(
+  model: BasetenModel,
+  current: Record<string, unknown> | undefined,
+) {
+  const base = typeof current?.base_model === "string" ? current.base_model : `baseten/${model.name}`;
+  const lab = labModel(base);
+  const input = price(model.pricing.prompt);
+  const output = price(model.pricing.completion);
+  if (lab === undefined || input === undefined || output === undefined) return undefined;
+
+  const doc: Record<string, unknown> = { schema: 2, v2_only: true, base_model: base };
+  if (current?.status !== undefined) doc.status = current.status;
+  if (model.context_length !== (lab.limit as { context?: number } | undefined)?.context) {
+    doc.limit = { context: model.context_length };
+  }
+  const api = lab.type === "decision" ? { systemone: { sdk: SYSTEMONE_SDK } } : current?.api;
+  if (api !== undefined) doc.api = api;
+  doc.cost = { text: { input: { price: input }, output: { price: output } } };
+  return doc;
+}
+
+function labModel(modelID: string) {
+  try {
+    return Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as Record<string, unknown>;
+  } catch {
+    return undefined;
+  }
+}
 
 export async function fetchBasetenModels(
   key: string,
@@ -122,21 +199,29 @@ export function buildBasetenModel(
         input: inputCost,
         output: outputCost,
         reasoning: existing?.cost?.reasoning,
-        cache_read: existing?.cost?.cache_read,
+        cache_read: price(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
         cache_write: existing?.cost?.cache_write,
         tiers: existing?.cost?.tiers,
       }
     : existing?.cost;
+  // Explicit provider limits are serving overrides and sync pins. Baseten's
+  // catalog has returned a model's context window as its completion limit.
+  const outputLimit = authored?.limit?.output ?? model.max_completion_tokens;
+  if (outputLimit === undefined) {
+    throw new Error(`Baseten model ${model.id} has incomplete token limits required for sync`);
+  }
   const limit = {
     context: model.context_length,
     input: existing?.limit?.input,
-    // Explicit provider limits are serving overrides and sync pins. Baseten's
-    // catalog has returned a model's context window as its completion limit.
-    output: authored?.limit?.output ?? model.max_completion_tokens,
+    output: outputLimit,
   };
+  // Model facts (family, dates, knowledge, open weights) belong to the lab file
+  // that a base_model entry inherits; only standalone definitions carry them,
+  // and only standalone definitions get a generated description.
+  const facts = baseModel === undefined ? existing : undefined;
   const values: Partial<SyncedFullModel> = {
     name: model.name ?? existing?.name,
-    description: existing?.description ?? describeModel({
+    description: existing?.description ?? (baseModel !== undefined ? undefined : describeModel({
       id: model.id,
       name: model.name ?? existing?.name,
       family: existing?.family,
@@ -146,18 +231,20 @@ export function buildBasetenModel(
       open_weights: existing?.open_weights,
       limit,
       modalities: { input, output },
-    }),
-    family: existing?.family,
-    release_date: existing?.release_date,
-    last_updated: existing?.last_updated,
+    })),
+    family: facts?.family,
+    release_date: facts?.release_date,
+    last_updated: facts?.last_updated,
     attachment: input.some((value) => value !== "text"),
     reasoning: features.has("reasoning") || existing?.reasoning,
     reasoning_options: existing?.reasoning_options,
     temperature: samplingParameters.has("temperature"),
     tool_call: features.has("tools") || existing?.tool_call,
     structured_output: features.has("structured_outputs") || existing?.structured_output,
-    knowledge: existing?.knowledge,
-    open_weights: existing?.open_weights,
+    // A base_model file may keep its own knowledge cutoff (e.g. an unsourced
+    // host value where the lab states none); the sync never adds one.
+    knowledge: baseModel === undefined ? existing?.knowledge : authored?.knowledge,
+    open_weights: facts?.open_weights,
     status: existing?.status,
     interleaved: existing?.interleaved,
     cost,

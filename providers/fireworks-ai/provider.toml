@@ -3,7 +3,12 @@ name = "Fireworks AI"
 # JSON reasoning_effort: "low" | "medium" | "high", or thinking =
 # { type = "enabled", budget_tokens = N } with N >= 1024; the two conflict.
 # Support is model-specific. https://docs.fireworks.ai/guides/reasoning
+# APIs (2026-10-21): Chat Completions POST /inference/v1/chat/completions (default),
+# Completions POST /inference/v1/completions, Anthropic Messages POST /inference/v1/messages
+# (https://docs.fireworks.ai/api-reference/anthropic-messages) and Responses
+# POST /inference/v1/responses (https://docs.fireworks.ai/guides/response-api).
 env = ["FIREWORKS_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/fireworks"
 api = "https://api.fireworks.ai/inference/v1/"
 doc = "https://fireworks.ai/docs/"

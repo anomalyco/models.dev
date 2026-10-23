@@ -1,0 +1,17 @@
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+name = "MiMo V2.6 Flash (Xiaomi)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

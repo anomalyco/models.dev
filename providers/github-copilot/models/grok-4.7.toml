@@ -1,0 +1,41 @@
+# Sources:
+# - https://github.blog/changelog/2026-09-21-grok-4-7-is-now-available-in-github-copilot/
+# - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# - https://docs.github.com/en/copilot/reference/ai-models/supported-models
+# - https://docs.x.ai/developers/models/grok-4.7
+# - https://docs.x.ai/developers/pricing
+# Input MIME types: capabilities.limits.vision.supported_media_types from authenticated GET https://api.githubcopilot.com/models (2026-10-21).
+schema = 2
+base_model = "xai/grok-4.7"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 500_000
+input = 372_000
+output = 128_000
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12

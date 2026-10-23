@@ -1,19 +1,13 @@
+# Status: https://poe.com/kimi-k2-thinking is titled "Kimi-K2-Thinking_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "moonshotai/kimi-k2-thinking"
 name = "kimi-k2-thinking"
-description = "Kimi reasoning model for long-horizon research, planning, and tool use"
-family = "kimi-thinking"
-release_date = "2025-11-07"
-last_updated = "2025-11-07"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 temperature = false
-open_weights = false
-tool_call = true
 
 [limit]
 context = 256_000
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["text"]

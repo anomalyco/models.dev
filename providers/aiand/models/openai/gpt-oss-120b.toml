@@ -1,14 +1,26 @@
-# Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
-# reasoning_effort verified by live probe on 2026-07-24: the backend rejects
-# "none", "minimal", and "xhigh" with 400 ("Supported values are: high,
-# medium, low"), so the array is narrowed from the gateway-wide documented
-# set. Invalid values also rejected with 400 (negative control).
+# Effort: reasoning_effort = low|medium|high
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-14: low|medium|high → 200; none|minimal|xhigh|max → 400.
+# Reasoning side channel: message.reasoning_content
+# Mid-conversation: ai& serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.aiand.com/api/chat-completions/
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers (https://docs.aiand.com/models/pricing/#prompt-caching).
+schema = 2
 base_model = "openai/gpt-oss-120b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+structured_output = true
+effort_updates = false
 
-[cost]
-input = 0.15
-output = 0.60
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 0.6

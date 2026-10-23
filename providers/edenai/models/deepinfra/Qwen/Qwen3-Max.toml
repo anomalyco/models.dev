@@ -1,0 +1,18 @@
+schema = 2
+base_model = "alibaba/qwen3-max"
+name = "Qwen3 Max (Deep Infra)"
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 6

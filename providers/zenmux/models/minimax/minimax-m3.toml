@@ -1,10 +1,32 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.60
-output = 2.40
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://zenmux.ai/api/anthropic/v1"
+[limit]
+context = 1_000_000
+
+[api.messages]
+base_url = "https://zenmux.ai/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 512_000 } }
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 512_000 } }
+price = 2.4

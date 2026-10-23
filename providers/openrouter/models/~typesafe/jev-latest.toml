@@ -1,0 +1,27 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+schema = 2
+base_model = "typesafe/jev-latest"
+name = "Jev Latest"
+
+[capabilities]
+structured_output = true
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[limit]
+context = 262_144
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }
+
+[api.decisions]
+base_url = "https://openrouter.ai/api/alpha"
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

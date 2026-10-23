@@ -1,15 +1,21 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+schema = 2
 base_model = "openai/gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.089
-output = 0.446
-cache_read = 0.01
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 131_000
 output = 131_000
+
+[cost.text.input]
+price = 0.089
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.446

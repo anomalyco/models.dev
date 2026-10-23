@@ -1,6 +1,7 @@
 name = "Morph"
 env = ["MORPH_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP for the configured Apply models is POST `/v1/chat/completions`.
 # Morph documents no reasoning toggle, effort, or token-budget request field
 # for `morph-v3-fast`, `morph-v3-large`, or `auto`.

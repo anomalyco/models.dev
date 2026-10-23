@@ -1,18 +1,29 @@
 # Included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: the lab's formats that NanoGPT Chat Completions accepts): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3 Thinking"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+tools = { supported = true, updates = false }
+effort_updates = false
 
 [limit]
 context = 512_000
 input = 512_000
 output = 80_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.23
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.96

@@ -80,6 +80,18 @@ export interface ModelCost extends Cost {
 /** Input/output data types a model supports. */
 export type Modality = "text" | "audio" | "image" | "video" | "pdf"
 
+/** A model's specialized behavioral contract. Omitted for standard generative models. */
+export type ModelType =
+  | "chat"
+  | "image"
+  | "video"
+  | "embedding"
+  | "reranking"
+  | "decision"
+  | "transcription"
+  | "speech"
+  | "realtime"
+
 export interface Modalities {
   input: Modality[]
   output: Modality[]
@@ -143,6 +155,7 @@ export interface BenchmarkResult {
 export interface ModelMetadata {
   /** Canonical model ID, e.g. "anthropic/claude-opus-4-6". */
   id: string
+  type?: ModelType
   name: string
   description: string
   family?: ModelFamily
@@ -208,6 +221,9 @@ export interface ModelProviderConfig {
 export interface Model {
   /** Provider-scoped model ID, e.g. "claude-opus-4-6". */
   id: string
+  /** Canonical lab/model ID when this provider offering is linked to model metadata. */
+  canonical_model_id?: string
+  type?: ModelType
   name: string
   description: string
   family?: ModelFamily

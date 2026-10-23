@@ -1,0 +1,25 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+
+[limit]
+output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 0.5

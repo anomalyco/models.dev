@@ -1,25 +1,28 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=moonshot%2Fkimi-k2.7-code (accessed 2026-07-21)
-
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 32_768
-
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.19
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1, max = 32_768 } }
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

@@ -1,0 +1,23 @@
+schema = 2
+name = "GPT-5.6 Cyber"
+description = "Cybersecurity model for authorized vulnerability research and security testing"
+family = "gpt"
+open_weights = false
+knowledge = "2026-02-16"
+release_date = "2026-08-07"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000

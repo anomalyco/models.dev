@@ -1,16 +1,18 @@
+schema = 2
 base_model = "openai/gpt-5.6-sol"
 base_model_omit = ["limit.input"]
 name = "GPT-5.6 Sol (AWS Mantle)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 5.5
-output = 33
-cache_read = 0.55
-cache_write = 6.875
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
-context = 278_528
+context = 921_600
+
+[cost.text.input]
+price = 4.4
+cache = { read = 0.44, write = 5.5 }
+
+[cost.text.output]
+price = 22

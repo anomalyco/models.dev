@@ -1,30 +1,30 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 name = "nemotron-3-nano-omni"
 description = "The most open, efficient, and accurate omni modal reasoning model for agentic AI."
 family = "nemotron"
-release_date = "2026-05-20"
-last_updated = "2026-05-20"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-05-20"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.06
-output = 0.24
-cache_read = 0.06
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 300_000
 output = 300_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.06
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.24

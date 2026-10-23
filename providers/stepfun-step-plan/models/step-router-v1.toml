@@ -1,19 +1,37 @@
+# Sources (accessed 2026-10-21):
+# - Model: https://platform.stepfun.com/docs/zh/guides/models/step-router, https://platform.stepfun.com/docs/zh/guides/developer/step-router
+#   Step Plan only. Routes each request to deepseek-v4-pro or step-3.7-flash; no image input; max_tokens up to 250K;
+#   Messages ignores output_config.effort (https://platform.stepfun.com/docs/zh/api-reference/chat/messages-create,
+#   https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create).
+# - Step Plan (credit subscription, no per-token price, so no [cost]): https://platform.stepfun.com/docs/zh/step-plan/overview, https://platform.stepfun.com/docs/zh/step-plan/pricing
+# - Plan endpoints: POST /step_plan/v1/chat/completions and /step_plan/v1/messages (no Responses):
+#   https://platform.stepfun.com/docs/zh/step-plan/integrations/reasoning-api
+#   Billed at the price of whichever model served the request.
+# reasoning stays false as published: both engines reason, but the router documents no reasoning control and
+#   nothing was tested live. knowledge is unsourced.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) unset: undocumented, and no StepFun key to test.
+schema = 2
 name = "Step Router v1"
 description = "StepFun routing model that dispatches requests to the appropriate Step model."
-release_date = "2026-05-29"
-last_updated = "2026-05-29"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-05-29"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 256_000
 input = 256_000
 output = 256_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

@@ -1,0 +1,23 @@
+# Source verified 2026-09-16:
+# Authenticated GET https://api.gmi-serving.com/v1/models returned
+# context_length=1048575, quantization=bf16, and per-token USD pricing of
+# prompt=0.000000160, completion=0.000000470,
+# input_cache_read=0.000000016, input_cache_write=0.000000200
+# for the GMI model ID Qwen/Qwen3.8-Flash.
+# Toggle: enable_thinking true|false
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 1_048_575
+
+[cost.text.input]
+price = 0.16
+cache = { read = 0.016, write = 0.2 }
+
+[cost.text.output]
+price = 0.47

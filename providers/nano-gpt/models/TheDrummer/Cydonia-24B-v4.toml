@@ -1,24 +1,29 @@
 # Included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 name = "The Drummer Cydonia 24B v4"
 description = "General-purpose chat model for instruction following, writing, and analysis"
-release_date = "2025-07-22"
-last_updated = "2025-07-22"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-07-22"
 
-[cost]
-input = 0.2006
-output = 0.2414
-cache_read = 0.1003
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 32_768
 input = 32_768
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.2006
+cache = { read = 0.1003 }
+
+[cost.text.output]
+price = 0.2414
