@@ -6,7 +6,7 @@
 # Modalities: image and video input as the file already listed (not PDF); MIME types from the lab.
 # Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
 # family: kept as "qwen3.8-max" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
-# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-max.toml (Go passes requests through).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-max.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 family = "qwen3.8-max"

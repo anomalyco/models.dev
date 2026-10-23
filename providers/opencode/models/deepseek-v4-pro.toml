@@ -4,7 +4,7 @@
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/deepseek/models/deepseek-v4-pro.toml (Zen passes requests through).
 #   system_updates true although the lab doesn't claim it: a system message before the next user turn kept the cache and was followed on Zen (live 2026-10-23: cached 6933-7839 vs control 6932-7536, French 5/5), so Zen's route doesn't hoist it like DeepSeek's own API.
-#   effort_updates true although the lab doesn't claim it: turning thinking on or off for one turn with thinking.type kept the cache on Zen (live 2026-10-23: disabled -> enabled 6933-7537 in 5/5, enabled -> disabled 7234-7536 in 5/5, controls 6932-7539, 0 reasoning tokens after disabling); changing reasoning_effort between high and max still drops it (0 in 4/4).
+# effort_updates: left out. Changing thinking.type on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
@@ -14,7 +14,6 @@ reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
 cache = { implicit = true }
 system_updates = true
-effort_updates = true
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

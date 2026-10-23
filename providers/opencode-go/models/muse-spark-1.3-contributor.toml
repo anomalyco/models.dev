@@ -4,7 +4,7 @@
 # https://dev.meta.ai/docs/models
 # Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Effort: reasoning.effort = minimal|low|medium|high|xhigh (not verified on Go: no Go subscription key was available)
-# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/meta/models/muse-spark-1.3.toml (Go passes requests through).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/meta/models/muse-spark-1.3.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
 base_model = "meta/muse-spark-1.3"
 name = "Muse Spark 1.3 Contributor"
