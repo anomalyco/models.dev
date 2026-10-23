@@ -3,7 +3,7 @@
 # v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
 # Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html);
 # toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
-# Per-turn effort: effort_updates = true from the in-history effort message, a per-turn system message carrying output_config on InvokeModel and Mantle Messages, which AWS documents for Fable 5.1 (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html). Fable 5.1 couldn't be run on this account, so this follows the docs. Converse has no per-message output_config.
+# Per-turn effort: left out. This file only lists Converse, where a per-message output_config is silently dropped and only a top-level effort change exists, which doesn't count. The in-history effort message (a per-turn system message carrying output_config, https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html) needs InvokeModel or Mantle Messages, which this file doesn't list.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 name = "Claude Fable 5.1 (US)"
@@ -13,7 +13,6 @@ tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]
