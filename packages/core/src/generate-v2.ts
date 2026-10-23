@@ -482,6 +482,7 @@ function toModelApis(
         // `"none"`: no package supports this API, so the key is left out.
         sdk: Object.fromEntries(Object.entries(sdk).filter(([, value]) => value !== undefined && value !== "none")),
         ...(table.compatibility !== undefined ? { compatibility: table.compatibility } : {}),
+        ...(table.capabilities !== undefined ? { capabilities: table.capabilities } : {}),
       };
       return [protocol, entry];
     }),

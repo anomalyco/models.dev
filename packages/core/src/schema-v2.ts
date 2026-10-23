@@ -376,6 +376,18 @@ export type CompatibilityV2 = z.infer<typeof CompatibilityV2>;
 export const CapabilitiesOverrideV2 = AuthoredCapabilitiesV2.partial();
 export type CapabilitiesOverrideV2 = z.infer<typeof CapabilitiesOverrideV2>;
 
+// Mid-conversation flags that hold on one API but not on others the model lists.
+// The model's top-level capabilities apply to every API.
+export const ApiCapabilitiesV2 = z
+  .object({
+    system_updates: z.boolean().optional(),
+    effort_updates: z.boolean().optional(),
+    tools: z.object({ updates: z.boolean() }).strict().optional(),
+  })
+  .strict();
+
+export type ApiCapabilitiesV2 = z.infer<typeof ApiCapabilitiesV2>;
+
 export const ApiBaseUrlV2 = z.union([
   z.string().url("Must be a valid URL"),
   z.string().regex(/^\$\{[A-Z0-9_]+\}/, "Must be a valid URL or env var template"),
@@ -392,7 +404,7 @@ export const ApiEntryV2 = z
     path: ApiPathV2.optional(),
     sdk: SdkV2.optional(),
     compatibility: CompatibilityV2.optional(),
-    capabilities: CapabilitiesOverrideV2.optional(),
+    capabilities: ApiCapabilitiesV2.optional(),
   })
   .strict();
 
@@ -831,6 +843,7 @@ export const AuthoredApiEntryV2 = z
     compatibility: CompatibilityV2.pick({ reasoning_field: true, replay_reasoning: true })
       .strict()
       .optional(),
+    capabilities: ApiCapabilitiesV2.optional(),
     // Legacy, v1-only: the v1 `provider.shape` of a file that states its SDK's
     // default protocol (Responses on `@ai-sdk/openai`). It only keeps that
     // published v1 field unchanged; the v2 API never emits it.
