@@ -1,5 +1,6 @@
 import path from "node:path";
 import { lstat, mkdir, readdir, rm } from "node:fs/promises";
+import { existsSync, readFileSync } from "node:fs";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
@@ -314,7 +315,8 @@ export async function syncProvider<SourceModel>(
 ): Promise<SyncResult> {
   console.log(`\nSyncing ${provider.name}...`);
 
-  const existingState = await readExisting(provider.modelsDir);
+  const npm = providerNpm(provider.modelsDir);
+  const existingState = await readExisting(provider.modelsDir, npm);
   const { models: existing, brokenSymlinks } = existingState;
   let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
@@ -387,7 +389,7 @@ export async function syncProvider<SourceModel>(
 
     if ("v2" in translated) {
       // Validates the file the same way readers will translate it.
-      modelV2ToV1({ ...translated.v2, id: translated.id }, { provider: provider.id, path: relativePath });
+      modelV2ToV1({ ...translated.v2, id: translated.id }, { provider: provider.id, path: relativePath }, npm);
       const translatedHeader = translated.header === undefined ? "" : leadingComments(translated.header);
       const header = provider.authoritativeHeaders
         ? translatedHeader
@@ -466,6 +468,7 @@ export async function syncProvider<SourceModel>(
         undefined,
         resolvedFlags(model, baseMetadata(model, modelMetadata)).reasoning,
         file.v2Set,
+        npm,
       );
       if (content === undefined) continue;
       files.push({ status: "created", path: filePath });
@@ -510,6 +513,7 @@ export async function syncProvider<SourceModel>(
       resolved,
       resolved.after.reasoning,
       file.v2Set,
+      npm,
     );
     if (content === undefined || options.newOnly) {
       unchanged++;
@@ -639,6 +643,7 @@ function v2Content(
   // The model's resolved `reasoning`, as v1 leaves out a reasoning price without it.
   reasoning: boolean | undefined,
   v2Set?: Record<string, unknown>,
+  providerNpm?: string,
 ) {
   const { id, ...synced } = model;
   try {
@@ -647,12 +652,12 @@ function v2Content(
       : multiplierModes(doc, before, synced);
     const after = withoutModeCosts(synced, carried);
     const next = doc === undefined || before === undefined
-      ? providerModelToV2(after, protocol)
-      : patchModelV2(doc, withoutModeCosts(before, carried), after, resolved);
+      ? providerModelToV2(after, protocol, providerNpm)
+      : patchModelV2(doc, withoutModeCosts(before, carried), after, resolved, providerNpm);
     for (const [key, value] of Object.entries(v2Set ?? {})) setPath(next, key, value);
     const content = header + formatModelV2(next);
     const translated = withoutV1ReasoningCost(
-      modelV2ToV1({ ...(Bun.TOML.parse(content) as Record<string, unknown>), id }, { modelPath: relativePath }),
+      modelV2ToV1({ ...(Bun.TOML.parse(content) as Record<string, unknown>), id }, { modelPath: relativePath }, providerNpm),
       reasoning,
     );
     if (sameV1Model(withoutModeCosts(translated, carried), after)) return content;
@@ -827,7 +832,15 @@ export function syncProviderMatrix() {
   };
 }
 
-async function readExisting(modelsDir: string) {
+// The provider's `npm`, which a model's first API table without its own `aisdk` uses in v1.
+function providerNpm(modelsDir: string) {
+  const file = path.join(path.dirname(modelsDir), "provider.toml");
+  if (!existsSync(file)) return undefined;
+  const npm = (Bun.TOML.parse(readFileSync(file, "utf8")) as Record<string, unknown>).npm;
+  return typeof npm === "string" ? npm : undefined;
+}
+
+async function readExisting(modelsDir: string, npm?: string) {
   const existing = new Map<string, {
     authored: ExistingModel;
     toml: ExistingModel;
@@ -853,7 +866,7 @@ async function readExisting(modelsDir: string) {
     }
     const v2 = Bun.TOML.parse(text) as Record<string, unknown>;
     if (!isSchemaV2(v2)) throw new Error(`Model file is not schema = 2: ${filePath}`);
-    const { id: _id, ...translated } = modelV2ToV1({ ...v2, id: file.slice(0, -5) }, { modelPath: filePath });
+    const { id: _id, ...translated } = modelV2ToV1({ ...v2, id: file.slice(0, -5) }, { modelPath: filePath }, npm);
     const parsed = ExistingModel.safeParse(translated);
     if (!parsed.success) {
       parsed.error.cause = { path: filePath };

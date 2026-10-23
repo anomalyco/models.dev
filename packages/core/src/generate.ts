@@ -149,7 +149,7 @@ async function generateProviders(
       raw.id = modelID;
       // Models marked `v2_only = true` are only published in the v2 API.
       if (raw.v2_only === true) continue;
-      const toml = modelV2ToV1(raw, { modelPath });
+      const toml = modelV2ToV1(raw, { modelPath }, provider.data.npm);
       if (toml.base_model !== undefined) {
         const baseModel = BaseModel.safeParse(toml);
         if (!baseModel.success) {

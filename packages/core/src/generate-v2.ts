@@ -104,7 +104,7 @@ async function loadProviderV2(
       .join("/")
       .slice(0, -5);
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
-    const v1Model = modelV2ToV1(rawModel, { modelPath });
+    const v1Model = modelV2ToV1(rawModel, { modelPath }, v1Provider.npm);
     const resolved = resolveV1Model(v1Model, baseModels, modelPath);
     const model = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
     const tables = (rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined;

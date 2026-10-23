@@ -74,6 +74,22 @@ test("a v1 shape that repeats the SDK default round-trips as legacy_shape", () =
   });
 });
 
+test("an API table without its own aisdk takes the provider's npm for its v1 shape", () => {
+  const toml = { schema: 2, id: "m", base_model: "openai/gpt-5.5", api: { responses: {}, "chat-completions": {} } };
+  // On a Responses-default SDK, a leading Responses table is the default and has no v1 shape.
+  expect(modelV2ToV1(toml, {}, "@ai-sdk/openai").provider).toBeUndefined();
+  // Elsewhere it still publishes one.
+  expect(modelV2ToV1(toml, {}, "@ai-sdk/xai").provider).toEqual({ shape: "responses" });
+  expect(modelV2ToV1(toml).provider).toEqual({ shape: "responses" });
+
+  // The writer keeps a redundant v1 shape as legacy_shape, judged against the provider's npm.
+  const v1 = { base_model: "openai/gpt-5.5", provider: { shape: "responses" } };
+  const doc = providerModelToV2(v1, undefined, "@ai-sdk/openai");
+  expect(doc.api).toEqual({ responses: { legacy_shape: "responses" } });
+  const back = modelV2ToV1({ ...(Bun.TOML.parse(formatModelV2(doc)) as Record<string, unknown>), id: "m" }, {}, "@ai-sdk/openai");
+  expect(back.provider).toEqual(v1.provider);
+});
+
 test("legacy_shape must name the protocol of its [api.<protocol>] table", () => {
   expect(() =>
     modelV2ToV1({
