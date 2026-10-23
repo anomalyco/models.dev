@@ -1,4 +1,4 @@
-# system_updates and effort_updates: follows providers/anthropic (the in-history per-message output_config); Foundry passes Anthropic betas through (tool changes verified live 2026-10-23); deployment blocked today (Marketplace), so not re-tested here.
+# system_updates and effort_updates: follows providers/anthropic (the in-history per-message output_config, on Foundry's Messages endpoint, the only API these files list); Foundry passes Anthropic betas through (tool changes verified live 2026-10-23); deployment blocked today (Marketplace), so not re-tested here.
 # Effort: output_config.effort = low|medium|high|xhigh. Foundry's effort table lists max as "No" for claude-fable-5-1 ("xhigh produces the same result as max"):
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#thinking-and-effort
 # Mid-conversation: Foundry lists "Mid-conversation role: system" (haiku-5-5, opus-5-5, opus-5, sonnet-5-5, sonnet-5) and "Per-turn effort controls" (opus-5-5, opus-5) as Beta:
