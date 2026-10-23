@@ -1,5 +1,6 @@
 # Modalities: xAI image inputs jpg/jpeg and png, https://docs.x.ai/docs/guides/image-understanding
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system messages stay in place (cache prefix kept). No per-turn effort or tool-change mechanism is forwarded.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 name = "Grok 4.20 Beta Non-Reasoning"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -14,7 +15,6 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = false }
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
@@ -23,6 +23,7 @@ context = 2_000_000
 output = 2_000_000
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

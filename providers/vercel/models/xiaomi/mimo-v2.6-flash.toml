@@ -2,6 +2,7 @@
 # https://mimo.mi.com/docs/en-US/api/chat/responses
 # Modalities: MiMo image formats JPEG, PNG, GIF, WebP, BMP, https://mimo.mi.com/static/docs/quick-start/usage-guide/multimodal-understanding/image-understanding.md
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-23): a mid-conversation system message stays in place (cache kept, followed: mimo-v2.6-flash 11776/11776, mimo-v2.6-pro 11776/11776). effort_updates: left out. Changing reasoning effort on the next request keeps the cache on the xiaomi route (mimo-v2.6-flash low->high 6656 and high->low 6656 vs warm 6528; reasoning 1330->2530), but there's no in-history effort message, so it doesn't count. No tool-change mechanism is forwarded.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 name = "MiMo V2.6 Flash"
@@ -13,10 +14,10 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
-system_updates = true
 cache = { implicit = true }
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

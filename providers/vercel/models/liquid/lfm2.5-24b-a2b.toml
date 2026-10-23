@@ -1,4 +1,5 @@
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-23): a mid-conversation system message is rendered (+27 prompt tokens) and followed (French 1 of 2); no cache read on any request, so nothing to lose. No per-turn effort or tool-change mechanism reaches this model on this API.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 name = "LFM2.5-24B-A2B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
@@ -13,7 +14,6 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
@@ -22,6 +22,7 @@ context = 128_000
 output = 8_200
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

@@ -5,6 +5,7 @@
 # https://vercel.com/ai-gateway/models/kimi-k3-fast
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). No per-turn effort or tool-change mechanism reaches this model on this API.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
@@ -18,7 +19,6 @@ output = ["text"]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
@@ -26,6 +26,7 @@ cache = { implicit = true }
 context = 1_000_000
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

@@ -3,6 +3,7 @@
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 # https://docs.qwencloud.com/developer-guides/text-generation/thinking
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). No per-turn effort or tool-change mechanism reaches this model on this API.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 base_model = "alibaba/qwen3.8-max-0902"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -14,7 +15,6 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
-system_updates = true
 effort_updates = false
 cache = { implicit = true, explicit = true }
 
@@ -23,6 +23,7 @@ context = 991_000
 output = 128_000
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

@@ -4,6 +4,7 @@
 # - https://docs.poolside.ai/get-started/supported-models — thinking on or off per request
 # API: {"chat_template_kwargs": {"enable_thinking": false}}
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-23): Not probed (503 on 2026-10-23); the paid Laguna S 2.1 keeps a mid-conversation system message in place (11776/11776, French 2 of 2). This host lists no cached-input price, so there is no cache to lose and system_updates stays true; effort_updates and tools.updates need a cache and stay off.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 base_model = "poolside/laguna-s-2.1"
 name = "Laguna S 2.1 Free"
@@ -13,13 +14,13 @@ description = "Free provider route for experiments, demos, and cost-sensitive ch
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-system_updates = true
 effort_updates = false
 
 [limit]
 context = 256_000
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

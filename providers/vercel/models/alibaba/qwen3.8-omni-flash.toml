@@ -2,6 +2,7 @@
 # Alibaba maps minimal to low and high|max to xhigh; none disables thinking.
 # https://www.alibabacloud.com/help/en/model-studio/qwen-omni
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-23): system_updates follows Alibaba's API (the gateway keeps system messages in place on the alibaba route: qwen3.8-flash 12168/12168, qwen3.8-27b 12168/12166). No per-turn effort or tool-change mechanism keeps the cache for this model.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 base_model = "alibaba/qwen3.8-omni-flash"
 name = "Qwen 3.8 Omni Flash"
@@ -15,10 +16,10 @@ tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
 effort_updates = false
-system_updates = true
 cache = { implicit = true }
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"
