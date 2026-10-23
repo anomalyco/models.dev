@@ -13,14 +13,32 @@
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true, updates = false }
-reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 0, max = 24_576 } }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = {} }
 structured_output = true
-cache = { implicit = { min_tokens = 2_048 }, explicit = true }
+cache = { implicit = { min_tokens = 2_048 } }
 service_tier = ["flex", "priority"]
 system_updates = false
 effort_updates = false
+
+[limit]
+context = 1_000_000
+output = 65_535
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.3
@@ -28,10 +46,6 @@ cache = { read = 0.03, storage = 1 }
 
 [cost.text.output]
 price = 2.5
-
-[cost.audio.input]
-price = 1
-cache = { read = 0.1, storage = 1 }
 
 [cost.web_search]
 price = 35

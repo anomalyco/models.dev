@@ -2,6 +2,10 @@ schema = 2
 base_model = "openai/gpt-4.1-nano"
 status = "deprecated"
 
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true, updates = true }
 structured_output = true
@@ -12,9 +16,22 @@ cache = { implicit = { min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["priority"]
 
+[limit]
+input = 1_014_808
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
 [cost.text.input]
 price = 0.1
-cache = { read = 0.025 }
+cache = { read = 0.03 }
 
 [cost.text.output]
 price = 0.4
