@@ -398,7 +398,7 @@ env = { TARGET_RESOURCE = "LEGACY_RESOURCE", TARGET_KEY = "LEGACY_KEY" }
     expect(qualifiedNames).toEqual([]);
   });
 
-  test("legacy_shape is published in v1 and never in v2", async () => {
+  test("legacy_shape and legacy_interleaved are published in v1 and never in v2", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/provider/provider.toml", providerToml("Provider"));
       await write(
@@ -426,6 +426,7 @@ output = 128_000
 base_url = "https://example.com/v1"
 sdk = { aisdk = "@ai-sdk/openai" }
 legacy_shape = "responses"
+legacy_interleaved = true
 
 [cost.text.input]
 price = 1
@@ -441,12 +442,14 @@ price = 2
         api: "https://example.com/v1",
         shape: "responses",
       });
+      expect(providers.provider?.models.model?.interleaved).toBe(true);
 
       const providersV2 = await generateV2(path.join(root, "providers"));
       expect(providersV2.provider?.models.model?.api).toEqual({
         responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
       });
       expect(JSON.stringify(providersV2)).not.toContain("legacy_shape");
+      expect(JSON.stringify(providersV2)).not.toContain("legacy_interleaved");
     });
   });
 

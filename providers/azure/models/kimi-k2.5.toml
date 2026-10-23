@@ -19,7 +19,7 @@ temperature = true
 [api.chat-completions]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 0.6

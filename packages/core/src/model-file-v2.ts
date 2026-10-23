@@ -97,7 +97,7 @@ function apiEntry(model: Record<string, any>, fallback: string | undefined, prov
   const entry: Doc = {};
   if (provider?.api !== undefined) entry.base_url = provider.api;
   if (provider?.npm !== undefined) entry.sdk = { aisdk: provider.npm };
-  if (interleaved === true) entry.compatibility = { replay_reasoning: true };
+  if (interleaved === true) entry.legacy_interleaved = true;
   else if (interleaved !== undefined) entry.compatibility = { reasoning_field: interleaved.field };
   // A shape v1 would drop as the SDK's default stays as the legacy field.
   if (shape !== undefined && toV1Shape(protocol, provider?.npm ?? providerNpm) === undefined) entry.legacy_shape = shape;

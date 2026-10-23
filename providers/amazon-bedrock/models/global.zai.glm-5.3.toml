@@ -27,7 +27,7 @@ service_tier = ["flex", "priority"]
 output = 128_000
 
 [api.converse]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 1.68

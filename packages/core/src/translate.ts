@@ -184,12 +184,13 @@ function withoutReasoningPrice(cost: unknown): unknown {
 // `interleaved` its reasoning requirement. With several `[api.<protocol>]`
 // tables, the first one in the file is the default and becomes the v1 API.
 // The protocol only becomes a v1 `shape` where it isn't the SDK's default
-// (OpenAI, Azure and xAI default to Responses), unless `legacy_shape` keeps one. A
-// table without its own `aisdk` takes the provider's.
+// (OpenAI, Azure and xAI default to Responses), unless `legacy_shape` keeps one.
+// `legacy_interleaved` keeps a bare `interleaved: true`. A table without its own
+// `aisdk` takes the provider's.
 function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNpm?: string) {
   const first = Object.entries(api ?? {})[0];
   if (first === undefined) return {};
-  const [protocol, { base_url, sdk, compatibility, legacy_shape }] = first;
+  const [protocol, { base_url, sdk, compatibility, legacy_shape, legacy_interleaved }] = first;
   // `aisdk = "none"` (no AI SDK package) is v2-only; v1 keeps the provider's npm.
   const npm = sdk?.aisdk === "none" ? undefined : sdk?.aisdk;
   if (legacy_shape !== undefined && toProtocol(legacy_shape) !== protocol) {
@@ -199,7 +200,7 @@ function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNp
   const provider = withoutUndefined({ npm, api: base_url, shape });
   const field = compatibility?.reasoning_field;
   return withoutUndefined({
-    interleaved: field !== undefined ? { field } : compatibility?.replay_reasoning ? true : undefined,
+    interleaved: field !== undefined ? { field } : legacy_interleaved,
     provider: Object.keys(provider).length > 0 ? provider : undefined,
   });
 }

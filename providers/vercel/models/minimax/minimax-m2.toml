@@ -14,7 +14,7 @@ context = 205_000
 output = 196_608
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

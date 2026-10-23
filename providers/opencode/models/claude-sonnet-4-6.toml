@@ -14,7 +14,7 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 3

@@ -110,7 +110,7 @@ body = { speed = "fast" }
 
 ### APIs (`[api.<protocol>]`)
 
-A model's `[api.<protocol>]` tables (`chat-completions`, `responses`, `messages`, …) are its complete list of APIs, in order, and replace the provider's default API. Each table can set `base_url`, `path`, `sdk = { aisdk, opencodeai }` and `compatibility.reasoning_field` / `replay_reasoning`; anything left out comes from the provider (`base_url` from `api` or the SDK's default URL, `sdk.aisdk` from `npm`, `sdk.opencodeai` from the provider's `opencodeai`, but only when the table takes the provider's `npm`: a table naming another `aisdk` must name its own `opencodeai` or gets none). v1 only reads the first table, as its `provider` and `interleaved` fields.
+A model's `[api.<protocol>]` tables (`chat-completions`, `responses`, `messages`, …) are its complete list of APIs, in order, and replace the provider's default API. Each table can set `base_url`, `path`, `sdk = { aisdk, opencodeai }` and `compatibility.reasoning_field`; anything left out comes from the provider (`base_url` from `api` or the SDK's default URL, `sdk.aisdk` from `npm`, `sdk.opencodeai` from the provider's `opencodeai`, but only when the table takes the provider's `npm`: a table naming another `aisdk` must name its own `opencodeai` or gets none). v1 only reads the first table, as its `provider` and `interleaved` fields.
 
 ```toml
 [api.chat-completions]
@@ -122,6 +122,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 - `path` is the request path appended to `base_url`, set only when a host departs from its protocol's usual path. `systemone` normally posts to `{base_url}/systemone`; Inception serves the same body at `/v1/decisions`, so its `[api.systemone]` sets `base_url = "https://api.inceptionlabs.ai/v1"` and `path = "/decisions"`. v1 never publishes it.
 - Name the protocol by its wire format, not the model type, nor the host's path. `decisions` is only OpenAI's Decisions format; every host that takes System One's `{model, state, questions}` body is `systemone`, whatever its path. `realtime` is OpenAI's Realtime API; Google's Live API is `bidi-generate-content` and Lyria RealTime is `bidi-generate-music` (after their `BidiGenerateContent` / `BidiGenerateMusic` WebSocket methods).
 - `legacy_shape = "responses" | "completions"` is v1-only: it keeps a v1 `provider.shape` that repeats the SDK's default. Sync writes and keeps it; don't add it by hand.
+- `legacy_interleaved = true` is v1-only: it keeps v1's bare `interleaved: true` (replaying reasoning is the default in v2). Sync writes and keeps it; don't add it by hand.
 
 ## When to use `base_model` (blocker)
 

@@ -23,7 +23,7 @@ context = 196_608
 output = 98_304
 
 [api.converse]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [api.chat-completions]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"

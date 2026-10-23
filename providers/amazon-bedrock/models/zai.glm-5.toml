@@ -21,7 +21,7 @@ service_tier = ["flex", "priority"]
 context = 202_752
 
 [api.converse]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [api.chat-completions]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"

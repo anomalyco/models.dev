@@ -366,7 +366,6 @@ export type MaxTokensFieldV2 = z.infer<typeof MaxTokensFieldV2>;
 export const CompatibilityV2 = z
   .object({
     reasoning_field: ReasoningFieldV2.optional(),
-    replay_reasoning: z.boolean().optional(),
     max_tokens_field: MaxTokensFieldV2.optional(),
   })
   .strict();
@@ -840,7 +839,7 @@ export const AuthoredApiEntryV2 = z
       })
       .strict()
       .optional(),
-    compatibility: CompatibilityV2.pick({ reasoning_field: true, replay_reasoning: true })
+    compatibility: CompatibilityV2.pick({ reasoning_field: true })
       .strict()
       .optional(),
     capabilities: ApiCapabilitiesV2.optional(),
@@ -848,6 +847,9 @@ export const AuthoredApiEntryV2 = z
     // default protocol (Responses on `@ai-sdk/openai`). It only keeps that
     // published v1 field unchanged; the v2 API never emits it.
     legacy_shape: z.enum(["responses", "completions"]).optional(),
+    // Legacy, v1-only: v1's bare `interleaved: true`. The v2 API never emits it;
+    // replaying reasoning is the default there.
+    legacy_interleaved: z.literal(true).optional(),
   })
   .strict();
 

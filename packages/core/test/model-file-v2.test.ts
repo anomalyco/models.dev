@@ -74,6 +74,15 @@ test("a v1 shape that repeats the SDK default round-trips as legacy_shape", () =
   });
 });
 
+test("a bare v1 interleaved round-trips as legacy_interleaved", () => {
+  const v1 = { base_model: "moonshotai/kimi-k2", interleaved: true, cost: { input: 1, output: 2 } };
+  const doc = providerModelToV2(v1, "chat-completions");
+
+  expect(doc.api).toEqual({ "chat-completions": { legacy_interleaved: true } });
+  const back = modelV2ToV1({ ...(Bun.TOML.parse(formatModelV2(doc)) as Record<string, unknown>), id: "m" });
+  expect(back.interleaved).toBe(true);
+});
+
 test("an API table without its own aisdk takes the provider's npm for its v1 shape", () => {
   const toml = { schema: 2, id: "m", base_model: "openai/gpt-5.5", api: { responses: {}, "chat-completions": {} } };
   // On a Responses-default SDK, a leading Responses table is the default and has no v1 shape.

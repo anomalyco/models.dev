@@ -6444,7 +6444,7 @@ test("Vercel text models keep their default API first and add Responses and Mess
   const fresh = chatApis(undefined);
   expect(fresh).toEqual({ "chat-completions": {}, ...extra });
   expect(Object.keys(fresh)).toEqual(["chat-completions", "responses", "messages"]);
-  const own = { "chat-completions": { compatibility: { replay_reasoning: true } } };
+  const own = { "chat-completions": { legacy_interleaved: true } };
   expect(chatApis(own)).toEqual({ ...own, ...extra });
   // A second run changes nothing.
   expect(chatApis(chatApis(own))).toEqual(chatApis(own));

@@ -15,7 +15,7 @@ base_model = "google/gemini-3-pro-image"
 reasoning = { supported = true, effort = ["low", "high"] }
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
