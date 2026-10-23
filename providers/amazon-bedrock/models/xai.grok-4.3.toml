@@ -3,7 +3,7 @@
 # Effort: reasoning.effort = none|low|medium|high.
 # v2 cache: implicit per the model card (Mantle).
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
-# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted.
+# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted, but no cache kept after it (live 2026-10-23 on Grok 4.3: 0 cached tokens in all 9 add trials, control hit 1 of 9) and xAI has no tool-change mechanism, so tools.updates is left out.
 # Modalities: image formats are xAI's (jpeg, png; the base model); the Bedrock model card lists image input but no file/document input, so no application/pdf.
 # APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
 schema = 2
@@ -15,7 +15,7 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 system_updates = true
