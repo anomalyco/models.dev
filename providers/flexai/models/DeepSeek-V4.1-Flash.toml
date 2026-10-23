@@ -8,8 +8,8 @@
 # only the two on-levels are declared -- the DeepSeek V4 pattern.
 # Context: 1_048_576 is the served window (GET /v1/models context_length, and
 # the server's own max_tokens error states "maximum context length of 1048576").
-# Vision: reads images, verified on two solid-colour fixtures. /v1/models reports
-# input_modalities ["text"] for this model, which understates it.
+# Vision: reads images, verified on two solid-colour fixtures; /v1/models
+# reports input_modalities ["text", "image"].
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
@@ -24,8 +24,8 @@ context = 1_048_576
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.14
-cache = { read = 0.021 }
+price = 0.103
+cache = { read = 0.0154 }
 
 [cost.text.output]
-price = 0.42
+price = 0.715
