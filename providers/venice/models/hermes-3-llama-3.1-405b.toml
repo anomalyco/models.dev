@@ -12,8 +12,17 @@ system_updates = false
 [limit]
 context = 128_000
 
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 1.1
 
 [cost.text.output]
 price = 3
+
+[cost.web_search]
+price = 10

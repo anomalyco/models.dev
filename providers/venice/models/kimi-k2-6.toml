@@ -30,9 +30,16 @@ output = 65_536
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 0.75
 cache = { read = 0.16 }
 
 [cost.text.output]
 price = 3.5
+
+[cost.web_search]
+price = 10

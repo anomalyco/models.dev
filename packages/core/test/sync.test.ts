@@ -97,7 +97,7 @@ import { buildOfoxModel, ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
-import { buildVeniceModel, resolveVeniceBaseModel, type VeniceModel } from "../src/sync/providers/venice.js";
+import { buildVeniceModel, resolveVeniceBaseModel, veniceV2Set, withResponsesApi, type VeniceModel } from "../src/sync/providers/venice.js";
 import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, vercel, vercelCache, vercelMediaCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
@@ -4303,6 +4303,24 @@ test("Venice sync sorts reasoning efforts low to high", () => {
   expect(buildVeniceModel(veniceModel(), undefined, null)).toMatchObject({
     reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
   });
+});
+
+test("Venice sync lists Responses after the first API and prices web search", () => {
+  const responses = {
+    base_url: "https://api.venice.ai/api/v1",
+    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+  };
+  // A file with no table gets the provider's default Chat Completions API first.
+  expect(withResponsesApi(undefined)).toEqual({ "chat-completions": {}, responses });
+  const first = { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } };
+  const once = withResponsesApi(first);
+  expect(Object.keys(once)).toEqual(["chat-completions", "responses"]);
+  expect(withResponsesApi(once)).toEqual(once);
+
+  const capabilities = veniceModel().model_spec.capabilities;
+  expect(veniceV2Set(veniceModel({ capabilities: { ...capabilities, supportsWebSearch: true } }))["cost.web_search"])
+    .toEqual({ price: 10 });
+  expect(veniceV2Set(veniceModel())["cost.web_search"]).toBeUndefined();
 });
 
 test("prefers OpenRouter API reasoning options over authored ones", () => {

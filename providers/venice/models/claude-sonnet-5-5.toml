@@ -23,9 +23,18 @@ effort_updates = false
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 prompt_cache_key = true
 
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 2
 cache = { read = 0.1, write = 2.5 }
 
 [cost.text.output]
+price = 10
+
+[cost.web_search]
 price = 10

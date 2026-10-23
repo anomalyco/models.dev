@@ -29,9 +29,18 @@ prompt_cache_key = true
 context = 198_000
 output = 32_768
 
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 5
 cache = { read = 0.5, write = 6.25 }
 
 [cost.text.output]
 price = 25
+
+[cost.web_search]
+price = 10

@@ -23,6 +23,12 @@ effort_updates = false
 [limit]
 context = 1_000_000
 
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 30
 
@@ -36,3 +42,6 @@ price = 180
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 270
+
+[cost.web_search]
+price = 10
