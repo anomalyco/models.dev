@@ -1,0 +1,10 @@
+name = "Obscurify.ai"
+env = ["OBSCURIFY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# OpenAI-compatible relay: POST /v1/chat/completions (streaming, tools) and GET /v1/models.
+# Requests go to OpenRouter (zero-data-retention routes only) or NanoGPT, whichever is
+# cheaper per model; extra request fields such as `reasoning_effort` are passed through.
+# https://obscurify.ai/api-docs (accessed 2026-10-23)
+api = "https://obscurify.ai/v1"
+doc = "https://obscurify.ai/api-docs"

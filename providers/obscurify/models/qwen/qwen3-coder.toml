@@ -1,0 +1,12 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing per token x 1M), accessed 2026-10-23. Obscurify.ai bills one flat price per model.
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[limit]
+context = 262_000
+
+[cost.text.input]
+price = 0.1436
+
+[cost.text.output]
+price = 0.5525

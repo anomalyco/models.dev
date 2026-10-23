@@ -1,0 +1,16 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing per token x 1M), accessed 2026-10-23. Obscurify.ai bills one flat price per model.
+# Reasoning: Obscurify.ai forwards `reasoning_effort` / `reasoning.effort` unchanged to its relay upstream (OpenRouter or NanoGPT), so the levels match providers/openrouter/models/qwen/qwen3.8-27b.toml
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[limit]
+context = 1_001_536
+
+[cost.text.input]
+price = 0.1657
+
+[cost.text.output]
+price = 0.7735

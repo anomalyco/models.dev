@@ -1,0 +1,16 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing per token x 1M), accessed 2026-10-23. Obscurify.ai bills one flat price per model.
+# Reasoning: Obscurify.ai forwards `reasoning_effort` / `reasoning.effort` unchanged to its relay upstream (OpenRouter or NanoGPT), so the levels match providers/openrouter/models/z-ai/glm-5.3-flash.toml
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.1105
+
+[cost.text.output]
+price = 0.3315

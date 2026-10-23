@@ -1,0 +1,12 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing per token x 1M), accessed 2026-10-23. Obscurify.ai bills one flat price per model.
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.05525
+
+[cost.text.output]
+price = 0.2541

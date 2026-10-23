@@ -1,0 +1,13 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing per token x 1M), accessed 2026-10-23. Obscurify.ai bills one flat price per model.
+# Reasoning: Obscurify.ai forwards `reasoning_effort` / `reasoning.effort` unchanged to its relay upstream (OpenRouter or NanoGPT), so the levels match providers/openrouter/models/x-ai/grok-4.7.toml
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 2.21
+
+[cost.text.output]
+price = 6.63
