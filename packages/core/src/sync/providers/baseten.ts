@@ -94,10 +94,28 @@ export const baseten = {
       model: built,
       // Model APIs cache prompt prefixes automatically and bill cached input
       // at the catalog's input_cache_read price.
-      v2Set: basetenV2Set(built.cost?.cache_read, context.v2?.(model.id)),
+      v2Set: { ...basetenV2Set(built.cost?.cache_read, context.v2?.(model.id)), api: chatApis },
     };
   },
 } satisfies SyncProvider<BasetenModel>;
+
+// Model APIs also serve the Anthropic Messages API (beta) at POST /v1/messages,
+// for the same model slugs: https://docs.baseten.co/inference/model-apis/overview
+const MESSAGES_API = {
+  sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" },
+};
+
+// A chat model's APIs: its own first table (what v1 reads; an empty table takes
+// the provider's Chat Completions API), then Messages.
+export function chatApis(current: unknown): Record<string, unknown> {
+  const { messages: _messages, ...own } = current !== null && typeof current === "object" && !Array.isArray(current)
+    ? current as Record<string, unknown>
+    : {};
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    messages: structuredClone(MESSAGES_API),
+  };
+}
 
 // Model APIs cache prompt prefixes automatically ("Caching is automatic and
 // requires no request flags") and bill cached input at input_cache_read.
