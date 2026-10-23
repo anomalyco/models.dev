@@ -12,6 +12,7 @@
 # effort_updates: left out. Flipping thinking.type on the next request keeps the cache (reasoning tokens
 # ~100 vs 0), but there's no in-history effort message, so it doesn't count.
 # Adding or removing tools between turns drops the cache (2026-10-19).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked on Chat Completions (live 2026-10-23); the Anthropic-compatible Messages and Responses endpoints have no documented or tested in-place system message.
 schema = 2
 base_model = "zhipuai/glm-5v-turbo"
 
@@ -19,11 +20,11 @@ base_model = "zhipuai/glm-5v-turbo"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 top_k = false
-system_updates = true
 cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.messages]
 base_url = "https://open.bigmodel.cn/api/anthropic/v1"

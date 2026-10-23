@@ -11,6 +11,7 @@
 # a late system message is accepted (200) but wasn't followed in the probe; the unchanged control gets
 # almost no cache hits, so system_updates stays.
 # Adding or removing tools between turns drops the cache (2026-10-19).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked on Chat Completions (live 2026-10-23); the Anthropic-compatible Messages and Responses endpoints have no documented or tested in-place system message.
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-4.6v-flash"
@@ -21,11 +22,11 @@ description = "Paid high-speed GLM-4.6V-Flash serving option for affordable visu
 tools = { supported = true, updates = false }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 top_k = false
-system_updates = true
 cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.messages]
 base_url = "https://open.bigmodel.cn/api/anthropic/v1"
