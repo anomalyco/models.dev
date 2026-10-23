@@ -7,11 +7,12 @@
 # toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
 # Per-turn effort is a system-message output_config on InvokeModel only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html); a Converse Message has no such field, so effort_updates = false.
 # APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
+# Per-API flags: tools.updates sits on [api.messages] (Mantle Messages / InvokeModel), where AWS documents tool_addition/tool_removal. Converse has no documented tool change block; it only worked by passing the beta and deferred tools through additionalModelRequestFields. system_updates stays top-level: Converse documents role "system" messages and the Messages API documents mid-conversation system messages.
 schema = 2
 base_model = "anthropic/claude-opus-4-8"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
@@ -23,6 +24,7 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 [api.messages]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/messages" }
+capabilities = { tools = { updates = true } }
 
 [cost.text.input]
 price = 5

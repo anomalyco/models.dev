@@ -6,11 +6,12 @@
 # toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
 # Per-turn effort: effort_updates = true on [api.messages] only (Converse drops a per-message output_config), from the in-history effort message, a per-turn system message carrying output_config on InvokeModel and Mantle Messages (beta mid-conversation-output-config-2026-07-01, https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html); it kept the cache on Opus 5.5 over Mantle Messages (live 2026-10-23). Converse has no per-message output_config (a per-message outputConfig is silently dropped). Changing additionalModelRequestFields.output_config.effort on the next Converse request also keeps the cache, but a top-level change doesn't count on its own.
 # APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
+# Per-API flags: tools.updates sits on [api.messages] (Mantle Messages / InvokeModel), where AWS documents tool_addition/tool_removal. Converse has no documented tool change block; it only worked by passing the beta and deferred tools through additionalModelRequestFields. system_updates stays top-level: Converse documents role "system" messages and the Messages API documents mid-conversation system messages.
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
@@ -21,7 +22,7 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 [api.messages]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/messages" }
-capabilities = { effort_updates = true }
+capabilities = { effort_updates = true, tools = { updates = true } }
 
 [cost.text.input]
 price = 4
