@@ -205,7 +205,8 @@ function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNp
 }
 
 // The v1 `shape` a protocol gets on an SDK: none where it's the SDK's default.
-// `@ai-sdk/openai`, `@ai-sdk/azure` and `@ai-sdk/xai` default to Responses.
+// `@ai-sdk/openai`, `@ai-sdk/azure` and `@ai-sdk/xai` default to Responses (`createXai().languageModel`
+// is `createResponsesLanguageModel` in packages/xai/src/xai-provider.ts).
 export function toV1Shape(protocol: string, npm: string | undefined) {
   const responsesByDefault = npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure" || npm === "@ai-sdk/xai";
   if (protocol === "responses" && !responsesByDefault) return "responses";

@@ -437,7 +437,7 @@ export function resolveProtocol(
   if (npm === "@ai-sdk/anthropic" || npm === "@ai-sdk/google-vertex/anthropic") {
     return "messages";
   }
-  if (npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure") {
+  if (npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure" || npm === "@ai-sdk/xai") {
     return shape === "completions" ? "chat-completions" : "responses";
   }
   if (npm === "@ai-sdk/amazon-bedrock") {
