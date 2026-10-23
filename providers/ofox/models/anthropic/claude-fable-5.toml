@@ -6,7 +6,6 @@ base_model = "anthropic/claude-fable-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-effort_updates = false
 cache = { explicit = { ttl = ["5m", "1h"], min_tokens = 512 } }
 
 [api.messages]

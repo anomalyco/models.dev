@@ -10,10 +10,8 @@ schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, budget = { min = 1_024 } }
-system_updates = false
-effort_updates = false
 cache = { explicit = { ttl = ["5m", "1h"], min_tokens = 4_096 } }
 
 [api.messages]

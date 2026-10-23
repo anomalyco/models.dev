@@ -12,9 +12,8 @@ schema = 2
 base_model = "alibaba/qwen3-max"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = {} }
-effort_updates = false
 cache = { implicit = true }
 
 [cost.text.input]
