@@ -7,19 +7,19 @@
 # No toggle: Copilot's /models lists only reasoning_effort for this model (no thinking on/off control), so the first-party
 #   thinking.type toggle isn't claimed here.
 # APIs: GET /models supported_endpoints lists /v1/messages and /chat/completions for Claude models (authenticated, 2026-10-21; see provider.toml).
+# Per-API flags: the mid-conversation flags come from Anthropic's Messages API (mid-conversation system messages, per-message output_config, tool_addition/tool_removal), so they sit on [api.messages]. Copilot's /chat/completions has no documented way to keep a late system message in place or change effort or tools per message.
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-system_updates = true
-effort_updates = true
 
 [api.messages]
 base_url = "https://api.githubcopilot.com/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
+capabilities = { system_updates = true, effort_updates = true, tools = { updates = true } }
 
 [api.chat-completions]
 
