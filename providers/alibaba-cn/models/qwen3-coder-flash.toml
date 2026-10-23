@@ -3,6 +3,7 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) tiers: 0-32K $0.144/$0.574, 32K-128K $0.216/$0.861, 128K-256K $0.359/$1.434, 256K-1M $0.717/$3.584.
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/qwen3-coder-flash, accessed 2026-10-23).
 schema = 2
 name = "Qwen3 Coder Flash"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
@@ -41,18 +42,22 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibab
 
 [cost.text.input]
 price = 0.144
+cache = { read = 0.0288, write = 0.18, explicit = { read = 0.0144 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 32_000 } }
 price = 0.216
+cache = { read = 0.0432, write = 0.27, explicit = { read = 0.0216 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128_000 } }
 price = 0.359
+cache = { read = 0.0718, write = 0.44875, explicit = { read = 0.0359 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 0.717
+cache = { read = 0.1434, write = 0.89625, explicit = { read = 0.0717 } }
 
 [cost.text.output]
 price = 0.574

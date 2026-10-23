@@ -3,6 +3,7 @@
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted and obeyed but missed the explicit cache (moved, not in place); enable_thinking and thinking_budget changes kept the cache; adding tools missed the cache.
 # Prices (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19)
 # Tiers: 0-256K $0.4 in, $1.2 out ($4 thinking); 256K-1M $1.2 in, $3.6 out ($12 thinking).
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qwencloud.com/models/qwen-plus, accessed 2026-10-23).
 schema = 2
 name = "Qwen Plus"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -43,10 +44,12 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibab
 
 [cost.text.input]
 price = 0.4
+cache = { read = 0.08, write = 0.5, explicit = { read = 0.04 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 1.2
+cache = { read = 0.24, write = 1.5, explicit = { read = 0.12 } }
 
 [cost.text.output]
 price = 1.2

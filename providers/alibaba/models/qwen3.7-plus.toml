@@ -11,6 +11,7 @@
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the explicit cache (in place); enable_thinking and thinking_budget changes kept the cache; adding tools missed the cache.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qwencloud.com/models/qwen3.7-plus, accessed 2026-10-23).
 schema = 2
 name = "Qwen3.7 Plus"
 description = "Multimodal Qwen workhorse for long-context agents, visual inputs, and coding"
@@ -52,12 +53,12 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibab
 
 [cost.text.input]
 price = 0.4
-cache = { read = 0.04, write = 0.5 }
+cache = { read = 0.08, write = 0.5, explicit = { read = 0.04 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 1.2
-cache = { read = 0.12, write = 1.5 }
+cache = { read = 0.24, write = 1.5, explicit = { read = 0.12 } }
 
 [cost.text.output]
 price = 1.6

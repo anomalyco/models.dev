@@ -3,6 +3,7 @@
 # Thinking only (deep-thinking doc; enable_thinking=false is ignored live); Budget: thinking_budget. preserve_thinking defaults to true on this model. top_k: the Kimi series does not support it.
 # Cache: implicit (and explicit in China (Beijing)) per the context-cache model lists; implicit hits at 20% of input.
 # Explicit cache read: CNY 0.65 per 1M at the file's CNY 6.5 = $0.894 rate (https://www.qianwenai.com/models/kimi-k2.7-code, accessed 2026-10-23).
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/kimi-k2.7-code, accessed 2026-10-23).
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.7-code"
@@ -23,7 +24,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibab
 
 [cost.text.input]
 price = 0.894
-cache = { read = 0.1788, explicit = { read = 0.0894 } }
+cache = { read = 0.1788, write = 1.1175, explicit = { read = 0.0894 } }
 
 [cost.text.output]
 price = 3.713

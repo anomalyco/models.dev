@@ -1,8 +1,9 @@
 # Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, China (Beijing), accessed 2026-10-19).
 # Capabilities: Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions; structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (tool definitions count as part of the system message, so changing tools changes the prefix).
 # Toggle: enable_thinking true|false (default on); Effort: reasoning_effort = low|medium|xhigh (default xhigh); Budget: thinking_budget 0-262144, not combinable with reasoning_effort.
-# Cache: explicit and implicit (context-cache model lists); creation bills at 125% of input; the hit price for this model is not published ("see the console"), so only the write price is set.
+# Cache: explicit and implicit (context-cache model lists); prices below.
 # Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 12.5%, explicit creation 125%, explicit read 8.333333% of input (https://www.qianwenai.com/models/qwen3.8-max-0902, accessed 2026-10-23).
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3.8-max-0902"
@@ -26,7 +27,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibab
 
 [cost.text.input]
 price = 1.65
-cache = { write = 2.0625 }
+cache = { read = 0.20625, write = 2.0625, explicit = { read = 0.1375 } }
 
 [cost.text.output]
 price = 4.951
