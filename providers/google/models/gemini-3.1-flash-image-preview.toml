@@ -3,6 +3,7 @@
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 # Image output formats: https://ai.google.dev/gemini-api/docs/image-generation (response_format mime_type image/png or image/jpeg).
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#pricing-for-tools ("Gemini 3 and newer models"); support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image-preview
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 type = "image"
 name = "Nano Banana 2"
@@ -31,6 +32,9 @@ output = 65_536
 sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
 
 [api.generate-content]
+
+[api.interactions]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.5

@@ -5,6 +5,7 @@
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 schema = 2
 name = "Gemini Flash Latest"
 description = "High-efficiency Gemini model for agentic workflows, coding, and multimodal reasoning"
@@ -31,6 +32,15 @@ effort_updates = false
 [limit]
 context = 1_048_576
 output = 65_536
+
+[api.generate-content]
+
+[api.chat-completions]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.interactions]
+sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 0.75

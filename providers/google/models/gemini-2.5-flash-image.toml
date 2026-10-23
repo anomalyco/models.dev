@@ -1,5 +1,6 @@
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/pricing
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/gemini-2.5-flash-image"
 
@@ -7,6 +8,9 @@ base_model = "google/gemini-2.5-flash-image"
 sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
 
 [api.generate-content]
+
+[api.interactions]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.3

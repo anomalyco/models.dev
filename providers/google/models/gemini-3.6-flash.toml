@@ -13,6 +13,7 @@
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-3.6-flash; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3.6-flash
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Grounding keeps its price under Priority, Flex and the scheduled increases (https://ai.google.dev/gemini-api/docs/pricing).
+# APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 schema = 2
 base_model = "google/gemini-3.6-flash"
 
@@ -24,6 +25,15 @@ cache = { implicit = { min_tokens = 4_096 }, explicit = true }
 service_tier = ["flex", "priority"]
 system_updates = false
 effort_updates = false
+
+[api.generate-content]
+
+[api.chat-completions]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.interactions]
+sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 0.75

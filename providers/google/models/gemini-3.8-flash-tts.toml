@@ -4,6 +4,7 @@
 # - https://ai.google.dev/gemini-api/docs/flex-inference
 # - Text input $0.50 and audio output $9 through 2026-12-31, doubling from 2027-01-01.
 # - Priority is 1.8x and Flex 0.5x Standard.
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 v2_only = true
 base_model = "google/gemini-3.8-flash-tts"
@@ -15,6 +16,9 @@ service_tier = ["flex", "priority"]
 
 [api.speech]
 sdk = { opencodeai = "@opencode/ai/protocols/google-speech" }
+
+[api.interactions]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.5

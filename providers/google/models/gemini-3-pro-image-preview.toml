@@ -1,4 +1,5 @@
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#pricing-for-tools ("Gemini 3 and newer models"); support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3-pro-image-preview
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/gemini-3-pro-image-preview"
 name = "Nano Banana Pro"
@@ -13,6 +14,9 @@ context = 131_072
 sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
 
 [api.generate-content]
+
+[api.interactions]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 2
