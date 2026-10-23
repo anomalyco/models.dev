@@ -4,24 +4,28 @@
 # max_length=256 for flux-schnell (512 for dev):
 # https://github.com/black-forest-labs/flux/blob/main/src/flux/cli.py
 # output = 0 per the other text-to-image entries (glm-image, qwen-image-2.1).
+schema = 2
 name = "FLUX.1 [schnell]"
 description = "Fast distilled text-to-image model generating images in one to four steps"
 family = "flux"
+open_weights = true
 release_date = "2024-07-31"
 last_updated = "2024-08-16"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
-
-[limit]
-context = 256
-output = 0
 
 [modalities]
 input = ["text"]
 output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 256
+output = 0
 
 [[weights]]
 label = "Hugging Face"
