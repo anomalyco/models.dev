@@ -20,6 +20,8 @@
 # No discounted prompt-cache tier is published in the public catalog: cached and fresh
 # input are billed identically, so cache_read = input (same rationale as
 # DeepSeek-V4-Flash-0731 / Kimi-K3 / GLM-5.3).
+# Responses: POST https://api.tokenfactory.nebius.com/v1/responses (https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response); the public catalog
+#   https://tokenfactory.nebius.com/api/public/models_info lists "responses_api" in this model's use_cases (accessed 2026-10-22).
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
@@ -36,6 +38,9 @@ output = 262_144
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.45

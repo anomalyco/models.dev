@@ -7,6 +7,8 @@
 #   rationale as the other Nemotron entries on this host).
 # Limits: input 262_144 / output 32_768 are carried over from the original entry; models_info publishes only
 #   max_model_len.
+# Responses: POST https://api.tokenfactory.nebius.com/v1/responses (https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response); the public catalog
+#   https://tokenfactory.nebius.com/api/public/models_info lists "responses_api" in this model's use_cases (accessed 2026-10-22).
 schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron-3-Super-120B-A12B"
@@ -18,6 +20,11 @@ structured_output = true
 [limit]
 input = 262_144
 output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.3
