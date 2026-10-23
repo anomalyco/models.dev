@@ -9,28 +9,39 @@
 # level, none 762/479/627/646, minimal 715/513/760/717, low 942/561/660/596,
 # high 599/502/586/837, max 575/863/714/598 -- fully overlapping, and 'none' does not
 # even switch thinking off here, so thinking.type is the only real control.
+# Deprecated: retired in Ark's 9th deprecation batch (EOS 2026-09-21 14:00 UTC+8). https://www.volcengine.com/docs/ark/model-deprecation-notice
+schema = 2
 base_model = "bytedance-seed/seed-1-6-flash"
-reasoning = true
+status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.02227
-output = 0.22265
-cache_read = 0.00445
+[cost.text.input]
+price = 0.02227
+cache = { read = 0.00445 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.04453
-output = 0.4453
-cache_read = 0.00445
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.04453
+cache = { read = 0.00445 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 0.08906
-output = 0.8906
-cache_read = 0.00445
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.08906
+cache = { read = 0.00445 }
+
+[cost.text.output]
+price = 0.22265
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.4453
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.8906

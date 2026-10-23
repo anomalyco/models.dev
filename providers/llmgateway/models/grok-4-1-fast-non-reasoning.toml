@@ -1,24 +1,30 @@
+# Modalities: image formats from models/xai/grok-4.3.toml (same model)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 name = "Grok 4.1 Fast Non-Reasoning"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
 family = "grok"
-release_date = "2025-11-19"
-last_updated = "2025-11-19"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-11-19"
 
-[cost]
-input = 0.2
-output = 0.5
-cache_read = 0.05
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+effort_updates = false
 
 [limit]
 context = 2_000_000
 output = 2_000_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5

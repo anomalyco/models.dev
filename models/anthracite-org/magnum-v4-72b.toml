@@ -1,0 +1,26 @@
+# Lab metadata carried over from providers/openrouter/models/anthracite-org/magnum-v4-72b.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Weights: https://huggingface.co/anthracite-org/magnum-v4-72b (Apache-2.0)
+# Sampling: open weights; generation_config.json sets temperature 0.7, top_p 0.8, top_k 20
+# (https://huggingface.co/anthracite-org/magnum-v4-72b/blob/main/generation_config.json).
+schema = 2
+name = "Magnum v4 72B"
+description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
+open_weights = true
+knowledge = "2024-06-30"
+release_date = "2024-10-22"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 4_096

@@ -1,0 +1,32 @@
+# Sources: https://opencode.ai/docs/go/#endpoints and https://opencode.ai/docs/go/#usage-limits
+# Toggle: thinking.type = adaptive|disabled (disabled only at low, medium, or high effort)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+# https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
+# Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.messages]
+base_url = "https://opencode.ai/inference/go/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

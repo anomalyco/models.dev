@@ -76,6 +76,14 @@ describe("catalog API model type filtering", () => {
 
     expect(response.status).toBe(400);
   });
+
+  test("serves experimental v2.0 api.json", async () => {
+    const response = await request("/experimental/v2.0/api.json");
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body).toEqual(providers);
+  });
 });
 
 describe("hit tracking", () => {
@@ -180,6 +188,9 @@ async function request(
     ASSETS: {
       fetch(input: Request) {
         const pathname = new URL(input.url).pathname;
+        if (pathname === "/_experimental_v2.0_api.json") {
+          return Response.json(providers);
+        }
         if (pathname === "/_api.json") {
           return Response.json({
             example: { ...providers.example, models: { text: textModel } },

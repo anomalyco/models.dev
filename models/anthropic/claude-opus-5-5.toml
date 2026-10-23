@@ -1,24 +1,27 @@
 # Launch evaluations use adaptive thinking and production safeguards, with Opus 4.8 fallback for cyber and Opus 5 for bio/frontier-LLM development.
 # AutomationBench disables fallback and counts safeguard-triggered tasks as failures; Terminal-Bench uses xhigh effort.
+schema = 2
 name = "Claude Opus 5.5"
 description = "Claude model for long-running agentic coding and knowledge work"
 family = "claude-opus"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
 open_weights = false
 knowledge = "2026-06"
+release_date = "2026-09-22"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 1_000_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "Terminal-Bench"

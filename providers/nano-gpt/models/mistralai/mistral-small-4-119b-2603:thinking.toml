@@ -1,29 +1,25 @@
 # Included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
+base_model = "mistral/mistral-small-2603"
 name = "Mistral Small 4 119B Thinking"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral-small"
-release_date = "2026-03-17"
-last_updated = "2026-03-17"
-attachment = true
-reasoning = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.4
-output = 1.4
-cache_read = 0.2
+tools = { supported = true, updates = false }
+effort_updates = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.4

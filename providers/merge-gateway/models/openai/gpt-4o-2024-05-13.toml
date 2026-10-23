@@ -1,9 +1,18 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-4o-2024-05-13 (accessed 2026-07-21)
+schema = 2
 base_model = "openai/gpt-4o-2024-05-13"
 
-[cost]
-input = 5
-output = 15
-
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 15

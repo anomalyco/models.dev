@@ -1,14 +1,21 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
 # /v1/messages: thinking.type = enabled|disabled
 # /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+# Temperature: not in the catalog's supported_parameters (Kimi fixes it upstream).
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
-reasoning_options = [
-  { type = "toggle" },
-]
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = false
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.16
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

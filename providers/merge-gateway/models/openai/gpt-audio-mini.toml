@@ -1,0 +1,18 @@
+schema = 2
+base_model = "openai/gpt-audio-mini"
+name = "GPT Audio Mini"
+
+[modalities]
+input = ["text", "audio/wav", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.4

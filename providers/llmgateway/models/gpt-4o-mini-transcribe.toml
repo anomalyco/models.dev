@@ -1,23 +1,29 @@
+# Modalities: audio formats from models/openai/gpt-4o-mini-transcribe.toml (same model)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 name = "GPT-4o Mini Transcribe"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "gpt"
-release_date = "2025-03-20"
-last_updated = "2025-03-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-03-20"
 
-[cost]
-input = 1.25
-output = 5
+[modalities]
+input = ["text", "audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/webm", "audio/pcm", "audio/pcmu", "audio/pcma"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+effort_updates = false
 
 [limit]
 context = 16_000
 output = 16_000
 
-[modalities]
-input = ["text", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 5

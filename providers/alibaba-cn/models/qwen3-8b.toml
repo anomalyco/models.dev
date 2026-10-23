@@ -1,31 +1,29 @@
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
+schema = 2
 name = "Qwen3 8B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-04"
-last_updated = "2025-04"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2025-04"
-tool_call = true
 open_weights = true
+knowledge = "2025-04"
+release_date = "2025-04"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-max = 38_912
-
-[cost]
-input = 0.072
-output = 0.287
-reasoning = 0.717
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, budget = { max = 38_912 } }
+temperature = true
 
 [limit]
 context = 131_072
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.072
+
+[cost.text.output]
+price = 0.287
+reasoning = 0.717

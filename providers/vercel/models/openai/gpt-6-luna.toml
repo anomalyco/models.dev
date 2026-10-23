@@ -1,18 +1,38 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system/developer messages stay in place (cache prefix kept). The gateway's AI SDK request has no OpenAI configuration_update, so effort changes are false.
+# Tool changes (@ai-sdk/gateway, live 2026-10-23): providerOptions.openai.additionalTools on a tool result reaches OpenAI as a Responses additional_tools item, the model sees the tool and the cached prefix is kept, so tools.updates = true (add only; https://ai-sdk.dev/providers/ai-sdk-providers/openai). The azure and bedrock routes drop it; the default route is openai.
+schema = 2
 base_model = "openai/gpt-6-luna"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
+cache = { implicit = true, explicit = true }
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[api.chat-completions]
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_001 }
-input = 0.2
-output = 0.75
-cache_read = 0.02
-cache_write = 0.25
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_001 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_001 } }
+price = 0.75

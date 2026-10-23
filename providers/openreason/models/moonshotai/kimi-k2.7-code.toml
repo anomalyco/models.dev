@@ -6,18 +6,23 @@
 # The Baseten route respects temperature, so we override the canonical
 # `false` to `true` for this host.
 # https://openreason.app · https://docs.baseten.co/inference/model-apis/reasoning
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-temperature = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1.0022
-output = 4.22
-
-[interleaved]
-field = "reasoning_content"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.0022
+
+[cost.text.output]
+price = 4.22

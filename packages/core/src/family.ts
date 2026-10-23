@@ -91,6 +91,12 @@ export const ModelFamilyValues = [
   "laguna",
   "laguna-s",
 
+  // Reflection Beam
+  "beam",
+
+  // Recursive Flint
+  "flint",
+
   // Mistral family
   "mistral",
   "mistral-large",
@@ -100,6 +106,7 @@ export const ModelFamilyValues = [
   "ministral",
   "codestral",
   "devstral",
+  "leanstral",
   "pixtral",
   "mixtral",
 

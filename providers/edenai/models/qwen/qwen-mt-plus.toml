@@ -1,0 +1,15 @@
+schema = 2
+base_model = "alibaba/qwen-mt-plus"
+
+[capabilities]
+structured_output = false
+effort_updates = false
+
+[limit]
+context = 4_096
+
+[cost.text.input]
+price = 2.46
+
+[cost.text.output]
+price = 7.37

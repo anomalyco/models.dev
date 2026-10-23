@@ -99,7 +99,12 @@ export default {
       });
     }
 
-    if (url.pathname === "/api.json") {
+    if (url.pathname === "/experimental/v2.0/api.json") {
+      const assetUrl = new URL(url);
+      assetUrl.pathname = "/_experimental_v2.0_api.json";
+      assetUrl.search = "";
+      return await env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    } else if (url.pathname === "/api.json") {
       return catalogResponse(url, request, env, "api");
     } else if (url.pathname === "/models.json") {
       return catalogResponse(url, request, env, "models");

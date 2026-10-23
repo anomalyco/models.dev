@@ -1,28 +1,20 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "ibm/granite-4.2-8b"
 name = "IBM: Granite 4.2 8B"
 description = "Granite 4.2 8B is a dense reasoning model from IBM. It is suited for mathematics, code generation, multilingual dialogue, and agentic workflows that need multi-step reasoning. It supports full, low-effort,..."
-family = "granite"
-release_date = "2026-08-31"
-last_updated = "2026-08-31"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-open_weights = false
+effort_updates = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
+[cost.text.input]
+price = 0.06
+cache = { read = 0.015 }
 
-[cost]
-input = 0.06
-output = 0.25
-cache_read = 0.015
-
-[limit]
-context = 131_072
-output = 117_964
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.25

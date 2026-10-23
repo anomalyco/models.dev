@@ -1,11 +1,14 @@
+schema = 2
 base_model = "mistral/voxtral-small-24b-2507"
 name = "Voxtral Small 24B 2507 (Amazon Bedrock)"
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
 structured_output = false
+effort_updates = false
 
-[cost]
-input = 0.1
-output = 0.3
+[cost.text.input]
+price = 0.1
 
-[limit]
-context = 128_000
+[cost.text.output]
+price = 0.3

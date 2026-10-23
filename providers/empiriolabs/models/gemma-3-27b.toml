@@ -1,12 +1,21 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/gemma-3-27b.md
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/gemma-3-27b:generateContent
+schema = 2
 base_model = "google/gemma-3-27b-it"
 name = "Gemma 3 27B"
-tool_call = false
-structured_output = true
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+tools = { supported = false }
+structured_output = false
 
 [limit]
 context = 128_000
 output = 8_192
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

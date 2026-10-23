@@ -1,35 +1,35 @@
-name = "Qwen3.7 Plus"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+# Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Toggle: thinking.type = enabled|disabled (not verified on Go: no Go subscription key was available)
+# Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+# family: kept as "qwen3.7-plus" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
 family = "qwen3.7-plus"
-release_date = "2026-06-02"
-last_updated = "2026-06-02"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
-temperature = true
-tool_call = true
-open_weights = false
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
-[cost]
-input = 0.40
-output = 1.60
-cache_read = 0.04
-cache_write = 0.5
-
-[[cost.tiers]]
-tier = { size = 256_000 }
-input = 1.20
-output = 4.80
-cache_read = 0.12
-cache_write = 1.50
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
 
 [limit]
-context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.messages]
+base_url = "https://opencode.ai/inference/go/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04, write = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 1.2
+cache = { read = 0.12, write = 1.5 }
+
+[cost.text.output]
+price = 1.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 4.8

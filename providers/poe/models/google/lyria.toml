@@ -1,18 +1,20 @@
+# Modalities (audio: Lyria 2 returns 48 kHz WAV, mimeType audio/wav; Poe lists none): https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/lyria-music-generation
+schema = 2
 name = "Lyria"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "lyria"
-release_date = "2025-06-04"
-last_updated = "2025-06-04"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2025-06-04"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["audio"]

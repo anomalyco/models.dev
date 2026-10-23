@@ -1,26 +1,24 @@
-name = "GPT OSS 20B"
-description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-# Chat `reasoning_effort = low|medium|high`; `medium` is the default.
-# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+# Models, inputs and lifecycle (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Reasoning (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Chat `reasoning_effort` = low|medium|high; `medium` is the default, `minimal` maps to `low`, `xhigh`/`max` map to `high`, and `none` is treated as unset.
+# Pricing (accessed 2026-10-20): DBU rates from https://www.databricks.com/product/pricing/foundation-model-serving x USD 0.070/DBU (`foundation_model_apis` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json, AWS US East (N. Virginia); other regions are USD 0.070-0.112/DBU, not modeled). Pay-per-token is 1.000/4.286 DBU per 1M input/output tokens.
+# Provisioned throughput and batch inference (per DBU-hour) are not modeled.
+# Output limit: 25,000 tokens (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/limits, "Maximum output tokens for open models").
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+schema = 2
+base_model = "openai/gpt-oss-20b"
 
-[cost]
-input = 0.05
-output = 0.20
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
 
 [limit]
-context = 131_072
-output = 32_768
+output = 25_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.3

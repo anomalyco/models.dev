@@ -1,0 +1,16 @@
+# Sources:
+#   GET https://api.mistral.ai/v1/models (mistral-moderation-2603)
+#   https://docs.mistral.ai/models/mistral-moderation-26-03 and https://docs.mistral.ai/inference/pricing (free)
+# APIs: the /v1/models capabilities (completion_fim: POST /v1/fim/completions; moderation: /v1/moderations; ocr: /v1/ocr), https://docs.mistral.ai/api. No AI SDK or OpenCode package calls them.
+schema = 2
+v2_only = true
+base_model = "mistral/mistral-moderation-2603"
+
+[api.moderations]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

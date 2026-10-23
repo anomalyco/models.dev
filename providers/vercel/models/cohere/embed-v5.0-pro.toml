@@ -1,16 +1,15 @@
-name = "Embed 5 Pro"
-description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-release_date = "2026-09-30"
-last_updated = "2026-09-30"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = false
-
-[limit]
-context = 128_000
-output = 0
+# Modalities: Vercel's catalog (https://ai-gateway.vercel.sh/v1/models) lists input ["text"] only for this route, so the
+#   lab's image inputs are not inherited; v2 modalities replace the base as a whole, so output restates the lab's embedding.
+schema = 2
+base_model = "cohere/embed-v5.0-pro"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.12

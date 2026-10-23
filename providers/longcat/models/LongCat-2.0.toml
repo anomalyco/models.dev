@@ -1,11 +1,41 @@
-# API: {"thinking": {"type": "enabled"}} / {"thinking": {"type": "disabled"}}
+# Toggle: thinking.type = enabled|disabled
+# LongCat API docs (accessed 2026-10-21):
+# - Pricing https://longcat.chat/platform/docs/pricing/longcat-2.0 and
+#   https://longcat.chat/platform/docs/api-pay-as-you-go: "Discounted Price $/1M Tokens (limited-time)": uncached input
+#   $0.30, cached input $0.006, output $1.20 (no end date published).
+# - Parameters https://longcat.chat/platform/docs/api/model-params: context 1,048,576 tokens (input + output), max_tokens
+#   up to 131,072; temperature is fixed (1.0 with thinking on, 0.7 off) and other values are overridden; top_p (0, 1]
+#   and top_k [-1, 100] are accepted; thinking = {"type":"enabled"|"disabled"}. The same table lists a thinking_budget
+#   (max 262,144), but the Chat Completions reference does not document it, so no budget control is listed.
+# - Reasoning is returned in reasoning_content (https://longcat.chat/platform/docs/api/chat).
+# APIs on this host (https://longcat.chat/platform/docs/api/chat, /api/responses, /api/messages, accessed 2026-10-23):
+#   POST /openai/v1/chat/completions, /openai/v1/responses and /anthropic/v1/messages; both models on all three.
+#   The Chat table keeps the provider's published base (https://api.longcat.chat/openai, v1 unchanged).
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+schema = 2
 base_model = "meituan/longcat-2.0"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.75
-output = 2.95
-cache_read = 0.015
+[capabilities]
+reasoning = { supported = true, toggle = true }
+temperature = false
 
-[interleaved]
-field = "reasoning_content"
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://api.longcat.chat/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.longcat.chat/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

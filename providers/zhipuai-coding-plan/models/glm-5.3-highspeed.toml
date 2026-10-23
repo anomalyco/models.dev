@@ -1,21 +1,35 @@
-# GLM-5.3 Highspeed is tier-gated on the coding endpoint: served as-is on
-# eligible (higher) plan tiers, 403 "not available on plan" on lower tiers
-# (#7331 tested a single lower tier). First-hand verified served via
-# open.bigmodel.cn/api/coding/paas/v4 on 2026-09-17.
-# https://docs.bigmodel.cn/cn/coding-plan/latest-model
+# Sources (accessed 2026-10-19):
+# - Plan and supported models: https://docs.bigmodel.cn/cn/coding-plan/overview, https://docs.bigmodel.cn/cn/coding-plan/latest-model
+# - Thinking (Coding Plan effort mapping): https://docs.bigmodel.cn/cn/guide/capabilities/thinking
+# Subscription plan billed in credits, so no per-token cost.
+# GLM-5.3 Highspeed is not listed in the current plan docs; earlier it was tier-gated on the coding
+# endpoint (403 "not available on plan" on lower tiers). Kept as-is pending confirmation.
+# Effort: none|minimal|low map to low, medium|high to high, xhigh|max to max; disabling thinking maps to low.
+schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 Highspeed"
 
-# Effort levels mirror the base GLM-5.3 (low, high, max).
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[api.messages]
+base_url = "https://open.bigmodel.cn/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-coding-plan/messages" }
+
+[api.responses]
+base_url = "https://open.bigmodel.cn/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

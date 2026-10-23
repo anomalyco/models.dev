@@ -1,25 +1,19 @@
 # Not included in subscription
-name = "Perceptron Mk1"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-05-12"
-last_updated = "2026-05-12"
-attachment = true
-reasoning = true
-tool_call = false
-structured_output = true
-open_weights = false
-reasoning_options = []
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "perceptron/perceptron-mk1"
 
-[cost]
-input = 0.15
-output = 1.5
-cache_read = 0.075
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+effort_updates = false
 
 [limit]
-context = 32_768
 input = 32_768
-output = 8_192
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.5

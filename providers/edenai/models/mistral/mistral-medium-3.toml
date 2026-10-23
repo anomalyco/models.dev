@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/mistral-medium-3"
+
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 2

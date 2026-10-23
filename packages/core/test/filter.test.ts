@@ -24,13 +24,14 @@ describe("model type filtering", () => {
     );
   });
 
-  test("omits typed models by default", () => {
+  test("omits decision models by default while keeping other typed models", () => {
     const catalog = fixture();
     const filtered = filterCatalogByModelType(catalog, "default");
 
-    expect(Object.keys(filtered.models)).toEqual(["standard"]);
+    expect(Object.keys(filtered.models)).toEqual(["standard", "image"]);
     expect(Object.keys(filtered.providers.example!.models)).toEqual([
       "standard",
+      "image",
     ]);
     expect(filtered.providers.decisionOnly).toBeUndefined();
   });
@@ -64,7 +65,7 @@ describe("model type filtering", () => {
     const defaults = filterCatalogByModelType(catalog, "default");
     expect(
       Object.values(defaults.providers).some((provider) =>
-        Object.values(provider.models).some((model) => model.type !== undefined),
+        Object.values(provider.models).some((model) => model.type === "decision"),
       ),
     ).toBe(false);
     expect(defaults.models["typesafe/jev-latest"]).toBeUndefined();
@@ -91,13 +92,14 @@ describe("model type filtering", () => {
 
 function fixture() {
   const standard = model("standard-model");
+  const image = model("image-model", "image");
   const decision = model("decision-model", "decision");
   return {
-    models: { standard, decision },
+    models: { standard, image, decision },
     providers: {
       example: {
         id: "example",
-        models: { standard, decision },
+        models: { standard, image, decision },
       } as unknown as Provider,
       decisionOnly: {
         id: "decision-only",
@@ -107,6 +109,6 @@ function fixture() {
   };
 }
 
-function model(id: string, type?: "decision") {
+function model(id: string, type?: ModelMetadata["type"]) {
   return { id, type } as unknown as ModelMetadata;
 }

@@ -1,0 +1,26 @@
+# Released 2026-08-04 ("FLUX 3 is our first video model"): https://docs.bfl.ml/release-notes
+# Inputs: images PNG, JPEG or WebP and MP4 video: https://docs.bfl.ml/llms-full.txt ("Images can be PNG, JPEG, or WebP"), https://docs.bfl.ml/flux_tools/flux_video_edit
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "FLUX 3 Video"
+description = "Video model with synchronized audio for text, keyframe and continuation workflows"
+family = "flux"
+open_weights = false
+release_date = "2026-08-04"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video/mp4"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

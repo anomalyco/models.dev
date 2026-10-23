@@ -1,22 +1,21 @@
-name = "Qwen3.5 Flash"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-release_date = "2026-03-20"
-last_updated = "2026-03-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Reasoning: catalog capabilities.reasoning = true. Toggle: reasoning.enabled = true|false; budget: reasoning.max_tokens (https://docs.zenmux.ai/guide/advanced/reasoning.html), as Alibaba's enable_thinking / thinking_budget.
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+schema = 2
+base_model = "alibaba/qwen3.5-flash"
 knowledge = "2025-01-01"
-open_weights = false
 
-[cost]
-input = 0.10
-output = 0.40
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+cache = { implicit = true, explicit = { min_tokens = 256 } }
 
 [limit]
 context = 1_020_000
 output = 1_020_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.02, write = 0.125, explicit = { read = 0.01 } }
+
+[cost.text.output]
+price = 0.4

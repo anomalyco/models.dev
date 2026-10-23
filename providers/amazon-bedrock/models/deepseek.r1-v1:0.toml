@@ -5,10 +5,20 @@
 # US Standard pricing; use the us.deepseek.r1-v1:0 profile for on-demand Converse.
 # Live US profile (us-east-1, 2026-09-09): toolConfig rejected with HTTP 400,
 # "This model doesn't support tool use." with AUTO or omitted toolChoice.
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Status: Legacy 2026-09-30, EOL 2027-03-30 per https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle.html.
+schema = 2
 base_model = "deepseek/deepseek-r1"
-reasoning_options = []
-tool_call = false
+status = "deprecated"
 
-[cost]
-input = 1.35
-output = 5.4
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+system_updates = false
+effort_updates = false
+
+[cost.text.input]
+price = 1.35
+
+[cost.text.output]
+price = 5.4

@@ -1,0 +1,31 @@
+# Model card: https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1 (Apache 2.0; release post
+# https://mistral.ai/news/mixtral-of-experts, 2023-12-11, "gracefully handles a context of 32k tokens"). Context 32,768:
+# config.json. No function calling in the v0.1 chat template (NVIDIA's card: "Function Calling: Not supported",
+# https://build.nvidia.com/mistralai/mixtral-8x7b-instruct). No separate output cap is published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Mixtral 8x7B Instruct v0.1"
+description = "Open sparse mixture-of-experts Mistral instruction model"
+family = "mistral"
+open_weights = true
+release_date = "2023-12-11"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1"

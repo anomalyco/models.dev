@@ -1,29 +1,53 @@
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4.1-mini
+schema = 2
 name = "GPT-4.1 mini"
 description = "Affordable GPT-4.1 lane for fast coding help and structured extraction"
 family = "gpt-mini"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-structured_output = true
 open_weights = false
-
-[cost]
-input = 0.40
-output = 1.60
-cache_read = 0.10
-
-[limit]
-context = 1047576
-output = 32768
+knowledge = "2024-04"
+release_date = "2025-04-14"
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+system_updates = true
+effort_updates = false
+store = true
+cache = { implicit = { min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["priority"]
+
+[limit]
+context = 1_047_576
+output = 32_768
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.6
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.75 }
+
 [experimental.modes.fast]
-cost = { input = 0.70, output = 2.80, cache_read = 0.175 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }

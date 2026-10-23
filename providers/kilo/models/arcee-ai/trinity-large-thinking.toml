@@ -1,15 +1,22 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 base_model = "arcee-ai/trinity-large-thinking"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["high"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 0.25
-output = 0.8
-cache_read = 0.06
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 80_000
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.8

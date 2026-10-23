@@ -1,0 +1,24 @@
+# Available on the Runway API 2026-06-02 ("Aleph 2.0 is now available"): https://docs.dev.runwayml.com/api-details/api_changelog/
+# Input formats (images JPEG, PNG, WebP; videos MP4, QuickTime, Matroska, WebM): https://docs.dev.runwayml.com/assets/inputs/ ; outputs are MP4 URLs: https://docs.dev.runwayml.com/assets/outputs/
+schema = 2
+v2_only = true
+type = "video"
+name = "Aleph 2.0"
+description = "Video editing model that changes existing footage from a text prompt and optional keyframe images"
+open_weights = false
+release_date = "2026-06-02"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska", "video/webm"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

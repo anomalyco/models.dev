@@ -1,15 +1,19 @@
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash (Nebius)"
-structured_output = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 1.2

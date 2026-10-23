@@ -1,24 +1,26 @@
 # Effort: reasoning_effort = none|low|high|max (none disables thinking)
 # Budget: thinking_token_budget (integer reasoning tokens)
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-interleaved = true
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], budget = {} }
+structured_output = true
 
 [limit]
 context = 1_048_560
 output = 1_048_560
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

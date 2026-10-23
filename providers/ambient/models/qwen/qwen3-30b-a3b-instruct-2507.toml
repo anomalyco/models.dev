@@ -1,0 +1,21 @@
+# Mid-conversation: Ambient serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://api.ambient.xyz/openapi.json
+schema = 2
+base_model = "alibaba/qwen3-30b-a3b-instruct-2507"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 131_072
+output = 32_768
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.09, write = 0 }
+
+[cost.text.output]
+price = 0.3

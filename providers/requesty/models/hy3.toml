@@ -1,16 +1,23 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 base_model = "tencent/hy3"
 base_model_omit = ["limit.input"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 0.14
-output = 0.58
-cache_read = 0.035
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 262_144
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.035 }
+
+[cost.text.output]
+price = 0.58

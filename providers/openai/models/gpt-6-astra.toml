@@ -1,29 +1,65 @@
 # Pricing: https://developers.openai.com/api/docs/models/gpt-6-astra
 # Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra
 # Ultrafast mode: https://developers.openai.com/api/docs/guides/ultrafast-mode
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Ultrafast (https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6-astra
+schema = 2
 base_model = "openai/gpt-6-astra"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 10.00
-output = 50.00
-cache_read = 1.00
-cache_write = 12.50
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+store = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority", "ultrafast"]
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 20.00
-output = 75.00
-cache_read = 2.00
-cache_write = 25.00
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" } }
+factor = { text = 6 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }
 
 [experimental.modes.fast]
-cost = { input = 20.00, output = 100.00, cache_read = 2.00, cache_write = 25.00 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }
 
 [experimental.modes.pro]
-provider = { body = { reasoning = { mode = "pro" } } }
+body = { reasoning = { mode = "pro" } }
 
 [experimental.modes.ultrafast]
-cost = { input = 60.00, output = 300.00, cache_read = 6.00, cache_write = 75.00 }
-provider = { body = { service_tier = "ultrafast" } }
+body = { service_tier = "ultrafast" }

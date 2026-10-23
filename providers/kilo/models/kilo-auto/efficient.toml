@@ -1,27 +1,32 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 name = "Auto Efficient"
 description = "Routes each request to the cheapest model that gets the job done, based on continuously benchmarked accuracy and cost."
 family = "auto"
-release_date = "1970-01-01"
-last_updated = "1970-01-01"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
-reasoning_options = []
+release_date = "1970-01-01"
 
-[cost]
-input = 0.325
-output = 1.95
-reasoning = 0
-cache_read = 0.0325
-cache_write = 0.40625
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true }
+structured_output = false
+temperature = true
+effort_updates = false
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.325
+cache = { read = 0.0325, write = 0.40625 }
+
+[cost.text.output]
+price = 1.95
+reasoning = 0

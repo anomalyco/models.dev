@@ -1,0 +1,17 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-4o-mini-tts
+# https://developers.openai.com/api/docs/pricing
+# https://developers.openai.com/api/docs/deprecations
+schema = 2
+v2_only = true
+base_model = "openai/gpt-4o-mini-tts"
+status = "deprecated"
+
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.audio.output]
+price = 12

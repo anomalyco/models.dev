@@ -1,9 +1,17 @@
-name = "Qwen3.6-35B-A3B-fp8-no-thinking"
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
-reasoning = false
+name = "Qwen3.6-35B-A3B-fp8-no-thinking"
 description = "Qwen3.6-35B-A3B-fp8 disable thinking"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
 [limit]
 context = 262_000
-[cost]
-input = 0
-output = 0
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

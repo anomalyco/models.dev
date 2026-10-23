@@ -6,6 +6,7 @@ import {
   buildMistralModel,
   fetchMistralModels,
   mistral,
+  mistralApis,
   parseMistralModels,
   parseSupportedEfforts,
   type MistralModel,
@@ -234,6 +235,15 @@ test("maps Mistral deprecation to catalog status", () => {
     .toMatchObject({ status: "beta" });
 });
 
+test("keeps docs-deprecated models deprecated when /v1/models omits deprecation", () => {
+  const leanstral = model({ id: "labs-leanstral-1-5-1", name: "labs-leanstral-1-5-1", aliases: [] });
+  expect(buildMistralModel(leanstral, { ...existingSmall, status: "deprecated" }))
+    .toMatchObject({ status: "deprecated" });
+  const glm = model({ id: "zai-glm-5-2", name: "glm-5-2", aliases: ["zai-glm-5-2"] });
+  expect(buildMistralModel(glm, { ...existingSmall, status: "beta" }))
+    .toMatchObject({ status: "deprecated" });
+});
+
 test("writes only provider overrides for base_model entries", () => {
   const synced = buildMistralModel(
     model({
@@ -265,4 +275,23 @@ test("writes only provider overrides for base_model entries", () => {
     cost: { input: 1.4, output: 4.4, cache_read: 0.14 },
   });
   expect(synced).not.toHaveProperty("name");
+});
+
+test("lists the FIM, moderation and OCR APIs /v1/models names after the first API", () => {
+  const none = { sdk: { aisdk: "none", opencodeai: "none" } };
+  const base = { completion_chat: true, function_calling: true, reasoning: false, vision: false, audio: false };
+  expect(mistralApis(base)).toBeUndefined();
+
+  const fim = mistralApis({ ...base, completion_fim: true })!;
+  expect(fim(undefined)).toEqual({ "chat-completions": {}, fim: none });
+  const first = { "chat-completions": { base_url: "https://example.com/v1" } };
+  const once = fim(first);
+  expect(once).toEqual({ ...first, fim: none });
+  expect(fim(once)).toEqual(once);
+
+  // A model with no chat API starts with its only one.
+  const ocr = mistralApis({ ...base, completion_chat: false, ocr: true })!;
+  expect(ocr(undefined)).toEqual({ ocr: none });
+  const moderation = mistralApis({ ...base, completion_chat: false, moderation: true })!;
+  expect(moderation(undefined)).toEqual({ moderations: none });
 });

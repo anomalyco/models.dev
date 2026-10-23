@@ -1,24 +1,36 @@
 # Cost from https://ollama.com/pricing (accessed 2026-09-15).
+# Lab identity: minimax/MiniMax-M2.7 (Ollama library page https://ollama.com/library/minimax-m2.7).
+# Reasoning: POST https://ollama.com/api/show reports thinking.values [true] (thinking cannot be turned off) (2026-10-21); Ollama applies a model's named levels exactly and `false` disables thinking (https://docs.ollama.com/api/openai-compatibility).
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+#   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
 name = "minimax-m2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-open_weights = true
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+cache = { implicit = true }
 
 [limit]
-context = 196608
-output = 196608
+context = 196_608
+output = 196_608
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

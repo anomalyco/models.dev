@@ -1,23 +1,28 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 name = "ASI1 Mini"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-03-25"
-last_updated = "2025-03-25"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2025-03-25"
 
-[cost]
-input = 1
-output = 1
-cache_read = 0.5
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 128_000
 input = 128_000
 output = 16_384
 
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 1
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 1

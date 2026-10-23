@@ -1,24 +1,12 @@
+schema = 2
+base_model = "openai/gpt-4.1-nano"
 name = "gpt-4.1-nano"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-nano"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
 structured_output = true
-open_weights = false
-knowledge = "2024-04"
 
-[cost]
-input = 0.100
-output = 0.400
+[cost.text.input]
+price = 0.1
 
-[limit]
-context = 1_047_576
-output = 32_768
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 0.4

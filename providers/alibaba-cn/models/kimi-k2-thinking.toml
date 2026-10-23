@@ -1,29 +1,31 @@
+# Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
+schema = 2
 name = "Moonshot Kimi K2 Thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
 family = "kimi-thinking"
-release_date = "2025-11-06"
-last_updated = "2025-11-06"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-11-06"
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, budget = {} }
 structured_output = true
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.574
-output = 2.294
+temperature = true
 
 [limit]
 context = 262_144
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.574
+
+[cost.text.output]
+price = 2.294

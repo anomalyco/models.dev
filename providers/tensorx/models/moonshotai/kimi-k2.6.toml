@@ -1,10 +1,17 @@
+# Retired 2026-10-04 (rerouted to its replacement): https://docs.tensorx.ai/api-reference/model-deprecation (accessed 2026-10-21).
+# Reasoning is always on: Kimi models "cannot be toggled off" on TensorX and take no reasoning_effort.
+# https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-10-21)
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"thinking": false}} (default on)
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
-[cost]
-input = 1
-output = 4
-cache_read = 0.25
-cache_write = 1.25
+[cost.text.input]
+price = 1
+cache = { read = 0.25, write = 1.25 }
+
+[cost.text.output]
+price = 4

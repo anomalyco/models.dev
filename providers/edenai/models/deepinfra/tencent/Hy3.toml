@@ -1,16 +1,20 @@
+schema = 2
 base_model = "tencent/hy3"
 base_model_omit = ["limit.input"]
 name = "Hy3 (Deep Infra)"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
-
-[cost]
-input = 0.13
-output = 0.53
-cache_read = 0.033
+effort_updates = false
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 0.13
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 0.53

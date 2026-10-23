@@ -1,10 +1,17 @@
+schema = 2
 base_model = "mistral/voxtral-small-latest"
-structured_output = true
 
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.01
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 32_768
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4

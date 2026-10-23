@@ -1,0 +1,25 @@
+# Release date (10/15/2026) and formats (model card input formats: video mp4, image jpeg and png):
+#   https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
+#   the model card recommends temperature 1.0 (0.6 for vision) and top_p 0.95.
+schema = 2
+name = "Nemotron 3.5 Super VL 120B A12B"
+description = "NVIDIA vision-language reasoning model for text, image, and video understanding and agentic tool use"
+family = "nemotron"
+open_weights = true
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 8_192

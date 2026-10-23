@@ -1,12 +1,25 @@
+# Price: NVIDIA publishes no per-token rate; the hosted API is a free trial (see provider.toml), so 0.
+# The earlier $0.50/$2.50 (cache $0.15) had no source.
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): a late system message was
+# followed and kept the cache in 2 of 2 trials; adding a tool dropped the cache to 0.
+# Effort: top-level reasoning_effort = none|medium|high (`none` turns reasoning off; NIM translates it into
+# chat_template_kwargs). Budget: top-level reasoning_budget, -1..32768, default 16384, -1 = no enforcement
+# (https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-3-ultra-550b-a55b-infer). Live 2026-10-21: none and
+# enable_thinking = false gave 0 reasoning characters, medium 154 and high 191.
+schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-reasoning_options = [{ type = "toggle" }]
-structured_output = true
 
-[cost]
-input = 0.50
-output = 2.50
-cache_read = 0.15
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"], budget = { min = -1, max = 32_768 } }
+structured_output = true
+system_updates = true
+tools = { supported = true, updates = false }
 
 [limit]
-context = 1_000_000
 output = 65_536
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,27 +1,25 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "google/diffusiongemma-26b-a4b-it"
 name = "DiffusionGemma"
 description = "DiffusionGemma is a high-speed diffusion-based version of Gemma 4 26B A4B. It supports optional reasoning and a 262,144-token context window."
-release_date = "2026-09-19"
-last_updated = "2026-09-19"
-attachment = false
-reasoning = true
-tool_call = false
-structured_output = false
-open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "xhigh"]
-
-[cost]
-input = 0.05
-output = 0.15
-cache_read = 0.025
-
-[limit]
-context = 262_144
-input = 262_144
-output = 32_768
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "xhigh"] }
+structured_output = false
+effort_updates = false
+
+[limit]
+input = 262_144
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.15

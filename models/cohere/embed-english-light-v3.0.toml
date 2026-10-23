@@ -1,0 +1,28 @@
+# Sources:
+# - Models: https://docs.cohere.com/docs/cohere-embed (modalities, dimensions, context length)
+# - Image MIME types: https://docs.cohere.com/reference/embed ("The image must be in either `image/jpeg`,
+#   `image/png`, `image/webp`, or `image/gif` format.")
+# - Release: https://cohere.com/blog/introducing-embed-v3 (Nov 2, 2023); image input added later (docs above)
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Embed English Light 3"
+description = "Smaller, faster English embedding model"
+family = "cohere-embed"
+open_weights = false
+release_date = "2023-11-02"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 512
+output = 384

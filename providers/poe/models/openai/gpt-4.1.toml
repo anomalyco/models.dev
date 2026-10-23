@@ -1,23 +1,17 @@
-name = "GPT-4.1"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
-reasoning = false
-temperature = false
-open_weights = false
-tool_call = true
-
-[cost]
-input = 1.8
-output = 7.2
-cache_read = 0.45
-
-[limit]
-context = 1_047_576
-output = 32_768
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "openai/gpt-4.1"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+temperature = false
+
+[cost.text.input]
+price = 1.8182
+cache = { read = 0.4545 }
+
+[cost.text.output]
+price = 7.2727

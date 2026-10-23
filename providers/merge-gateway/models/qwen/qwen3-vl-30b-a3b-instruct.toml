@@ -1,0 +1,22 @@
+schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
+name = "Qwen3-VL 30B-A3B Instruct"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.0216 }
+
+[cost.text.output]
+price = 0.6

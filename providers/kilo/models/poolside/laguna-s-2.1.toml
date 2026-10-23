@@ -1,28 +1,25 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Deprecated: Kilo's catalog names it "Poolside: Laguna S 2.1 (retires Oct 31)" (GET https://api.kilo.ai/api/gateway/models, 2026-10-20)
+schema = 2
+base_model = "poolside/laguna-s-2.1"
 name = "Poolside: Laguna S 2.1 (retires Oct 31)"
 description = "Laguna S 2.1 is the latest coding agent model from [Poolside](<https://poolside.ai/>). Laguna S 2.1 is a 118B total parameter model with 8B active parameters, scoring 70.2% on Terminal-Bench 2.1 and..."
-family = "laguna-s"
-release_date = "2026-07-21"
-last_updated = "2026-07-21"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+status = "deprecated"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.01
+effort_updates = false
 
 [limit]
-context = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.2

@@ -1,16 +1,32 @@
+# Sources (accessed 2026-10-19):
+# - Plan and supported models: https://docs.z.ai/devpack/overview, https://docs.z.ai/devpack/latest-model
+# - Thinking (Coding Plan effort mapping): https://docs.z.ai/guides/capabilities/thinking
+# Subscription plan billed in credits, so no per-token cost.
+# Effort: none|minimal|low map to low, medium|high to high, xhigh|max to max; disabling thinking maps to low.
+schema = 2
 base_model = "zhipuai/glm-5.3"
 
-# GLM-5.3 always reasons; low, high, and max are the effective effort levels.
-# https://docs.z.ai/devpack/latest-model (accessed 2026-08-14)
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[api.messages]
+base_url = "https://api.z.ai/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-coding-plan/messages" }
+
+[api.responses]
+base_url = "https://api.z.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
