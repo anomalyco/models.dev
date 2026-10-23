@@ -113,6 +113,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 - `opencodeai` (provider.toml's top-level field, or `sdk.opencodeai`) is an `@opencode/ai` entry point: `@opencode/ai/providers/<path>` (e.g. `@opencode/ai/providers/openai/chat`), or `@opencode/ai/protocols/<name>` for APIs with no provider entry point (`openai-images`, `openai-speech`, `openai-transcription`). v1 never publishes it.
 - `"none"` in `sdk.aisdk`, `sdk.opencodeai` or the provider's `opencodeai` says no package supports that API: nothing is filled in (e.g. `sdk = { aisdk = "none" }` on a decision model's `[api.systemone]`).
+- Name the protocol by its wire format, not the model type. `realtime` is OpenAI's Realtime API; Google's Live API is `bidi-generate-content` and Lyria RealTime is `bidi-generate-music` (after their `BidiGenerateContent` / `BidiGenerateMusic` WebSocket methods).
 - `legacy_shape = "responses" | "completions"` is v1-only: it keeps a v1 `provider.shape` that repeats the SDK's default. Sync writes and keeps it; don't add it by hand.
 
 ## When to use `base_model` (blocker)

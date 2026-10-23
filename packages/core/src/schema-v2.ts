@@ -400,6 +400,10 @@ export const ApiProtocolV2Values = [
   "videos",
   "realtime",
   "live",
+  // Google Live API: the `BidiGenerateContent` WebSocket.
+  "bidi-generate-content",
+  // Google Lyria RealTime: the `BidiGenerateMusic` WebSocket.
+  "bidi-generate-music",
   "rerank",
   "speech",
   "transcriptions",
