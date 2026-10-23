@@ -10,6 +10,10 @@
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true, updates = false }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
