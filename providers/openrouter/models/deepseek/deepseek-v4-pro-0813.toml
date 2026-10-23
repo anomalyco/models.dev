@@ -1,6 +1,6 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Sail Research). DeepSeek's own API moves it to the leading prompt on V4 Pro (providers/deepseek), so the DeepSeek upstream may differ
+# Mid-conversation: system_updates unset. OpenRouter doesn't document mid-conversation system messages for this model, and it routes to about 20 upstreams; DeepSeek's own API moves them to the leading prompt on V4 Pro (providers/deepseek). The earlier true came from one live run (cache kept on Sail Research, 2026-10-19), which isn't enough on its own.
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
@@ -10,7 +10,6 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-system_updates = true
 effort_updates = false
 
 [limit]
