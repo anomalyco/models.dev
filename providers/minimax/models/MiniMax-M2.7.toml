@@ -3,6 +3,7 @@
 # Thinking is always on; thinking.type = disabled is accepted and ignored.
 # Caching: cache_control (explicit) and, from M2.1, an automatic prefix cache from 512 input
 #   tokens; M2 caches only with cache_control (checked live 2026-10-19).
+# tools.updates: adding or removing a tool busts the cache (prefix order is tools, system, messages; live on api.minimax.io 2026-10-22).
 schema = 2
 name = "MiniMax-M2.7"
 description = "Open MiniMax flagship for coding agents, office automation, and complex environments"
@@ -16,7 +17,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = true }
 temperature = true
 top_p = true

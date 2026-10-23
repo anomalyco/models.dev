@@ -14,8 +14,8 @@
 #   a base64 PDF was read correctly live.
 # - Sampling: temperature and top_p; no top_k (live 400 "top_k sampling is not enabled for this model").
 # - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
-#   keeps the cached prefix and is obeyed. Adding or removing tools between requests keeps the cached
-#   prefix (Mistral renders tools after it).
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests
+#   drops the cache after the system prompt (live 2026-10-22).
 # Audio formats: Mistral's docs list none for chat audio input (the known-limitations page lists WAV, MP3, FLAC, OGG and
 #   WEBM for /v1/audio/transcriptions only; the Hugging Face card and mistral-common, which decodes through libsndfile,
 #   list none). Mistral's chat API rejects other files with "Failed to load audio file. Verify that the given file is
@@ -33,7 +33,7 @@ input = ["text", "audio/wav", "audio/mpeg", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = false }
 reasoning = { supported = false }
 structured_output = true
 temperature = true

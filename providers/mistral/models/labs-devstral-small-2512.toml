@@ -1,6 +1,7 @@
 # Image input: https://docs.mistral.ai/models/devstral-small-2-25-12 lists text and image input, so attachment is true.
 # Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 # Sampling: the chat API takes temperature and top_p but has no top_k (https://docs.mistral.ai/api/endpoint/chat).
+# tools.updates: adding or removing a tool busts the cache; tools render before the conversation (live 2026-10-22).
 schema = 2
 name = "Devstral Small 2"
 description = "Legacy model retained for compatibility with older integrations"
@@ -15,7 +16,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = false }
 reasoning = { supported = false }
 temperature = true
 top_p = true

@@ -14,7 +14,7 @@ schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = false }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 system_updates = true
