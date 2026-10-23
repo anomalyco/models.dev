@@ -15,6 +15,7 @@ effort_updates = false
 context = 1_050_000
 
 [api.responses]
+base_url = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/openai"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
 
 [cost.text.input]

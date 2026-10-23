@@ -29,9 +29,13 @@ const MAX_RETRY_DELAY_MS = 60_000;
 
 // OpenAI and Anthropic models use their own SDK and API on the gateway's native
 // routes. The gateway's OpenCode entry point serves those routes too.
-const NATIVE_API: Record<string, { npm: string; protocol: string }> = {
-  anthropic: { npm: "@ai-sdk/anthropic", protocol: "messages" },
-  openai: { npm: "@ai-sdk/openai", protocol: "responses" },
+// Their base URLs are the gateway's provider-native routes, not the SDKs' defaults:
+// https://developers.cloudflare.com/ai-gateway/usage/providers/openai/
+// https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/
+const NATIVE_BASE = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}";
+const NATIVE_API: Record<string, { npm: string; api: string; protocol: string }> = {
+  anthropic: { npm: "@ai-sdk/anthropic", api: `${NATIVE_BASE}/anthropic/v1`, protocol: "messages" },
+  openai: { npm: "@ai-sdk/openai", api: `${NATIVE_BASE}/openai`, protocol: "responses" },
 };
 const OPENCODE_PACKAGE = "@opencode/ai/providers/cloudflare-ai-gateway";
 
@@ -58,10 +62,9 @@ export function gatewayApis(
   const tables = isRecord(current) ? current : {};
   const [firstKey, firstValue] = Object.entries(tables)[0] ?? [nativeProtocol ?? "chat-completions", {}];
   const first = isRecord(firstValue) ? firstValue : {};
+  const { opencodeai: _opencodeai, ...sdk } = isRecord(first.sdk) ? first.sdk : {};
   const api: Record<string, unknown> = {
-    [firstKey]: firstKey === nativeProtocol
-      ? { ...first, sdk: { ...(isRecord(first.sdk) ? first.sdk : {}), opencodeai: OPENCODE_PACKAGE } }
-      : first,
+    [firstKey]: firstKey === nativeProtocol ? { ...first, sdk: { ...sdk, opencodeai: OPENCODE_PACKAGE } } : first,
   };
   for (const format of Array.isArray(requestFormats) ? requestFormats : []) {
     const rest = typeof format === "string" ? REST_APIS[format] : undefined;
@@ -368,7 +371,7 @@ export function buildCloudflareAiGatewayModel(
   if (Object.keys(limit).length > 0) model.limit = limit;
 
   const native = NATIVE_API[id.split("/")[0]!];
-  if (native !== undefined) model.provider = { npm: native.npm };
+  if (native !== undefined) model.provider = { npm: native.npm, api: native.api };
   return model;
 }
 

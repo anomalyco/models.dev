@@ -88,7 +88,10 @@ test("builds Cloudflare AI Gateway overrides from catalog metadata", () => {
       }],
     },
     limit: { context: 1_050_000 },
-    provider: { npm: "@ai-sdk/openai" },
+    provider: {
+      npm: "@ai-sdk/openai",
+      api: "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/openai",
+    },
   });
 });
 
@@ -623,13 +626,14 @@ test("writes new native-route models as v2 files with their API protocol", async
     const opus = await readFile(path.join(modelsDir, "anthropic", "claude-opus-4.7.toml"), "utf8");
     expect(opus).toContain("\nschema = 2\n");
     const opencodeai = 'opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway"';
-    expect(opus).toContain(`[api.messages]\nsdk = { aisdk = "@ai-sdk/anthropic", ${opencodeai} }`);
+    const native = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}";
+    expect(opus).toContain(`[api.messages]\nbase_url = "${native}/anthropic/v1"\nsdk = { aisdk = "@ai-sdk/anthropic", ${opencodeai} }`);
     const gpt = await readFile(path.join(modelsDir, "openai", "gpt-5.5.toml"), "utf8");
-    expect(gpt).toContain(`[api.responses]\nsdk = { aisdk = "@ai-sdk/openai", ${opencodeai} }`);
+    expect(gpt).toContain(`[api.responses]\nbase_url = "${native}/openai"\nsdk = { aisdk = "@ai-sdk/openai", ${opencodeai} }`);
     // An existing table gets the OpenCode package too, and keeps its other v2 data.
     const updated = await readFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), "utf8");
     expect(updated).toContain("system_updates = true");
-    expect(updated).toContain(`[api.responses]\nsdk = { aisdk = "@ai-sdk/openai", ${opencodeai} }`);
+    expect(updated).toContain(`base_url = "${native}/openai"\nsdk = { aisdk = "@ai-sdk/openai", ${opencodeai} }`);
     expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0 });
   } finally {
     await rm(providerDir, { recursive: true, force: true });
