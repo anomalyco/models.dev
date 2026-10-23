@@ -1,0 +1,25 @@
+# Price: https://cloudcode.one/models.json (accessed 2026-10-23).
+# Effort: reasoning_effort = none|high (default none; low and medium act as none, xhigh and max as high)
+# Checked live through the Chat Completions endpoint on 2026-10-23:
+# - Images: PNG, JPEG, WebP and GIF were read.
+# - With reasoning_effort unset, none or low there was no reasoning; high and max reasoned.
+# - Caching is automatic and keyed per API key by the gateway: a repeated 16k-token prefix came back
+#   with 15,852 cached tokens.
+# - A strict json_schema response_format returned schema-valid JSON.
+schema = 2
+base_model = "mistral/mistral-large-4"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.72
+cache = { read = 0.28 }
+
+[cost.text.output]
+price = 8.36
