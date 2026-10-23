@@ -1,0 +1,10 @@
+# AI Stupid Level Smart Router: OpenAI-compatible; each request is routed to the model that
+# scores best on continuously re-run coding, reasoning and tool-use benchmarks, using the
+# caller's own provider keys (BYOK). Routing modes are listed here; GET /v1/models also lists
+# the real model ids that can be pinned. https://aistupidlevel.info/router/docs (accessed 2026-10-19)
+name = "AI Stupid Level"
+env = ["AISTUPIDLEVEL_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://aistupidlevel.info/v1"
+doc = "https://aistupidlevel.info/router/docs"
