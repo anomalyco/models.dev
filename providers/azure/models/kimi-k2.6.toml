@@ -5,7 +5,7 @@
 # Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
 # (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-23, Chat Completions) a system message between turns
 # keeps the cached prefix and is followed on DeepSeek-V4.1-Flash, Kimi-K2.7-Code and grok-4-1-fast-non-reasoning, and is followed on Llama-3.3/Llama-4-Maverick
-# (no cache on Llama); each DeepSeek, Kimi, Grok and Llama family follows its tested model.
+# (no cache on Llama); each Kimi, Grok and Llama family follows its tested model (DeepSeek models were tested one by one).
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
