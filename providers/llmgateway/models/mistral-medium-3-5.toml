@@ -1,23 +1,23 @@
-name = "Mistral Medium 3.5"
-description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-family = "mistral-medium"
-release_date = "2026-05-01"
-last_updated = "2026-05-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 1.5
-output = 7.5
-
-[limit]
-context = 262_144
-output = 262_144
+# Modalities: image formats from models/mistral/mistral-medium-3-5.toml (same model)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
+base_model = "mistral/mistral-medium-3-5"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+structured_output = true
+effort_updates = false
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

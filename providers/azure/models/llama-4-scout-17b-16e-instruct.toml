@@ -1,23 +1,31 @@
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
+# Modalities: Azure names no image formats for Llama 4; these are Meta's (see models/meta/llama-4-scout-17b-instruct.toml).
+schema = 2
 name = "Llama 4 Scout 17B 16E Instruct"
 description = "Open multimodal Llama model for long-context analysis and efficient agents"
 family = "llama"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-08"
-tool_call = true
 open_weights = true
+knowledge = "2024-08"
+release_date = "2025-04-05"
 
-[cost]
-input = 0.20
-output = 0.78
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+temperature = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.78

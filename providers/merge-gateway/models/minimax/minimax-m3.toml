@@ -1,24 +1,27 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=minimax%2Fminimax-m3 (accessed 2026-07-21)
+schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1, max = 128_000 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 128_000
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+effort_updates = false
+tools = { supported = true, updates = false }
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

@@ -1,6 +1,7 @@
 name = "DeepSeek"
 env = ["DEEPSEEK_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/deepseek"
 # OpenAI Chat is POST `/chat/completions`: `thinking.type = enabled|disabled`
 # and `reasoning_effort = low|high|max`. Both current models map minimal→low,
 # medium/xhigh→high, and ultra→max; low/high/max remain distinct native levels.

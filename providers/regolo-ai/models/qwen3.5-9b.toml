@@ -1,23 +1,22 @@
+# Price: https://regolo.ai/pricing lists EUR (accessed 2026-10-21); converted to USD at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# EUR 0.07 / 0.35 per 1M tokens.
+schema = 2
+base_model = "alibaba/qwen3.5-9b"
 name = "Qwen3.5-9B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2026-02-01"
-last_updated = "2026-02-01"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.15
-output = 0.60
-
-[limit]
-context = 262144
-output = 8192
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 8_192
+
+[cost.text.input]
+price = 0.078505
+
+[cost.text.output]
+price = 0.392525

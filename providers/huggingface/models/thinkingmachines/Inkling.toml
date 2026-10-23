@@ -1,11 +1,20 @@
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (thinkingmachines/inkling).
+schema = 2
 base_model = "thinkingmachines/inkling"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-
-[cost]
-input = 1
-output = 4.05
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+effort_updates = false
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 4.05

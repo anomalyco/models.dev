@@ -1,23 +1,30 @@
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
+schema = 2
 name = "Llama-3.3-70B-Instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
-release_date = "2024-12-06"
-last_updated = "2024-12-06"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2023-12"
-tool_call = true
 open_weights = true
+knowledge = "2023-12"
+release_date = "2024-12-06"
 
-[cost]
-input = 0.71
-output = 0.71
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = false }
+temperature = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 128_000
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.71
+
+[cost.text.output]
+price = 0.71

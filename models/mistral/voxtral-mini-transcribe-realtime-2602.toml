@@ -1,0 +1,35 @@
+# Sources:
+#   https://docs.mistral.ai/models/voxtral-mini-transcribe-realtime-26-02 (Voxtral Mini Transcribe Realtime, released
+#     2026-02-04, audio in / text out, open weights under Apache 2.0)
+#   https://huggingface.co/mistralai/Voxtral-Mini-4B-Realtime-2602
+#   https://docs.mistral.ai/studio/audio/speech_to_text/realtime_transcription (WebSocket streaming transcription)
+#   https://docs.mistral.ai/api/endpoint/realtime/sessions (audio_format.encoding pcm_s16le|pcm_s32le|pcm_f16le|pcm_f32le|
+#     pcm_mulaw|pcm_alaw, 8-96 kHz). audio/pcm, audio/pcmu and audio/pcma are the MIME types for those encodings.
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Voxtral Mini Transcribe Realtime"
+description = "Low-latency streaming speech-to-text model for live transcription and voice agents"
+family = "voxtral"
+open_weights = true
+license = "Apache-2.0"
+release_date = "2026-02-04"
+
+[modalities]
+input = ["audio/pcm", "audio/pcmu", "audio/pcma"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Voxtral-Mini-4B-Realtime-2602"

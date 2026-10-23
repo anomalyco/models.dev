@@ -1,25 +1,27 @@
-name = "Nemotron-3-Super-120B-A12B"
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 262_144, type text2text)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# Reasoning: no host control verified, so reasoning_options stays empty.
+# Cost: $0.30 in / $0.90 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as the other Nemotron entries on this host).
+# Limits: input 262_144 / output 32_768 are carried over from the original entry; models_info publishes only
+#   max_model_len.
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
-structured_output = true
-temperature = true
-knowledge = "2026-02"
-release_date = "2026-03-11"
-last_updated = "2026-03-12"
-open_weights = true
+name = "Nemotron-3-Super-120B-A12B"
 
-[cost]
-input = 0.30
-output = 0.90
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
-context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 0.9

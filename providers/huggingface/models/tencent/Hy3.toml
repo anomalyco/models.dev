@@ -1,10 +1,17 @@
+schema = 2
 base_model = "tencent/hy3"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
 
-[cost]
-input = 0.14
-output = 0.58
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.58

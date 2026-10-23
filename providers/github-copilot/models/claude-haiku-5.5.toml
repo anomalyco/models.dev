@@ -3,22 +3,35 @@
 # - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 # - https://platform.claude.com/docs/en/models/haiku-5-5/overview
 # - https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
+# Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-haiku-5-5.toml.
+# No toggle: Copilot's /models lists only reasoning_effort for this model (no thinking on/off control), so the first-party
+#   thinking.type toggle isn't claimed here.
+schema = 2
 base_model = "anthropic/claude-haiku-5-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 100_000 }
-input = 0.5
-output = 2.5
-cache_read = 0.05
-cache_write = 0.625
+[api.messages]
+base_url = "https://api.githubcopilot.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://api.githubcopilot.com/v1"
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

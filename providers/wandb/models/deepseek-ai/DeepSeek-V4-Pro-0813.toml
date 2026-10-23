@@ -1,17 +1,21 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 description = "DeepSeek V4-Pro-0813 is a 1.6T-parameter MoE model excelling at advanced reasoning, coding, and complex agentic workloads."
-family = "deepseek"
-release_date = "2026-08-13"
-last_updated = "2026-08-13"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1.31
-output = 3.96
-cache_read = 0.044
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[cost.text.input]
+price = 1.31
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96

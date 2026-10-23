@@ -1,12 +1,19 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 base_model = "gryphe/mythomax-l2-13b"
 name = "MythoMax 13B"
-structured_output = false
 
-[cost]
-input = 0.1003
-output = 0.1003
-cache_read = 0.05015
+[capabilities]
+structured_output = false
+effort_updates = false
 
 [limit]
 input = 4_096
 output = 3_686
+
+[cost.text.input]
+price = 0.1003
+cache = { read = 0.05015 }
+
+[cost.text.output]
+price = 0.1003

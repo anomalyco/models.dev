@@ -4,23 +4,26 @@
 # Field values mirror Upstage's own first-party host entry in this repo
 # (providers/upstage/models/solar-pro4.toml); host-scoped keys (cost,
 # reasoning_options) are intentionally left to the provider files.
+# Sampling: the chat API reference (https://console.upstage.ai/api/chat) documents temperature and top_p; no top_k.
+schema = 2
 name = "Solar Pro 4"
 description = "Upstage's flagship model, specialized for agentic use"
 family = "solar-pro"
-release_date = "2026-08-06"
-last_updated = "2026-08-06"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2026-02"
-tool_call = true
-structured_output = true
 open_weights = false
-
-[limit]
-context = 524_288
-output = 131_072
+knowledge = "2026-02"
+release_date = "2026-08-06"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 524_288
+output = 131_072

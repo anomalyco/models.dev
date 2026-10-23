@@ -1,6 +1,13 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+schema = 2
 base_model = "sarvam/sarvam-105b"
-reasoning_options = []
 
-[cost]
-input = 0.04
-output = 0.16
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.16

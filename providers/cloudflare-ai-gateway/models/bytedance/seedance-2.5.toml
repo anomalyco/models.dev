@@ -1,0 +1,29 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image/video/audio fields (the lab's MIME types) and output_format enum, else the lab's video outputs. Prices: catalog provider_details per second of output video, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedance-2.5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
+output = ["video/mp4", "video/quicktime"]
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.2312
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "480p" } }, { input_video = { equals = true } }] }
+price = 0.4304
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "720p" } }, { input_video = { equals = true } }] }
+price = 0.9676
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "480p" } }, { input_video = { equals = false } }] }
+price = 0.1028

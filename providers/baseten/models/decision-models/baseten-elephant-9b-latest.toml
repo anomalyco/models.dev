@@ -1,0 +1,13 @@
+# Decision model: POST /v1/systemone (https://docs.baseten.co/inference/model-apis/decision-models)
+schema = 2
+v2_only = true
+base_model = "baseten/elephant-1"
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

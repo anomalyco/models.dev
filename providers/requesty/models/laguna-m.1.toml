@@ -1,13 +1,22 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+# status = deprecated: retires 2026-09-21 on https://router.requesty.ai/v1/models/managed (accessed 2026-10-20)
+schema = 2
 base_model = "poolside/laguna-m.1"
-tool_call = false
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 0
-output = 0
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = false
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 32_768
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

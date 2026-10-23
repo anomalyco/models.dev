@@ -1,26 +1,29 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 name = "ring-2.6-1t"
 description = "Inclusion AI ring-2.6-1t"
 family = "ring"
-release_date = "2026-05-08"
-last_updated = "2026-05-08"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-05-08"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 2.5
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = false
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.5

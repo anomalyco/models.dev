@@ -3,17 +3,40 @@
 # - https://vercel.com/ai-gateway/models/inkling — routes to baseten
 # - https://docs.baseten.co/inference/model-apis/reasoning — Inkling reasoning_effort
 # API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
+# Image MIME types: the lab's, https://tinker-docs.thinkingmachines.ai/cookbook/inkling/images/ ("Formats: PNG and JPEG");
+#   the AI Gateway catalog lists no image formats.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
 base_model = "thinkingmachines/inkling"
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 1
-output = 4.05
-cache_read = 0.17
+[modalities]
+input = ["text", "image/png", "image/jpeg", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+system_updates = true
+effort_updates = false
+cache = { implicit = true }
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.17 }
+
+[cost.text.output]
+price = 4.05

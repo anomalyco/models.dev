@@ -7,19 +7,21 @@
 # RouteLLM output_token_rate: 0.00000028
 # RouteLLM cached_input_token_rate: 0.00000003
 # RouteLLM thinking: True
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21), which listed it when this file was written.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
-reasoning = true
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
-context = 1_000_000
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.14
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.28

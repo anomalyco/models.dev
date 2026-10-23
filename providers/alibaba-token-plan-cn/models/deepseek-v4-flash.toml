@@ -1,4 +1,9 @@
-base_model = "deepseek/deepseek-v4-flash"
+# Deprecated on Alibaba Token Plan (China): absent from the exact-string
+# supported-models allowlist on 2026-10-20; use deepseek-v4.1-flash-1017 or
+# deepseek-v4-flash-0731.
+# Sources:
+# https://platform.qianwenai.com/docs/token-plan/team/token-plan-team-overview
+# https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
 # Reasoning HTTP format (accessed 2026-08-15):
 # This model toggles with `enable_thinking`: true or false. Chat Completions
 # `reasoning_effort` accepts high (default) or max; low/medium map to high and
@@ -6,14 +11,23 @@ base_model = "deepseek/deepseek-v4-flash"
 # Sources:
 # https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
 # https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
+# Status: no longer on the plan's supported model list (https://help.aliyun.com/zh/model-studio/token-plan-team-overview, accessed 2026-10-19).
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+status = "deprecated"
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
+top_k = false
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

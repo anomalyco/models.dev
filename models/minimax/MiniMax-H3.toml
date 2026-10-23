@@ -2,26 +2,38 @@
 # - https://www.minimax.io/blog/minimax-h3
 # - https://www.minimax.io/news/minimax-h3-open-source
 # - https://huggingface.co/MiniMaxAI/MiniMax-H3
+# - https://platform.minimax.io/docs/guides/video-generation
+# - https://platform.minimax.io/docs/api-reference/video-generation-v2-create
+#   (inputs: images JPG/JPEG/PNG/WEBP/HEIC/HEIF, videos MP4/MOV, audio WAV/MP3)
 # Token limits are not applicable to this audio-video generation endpoint.
 # Zero follows existing non-token media catalog entries; it is not a measured token limit.
+# The video API has no sampling parameters. Output is MP4 with synchronized audio.
+# Output: generated videos are MP4 (task content.url in the create/query responses above). `audio` stays generic: the
+# synchronized audio is a track inside that MP4, not a separate output, and MiniMax names no output audio codec.
+schema = 2
+type = "video"
 name = "MiniMax H3"
 description = "MiniMax general-purpose video model with multimodal references and synchronized stereo audio. Open H3-Base checkpoints; Context-IR and 2K regeneration are not included in the initial weights release."
 family = "minimax"
+open_weights = true
 release_date = "2026-07-31"
 last_updated = "2026-10-04"
-attachment = true
-reasoning = false
-tool_call = false
-open_weights = true
 license = "MiniMax H3 Community License Agreement"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
+output = ["video/mp4", "audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["video", "audio"]
 
 [[links]]
 url = "https://www.minimax.io/blog/minimax-h3"

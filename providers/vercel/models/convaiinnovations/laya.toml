@@ -1,21 +1,28 @@
+schema = 2
 type = "decision"
 name = "Laya"
 description = "General-purpose chat model for instruction following, writing, and analysis"
-release_date = "2026-10-01"
-last_updated = "2026-10-01"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-10-01"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 8_192
 output = 0
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.evaluate]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/vercel-ai-gateway" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

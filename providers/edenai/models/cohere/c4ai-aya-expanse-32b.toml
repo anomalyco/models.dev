@@ -1,6 +1,12 @@
+schema = 2
 base_model = "cohere/c4ai-aya-expanse-32b"
-structured_output = false
 
-[cost]
-input = 0.5
-output = 1.5
+[capabilities]
+structured_output = false
+effort_updates = false
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

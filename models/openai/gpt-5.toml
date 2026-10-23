@@ -1,24 +1,26 @@
+schema = 2
 name = "GPT-5"
 description = "Original GPT-5 workhorse for reasoning, coding, writing, and tool workflows"
 family = "gpt"
-release_date = "2025-08-07"
-last_updated = "2025-08-07"
-attachment = true
-reasoning = true
-temperature = false
-knowledge = "2024-09-30"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2024-09-30"
+release_date = "2025-08-07"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[benchmarks]]
 name = "Aider Polyglot"

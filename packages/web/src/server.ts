@@ -1,5 +1,5 @@
 import Index from "../index.html";
-import { getRenderedPage, Models, Providers, renderDocument } from "./render";
+import { getRenderedPage, Models, Providers, SearchIndexJson, renderDocument } from "./render";
 import {
   filterCatalogByModelType,
   filterModelsByModelType,
@@ -114,6 +114,13 @@ Bun.serve({
     "/experimental/v2.0/api.json": () =>
       Response.json(ProvidersV2, {
         headers: {
+          "Cache-Control": "public, max-age=3600",
+        },
+      }),
+    "/search-index.json": () =>
+      new Response(SearchIndexJson, {
+        headers: {
+          "Content-Type": "application/json",
           "Cache-Control": "public, max-age=3600",
         },
       }),

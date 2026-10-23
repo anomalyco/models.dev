@@ -1,0 +1,26 @@
+# Sources:
+# - Models: https://docs.cohere.com/docs/rerank (text-only, context length)
+# - Release: https://docs.cohere.com/changelog ("Cohere's Rerank v4.0 Model is Here!", December 11, 2025)
+# Reranking returns relevance scores, not generated tokens (limit.output = 0).
+schema = 2
+v2_only = true
+type = "reranking"
+name = "Rerank 4 Fast"
+description = "Low-latency multilingual reranker for high-throughput retrieval"
+open_weights = false
+release_date = "2025-12-11"
+
+[modalities]
+input = ["text"]
+output = ["reranking"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0

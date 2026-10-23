@@ -1,26 +1,31 @@
-name = "Mistral Large 4"
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+schema = 2
+base_model = "mistral/mistral-large-4"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
-family = "mistral-large"
-release_date = "2026-10-06"
-last_updated = "2026-10-06"
-attachment = true
-reasoning = true
-tool_call = true
-open_weights = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.68
-output = 2.09
-cache_read = 0.07
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+system_updates = true
+effort_updates = false
+cache = { implicit = true }
 
 [limit]
 context = 524_288
-output = 262_144
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 1.36
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.18

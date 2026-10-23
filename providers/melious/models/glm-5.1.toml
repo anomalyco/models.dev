@@ -18,16 +18,25 @@
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
 # limit.context: the catalog reports 203_000 for this deployment, not the lab's
 # 200_000.
+# Deprecated: no longer listed on https://melious.ai/hub/models (44 models, accessed
+# 2026-10-21); its hub page no longer loads.
+schema = 2
 base_model = "zhipuai/glm-5.1"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+status = "deprecated"
 
-[cost]
-input = 1.50696
-output = 4.6368
-cache_read = 0.370944
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
 [limit]
 context = 203_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.50696
+cache = { read = 0.370944 }
+
+[cost.text.output]
+price = 4.6368

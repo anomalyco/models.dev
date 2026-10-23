@@ -500,14 +500,40 @@ function deprecatingProvider(modelsDir: string) {
   } satisfies SyncProvider<StubRemoteModel>;
 }
 
+async function writeLabFixture(basePath: string, name: string) {
+  await mkdir(path.dirname(basePath), { recursive: true });
+  await Bun.write(basePath, [
+    "schema = 2",
+    `name = "${name}"`,
+    'description = "Fixture lab model"',
+    "open_weights = false",
+    'release_date = "2026-01-01"',
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = true }",
+    "temperature = true",
+    "top_p = true",
+    "top_k = true",
+    "",
+    "[limit]",
+    "context = 262_144",
+    "output = 32_768",
+    "",
+  ].join("\n"));
+}
+
 async function deprecationFixture(prefix: string) {
   const root = await mkdtemp(path.join(tmpdir(), prefix));
   const modelsDir = path.join(root, "providers", "neuralwatt", "models");
   const oldPath = path.join(modelsDir, "old-model.toml");
   const basePath = path.join(root, "models", "alibaba", "qwen3.8-27b.toml");
   await mkdir(modelsDir, { recursive: true });
-  await mkdir(path.dirname(basePath), { recursive: true });
-  await Bun.write(basePath, 'name = "Qwen3.8 27B"\n');
+  await writeLabFixture(basePath, "Qwen3.8 27B");
   return { root, modelsDir, oldPath };
 }
 
@@ -515,6 +541,7 @@ test("deprecates a delisted local model instead of deleting it", async () => {
   const { root, modelsDir, oldPath } = await deprecationFixture("sync-neuralwatt-");
   await Bun.write(oldPath, [
     "# Old model note",
+    "schema = 2",
     'base_model = "alibaba/qwen3.8-27b"',
     'name = "Old Model"',
     "",
@@ -602,9 +629,9 @@ test("keeps a live model's file when its reasoning controls are missing", async 
   const filePath = path.join(modelsDir, "deepseek-v4-flash-speed.toml");
   const basePath = path.join(root, "models", "deepseek", "deepseek-v4-flash-0731.toml");
   await mkdir(modelsDir, { recursive: true });
-  await mkdir(path.dirname(basePath), { recursive: true });
-  await Bun.write(basePath, 'name = "DeepSeek V4 Flash 0731"\n');
+  await writeLabFixture(basePath, "DeepSeek V4 Flash 0731");
   await Bun.write(filePath, [
+    "schema = 2",
     'base_model = "deepseek/deepseek-v4-flash-0731"',
     'name = "DeepSeek V4 Flash Speed"',
     "",
@@ -636,6 +663,7 @@ test("keeps a live model's file when its reasoning controls are missing", async 
 test("leaves delisted files untouched in new-only mode", async () => {
   const { root, modelsDir, oldPath } = await deprecationFixture("sync-neuralwatt-newonly-");
   await Bun.write(oldPath, [
+    "schema = 2",
     'base_model = "alibaba/qwen3.8-27b"',
     'name = "Old Model"',
     "",
@@ -656,6 +684,7 @@ test("does not write through a leaf symlink when deprecating", async () => {
   const { root, modelsDir, oldPath } = await deprecationFixture("sync-neuralwatt-symlink-");
   const targetPath = path.join(root, "outside.toml");
   await Bun.write(targetPath, [
+    "schema = 2",
     'base_model = "alibaba/qwen3.8-27b"',
     'name = "Outside Target"',
     "",

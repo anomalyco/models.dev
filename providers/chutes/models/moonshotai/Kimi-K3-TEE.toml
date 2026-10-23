@@ -1,19 +1,24 @@
 # Toggle: chat_template_kwargs.thinking = true|false
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 TEE"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-release_date = "2026-07-29"
-last_updated = "2026-07-29"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
 temperature = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.29999999999999993
+effort_updates = false
 
 [limit]
 output = 65_535
+
+[cost.text.input]
+price = 1.85
+cache = { read = 0.18499999999999997 }
+
+[cost.text.output]
+price = 9.5

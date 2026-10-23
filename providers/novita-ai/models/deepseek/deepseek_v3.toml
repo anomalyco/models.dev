@@ -1,11 +1,20 @@
 # https://novita.ai/docs/api-reference/model-apis-llm-list-models
 # Exact legacy ID returned by /models and verified with a successful chat request on 2026-10-09.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20: mid turn 8,064 of 8,108 prompt tokens cached; usage.prompt_tokens_details.cached_tokens, reported here although no cache-read price is listed).
+schema = 2
 base_model = "deepseek/deepseek-v3"
 
-[cost]
-input = 0.89
-output = 0.89
+[capabilities]
+tools = { supported = true, updates = false }
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 64_000
 output = 16_000
+
+[cost.text.input]
+price = 0.89
+
+[cost.text.output]
+price = 0.89

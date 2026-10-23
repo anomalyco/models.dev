@@ -1,6 +1,13 @@
+# Deprecated: its model page on https://unorouter.com/en/models tags it "Deprecated" (accessed 2026-10-21).
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.819
-output = 3.276
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.819
+
+[cost.text.output]
+price = 3.276

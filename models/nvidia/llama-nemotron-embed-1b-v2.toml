@@ -1,0 +1,27 @@
+schema = 2
+type = "embedding"
+name = "Llama Nemotron Embed 1B v2"
+description = "Multilingual text embedding model for retrieval and question answering pipelines"
+family = "nemotron"
+open_weights = true
+release_date = "2025-10-16"
+license = "nvidia-open-model-license"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 2_048
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/llama-nemotron-embed-1b-v2"

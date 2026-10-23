@@ -1,26 +1,30 @@
 # Effort: reasoning_effort = low|medium|high|xhigh|max|ultracode (catalog enum represents through max)
 # Sources: https://api.bee.heossi.com/openapi.json and https://api.bee.heossi.com/bee/models
+# Input MIME types from https://api.bee.heossi.com/bee/openrouter/models (checked 2026-10-21).
+# The feed lists text and audio for Swarm but no image; image input is kept from the earlier entry.
+schema = 2
 name = "Bee Swarm 1.0"
 description = "Premium reasoning, multi-model cloud execution, large-document analysis, and high-value technical work. Includes the evolution engine and stronger eval gates by default."
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-tool_call = false
-structured_output = false
 open_weights = false
 release_date = "2026-07-10"
 last_updated = "2026-09-28"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "audio/wav", "audio/mpeg"]
 output = ["text"]
 
-[limit]
-context = 1000000
-output = 64000
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
 
-[cost]
-input = 25.00
-output = 150.00
-cache_read = 2.50
-cache_write = 30.00
+[limit]
+context = 1_000_000
+output = 64_000
+
+[cost.text.input]
+price = 25
+cache = { read = 2.5, write = 30 }
+
+[cost.text.output]
+price = 150

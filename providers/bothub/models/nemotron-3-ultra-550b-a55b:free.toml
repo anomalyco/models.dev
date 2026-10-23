@@ -1,13 +1,16 @@
 # Bothub wire: reasoning in message.reasoning (also mirrored in message.reasoning_details as reasoning.text)
+schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra (free)"
 
-interleaved = true
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "medium", "high"]
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
 
-[cost]
-input = 0
-output = 0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

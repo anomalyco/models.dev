@@ -1,15 +1,16 @@
-# Thinking is always on (disabled returns 400); depth via output_config.effort /
-# reasoning_effort = low|medium|high|xhigh|max, default max.
-# https://platform.minimax.io/docs/api-reference/text-anthropic-api
-# https://platform.minimax.io/docs/api-reference/text-openai-api
+# Retired: requests using this name are served by MiniMax-M3.1-Flash
+# (https://platform.minimax.io/docs/m-plan/intro, checked 2026-10-19).
+# Effort: output_config.effort = low|medium|high|xhigh|max, default max.
+schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash-Preview"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

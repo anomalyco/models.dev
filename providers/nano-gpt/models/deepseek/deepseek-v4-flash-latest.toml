@@ -1,28 +1,31 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "DeepSeek V4 Flash Latest"
 description = "Compatibility alias that routes to the newest dated DeepSeek V4 Flash release. Currently routes to DeepSeek V4 Flash 0731. ⚠️ This route goes directly to DeepSeek, so privacy and logging guarantees are limited."
 family = "deepseek"
-release_date = "2026-08-02"
-last_updated = "2026-08-02"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 0.05
-output = 0.16
-cache_read = 0.013
-
-[limit]
-context = 1_000_000
-input = 1_000_000
-output = 131_072
+release_date = "2026-08-02"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = false
+effort_updates = false
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 393_216
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6

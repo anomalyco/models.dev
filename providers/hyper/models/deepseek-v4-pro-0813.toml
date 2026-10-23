@@ -1,15 +1,19 @@
+# Mid-conversation: Hyper serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://hyper.charm.land/v1/models
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-release_date = "2026-08-14"
-last_updated = "2026-08-14"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.437216
-output = 4.311648
-cache_read = 0.047907
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 output = 262_144
+
+[cost.text.input]
+price = 1.437216
+cache = { read = 0.047907 }
+
+[cost.text.output]
+price = 4.311648

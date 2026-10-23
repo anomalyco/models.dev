@@ -2,15 +2,36 @@
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # Toggle: additionalModelRequestFields.reasoning_config = "high"; omit for default mode, matching GLM-4.7.
 # Live 2026-09-09: high returns reasoningContent; maxTokens=131072 accepted.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+schema = 2
 base_model = "zhipuai/glm-5"
 last_updated = "2026-03-18"
-reasoning_options = [{ type = "toggle" }]
-structured_output = true
-interleaved = true
 
-[cost]
-input = 1.00
-output = 3.20
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = false
+effort_updates = false
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 202_752
+
+[api.converse]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3.2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

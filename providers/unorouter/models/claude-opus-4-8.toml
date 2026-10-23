@@ -1,6 +1,13 @@
+# Retired: absent from https://unorouter.com/en/models, and its model page returns 404 (accessed 2026-10-21).
+schema = 2
 base_model = "anthropic/claude-opus-4-8"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.425
-output = 2.125
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.425
+
+[cost.text.output]
+price = 2.125

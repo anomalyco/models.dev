@@ -4,13 +4,41 @@
 # Effort: additionalModelRequestFields.reasoning_effort = low|medium|high, following the GPT-OSS Converse request mapping.
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-openai.html
 # Live Converse check 2026-09-09 (us-east-1): reasoning_effort=low returns reasoningContent.
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+schema = 2
 base_model = "openai/gpt-oss-safeguard-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.15
-output = 0.60
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = false
+effort_updates = false
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 128_000
 output = 16_384
+
+[cost.text.input]
+price = 0.15
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 0.26
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.07
+
+[cost.text.output]
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 1.05
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.3

@@ -1,16 +1,23 @@
+# Catalog: GET https://api.synthetic.new/openai/v1/models (accessed 2026-10-21).
+# Effort: reasoning_effort (reasoning_parameters.efforts in the catalog).
+# Lists reasoning efforts none|low|medium|high (none is off, so no separate toggle)
+# and input_cache_reads $0.00000002.
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 
-[[reasoning_options]]
-type = "toggle"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.1
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
 context = 196_608
 output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.5

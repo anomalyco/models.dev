@@ -1,10 +1,18 @@
 # https://novita.ai/models/model-detail/microsoft-wizardlm-2-8x22b
+# system_updates = false: the turn after a mid-conversation system message missed the cache in two trials while control turns hit (live 2026-10-20: control 8,128 then mid 0 cached; control 7,488 then mid 0; usage.prompt_tokens_details.cached_tokens, reported here although no cache-read price is listed).
+schema = 2
 base_model = "microsoft/wizardlm-2-8x22b"
-structured_output = true
 
-[cost]
-input = 0.62
-output = 0.62
+[capabilities]
+structured_output = true
+system_updates = false
+effort_updates = false
 
 [limit]
 context = 65_535
+
+[cost.text.input]
+price = 0.62
+
+[cost.text.output]
+price = 0.62

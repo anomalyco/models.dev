@@ -1,24 +1,21 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "mistral/devstral-2512"
 name = "Devstral 2 123B"
 description = "Mistral coding agent model for repository tasks and software engineering workflows"
-family = "devstral"
-release_date = "2025-12-09"
-last_updated = "2025-12-09"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.4
-output = 1.4
-cache_read = 0.2
+[capabilities]
+tools = { supported = false }
+structured_output = false
+effort_updates = false
 
 [limit]
-context = 262_144
 input = 262_144
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.4

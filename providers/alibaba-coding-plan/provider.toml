@@ -1,6 +1,7 @@
 name = "Alibaba Coding Plan"
 env = ["ALIBABA_CODING_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/alibaba/chat"
 # Reasoning HTTP format (accessed 2026-06-25):
 # OpenAI plan base https://coding-intl.dashscope.aliyuncs.com/v1 uses POST
 # /chat/completions with top-level `enable_thinking`: true or false.

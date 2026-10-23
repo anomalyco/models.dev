@@ -1,24 +1,33 @@
 # https://developers.cloudflare.com/workers-ai/models/clef/
-name = "Clef"
+# Images: embedded PNG, JPEG or WebP (model page).
+# API: POST /accounts/{ACCOUNT_ID}/ai/run/@cf/cloudflare/clef (https://developers.cloudflare.com/workers-ai/models/clef/).
+schema = 2
 type = "decision"
+name = "Clef"
 description = "Multimodal decision model for typed questions over text, structured state, and images"
-release_date = "2026-09-29"
-last_updated = "2026-09-29"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = true
+release_date = "2026-09-29"
 
-[cost]
-input = 0.24
-output = 0
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0

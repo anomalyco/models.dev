@@ -1,14 +1,21 @@
+# Images: POST /v3/images/generations only (https://www.edenai.co/docs/v3/llms/image-generation)
+schema = 2
 base_model = "google/gemini-3-pro-image"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
-[cost]
-input = 2
-output = 12
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 0.375 }
+
+[cost.text.output]
+price = 12
 reasoning = 12
-cache_read = 0.2
-cache_write = 0.375
-input_audio = 2
+
+[cost.audio.input]
+price = 2

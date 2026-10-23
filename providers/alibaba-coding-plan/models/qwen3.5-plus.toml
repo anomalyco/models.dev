@@ -1,26 +1,30 @@
+# Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates is left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits covers the Qwen-VL, QVQ and Qwen2.5-VL/Qwen3-VL series; video lists extensions, registered MIME types used).
+schema = 2
 name = "Qwen3.5 Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
-release_date = "2026-02-16"
-last_updated = "2026-02-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-knowledge = "2025-04"
-tool_call = true
 open_weights = false
+knowledge = "2025-04"
+release_date = "2026-02-16"
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+temperature = true
+effort_updates = false
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

@@ -1,17 +1,47 @@
+# Modalities: FLUX 3 Image has no output_format; BFL's quickstart saves result.sample as PNG, https://docs.bfl.ml/flux_3/flux3_image_generate
+schema = 2
+type = "image"
 name = "FLUX 3 Image"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "flux"
-release_date = "2026-10-05"
-last_updated = "2026-10-05"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-10-05"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["text"]
-output = ["image"]
+[api.images]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
+
+[cost.image.output]
+unit = "image"
+price = 0.048
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "768x768" } }
+price = 0.041
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "1536x1536" } }
+price = 0.07
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "2048x2048" } }
+price = 0.1
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "4096x4096" } }
+price = 0.607

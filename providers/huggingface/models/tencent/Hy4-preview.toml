@@ -1,13 +1,20 @@
 # Effort: reasoning_effort = none|high; high is the default.
 # https://huggingface.co/tencent/Hy4-preview#quickstart
+schema = 2
 base_model = "tencent/hy4-preview"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 0.834
-output = 2.501
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_000_000
+
+[cost.text.input]
+price = 0.834
+
+[cost.text.output]
+price = 2.501

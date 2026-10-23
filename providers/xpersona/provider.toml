@@ -2,7 +2,10 @@ name = "Xpersona"
 # POST /v1/chat/completions accepts reasoning.effort set to "low", "medium",
 # "high", "xhigh", or "max"; no disable sentinel or token budget is documented.
 # https://www.xpersona.co/api/v1/openapi/ai-public (accessed 2026-06-25)
+# GET /v1/pricing also lists minimumRequestUsd = 0.001 per request, which the
+# per-token costs here don't express (accessed 2026-10-21).
 env = ["XPERSONA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 api = "https://www.xpersona.co/v1"
 doc = "https://www.xpersona.co/docs"

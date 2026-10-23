@@ -1,0 +1,18 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
+# https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+schema = 2
+v2_only = true
+base_model = "google/gemini-embedding-2"
+
+[api.embeddings]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.image.input]
+price = 0.45
+
+[cost.audio.input]
+price = 6.5

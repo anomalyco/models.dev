@@ -1,0 +1,26 @@
+# Lab metadata carried over from providers/vercel/models/alibaba/qwen3-max-preview.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
+name = "Qwen3 Max Preview"
+description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
+family = "qwen"
+open_weights = false
+knowledge = "2025-04"
+release_date = "2025-09-05"
+last_updated = "2025-09-23"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768

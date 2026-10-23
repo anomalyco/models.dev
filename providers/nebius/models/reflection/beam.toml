@@ -1,0 +1,36 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# Accessed 2026-10-16.
+# Serverless FP8 deployment (us-north1), catalog model type text2text. Smoke-tested live
+# against api.tokenfactory.nebius.com/v1/chat/completions on 2026-10-16: reasoning is on by
+# default and returned on message.reasoning_content.
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max. Probed live on 2026-10-16
+# (temperature 0, fixed prompt, three runs per level): the gateway accepts exactly these
+# (plus an integer strength) and rejects none with 400 "must be an int or one of: minimal,
+# low, medium, high, xhigh, max". Unlike the first-party Reflection API, minimal is accepted
+# here and is distinctly shorter (~350-380 completion tokens vs ~400-1,160 for the other
+# levels). low..max are the lab's native ladder. Reasoning is always on: none is rejected
+# and chat_template_kwargs.enable_thinking=false is ignored, so there is no toggle.
+# No discounted prompt-cache tier is published in the public catalog: cached and fresh
+# input are billed identically, so cache_read = input (same rationale as Kimi-K3 / GLM-5.3).
+# Limits are inherited from the lab entry (1_048_576 context, matching models_info
+# max_model_len; 131_072 output).
+# Rechecked 2026-10-20 against models_info: price, max_model_len and model type unchanged; no
+# input_cached_price_per_million_tokens listed.
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 1

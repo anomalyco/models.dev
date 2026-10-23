@@ -1,15 +1,26 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Toggle: {"generationConfig":{"thinkingConfig":{"thinkingBudget":0}}}
+# Budget: {"generationConfig":{"thinkingConfig":{"thinkingBudget":<n>}}}
+# Prompt caching (https://impossibl.com/docs/prompt-caching): OpenAI, xAI, DeepSeek and Google routes cache implicitly.
+# Audio input: catalog audio_input_per_mtok_usd.
+schema = 2
 base_model = "google/gemini-2.5-flash"
 
-[cost]
-input = 0.30
-output = 2.50
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
+cache = { implicit = true }
+structured_output = true
 
-[[reasoning_options]]
-type = "toggle" # API: {"generationConfig":{"thinkingConfig":{"thinkingBudget":0}}}
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
 
-[[reasoning_options]]
-type = "budget_tokens" # API: {"generationConfig":{"thinkingConfig":{"thinkingBudget":<n>}}}
-min = 0
-max = 24576
+[cost.text.output]
+price = 2.5
+
+[cost.audio.input]
+price = 1

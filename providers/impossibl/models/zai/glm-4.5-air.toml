@@ -1,10 +1,18 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Toggle: {"reasoning_effort":"none"}
+schema = 2
 base_model = "zhipuai/glm-4.5-air"
 
-[cost]
-input = 0.20
-output = 1.10
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[[reasoning_options]]
-type = "toggle" # API: {"reasoning_effort":"none"}
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.1

@@ -1,0 +1,28 @@
+# Toggle: reasoning.enabled = true|false
+# Ambient request schema: https://api.ambient.xyz/openapi.json
+# Model controls: https://huggingface.co/MiniMaxAI/MiniMax-M3 (thinking on/off; no effort or budget)
+# Mid-conversation: Ambient serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://api.ambient.xyz/openapi.json
+schema = 2
+base_model = "minimax/MiniMax-M3"
+description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+effort_updates = false
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.23
+cache = { read = 0.05, write = 0 }
+
+[cost.text.output]
+price = 0.96

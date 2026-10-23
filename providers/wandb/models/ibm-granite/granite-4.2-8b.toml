@@ -1,27 +1,20 @@
-name = "Granite 4.2 8B"
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
+schema = 2
+base_model = "ibm/granite-4.2-8b"
 description = "Granite 4.2 8B is an instruct model capable of enhanced tool calling, instruction following, and chat capabilities."
-family = "granite"
-release_date = "2026-08-24"
-last_updated = "2026-08-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-open_weights = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.1
-output = 0.15
-cache_read = 0.05
+effort_updates = false
 
 [limit]
-context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.15

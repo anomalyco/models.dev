@@ -6,12 +6,17 @@
 # RouteLLM input_token_rate: 0.0000025
 # RouteLLM output_token_rate: 0.0000075
 # RouteLLM thinking: True
+schema = 2
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = []
 
-[cost]
-input = 2.5
-output = 7.5
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 output = 64_000
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 7.5

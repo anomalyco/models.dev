@@ -1,13 +1,20 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Effort: reasoning_effort = max (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["max"]
+[capabilities]
+reasoning = { supported = true, effort = ["max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

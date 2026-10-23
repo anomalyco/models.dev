@@ -1,24 +1,14 @@
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking.budget_tokens (lab-mapped, not probed on 302.AI)
+schema = 2
+base_model = "anthropic/claude-haiku-4-5-20251001"
 name = "claude-haiku-4-5-20251001"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-family = "claude-haiku"
-release_date = "2025-10-16"
-last_updated = "2025-10-16"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 63999 }]
-temperature = true
-tool_call = true
-open_weights = false
-knowledge = "2025-02-28"
 
-[cost]
-input = 1.000
-output = 5.000
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 63_999 } }
 
-[limit]
-context = 200_000
-output = 64_000
+[cost.text.input]
+price = 1
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 5

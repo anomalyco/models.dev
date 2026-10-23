@@ -3,17 +3,26 @@
 # https://docs.z.ai/guides/llm/glm-5.3-flash
 # https://huggingface.co/zai-org/GLM-5.3-Flash
 # https://huggingface.co/docs/inference-providers/tasks/chat-completion
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (zhipuai/glm-5.3-flash).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-open_weights = true
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[cost]
-input = 0.15
-output = 0.5
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.5

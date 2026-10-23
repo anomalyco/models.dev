@@ -1,24 +1,21 @@
 # Included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
+base_model = "thedrummer/cydonia-24b-v4.1"
 name = "The Drummer Cydonia 24B v4.1"
-description = "General-purpose chat model for instruction following, writing, and analysis"
-release_date = "2025-08-19"
-last_updated = "2025-08-19"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.35
-output = 0.55
-cache_read = 0.16
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = false
+effort_updates = false
 
 [limit]
-context = 131_072
 input = 131_072
-output = 117_964
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 0.5

@@ -9,18 +9,21 @@
 # Budget: thinking_budget (Max Reasoning 262K)
 # Reasoning streams in reasoning_content.
 # Cost is Credits-subscription (no public USD per-token rate on Token Plan).
+# Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates and effort_updates are left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens", max = 262_144 },
-]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 (TensorX)"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = false
+effort_updates = false
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 1.5

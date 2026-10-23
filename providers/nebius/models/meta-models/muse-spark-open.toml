@@ -1,0 +1,44 @@
+# Sources:
+# - https://tokenfactory.nebius.com/endpoints?modals=endpoint-details&model-id=meta-models/muse-spark-open
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# Accessed 2026-10-16.
+# Serverless NVFP4 deployment (us-north1), catalog model type image2text. Probed live against
+# api.tokenfactory.nebius.com/v1/chat/completions on 2026-10-16: image_url and video_url
+# input work; audio parts (input_audio, audio_url) are rejected by the gateway's request
+# schema with 422, so audio is dropped from the lab entry's inputs. Tool calling and strict
+# json_schema response_format both work.
+# Effort: reasoning_effort = low|medium|high|xhigh (default xhigh). This is the model's
+# native ladder (chat template maps it to strength 8/32/256/512); the gateway rejects
+# none/minimal/max with 400 "Expected one of: low, medium, high, xhigh". Reasoning cannot be
+# turned off: chat_template_kwargs.enable_thinking=false is ignored, so there is no toggle.
+# Reasoning text is returned on message.reasoning_content.
+# Served window: models_info max_model_len = 1_048_576 with no separate output cap
+# (max_tokens = 1_048_000 accepted live), so output is raised above the lab's 131_072.
+# No discounted prompt-cache tier is published (models_info has no cache fields and
+# /v1/models reports input_cache_read = null): cached and fresh input are billed
+# identically, so cache_read = input (same rationale as Kimi-K3 / GLM-5.3).
+# Rechecked 2026-10-20 against models_info: price, max_model_len and model type unchanged; no
+# input_cached_price_per_million_tokens listed.
+schema = 2
+base_model = "meta/muse-spark-open"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 4.25

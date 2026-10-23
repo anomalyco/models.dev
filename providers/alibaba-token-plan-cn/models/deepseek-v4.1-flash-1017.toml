@@ -1,0 +1,31 @@
+# Model availability: listed in the China Token Plan Team supported-models table
+# and discovered on China Team (2026-10-20); also discovered on Global Personal
+# and Global Team. Previously subscription-console only with POST
+# /chat/completions accepted but GET /models absent (checked 2026-10-19).
+# Reasoning HTTP format (accessed 2026-10-19):
+# Toggle: enable_thinking = true|false. Chat Completions `reasoning_effort`
+# accepts low, high (default), and max; medium and xhigh map to high.
+# Reasoning streams on `reasoning_content`.
+# Sources:
+# https://platform.qianwenai.com/docs/token-plan/team/token-plan-team-overview
+# https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
+# https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
+# Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates and effort_updates are left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (the DeepSeek, Kimi and MiniMax series do not support top_k).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

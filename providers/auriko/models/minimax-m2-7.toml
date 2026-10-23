@@ -1,11 +1,17 @@
-base_model = "minimax/MiniMax-M2.7"
-
 # Auriko documents M2-series reasoning as built in and drops reasoning_effort;
 # schema acceptance is therefore not a meaningful control for this model.
 # https://docs.auriko.ai/guides/extensions-and-thinking
-reasoning_options = []
+# Cache read 0.06: minimax route in https://api.auriko.ai/v1/directory/models
+# (accessed 2026-10-21).
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
 
-[cost]
-input = 0.3
-output = 1.2
-cache_write = 0.375
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06, write = 0.375 }
+
+[cost.text.output]
+price = 1.2

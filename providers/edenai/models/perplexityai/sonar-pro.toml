@@ -1,6 +1,12 @@
+schema = 2
 base_model = "perplexity/sonar-pro"
-structured_output = false
 
-[cost]
-input = 3
-output = 15
+[capabilities]
+structured_output = false
+effort_updates = false
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

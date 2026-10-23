@@ -1,24 +1,22 @@
-name = "ReMM SLERP 13B"
-description = "Open Llama multimodal model for image understanding and text reasoning"
-family = "llama"
-release_date = "2024-01-01"
-last_updated = "2025-01-01"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = true
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "undi95/remm-slerp-l2-13b"
 
-[cost]
-input = 0.799
-output = 1.207
-cache_read = 0.3995
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
+effort_updates = false
 
 [limit]
-context = 6_144
 input = 6_144
 output = 4_096
 
-[modalities]
-input = ["text", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.799
+cache = { read = 0.3995 }
+
+[cost.text.output]
+price = 1.207

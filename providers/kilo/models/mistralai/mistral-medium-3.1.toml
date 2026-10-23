@@ -1,24 +1,18 @@
-name = "Mistral: Mistral Medium 3.1"
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "mistral/mistral-medium-3.1"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-family = "mistral-medium"
-release_date = "2025-08-13"
-last_updated = "2025-08-13"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true, updates = false }
 structured_output = true
-open_weights = false
+effort_updates = false
 
-[cost]
-input = 0.4
-output = 2
-cache_read = 0.04
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
 
-[limit]
-context = 131_072
-output = 104_857
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 2

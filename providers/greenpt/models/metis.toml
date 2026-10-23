@@ -1,0 +1,33 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# EUR 0.12 per 1M input tokens (0.12 * 1.14 = 0.137). Metis generates no tokens, so output is 0.
+# Sources: https://docs.greenpt.ai/systemone and https://api.greenpt.ai/v1/pricing/metis (public, no key)
+# Served on POST /v1/systemone (TypeSafe System One wire format), not on chat completions.
+schema = 2
+type = "decision"
+name = "Metis"
+description = "GreenPT decision model: probabilities for yes/no, choice and score questions about a case"
+open_weights = false
+release_date = "2026-10-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 32_768
+output = 0
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.137
+
+[cost.text.output]
+price = 0

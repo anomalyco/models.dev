@@ -1,11 +1,17 @@
 # https://novita.ai/models/model-detail/deepseek-deepseek-r1-0528-qwen3-8b
 # Always-on distilled reasoning model; live availability checks returned 503, not MODEL_NOT_FOUND.
+schema = 2
 base_model = "deepseek/deepseek-r1-0528-qwen3-8b"
-reasoning_options = []
 
-[cost]
-input = 0.06
-output = 0.09
+[capabilities]
+reasoning = { supported = true }
+effort_updates = false
 
 [limit]
 context = 128_000
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.09

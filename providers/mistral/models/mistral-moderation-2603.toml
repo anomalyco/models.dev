@@ -1,0 +1,12 @@
+# Sources:
+#   GET https://api.mistral.ai/v1/models (mistral-moderation-2603)
+#   https://docs.mistral.ai/models/mistral-moderation-26-03 and https://docs.mistral.ai/inference/pricing (free)
+schema = 2
+v2_only = true
+base_model = "mistral/mistral-moderation-2603"
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

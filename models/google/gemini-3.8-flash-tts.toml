@@ -1,0 +1,28 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash-tts
+# - https://ai.google.dev/gemini-api/docs/speech-generation
+# - https://ai.google.dev/gemini-api/docs/changelog (GA 2026-09-22)
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+schema = 2
+v2_only = true
+type = "speech"
+name = "Gemini 3.8 Flash TTS"
+description = "Flagship text-to-speech model for expressive, studio-grade voices and long-form multi-speaker audio"
+family = "gemini-flash"
+open_weights = false
+release_date = "2026-09-22"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav", "audio/l16", "audio/mulaw", "audio/alaw"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8_192
+output = 16_384

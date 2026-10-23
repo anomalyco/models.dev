@@ -1,0 +1,33 @@
+# Lab metadata carried over from providers/openrouter/models/rekaai/reka-edge.toml (curated catalogue data already
+#   in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sources:
+# - Release 2026-03-11: https://reka.ai/news/reka-edge-frontier-level-edge-intelligence-for-physical-ai
+# - https://huggingface.co/RekaAI/reka-edge-2603 (open weights; image/video + text input)
+# - https://docs.reka.ai/chat/models.md (reka-edge-2603: 16k context, text/image/video input, tools)
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the Reka API
+#   also takes temperature, top_p and top_k
+#   (https://docs.reka.ai/chat/api-reference/create-chat-completion.md).
+# Image/video input: neither the model card nor the Reka API docs (https://docs.reka.ai/chat/multimodal.md)
+#   list accepted formats, so the inputs stay generic `image` and `video`.
+schema = 2
+name = "Reka Edge"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+family = "reka"
+open_weights = true
+release_date = "2026-03-11"
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+output = 14_745

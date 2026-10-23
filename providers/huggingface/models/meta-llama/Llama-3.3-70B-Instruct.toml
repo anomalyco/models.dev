@@ -1,10 +1,16 @@
+schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
-attachment = false
-structured_output = true
 
-[cost]
-input = 0.59
-output = 0.79
+[capabilities]
+tools = { supported = true, updates = false }
+structured_output = true
+effort_updates = false
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 0.59
+
+[cost.text.output]
+price = 0.79

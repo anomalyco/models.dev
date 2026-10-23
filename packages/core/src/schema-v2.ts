@@ -1,7 +1,13 @@
 import { z } from "zod";
 
 import { ModelFamily, ModelFamilyValues } from "./family.js";
-import { DateString, JsonValue } from "./schema.js";
+import {
+  BenchmarkResult,
+  DateString,
+  JsonValue,
+  ModelLink,
+  ModelWeights,
+} from "./schema.js";
 
 /**
  * Creates an open-ended string union for public API / OpenAPI schemas.
@@ -211,7 +217,7 @@ export const CacheTargetV2 = openEnum(CacheTargetV2Values);
 export type CacheTargetV2 = z.infer<typeof CacheTargetV2>;
 
 export const ImplicitCacheV2 = z.union([
-  z.boolean(),
+  z.literal(true),
   z
     .object({
       ttl: z.array(DurationStringV2).optional(),
@@ -223,7 +229,7 @@ export const ImplicitCacheV2 = z.union([
 export type ImplicitCacheV2 = z.infer<typeof ImplicitCacheV2>;
 
 export const ExplicitCacheV2 = z.union([
-  z.boolean(),
+  z.literal(true),
   z
     .object({
       ttl: z.array(DurationStringV2).optional(),
@@ -236,22 +242,31 @@ export const ExplicitCacheV2 = z.union([
 
 export type ExplicitCacheV2 = z.infer<typeof ExplicitCacheV2>;
 
-export const CacheSupportV2 = z.discriminatedUnion("supported", [
+export const CacheSupportV2 = z.union([
+  z.literal(false),
   z
     .object({
-      supported: z.literal(false),
-    })
-    .strict(),
-  z
-    .object({
-      supported: z.literal(true),
       implicit: ImplicitCacheV2.optional(),
       explicit: ExplicitCacheV2.optional(),
     })
-    .strict(),
+    .strict()
+    .refine((cache) => cache.implicit !== undefined || cache.explicit !== undefined, {
+      message: "List at least one cache kind (implicit or explicit), or set cache = false",
+    }),
 ]);
 
 export type CacheSupportV2 = z.infer<typeof CacheSupportV2>;
+
+export const ServiceTierV2Values = [
+  "flex",
+  "priority",
+  "fast",
+  "ultrafast",
+] as const;
+
+export const KnownServiceTierV2 = z.enum(ServiceTierV2Values);
+export const ServiceTierV2 = openEnum(ServiceTierV2Values);
+export type ServiceTierV2 = z.infer<typeof ServiceTierV2>;
 
 export const CapabilitiesV2 = z
   .object({
@@ -264,6 +279,10 @@ export const CapabilitiesV2 = z
     top_k: z.boolean().optional(),
     system_updates: z.boolean().optional(),
     effort_updates: z.boolean().optional(),
+    store: z.boolean().optional(),
+    stream_usage: z.boolean().optional(),
+    prompt_cache_key: z.boolean().optional(),
+    service_tier: z.array(ServiceTierV2).optional(),
   })
   .strict();
 
@@ -334,29 +353,11 @@ export const KnownMaxTokensFieldV2 = z.enum(MaxTokensFieldV2Values);
 export const MaxTokensFieldV2 = openEnum(MaxTokensFieldV2Values);
 export type MaxTokensFieldV2 = z.infer<typeof MaxTokensFieldV2>;
 
-export const SanitizerV2Values = [
-  "gemini",
-  "moonshot",
-  "none",
-] as const;
-
-export const KnownSanitizerV2 = z.enum(SanitizerV2Values);
-export const SanitizerV2 = openEnum(SanitizerV2Values);
-export type SanitizerV2 = z.infer<typeof SanitizerV2>;
-
 export const CompatibilityV2 = z
   .object({
-    sanitizer: SanitizerV2.optional(),
     reasoning_field: ReasoningFieldV2.optional(),
-    require_reasoning: z.boolean().optional(),
+    replay_reasoning: z.boolean().optional(),
     max_tokens_field: MaxTokensFieldV2.optional(),
-    require_finish_reason: z.boolean().optional(),
-    require_assistant_after_tool: z.boolean().optional(),
-    supports_store: z.boolean().optional(),
-    supports_streaming_usage: z.boolean().optional(),
-    supports_prompt_cache_key: z.boolean().optional(),
-    zai_tool_stream: z.boolean().optional(),
-    require_signature: z.boolean().optional(),
   })
   .strict();
 
@@ -397,6 +398,10 @@ export const ApiProtocolV2Values = [
   "videos",
   "realtime",
   "live",
+  // Google Live API: the `BidiGenerateContent` WebSocket.
+  "bidi-generate-content",
+  // Google Lyria RealTime: the `BidiGenerateMusic` WebSocket.
+  "bidi-generate-music",
   "rerank",
   "speech",
   "transcriptions",
@@ -411,54 +416,273 @@ export type ApiProtocolV2 = z.infer<typeof ApiProtocolV2>;
 export const ApiV2 = z.record(ApiProtocolV2, ApiEntryV2);
 export type ApiV2 = z.infer<typeof ApiV2>;
 
-// TODO(v2): Revisit pricing design to support:
-// - service tiers (fast, priority, flex, ultrafast, batch)
-// - more pricing capabilities (e.g. 5m vs 1h cache TTLs, non-token media pricing)
-export const BaseCostV2 = z
+// Prices are USD per 1M for `token` and `character`, and per 1 unit otherwise.
+export const CostUnitV2Values = [
+  "token",
+  "character",
+  "image",
+  "megapixel",
+  "second",
+  "minute",
+] as const;
+
+export const KnownCostUnitV2 = z.enum(CostUnitV2Values);
+export const CostUnitV2 = openEnum(CostUnitV2Values);
+export type CostUnitV2 = z.infer<typeof CostUnitV2>;
+
+export const HolidayV2Values = ["CN", "US", "CA"] as const;
+
+export const KnownHolidayV2 = z.enum(HolidayV2Values);
+export const HolidayV2 = openEnum(HolidayV2Values);
+export type HolidayV2 = z.infer<typeof HolidayV2>;
+
+export const UtcDayV2Values = [
+  "mon",
+  "tue",
+  "wed",
+  "thu",
+  "fri",
+  "sat",
+  "sun",
+] as const;
+
+export const KnownUtcDayV2 = z.enum(UtcDayV2Values);
+export const UtcDayV2 = openEnum(UtcDayV2Values);
+export type UtcDayV2 = z.infer<typeof UtcDayV2>;
+
+export const SearchContextSizeV2Values = ["low", "medium", "high"] as const;
+
+export const KnownSearchContextSizeV2 = z.enum(SearchContextSizeV2Values);
+export const SearchContextSizeV2 = openEnum(SearchContextSizeV2Values);
+export type SearchContextSizeV2 = z.infer<typeof SearchContextSizeV2>;
+
+const PriceV2 = z.number().min(0, "Price cannot be negative");
+
+const CostConditionValueV2 = z.union([z.string(), z.number(), z.boolean()]);
+
+// Strings compare lexicographically, so ISO dates (`date`) and "HH:MM" times work.
+const CostComparableV2 = z.union([z.number(), z.string()]);
+
+// Exactly one operator per condition.
+export const CostConditionV2 = z.union([
+  z.object({ equals: CostConditionValueV2 }).strict(),
+  z.object({ in: z.array(CostConditionValueV2) }).strict(),
+  z.object({ gt: CostComparableV2 }).strict(),
+  z.object({ gte: CostComparableV2 }).strict(),
+  z.object({ lt: CostComparableV2 }).strict(),
+  z.object({ lte: CostComparableV2 }).strict(),
+  z.object({ min_items: z.number().int().min(0) }).strict(),
+]);
+
+export type CostConditionV2 = z.infer<typeof CostConditionV2>;
+
+function choiceCondition<T extends z.ZodTypeAny>(value: T) {
+  return z.union([
+    z.object({ equals: value }).strict(),
+    z.object({ in: z.array(value) }).strict(),
+  ]);
+}
+
+export const CostConditionKeyV2Values = [
+  "context",
+  "duration",
+  "megapixels",
+  "input_images",
+  "service_tier",
+  "region",
+  "date",
+  "utc_days",
+  "utc_hours",
+  "holiday",
+  "thinking",
+  "resolution",
+  "quality",
+  "aspect_ratio",
+  "generate_audio",
+  "mode",
+  "input_video",
+  "fps",
+  "steps",
+  "search_context_size",
+] as const;
+
+export const KnownCostConditionKeyV2 = z.enum(CostConditionKeyV2Values);
+export const CostConditionKeyV2 = openEnum(CostConditionKeyV2Values);
+export type CostConditionKeyV2 = z.infer<typeof CostConditionKeyV2>;
+
+// Known condition keys, typed for autocomplete. `when` also accepts any other key.
+const KnownCostConditionsV2 = z
   .object({
-    input: z.number().min(0, "Input price cannot be negative"),
-    output: z.number().min(0, "Output price cannot be negative"),
-    reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
-    cache_read: z
-      .number()
-      .min(0, "Cache read price cannot be negative")
-      .optional(),
-    cache_write: z
-      .number()
-      .min(0, "Cache write price cannot be negative")
-      .optional(),
-    input_audio: z
-      .number()
-      .min(0, "Audio input price cannot be negative")
-      .optional(),
-    output_audio: z
-      .number()
-      .min(0, "Audio output price cannot be negative")
+    context: CostConditionV2,
+    duration: CostConditionV2,
+    megapixels: CostConditionV2,
+    input_images: CostConditionV2,
+    service_tier: choiceCondition(ServiceTierV2),
+    region: CostConditionV2,
+    date: CostConditionV2,
+    utc_days: choiceCondition(UtcDayV2),
+    utc_hours: CostConditionV2,
+    holiday: choiceCondition(HolidayV2),
+    thinking: CostConditionV2,
+    resolution: CostConditionV2,
+    quality: CostConditionV2,
+    aspect_ratio: CostConditionV2,
+    generate_audio: CostConditionV2,
+    mode: CostConditionV2,
+    input_video: CostConditionV2,
+    fps: CostConditionV2,
+    steps: CostConditionV2,
+    search_context_size: choiceCondition(SearchContextSizeV2),
+  } satisfies Record<(typeof CostConditionKeyV2Values)[number], z.ZodTypeAny>)
+  .partial();
+
+export type CostWhenV2 = z.infer<typeof KnownCostConditionsV2> & {
+  all?: CostWhenV2[];
+  any?: CostWhenV2[];
+  not?: CostWhenV2;
+  [key: string]: CostConditionV2 | CostWhenV2[] | CostWhenV2 | undefined;
+};
+
+export const CostWhenV2: z.ZodType<CostWhenV2> = z.lazy(() =>
+  KnownCostConditionsV2.extend({
+    all: z.array(CostWhenV2).optional(),
+    any: z.array(CostWhenV2).optional(),
+    not: CostWhenV2.optional(),
+  }).catchall(CostConditionV2),
+);
+
+export const CachePricesV2 = z
+  .object({
+    read: PriceV2.optional(),
+    write: z.union([PriceV2, z.record(DurationStringV2, PriceV2)]).optional(),
+    storage: PriceV2.optional(),
+  })
+  .strict();
+
+export type CachePricesV2 = z.infer<typeof CachePricesV2>;
+
+export const CacheCostV2 = CachePricesV2.extend({
+  explicit: CachePricesV2.optional(),
+}).strict();
+
+export type CacheCostV2 = z.infer<typeof CacheCostV2>;
+
+const InputPricesV2 = z
+  .object({
+    price: PriceV2,
+    cache: CacheCostV2.optional(),
+  })
+  .strict();
+
+export const InputCostV2 = z
+  .object({ unit: CostUnitV2.optional() })
+  .extend(InputPricesV2.shape)
+  .extend({
+    overrides: z
+      .array(
+        z
+          .object({ when: CostWhenV2 })
+          .extend(InputPricesV2.partial().shape)
+          .strict(),
+      )
       .optional(),
   })
   .strict();
 
-export type BaseCostV2 = z.infer<typeof BaseCostV2>;
+export type InputCostV2 = z.infer<typeof InputCostV2>;
 
-export const CostTierV2 = BaseCostV2.extend({
-  tier: z
-    .object({
-      type: z.literal("context").default("context"),
-      size: z.number().int().min(0, "Context tier size cannot be negative"),
-    })
-    .strict(),
+const OutputPricesV2 = z
+  .object({
+    price: PriceV2,
+    reasoning: PriceV2.optional(),
+  })
+  .strict();
+
+export const OutputCostV2 = z
+  .object({ unit: CostUnitV2.optional() })
+  .extend(OutputPricesV2.shape)
+  .extend({
+    overrides: z
+      .array(
+        z
+          .object({ when: CostWhenV2 })
+          .extend(OutputPricesV2.partial().shape)
+          .strict(),
+      )
+      .optional(),
+  })
+  .strict();
+
+export type OutputCostV2 = z.infer<typeof OutputCostV2>;
+
+export const ModalityCostV2 = z
+  .object({
+    input: InputCostV2.optional(),
+    output: OutputCostV2.optional(),
+  })
+  .strict();
+
+export type ModalityCostV2 = z.infer<typeof ModalityCostV2>;
+
+const WebSearchPricesV2 = z
+  .object({
+    price: PriceV2,
+  })
+  .strict();
+
+// USD per 1,000 web searches (or search requests, as the host bills them).
+export const WebSearchCostV2 = WebSearchPricesV2.extend({
+  overrides: z
+    .array(
+      z
+        .object({ when: CostWhenV2 })
+        .extend(WebSearchPricesV2.partial().shape)
+        .strict(),
+    )
+    .optional(),
 }).strict();
 
-export type CostTierV2 = z.infer<typeof CostTierV2>;
+export type WebSearchCostV2 = z.infer<typeof WebSearchCostV2>;
 
-export const CostV2 = BaseCostV2.extend({
-  tiers: z.array(CostTierV2).optional(),
-}).strict();
+// A plain number multiplies every price in the cost, `web_search` included; an object
+// (e.g. `{ text = 2, audio = 2 }`) multiplies only the prices it names.
+export type CostFactorV2 = number | { [key: string]: CostFactorV2 };
+
+export const CostFactorV2: z.ZodType<CostFactorV2> = z.lazy(() =>
+  z.union([
+    z.number().min(0, "Factor cannot be negative"),
+    z.record(CostFactorV2),
+  ]),
+);
+
+export const CostMultiplierV2 = z
+  .object({
+    when: CostWhenV2,
+    factor: CostFactorV2,
+  })
+  .strict();
+
+export type CostMultiplierV2 = z.infer<typeof CostMultiplierV2>;
+
+// Matching overrides merge field by field (nested objects included) in order, then
+// every matching multiplier applies. Rules with unknown condition keys are skipped.
+export const CostV2 = z
+  .object({
+    text: ModalityCostV2.optional(),
+    image: ModalityCostV2.optional(),
+    audio: ModalityCostV2.optional(),
+    video: ModalityCostV2.optional(),
+    web_search: WebSearchCostV2.optional(),
+    multipliers: z.array(CostMultiplierV2).optional(),
+  })
+  .strict();
 
 export type CostV2 = z.infer<typeof CostV2>;
 
 export const ExperimentalModeV2 = z
   .object({
+    // The service tier this mode runs on, when it differs from the mode name.
+    service_tier: ServiceTierV2.optional(),
     cost: CostV2.optional(),
     capabilities: CapabilitiesOverrideV2.optional(),
     body: z.record(JsonValue).optional(),
@@ -496,10 +720,138 @@ export const ModelV2 = z
     cost: CostV2.optional(),
     api: ApiV2,
     experimental: ExperimentalV2.optional(),
+    metadata: z.record(JsonValue).optional(),
   })
   .strict();
 
 export type ModelV2 = z.infer<typeof ModelV2>;
+
+// Lab files only hold what is true of the model on every host. Everything else
+// (reasoning controls, structured output, cache, service tiers…) is per provider.
+export const LabCapabilitiesV2 = z
+  .object({
+    tools: ToolsSupportV2,
+    reasoning: z.object({ supported: z.boolean() }).strict(),
+    temperature: z.boolean(),
+    top_p: z.boolean(),
+    top_k: z.boolean(),
+  })
+  .strict();
+
+export type LabCapabilitiesV2 = z.infer<typeof LabCapabilitiesV2>;
+
+// Authored lab model file (`models/<lab>/<model>.toml`): provider-agnostic facts
+// that hosts inherit through `base_model`.
+export const LabModelV2 = z
+  .object({
+    // Published in the v2 API only; v1 output leaves the model out.
+    v2_only: z.boolean().optional(),
+    id: z.string(),
+    type: ModelTypeV2.optional(),
+    name: z.string().min(1, "Model name cannot be empty"),
+    description: z.string().min(1, "Model description cannot be empty"),
+    family: ModelFamilyV2.optional(),
+    open_weights: z.boolean(),
+    knowledge: DateString.optional(),
+    release_date: DateString,
+    last_updated: DateString.optional(),
+    modalities: ModalitiesV2,
+    capabilities: LabCapabilitiesV2,
+    limit: LimitV2,
+    license: z.string().min(1, "License cannot be empty").optional(),
+    links: z.array(ModelLink).optional(),
+    weights: z.array(ModelWeights).optional(),
+    benchmarks: z.array(BenchmarkResult).optional(),
+    metadata: z.record(JsonValue).optional(),
+  })
+  .strict();
+
+export type LabModelV2 = z.infer<typeof LabModelV2>;
+
+// Lab metadata file (`labs/<lab>/lab.toml`): facts about the lab itself, shown
+// on the website's lab pages. Not part of the v1 or v2 API output.
+export const LabMetadataV2 = z
+  .object({
+    description: z.string().min(1, "Lab description cannot be empty"),
+  })
+  .strict();
+
+export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
+
+// `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
+// point: `@opencode/ai/providers/<path>` for a provider's chat, responses or
+// messages model (`@opencode/ai/providers/openai/chat`), or
+// `@opencode/ai/protocols/<name>` for an API with no provider entry point, such
+// as media (`@opencode/ai/protocols/openai-images`, `openai-speech`,
+// `openai-transcription`). `"none"` (here or in `sdk.aisdk`) says no package
+// supports the API: nothing is filled in and the v2 output has no such key.
+export const OpencodePackageV2 = z.union([
+  z.literal("none"),
+  z
+    .string()
+    .regex(
+      /^@opencode\/ai\/(providers|protocols)\/[a-z0-9-]+(\/[a-z0-9-]+)*$/,
+      "Must be \"none\" or an @opencode/ai/providers/... or @opencode/ai/protocols/... entry point",
+    ),
+]);
+
+// A provider model file's APIs. Its `[api.<protocol>]` tables are the model's
+// complete list, in order, and replace the provider's default API. Anything a
+// table leaves out comes from the provider: `base_url` from `api` (or the SDK's
+// default URL), `sdk.aisdk` from `npm`, `sdk.opencodeai` from `opencodeai`.
+// `"none"` stops a package from being filled in. v1 only gets the first table.
+export const AuthoredApiEntryV2 = z
+  .object({
+    base_url: ApiBaseUrlV2.optional(),
+    sdk: z
+      .object({
+        aisdk: z.string().min(1).optional(),
+        opencodeai: OpencodePackageV2.optional(),
+      })
+      .strict()
+      .optional(),
+    compatibility: CompatibilityV2.pick({ reasoning_field: true, replay_reasoning: true })
+      .strict()
+      .optional(),
+    // Legacy, v1-only: the v1 `provider.shape` of a file that states its SDK's
+    // default protocol (Responses on `@ai-sdk/openai`). It only keeps that
+    // published v1 field unchanged; the v2 API never emits it.
+    legacy_shape: z.enum(["responses", "completions"]).optional(),
+  })
+  .strict();
+
+export type AuthoredApiEntryV2 = z.infer<typeof AuthoredApiEntryV2>;
+
+// Authored provider model file (`providers/<provider>/models/<model>.toml`). With
+// `base_model`, it holds only what differs from the lab file. Without it, it is a
+// full definition.
+export const AuthoredModelV2 = z
+  .object({
+    // Published in the v2 API only; v1 output leaves the model out.
+    v2_only: z.boolean().optional(),
+    id: z.string(),
+    base_model: z.string().min(1, "Base model cannot be empty").optional(),
+    base_model_omit: z.array(z.string()).optional(),
+    type: ModelTypeV2.optional(),
+    name: z.string().min(1, "Model name cannot be empty").optional(),
+    description: z.string().min(1, "Model description cannot be empty").optional(),
+    family: ModelFamilyV2.optional(),
+    open_weights: z.boolean().optional(),
+    knowledge: DateString.optional(),
+    release_date: DateString.optional(),
+    last_updated: DateString.optional(),
+    status: z.enum(["alpha", "beta", "deprecated"]).optional(),
+    modalities: ModalitiesV2.optional(),
+    capabilities: CapabilitiesOverrideV2.optional(),
+    limit: LimitV2.optional(),
+    cost: CostV2.optional(),
+    api: z.record(ApiProtocolV2, AuthoredApiEntryV2).optional(),
+    experimental: ExperimentalV2.optional(),
+    metadata: z.record(JsonValue).optional(),
+  })
+  .strict();
+
+export type AuthoredModelV2 = z.infer<typeof AuthoredModelV2>;
 
 export const ProviderV2 = z
   .object({

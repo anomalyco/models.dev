@@ -3,14 +3,15 @@
 # https://platform.stepfun.ai/docs/en/step-plan/integrations/reasoning-api
 # Step 5 Preview's model card lists 64k maximum output:
 # https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
+schema = 2
 base_model = "stepfun/step-5-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

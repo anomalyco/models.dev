@@ -1,23 +1,30 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 name = "devstral-latest"
 description = "An enterprise grade text model, that excels at using tools to explore codebases, editing multiple files and power software engineering agents."
 family = "devstral"
-release_date = "2026-05-27"
-last_updated = "2026-05-27"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-05-27"
 
-[cost]
-input = 0.44
-output = 2.2
-cache_read = 0.44
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = false
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.44
+cache = { read = 0.44 }
+
+[cost.text.output]
+price = 2.2

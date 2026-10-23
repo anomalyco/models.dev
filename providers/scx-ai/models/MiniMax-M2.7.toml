@@ -9,16 +9,23 @@
 # Reasoning is returned on a side channel, but this host names the field
 # `reasoning` rather than `reasoning_content`/`reasoning_details`, so
 # `interleaved` is the bare boolean instead of a field name.
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-interleaved = true
 
-[cost]
-input = 0.48
-output = 1.79
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 196_608
 output = 196_608
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.48
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.79

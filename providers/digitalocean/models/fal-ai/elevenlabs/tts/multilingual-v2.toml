@@ -1,18 +1,13 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (fal models: POST /v1/async-invoke, no OpenAI protocol)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ($0.10 per 1,000 characters)
+schema = 2
+base_model = "elevenlabs/eleven_multilingual_v2"
 name = "ElevenLabs Multilingual TTS v2"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "elevenlabs"
-release_date = "2023-08-22"
-last_updated = "2026-04-16"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = false
 
-[limit]
-context = 0
-output = 0
+[api.speech]
+sdk = { aisdk = "none", opencodeai = "none" }
 
-[modalities]
-input = ["text"]
-output = ["audio"]
+[cost.text.input]
+unit = "character"
+price = 100

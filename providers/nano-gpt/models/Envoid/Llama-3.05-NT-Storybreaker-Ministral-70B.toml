@@ -1,24 +1,30 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 name = "Llama 3.05 Storybreaker Ministral 70b"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "llama"
+open_weights = true
 release_date = "2024-01-01"
 last_updated = "2024-12-01"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.493
-output = 0.493
-cache_read = 0.2465
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+effort_updates = false
 
 [limit]
 context = 16_384
 input = 16_384
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.493
+cache = { read = 0.2465 }
+
+[cost.text.output]
+price = 0.493

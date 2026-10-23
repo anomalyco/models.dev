@@ -1,19 +1,15 @@
+# Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
+# Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
+base_model = "zhipuai/glm-4.5-air"
 name = "GLM 4.5 Air"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-temperature = true
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = false
-open_weights = false
 
 [limit]
 context = 131_000
 output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]

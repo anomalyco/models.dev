@@ -1,0 +1,17 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
+# https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+# Limit: OpenRouter's catalog reports 512, the encoder's position limit; the lab's context is sentence-transformers'
+#   default truncation (max_seq_length).
+schema = 2
+v2_only = true
+base_model = "sentence-transformers/all-minilm-l12-v2"
+
+[limit]
+context = 512
+
+[api.embeddings]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.005

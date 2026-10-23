@@ -1,6 +1,12 @@
 # https://novita.ai/models/model-detail/zai-org-autoglm-phone-9b-multilingual
+schema = 2
 base_model = "zhipuai/autoglm-phone-9b-multilingual"
 
-[cost]
-input = 0.035
-output = 0.138
+[capabilities]
+effort_updates = false
+
+[cost.text.input]
+price = 0.035
+
+[cost.text.output]
+price = 0.138

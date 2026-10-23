@@ -1,11 +1,11 @@
 # Chat `reasoning_effort` and Messages `output_config.effort` accept low/high
 # (accessed 2026-06-25).
 # https://platform.stepfun.ai/docs/en/guides/models/step-3.5-flash
+schema = 2
 base_model = "stepfun/step-3.5-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

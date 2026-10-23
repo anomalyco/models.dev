@@ -1,0 +1,35 @@
+# Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, Singapore, accessed 2026-10-19). Billed per output image.
+# Image generation and editing: https://www.alibabacloud.com/help/en/model-studio/image-model
+# MIME types: input images JPG, JPEG, PNG, BMP, TIFF, WEBP or GIF; output PNG, per https://www.alibabacloud.com/help/en/model-studio/qwen-image-edit-api.
+# API: POST /api/v1/services/aigc/multimodal-generation/generation (https://www.alibabacloud.com/help/en/model-studio/qwen-image-api)
+schema = 2
+v2_only = true
+type = "image"
+name = "Qwen Image 2.0"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "qwen"
+open_weights = false
+release_date = "2026-03-03"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/tiff", "image/webp", "image/gif"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[api.images]
+base_url = "https://dashscope-intl.aliyuncs.com/api/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.output]
+unit = "image"
+price = 0.035

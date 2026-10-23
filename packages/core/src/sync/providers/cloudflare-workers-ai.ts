@@ -19,8 +19,10 @@ const ENABLE_THINKING_MODELS = new Set([
   "@cf/zai-org/glm-5.2",
 ]);
 // Workers AI search reports these as text generation, but their served API takes
-// state + typed questions and returns decisions rather than chat completions.
+// state + typed questions (or fields, for Clairic) and returns typed answers rather
+// than chat completions.
 const DECISION_MODELS = new Set([
+  "@cf/cloudflare/clairic",
   "@cf/cloudflare/clef",
   "@cf/cloudflare/clef-flash",
   "@cf/cloudflare/clef-omni",
@@ -212,7 +214,9 @@ export function buildWorkersAiModel(
     existing?.base_model ?? resolveCloudflareBaseModel(model),
   );
   const type = DECISION_MODELS.has(model.id) ? "decision" : existing?.type;
-  const typed = type === undefined ? synced : { ...synced, type: "decision" as const };
+  const decision = type === undefined ? synced : { ...synced, type: "decision" as const };
+  // Workers AI search has no API address, so the file's own one (v1 `provider`) is kept.
+  const typed = existing?.provider === undefined ? decision : { ...decision, provider: existing.provider };
   if ("base_model" in typed) return typed;
   return {
     ...typed,
@@ -252,7 +256,9 @@ function workersAiReasoningOptions({ id, reasoning }: WorkersAiModel): SyncedFul
     options.push({ type: "toggle" });
   }
 
-  const values = reasoning.mandatory ? efforts?.filter((value) => value !== "none") : efforts;
+  // Search lists efforts strongest first; v2 files keep them weakest first.
+  const values = (reasoning.mandatory ? efforts?.filter((value) => value !== "none") : efforts)
+    ?.toSorted((a, b) => effortRank(a) - effortRank(b));
   // One mandatory effective effort offers no caller choice. Unlike missing or
   // empty metadata, a concrete singleton establishes this explicitly.
   const fixedEffort = reasoning.mandatory === true && values?.length === 1;
@@ -267,6 +273,12 @@ function workersAiReasoningOptions({ id, reasoning }: WorkersAiModel): SyncedFul
 
   // Empty control metadata never clears authored controls; a known fixed effort can.
   return options.length > 0 || fixedEffort ? options : undefined;
+}
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
+
+function effortRank(effort: string) {
+  return EFFORT_ORDER.indexOf(effort);
 }
 
 export function resolveCloudflareBaseModel(model: WorkersAiModel) {

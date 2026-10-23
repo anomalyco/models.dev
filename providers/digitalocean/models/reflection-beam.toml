@@ -1,0 +1,26 @@
+schema = 2
+name = "Beam"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "beam"
+open_weights = false
+release_date = "2026-10-21"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2
