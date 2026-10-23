@@ -3,6 +3,7 @@
 # Standard us-east-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
 # Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# v2 cache: implicit for all text prompts; explicit cachePoint in system/messages, 5m TTL, 4 checkpoints per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html.
 schema = 2
 base_model = "amazon/nova-micro"
 
@@ -10,6 +11,7 @@ base_model = "amazon/nova-micro"
 tools = { supported = true, updates = false }
 system_updates = false
 effort_updates = false
+cache = { supported = true, implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 
 [cost.text.input]
 price = 0.035

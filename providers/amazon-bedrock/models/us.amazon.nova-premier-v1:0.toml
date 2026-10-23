@@ -7,6 +7,7 @@
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
 # Modalities: Converse images png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); video MP4, MOV, MKV, WebM, FLV, MPEG/MPG, WMV, 3GP (https://docs.aws.amazon.com/nova/latest/userguide/modalities-video.html);
 # documents PDF, CSV, TXT, HTML, Markdown (https://docs.aws.amazon.com/nova/latest/userguide/modalities-document.html). DOC/DOCX/XLS/XLSX are also supported but have no v1 modality, so they are left out.
+# v2 cache: implicit for all text prompts; Premier isn't in the explicit cachePoint table (https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html).
 schema = 2
 base_model = "amazon/nova-premier"
 name = "Nova Premier (US)"
@@ -21,6 +22,7 @@ tools = { supported = true, updates = false }
 structured_output = false
 system_updates = false
 effort_updates = false
+cache = { supported = true, implicit = true }
 
 [cost.text.input]
 price = 2.5
