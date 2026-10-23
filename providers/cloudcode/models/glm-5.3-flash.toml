@@ -1,0 +1,30 @@
+# Price: https://cloudcode.one/models.json (accessed 2026-10-23).
+# Effort: reasoning_effort = low|high|max (none is ignored, not a way to turn reasoning off)
+# Checked live through the Chat Completions endpoint on 2026-10-23:
+# - Images: PNG, JPEG, WebP and GIF were read.
+# - low cut reasoning to about a quarter of high on the same prompt.
+# - Caching is automatic but not on every repeat: cached tokens are reported on production traffic,
+#   while five repeats of a 16k-token prefix on 2026-10-23 reported none.
+# - A strict json_schema response_format was not followed (JSON under another key), so no structured output.
+# - top_k is not applied.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.165
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 0.55
