@@ -8,6 +8,11 @@ reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
 effort_updates = false
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 2.5
 

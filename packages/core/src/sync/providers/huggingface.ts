@@ -101,7 +101,7 @@ export const huggingface = {
     // Existing files are curated (prices differ per inference provider), so the
     // sync only creates new ones and writes existing files back unchanged.
     const v2 = context.v2?.(model.id);
-    if (v2 !== undefined) return { id: model.id, v2 };
+    if (v2 !== undefined) return { id: model.id, v2: { ...v2, api: chatApis(v2.api) } };
     const authored = context.authored(model.id);
     if (authored !== undefined) return { id: model.id, model: authored as SyncedModel };
 
@@ -218,7 +218,27 @@ export function buildHuggingFaceModel(
   if (aggregate.tools) next.tools = { supported: true, updates: false };
   Object.assign(next, doc.capabilities, { effort_updates: false });
   doc.capabilities = next;
+  doc.api = chatApis(undefined);
   return doc;
+}
+
+// The router serves every chat model on POST /v1/responses too ("All Inference Providers chat
+// completion models should be compatible with the Responses API"):
+// https://huggingface.co/docs/inference-providers/guides/responses-api
+const RESPONSES_API = {
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+};
+
+// A chat model's APIs: its own first table (what v1 reads; an empty table takes the
+// provider's Chat Completions API), then Responses.
+export function chatApis(current: unknown): Record<string, unknown> {
+  const { responses: _responses, ...own } = current !== null && typeof current === "object" && !Array.isArray(current)
+    ? current as Record<string, unknown>
+    : {};
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    responses: structuredClone(RESPONSES_API),
+  };
 }
 
 function labModel(modelID: string) {

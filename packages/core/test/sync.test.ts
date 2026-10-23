@@ -8043,6 +8043,7 @@ test("Hugging Face creates v2 files with host data only and the lab's exact MIME
       effort_updates: false,
     },
     cost: { text: { input: { price: 0.4 }, output: { price: 3.2 } } },
+    api: { "chat-completions": {}, responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } } },
   });
   expect(doc).not.toHaveProperty("limit");
 
@@ -8069,13 +8070,23 @@ test("Hugging Face skips new reasoning models until their controls are authored"
   expect(() => buildHuggingFaceModel(huggingFaceModel(), "lab/missing")).toThrow("no lab file");
 });
 
-test("Hugging Face writes existing files back unchanged", () => {
+test("Hugging Face writes existing files back unchanged apart from their API tables", () => {
   const v2 = { schema: 2, base_model: "alibaba/qwen3.5-122b-a10b", cost: { text: { input: { price: 9 }, output: { price: 9 } } } };
-  expect(huggingface.translateModel(huggingFaceModel(), {
+  const responses = { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } };
+  const translate = (doc: Record<string, unknown>) => huggingface.translateModel(huggingFaceModel(), {
     existing: () => ({ base_model: "alibaba/qwen3.5-122b-a10b" }),
     authored: () => ({ base_model: "alibaba/qwen3.5-122b-a10b" }),
-    v2: () => v2,
-  })).toEqual({ id: "Qwen/Qwen3.5-122B-A10B", v2 });
+    v2: () => doc,
+  });
+  // A file with no table gets the provider's Chat Completions API first, then Responses.
+  const once = translate(v2);
+  expect(once).toEqual({ id: "Qwen/Qwen3.5-122B-A10B", v2: { ...v2, api: { "chat-completions": {}, responses } } });
+  // An existing first table is kept as is, and a second run changes nothing.
+  const first = { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } };
+  const kept = translate({ ...v2, api: first }) as { v2: Record<string, unknown> };
+  expect(Object.keys(kept.v2.api as object)).toEqual(["chat-completions", "responses"]);
+  expect(kept.v2.api).toEqual({ ...first, responses });
+  expect(translate(kept.v2)).toEqual(kept);
   expect(huggingface.translateModel(huggingFaceModel({ providers: [] }), {
     existing: () => undefined,
     authored: () => undefined,

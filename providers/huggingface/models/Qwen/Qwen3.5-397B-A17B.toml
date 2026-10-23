@@ -21,6 +21,9 @@ output = 32_768
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 0.6
 

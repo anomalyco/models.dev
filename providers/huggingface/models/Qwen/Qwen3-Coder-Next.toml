@@ -8,6 +8,11 @@ description = "Qwen coding model for software agents, repository edits, and code
 tools = { supported = true, updates = false }
 effort_updates = false
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 0.2
 
