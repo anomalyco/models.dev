@@ -1,14 +1,10 @@
-# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Modalities: OpenRouter says "Jev accepts only image/png and image/jpeg" (https://openrouter.ai/docs/guides/community/multimodal-decisions), matching the lab (https://docs.typesafe.ai/images.md)
 schema = 2
 base_model = "typesafe/jev-latest"
 name = "Jev Latest"
 
 [capabilities]
 structured_output = true
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["text"]
 
 [limit]
 context = 262_144
