@@ -1,5 +1,6 @@
 # Input MIME types: capabilities.limits.vision.supported_media_types from authenticated GET https://api.githubcopilot.com/models (2026-10-21).
 # Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-haiku-4-5.toml.
+# APIs: GET /models supported_endpoints lists /v1/messages and /chat/completions for Claude models (authenticated, 2026-10-21; see provider.toml).
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
@@ -19,6 +20,8 @@ input = 136_000
 [api.messages]
 base_url = "https://api.githubcopilot.com/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
+
+[api.chat-completions]
 
 [cost.text.input]
 price = 1

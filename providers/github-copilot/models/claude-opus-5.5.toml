@@ -5,6 +5,7 @@
 # - https://platform.claude.com/docs/en/models/opus-5-5/overview
 # structured_output: capabilities.supports.structured_outputs = true (authenticated GET https://api.githubcopilot.com/models (2026-10-21)).
 # Mid-conversation flags follow Anthropic's own API for this model: Copilot serves it on /v1/messages (Anthropic Messages). See providers/anthropic/models/claude-opus-5-5.toml.
+# APIs: GET /models supported_endpoints lists /v1/messages and /chat/completions for Claude models (authenticated, 2026-10-21; see provider.toml).
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
@@ -18,6 +19,8 @@ effort_updates = true
 [api.messages]
 base_url = "https://api.githubcopilot.com/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
+
+[api.chat-completions]
 
 [cost.text.input]
 price = 4
