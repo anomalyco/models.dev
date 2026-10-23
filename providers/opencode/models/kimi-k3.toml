@@ -1,4 +1,4 @@
-# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21; cache write $3 from 2026-10-23).
 # thinking.type = disabled turns reasoning off (live: 0 reasoning tokens in 3 of 3 runs, vs 104-192 enabled).
 # reasoning_effort levels are graded on Zen (live, 3 trials each: low 94-374, high 339-520, max 817-1495 reasoning tokens; omitted behaves like max).
 # Toggle: thinking.type = enabled|disabled
@@ -22,7 +22,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 3
-cache = { read = 0.3 }
+cache = { read = 0.3, write = 3 }
 
 [cost.text.output]
 price = 15
