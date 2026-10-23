@@ -32,6 +32,12 @@ cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_brea
 context = 262_144
 output = 32_768
 
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.2
 

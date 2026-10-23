@@ -30,6 +30,15 @@ cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_brea
 context = 1_000_000
 output = 32_768
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.115
 cache = { read = 0.012, write = 0.144 }

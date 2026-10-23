@@ -28,6 +28,12 @@ cache = false
 context = 131_072
 output = 32_768
 
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.2
 

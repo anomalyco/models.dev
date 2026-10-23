@@ -22,6 +22,12 @@ effort_updates = false
 context = 1_000_000
 output = 65_536
 
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0
 cache = { read = 0, write = 0 }
