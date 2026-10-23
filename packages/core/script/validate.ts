@@ -2,7 +2,7 @@
 
 import { generate } from "../src/generate";
 import { generateV2 } from "../src/generate-v2";
-import { isSchemaV2, readLabMetadata } from "../src/translate";
+import { explicitFalseFlags, isSchemaV2, readLabMetadata } from "../src/translate";
 import path from "path";
 import { ZodError } from "zod";
 
@@ -16,6 +16,7 @@ try {
   );
   const rootDir = path.dirname(providersDir);
   const notV2: string[] = [];
+  const falseFlags: string[] = [];
   for (const pattern of ["models/**/*.toml", "providers/*/models/**/*.toml", "labs/*/lab.toml"]) {
     for await (const file of new Bun.Glob(pattern).scan({
       cwd: rootDir,
@@ -25,12 +26,20 @@ try {
         with: { type: "toml" },
       }).then((mod) => mod.default);
       if (!isSchemaV2(toml)) notV2.push(file);
+      for (const flag of explicitFalseFlags(toml)) falseFlags.push(`${file}: ${flag}`);
     }
   }
   if (notV2.length > 0) {
     console.error(
       "Model and lab files must be v2. Add `schema = 2` and write them in the v2 format (see AGENTS.md):\n" +
         notV2.map((file) => `  ${file}`).join("\n"),
+    );
+    process.exit(1);
+  }
+  if (falseFlags.length > 0) {
+    console.error(
+      "system_updates, effort_updates and tools.updates default to false. Leave them out instead of writing `= false` (see AGENTS.md):\n" +
+        falseFlags.map((flag) => `  ${flag}`).join("\n"),
     );
     process.exit(1);
   }

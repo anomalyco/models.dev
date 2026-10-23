@@ -16,6 +16,30 @@ export function isSchemaV2(toml: Record<string, unknown>) {
   return toml.schema === 2;
 }
 
+// Mid-conversation flags default to false, so files leave them out instead of
+// writing `= false`. Returns the dotted path of every explicit false.
+export function explicitFalseFlags(toml: Record<string, unknown>): string[] {
+  const record = (value: unknown) =>
+    value !== null && typeof value === "object" && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : undefined;
+  const check = (capabilities: unknown, at: string) => {
+    const caps = record(capabilities);
+    if (caps === undefined) return [];
+    return [
+      caps.system_updates === false ? `${at}.system_updates` : undefined,
+      caps.effort_updates === false ? `${at}.effort_updates` : undefined,
+      record(caps.tools)?.updates === false ? `${at}.tools.updates` : undefined,
+    ].filter((flag) => flag !== undefined);
+  };
+  return [
+    ...check(toml.capabilities, "capabilities"),
+    ...Object.entries(record(toml.api) ?? {}).flatMap(([protocol, api]) =>
+      check(record(api)?.capabilities, `api.${protocol}.capabilities`),
+    ),
+  ];
+}
+
 // Reads a lab model file (`models/<lab>/<model>.toml`) as v1 fields.
 export function readLabModel(filePath: string, modelID: string) {
   const toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;

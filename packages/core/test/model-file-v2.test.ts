@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
-import { modelV2ToV1, readLabMetadata } from "../src/translate.js";
+import { explicitFalseFlags, modelV2ToV1, readLabMetadata } from "../src/translate.js";
 
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
   const doc = {
@@ -330,4 +330,24 @@ test("readLabMetadata reads a v2 lab.toml and rejects v1 or unknown fields", () 
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test("explicitFalseFlags reports false mid-conversation flags, top-level and per API", () => {
+  const toml = Bun.TOML.parse(`schema = 2
+base_model = "lab/model"
+
+[capabilities]
+system_updates = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[api.messages]
+capabilities = { system_updates = false, tools = { updates = true } }
+`) as Record<string, unknown>;
+  expect(explicitFalseFlags(toml)).toEqual([
+    "capabilities.effort_updates",
+    "capabilities.tools.updates",
+    "api.messages.capabilities.system_updates",
+  ]);
+  expect(explicitFalseFlags({ schema: 2, capabilities: { tools: { supported: true } } })).toEqual([]);
 });
