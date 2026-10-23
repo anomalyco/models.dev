@@ -17,6 +17,7 @@
 #   cached prefix (Command A Reasoning: 6144 -> 480 cached tokens; Command A+: 0 cached in 2/2 runs).
 # Tools: tool_choice returns 400 "tool_choice is not supported for this model"; strict_tools = true is accepted.
 # APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
 base_model = "cohere/command-a-reasoning-08-2025"
 
@@ -24,11 +25,11 @@ base_model = "cohere/command-a-reasoning-08-2025"
 tools = { supported = true, strict = true, choice = ["auto"], updates = false }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 1 } }
 structured_output = true
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
 [api.cohere-chat]
+capabilities = { system_updates = true }
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"

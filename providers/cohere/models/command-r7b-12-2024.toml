@@ -14,17 +14,18 @@
 # Tools: tool_choice REQUIRED and NONE are honored live; strict_tools = true is accepted.
 # Pricing: https://cohere.com/pricing (Command R7B $0.0375/$0.15 per 1M).
 # APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
 base_model = "cohere/command-r7b-12-2024"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required"], updates = false }
 structured_output = true
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
 [api.cohere-chat]
+capabilities = { system_updates = true }
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"

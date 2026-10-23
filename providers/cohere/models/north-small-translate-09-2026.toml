@@ -16,12 +16,12 @@
 #   model"; GET /v1/models lists no json_mode/json_schema feature for it.
 # Tools: live tool requests return 400 "tool use is not supported".
 # APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
 base_model = "cohere/north-small-translate-1-0"
 
 [capabilities]
 structured_output = false
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
@@ -29,6 +29,7 @@ cache = { implicit = true }
 context = 32_768
 
 [api.cohere-chat]
+capabilities = { system_updates = true }
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"

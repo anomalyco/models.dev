@@ -13,16 +13,17 @@
 #   for input and $1.50/1M tokens for output").
 # Tools: live tool requests return 400 "tool use is not supported".
 # APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
 base_model = "cohere/c4ai-aya-expanse-32b"
 
 [capabilities]
 structured_output = false
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
 [api.cohere-chat]
+capabilities = { system_updates = true }
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"

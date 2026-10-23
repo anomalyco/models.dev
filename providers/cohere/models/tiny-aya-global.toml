@@ -17,17 +17,18 @@
 # Tools: the API accepts `tools` (GET /v1/models lists tools and tool_choice), but live requests never produced a
 #   tool call, so choice is left unset; strict_tools returns 400 "cannot use strict_tools with the specified model".
 # APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
 base_model = "cohere/tiny-aya-global"
 
 [capabilities]
 tools = { supported = true, strict = false, updates = false }
 structured_output = false
-system_updates = true
 effort_updates = false
 cache = { implicit = true }
 
 [api.cohere-chat]
+capabilities = { system_updates = true }
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"
