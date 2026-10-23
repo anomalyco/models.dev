@@ -5,10 +5,9 @@ name = "Mistral-Nemo-Instruct-2407"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 65_536

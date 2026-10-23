@@ -19,10 +19,9 @@ schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
-tools = { supported = true, choice = ["auto"], updates = false }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
-effort_updates = false
 cache = { implicit = { min_tokens = 512 } }
 
 [limit]

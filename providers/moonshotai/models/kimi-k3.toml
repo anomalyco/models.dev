@@ -19,7 +19,6 @@ base_model = "moonshotai/kimi-k3"
 tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { ttl = ["5m", "1h"] } }

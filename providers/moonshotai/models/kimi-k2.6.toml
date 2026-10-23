@@ -16,7 +16,7 @@ schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto", "none"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
 temperature = false

@@ -27,7 +27,7 @@ base_model = "xiaomi/mimo-v2.6-pro"
 description = "MiMo Pro model for multimodal coding agents and long-context automation"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
 top_k = false

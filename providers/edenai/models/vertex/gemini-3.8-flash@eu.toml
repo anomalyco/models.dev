@@ -5,11 +5,10 @@ base_model = "google/gemini-3.8-flash"
 name = "Gemini 3.8 Flash (Vertex AI, EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 1.5

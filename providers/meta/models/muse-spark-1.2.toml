@@ -9,10 +9,9 @@ schema = 2
 base_model = "meta/muse-spark-1.2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 store = true
 stream_usage = true
 prompt_cache_key = true

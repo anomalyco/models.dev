@@ -5,10 +5,9 @@ schema = 2
 base_model = "openai/gpt-4o"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
-effort_updates = false
 prompt_cache_key = true
 
 [cost.text.input]

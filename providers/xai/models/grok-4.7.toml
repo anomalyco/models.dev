@@ -17,11 +17,10 @@ schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 store = true
 stream_usage = true
 prompt_cache_key = true

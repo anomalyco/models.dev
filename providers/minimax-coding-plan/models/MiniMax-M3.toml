@@ -27,7 +27,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto"], updates = false }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
 structured_output = false
 temperature = true
