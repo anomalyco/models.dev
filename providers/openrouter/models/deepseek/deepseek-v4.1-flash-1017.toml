@@ -17,8 +17,8 @@ context = 1_048_576
 output = 393_216
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.003 }
+price = 0.3
+cache = { read = 0.006 }
 
 [[cost.text.input.overrides]]
 when = { utc_days = { in = ["sat", "sun"] } }
@@ -51,7 +51,7 @@ price = 0.15
 cache = { read = 0.003 }
 
 [cost.text.output]
-price = 0.6
+price = 1.2
 
 [[cost.text.output.overrides]]
 when = { utc_days = { in = ["sat", "sun"] } }
