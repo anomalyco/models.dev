@@ -1,4 +1,4 @@
-# Sources (accessed 2026-10-15, re-verified on the live feed 2026-10-22):
+# Sources (accessed 2026-10-15, re-verified on the live feed 2026-10-23):
 # - Model id, USD pricing and limits: https://pool.linkrra.com/v1/models?format=openrouter
 #   (cost_usd is per token: 0.00000004 prompt / 0.00000021 completion).
 # - limit.context 131,072: the deployment's --max-model-len as declared by the live feed
@@ -7,9 +7,11 @@
 # - modalities input = ["text"]: live probe - a chat request with an image_url content part
 #   returns an upstream error while the same request with text only succeeds, so this
 #   deployment does not accept image input even though the lab model can.
-# - reasoning = false: live probes return no reasoning/reasoning_content field and the feed
-#   advertises no effort control; `reasoning_effort` is tolerated (HTTP 200) but not served,
-#   so it is not published as caller control.
+# - reasoning = { supported = true, toggle = true }: re-probed 2026-10-23 on this host with
+#   reasoning explicitly enabled. Default request: no reasoning, completion_tokens_details
+#   .reasoning_tokens = 0. With "reasoning": {"enabled": true} (or chat_template_kwargs
+#   {"enable_thinking": true}) the response carries message.reasoning and
+#   reasoning_tokens = 399 of 400. Off by default, caller-toggled; no effort levels.
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
@@ -17,7 +19,7 @@ base_model = "google/gemma-4-26b-a4b-it"
 input = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0.04
