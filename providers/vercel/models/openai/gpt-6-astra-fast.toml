@@ -1,10 +1,11 @@
 # Pricing: https://ai-gateway.vercel.sh/v1/models (2026-09-04), upper band starts at 272,001 prompt tokens
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system/developer messages stay in place (cache prefix kept). The gateway's AI SDK request has no OpenAI configuration_update or additional_tools, so effort and tool changes are false.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system/developer messages stay in place (cache prefix kept). The gateway's AI SDK request has no OpenAI configuration_update, so effort changes are false.
+# Tool changes (@ai-sdk/gateway, live 2026-10-23): providerOptions.openai.additionalTools on a tool result reaches OpenAI as a Responses additional_tools item, the model sees the tool and the cached prefix is kept, so tools.updates = true (add only; https://ai-sdk.dev/providers/ai-sdk-providers/openai). The azure and bedrock routes drop it; the default route is openai.
 schema = 2
 base_model = "openai/gpt-6-astra-fast"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

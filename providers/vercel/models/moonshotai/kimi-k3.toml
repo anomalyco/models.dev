@@ -1,4 +1,5 @@
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Tool changes (live 2026-10-23): Kimi dynamic tools (providerOptions.moonshotai.tools on an empty system message) keep the cache only when pinned to the moonshotai route; the default route (baseten/fireworks) silently drops the tool and /v1/chat/completions rejects the message, so tools.updates stays false.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
