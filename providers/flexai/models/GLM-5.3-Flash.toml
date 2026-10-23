@@ -7,22 +7,21 @@
 # minimal and low return no reasoning (the off state the toggle expresses);
 # medium and high are one band, named `high` as every peer entry names it.
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.09
-output = 0.28
-cache_read = 0.0135
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 
 [limit]
 context = 1_048_576
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
+[cost.text.input]
+price = 0.09
+cache = { read = 0.0135 }
+
+[cost.text.output]
+price = 0.28

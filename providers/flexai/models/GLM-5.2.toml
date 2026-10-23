@@ -8,22 +8,21 @@
 # medium and high are one measured band; it is named `high` here because
 # that is the name every peer entry for this model uses.
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "zhipuai/glm-5.2"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
-
-[cost]
-input = 0.5625
-output = 1.8
-cache_read = 0.0844
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 
 [limit]
 context = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5625
+cache = { read = 0.0844 }
+
+[cost.text.output]
+price = 1.8

@@ -6,18 +6,21 @@
 # FlexAI serves the NVFP4 checkpoint (nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4),
 # whose config.json reports a 1M position limit; the base entry describes the BF16 build.
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 
-[cost]
-input = 0.08
-output = 0.2
-cache_read = 0.012
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.2

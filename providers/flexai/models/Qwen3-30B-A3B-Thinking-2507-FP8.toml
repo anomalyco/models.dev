@@ -2,15 +2,18 @@
 # effect, so no caller-facing
 # control is exposed and reasoning_options is empty.
 # https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
 base_model = "alibaba/qwen3-30b-a3b-thinking-2507"
 
+[capabilities]
+reasoning = { supported = true }
 
-reasoning_options = []
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.2
-output = 2.4
-cache_read = 0.03
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03 }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 2.4
