@@ -14,11 +14,10 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

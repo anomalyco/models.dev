@@ -7,10 +7,9 @@ base_model = "google/gemma-4-31b-it"
 name = "gemma 4 31B turbo TEE"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 131_072

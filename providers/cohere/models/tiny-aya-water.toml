@@ -22,9 +22,8 @@ schema = 2
 base_model = "cohere/tiny-aya-water"
 
 [capabilities]
-tools = { supported = true, strict = false, updates = false }
+tools = { supported = true, strict = false }
 structured_output = false
-effort_updates = false
 cache = { implicit = true }
 
 [api.cohere-chat]

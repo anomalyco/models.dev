@@ -5,11 +5,9 @@ base_model = "anthropic/claude-sonnet-4-5"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [api.messages]

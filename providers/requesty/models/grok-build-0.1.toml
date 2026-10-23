@@ -4,11 +4,10 @@ schema = 2
 base_model = "xai/grok-build-0.1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [cost.text.input]
 price = 1

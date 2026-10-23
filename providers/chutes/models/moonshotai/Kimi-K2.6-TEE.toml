@@ -7,10 +7,9 @@ base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 TEE"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 65_535

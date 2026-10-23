@@ -21,11 +21,10 @@ schema = 2
 base_model = "cohere/north-mini-code-1-0"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "high"] }
 structured_output = false
 top_k = false
-effort_updates = false
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"

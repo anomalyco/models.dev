@@ -25,10 +25,9 @@ schema = 2
 base_model = "cohere/command-a-plus-05-2026"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 1 } }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [api.cohere-chat]

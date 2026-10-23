@@ -4,11 +4,10 @@ schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = false
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

@@ -16,12 +16,11 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 cache = { implicit = true }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
