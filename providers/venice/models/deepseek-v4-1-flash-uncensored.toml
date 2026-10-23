@@ -1,0 +1,35 @@
+schema = 2
+name = "DeepSeek V4.1 Flash Uncensored"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+family = "deepseek"
+open_weights = true
+release_date = "2026-10-23"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 524_288
+output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.00825 }
+
+[cost.text.output]
+price = 1.32
+
+[cost.web_search]
+price = 10
