@@ -1,0 +1,20 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
+# No toggle: the catalog reports reasoning_toggle true, but that flag describes kenari's
+#   own request translation; the model itself is always-on, so this entry follows the lab
+#   and authors the effort list only.
+# Reasoning: catalog reasoning_options ["low", "medium", "high", "xhigh"], reasoning_toggle true (not authored, see above) (https://kenari.id/en/docs/reasoning).
+# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+schema = 2
+base_model = "meta/muse-spark-open"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.14285714
+cache = { read = 0.11428571 }
+
+[cost.text.output]
+price = 4.57142857

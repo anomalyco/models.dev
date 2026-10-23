@@ -1,0 +1,23 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: :free models cost Rp 0 (https://kenari.id/en/docs/free-models).
+# Reasoning: the catalog lists no reasoning fields for this id. With no listed levels kenari
+#   sends the requested reasoning_effort unchanged (https://kenari.id/en/docs/reasoning), so the
+#   effort list is the native one (providers/venice/models/nvidia-nemotron-3-5-super-vl-120b-a12b.toml: none|low|medium|high).
+#   No toggle: reasoning_toggle is false.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "Nemotron 3.5 Super VL 120B A12B (Free)"
+
+[limit]
+# catalog context_length for this id is 1_000_000 (/v1/models); the base says 1_048_576
+context = 1_000_000
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

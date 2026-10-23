@@ -1,0 +1,17 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: :free models cost Rp 0 (https://kenari.id/en/docs/free-models).
+# Reasoning: the catalog lists no effort levels and reasoning_toggle is false, so this host
+#   exposes no caller control (https://kenari.id/en/docs/reasoning).
+schema = 2
+base_model = "meituan/longcat-2.5-preview"
+name = "LongCat-2.5-Preview (Free)"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
