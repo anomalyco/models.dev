@@ -6,10 +6,9 @@ base_model = "alibaba/qwen3.6-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.45

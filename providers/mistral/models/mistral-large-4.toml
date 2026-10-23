@@ -31,7 +31,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "high"] }
 structured_output = true
 system_updates = true

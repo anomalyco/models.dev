@@ -18,11 +18,9 @@ description = "Open-weight GPT model for self-hosted reasoning and instruction-f
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

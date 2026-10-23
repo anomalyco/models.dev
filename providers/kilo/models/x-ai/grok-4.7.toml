@@ -6,10 +6,9 @@ base_model = "xai/grok-4.7"
 description = "Grok 4.7 is SpaceXAI's smartest model with frontier performance on coding, knowledge work, and STEM."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 450_000

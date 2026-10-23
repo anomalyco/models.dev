@@ -24,9 +24,8 @@ input = ["text", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
-effort_updates = false
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { min_tokens = 64 } }

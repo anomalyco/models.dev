@@ -20,11 +20,10 @@ schema = 2
 base_model = "fireworks/ember-1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

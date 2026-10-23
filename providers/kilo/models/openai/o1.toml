@@ -6,10 +6,9 @@ base_model = "openai/o1"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 15
