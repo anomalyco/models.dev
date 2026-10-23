@@ -15,6 +15,7 @@
 #   -> effort_updates = false, tools.updates = false.
 # - usage.prompt_tokens_details.cached_tokens stayed 0 across 10 identical requests, so cache is left unset.
 # - https://cohere.com/pricing lists North Mini Code as free (API key).
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
 schema = 2
 base_model = "cohere/north-mini-code-1-0"
 
@@ -30,6 +31,8 @@ effort_updates = false
 base_url = "https://api.cohere.ai/compatibility/v1"
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.cohere-chat]
 
 [cost.text.input]
 price = 0

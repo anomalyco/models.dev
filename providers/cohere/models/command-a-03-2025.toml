@@ -13,6 +13,7 @@
 #   json_schema returned schema-valid JSON.
 # Tools: tool_choice REQUIRED and NONE are honored live; strict_tools = true is accepted.
 # Pricing: https://cohere.com/pricing (Command A $2.50/$10 per 1M; listed through May 2026).
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
 schema = 2
 base_model = "cohere/command-a-03-2025"
 
@@ -22,6 +23,12 @@ structured_output = true
 system_updates = true
 effort_updates = false
 cache = { implicit = true }
+
+[api.cohere-chat]
+
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
 
 [cost.text.input]
 price = 2.5

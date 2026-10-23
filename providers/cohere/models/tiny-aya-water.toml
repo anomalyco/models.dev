@@ -16,6 +16,7 @@
 #   model"; GET /v1/models lists no json_mode/json_schema feature for it.
 # Tools: the API accepts `tools` (GET /v1/models lists tools and tool_choice), but live requests never produced a
 #   tool call, so choice is left unset; strict_tools returns 400 "cannot use strict_tools with the specified model".
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
 schema = 2
 base_model = "cohere/tiny-aya-water"
 
@@ -25,3 +26,9 @@ structured_output = false
 system_updates = true
 effort_updates = false
 cache = { implicit = true }
+
+[api.cohere-chat]
+
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }

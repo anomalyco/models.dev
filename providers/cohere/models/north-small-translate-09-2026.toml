@@ -15,6 +15,7 @@
 # Structured output: live response_format returned 400 "response_format is not supported with the specified
 #   model"; GET /v1/models lists no json_mode/json_schema feature for it.
 # Tools: live tool requests return 400 "tool use is not supported".
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
 schema = 2
 base_model = "cohere/north-small-translate-1-0"
 
@@ -26,6 +27,12 @@ cache = { implicit = true }
 
 [limit]
 context = 32_768
+
+[api.cohere-chat]
+
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
 
 [cost.text.input]
 price = 0

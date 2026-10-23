@@ -12,6 +12,7 @@
 # Pricing: https://cohere.com/pricing FAQ ("Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens
 #   for input and $1.50/1M tokens for output").
 # Tools: live tool requests return 400 "tool use is not supported".
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
 schema = 2
 base_model = "cohere/c4ai-aya-expanse-32b"
 
@@ -20,6 +21,12 @@ structured_output = false
 system_updates = true
 effort_updates = false
 cache = { implicit = true }
+
+[api.cohere-chat]
+
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
 
 [cost.text.input]
 price = 0.5
