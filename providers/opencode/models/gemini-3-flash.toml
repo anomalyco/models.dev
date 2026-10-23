@@ -2,7 +2,7 @@
 # Effort: generationConfig.thinkingConfig.thinkingLevel = minimal|low|medium|high
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-3-flash-preview.toml (Zen passes requests through).
-#   system_updates true although the lab doesn't claim it: a contents entry with role system before the next user turn kept the cache and was followed on Zen (live 2026-10-23: cached 8120-8129 in 4 of 4 trials where the warm-up cached, control 8147-8157, French 4/5; Zen leaves it out of promptTokenCount, but a same-seed check shows the model reads it).
+#   system_updates left out: undocumented. Google's generateContent spec lists only "user" and "model" for Content.role (https://ai.google.dev/api/caching#Content). A contents entry with role system kept the cache and was followed on Zen (live 2026-10-23), but server behavior alone is not a documented mechanism.
 schema = 2
 base_model = "google/gemini-3-flash-preview"
 name = "Gemini 3 Flash"
@@ -13,7 +13,6 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
-system_updates = true
 
 [api.generate-content]
 base_url = "https://opencode.ai/inference/google/v1beta"
