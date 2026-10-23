@@ -1,3 +1,4 @@
+# tools.updates: left out. This model has no prompt caching (no cached-input price), so there is no cache for a tool change to keep.
 schema = 2
 name = "o1-pro"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
@@ -12,7 +13,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = false

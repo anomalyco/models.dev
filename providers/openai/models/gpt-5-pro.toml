@@ -1,4 +1,5 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# tools.updates: left out. This model has no prompt caching (no cached-input price), so there is no cache for a tool change to keep.
 schema = 2
 name = "GPT-5 Pro"
 description = "Higher-accuracy GPT-5 tier for tough analysis, coding reviews, and planning"
@@ -12,7 +13,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
 temperature = false
