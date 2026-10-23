@@ -11,6 +11,7 @@
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-pro
 # The documented text/plain document type is covered by `text`.
 # Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed). Price: https://cloud.google.com/vertex-ai/generative-ai/pricing; support (supported models list): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/grounding-with-google-search
+# APIs: generateContent, and Interactions (https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/models/interactions-api lists this model; global location only).
 schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 status = "beta"
@@ -27,6 +28,12 @@ system_updates = false
 effort_updates = false
 cache = { implicit = { min_tokens = 6_144 }, explicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
+
+[api.generate-content]
+
+[api.interactions]
+base_url = "https://aiplatform.googleapis.com/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/global"
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/interactions" }
 
 [cost.text.input]
 price = 2

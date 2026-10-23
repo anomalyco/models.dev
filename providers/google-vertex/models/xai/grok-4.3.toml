@@ -7,6 +7,7 @@
 # Image formats (jpg/jpeg, png): https://docs.x.ai/developers/models
 # Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
 # system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+# APIs: Chat Completions and Responses on the endpoints/openapi path (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/grok/responses).
 schema = 2
 base_model = "xai/grok-4.3"
 status = "beta"
@@ -29,6 +30,10 @@ context = 200_000
 [api.chat-completions]
 base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/google-vertex/chat" }
+
+[api.responses]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/google-vertex/responses" }
 
 [cost.text.input]
 price = 1.25
