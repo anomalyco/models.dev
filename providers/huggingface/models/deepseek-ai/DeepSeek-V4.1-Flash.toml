@@ -5,10 +5,9 @@ base_model = "deepseek/deepseek-v4.1-flash"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

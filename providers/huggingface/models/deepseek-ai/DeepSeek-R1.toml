@@ -2,10 +2,9 @@ schema = 2
 base_model = "deepseek/deepseek-r1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 64_000

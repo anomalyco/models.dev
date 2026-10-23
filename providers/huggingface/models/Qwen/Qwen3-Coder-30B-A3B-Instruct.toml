@@ -2,9 +2,8 @@ schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 

@@ -3,9 +3,8 @@ base_model = "minimax/minimax-m1-80k"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-effort_updates = false
 
 [api.chat-completions]
 

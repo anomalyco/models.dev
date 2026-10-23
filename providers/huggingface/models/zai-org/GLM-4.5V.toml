@@ -7,9 +7,8 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-effort_updates = false
 
 [limit]
 context = 65_536

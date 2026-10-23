@@ -30,11 +30,10 @@ name = "DeepSeek V4 Flash Vision Exp"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false
-effort_updates = false
 stream_usage = true
 cache = { implicit = true }
 

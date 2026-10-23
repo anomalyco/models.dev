@@ -5,9 +5,8 @@ name = "Kimi-K2-Thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -6,9 +6,8 @@ description = "MiniMax model for chat, coding, office work, and agentic tasks"
 knowledge = "2025-10"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

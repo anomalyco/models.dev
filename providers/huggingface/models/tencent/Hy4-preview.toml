@@ -5,10 +5,9 @@ base_model = "tencent/hy4-preview"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_000_000

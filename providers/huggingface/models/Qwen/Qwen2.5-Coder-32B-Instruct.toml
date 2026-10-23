@@ -3,9 +3,8 @@ base_model = "alibaba/qwen2.5-coder-32b-instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 

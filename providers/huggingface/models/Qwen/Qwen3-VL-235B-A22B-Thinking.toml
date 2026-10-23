@@ -3,10 +3,9 @@ base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 
