@@ -1,11 +1,9 @@
-# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=openai%2Fgpt-3.5-turbo&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "openai/gpt-3.5-turbo"
 name = "GPT-3.5 Turbo"
 
 [capabilities]
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 16_000

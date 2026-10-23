@@ -306,7 +306,7 @@ test("a price update keeps the mid-conversation flags copied from Anthropic", as
   expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
   const synced = await Bun.file(path.join(modelsDir, "claude-opus-4.8.toml")).text();
   expect(Bun.TOML.parse(synced)).toMatchObject({
-    capabilities: { tools: { supported: true, updates: true }, system_updates: true, effort_updates: false },
+    capabilities: { tools: { supported: true, updates: true }, system_updates: true },
     cost: { text: { output: { price: 25 } } },
   });
   expect(synced).toBe(opus);

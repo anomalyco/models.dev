@@ -215,8 +215,8 @@ export function buildHuggingFaceModel(
   // per-turn effort or tool-change message.
   // Tool support comes from the router (any live provider); otherwise it's inherited.
   const next: Record<string, unknown> = {};
-  if (aggregate.tools) next.tools = { supported: true, updates: false };
-  Object.assign(next, doc.capabilities, { effort_updates: false });
+  if (aggregate.tools) next.tools = { supported: true };
+  Object.assign(next, doc.capabilities);
   doc.capabilities = next;
   doc.api = chatApis(undefined);
   return doc;

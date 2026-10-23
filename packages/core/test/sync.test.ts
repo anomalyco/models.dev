@@ -8201,9 +8201,8 @@ test("Hugging Face creates v2 files with host data only and the lab's exact MIME
       output: ["text"],
     },
     capabilities: {
-      tools: { supported: true, updates: false },
+      tools: { supported: true },
       structured_output: true,
-      effort_updates: false,
     },
     cost: { text: { input: { price: 0.4 }, output: { price: 3.2 } } },
     api: { "chat-completions": {}, responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } } },

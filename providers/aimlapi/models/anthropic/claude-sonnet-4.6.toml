@@ -1,5 +1,3 @@
-# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=anthropic%2Fclaude-sonnet-4.6&endpoint=openai%2Fchat-completions
-# system_updates = false: the lab's own API keeps no mid-conversation system message for this closed-weight model (system_updates = false in its first-party file here), so a relay can't keep one in place.
 # Cache: the chat-completions catalog row prices cache writes at 5m (cache_write) and 1h (cache_write_1h), and the request schema takes cache_control { type: ephemeral, ttl: 5m | 1h }. https://api.aimlapi.com/v1/models?include=pricing,modalities
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
@@ -7,9 +5,7 @@ name = "Claude 4.6 Sonnet"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
-system_updates = false
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { explicit = { ttl = ["5m", "1h"] } }
 
 [limit]
