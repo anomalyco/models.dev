@@ -13,6 +13,7 @@
 # structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
 # store = false: "Stored responses is not supported" (Responses API reference above).
 # system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+# APIs: Chat Completions, and the OpenAI Responses API at /serving-endpoints/responses (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference#responses-api).
 schema = 2
 base_model = "openai/gpt-5.6-sol"
 
@@ -26,6 +27,12 @@ service_tier = ["priority"]
 
 [limit]
 image = { max_per_request = 500 }
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://${DATABRICKS_HOST}/serving-endpoints"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 4
