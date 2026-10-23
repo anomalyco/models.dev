@@ -1,0 +1,17 @@
+# Prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = low|medium|xhigh
+# Alibaba's levels (low/medium/xhigh); none errors on this endpoint (5xx), so it is not listed. Tested live 2026-10-22.
+# Controls: reasoning_effort is the only documented reasoning parameter (https://you.com/docs/api-reference/inference-router/create-chat-completion);
+# thinking, enable_thinking and thinking_budget are not part of the public API, so no toggle or budget is authored.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 1.85
+cache = { read = 0.231 }
+
+[cost.text.output]
+price = 5.55

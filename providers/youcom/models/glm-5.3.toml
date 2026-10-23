@@ -1,0 +1,15 @@
+# Prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = none|low|high|max
+# Z.ai's levels (low/high/max); none disables thinking (0 reasoning tokens). Tested live 2026-10-22.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 1.35
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.25
