@@ -12,7 +12,9 @@ cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_bre
 
 [api.responses]
 base_url = "https://api.saygm.com/v1"
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
 
 [cost.text.input]
 price = 1.8
