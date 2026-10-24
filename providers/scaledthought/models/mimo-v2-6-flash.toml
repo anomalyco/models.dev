@@ -1,0 +1,20 @@
+# Verified through https://api.us.scaledthought.com/v1 on 2026-10-13 (live calls, chat completions):
+#   Toggle: reasoning.enabled = true|false (false: no reasoning_content; true or no field: reasoning_content returned;
+#   chat_template_kwargs.enable_thinking toggles it too, thinking.type does not). Tool call (get_weather),
+#   response_format json_schema (strict), image_url (data: PNG) and max_tokens 131072 returned 200 as expected.
+#   Audio and video input were not tested through our API, so input is text and image only here.
+# Price (accessed 2026-10-12): GET https://api.us.scaledthought.com/v1/models/mimo-v2-6-flash
+#   "pricing": {"input": 0.22, "cached_input": 0.0044, "output": 0.44, "unit": "usd_per_1m_tokens"}
+base_model = "xiaomi/mimo-v2.6-flash"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 0.22
+output = 0.44
+cache_read = 0.0044
