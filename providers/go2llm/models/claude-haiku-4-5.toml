@@ -1,0 +1,16 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/anthropic/models/claude-haiku-4-5.toml.
+
+base_model = "anthropic/claude-haiku-4-5"
+name = "Claude Haiku 4.5"
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+
+[cost]
+input = 0.13
+output = 0.65
+cache_read = 0.01299
+cache_write = 0.163
+
+[modalities]
+input = ["text"]
+output = ["text"]

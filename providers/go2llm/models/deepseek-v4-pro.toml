@@ -1,0 +1,13 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/deepseek/models/deepseek-v4-pro.toml.
+# Toggle: Chat Completions `/v1/chat/completions` `thinking.type` = enabled|disabled (copied from the first-party model control; Go2LLM was not live-tested).
+
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.066
+output = 0.198
+cache_read = 0.0022
+cache_write = 0.0825

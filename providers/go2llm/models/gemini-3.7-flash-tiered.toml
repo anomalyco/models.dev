@@ -1,0 +1,17 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/google/models/gemini-3.7-flash.toml.
+# Catalog alias: gemini-3.7-flash.
+
+base_model = "google/gemini-3.7-flash"
+name = "Gemini 3.7 Flash Tiered"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.3
+output = 1.5
+cache_read = 0.03
+cache_write = 0.375
+
+[modalities]
+input = ["text"]
+output = ["text"]

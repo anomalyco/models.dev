@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/openai/models/gpt-5.3-codex.toml.
+
+base_model = "openai/gpt-5.3-codex"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.519
+output = 4.15
+cache_read = 0.05192
+cache_write = 0.649
+
+[modalities]
+input = ["text"]
+output = ["text"]

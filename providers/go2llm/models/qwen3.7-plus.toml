@@ -1,0 +1,16 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/alibaba/models/qwen3.7-plus.toml.
+# Toggle: OpenAI Chat `enable_thinking` = true|false (copied from the first-party model control; Go2LLM was not live-tested).
+
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.03036
+output = 0.121
+cache_read = 0.00308
+cache_write = 0.03795
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/anthropic/models/claude-sonnet-4-6.toml.
+
+base_model = "anthropic/claude-sonnet-4-6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024 }]
+
+[cost]
+input = 0.344
+output = 1.72
+cache_read = 0.03435
+cache_write = 0.43
+
+[modalities]
+input = ["text"]
+output = ["text"]

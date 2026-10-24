@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/openai/models/gpt-6-astra.toml.
+
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1.01
+output = 5.03
+cache_read = 0.101
+cache_write = 1.26
+
+[modalities]
+input = ["text"]
+output = ["text"]

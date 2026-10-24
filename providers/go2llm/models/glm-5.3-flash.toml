@@ -1,0 +1,16 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/zai/models/glm-5.3-flash.toml.
+
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.018
+output = 0.06
+cache_read = 0.0036
+cache_write = 0.0225
+
+[modalities]
+input = ["text"]
+output = ["text"]

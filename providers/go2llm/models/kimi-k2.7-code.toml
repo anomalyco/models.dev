@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/moonshotai/models/kimi-k2.7-code.toml.
+
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[cost]
+input = 0.09548
+output = 0.402
+cache_read = 0.0191
+cache_write = 0.119
+
+[modalities]
+input = ["text"]
+output = ["text"]
