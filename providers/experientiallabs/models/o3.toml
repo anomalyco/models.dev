@@ -1,0 +1,25 @@
+# Source: https://api.experientiallabs.ai/api/models/o3
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/openai/models/o3.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = low|medium|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "openai/o3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+input = 100_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5, write = 2.5 }
+
+[cost.text.output]
+price = 8

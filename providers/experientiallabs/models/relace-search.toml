@@ -1,0 +1,18 @@
+# Source: https://api.experientiallabs.ai/api/models/relace-search
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "relace/relace-search"
+
+[capabilities]
+structured_output = true
+
+[limit]
+input = 128_000
+
+[cost.text.input]
+price = 1
+cache = { read = 1 }
+
+[cost.text.output]
+price = 3

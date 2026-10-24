@@ -1,0 +1,22 @@
+# Source: https://api.experientiallabs.ai/api/models/gpt-4.1
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "openai/gpt-4.1"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[limit]
+input = 1_014_808
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8

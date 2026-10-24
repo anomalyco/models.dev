@@ -1,0 +1,26 @@
+# Source: https://api.experientiallabs.ai/api/models/muse-wonder-1.0
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/meta/models/muse-wonder-1.0.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = minimal|low|medium|high|xhigh|max.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "meta/muse-wonder-1.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+input = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20

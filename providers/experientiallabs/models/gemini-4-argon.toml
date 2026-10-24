@@ -1,0 +1,23 @@
+# Source: https://api.experientiallabs.ai/api/models/gemini-4-argon
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/google/models/gemini-4-argon.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = low|medium|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+input = 1_048_576
+output = 32_768
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
