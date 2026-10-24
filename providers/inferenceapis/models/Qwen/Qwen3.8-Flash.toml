@@ -1,0 +1,21 @@
+# Toggle: reasoning_effort = "none" switches thinking off; any other value (or omitting it) leaves it on. The gateway also maps
+#   reasoning.enabled = false and thinking.type = "disabled" onto the same switch, but reasoning_effort is the canonical field.
+# Effort and budget are not available on this path. Measured live on api.inferenceapis.com 2026-10-21, same prompt, 3 runs per setting, reasoning
+#   tokens: no field 26/26/104; reasoning_effort low 42/30/39, medium 27/93/44, xhigh 25/47/26; thinking_budget 64 26/30/74, thinking_budget 8192 26/24/28;
+#   reasoning_effort none 0/0/0 (no reasoning_content). The graded fields change nothing beyond run-to-run noise; only the toggle is real here.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-10-21)
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.5
