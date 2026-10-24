@@ -1,0 +1,13 @@
+# Verathos Decide serves open-weight decision models on Bittensor subnet 96. Requests go to
+# POST /v1/systemone in the System One request and answer format (state, typed questions,
+# a probability per option); there is no chat completions endpoint. `api` is required by the
+# schema for `@ai-sdk/openai-compatible`. Keys are `Authorization: Bearer`, created at
+# https://verathos.ai/account/keys. Prices, limits and image support per model are public at
+# https://api.verathos.ai/v1/models; output tokens are free. https://verathos.ai/docs/api (accessed 2026-10-20)
+# opencodeai = "none": there is no chat API; each model's [api.systemone] names its SDK.
+name = "Verathos"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "none"
+api = "https://api.verathos.ai/v1"
+env = ["VERATHOS_API_KEY"]
+doc = "https://verathos.ai/docs/models"

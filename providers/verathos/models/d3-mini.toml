@@ -1,0 +1,23 @@
+# Price and limits: https://api.verathos.ai/v1/models (2026-10-20). Billed on input tokens only, so
+# output is 0. Serving: POST /v1/systemone with max_state_tokens 16,384; input_modalities is text
+# only and a request with images gets 400, so this entry is text only.
+schema = 2
+v2_only = true
+base_model = "vllm-sr/d3-mini"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[limit]
+context = 16_384
+
+[api.systemone]
+base_url = "https://api.verathos.ai/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.015
+
+[cost.text.output]
+price = 0

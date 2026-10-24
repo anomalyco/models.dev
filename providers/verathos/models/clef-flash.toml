@@ -1,0 +1,22 @@
+# Price and limits: https://api.verathos.ai/v1/models (2026-10-20). Billed on input tokens only, so
+# output is 0. Serving: POST /v1/systemone, which caps the state at 65,536 tokens (max_state_tokens)
+# and takes up to 4 PNG, JPEG or WebP images. System One has no temperature parameter.
+schema = 2
+v2_only = true
+base_model = "cloudflare/clef-flash"
+
+[capabilities]
+temperature = false
+
+[limit]
+context = 65_536
+
+[api.systemone]
+base_url = "https://api.verathos.ai/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0
