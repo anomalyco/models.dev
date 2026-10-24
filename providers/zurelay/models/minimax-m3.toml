@@ -1,0 +1,15 @@
+# Toggle: thinking.type = enabled|disabled (tested 2026-10-14).
+# reasoning_effort doesn't change MiniMax-M3's thinking on this host.
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.13
+output = 0.51
+cache_read = 0.026

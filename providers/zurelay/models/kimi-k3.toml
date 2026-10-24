@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 1.27
+output = 6.37
+cache_read = 0.127

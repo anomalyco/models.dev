@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max on POST /v1/chat/completions.
+base_model = "anthropic/claude-fable-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 3.5
+output = 17.5
+cache_read = 0.35
+cache_write = 4.375

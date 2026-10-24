@@ -1,0 +1,12 @@
+# Effort: reasoning_effort = none|high; none turns thinking off (tested 2026-10-14).
+# thinking.type = disabled doesn't turn HY4 off on this host.
+base_model = "tencent/hy4-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.4
+output = 1.2
+cache_read = 0.02
