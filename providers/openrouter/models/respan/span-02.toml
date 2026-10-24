@@ -1,23 +1,20 @@
-# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# https://openrouter.ai/api/v1/models?output_modalities=text,decisions
+# OpenRouter is a relay: supported_parameters = [] advertises no reasoning controls.
+# Host image formats: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Keep the relay's PNG/JPEG/WebP/GIF inputs separately from the self-hosted lab's PNG/JPEG inputs.
+# Decision answers generate no text here.
 schema = 2
-type = "decision"
-name = "Span-02"
-description = "Decision model for typed evaluation of shared state"
-open_weights = false
-release_date = "2026-10-16"
+base_model = "respan/span-02"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = false
 
 [limit]
-context = 131_072
 output = 0
 
 [api.systemone]

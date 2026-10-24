@@ -102,7 +102,7 @@ import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/provi
 import { buildVeniceModel, resolveVeniceBaseModel, veniceV2Set, withResponsesApi, type VeniceModel } from "../src/sync/providers/venice.js";
 import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, vercel, vercelCache, vercelMediaCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
-import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
+import { formatModelV2, patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
 import { generate } from "../src/generate.js";
 import { buildWandbModel, mergeReasoningOptions, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -7549,6 +7549,88 @@ test("v2 sync patches keep legacy_shape", async () => {
     expect(doc.api).toEqual({
       responses: { base_url: "https://example.com/v2", sdk: { aisdk: "@ai-sdk/openai" }, legacy_shape: "responses" },
     });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+async function openRouterDecisionFixture(input: string[]) {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-openrouter-mime-"));
+  const modelsDir = path.join(root, "providers/openrouter/models");
+  await mkdir(path.join(modelsDir, "respan"), { recursive: true });
+  await mkdir(path.join(root, "models/respan"), { recursive: true });
+  await copyFile(
+    path.resolve(import.meta.dirname, "../../../models/respan/span-02.toml"),
+    path.join(root, "models/respan/span-02.toml"),
+  );
+  const file = path.join(modelsDir, "respan/span-02.toml");
+  const doc = {
+    schema: 2,
+    base_model: "respan/span-02",
+    modalities: { input, output: ["text"] },
+    capabilities: { reasoning: { supported: false }, structured_output: false },
+    limit: { output: 0 },
+    api: {
+      systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" } },
+      decisions: { base_url: "https://openrouter.ai/api/alpha", sdk: { opencodeai: "none" } },
+    },
+    cost: { text: { input: { price: 0.01 }, output: { price: 0 } } },
+  };
+  await writeFile(file, formatModelV2(doc));
+  const source = openRouterModel({
+    id: "respan/span-02",
+    name: "Respan: Span-02",
+    knowledge_cutoff: null,
+    context_length: 131_072,
+    architecture: { input_modalities: ["text", "image"], output_modalities: ["decisions"] },
+    pricing: { prompt: "0.00000001", completion: "0" },
+    top_provider: { context_length: 131_072, max_completion_tokens: 117_964 },
+    supported_parameters: [],
+  });
+  const provider: SyncProvider<OpenRouterModel> = {
+    ...openrouter,
+    modelsDir,
+    async fetchModels() { return { data: [source] }; },
+  };
+  const read = async () => Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
+  return { root, file, doc, source, provider, read };
+}
+
+test("OpenRouter sync keeps a host's MIME override through factoring and repricing", async () => {
+  const fixture = await openRouterDecisionFixture(["text", "image/png", "image/jpeg", "image/webp", "image/gif"]);
+  const { root, file, doc, source, provider, read } = fixture;
+  try {
+    const original = await readFile(file, "utf8");
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1, notices: [] });
+    expect(await readFile(file, "utf8")).toBe(original);
+
+    source.pricing.prompt = "0.00000002";
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1, notices: [] });
+    let next = await read();
+    expect(next.modalities).toEqual(doc.modalities);
+    expect(next.cost.text.input.price).toBe(0.02);
+    expect(next.api).toEqual(doc.api);
+    expect(next.capabilities).toEqual(doc.capabilities);
+    expect(next.limit).toEqual(doc.limit);
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1, notices: [] });
+
+    // A removed source modality must still remove the host's old image formats.
+    source.architecture.input_modalities = ["text"];
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1, notices: [] });
+    next = await read();
+    expect(next.modalities).toEqual({ input: ["text"], output: ["text"] });
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1, notices: [] });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("OpenRouter sync drops a MIME block identical to the lab's formats", async () => {
+  const { root, provider, read } = await openRouterDecisionFixture(["text", "image/png", "image/jpeg"]);
+  try {
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1, notices: [] });
+    expect(await read()).not.toHaveProperty("modalities");
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1, notices: [] });
   } finally {
     await rm(root, { recursive: true, force: true });
   }

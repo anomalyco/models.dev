@@ -1,23 +1,9 @@
+# https://openrouter.ai/api/v1/models?output_modalities=text,decisions
 schema = 2
-type = "decision"
-name = "Span-01"
-description = "Decision model for typed evaluation of shared state"
-open_weights = false
-release_date = "2026-09-26"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "respan/span-01"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = false
-
-[limit]
-context = 0
-output = 0
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }

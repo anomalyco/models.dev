@@ -254,6 +254,23 @@ export const openrouter = {
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
     const built = buildOpenRouterModel(model, context.existing(model.id));
+    // Factoring compares v1 modality kinds, which collapse all image formats.
+    // Keep a real v2 host-format override when the catalog still lists those kinds.
+    const formats = context.v2?.(model.id)?.modalities;
+    const authored = formats === undefined ? undefined : context.authored(model.id);
+    if (
+      "base_model" in built && typeof built.base_model === "string"
+      && built.modalities === undefined && authored?.modalities !== undefined
+      && sameInheritedValue(authored.modalities, {
+        input: modalities(model.architecture.input_modalities, ["text"]),
+        output: modalities(model.architecture.output_modalities, ["text"]),
+      })
+    ) {
+      const base = rawLabModel(built.base_model);
+      if (base !== undefined && !sameInheritedValue(formats, base.modalities)) {
+        built.modalities = authored.modalities;
+      }
+    }
     // The decision model's first API (systemone) names its own AI SDK package,
     // which v1 reads as the model's provider npm.
     const translated = isDecisionModel(model)
