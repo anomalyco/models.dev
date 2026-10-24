@@ -1,0 +1,22 @@
+# Source: https://www.tokener.ca/models/deepseek-v4.1-flash (verified 2026-10-11)
+# Price list: https://www.tokener.ca/pricing (USD per 1M tokens, regular price)
+# The model page states: context 1,048,576; max output 1,048,576; input text only;
+# output text; adjustable reasoning effort (default off); tool calling.
+# Text-only input here, so attachment = false and image input is not inherited.
+# Effort: reasoning_effort = none|low|high|max ("none" turns thinking off).
+# https://www.tokener.ca/docs#reasoning-controls
+base_model = "deepseek/deepseek-v4.1-flash"
+attachment = false
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[cost]
+input = 0.20
+output = 0.89
+cache_read = 0.04
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text"]
