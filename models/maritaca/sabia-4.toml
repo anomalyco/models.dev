@@ -1,0 +1,19 @@
+# Source: https://docs.maritaca.ai/pt/modelos (accessed 2026-09-28)
+name = "Sabiá 4"
+description = "Generalist model focused on agentic capability and the Brazilian context, balancing precision and cost-efficiency."
+release_date = "2026-01-06"
+last_updated = "2026-01-06"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
