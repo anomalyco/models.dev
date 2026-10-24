@@ -58,6 +58,7 @@ import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { tinfoil } from "./providers/tinfoil.js";
+import { theGridAi } from "./providers/the-grid-ai.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -222,6 +223,7 @@ export const providers: {
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
+  "the-grid-ai": SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -267,6 +269,7 @@ export const providers: {
   prime,
   requesty,
   tinfoil,
+  "the-grid-ai": theGridAi,
   vercel,
   venice,
   wandb,
@@ -291,6 +294,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "the-grid-ai",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
