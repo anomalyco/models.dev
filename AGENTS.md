@@ -164,6 +164,10 @@ base_model_omit = ["limit.input"]  # drop inherited keys after merge
 - `base_model` / `base_model_omit` are parse-time only; they do not appear in generated JSON
 - Missing `base_model` target → validation error
 
+## Restricted models
+
+Don't add provider entries for models that most of the host's users can't call: gated research previews and allowlist-only models (for example Claude Mythos on Anthropic's API). Clients show every provider model in their model lists, so people pick it and get an access error. Add them once the host makes them generally available.
+
 ## Adding a provider
 
 ```
