@@ -1,0 +1,28 @@
+# Sources (accessed 2026-09-25):
+# - https://api.wokey.ai/v1/models/pricing (public, no key; id "claude-opus-4-8"; pricing_mode dynamic_discount)
+# - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
+# - https://wokey.ai/models/claude-opus-4-8
+# Reasoning options copied from providers/anthropic/models/claude-opus-4-8.toml (Wokey relays the upstream API).
+# Pricing is flat per token at every context length: Wokey has no long-context tier or premium.
+# cache_write is the 5-minute cache write price; 1-hour cache write is 1.5 USD/MTok.
+# Input modalities narrowed to the list Wokey publishes for this model.
+# Request shape: Anthropic Messages API (POST https://api.wokey.ai/v1/messages).
+base_model = "anthropic/claude-opus-4-8"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+cache_write = 0.9375
+
+[modalities]
+input = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.wokey.ai/v1"

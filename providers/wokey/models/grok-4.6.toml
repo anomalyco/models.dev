@@ -1,0 +1,16 @@
+# Sources (accessed 2026-09-25):
+# - https://api.wokey.ai/v1/models/pricing (public, no key; id "grok-4.6"; pricing_mode dynamic_discount)
+# - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
+# - https://wokey.ai/models/grok-4.6
+# Reasoning options copied from providers/xai/models/grok-4.6.toml (Wokey relays the upstream API).
+# Pricing is flat per token at every context length: Wokey has no long-context tier or premium.
+base_model = "xai/grok-4.6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.28
+output = 0.84
+cache_read = 0.07

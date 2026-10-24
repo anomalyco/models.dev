@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-25):
+# - https://api.wokey.ai/v1/models/pricing (public, no key; id "mimo-v2.6-pro"; pricing_mode dynamic_discount)
+# - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
+# - https://wokey.ai/models/mimo-v2.6-pro
+# Reasoning options copied from providers/xiaomi/models/mimo-v2.6-pro.toml (Wokey relays the upstream API).
+# Pricing is flat per token at every context length: Wokey has no long-context tier or premium.
+# Toggle: thinking.type = enabled|disabled
+# Input modalities narrowed to the list Wokey publishes for this model.
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3045
+output = 0.609
+cache_read = 0.002537
+
+[modalities]
+input = ["text", "image"]
