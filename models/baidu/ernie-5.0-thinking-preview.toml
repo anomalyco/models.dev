@@ -1,0 +1,17 @@
+name = "ERNIE 5.0 Thinking Preview"
+description = "Preview of Baidu's Wenxin 5.0 thinking model; accepts text, image, and video input, with audio understanding for videos"
+family = "ernie"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
