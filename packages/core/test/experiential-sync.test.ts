@@ -6,12 +6,12 @@ import path from "node:path";
 import { generate } from "../src/generate.js";
 import { syncProvider, syncProviderMatrix } from "../src/sync/index.js";
 import {
-  buildExperientiallabsModel,
-  experientiallabs,
-  fetchExperientiallabsModels,
-  resolveExperientiallabsBaseModel,
+  buildExperientialModel,
+  experiential,
+  fetchExperientialModels,
+  resolveExperientialBaseModel,
   type ExperientialEntry,
-} from "../src/sync/providers/experientiallabs.js";
+} from "../src/sync/providers/experiential.js";
 
 function entry(): ExperientialEntry {
   return {
@@ -61,20 +61,20 @@ test("public discovery paginates without credentials and rejects a changing or i
     model.model.slug += `-${offset}`;
     return Response.json(catalog([model], 2, offset));
   }) as typeof fetch;
-  expect(experientiallabs.parseModels(await fetchExperientiallabsModels(fetcher))).toHaveLength(2);
+  expect(experiential.parseModels(await fetchExperientialModels(fetcher))).toHaveLength(2);
   expect(requests.map((request) => request.url)).toEqual([
     "https://api.experientiallabs.ai/api/models?limit=1000&offset=0",
     "https://api.experientiallabs.ai/api/models?limit=1000&offset=1",
   ]);
   expect(requests.every((request) => !request.headers.has("authorization"))).toBe(true);
   const empty = (async () => Response.json(catalog([]))) as typeof fetch;
-  await expect(fetchExperientiallabsModels(empty)).rejects.toThrow("incomplete page");
+  await expect(fetchExperientialModels(empty)).rejects.toThrow("incomplete page");
   const unavailable = (async () => new Response("Unavailable", { status: 503 })) as typeof fetch;
-  await expect(fetchExperientiallabsModels(unavailable)).rejects.toThrow("503");
+  await expect(fetchExperientialModels(unavailable)).rejects.toThrow("503");
   const repeated = (async () => Response.json(catalog([entry()], 2))) as typeof fetch;
-  await expect(fetchExperientiallabsModels(repeated)).rejects.toThrow("incomplete page");
-  expect(() => experientiallabs.parseModels(catalog([entry(), entry()]))).toThrow("duplicate catalog");
-  expect(() => experientiallabs.parseModels(catalog([entry()], 2))).toThrow("incomplete");
+  await expect(fetchExperientialModels(repeated)).rejects.toThrow("incomplete page");
+  expect(() => experiential.parseModels(catalog([entry(), entry()]))).toThrow("duplicate catalog");
+  expect(() => experiential.parseModels(catalog([entry()], 2))).toThrow("incomplete");
 });
 
 test("only active default host-managed chat routes can become coding models", () => {
@@ -91,8 +91,8 @@ test("only active default host-managed chat routes can become coding models", ()
   ]) {
     const value = entry();
     mutate(value);
-    expect(experientiallabs.translateModel(value, context)).toBeUndefined();
-    expect(experientiallabs.missingModelID(value)).toBeUndefined();
+    expect(experiential.translateModel(value, context)).toBeUndefined();
+    expect(experiential.missingModelID(value)).toBeUndefined();
   }
 });
 
@@ -104,25 +104,25 @@ test("v2 baselines constrain efforts across the default waterfall without borrow
     capabilities: { supports_tools: true, supported_reasoning_efforts: ["high", "future-effort"] },
   });
   value.default_provider_ids.push("fallback");
-  const built = buildExperientiallabsModel(value, undefined)!;
+  const built = buildExperientialModel(value, undefined)!;
   expect(built.model.reasoning_options).toEqual([{ type: "effort", values: ["high"] }]);
   expect(built.model.cost).toMatchObject({ input: 2, output: 10, cache_read: 0 });
   expect(built.header).toContain("providers/openai/models/gpt-6.1-sol.toml");
   value.providers[2]!.capabilities!.supported_reasoning_efforts = ["future-effort"];
-  expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
+  expect(buildExperientialModel(value, undefined)).toBeUndefined();
   value.providers[2]!.capabilities!.supported_reasoning_efforts = undefined;
-  expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
+  expect(buildExperientialModel(value, undefined)).toBeUndefined();
 });
 
 test("budget and toggle models are held for verified host mappings instead of claiming no controls", () => {
   const value = entry();
   value.model.slug = "qwen3.5-27b";
   value.model.icon = "qwen";
-  expect(resolveExperientiallabsBaseModel(value.model.slug, value.model.icon)).toBe("alibaba/qwen3.5-27b");
-  expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
-  expect(experientiallabs.missingModelID(value)).toBe("qwen3.5-27b");
-  expect(resolveExperientiallabsBaseModel("gpt-6.1-sol-uncensored", "openai")).toBeUndefined();
-  expect(resolveExperientiallabsBaseModel("gpt-6.1-sol-24k", "openai")).toBeUndefined();
+  expect(resolveExperientialBaseModel(value.model.slug, value.model.icon)).toBe("alibaba/qwen3.5-27b");
+  expect(buildExperientialModel(value, undefined)).toBeUndefined();
+  expect(experiential.missingModelID(value)).toBe("qwen3.5-27b");
+  expect(resolveExperientialBaseModel("gpt-6.1-sol-uncensored", "openai")).toBeUndefined();
+  expect(resolveExperientialBaseModel("gpt-6.1-sol-24k", "openai")).toBeUndefined();
 });
 
 test("verified DeepSeek and uncensored mappings tolerate omitted fallback metadata but honor explicit restrictions", () => {
@@ -143,30 +143,30 @@ test("verified DeepSeek and uncensored mappings tolerate omitted fallback metada
     value.providers[0]!.capabilities!.supported_reasoning_efforts = ["none", "low", "medium", "high", "xhigh", "max", "ultra"];
     value.providers.push({ ...value.providers[0]!, id: "fallback", capabilities: {} });
     value.default_provider_ids.push("fallback");
-    expect(resolveExperientiallabsBaseModel(slug)).toBe(baseModel);
-    const built = buildExperientiallabsModel(value, undefined)!;
+    expect(resolveExperientialBaseModel(slug)).toBe(baseModel);
+    const built = buildExperientialModel(value, undefined)!;
     expect(built.model.base_model).toBe(baseModel);
     expect(built.model.reasoning_options).toEqual([{ type: "effort", values: [...efforts] }]);
     value.providers[1]!.capabilities = { supported_reasoning_efforts: ["high"] };
-    expect(buildExperientiallabsModel(value, undefined)!.model.reasoning_options).toEqual([{ type: "effort", values: ["high"] }]);
+    expect(buildExperientialModel(value, undefined)!.model.reasoning_options).toEqual([{ type: "effort", values: ["high"] }]);
     value.providers[1]!.capabilities = { supported_reasoning_efforts: [] };
-    expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
+    expect(buildExperientialModel(value, undefined)).toBeUndefined();
     value.providers[1]!.capabilities = { supports_reasoning: false };
-    expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
+    expect(buildExperientialModel(value, undefined)).toBeUndefined();
     value.providers[1]!.capabilities = {};
     value.providers[0]!.capabilities!.supported_reasoning_efforts = undefined;
-    expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
+    expect(buildExperientialModel(value, undefined)).toBeUndefined();
   }
   // Only identified derivatives can use these mappings; suffix stripping
   // would silently assign a future fine-tune the original model's identity.
-  expect(resolveExperientiallabsBaseModel("deepseek-v4-pro-uncensored")).toBeUndefined();
+  expect(resolveExperientialBaseModel("deepseek-v4-pro-uncensored")).toBeUndefined();
 });
 
 test("both Luna models resolve and retain their native effort controls", () => {
   for (const slug of ["gpt-5.6-luna", "gpt-6-luna"]) {
     const value = entry();
     value.model.slug = slug;
-    const built = buildExperientiallabsModel(value, undefined)!;
+    const built = buildExperientialModel(value, undefined)!;
     expect(built.model.base_model).toBe(`openai/${slug}`);
     expect(built.model.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }]);
   }
@@ -180,17 +180,17 @@ test("host flags cannot enlarge known model limits or enable unsupported samplin
   value.providers[0]!.capabilities!.supports_structured_output = true;
   value.model.slug = "muse-spark-1.1";
   value.model.icon = "meta";
-  expect(buildExperientiallabsModel(value, undefined)!.model.limit?.output).not.toBe(1_048_576);
+  expect(buildExperientialModel(value, undefined)!.model.limit?.output).not.toBe(1_048_576);
   value.model.slug = "claude-opus-4.7";
   value.model.icon = "anthropic";
-  expect(buildExperientiallabsModel(value, undefined)!.model.temperature).not.toBe(true);
+  expect(buildExperientialModel(value, undefined)!.model.temperature).not.toBe(true);
   value.model.slug = "gpt-5.4-pro";
   value.model.icon = "openai";
-  expect(buildExperientiallabsModel(value, undefined)!.model.structured_output).toBe(false);
+  expect(buildExperientialModel(value, undefined)!.model.structured_output).toBe(false);
   // Lab models may leave an output cap unspecified.
   value.model.slug = "fugu-ultra";
   value.model.icon = "sakana";
-  expect(buildExperientiallabsModel(value, undefined)!.model.limit?.output).toBe(1_048_576);
+  expect(buildExperientialModel(value, undefined)!.model.limit?.output).toBe(1_048_576);
 });
 
 test("long-context pricing preserves the inclusive source threshold and zero cache prices", () => {
@@ -201,31 +201,31 @@ test("long-context pricing preserves the inclusive source threshold and zero cac
     long_context_output_nano_usd_per_million: 15_000_000_000,
     long_context_cached_input_nano_usd_per_million: 0,
   });
-  expect(buildExperientiallabsModel(value, undefined)!.model.cost?.tiers).toEqual([{
+  expect(buildExperientialModel(value, undefined)!.model.cost?.tiers).toEqual([{
     tier: { type: "context", size: 272_000 },
     input: 4,
     output: 15,
     cache_read: 0,
   }]);
   value.providers[0]!.long_context_threshold_tokens = -1;
-  expect(buildExperientiallabsModel(value, undefined)!.model.cost?.tiers).toBeUndefined();
+  expect(buildExperientialModel(value, undefined)!.model.cost?.tiers).toBeUndefined();
 });
 
 test("sync emits v2 models, is idempotent, preserves unresolved live entries, and removes retired models", async () => {
-  expect(syncProviderMatrix().include.some((item) => item.provider === experientiallabs.id)).toBe(true);
+  expect(syncProviderMatrix().include.some((item) => item.provider === experiential.id)).toBe(true);
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-experiential-"));
-  const modelsDir = path.join(root, "providers/experientiallabs/models");
+  const modelsDir = path.join(root, "providers/experiential/models");
   await mkdir(modelsDir, { recursive: true });
   await mkdir(path.join(root, "models/openai"), { recursive: true });
   await copyFile(path.join(import.meta.dirname, "../../../models/openai/gpt-6.1-sol.toml"), path.join(root, "models/openai/gpt-6.1-sol.toml"));
-  await copyFile(path.join(import.meta.dirname, "../../../providers/experientiallabs/provider.toml"), path.join(root, "providers/experientiallabs/provider.toml"));
+  await copyFile(path.join(import.meta.dirname, "../../../providers/experiential/provider.toml"), path.join(root, "providers/experiential/provider.toml"));
   let value = entry();
-  const provider = { ...experientiallabs, modelsDir, fetchModels: async () => catalog([value]) };
+  const provider = { ...experiential, modelsDir, fetchModels: async () => catalog([value]) };
   const file = Bun.file(path.join(modelsDir, "gpt-6.1-sol.toml"));
   try {
     expect((await syncProvider(provider, { openIssues: false })).created).toBe(1);
     expect(Bun.TOML.parse(await file.text()).schema).toBe(2);
-    const generated = (await generate(path.join(root, "providers"))).experientiallabs!.models["gpt-6.1-sol"]!;
+    const generated = (await generate(path.join(root, "providers"))).experiential!.models["gpt-6.1-sol"]!;
     expect(generated.limit).toEqual({ context: 128_000, output: 8192 });
     expect(generated.cost).toEqual({ input: 2, output: 10, cache_read: 0 });
     expect((await syncProvider(provider, { openIssues: false }))).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 1 });

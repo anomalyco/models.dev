@@ -17,7 +17,7 @@ const API_ENDPOINT = "https://api.experientiallabs.ai/api/models";
 
 // Keep this for slugs that cannot be derived from a lab filename.
 // Family prefixes, version-dot slugs, and unique filenames are resolved
-// automatically by resolveExperientiallabsBaseModel.
+// automatically by resolveExperientialBaseModel.
 const CANONICAL_BASE_MODELS: Record<string, string> = {
   "grok-4.20": "xai/grok-4.20-0309-reasoning",
   "grok-4.20-non-reasoning": "xai/grok-4.20-0309-non-reasoning",
@@ -162,10 +162,10 @@ const ExperientialResponse = z
 export type ExperientialEntry = z.infer<typeof ExperientialEntry>;
 export type ExperientialRung = z.infer<typeof ExperientialRung>;
 
-export const experientiallabs = {
-  id: "experientiallabs",
+export const experiential = {
+  id: "experiential",
   name: "Experiential Labs",
-  modelsDir: "providers/experientiallabs/models",
+  modelsDir: "providers/experiential/models",
   // The sync generates the wire-path headers for copied reasoning controls,
   // so its header must win over any stale header from a previous run.
   authoritativeHeaders: true,
@@ -180,7 +180,7 @@ export const experientiallabs = {
       `Skipped slugs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
-  fetchModels: fetchExperientiallabsModels,
+  fetchModels: fetchExperientialModels,
   parseModels(raw) {
     const data = ExperientialResponse.parse(raw);
     const ids = data.models.map((entry) => entry.model.slug);
@@ -197,10 +197,10 @@ export const experientiallabs = {
     if (!eligible(entry)) return undefined;
     const model = entry.model;
     const existing = context.existing(model.slug);
-    const baseModel = existing?.base_model ?? resolveExperientiallabsBaseModel(model.slug, model.icon);
+    const baseModel = existing?.base_model ?? resolveExperientialBaseModel(model.slug, model.icon);
     // A model with no existing file and no canonical match cannot be created.
     if (existing === undefined && baseModel === undefined) return undefined;
-    const built = buildExperientiallabsModel(entry, existing, baseModel);
+    const built = buildExperientialModel(entry, existing, baseModel);
     // Keep unresolved models for manual review instead of inventing controls.
     if (built === undefined) return undefined;
     return {
@@ -211,7 +211,7 @@ export const experientiallabs = {
   },
 } satisfies SyncProvider<ExperientialEntry>;
 
-export async function fetchExperientiallabsModels(fetcher: typeof fetch = fetch) {
+export async function fetchExperientialModels(fetcher: typeof fetch = fetch) {
   const models: ExperientialEntry[] = [];
   let total: number | undefined;
   while (total === undefined || models.length < total) {
@@ -523,7 +523,7 @@ function prefixesFor(id: string) {
   return [];
 }
 
-export function resolveExperientiallabsBaseModel(id: string, icon?: string | null) {
+export function resolveExperientialBaseModel(id: string, icon?: string | null) {
   const explicit = CANONICAL_BASE_MODELS[id];
   if (explicit !== undefined) return explicit;
 
@@ -550,10 +550,10 @@ export function resolveExperientiallabsBaseModel(id: string, icon?: string | nul
 // Publish only controls verified by a lab/peer baseline or explicit host mapping,
 // restricted by the default serving routes. Toggle/budget models need host mappings;
 // leaving their options empty would incorrectly claim there is no caller control.
-export function buildExperientiallabsModel(
+export function buildExperientialModel(
   entry: ExperientialEntry,
   existing: ExistingModel | undefined,
-  baseModel = existing?.base_model ?? resolveExperientiallabsBaseModel(entry.model.slug, entry.model.icon),
+  baseModel = existing?.base_model ?? resolveExperientialBaseModel(entry.model.slug, entry.model.icon),
 ): { model: SyncedModel; header: string } | undefined {
   if (baseModel === undefined || !eligible(entry)) return undefined;
   const model = entry.model;
