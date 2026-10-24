@@ -1,0 +1,18 @@
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/glm-5/ (host capabilities and pricing)
+# Toggle wire path: thinking.type = enabled|disabled (native GLM chat control).
+# Control baseline: providers/zai and providers/openrouter for the same model.
+schema = 2
+base_model = "zhipuai/glm-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.89
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 3.14

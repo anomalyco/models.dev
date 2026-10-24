@@ -1,0 +1,32 @@
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/deepseek-v4-1-flash-1017/ (host capabilities and pricing)
+# Effort wire path: reasoning_effort = low|high|max.
+# Host recheck (2026-10-23): this exact ID has no reasoning capability extension in /v1/models.
+# Control baseline: the same-host deepseek/deepseek-v4.1-flash entry exposes low|high|max without a toggle.
+# Do not infer a host toggle from the native DeepSeek API.
+# Effort baseline also matches providers/deepseek/models/deepseek-v4-flash.toml for this same 1017 model:
+# https://api-docs.deepseek.com/guides/thinking_mode (low|high|max).
+# The exact host page Overview explicitly states that image input is unavailable on this route;
+# this host-route statement is the source for text-only input, independent of the native model vision specification.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[cost.text.input]
+price = 0.17
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.7

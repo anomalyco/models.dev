@@ -1,0 +1,30 @@
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/kimi-k3-free/ (host capabilities and pricing)
+# Effort wire path: reasoning_effort = low|high|max; reasoning.effort is also accepted.
+# The host advertises mandatory reasoning and no enable/disable control.
+# Zero token prices require at least $10 cumulative net recharge (principal minus refunds).
+# Spending balance keeps access; grants and fees do not qualify. This route is especially slow.
+# This is an access threshold, not a per-token price tier.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Free"
+description = "Kimi K3 at zero token cost after at least $10 cumulative net recharge; especially slow, with fair-use limits and no SLA."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 1_048_576
+
+[cost.text.input]
+price = 0
+cache = { read = 0.0 }
+
+[cost.text.output]
+price = 0

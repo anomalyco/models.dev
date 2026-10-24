@@ -1,0 +1,25 @@
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/claude-haiku-5-5/ (host capabilities and pricing)
+# Effort wire path: reasoning_effort = low|medium|high|xhigh|max; reasoning.effort is also accepted.
+# Toggle wire path: reasoning = true|false; reasoning.enabled = true|false is also accepted.
+# This exact host record advertises supports_enable_disable=true with low|medium|high|xhigh|max.
+# Native providers/anthropic/models/claude-haiku-5-5.toml also exposes toggle plus these efforts.
+# structured_output is intentionally unauthored: the host page records json_object returning Markdown;
+# raw JSON passed only with an explicit system instruction, so enforced JSON mode remains unverified.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005, write = 0.0625 }
+
+[cost.text.output]
+price = 0.25
