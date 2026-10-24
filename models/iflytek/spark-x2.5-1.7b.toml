@@ -1,0 +1,24 @@
+name = "Spark X2.5 1.7B"
+description = "Ultra-lightweight 1.7B edge Dense model with native 1M context; designed for IoT/smart-home control, robotics, and on-device agents; 90.3% Domux control accuracy at 0.85s avg response"
+family = "spark"
+release_date = "2026-09-01"
+last_updated = "2026-09-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+knowledge = "2026-08"
+open_weights = true
+
+[limit]
+context = 1_048_576
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XHToken/Spark-X2.5-1.7B"

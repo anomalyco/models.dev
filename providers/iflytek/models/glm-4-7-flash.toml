@@ -1,0 +1,25 @@
+# Sources (accessed 2026-09-14):
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+# https://www.xfyun.cn/doc/spark/推理服务-http.html
+# GLM-4.7-Flash: 128K context on this host (Token Plan listing; lab is 200K).
+# Toggle: enable_thinking = true|false per host docs ("仅支持思考的模型不受
+# 此参数影响" — GLM-4.7-Flash is a thinking model, so the toggle applies).
+# Matches first-party zhipuai baseline and peers (empiriolabs, poe/novita).
+# Tool calling SUPPORTED on this host (per host docs, only V3.2 and GLM-4.7).
+# Pricing: Token Plan points 100/20/150 per 1M at 0.01 CNY/point
+# (Token Plan doc: 200 CNY / 20000 points for standard members),
+# converted at 7.25 CNY/USD.
+
+base_model = "zhipuai/glm-4.7-flash"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.21
+cache_read = 0.03
+
+[limit]
+context = 128_000
