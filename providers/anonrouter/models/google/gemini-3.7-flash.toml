@@ -1,0 +1,17 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+# Controls: https://docs.anonrouter.ai/reasoning
+# Effort: reasoning_effort.
+base_model = "google/gemini-3.7-flash"
+reasoning_options = [{ type = "effort", values = ["low","medium","high"] }]
+
+[cost]
+input = 0.75
+output = 3.75
+
+[limit]
+context = 1000000
+output = 16384
+
+[modalities]
+input = ["text","image"]

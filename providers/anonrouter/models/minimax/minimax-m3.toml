@@ -1,0 +1,16 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+# Controls: https://docs.anonrouter.ai/reasoning
+# Effort: reasoning_effort.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "effort", values = ["low","medium","high"] }]
+
+[cost]
+input = 0.28
+output = 1.1
+
+[limit]
+context = 524288
+
+[modalities]
+input = ["text","image"]

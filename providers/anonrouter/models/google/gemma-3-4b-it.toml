@@ -1,0 +1,11 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+base_model = "google/gemma-3-4b-it"
+
+[cost]
+input = 0.04
+output = 0.08
+
+[limit]
+context = 128000
+output = 8000

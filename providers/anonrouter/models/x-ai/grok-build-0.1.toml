@@ -1,0 +1,16 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-11).
+# Capabilities use callable provider_routes; prices and limits use the default route.
+# Controls: https://docs.anonrouter.ai/reasoning
+# All callable routes report effort_configurable=false and can_disable=false.
+base_model = "xai/grok-build-0.1"
+reasoning_options = []
+
+[cost]
+input = 1
+output = 2
+
+[limit]
+output = 65536
+
+[modalities]
+input = ["text","image"]
