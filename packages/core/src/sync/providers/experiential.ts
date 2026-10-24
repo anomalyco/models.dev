@@ -80,6 +80,8 @@ const ExperientialCapabilities = z
   .object({
     supports_reasoning: z.boolean().nullable().optional(),
     supported_reasoning_efforts: z.array(z.string()).nullable().optional(),
+    reasoning_default_effort: z.string().nullable().optional(),
+    reasoning_effort_required: z.boolean().nullable().optional(),
     supports_temperature: z.boolean().nullable().optional(),
     supports_tools: z.boolean().nullable().optional(),
     supports_structured_output: z.boolean().nullable().optional(),
@@ -278,8 +280,8 @@ function orderedUsableRungs(entry: ExperientialEntry): ExperientialRung[] {
 function declaredCapability(
   entry: ExperientialEntry,
   rungs: ExperientialRung[],
-  capability: "supports_temperature" | "supports_structured_output",
-  parameter: "temperature" | "structured_outputs",
+  capability: "supports_temperature" | "supports_structured_output" | "supports_tools",
+  parameter: "temperature" | "structured_outputs" | "tools",
 ) {
   const flags = rungs.map((route) => route.capabilities?.[capability] ?? entry.model.supported_params?.[parameter]);
   if (flags.some((value) => value === false)) return false;
@@ -564,6 +566,7 @@ export function buildExperientialModel(
   const host = HOST_REASONING[baseModel];
   const reasoning = base.reasoning === true;
   let reasoningOptions: SyncedModel["reasoning_options"];
+  let fixedEffort: string | undefined;
   if (reasoning) {
     if (host === undefined && (lab?.options === undefined || lab.options.some((option) => option.type !== "effort"))) return undefined;
     if (host !== undefined && (rung.capabilities?.supports_reasoning !== true
@@ -577,7 +580,15 @@ export function buildExperientialModel(
     if (baseline.length > 0 && values.length === 0) return undefined;
     // A lab with no control is only safe when the serving routes agree.
     if (baseline.length === 0 && rungs.some((route) => (route.capabilities?.supported_reasoning_efforts?.length ?? 0) > 0)) return undefined;
-    reasoningOptions = values.length > 0 ? [{ type: "effort", values }] : [];
+    // A one-value intersection is not enough to prove always-on reasoning:
+    // each route must explicitly fix the same optional effort as its default.
+    if (values.length === 1 && values[0] !== "none" && rungs.every(({ capabilities }) =>
+      capabilities?.supports_reasoning === true
+      && capabilities.supported_reasoning_efforts?.length === 1
+      && capabilities.supported_reasoning_efforts[0] === values[0]
+      && capabilities.reasoning_default_effort === values[0]
+      && capabilities.reasoning_effort_required === false)) fixedEffort = values[0];
+    reasoningOptions = values.length > 0 && fixedEffort === undefined ? [{ type: "effort", values }] : [];
   }
   const context = model.context_window;
   const hostOutput = model.max_output_tokens;
@@ -587,14 +598,16 @@ export function buildExperientialModel(
   const output = Math.min(hostOutput, base.limit.output ?? hostOutput);
   const limit = { context, input: model.max_input_tokens ?? undefined, output };
   const input = modalities(model.input_modalities, ["text"]);
+  const name = model.display_name ?? model.slug;
   const values: Partial<SyncedFullModel> = {
-    name: model.display_name ?? model.slug,
+    name: name.toLowerCase() === base.name?.toLowerCase() ? base.name : name,
     attachment: input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,
     temperature: base.temperature === false ? false
       : declaredCapability(entry, rungs, "supports_temperature", "temperature") ?? existing?.temperature,
-    tool_call: true,
+    tool_call: base.tool_call === false ? false
+      : declaredCapability(entry, rungs, "supports_tools", "tools") ?? existing?.tool_call,
     structured_output: lab?.structuredOutput === false ? false
       : declaredCapability(entry, rungs, "supports_structured_output", "structured_outputs") ?? existing?.structured_output,
     cost: buildCost(rung, existing),
@@ -602,13 +615,21 @@ export function buildExperientialModel(
     modalities: { input, output: ["text"] },
   };
   const efforts = reasoningOptions?.flatMap((option) => option.type === "effort" ? option.values : []) ?? [];
+  const addedInputs = input.filter((value) => !base.modalities?.input.includes(value));
   const header = [
     `# Source: https://api.experientiallabs.ai/api/models/${model.slug}`,
     "# List prices in USD per million tokens; temporary promotions are excluded.",
+    ...(addedInputs.length > 0 ? [
+      `# Host model.input_modalities = ${JSON.stringify(model.input_modalities)}; additional host inputs: ${addedInputs.join(", ")}.`,
+    ] : []),
     ...(reasoning ? [host === undefined
       ? `# Reasoning baseline: ${lab!.sourcePath}; restricted to all default serving routes.`
       : `# Reasoning baseline: ${host.source}; intersected with published default-route efforts.`] : []),
     ...(efforts.length > 0 ? [`# Effort: top-level reasoning_effort = ${efforts.join("|")}.`] : []),
+    ...(fixedEffort !== undefined ? [
+      `# Reasoning: every default route publishes supported_reasoning_efforts=["${fixedEffort}"],`,
+      `# reasoning_default_effort="${fixedEffort}" and reasoning_effort_required=false; no adjustable effort.`,
+    ] : []),
     "# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility",
   ].join("\n") + "\n";
   return { model: factorBaseModel(baseModel, values, limit, existing?.base_model_omit), header };

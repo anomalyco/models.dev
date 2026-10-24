@@ -1,13 +1,14 @@
 # Source: https://api.experientiallabs.ai/api/models/gemini-3.8-flash
 # List prices in USD per million tokens; temporary promotions are excluded.
 # Reasoning baseline: providers/google/models/gemini-3.8-flash.toml; restricted to all default serving routes.
-# Effort: top-level reasoning_effort = high.
+# Reasoning: every default route publishes supported_reasoning_efforts=["high"],
+# reasoning_default_effort="high" and reasoning_effort_required=false; no adjustable effort.
 # Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
 schema = 2
 base_model = "google/gemini-3.8-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["high"] }
+reasoning = { supported = true }
 structured_output = true
 
 [limit]

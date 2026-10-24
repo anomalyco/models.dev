@@ -125,6 +125,49 @@ test("budget and toggle models are held for verified host mappings instead of cl
   expect(resolveExperientialBaseModel("gpt-6.1-sol-24k", "openai")).toBeUndefined();
 });
 
+test("fixed optional host effort is not advertised as adjustable or inferred from missing defaults", () => {
+  const value = entry();
+  value.model.slug = "gpt-oss-safeguard-20b";
+  Object.assign(value.providers[0]!.capabilities!, {
+    supported_reasoning_efforts: ["medium"],
+    reasoning_default_effort: "medium",
+    reasoning_effort_required: false,
+  });
+  const built = buildExperientialModel(value, undefined)!;
+  expect(built.model.reasoning_options).toEqual([]);
+  expect(built.header).toContain("no adjustable effort");
+  value.providers[0]!.capabilities!.reasoning_effort_required = true;
+  expect(buildExperientialModel(value, undefined)!.model.reasoning_options).toEqual([{ type: "effort", values: ["medium"] }]);
+  value.providers[0]!.capabilities!.reasoning_effort_required = false;
+  value.providers[0]!.capabilities!.reasoning_default_effort = undefined;
+  expect(buildExperientialModel(value, undefined)!.model.reasoning_options).toEqual([{ type: "effort", values: ["medium"] }]);
+});
+
+test("tool support respects the lab baseline and every default serving route", () => {
+  const value = entry();
+  value.model.slug = "gpt-3.5-turbo";
+  expect(buildExperientialModel(value, undefined)!.model.tool_call).toBeUndefined();
+  value.model.slug = "gpt-4.1";
+  value.providers.push({ ...value.providers[0]!, id: "fallback", capabilities: { supports_tools: false } });
+  value.default_provider_ids.push("fallback");
+  expect(buildExperientialModel(value, undefined)!.model.tool_call).toBe(false);
+  value.providers[1]!.capabilities = {};
+  value.model.supported_params = {};
+  expect(buildExperientialModel(value, { tool_call: false })!.model.tool_call).toBe(false);
+});
+
+test("case-only names inherit the canonical label while host modality additions retain source evidence", () => {
+  const value = entry();
+  value.model.slug = "gpt-oss-safeguard-20b";
+  value.model.display_name = "Gpt Oss Safeguard 20b";
+  expect(buildExperientialModel(value, undefined)!.model.name).toBeUndefined();
+  value.model.display_name = "Experiential Safeguard";
+  expect(buildExperientialModel(value, undefined)!.model.name).toBe("Experiential Safeguard");
+  value.model.slug = "gpt-5-mini";
+  value.model.input_modalities = ["text", "image", "pdf"];
+  expect(buildExperientialModel(value, undefined)!.header).toContain('model.input_modalities = ["text","image","pdf"]');
+});
+
 test("verified DeepSeek and uncensored mappings tolerate omitted fallback metadata but honor explicit restrictions", () => {
   const cases = [
     ["deepseek-v4-flash", "deepseek/deepseek-v4-flash", ["none", "low", "high", "max"]],

@@ -1,14 +1,14 @@
 # Source: https://api.experientiallabs.ai/api/models/gpt-oss-safeguard-20b
 # List prices in USD per million tokens; temporary promotions are excluded.
 # Reasoning baseline: providers/openrouter/models/openai/gpt-oss-safeguard-20b.toml; restricted to all default serving routes.
-# Effort: top-level reasoning_effort = medium.
+# Reasoning: every default route publishes supported_reasoning_efforts=["medium"],
+# reasoning_default_effort="medium" and reasoning_effort_required=false; no adjustable effort.
 # Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
 schema = 2
 base_model = "openai/gpt-oss-safeguard-20b"
-name = "Gpt Oss Safeguard 20b"
 
 [capabilities]
-reasoning = { supported = true, effort = ["medium"] }
+reasoning = { supported = true }
 structured_output = true
 
 [limit]
