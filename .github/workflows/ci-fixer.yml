@@ -125,7 +125,16 @@ jobs:
           echo "LOG_FILE=$LOG_FILE" >> "$GITHUB_ENV"
 
           if [ -n "${FAILED_RUN_ID:-}" ]; then
-            gh run view "$FAILED_RUN_ID" --log-failed > "$LOG_FILE" || gh run view "$FAILED_RUN_ID" --log > "$LOG_FILE"
+            # `gh run view --log-failed` downloads the whole run's log archive,
+            # which for the model sync matrix is too large to stream reliably.
+            # Fetch only the failed jobs' logs instead.
+            : > "$LOG_FILE"
+            gh api --paginate "repos/$GH_REPO/actions/runs/$FAILED_RUN_ID/jobs?per_page=100" \
+              --jq '.jobs[] | select(.conclusion == "failure") | "\(.id)\t\(.name)"' |
+              while IFS=$'\t' read -r job_id job_name; do
+                echo "===== $job_name =====" >> "$LOG_FILE"
+                gh api "repos/$GH_REPO/actions/jobs/$job_id/logs" >> "$LOG_FILE"
+              done
           else
             echo "Manual dev CI fixer dispatch; no failed workflow_run logs are available." > "$LOG_FILE"
           fi
