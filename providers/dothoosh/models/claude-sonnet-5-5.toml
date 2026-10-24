@@ -1,0 +1,30 @@
+# DotHoosh bills in Toman (IRT) from a prepaid wallet. Its Toman price is derived from the
+# vendor's USD list price: USD price x 77/60 (5% margin, 10% USD acquisition premium, 1% payment
+# fee, 10% VAT), converted at the gateway's current USD/IRT rate. The costs below are that USD
+# figure before conversion, so they do not depend on the exchange rate (checked 2026-10-24).
+# https://gateway.dothoosh.com/models
+# Images and files are not accepted on any DotHoosh route yet (text only).
+# Gateway wire facts (DotHoosh verifies request fields per vendor against captured
+# vendor responses and refuses unverified ones with HTTP 400):
+# - Anthropic Messages at /anthropic/v1/messages (x-api-key). Effort: thinking.type =
+#   adaptive with output_config.effort = low|medium|high|xhigh|max (forwarded).
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.messages]
+base_url = "https://gateway.dothoosh.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.566667
+cache = { read = 0.128336, write = { "5m" = 3.208337, "1h" = 5.133334 } }
+
+[cost.text.output]
+price = 12.833336

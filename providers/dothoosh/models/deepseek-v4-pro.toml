@@ -1,0 +1,32 @@
+# DotHoosh bills in Toman (IRT) from a prepaid wallet. Its Toman price is derived from the
+# vendor's USD list price: USD price x 77/60 (5% margin, 10% USD acquisition premium, 1% payment
+# fee, 10% VAT), converted at the gateway's current USD/IRT rate. The costs below are that USD
+# figure before conversion, so they do not depend on the exchange rate (checked 2026-10-24).
+# https://gateway.dothoosh.com/models
+# Images and files are not accepted on any DotHoosh route yet (text only).
+# Gateway wire facts (DotHoosh verifies request fields per vendor against captured
+# vendor responses and refuses unverified ones with HTTP 400):
+# - Chat Completions. Toggle: thinking.type = enabled|disabled (forwarded since 2026-10-20; live:
+#   disabled -> 200 with no reasoning_content). Effort: reasoning_effort = low|high|max
+#   (forwarded; `none` is forwarded too and also disables thinking).
+# - One flat price at all hours: DotHoosh's cost basis is DeepSeek's peak rate.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.694002
+cache = { read = 0.056467 }
+
+[cost.text.output]
+price = 5.082003

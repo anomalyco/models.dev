@@ -1,0 +1,41 @@
+# DotHoosh bills in Toman (IRT) from a prepaid wallet. Its Toman price is derived from the
+# vendor's USD list price: USD price x 77/60 (5% margin, 10% USD acquisition premium, 1% payment
+# fee, 10% VAT), converted at the gateway's current USD/IRT rate. The costs below are that USD
+# figure before conversion, so they do not depend on the exchange rate (checked 2026-10-24).
+# https://gateway.dothoosh.com/models
+# Images and files are not accepted on any DotHoosh route yet (text only).
+# Gateway wire facts (DotHoosh verifies request fields per vendor against captured
+# vendor responses and refuses unverified ones with HTTP 400):
+# - OpenAI Responses at /v1/responses (GPT-6 admits function tools only there). Effort:
+#   reasoning.effort (forwarded). store is always sent as false upstream.
+# Long prompts are billed at the vendor's long-context tier (whole request), exactly as the vendor bills DotHoosh.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+tools = { supported = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.128336
+cache = { read = 0.012837, write = 0.16042 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.256669
+cache = { read = 0.025669, write = 0.320837 }
+
+[cost.text.output]
+price = 0.64167
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.962503
