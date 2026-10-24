@@ -1,0 +1,22 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash"
+description = "Very low-cost DeepSeek V4 model for fast chat, retrieval, and high-volume long-context tasks."
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.1053
+output = 0.3158
+cache_read = 0.1053
+
+[limit]
+context = 1000000
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]
