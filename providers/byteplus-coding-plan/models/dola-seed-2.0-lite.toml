@@ -1,0 +1,21 @@
+# Coding Plan model name per the official activity page (accessed 2026-10-10)
+# and the runtime-verified alias report in anomalyco/models.dev#5857.
+# Subscription tier: no per-token price.
+# Effort: reasoning_effort = none|low|high, measured on the sibling Volcengine
+# Ark Coding Plan endpoint for this same model on the same platform
+# (providers/volcengine-coding-plan): the wire accepts medium and max too, but
+# medium aliases low and max sits inside the high band, so only none|low|high
+# hold up. Not independently re-measured on this host.
+base_model = "bytedance-seed/seed-2.0-lite"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
