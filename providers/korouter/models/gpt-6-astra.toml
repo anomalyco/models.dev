@@ -1,0 +1,18 @@
+# Prices read from https://korouter.ai/models/gpt-6-astra on 2026-10-07 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 3.70
+output = 18.50
+cache_read = 0.37
+cache_write = 4.63
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 7.40
+output = 27.75
+cache_read = 0.74
+cache_write = 9.25
