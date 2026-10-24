@@ -4,7 +4,7 @@ schema = 2
 base_model = "bytedance-seed/seed-2.0-pro"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
@@ -12,12 +12,8 @@ tools = { supported = false }
 reasoning = { supported = true }
 structured_output = false
 
-[limit]
-context = 131_072
-output = 32_768
-
 [cost.text.input]
-price = 0.5
+price = 0.63
 
 [cost.text.output]
-price = 3
+price = 3.79
