@@ -1,0 +1,24 @@
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=500000, max_completion_tokens not declared,
+# capabilities=[chat, streaming, function-calling, coding, vision, reasoning],
+# price 1.6/4.8. No pdf on this route, so modalities narrow to [text, image].
+# The host publishes a flat rate with no long-context tier, so there are no cost
+# tiers here even though the lab and the peer carry one above 200k.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header).
+# Unverified on this host: with a plain key every effort value returns 404 "No
+# upstream available for model x-ai/grok-4.7" — the serving routes are
+# BYOK-only — so no rung could be measured here. providers/xai and the
+# OpenRouter peer publish the same ladder for this model, so that is published
+# unchanged.
+# Effort: reasoning_effort = low|medium|high|xhigh
+base_model = "xai/grok-4.7"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.6
+output = 4.8
+
+[modalities]
+input = ["text", "image"]

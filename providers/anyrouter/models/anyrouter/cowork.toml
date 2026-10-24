@@ -1,0 +1,37 @@
+# Router preset on the AnyRouter gateway; the served model is chosen per
+# request. Host contract (GET /api/v1/models?all=1, read 2026-09-24,
+# re-verified 2026-09-27): context_length=1000000, max_completion_tokens=65536,
+# capabilities=[chat, streaming, function-calling, vision]. The preset's own
+# supported_parameters ([max_tokens, temperature, top_p, stop, stream]) is the
+# legacy model-level projection the host documents, not a promise shared by
+# every route; the members it resolves do take tools and reasoning.
+# No [cost]: the preset bills whichever route it resolves at that route's rate,
+# so there is no single per-token price.
+# Reasoning: chat takes the flat `reasoning_effort` and there is no toggle on
+# this surface (see the provider header). Probed /api/v1/chat/completions
+# 2026-09-27 with a prompt that forces multi-step work: `none` returned 0
+# reasoning tokens on 3 of 3 runs and `low` returned 2000 of a 2000 budget on 2
+# of 2, both served by poolside/laguna-s-2.1. The graded rungs cannot be
+# separated from each other on a preset — the member the router picks decides
+# how deep a rung reasons — so only the verified off position is published.
+# Effort: reasoning_effort = none
+name = "AnyRouter Cowork"
+description = "Router across the best tool-calling models for everyday assistant work, with automatic fallback"
+family = "model-router"
+release_date = "2026-06-08"
+last_updated = "2026-06-08"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none"] }]
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

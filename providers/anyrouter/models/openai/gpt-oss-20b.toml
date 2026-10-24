@@ -1,0 +1,21 @@
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=131072, max_completion_tokens=32768,
+# capabilities=[chat, reasoning, function-calling, streaming, coding],
+# price 0.03/0.14. Context and modalities match the lab entry, so only cost and
+# reasoning_options are authored.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header).
+# Probed /api/v1/chat/completions 2026-09-27: the route accepts exactly low,
+# medium and high, and the upstream names that allowlist in its own 400 —
+# "`reasoning_effort` must be one of `low`, `medium`, or `high`" — refusing
+# none, minimal, xhigh and max. Honored effect with a prompt that forces
+# multi-step work: low=273, medium=629, high=698 reasoning tokens, so depth
+# tracks the value. This is the complete accepted set and it matches the peer.
+# Effort: reasoning_effort = low|medium|high
+base_model = "openai/gpt-oss-20b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.03
+output = 0.14
