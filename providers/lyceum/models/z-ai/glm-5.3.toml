@@ -1,0 +1,17 @@
+# Effort: reasoning_effort low|high|max (peer ladder); none only moves the trace into content, so it isn't listed.
+# Trace comes back in message.reasoning, which v1 can't express, so no reasoning field is pinned.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

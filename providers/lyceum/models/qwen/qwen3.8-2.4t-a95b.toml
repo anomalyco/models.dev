@@ -1,0 +1,19 @@
+# Effort: low|medium|xhigh (Qwen3.8 ladder; levels undocumented for this model). Lyceum: thinking can't be disabled here, so no none.
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.63 }
+
+[cost.text.output]
+price = 6

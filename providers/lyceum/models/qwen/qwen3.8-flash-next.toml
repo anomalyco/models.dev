@@ -1,0 +1,23 @@
+# Effort: reasoning_effort none|low|medium|xhigh (none = off); high, max and minimal are rejected.
+schema = 2
+base_model = "alibaba/qwen3.8-flash-next"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+cache = { supported = true, implicit = true }
+effort_updates = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5
