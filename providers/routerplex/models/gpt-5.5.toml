@@ -1,0 +1,17 @@
+# Source: https://routerplex.com/api/models (accessed 2026-10-20).
+# Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
+# cache_read is listed only where cached prompt tokens bill below the input rate.
+base_model = "openai/gpt-5.5"
+base_model_omit = ["limit.input"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.4
+
+[limit]
+context = 256_000
