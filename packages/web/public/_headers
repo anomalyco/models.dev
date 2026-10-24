@@ -1,2 +1,8 @@
 /*
   Access-Control-Allow-Origin: *
+
+/logos/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/sprites/*
+  Cache-Control: public, max-age=31536000, immutable

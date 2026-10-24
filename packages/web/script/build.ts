@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { RenderedPages, Providers, Models, SearchIndexJson, renderDocument } from "../src/render";
+import { LabLogoSprite, ProviderLogoSprite } from "../src/logos";
 import {
   filterCatalogByModelType,
   generateV2,
@@ -81,6 +82,10 @@ for (const [route, rendered] of RenderedPages) {
 }
 
 await Bun.write("./dist/search-index.json", SearchIndexJson);
+
+for (const sprite of [ProviderLogoSprite, LabLogoSprite]) {
+  await Bun.write(`./dist${sprite.path}`, sprite.svg);
+}
 
 const catalog = { models: Models, providers: Providers };
 const variants: Array<[suffix: string, filter: ModelTypeFilter]> = [
