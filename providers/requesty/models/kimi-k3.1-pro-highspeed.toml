@@ -1,21 +1,12 @@
 schema = 2
-name = "kimi-k3.1-pro-highspeed"
-description = "Kimi K3.1 Pro Highspeed is the high speed variant of Kimi K3.1 Pro, with the same intelligence and 1M token context window at roughly 3x the output speed. Built for latency sensitive coding agents, interactive assistants and real time knowledge work."
-family = "kimi-k3"
-open_weights = false
-release_date = "2026-10-23"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Highspeed"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 
 [limit]
-context = 1_048_576
 output = 1_048_576
 
 [cost.text.input]
