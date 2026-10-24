@@ -1,0 +1,21 @@
+# FutureInfra bills in KRW. USD = KRW / 1355.84 (open.er-api.com, 2026-10-01).
+# KRW per 1M tokens: input 178, output 892
+base_model = "openai/gpt-6-luna"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1316
+output = 0.6578
+cache_read = 0.0132
+cache_write = 0.1644
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.2631
+output = 0.9867
+cache_read = 0.0263
+cache_write = 0.3289

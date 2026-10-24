@@ -1,0 +1,13 @@
+# FutureInfra bills in KRW. USD = KRW / 1355.84 (open.er-api.com, 2026-10-01).
+# KRW per 1M tokens: input 1784, output 8918
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.3155
+output = 6.5777
+cache_read = 0.1316
+cache_write = 1.6444
