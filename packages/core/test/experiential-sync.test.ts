@@ -132,9 +132,6 @@ test("verified DeepSeek and uncensored mappings tolerate omitted fallback metada
     ["deepseek-v4.1-flash", "deepseek/deepseek-v4.1-flash", ["none", "low", "high", "max"]],
     ["deepseek-v4.1-flash-1017", "deepseek/deepseek-v4.1-flash-1017", ["none", "low", "high", "max"]],
     ["deepseek-v4.1-flash-uncensored", "dealignai/deepseek-v4.1-flash-1017-uncensored", ["none", "low", "high", "max"]],
-    ["glm-5.3-flash-uncensored", "dealignai/glm-5.3-flash-uncensored", ["low", "high", "max"]],
-    ["glm-5.3-uncensored", "dealignai/glm-5.3-uncensored", ["low", "high"]],
-    ["mimo-v2.6-flash-uncensored", "dealignai/mimo-v2.6-flash-uncensored", ["none", "high"]],
   ] as const;
   for (const [slug, baseModel, efforts] of cases) {
     const value = entry();
@@ -160,6 +157,38 @@ test("verified DeepSeek and uncensored mappings tolerate omitted fallback metada
   // Only identified derivatives can use these mappings; suffix stripping
   // would silently assign a future fine-tune the original model's identity.
   expect(resolveExperientialBaseModel("deepseek-v4-pro-uncensored")).toBeUndefined();
+});
+
+test("unidentified uncensored checkpoints keep their provider-local definitions during sync", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-experiential-inline-"));
+  const modelsDir = path.join(root, "providers/experiential/models");
+  await mkdir(modelsDir, { recursive: true });
+  await copyFile(path.join(import.meta.dirname, "../../../providers/experiential/provider.toml"), path.join(root, "providers/experiential/provider.toml"));
+  const ids = ["glm-5.3-flash-uncensored", "glm-5.3-uncensored", "mimo-v2.6-flash-uncensored"];
+  const originals = new Map<string, string>();
+  const values = ids.map((slug) => {
+    const value = entry();
+    value.model.slug = slug;
+    return value;
+  });
+  try {
+    for (const id of ids) {
+      const source = path.join(import.meta.dirname, `../../../providers/experiential/models/${id}.toml`);
+      await copyFile(source, path.join(modelsDir, `${id}.toml`));
+      originals.set(id, await Bun.file(source).text());
+      expect(resolveExperientialBaseModel(id)).toBeUndefined();
+    }
+    const provider = { ...experiential, modelsDir, fetchModels: async () => catalog(values) };
+    expect(await syncProvider(provider, { openIssues: false })).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 3 });
+    for (const id of ids) {
+      expect(await Bun.file(path.join(modelsDir, `${id}.toml`)).text()).toBe(originals.get(id)!);
+    }
+    const models = (await generate(path.join(root, "providers"))).experiential!.models;
+    expect(Object.keys(models).sort()).toEqual([...ids].sort());
+    expect(models[ids[0]!]!.modalities.input).toEqual(["text"]);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("both Luna models resolve and retain their native effort controls", () => {
@@ -209,6 +238,20 @@ test("long-context pricing preserves the inclusive source threshold and zero cac
   }]);
   value.providers[0]!.long_context_threshold_tokens = -1;
   expect(buildExperientialModel(value, undefined)!.model.cost?.tiers).toBeUndefined();
+});
+
+test("omitted capability flags preserve authored values instead of inventing false", () => {
+  const value = entry();
+  value.model.slug = "gpt-4.1";
+  expect(buildExperientialModel(value, undefined)!.model.temperature).toBeUndefined();
+  expect(buildExperientialModel(value, undefined)!.model.structured_output).toBeUndefined();
+  const existing = { structured_output: true, temperature: true };
+  expect(buildExperientialModel(value, existing)!.model.structured_output).toBe(true);
+  value.providers[0]!.capabilities!.supports_structured_output = false;
+  value.providers[0]!.capabilities!.supports_temperature = false;
+  const built = buildExperientialModel(value, existing)!.model;
+  expect(built.structured_output).toBe(false);
+  expect(built.temperature).toBe(false);
 });
 
 test("sync emits v2 models, is idempotent, preserves unresolved live entries, and removes retired models", async () => {

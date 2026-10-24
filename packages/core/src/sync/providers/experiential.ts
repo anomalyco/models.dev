@@ -22,9 +22,6 @@ const CANONICAL_BASE_MODELS: Record<string, string> = {
   "grok-4.20": "xai/grok-4.20-0309-reasoning",
   "grok-4.20-non-reasoning": "xai/grok-4.20-0309-non-reasoning",
   "deepseek-v4.1-flash-uncensored": "dealignai/deepseek-v4.1-flash-1017-uncensored",
-  "glm-5.3-flash-uncensored": "dealignai/glm-5.3-flash-uncensored",
-  "glm-5.3-uncensored": "dealignai/glm-5.3-uncensored",
-  "mimo-v2.6-flash-uncensored": "dealignai/mimo-v2.6-flash-uncensored",
 };
 
 // These models have an explicitly published Experiential reasoning_effort
@@ -43,18 +40,6 @@ const HOST_REASONING: Record<string, { values: string[]; source: string }> = {
   "dealignai/deepseek-v4.1-flash-1017-uncensored": {
     values: ["none", "low", "high", "max"],
     source: "https://huggingface.co/dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8",
-  },
-  "dealignai/glm-5.3-flash-uncensored": {
-    values: ["low", "high", "max"],
-    source: "https://huggingface.co/dealignai/GLM-5.3-Flash-UNCENSORED-NVFP4",
-  },
-  "dealignai/glm-5.3-uncensored": {
-    values: ["low", "high"],
-    source: "https://huggingface.co/dealignai/GLM-5.3-UNCENSORED-NVFP4",
-  },
-  "dealignai/mimo-v2.6-flash-uncensored": {
-    values: ["none", "high"],
-    source: "https://huggingface.co/dealignai/MiMo-V2.6-Flash-RL-UNCENSORED",
   },
 };
 
@@ -286,6 +271,20 @@ function orderedUsableRungs(entry: ExperientialEntry): ExperientialRung[] {
       && price(rung.output_nano_usd_per_million) !== undefined
       ? [rung] : [];
   });
+}
+
+// Omitted metadata is unknown, not an explicit lack of support. Preserve a
+// hand-authored value when any default route has not published this flag.
+function declaredCapability(
+  entry: ExperientialEntry,
+  rungs: ExperientialRung[],
+  capability: "supports_temperature" | "supports_structured_output",
+  parameter: "temperature" | "structured_outputs",
+) {
+  const flags = rungs.map((route) => route.capabilities?.[capability] ?? entry.model.supported_params?.[parameter]);
+  if (flags.some((value) => value === false)) return false;
+  if (flags.every((value) => value === true)) return true;
+  return undefined;
 }
 
 // Read per-host controls through the repository's v2 reader. Canonical lab
@@ -588,17 +587,16 @@ export function buildExperientialModel(
   const output = Math.min(hostOutput, base.limit.output ?? hostOutput);
   const limit = { context, input: model.max_input_tokens ?? undefined, output };
   const input = modalities(model.input_modalities, ["text"]);
-  const params = model.supported_params ?? {};
   const values: Partial<SyncedFullModel> = {
     name: model.display_name ?? model.slug,
     attachment: input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,
-    temperature: base.temperature === true
-      && rungs.every((route) => (route.capabilities?.supports_temperature ?? params.temperature) === true),
+    temperature: base.temperature === false ? false
+      : declaredCapability(entry, rungs, "supports_temperature", "temperature") ?? existing?.temperature,
     tool_call: true,
-    structured_output: lab?.structuredOutput !== false
-      && rungs.every((route) => (route.capabilities?.supports_structured_output ?? params.structured_outputs) === true),
+    structured_output: lab?.structuredOutput === false ? false
+      : declaredCapability(entry, rungs, "supports_structured_output", "structured_outputs") ?? existing?.structured_output,
     cost: buildCost(rung, existing),
     limit,
     modalities: { input, output: ["text"] },
