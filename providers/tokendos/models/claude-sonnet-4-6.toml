@@ -1,13 +1,13 @@
 # Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
 # Served id: raw_model "claude-sonnet-4-6" in OpenAI protocol (/v1), $0.0134228/$0.0671138 per MTok input/output.
 # Cache read: $0.0013423 per MTok, same snapshot row.
-# Reasoning: graded effort plus a reasoning-token budget, copied from providers/anthropic/models/claude-sonnet-4-6.toml; wire paths below.
-# Budget: thinking.budget_tokens
+# Reasoning: effort ladder and off value follow the same-surface peer providers/openrouter/models/anthropic/claude-sonnet-4.6.toml; that peer exposes no budget on this surface.
+# Effort: reasoning_effort = none|low|medium|high|max
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 
 [cost.text.input]
 price = 0.0134228
