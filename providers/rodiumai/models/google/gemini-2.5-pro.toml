@@ -1,0 +1,17 @@
+# Costs converted from RODI to USD at ~639.2 RODI = 1 USD (2026-10-12).
+# Source: GET https://api.rodiumai.io/v1/models id=google/gemini-2.5-pro
+# https://www.rodiumai.io/docs/models
+base_model = "google/gemini-2.5-pro"
+
+[cost]
+input = 1.47
+output = 11.79
+cache_read = 0.37
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 1048576
+output = 16384
