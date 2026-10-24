@@ -2,8 +2,13 @@
 # Effort: reasoning_effort = low|high|max
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.3-flash.toml (Zen passes requests through).
+# No PDF input: every Zen upstream for this model rejects file content parts (Fireworks: https://docs.fireworks.ai/guides/querying-vision-language-models#working-with-pdfs; verified live 2026-10-24).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
 
 [capabilities]
 tools = { supported = true }

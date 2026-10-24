@@ -4,8 +4,13 @@
 #   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
 # Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
 #   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+# No PDF input: Ollama Chat Completions accepts text and base64 images only (https://docs.ollama.com/api/openai-compatibility, 2026-10-24).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }

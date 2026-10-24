@@ -1,8 +1,13 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Effort: reasoning_effort = low|high|max (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.3-flash.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# No PDF input: Go proxies the same upstreams as Zen, which reject file content parts (https://docs.fireworks.ai/guides/querying-vision-language-models#working-with-pdfs).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
