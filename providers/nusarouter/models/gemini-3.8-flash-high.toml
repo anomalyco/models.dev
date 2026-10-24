@@ -1,0 +1,10 @@
+# Source: NusaRouter public catalog https://api.nusarouter.web.id/public/catalog (accessed 2026-09-29).
+# Rates are IDR per 1M tokens on that feed; converted to USD at the platform's stored
+# USD/IDR rate 17_984.765665 (origin automatic, 2026-09-29).
+base_model = "google/gemini-3.8-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.017936
+output = 0.089681
+cache_read = 0.017936

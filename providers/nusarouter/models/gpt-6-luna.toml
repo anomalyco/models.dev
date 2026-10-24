@@ -1,0 +1,15 @@
+# Source: NusaRouter public catalog https://api.nusarouter.web.id/public/catalog (accessed 2026-09-29).
+# Rates are IDR per 1M tokens on that feed; converted to USD at the platform's stored
+# USD/IDR rate 17_984.765665 (origin automatic, 2026-09-29).
+base_model = "openai/gpt-6-luna"
+base_model_omit = ["limit.input"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.008968
+output = 0.044841
+cache_read = 0.008968
+
+[limit]
+context = 272_000
+output = 128_000
