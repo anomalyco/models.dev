@@ -1,0 +1,27 @@
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled)
+# Effort: reasoning_effort = high | max
+# Re-measured on FlexAI 2026-10-05 (length of reasoning_content; 3 prompts x 3
+# runs, max_tokens 32000):
+#   default 0 (9/9 no reasoning) · thinking disabled 0 · minimal 0 · low 0
+#   medium 98 · high 103 · max 582 · thinking enabled 582 (medians)
+# minimal and low return no reasoning (the off state the toggle expresses);
+# medium and high are one band, named `high` as every peer entry names it.
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.5

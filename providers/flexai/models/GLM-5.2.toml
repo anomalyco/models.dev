@@ -1,0 +1,29 @@
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled)
+# Effort: reasoning_effort = high | max
+# Measured on FlexAI 2026-10-02 (reasoning tokens, n=4, max_tokens 4000):
+#   default 0 · minimal 0 · low 0 · medium 3297 · high 2653 · max 4000 (capped)
+# minimal and low return zero reasoning tokens, i.e. the disabled state the
+# toggle already expresses; medium and high overlap and are not separable;
+# max saturates the budget. Only the two separable on-levels are declared.
+# medium and high are one measured band; it is named `high` here because
+# that is the name every peer entry for this model uses.
+# Context: 1_048_576 is the served window (GET /v1/models context_length, 2026-10-22).
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.966
+cache = { read = 0.1449 }
+
+[cost.text.output]
+price = 3.036
