@@ -1,0 +1,9 @@
+# Source: https://tokenharbor.ai/models (retrieved 2026-10-08); USD per 1M tokens.
+# Effort: output_config.effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 (Fast)"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 4.5
+output = 22.5
