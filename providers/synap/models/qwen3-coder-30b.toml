@@ -1,0 +1,21 @@
+# Sources (accessed 2026-10-12, re-probed 2026-10-18, feed re-verified 2026-10-22):
+# - Model id, USD pricing and limits: https://pool.linkrra.com/v1/models?format=openrouter
+#   (cost_usd is per token: 0.0000000675 prompt / 0.00000027 completion).
+# - limit.context 32,768: the deployment's window as declared by the live feed (below the
+#   lab model's 262k). limit.output is not restated (lab value inherited).
+# - tools + structured_output: live probe 2026-10-18 - `tools` with tool_choice auto returns
+#   finish_reason "tool_calls", response_format json_schema returns conforming JSON.
+schema = 2
+base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 32_768
+
+[cost.text.input]
+price = 0.0675
+
+[cost.text.output]
+price = 0.27
