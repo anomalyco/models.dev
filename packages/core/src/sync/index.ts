@@ -57,6 +57,7 @@ import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
+import { routingRun } from "./providers/routing-run.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -221,6 +222,7 @@ export const providers: {
   pioneer: SyncProvider<any>;
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
+  "routing-run": SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -266,6 +268,7 @@ export const providers: {
   pioneer,
   prime,
   requesty,
+  "routing-run": routingRun,
   tinfoil,
   vercel,
   venice,
@@ -289,6 +292,7 @@ export const groups = {
     "novita-ai",
     "ofox",
     "requesty",
+    "routing-run",
     "openrouter",
     "prime",
     "vercel",
