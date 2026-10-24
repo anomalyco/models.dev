@@ -1,0 +1,23 @@
+# Qwen3.8 27B served by Heabsy on dedicated GPUs in the EEA (EEA tier, zero data retention).
+# Model ID: requests use model = "qwen38" (https://heabsy.com/models/qwen38, "model id: qwen38").
+# API reference: https://api.heabsy.com/docs
+# Pricing (accessed 2026-10-21, https://heabsy.com/models/qwen38): $1.00 input, $0.0761 cached input,
+# $3.00 output per 1M tokens.
+# Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off, so no separate toggle).
+# Probed live against api.heabsy.com/v1/chat/completions on 2026-10-21 (temperature 0, fixed prompt,
+# three runs per level; reasoning tokens from usage.completion_tokens_details.reasoning_tokens):
+# none 0/0/0 (2 completion tokens); low 90/90/90; medium 95/95/95; xhigh 123/123/123, the same as
+# the omitted default. high is accepted and folded to xhigh, so it is not listed.
+# Modalities: inherited from the base model; a video_url input was accepted (HTTP 200) in the same probe.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 1.0
+cache = { read = 0.0761 }
+
+[cost.text.output]
+price = 3.0
