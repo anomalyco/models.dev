@@ -1,0 +1,26 @@
+# Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, USD.
+# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# Reasoning controls mirror providers/openai/models/gpt-6.1-sol.toml (relay forwards the upstream request body).
+base_model = "openai/gpt-6.1-sol"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.aicodewith.ai/v1"
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.1
+cache_write = 2.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4
+output = 15
+cache_read = 0.2
+cache_write = 5
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
