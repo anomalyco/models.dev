@@ -1,8 +1,7 @@
 # Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
 # Served id: raw_model "gpt-6-luna" in OpenAI protocol (/v1), $0.0007444/$0.003722 per MTok input/output.
 # Cache read: $0.0000744 per MTok, same snapshot row.
-# Reasoning: the effort ladder of providers/openai/models/gpt-6-luna.toml, exactly as authored there.
-#   The off value is the `none` level itself on this chat-completions surface (AGENTS.md: effort carrying `none` needs no separate `toggle`). No caller-set budget is published — /v1 has no budget field.
+# Reasoning: the effort ladder of providers/openai/models/gpt-6-luna.toml, exactly as authored there; no separate on/off field on this surface.
 schema = 2
 base_model = "openai/gpt-6-luna"
 

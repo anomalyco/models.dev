@@ -1,14 +1,14 @@
 # Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
 # Served id: raw_model "gemini-2.5-flash" in OpenAI protocol (/v1), $0.0224238/$0.1868648 per MTok input/output.
 # Cache read: $0.0022424 per MTok, same snapshot row.
-# Reasoning: the lab entry (providers/google/models/gemini-2.5-flash.toml) exposes a toggle and a thinking budget only — no effort levels.
-# This /v1 surface has no toggle and no budget field (the relay reads effort aliases only), so the model reasons but exposes no caller control here.
-# Not "unknown": both control fields are affirmatively absent from this surface.
+# Reasoning: on/off and a reasoning-token budget, copied from providers/google/models/gemini-2.5-flash.toml (the lab entry has no effort levels); wire paths below.
+# Toggle: thinkingBudget = 0 turns thinking off; a positive value keeps it on
+# Budget: generationConfig.thinkingConfig.thinkingBudget (reasoning tokens only)
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
 
 [cost.text.input]
 price = 0.0224238
