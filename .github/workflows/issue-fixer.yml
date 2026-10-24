@@ -38,7 +38,7 @@ jobs:
           echo "ISSUE_FILE=$ISSUE_FILE" >> "$GITHUB_ENV"
 
       - name: Install opencode
-        run: curl -fsSL https://opencode.ai/install | bash
+        run: curl -fsSL https://opencode.ai/install | bash -s -- --version 1.19.4
 
       - name: Run issue fixer
         env:
