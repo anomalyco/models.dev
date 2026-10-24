@@ -1,17 +1,24 @@
-# Price: https://docs.frogbot.ai/api-reference/models (accessed 2026-10-21)
-# knowledge: FrogBot's value, unsourced and different from the lab's. Kept so v1 doesn't change.
+# Relayed to Fireworks (accounts/fireworks/models/deepseek-v4-pro-0813).
+# FrogBot's LiteLLM proxy forwards reasoning_effort and thinking to Fireworks
+# unchanged (fireworks_ai chat config; litellm 1.94.0).
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = none also disables)
+# Effort: reasoning_effort = low|high|max; Fireworks promotes medium to high and
+# xhigh to max for DeepSeek V4.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
+# https://docs.frogbot.ai/api-reference/chat-completions
 schema = 2
-base_model = "deepseek/deepseek-v4-pro"
-name = "DeepSeek v4 Pro"
-description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-knowledge = "2026-01"
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [limit]
-context = 128_000
-output = 8_192
+context = 1_040_000
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1.32
