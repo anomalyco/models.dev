@@ -7,7 +7,8 @@ permission:
   "*": deny
   read:
     "*": allow
-    "**/.git/**": deny
+    ".git": deny
+    ".git/**": deny
     "*.env": deny
     "*.env.*": deny
   glob: allow

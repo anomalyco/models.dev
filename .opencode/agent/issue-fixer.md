@@ -6,6 +6,12 @@ model: opencode/glm-5.2
 color: "#44BA81"
 permission:
   bash: deny
+  read:
+    "*": allow
+    ".git": deny
+    ".git/**": deny
+    "*.env": deny
+    "*.env.*": deny
   external_directory: deny
   edit:
     "*": deny
