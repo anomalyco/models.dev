@@ -1,0 +1,25 @@
+# https://runwayml.com/research/introducing-runway-gen-4
+# Inputs: images JPEG, PNG or WebP. Output: MP4. https://docs.dev.runwayml.com/assets/inputs/
+schema = 2
+v2_only = true
+type = "video"
+name = "Runway Gen-4 Turbo"
+description = "Runway Gen-4 Turbo is optimized for speed and cost."
+family = "runway"
+open_weights = false
+release_date = "2025-04-07"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

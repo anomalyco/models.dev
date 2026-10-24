@@ -1,0 +1,22 @@
+# https://docs.z.ai/guides/llm/glm-5
+schema = 2
+name = "GLM-5.3-FlashX"
+description = "GLM-5.3-FlashX is Z.ai's high-speed serving variant of GLM-5.3-Flash, delivering inference speeds of up to 200 tokens/s for faster responses."
+family = "glm"
+open_weights = true
+release_date = "2026-09-18"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072

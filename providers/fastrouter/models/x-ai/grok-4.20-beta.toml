@@ -1,0 +1,22 @@
+# No caller reasoning control on this route (affirmative, lab + relay baseline):
+#   First-party providers/xai grok-4.20-0309-reasoning has no effort or toggle (always-on reasoning; only
+#   the multi-agent variant takes reasoning.effort), and relay peers providers/ofox grok-4.20, providers/oci,
+#   providers/tempr and providers/impossibl grok-4.20-0309-reasoning are all []. xAI's reasoning guide
+#   documents reasoning_effort for grok-4.5+ only and says reasoning cannot be disabled (https://docs.x.ai/developers/model-capabilities/text/reasoning (accessed 2026-10-21)).
+#   FastRouter sends reasoning_effort to xAI only for Grok 4.5 and later and drops the reasoning parameter
+#   for models not in its table, which excludes Grok 4.20 (https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)).
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and include_reasoning with empty
+#   schemas; include_reasoning only selects whether the reasoning trace is returned in the response and is
+#   not a control over how much the model reasons.
+base_model = "xai/grok-4.20-beta"
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.5
+output = 5

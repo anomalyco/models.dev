@@ -1,0 +1,24 @@
+# https://docs.sarvam.ai
+schema = 2
+v2_only = true
+type = "speech"
+name = "Bulbul V2"
+description = "Sarvam: Bulbul V2 is a text-to-speech (TTS) model from Sarvam AI, delivering real-time, natural-sounding speech in 11 Indian languages at a fraction of global costs."
+family = "sarvam"
+open_weights = false
+release_date = "2025-05-07"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/wav", "audio/flac"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,0 +1,23 @@
+# https://ai.google.dev/gemma/docs
+# Image formats: https://ai.google.dev/gemini-api/docs/image-understanding
+schema = 2
+name = "Gemma 4 26B"
+description = "Gemma 4 26B is a dense multimodal model from Google DeepMind, handling text and image input to generate text output."
+family = "gemma"
+open_weights = true
+release_date = "2026-07-09"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768

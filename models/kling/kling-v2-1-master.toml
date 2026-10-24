@@ -1,0 +1,23 @@
+# https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-celebrates-first-anniversary-achieves-annualized
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling V2.1 Master"
+description = "Kling 2.1 Master is the premium version of Kling's 2.1 model, designed for professional use."
+open_weights = false
+release_date = "2025-05-29"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
