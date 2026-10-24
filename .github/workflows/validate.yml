@@ -4,6 +4,9 @@ on:
   pull_request:
     branches: [dev]
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     if: github.repository == 'anomalyco/models.dev'
@@ -11,7 +14,9 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
