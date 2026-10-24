@@ -44,6 +44,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           OPENCODE_PERMISSION: '{"bash":"deny"}'
+          OPENCODE_CONFIG_CONTENT: '{"snapshot":false}'
         run: |
           set -euo pipefail
           EVENTS_FILE="$RUNNER_TEMP/issue-fixer-events.jsonl"

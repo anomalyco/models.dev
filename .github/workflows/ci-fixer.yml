@@ -141,6 +141,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           OPENCODE_PERMISSION: '{"bash":"deny"}'
+          OPENCODE_CONFIG_CONTENT: '{"snapshot":false}'
         run: |
           set -o pipefail
           RESPONSE_FILE="$RUNNER_TEMP/ci-fixer-response.md"

@@ -24,6 +24,10 @@ permission:
     "sst.config.ts": allow
     "sst-env.d.ts": allow
     "tsconfig.json": allow
+    ".git": deny
+    ".git/**": deny
+    "**/.git": deny
+    "**/.git/**": deny
 ---
 
 You are the automated dev CI fixer for models.dev.

@@ -18,6 +18,10 @@ permission:
     "*": deny
     "models/**/*.toml": allow
     "providers/**/*.toml": allow
+    ".git": deny
+    ".git/**": deny
+    "**/.git": deny
+    "**/.git/**": deny
 ---
 
 You are the automated issue fixer for models.dev.
