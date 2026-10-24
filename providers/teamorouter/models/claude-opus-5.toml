@@ -1,0 +1,15 @@
+# Source: https://api.teamorouter.com/v1/models/pricing (accessed 2026-10-13)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-opus-5"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1.395
+output = 6.975
+cache_read = 0.1395
+cache_write = 1.74375
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.teamorouter.com/v1"
