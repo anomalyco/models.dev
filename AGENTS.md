@@ -61,8 +61,9 @@ context = 1_000_000
 output = 128_000
 ```
 
-Required: `name`, `description`, `open_weights`, `release_date`, `[modalities]`, `[capabilities]` (`tools`, `reasoning = { supported = … }`, and explicit `temperature`, `top_p`, `top_k`), and `[limit]`. Recommended: `family`, `knowledge`, `type` (defaults to `"chat"`; set it on `image`, `video`, `embedding`, `reranking`, `decision`, `transcription`, `speech`, `realtime` models), `license`, `links`, `weights`, `benchmarks`.
+Required: `name`, `description`, `open_weights`, `release_date`, `[modalities]`, `[capabilities]` (`tools`, `reasoning = { supported = … }`, and explicit `temperature`, `top_p`, `top_k`), and `[limit]`. Recommended: `family`, `knowledge`, `type` (defaults to `"chat"`; set it on `image`, `video`, `embedding`, `reranking`, `decision`, `extraction`, `transcription`, `speech`, `realtime` models), `license`, `links`, `weights`, `benchmarks`.
 
+- `extraction` (v2 only, so these models set `v2_only = true`) is for models that fill named, typed fields from a state and return each value with its confidence, like Cloudflare's Clairic.
 - There is no `attachment` field. It is derived from whether `modalities.input` has anything besides text.
 - Use MIME types where the lab documents them (`image/png`, `application/pdf`) instead of generic `image` / `pdf`.
 - Reasoning controls, `structured_output`, cache, and service tiers never go in lab files; they are per host.

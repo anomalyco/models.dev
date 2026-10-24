@@ -151,6 +151,7 @@ describe("v2 catalog generation", () => {
         },
       },
     });
+    expect(providersV2["cloudflare-workers-ai"]?.models["@cf/cloudflare/clairic"]?.type).toBe("extraction");
     expect(
       providersV2["google-vertex"]?.models["gemini-2.5-pro"]?.api[
         "generate-content"

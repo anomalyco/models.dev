@@ -6,6 +6,8 @@ import {
   takesResponsesBody,
   workersAiApis,
 } from "../src/sync/providers/cloudflare-workers-ai.js";
+import { patchModelV2 } from "../src/model-file-v2.js";
+import { modelV2ToV1 } from "../src/translate.js";
 
 test("preserves OpenRouter pricing overrides as context tiers", () => {
   const [source] = cloudflareWorkersAi.parseModels({
@@ -100,8 +102,8 @@ test("never raises a context window or pins other models", () => {
   expect(translatedContext("@cf/test/unpinned", 1_310_720)).toBe(1_310_720);
 });
 
-test("marks Clef and Clairic routes as decisions even when Workers AI search labels them text generation", () => {
-  for (const id of ["@cf/cloudflare/clairic", "@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
+test("marks Clef routes as decisions even when Workers AI search labels them text generation", () => {
+  for (const id of ["@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
     const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow(id, 65_536)] } });
     const translated = cloudflareWorkersAi.translateModel(source!, {
       existing: () => undefined,
@@ -114,6 +116,30 @@ test("marks Clef and Clairic routes as decisions even when Workers AI search lab
     existing: () => undefined,
     authored: () => undefined,
   })?.model.type).toBeUndefined();
+});
+
+test("keeps Clairic's authored extraction type when search labels it text generation", () => {
+  const doc = {
+    schema: 2,
+    v2_only: true,
+    type: "extraction",
+    name: "Clairic",
+    description: "Extracts typed fields",
+    open_weights: true,
+    release_date: "2026-10-14",
+    modalities: { input: ["text"], output: ["text"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false }, temperature: true },
+    limit: { context: 65_536, output: 65_536 },
+    cost: { text: { input: { price: 0.1 }, output: { price: 0 } } },
+  };
+  const before = modelV2ToV1({ ...doc, id: "@cf/cloudflare/clairic" });
+  const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow("@cf/cloudflare/clairic", 65_536)] } });
+  const after: Record<string, unknown> = cloudflareWorkersAi.translateModel(source!, {
+    existing: () => before as never,
+    authored: () => undefined,
+  })!.model;
+  expect(after.type).toBeUndefined();
+  expect(patchModelV2(doc, before, after).type).toBe("extraction");
 });
 
 test("lists search efforts weakest first so v2 files stay unchanged", () => {

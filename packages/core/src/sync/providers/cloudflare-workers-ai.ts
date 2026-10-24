@@ -19,10 +19,9 @@ const ENABLE_THINKING_MODELS = new Set([
   "@cf/zai-org/glm-5.2",
 ]);
 // Workers AI search reports these as text generation, but their served API takes
-// state + typed questions (or fields, for Clairic) and returns typed answers rather
-// than chat completions.
+// state + typed questions and returns typed answers rather than chat completions.
+// Clairic (typed fields) is an `extraction` model; its file's type is kept.
 const DECISION_MODELS = new Set([
-  "@cf/cloudflare/clairic",
   "@cf/cloudflare/clef",
   "@cf/cloudflare/clef-flash",
   "@cf/cloudflare/clef-omni",
@@ -281,7 +280,7 @@ export function buildWorkersAiModel(
     existing?.base_model ?? resolveCloudflareBaseModel(model),
   );
   const type = DECISION_MODELS.has(model.id) ? "decision" : existing?.type;
-  const decision = type === undefined ? synced : { ...synced, type: "decision" as const };
+  const decision = type === undefined ? synced : { ...synced, type };
   // Workers AI search has no API address, so the file's own one (v1 `provider`) is kept.
   const typed = existing?.provider === undefined ? decision : { ...decision, provider: existing.provider };
   if ("base_model" in typed) return typed;

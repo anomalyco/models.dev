@@ -360,3 +360,28 @@ capabilities = { system_updates = false, tools = { updates = true } }
   ]);
   expect(explicitFalseFlags({ schema: 2, capabilities: { tools: { supported: true } } })).toEqual([]);
 });
+
+test("a v2-only model type needs v2_only, and v1 leaves it out", () => {
+  const model = {
+    id: "extractor",
+    type: "extraction",
+    name: "Extractor",
+    description: "Fills typed fields",
+    open_weights: false,
+    release_date: "2026-10-14",
+    modalities: { input: ["text"], output: ["text"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false } },
+    limit: { context: 65_536, output: 65_536 },
+  };
+  expect(() => modelV2ToV1({ schema: 2, ...model })).toThrow(
+    'Model type "extraction" is v2-only, so the model must set `v2_only = true`',
+  );
+  expect(modelV2ToV1({ schema: 2, v2_only: true, ...model }).type).toBeUndefined();
+});
+
+test("patchModelV2 keeps a v2-only type that v1 can't carry", () => {
+  const doc = { schema: 2, v2_only: true, type: "extraction", name: "Extractor", cost: { text: { input: { price: 1 } } } };
+  const next = patchModelV2(doc, { name: "Extractor", cost: { input: 1 } }, { name: "Extractor", cost: { input: 2 } });
+  expect(next.type).toBe("extraction");
+  expect(next.v2_only).toBe(true);
+});

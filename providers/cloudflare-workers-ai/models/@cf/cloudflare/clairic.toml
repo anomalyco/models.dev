@@ -4,7 +4,8 @@
 # Images: embedded PNG, JPEG or WebP (model page).
 # API: POST /accounts/{ACCOUNT_ID}/ai/run/@cf/cloudflare/clairic (https://developers.cloudflare.com/workers-ai/models/clairic/).
 schema = 2
-type = "decision"
+v2_only = true
+type = "extraction"
 name = "Clairic"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
 open_weights = true

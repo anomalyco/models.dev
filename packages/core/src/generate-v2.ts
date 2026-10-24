@@ -30,7 +30,7 @@ import {
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
-import { modelV2ToV1, providerTomlToV1, withoutV1ReasoningCost } from "./translate.js";
+import { modelV2ToV1, providerTomlToV1, v1ModelType, withoutV1ReasoningCost } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -169,6 +169,11 @@ function withV2Fields(
       authored.capabilities ?? {},
     ) as ModelV2["capabilities"],
   };
+  // v1 leaves v2-only types out, so they come from the files.
+  const type = authored.type ?? (omit.includes("type") ? undefined : lab?.type);
+  if (type !== undefined && v1ModelType(type, authored.v2_only, { modelPath, toml: rawModel }) === undefined) {
+    result.type = type;
+  }
   if (authored.cost !== undefined) result.cost = authored.cost;
   if (authored.experimental !== undefined) result.experimental = authored.experimental;
   if (authored.metadata !== undefined) result.metadata = authored.metadata;
