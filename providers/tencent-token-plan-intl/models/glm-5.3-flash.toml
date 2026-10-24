@@ -1,0 +1,21 @@
+# Tencent Token Plan International, Singapore. Credits subscription has no
+# per-token USD price. Host reasoning_effort supports low, high, and max.
+# The host GLM guide documents image, video, and file/PDF input; the lab
+# modalities are inherited unchanged.
+# Sources: https://www.tencentcloud.com/document/product/1300/78934
+# https://www.tencentcloud.com/document/product/1300/80637
+# https://intl.cloud.tencent.com/document/product/1300/80634
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
