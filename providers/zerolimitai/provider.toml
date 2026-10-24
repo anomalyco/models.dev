@@ -1,0 +1,9 @@
+# OpenAI-compatible Chat Completions endpoint. A router rather than a model
+# host: each request goes to the free model that currently ranks best and is
+# answering, with failover; the model that replied is reported in the response.
+# https://www.zerolimitai.com/docs/api (accessed 2026-10-09)
+name = "ZeroLimitAI"
+env = ["ZEROLIMITAI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://www.zerolimitai.com/api/v1"
+doc = "https://www.zerolimitai.com/docs/api"
