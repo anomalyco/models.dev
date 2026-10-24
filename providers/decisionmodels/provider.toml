@@ -1,0 +1,12 @@
+# Decision Models (https://decisionmodels.io), the customer API of REAX, Bittensor subnet 92
+# (https://reax.co). Decision models only, on POST /v1/systemone (state plus typed questions, a
+# probability per option); there is no chat endpoint. Bearer keys from
+# https://decisionmodels.io/login. GET /v1/models is public and lists prices, input limits and
+# modalities. Output tokens are free.
+# opencodeai = "none": there is no chat API; each model's [api.systemone] names its SDK.
+name = "Decision Models"
+env = ["DECISIONMODELS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "none"
+api = "https://api.decisionmodels.io/v1"
+doc = "https://decisionmodels.io/models"

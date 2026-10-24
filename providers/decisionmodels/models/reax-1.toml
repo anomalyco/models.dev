@@ -1,0 +1,28 @@
+# Alias for the current REAX 1 release, since 2026-10-21 reax-1-20261021; may move to a newer REAX.
+# Text only, up to 3 questions per request; the state is billed once, not per question.
+# Prices, limit: https://api.decisionmodels.io/v1/models (2026-10-23), global tier; EU as override.
+# Launch pricing; output tokens are free.
+schema = 2
+v2_only = true
+base_model = "decisionmodels/reax-1"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[limit]
+context = 8_192
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.08
+
+[[cost.text.input.overrides]]
+when = { region = { equals = "eu" } }
+price = 0.084
+
+[cost.text.output]
+price = 0

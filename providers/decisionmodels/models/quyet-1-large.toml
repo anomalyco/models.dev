@@ -1,0 +1,21 @@
+# Quyet-1.0-Large served in FP8, with the card's 8,000-token input limit.
+# Prices: https://api.decisionmodels.io/v1/models (2026-10-21), global tier; EU as override.
+# Limit: 8,000 input tokens as the lab entry, per /v1/models and a live bisect (2026-10-23).
+# Launch pricing; output tokens are free.
+schema = 2
+v2_only = true
+base_model = "chinhnc/quyet-1.0-large"
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.035
+
+[[cost.text.input.overrides]]
+when = { region = { equals = "eu" } }
+price = 0.038
+
+[cost.text.output]
+price = 0

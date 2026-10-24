@@ -1,0 +1,29 @@
+# Blink v0.3 26B-A4B served in NVFP4; the host takes text only for Fast.
+# Prices: https://api.decisionmodels.io/v1/models (2026-10-21), global tier; EU as override.
+# Limit: 8,000 input tokens, per /v1/models and a live bisect (2026-10-23).
+# Launch pricing; output tokens are free.
+schema = 2
+v2_only = true
+base_model = "pixilabai/blink-v0.3-26b-a4b"
+name = "S1 Fast 2"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[limit]
+context = 8_000
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.019
+
+[[cost.text.input.overrides]]
+when = { region = { equals = "eu" } }
+price = 0.021
+
+[cost.text.output]
+price = 0
