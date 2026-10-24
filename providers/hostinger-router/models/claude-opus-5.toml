@@ -1,0 +1,19 @@
+# Pricing: catalog credit rates x 0.01 USD/credit, expressed per million tokens
+# Source: https://router.hostinger.com/v1/models (public catalog: supported_parameters, pricing, limits)
+# Effort: reasoning_effort = "none"|"low"|"medium"|"high"|"xhigh"|"max" (OpenRouter peer set; off lives
+# in effort = "none", accepted per 2026-10-22 probe)
+# No toggle: reasoning = {"enabled": ...} is accepted but provokes no observable change (probed on/off, identical completions)
+schema = 2
+base_model = "anthropic/claude-opus-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 6
+cache = { read = 0.6, write = { "5m" = 7.5, "1h" = 12 } }
+
+[cost.text.output]
+price = 30
