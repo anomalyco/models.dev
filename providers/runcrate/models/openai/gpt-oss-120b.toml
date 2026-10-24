@@ -1,0 +1,13 @@
+# Pricing and limits: GET https://api.runcrate.ai/v1/models (accessed 2026-10-20): openai/gpt-oss-120b prompt 0.000000037/completion 0.00000017 USD per token, context_length 131072, max_output_length 131072, input_modalities text.
+# Reasoning: the Runcrate API does not document a dedicated reasoning field; effort low/medium/high (reasoning_effort) copied from same-model peers (deepinfra, crusoe, sambanova), not live-tested on this host.
+base_model = "openai/gpt-oss-120b"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.037
+output = 0.17
+
+[limit]
+context = 131_072
+output = 131_072

@@ -1,0 +1,8 @@
+# OpenAI-compatible inference API: POST https://api.runcrate.ai/v1/chat/completions
+# Model catalog with live per-token pricing: https://api.runcrate.ai/v1/models
+# OpenAPI: https://www.runcrate.ai/openapi.json
+name = "Runcrate"
+env = ["RUNCRATE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.runcrate.ai/v1"
+doc = "https://www.runcrate.ai/docs/models/overview?utm_source=models-dev&utm_medium=directory&utm_campaign=gpu_pricing"

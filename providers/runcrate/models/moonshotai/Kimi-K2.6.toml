@@ -1,0 +1,16 @@
+# Pricing and limits: GET https://api.runcrate.ai/v1/models (accessed 2026-10-20): moonshotai/Kimi-K2.6 prompt 0.00000075/completion 0.0000035 USD per token, context_length 262144, max_output_length 262144, input_modalities text.
+# Reasoning: the Runcrate API does not document a dedicated reasoning field; toggle copied from same-model peers (deepinfra, crusoe), not live-tested on this host.
+base_model = "moonshotai/kimi-k2.6"
+structured_output = true
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.75
+output = 3.5
+
+[modalities]
+input = ["text"]
+output = ["text"]

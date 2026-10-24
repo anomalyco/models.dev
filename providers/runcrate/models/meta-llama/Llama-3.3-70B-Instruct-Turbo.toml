@@ -1,0 +1,12 @@
+# Pricing and limits: GET https://api.runcrate.ai/v1/models (accessed 2026-10-20): meta-llama/Llama-3.3-70B-Instruct-Turbo prompt 0.0000001/completion 0.00000032 USD per token, context_length 131072, max_output_length 131072, input_modalities text.
+base_model = "meta/llama-3.3-70b-instruct"
+name = "Llama 3.3 70B Instruct Turbo"
+structured_output = true
+
+[cost]
+input = 0.1
+output = 0.32
+
+[limit]
+context = 131_072
+output = 131_072
