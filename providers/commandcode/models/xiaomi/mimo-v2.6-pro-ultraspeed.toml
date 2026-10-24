@@ -1,0 +1,34 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Reasoning: always on; no caller control on this host (same surface as MiMo V2.6 Pro).
+#   Live /chat/completions (2026-10-21):
+#   plain HTTP 200 with reasoning returned in reasoning and reasoning_details (array);
+#   reasoning_effort = off -> HTTP 400 unsupported_value ("Only models that can turn thinking off accept it");
+#   none -> HTTP 400 invalid option (accepted: off|low|medium|high|xhigh|max).
+#   low/high/max, thinking.type=disabled, reasoning.enabled=false and
+#   chat_template_kwargs.enable_thinking=false -> HTTP 200, reasoning still returned.
+#   Repeated trials (n=3-5, easy and hard prompts): reasoning tokens low {8-68} / high {8-76} /
+#   max {8-71} - ranges overlap at every level; no level or switch changes the reasoning output.
+#   Command Code harness reports "Reasoning effort not supported for MiMo V2.6 Pro." (2026-10-21).
+# Response field: reasoning_details (array). OpenCode replay failed with
+#   "Invalid input: expected array, received string"; replay_reasoning=false keeps this
+#   response field out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# Modalities inherited from base_model (images/audio/video); host publishes no per-model modality list.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 4.35
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 8.7

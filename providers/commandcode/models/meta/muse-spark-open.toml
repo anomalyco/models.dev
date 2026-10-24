@@ -1,0 +1,32 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Native reasoning controls: https://dev.meta.ai/docs/muse-spark-open/prompting (max is rejected).
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning and reasoning_details (array).
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   Repeated trials (n=3-5): reasoning tokens low {238-456} / medium {493-808} / high {571-1085} /
+#   xhigh {346-705} / max {403-786}.
+#   low, medium and high occupy distinct bands (low < medium < high, non-overlapping against low);
+#   xhigh and max overlap these bands in the unpaired trials.
+# Paired follow-up (2026-10-22; 10 fixed prompts, same prompt at low and xhigh): xhigh used more
+#   reasoning tokens on all 10 (mean Δ +317; two-sided sign p = 0.001953). I added xhigh. CommandCode
+#   accepts max, but Meta's native docs reject it and no peer publishes it, so I left it out.
+# Response field: reasoning_details (array). OpenCode replay has not been verified for
+#   this field; replay_reasoning=false keeps it out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+schema = 2
+base_model = "meta/muse-spark-open"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25
