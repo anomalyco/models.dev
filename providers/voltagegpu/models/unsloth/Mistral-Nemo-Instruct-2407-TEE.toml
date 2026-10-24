@@ -1,0 +1,16 @@
+# Sources (read 2026-10-23): GET https://api.voltagegpu.com/v1/models (id, context_length) and
+#   GET https://voltagegpu.com/api/pricing/snapshot (inference prices, USD per million tokens).
+# No tool support or limits are published for this id: tools are left off, and the
+# context and output limits are the lab's.
+schema = 2
+base_model = "mistral/mistral-nemo"
+name = "Mistral Nemo Instruct 2407 TEE"
+
+[capabilities]
+tools = { supported = false }
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.18

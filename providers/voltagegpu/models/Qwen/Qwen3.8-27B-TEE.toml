@@ -1,0 +1,27 @@
+# Sources (read 2026-10-23): GET https://api.voltagegpu.com/v1/models (id, context_length) and
+#   GET https://voltagegpu.com/api/pricing/snapshot (inference prices, USD per million tokens).
+# Output limit: the max output length published for the deployment serving this id.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: chat_template_kwargs.reasoning_effort = low|medium|xhigh (xhigh by default)
+#  chat template: https://huggingface.co/Qwen/Qwen3.8-27B
+# Input: text and images (no video), with the lab's image MIME types.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B TEE"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], default = { type = "effort", value = "xhigh" } }
+structured_output = true
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 2.31

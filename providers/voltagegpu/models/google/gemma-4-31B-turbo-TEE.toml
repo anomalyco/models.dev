@@ -1,0 +1,22 @@
+# Sources (read 2026-10-23): GET https://api.voltagegpu.com/v1/models (id, context_length) and
+#   GET https://voltagegpu.com/api/pricing/snapshot (inference prices, USD per million tokens).
+# Output limit: the max output length published for the deployment serving this id.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+#  chat template: https://huggingface.co/google/gemma-4-31b-it
+schema = 2
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B Turbo TEE"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 0.22
+
+[cost.text.output]
+price = 0.68

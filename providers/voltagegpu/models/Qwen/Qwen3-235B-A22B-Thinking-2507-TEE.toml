@@ -1,0 +1,21 @@
+# Sources (read 2026-10-23): GET https://api.voltagegpu.com/v1/models (id, context_length) and
+#   GET https://voltagegpu.com/api/pricing/snapshot (inference prices, USD per million tokens).
+# Output limit: the max output length published for the deployment serving this id.
+# Always-on reasoning: the chat template has no switch
+#  (https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507).
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
+name = "Qwen3 235B A22B Thinking 2507 TEE"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 0.55
+
+[cost.text.output]
+price = 2.21

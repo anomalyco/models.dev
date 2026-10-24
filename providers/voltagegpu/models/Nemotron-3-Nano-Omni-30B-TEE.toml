@@ -1,0 +1,24 @@
+# Sources (read 2026-10-23): GET https://api.voltagegpu.com/v1/models (id, context_length) and
+#   GET https://voltagegpu.com/api/pricing/snapshot (inference prices, USD per million tokens).
+# /v1/models root checkpoint: nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+#  chat template: https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16
+# No input types, tool support or limits are published for this id: only text input is
+# listed, tools are left off, and the context and output limits are the lab's.
+schema = 2
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+name = "Nemotron 3 Nano Omni 30B TEE"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.18

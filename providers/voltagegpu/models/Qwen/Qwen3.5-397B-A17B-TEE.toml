@@ -1,0 +1,22 @@
+# Sources (read 2026-10-23): GET https://api.voltagegpu.com/v1/models (id, context_length) and
+#   GET https://voltagegpu.com/api/pricing/snapshot (inference prices, USD per million tokens).
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+#  chat template: https://huggingface.co/Qwen/Qwen3.5-397B-A17B
+# Input: text and images (no video), with the lab's image MIME types.
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+name = "Qwen3.5 397B A17B TEE"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.83
+
+[cost.text.output]
+price = 5.55

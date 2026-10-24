@@ -1,0 +1,22 @@
+# Sources (read 2026-10-23): GET https://api.voltagegpu.com/v1/models (id, context_length) and
+#   GET https://voltagegpu.com/api/pricing/snapshot (inference prices, USD per million tokens).
+# Output limit: the max output length published for the deployment serving this id.
+# No reasoning control authored: the checkpoint ships a Python encoder rather than a chat
+#  template (https://huggingface.co/deepseek-ai/DeepSeek-V3.2), and the request field was not tested live.
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
+name = "DeepSeek V3.2 TEE"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 1.85
+
+[cost.text.output]
+price = 1.85
