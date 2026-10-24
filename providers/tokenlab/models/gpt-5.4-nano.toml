@@ -1,0 +1,14 @@
+# Prices, limits and vision/tool/structured-output support come from the
+# TokenLab public model data (accessed 2026-10-06):
+# https://tokenlab.sh/api/public/model-data/models/gpt-5.4-nano/pricing
+# Prices are for the default delivery option (Auto):
+# https://tokenlab.sh/docs/en/guides/billing
+# Effort: reasoning_effort = none|low|medium|high|xhigh
+base_model = "openai/gpt-5.4-nano"
+structured_output = false
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.14
+output = 0.875
+cache_read = 0.014

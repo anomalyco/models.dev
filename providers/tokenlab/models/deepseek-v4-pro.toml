@@ -1,0 +1,16 @@
+# Prices, limits and vision/tool/structured-output support come from the
+# TokenLab public model data (accessed 2026-10-06):
+# https://tokenlab.sh/api/public/model-data/models/deepseek-v4-pro/pricing
+# Prices are for the default delivery option (Auto):
+# https://tokenlab.sh/docs/en/guides/billing
+# Off-peak rate; the peak rate is 2x (models.dev records off-peak).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.66
+output = 1.98
+cache_read = 0.022
+cache_write = 0.66

@@ -1,0 +1,13 @@
+# Prices, limits and vision/tool/structured-output support come from the
+# TokenLab public model data (accessed 2026-10-06):
+# https://tokenlab.sh/api/public/model-data/models/gemini-3.1-flash-lite/pricing
+# Prices are for the default delivery option (Auto):
+# https://tokenlab.sh/docs/en/guides/billing
+# Effort: reasoning_effort = minimal|low|medium|high
+base_model = "google/gemini-3.1-flash-lite"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 0.125
+output = 0.75
+cache_read = 0.0125
