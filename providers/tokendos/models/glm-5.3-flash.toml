@@ -1,8 +1,8 @@
 # Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
 # Served id: raw_model "glm-5.3-flash" in OpenAI protocol (/v1), $0.0001487/$0.0004461 per MTok input/output.
 # Cache read: $0.0000297 per MTok, same snapshot row.
-# Reasoning: the effort ladder of providers/zhipuai/models/glm-5.3-flash.toml with the lab's on/off folded into `none`,
-#   the off value on this chat-completions surface (AGENTS.md toggle table: effort carrying `none` needs no `toggle`). No caller-set budget is published — /v1 has no budget field.
+# Reasoning: the effort ladder of providers/zhipuai/models/glm-5.3-flash.toml, exactly as authored there.
+#   This /v1 surface has no separate on/off field, so no `none` level is claimed. No caller-set budget is published — /v1 has no budget field.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 

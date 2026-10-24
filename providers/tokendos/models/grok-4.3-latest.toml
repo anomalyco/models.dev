@@ -1,8 +1,8 @@
 # Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
 # Served id: raw_model "grok-4.3-latest" in OpenAI protocol (/v1), $0.04/$0.12 per MTok input/output.
 # Cache read: $0.01 per MTok, same snapshot row.
-# Reasoning: the effort ladder of providers/xai/models/grok-4.3.toml with the lab's on/off folded into `none`,
-#   the off value on this chat-completions surface (AGENTS.md toggle table: effort carrying `none` needs no `toggle`). No caller-set budget is published — /v1 has no budget field.
+# Reasoning: the effort ladder of providers/xai/models/grok-4.3.toml, exactly as authored there.
+#   The off value is the `none` level itself on this chat-completions surface (AGENTS.md: effort carrying `none` needs no separate `toggle`). No caller-set budget is published — /v1 has no budget field.
 schema = 2
 base_model = "xai/grok-4.3"
 

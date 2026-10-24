@@ -1,8 +1,8 @@
 # Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
 # Served id: raw_model "qwen3.8-max" in OpenAI protocol (/v1), $1.7933697/$5.3801092 per MTok input/output.
 # Cache read: $0.2241712 per MTok, same snapshot row.
-# Reasoning: the effort ladder of providers/alibaba/models/qwen3.8-max.toml with the lab's on/off folded into `none`,
-#   the off value on this chat-completions surface (AGENTS.md toggle table: effort carrying `none` needs no `toggle`). No caller-set budget is published — /v1 has no budget field.
+# Reasoning: the effort ladder of providers/alibaba/models/qwen3.8-max.toml, exactly as authored there.
+#   This /v1 surface has no separate on/off field, so no `none` level is claimed. No caller-set budget is published — /v1 has no budget field.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
