@@ -3,11 +3,12 @@ base_model = "minimax/MiniMax-M3.1-Flash"
 name = "MiniMax M3.1-Flash (Public Preview)"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
