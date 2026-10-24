@@ -1,0 +1,21 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
+# Reasoning: the catalog carries no controls for this id, so the entry describes the model:
+#   MiMo takes the boolean `enable_thinking`, and the same-base entry on EmpirioLabs
+#   authors that toggle. No corroborated level list exists for this id, so only the
+#   toggle is authored.
+# Toggle: reasoning: { "enabled": false } on this host's Chat Completions, the switch
+#   kenari documents for reasoning_toggle (https://kenari.id/en/docs/reasoning).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.51428571
+cache = { read = 0.05142857 }
+
+[cost.text.output]
+price = 1.02857143

@@ -1,0 +1,23 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
+# Promo: kenari runs 90% off until 2026-10-29 15:00 UTC. This file records the
+#   standard rate, as the provider asked: models.dev has no price-expiry field, so a
+#   promotional price would go stale when the promo ends.
+# Reasoning: catalog reasoning_options ["low", "medium", "high", "xhigh", "max"], reasoning_toggle false (https://kenari.id/en/docs/reasoning).
+# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+# Structured output: kenari accepts response_format but "does not check the result"
+#   (https://kenari.id/en/docs/structured-output), and the model's own entry sets
+#   structured_output = false, so it is false here too.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+
+[cost.text.input]
+price = 0.18285714
+cache = { read = 0.03428571 }
+
+[cost.text.output]
+price = 0.74285714
