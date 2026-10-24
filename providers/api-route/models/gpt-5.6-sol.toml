@@ -1,0 +1,9 @@
+# Pricing and availability: https://www.api-route.com/pricing/gpt-5.6-sol (accessed 2026-09-27)
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.24
+output = 1.2
+cache_read = 0.024
+cache_write = 0.3
