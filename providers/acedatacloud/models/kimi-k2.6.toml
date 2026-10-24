@@ -1,0 +1,21 @@
+# Public catalog: https://platform.acedata.cloud/models/kimi-k2.6
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/5c4649ee-22c6-44ea-84d6-6ecc3674f998
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# Toggle: thinking.type = enabled|disabled
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = [{ type = "toggle" }]
+
+[modalities]
+input = ["text", "image"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.5460875
+output = 2.2685425
+cache_read = 0.0924175
+
+[provider]
+api = "https://api.acedata.cloud/kimi"
