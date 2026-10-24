@@ -1,0 +1,23 @@
+# Toggle: chat_template_kwargs.enable_thinking true|false (verified live: reasoning_content
+# disappears). reasoning_effort is accepted but leaves the response unchanged.
+schema = 2
+base_model = "google/gemma-4-E4B-it"
+name = "Gemma 4 E4B"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 65_536
+output = 32_768
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6
