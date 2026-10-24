@@ -1,0 +1,28 @@
+# Source: https://huggingface.co/dealignai/MiMo-V2.6-Flash-RL-UNCENSORED
+# Release date: Hugging Face repository creation; capabilities retained from the upstream checkpoint.
+schema = 2
+name = "MiMo V2.6 Flash Uncensored"
+description = "dealignai's weight-modified MiMo V2.6 Flash model, retaining multimodal input, reasoning and tool calling."
+family = "mimo"
+open_weights = true
+release_date = "2026-09-22"
+license = "MIT"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "audio", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dealignai/MiMo-V2.6-Flash-RL-UNCENSORED"

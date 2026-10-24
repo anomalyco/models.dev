@@ -21,6 +21,41 @@ const API_ENDPOINT = "https://api.experientiallabs.ai/api/models";
 const CANONICAL_BASE_MODELS: Record<string, string> = {
   "grok-4.20": "xai/grok-4.20-0309-reasoning",
   "grok-4.20-non-reasoning": "xai/grok-4.20-0309-non-reasoning",
+  "deepseek-v4.1-flash-uncensored": "dealignai/deepseek-v4.1-flash-1017-uncensored",
+  "glm-5.3-flash-uncensored": "dealignai/glm-5.3-flash-uncensored",
+  "glm-5.3-uncensored": "dealignai/glm-5.3-uncensored",
+  "mimo-v2.6-flash-uncensored": "dealignai/mimo-v2.6-flash-uncensored",
+};
+
+// These models have an explicitly published Experiential reasoning_effort
+// contract. DeepSeek's native toggle is represented by effort=none here;
+// the uncensored checkpoints have their own controls, not their parent's.
+// Missing fallback metadata inherits provider defaults at the gateway. For
+// these verified mappings, require the primary route to declare its efforts
+// and intersect every additional route that publishes a restriction.
+const HOST_REASONING: Record<string, { values: string[]; source: string }> = {
+  ...Object.fromEntries([
+    "deepseek-v4-flash", "deepseek-v4-pro", "deepseek-v4.1-flash", "deepseek-v4.1-flash-1017",
+  ].map((id) => [`deepseek/${id}`, {
+    values: ["none", "low", "high", "max"],
+    source: "https://api-docs.deepseek.com/guides/thinking_mode/",
+  }])),
+  "dealignai/deepseek-v4.1-flash-1017-uncensored": {
+    values: ["none", "low", "high", "max"],
+    source: "https://huggingface.co/dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8",
+  },
+  "dealignai/glm-5.3-flash-uncensored": {
+    values: ["low", "high", "max"],
+    source: "https://huggingface.co/dealignai/GLM-5.3-Flash-UNCENSORED-NVFP4",
+  },
+  "dealignai/glm-5.3-uncensored": {
+    values: ["low", "high"],
+    source: "https://huggingface.co/dealignai/GLM-5.3-UNCENSORED-NVFP4",
+  },
+  "dealignai/mimo-v2.6-flash-uncensored": {
+    values: ["none", "high"],
+    source: "https://huggingface.co/dealignai/MiMo-V2.6-Flash-RL-UNCENSORED",
+  },
 };
 
 // The catalog's `icon` field names the upstream lab for ~1/4 of the rows.
@@ -270,6 +305,7 @@ const LabReasoning = z
   .object({
     reasoning: z.boolean().optional(),
     reasoning_options: z.array(LabReasoningOption).optional(),
+    structured_output: z.boolean().optional(),
   })
   .passthrough();
 
@@ -278,6 +314,7 @@ export type LabReasoningOption = z.infer<typeof LabReasoningOption>;
 interface LabControls {
   reasoning?: boolean;
   options?: LabReasoningOption[];
+  structuredOutput?: boolean;
   sourcePath: string;
   kind: "lab" | "peer";
 }
@@ -362,6 +399,7 @@ function readLabControls(baseModel: string, slug: string): LabControls | undefin
   ];
   let reasoningSource: LabControls | undefined;
   let optionsSource: LabControls | undefined;
+  let structuredOutput: boolean | undefined;
   for (const candidate of candidates) {
     if (!existsSync(candidate.filePath)) continue;
     const data = LabReasoning.safeParse(readProviderModel(candidate.filePath));
@@ -374,12 +412,14 @@ function readLabControls(baseModel: string, slug: string): LabControls | undefin
     };
     if (reasoningSource === undefined && data.data.reasoning !== undefined) reasoningSource = controls;
     if (optionsSource === undefined && data.data.reasoning_options !== undefined) optionsSource = controls;
+    if (structuredOutput === undefined && data.data.structured_output !== undefined) structuredOutput = data.data.structured_output;
   }
   const source = optionsSource ?? reasoningSource;
   if (source === undefined) return undefined;
   return {
     reasoning: reasoningSource?.reasoning,
     options: optionsSource?.options,
+    structuredOutput,
     sourcePath: source.sourcePath,
     kind: source.kind,
   };
@@ -507,8 +547,8 @@ export function resolveExperientiallabsBaseModel(id: string, icon?: string | nul
   return undefined;
 }
 
-// Publish only controls verified both by the lab/peer baseline and by every
-// default serving route. Toggle/budget models need explicit host wire mappings;
+// Publish only controls verified by a lab/peer baseline or explicit host mapping,
+// restricted by the default serving routes. Toggle/budget models need host mappings;
 // leaving their options empty would incorrectly claim there is no caller control.
 export function buildExperientiallabsModel(
   entry: ExperientialEntry,
@@ -522,21 +562,30 @@ export function buildExperientiallabsModel(
   const base = modelMetadata(baseModel);
   if (base.type !== undefined && base.type !== "chat") return undefined;
   const lab = labControls(baseModel, model.slug);
+  const host = HOST_REASONING[baseModel];
   const reasoning = base.reasoning === true;
   let reasoningOptions: SyncedModel["reasoning_options"];
   if (reasoning) {
-    if (lab?.options === undefined || lab.options.some((option) => option.type !== "effort")) return undefined;
-    const baseline = lab.options.flatMap((option) => option.type === "effort" ? option.values : []);
+    if (host === undefined && (lab?.options === undefined || lab.options.some((option) => option.type !== "effort"))) return undefined;
+    if (host !== undefined && (rung.capabilities?.supports_reasoning !== true
+      || !rung.capabilities.supported_reasoning_efforts?.length)) return undefined;
+    const baseline = host?.values ?? lab!.options!.flatMap((option) => option.type === "effort" ? option.values : []);
+    const restrictions = host === undefined ? rungs : rungs.filter((route) =>
+      route.capabilities?.supports_reasoning === false || route.capabilities?.supported_reasoning_efforts != null);
     const values = EFFORT_VALUES.filter((value) => baseline.includes(value)
-      && rungs.every((route) => route.capabilities?.supported_reasoning_efforts?.includes(value)));
+      && restrictions.every((route) => route.capabilities?.supports_reasoning !== false
+        && route.capabilities?.supported_reasoning_efforts?.includes(value)));
     if (baseline.length > 0 && values.length === 0) return undefined;
     // A lab with no control is only safe when the serving routes agree.
     if (baseline.length === 0 && rungs.some((route) => (route.capabilities?.supported_reasoning_efforts?.length ?? 0) > 0)) return undefined;
     reasoningOptions = values.length > 0 ? [{ type: "effort", values }] : [];
   }
   const context = model.context_window;
-  const output = model.max_output_tokens;
-  if (context === undefined || context === null || context <= 0 || output === undefined || output === null || output <= 0) return undefined;
+  const hostOutput = model.max_output_tokens;
+  if (context === undefined || context === null || context <= 0 || hostOutput === undefined || hostOutput === null || hostOutput <= 0) return undefined;
+  // Some catalog rows use the shared context budget as max_output_tokens.
+  // A host declaration cannot enlarge the checkpoint's generation limit.
+  const output = Math.min(hostOutput, base.limit.output ?? hostOutput);
   const limit = { context, input: model.max_input_tokens ?? undefined, output };
   const input = modalities(model.input_modalities, ["text"]);
   const params = model.supported_params ?? {};
@@ -545,9 +594,11 @@ export function buildExperientiallabsModel(
     attachment: input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,
-    temperature: rungs.every((route) => (route.capabilities?.supports_temperature ?? params.temperature) === true),
+    temperature: base.temperature === true
+      && rungs.every((route) => (route.capabilities?.supports_temperature ?? params.temperature) === true),
     tool_call: true,
-    structured_output: rungs.every((route) => (route.capabilities?.supports_structured_output ?? params.structured_outputs) === true),
+    structured_output: lab?.structuredOutput !== false
+      && rungs.every((route) => (route.capabilities?.supports_structured_output ?? params.structured_outputs) === true),
     cost: buildCost(rung, existing),
     limit,
     modalities: { input, output: ["text"] },
@@ -556,7 +607,9 @@ export function buildExperientiallabsModel(
   const header = [
     `# Source: https://api.experientiallabs.ai/api/models/${model.slug}`,
     "# List prices in USD per million tokens; temporary promotions are excluded.",
-    ...(reasoning ? [`# Reasoning baseline: ${lab!.sourcePath}; restricted to all default serving routes.`] : []),
+    ...(reasoning ? [host === undefined
+      ? `# Reasoning baseline: ${lab!.sourcePath}; restricted to all default serving routes.`
+      : `# Reasoning baseline: ${host.source}; intersected with published default-route efforts.`] : []),
     ...(efforts.length > 0 ? [`# Effort: top-level reasoning_effort = ${efforts.join("|")}.`] : []),
     "# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility",
   ].join("\n") + "\n";

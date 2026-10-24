@@ -125,6 +125,74 @@ test("budget and toggle models are held for verified host mappings instead of cl
   expect(resolveExperientiallabsBaseModel("gpt-6.1-sol-24k", "openai")).toBeUndefined();
 });
 
+test("verified DeepSeek and uncensored mappings tolerate omitted fallback metadata but honor explicit restrictions", () => {
+  const cases = [
+    ["deepseek-v4-flash", "deepseek/deepseek-v4-flash", ["none", "low", "high", "max"]],
+    ["deepseek-v4-pro", "deepseek/deepseek-v4-pro", ["none", "low", "high", "max"]],
+    ["deepseek-v4.1-flash", "deepseek/deepseek-v4.1-flash", ["none", "low", "high", "max"]],
+    ["deepseek-v4.1-flash-1017", "deepseek/deepseek-v4.1-flash-1017", ["none", "low", "high", "max"]],
+    ["deepseek-v4.1-flash-uncensored", "dealignai/deepseek-v4.1-flash-1017-uncensored", ["none", "low", "high", "max"]],
+    ["glm-5.3-flash-uncensored", "dealignai/glm-5.3-flash-uncensored", ["low", "high", "max"]],
+    ["glm-5.3-uncensored", "dealignai/glm-5.3-uncensored", ["low", "high"]],
+    ["mimo-v2.6-flash-uncensored", "dealignai/mimo-v2.6-flash-uncensored", ["none", "high"]],
+  ] as const;
+  for (const [slug, baseModel, efforts] of cases) {
+    const value = entry();
+    value.model.slug = slug;
+    value.model.icon = null;
+    value.providers[0]!.capabilities!.supported_reasoning_efforts = ["none", "low", "medium", "high", "xhigh", "max", "ultra"];
+    value.providers.push({ ...value.providers[0]!, id: "fallback", capabilities: {} });
+    value.default_provider_ids.push("fallback");
+    expect(resolveExperientiallabsBaseModel(slug)).toBe(baseModel);
+    const built = buildExperientiallabsModel(value, undefined)!;
+    expect(built.model.base_model).toBe(baseModel);
+    expect(built.model.reasoning_options).toEqual([{ type: "effort", values: [...efforts] }]);
+    value.providers[1]!.capabilities = { supported_reasoning_efforts: ["high"] };
+    expect(buildExperientiallabsModel(value, undefined)!.model.reasoning_options).toEqual([{ type: "effort", values: ["high"] }]);
+    value.providers[1]!.capabilities = { supported_reasoning_efforts: [] };
+    expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
+    value.providers[1]!.capabilities = { supports_reasoning: false };
+    expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
+    value.providers[1]!.capabilities = {};
+    value.providers[0]!.capabilities!.supported_reasoning_efforts = undefined;
+    expect(buildExperientiallabsModel(value, undefined)).toBeUndefined();
+  }
+  // Only identified derivatives can use these mappings; suffix stripping
+  // would silently assign a future fine-tune the original model's identity.
+  expect(resolveExperientiallabsBaseModel("deepseek-v4-pro-uncensored")).toBeUndefined();
+});
+
+test("both Luna models resolve and retain their native effort controls", () => {
+  for (const slug of ["gpt-5.6-luna", "gpt-6-luna"]) {
+    const value = entry();
+    value.model.slug = slug;
+    const built = buildExperientiallabsModel(value, undefined)!;
+    expect(built.model.base_model).toBe(`openai/${slug}`);
+    expect(built.model.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }]);
+  }
+});
+
+test("host flags cannot enlarge known model limits or enable unsupported sampling and structured output", () => {
+  const value = entry();
+  value.model.context_window = 1_048_576;
+  value.model.max_output_tokens = 1_048_576;
+  value.providers[0]!.capabilities!.supports_temperature = true;
+  value.providers[0]!.capabilities!.supports_structured_output = true;
+  value.model.slug = "muse-spark-1.1";
+  value.model.icon = "meta";
+  expect(buildExperientiallabsModel(value, undefined)!.model.limit?.output).not.toBe(1_048_576);
+  value.model.slug = "claude-opus-4.7";
+  value.model.icon = "anthropic";
+  expect(buildExperientiallabsModel(value, undefined)!.model.temperature).not.toBe(true);
+  value.model.slug = "gpt-5.4-pro";
+  value.model.icon = "openai";
+  expect(buildExperientiallabsModel(value, undefined)!.model.structured_output).toBe(false);
+  // Lab models may leave an output cap unspecified.
+  value.model.slug = "fugu-ultra";
+  value.model.icon = "sakana";
+  expect(buildExperientiallabsModel(value, undefined)!.model.limit?.output).toBe(1_048_576);
+});
+
 test("long-context pricing preserves the inclusive source threshold and zero cache prices", () => {
   const value = entry();
   Object.assign(value.providers[0]!, {

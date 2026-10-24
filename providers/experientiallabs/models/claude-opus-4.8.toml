@@ -9,7 +9,6 @@ base_model = "anthropic/claude-opus-4-8"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
-temperature = true
 
 [limit]
 input = 1_000_000
