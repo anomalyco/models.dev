@@ -5,7 +5,6 @@ import {
   AuthoredModelV2,
   LabMetadataV2,
   LabModelV2,
-  ModelTypeV2Values,
   type AuthoredApiEntryV2,
   type CostFactorV2,
   type CostV2,
@@ -78,21 +77,16 @@ export function providerTomlToV1(toml: Record<string, unknown>): Record<string, 
   return v1;
 }
 
-// v1's `type` enum can't grow, so a type it doesn't have (`extraction`) is
-// v2-only: its models must set `v2_only = true`, and v1 leaves the type out.
-const V2_ONLY_TYPES = new Set<string>(
-  ModelTypeV2Values.filter((type) => !(MODEL_TYPES as readonly string[]).includes(type)),
-);
-
+// v1's `type` enum can't grow, so a type it doesn't know is v2-only: the model
+// must set `v2_only = true`, and v1 leaves the type out.
 export function v1ModelType(
   type: string | undefined,
   v2Only: boolean | undefined,
   cause: Record<string, unknown> = {},
 ) {
-  // Other types pass through, so v1's schema still rejects a typo.
-  if (type === undefined || !V2_ONLY_TYPES.has(type)) return type;
+  if (type === undefined || (MODEL_TYPES as readonly string[]).includes(type)) return type;
   if (v2Only !== true) {
-    throw new Error(`Model type "${type}" is v2-only, so the model must set \`v2_only = true\` (see AGENTS.md)`, {
+    throw new Error(`Model type "${type}" isn't a v1 type, so the model must set \`v2_only = true\` (see AGENTS.md)`, {
       cause,
     });
   }

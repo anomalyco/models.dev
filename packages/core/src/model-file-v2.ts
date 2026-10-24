@@ -126,7 +126,7 @@ export function patchModelV2(
       return stable(before[key]) === stable(after[key]);
     });
 
-  // A v2-only type (`extraction`) has no v1 value, so an unchanged type keeps the file's.
+  // A type v1 doesn't know (Clairic's `extraction`) has no v1 value, so an unchanged type keeps the file's.
   if (doc.type !== undefined && same("type")) next.type = doc.type;
   if (doc.modalities !== undefined) {
     if (same("modalities")) next.modalities = doc.modalities;

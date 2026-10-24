@@ -33,7 +33,6 @@ export const ModelTypeV2Values = [
   "embedding",
   "reranking",
   "decision",
-  "extraction",
   "transcription",
   "speech",
   "realtime",
