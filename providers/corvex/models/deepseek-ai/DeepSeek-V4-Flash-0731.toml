@@ -1,0 +1,28 @@
+# Host rates and limits: https://api.tokenfactory.corvex.cloud/v1/models (2026-10-06).
+# Host documentation states: maximum output 1,048,576 tokens, subject to remaining context space.
+# https://docs.corvex.cloud/models/deepseek-ai/DeepSeek-V4-Flash-0731 explicitly
+# documents the output ceiling: input + requested output must fit the context.
+# Toggle: chat_template_kwargs.thinking = true|false (SGLang OpenAI chat route).
+# Effort: reasoning_effort = low|high|max; the Flash 0731 encoder has three levels.
+# https://github.com/sgl-project/sglang/blob/v0.5.20/python/sglang/srt/entrypoints/openai/encoding_dsv4.py
+# Cached input has the full input rate; no cache-write charge is advertised.
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.14
+
+[limit]
+context = 1_048_576
+output = 1_048_576
