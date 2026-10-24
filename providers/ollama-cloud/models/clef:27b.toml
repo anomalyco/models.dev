@@ -5,6 +5,7 @@
 # https://ollama.com/library/clef — 27B decision model from Cloudflare, cloud input limit
 #   65,536 tokens billed per input token, usage output_tokens 0. Lab identity Cloudflare Clef.
 # Ollama Cloud serves Clef via SystemOne (not chat completions); input-only billing matches lab output 0.
+# Images: top-level `images` list of raw base64 (no URLs or data URLs), per SystemOneRequest in https://docs.ollama.com/openapi.yaml (accessed 2026-10-23).
 schema = 2
 v2_only = true
 base_model = "cloudflare/clef"
@@ -14,6 +15,7 @@ structured_output = true
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+compatibility = { image_input = "images" }
 
 [cost.text.input]
 price = 0.24
