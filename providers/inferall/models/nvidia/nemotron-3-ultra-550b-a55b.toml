@@ -1,0 +1,22 @@
+# Served through NVIDIA NIM. $0 per token (see provider.toml).
+# Effort: top-level reasoning_effort = none|medium|high (`none` turns reasoning off). Live
+# 2026-10-22 through api.inferall.ai: none 0, medium 148, high 82 reasoning characters on the
+# same prompt; reasoning returned in message.reasoning_content. Tool calls and json_schema
+# output verified live. No limit override: max_tokens 100000 was accepted (200).
+# Budget: top-level reasoning_budget is not supported on this route; 16 and 2000 both
+# return 400 from the upstream runner (live 2026-10-22), so no budget control is listed.
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
