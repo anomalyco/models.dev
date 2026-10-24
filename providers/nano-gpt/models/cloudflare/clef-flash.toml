@@ -12,6 +12,7 @@ input = 1_800
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+compatibility = { image_input = "state" }
 
 [cost.text.input]
 price = 0.09

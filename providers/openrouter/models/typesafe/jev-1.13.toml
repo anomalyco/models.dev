@@ -11,6 +11,7 @@ context = 262_144
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }
+compatibility = { image_input = "state" }
 
 [cost.text.input]
 price = 0.042

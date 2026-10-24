@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveModelMetadataBaseModel, withSystemOneImageInput } from "./openrouter.js";
 
 const API_ENDPOINT = "https://nano-gpt.com/api/v1/models?detailed=true";
 
@@ -79,9 +79,13 @@ export const nanoGpt = {
     const baseModel = existing?.base_model ?? resolveNanoGptBaseModel(model.id);
     const translated = buildNanoGptModel(model, existing, baseModel);
     if (translated === undefined) return undefined;
+    const images = inputModalities(model, existing).includes("image");
     return {
       id,
       model: translated,
+      v2Set: {
+        api: (api: unknown) => withSystemOneImageInput(api, images),
+      },
     };
   },
 } satisfies SyncProvider<NanoGptModel>;
@@ -111,25 +115,9 @@ export function buildNanoGptModel(
   baseModel = existing?.base_model ?? resolveNanoGptBaseModel(model.id),
 ): SyncedModel | undefined {
   const capabilities = model.capabilities ?? {};
-  const explicitInputModalities = model.architecture?.input_modalities;
-  const hasInputCapabilityMetadata = capabilities.vision !== undefined
-    || capabilities.audio_input !== undefined
-    || capabilities.video_input !== undefined
-    || capabilities.pdf_upload !== undefined;
-  const addedInputModalities = [
-    ...(capabilities.vision ? ["image"] : []),
-    ...(capabilities.audio_input ? ["audio"] : []),
-    ...(capabilities.video_input ? ["video"] : []),
-    ...(capabilities.pdf_upload ? ["pdf"] : []),
-  ];
-  const hasInputMetadata = explicitInputModalities !== undefined || hasInputCapabilityMetadata;
+  const hasInputMetadata = model.architecture?.input_modalities !== undefined || hasInputCapabilityMetadata(model);
   const hasOutputMetadata = model.architecture?.output_modalities !== undefined;
-  const input = normalizeModalities([
-    ...explicitInputModalities
-      ?? (hasInputCapabilityMetadata ? ["text"] : existing?.modalities?.input)
-      ?? ["text"],
-    ...addedInputModalities,
-  ]);
+  const input = inputModalities(model, existing);
   const output = normalizeModalities(
     model.architecture?.output_modalities ?? existing?.modalities?.output ?? ["text"],
   );
@@ -218,6 +206,27 @@ export function buildNanoGptModel(
       ?? (KNOWN_OPEN_WEIGHT_IDS.has(model.id.toLowerCase()) ? true : existing?.open_weights)
       ?? false,
   } satisfies SyncedFullModel;
+}
+
+function hasInputCapabilityMetadata(model: NanoGptModel) {
+  const capabilities = model.capabilities ?? {};
+  return capabilities.vision !== undefined
+    || capabilities.audio_input !== undefined
+    || capabilities.video_input !== undefined
+    || capabilities.pdf_upload !== undefined;
+}
+
+function inputModalities(model: NanoGptModel, existing: ExistingModel | undefined) {
+  const capabilities = model.capabilities ?? {};
+  return normalizeModalities([
+    ...model.architecture?.input_modalities
+      ?? (hasInputCapabilityMetadata(model) ? ["text"] : existing?.modalities?.input)
+      ?? ["text"],
+    ...(capabilities.vision ? ["image"] : []),
+    ...(capabilities.audio_input ? ["audio"] : []),
+    ...(capabilities.video_input ? ["video"] : []),
+    ...(capabilities.pdf_upload ? ["pdf"] : []),
+  ]);
 }
 
 function buildCost(

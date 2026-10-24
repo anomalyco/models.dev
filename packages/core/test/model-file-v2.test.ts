@@ -35,16 +35,16 @@ test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the
 test("a model's own API round-trips through v2 as an [api.<protocol>] table", () => {
   const v1 = {
     base_model: "openai/gpt-oss-120b",
-    provider: { npm: "@ai-sdk/amazon-bedrock/mantle", api: "https://bedrock-mantle.us-east-1.api.aws/v1", shape: "responses" },
+    provider: { npm: "@ai-sdk/openai", api: "https://example.com/v1", shape: "completions" },
     interleaved: { field: "reasoning_content" },
     cost: { input: 1, output: 2 },
   };
-  const doc = providerModelToV2(v1, "chat-completions");
+  const doc = providerModelToV2(v1, "responses");
 
   expect(doc.api).toEqual({
-    responses: {
-      base_url: "https://bedrock-mantle.us-east-1.api.aws/v1",
-      sdk: { aisdk: "@ai-sdk/amazon-bedrock/mantle" },
+    "chat-completions": {
+      base_url: "https://example.com/v1",
+      sdk: { aisdk: "@ai-sdk/openai" },
       compatibility: { reasoning_field: "reasoning_content" },
     },
   });
