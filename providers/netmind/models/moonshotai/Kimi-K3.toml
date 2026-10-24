@@ -1,0 +1,12 @@
+# NetMind model ID: moonshotai/Kimi-K3.
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+# Pricing maps input/output/cache fields and context tiers from that response.
+# Effort: reasoning_effort = <level>
+# https://www.netmind.ai/product/inference
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3
