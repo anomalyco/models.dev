@@ -1,0 +1,21 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
+schema = 2
+base_model = "google/gemini-3.1-flash-lite-image"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
+
+[api.generate-content]
+base_url = "https://api.saygm.com/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 1.2
+
+
+[cost.image.output]
+price = 24

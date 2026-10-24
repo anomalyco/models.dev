@@ -1,0 +1,35 @@
+# https://huggingface.co/ornith-ai/Ornith-1.5-397B (created 2026-08-18, updated 2026-08-23; MIT)
+# Sampling: open weights; generation_config.json sets temperature 0.6, top_p 0.95, top_k 20.
+# Input: image input comes from the Qwen3.5 vision stack (config.json image_token_id). Neither the model card nor
+#   DeepReinforce (no first-party API) lists image formats, so input stays generic `image`.
+schema = 2
+name = "Ornith 1.5 397B"
+description = "Large mixture-of-experts coding-reasoning model for agentic software tasks, tool use, and image understanding"
+family = "ornith"
+open_weights = true
+release_date = "2026-08-18"
+last_updated = "2026-08-23"
+license = "MIT"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ornith-ai/Ornith-1.5-397B"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/ornith-ai/Ornith-1.5-397B"
+type = "model_card"
