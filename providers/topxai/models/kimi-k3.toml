@@ -1,0 +1,24 @@
+# Effort: reasoning_effort = low|high|max on /v1/chat/completions, forwarded unchanged
+# (default max, as https://ai.topxea.com/api/pricing lists it). Kimi K3 always thinks;
+# there is no toggle: thinking.type = "disabled" returns 400 on this host, and the trace
+# returns in reasoning_content (both checked live 2026-10-23).
+# One official line at 80% of Moonshot's list; cache writes bill at the input rate.
+# https://ai.topxea.com/pricing/kimi-k3 and https://ai.topxea.com/api/pricing (accessed 2026-10-23)
+# Structured output: response_format json_schema (strict) and json_object return valid JSON on
+# /v1/chat/completions, checked live 2026-10-16.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.4
+cache = { read = 0.24, write = 2.4 }
+
+[cost.text.output]
+price = 12

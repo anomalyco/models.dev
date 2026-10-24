@@ -1,0 +1,39 @@
+# DeepSeek-V4-Pro-0813, served as `deepseek-v4-pro` on one official line at 80% of
+# DeepSeek's list. The chat body is forwarded unchanged, so the controls are DeepSeek's
+# own, as in providers/deepseek/models/deepseek-v4-pro.toml (low|high|max since the
+# 2026-08-13 V4-Pro GA):
+# Toggle: thinking.type = enabled|disabled on /v1/chat/completions.
+# Effort: reasoning_effort = low|high|max (default high). The trace returns in reasoning_content.
+# Toggle and trace field checked live on 2026-09-28.
+# Base prices are off-peak. DeepSeek's peak hours, 01:00-04:00 and 06:00-10:00 UTC,
+# Monday to Friday outside Chinese public holidays, bill twice every lane (input 1.056,
+# output 3.168, cache read 0.0352); the multiplier below encodes that schedule.
+# Context 1,048,576 and output 393,216 tokens as TopxAI lists them.
+# https://ai.topxea.com/pricing/deepseek-v4-pro and https://ai.topxea.com/api/pricing (accessed 2026-10-23)
+# Structured output: response_format json_schema (strict) and json_object return valid JSON on
+# /v1/chat/completions, checked live 2026-10-16.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.528
+cache = { read = 0.0176 }
+
+[cost.text.output]
+price = 1.584
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, not = { holiday = { equals = "CN" } }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
