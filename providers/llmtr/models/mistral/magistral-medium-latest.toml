@@ -1,0 +1,15 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-10-22).
+# Measured: no reasoning by default; reasoning_effort -> 400 "does not expose a thinking mode"; prompt_mode = "reasoning" is rejected upstream.
+schema = 2
+base_model = "mistral/magistral-medium-latest"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 5
