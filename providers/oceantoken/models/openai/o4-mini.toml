@@ -1,0 +1,11 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "openai/o4-mini"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[cost]
+input = 1.1
+output = 4.4
+cache_read = 0.275
