@@ -1,0 +1,26 @@
+# Pricing from https://developer.reka.ai/models (accessed 2026-10-03).
+# Context: 262,144 tokens (lab default), verified 2026-10-02 against the live API.
+# Effort: reasoning_effort = none|low|medium|xhigh. Thinking is off unless an
+# effort is sent; "none" is also off (live 2026-10-02: 0 reasoning tokens with
+# none vs 597 with xhigh). The gateway maps none to enable_thinking=false, so
+# effort-only with none per AGENTS.md; no separate toggle. The backend names
+# the tiers ("Supported types are xhigh (default), medium, and low");
+# high/max alias to xhigh, minimal to low.
+# Budget: thinking_token_budget (integer reasoning tokens) is honoured (live
+# 2026-10-03: budget 60 -> 59 reasoning tokens).
+# interleaved = true: the trace is returned in message.reasoning, which the
+# schema cannot name, rather than message.reasoning_content.
+# Image input verified 2026-10-02; modalities inherited from the lab entry.
+# response_format json_schema verified working 2026-10-02 (the public
+# reference omits this model from its response_format list).
+base_model = "alibaba/qwen3.8-27b"
+interleaved = true
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "xhigh"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.25
+output = 2.55
+cache_read = 0.05

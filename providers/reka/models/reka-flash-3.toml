@@ -1,0 +1,14 @@
+# Pricing from https://developer.reka.ai/models (accessed 2026-10-03).
+# Context: 65,536 tokens, verified 2026-10-02 against the live API.
+# Reasoning is always on with no caller control; reasoning_effort is accepted
+# (low|medium|high) but has no effect, so no effort option is authored.
+# tools: not supported on this model.
+base_model = "reka/reka-flash-3"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.10
+output = 0.20
