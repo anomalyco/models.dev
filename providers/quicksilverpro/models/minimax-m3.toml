@@ -1,0 +1,14 @@
+# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
+# `reasoning_effort` through to the upstream model unchanged.
+# Toggle: reasoning.enabled = true|false
+# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
+# Pricing: https://quicksilverpro.io/models/minimax-m3/ and https://quicksilverpro.io/pricing.json
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.24
+output = 0.96
+cache_read = 0.048
