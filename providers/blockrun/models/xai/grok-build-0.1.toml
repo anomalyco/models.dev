@@ -1,0 +1,14 @@
+# BlockRun catalog 2026-09-29T23:31:20.524862+00:00 (source/catalog.json); upstream model facts inherited.
+base_model = "xai/grok-build-0.1"
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.2
+
+[limit]
+context = 256_000
+output = 16_384
+
+[[reasoning_options]]
+type = "toggle"

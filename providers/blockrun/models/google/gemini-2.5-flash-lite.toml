@@ -1,0 +1,19 @@
+# BlockRun catalog 2026-09-29T23:31:20.524862+00:00 (source/catalog.json); upstream model facts inherited.
+base_model = "google/gemini-2.5-flash-lite"
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.01
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 512
+max = 24_576

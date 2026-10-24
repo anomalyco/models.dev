@@ -1,0 +1,15 @@
+# BlockRun catalog 2026-09-29T23:31:20.524862+00:00 (source/catalog.json); upstream model facts inherited.
+base_model = "openai/gpt-5.3-codex"
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175
+
+[limit]
+context = 400_000
+output = 128_000
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
