@@ -1,0 +1,17 @@
+# Sources (accessed 2026-10-22):
+# - Pricing: https://apimodels.app/models/gpt-6-astra ($3.40 input / $17.00 output / $0.34 cache read per 1M tokens)
+#   Input above 272K tokens bills the whole request at 2x input and cache read, 1.5x output.
+# - Model ID: https://api.apimodels.app/v1/models ("gpt-6-astra")
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 3.4
+output = 17.0
+cache_read = 0.34
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 6.8
+output = 25.5
+cache_read = 0.68

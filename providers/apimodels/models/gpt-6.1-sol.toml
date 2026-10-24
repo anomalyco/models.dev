@@ -1,0 +1,17 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/gpt-6.1-sol ($1.00 input / $5.00 output / $0.05 cache read per 1M tokens)
+#   Input above 272K tokens bills the whole request at 2x input and cache read, 1.5x output.
+# - Model ID: https://api.apimodels.app/v1/models ("gpt-6.1-sol")
+base_model = "openai/gpt-6.1-sol"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1.0
+output = 5.0
+cache_read = 0.05
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 2.0
+output = 7.5
+cache_read = 0.1

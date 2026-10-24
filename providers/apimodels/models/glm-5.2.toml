@@ -1,0 +1,13 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/glm-5.2 ($1.26 input / $3.96 output / $0.26 cache read per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("glm-5.2")
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.26
+output = 3.96
+cache_read = 0.26

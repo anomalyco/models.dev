@@ -1,0 +1,16 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/claude-opus-4-5-20251101 ($1.765 input / $8.824 output per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("claude-opus-4-5-20251101")
+base_model = "anthropic/claude-opus-4-5-20251101"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high"] },
+  { type = "budget_tokens", min = 1_024 },
+]
+
+[cost]
+input = 1.765
+output = 8.824
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.apimodels.app/v1"
