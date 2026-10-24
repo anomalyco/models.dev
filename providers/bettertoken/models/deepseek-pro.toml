@@ -1,0 +1,19 @@
+# Pricing: https://bettertoken.ai/api/pricing (public, accessed 2026-10-15).
+# BetterToken describes deepseek-pro as an alias of deepseek/deepseek-v4-pro (pricing description field).
+# BetterToken bills official list price x group ratio 0.78 (DeepSeek group); values below are effective USD per 1M tokens.
+# Endpoint: POST https://bettertoken.ai/v1/chat/completions (also openai, anthropic).
+# Reasoning wire (BetterToken new-api fork, relay/channel/claude/relay-claude.go + dto/openai_request.go): Chat accepts reasoning_effort and
+# OpenRouter-style reasoning={enabled,effort,max_tokens} and renders them to the upstream's native controls; option set mirrors providers/openrouter/models/deepseek/deepseek-v4-pro.toml.
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 1.0296
+output = 3.0888
+cache_read = 0.03432
