@@ -1,0 +1,15 @@
+# Price: https://api.verathos.ai/v1/models (2026-10-20). Billed on input tokens only, so output is 0.
+# Serving: POST /v1/systemone; max_state_tokens 65,536, text only, as the lab entry.
+schema = 2
+v2_only = true
+base_model = "jaredpalmer/kev-4b"
+
+[api.systemone]
+base_url = "https://api.verathos.ai/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.015
+
+[cost.text.output]
+price = 0
