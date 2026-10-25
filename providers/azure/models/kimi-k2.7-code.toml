@@ -1,4 +1,8 @@
 # Pricing source: https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/kimi/ (accessed 2026-08-05)
+# Reasoning: on by default; the model returns its chain of thought in `reasoning_content`.
+# reasoning_effort accepts none|low|medium|high|max (the endpoint's own 400; live 2026-10-25
+# on a Foundry resource). `none` disables reasoning, and minimal/xhigh are rejected.
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning (accessed 2026-10-25)
 # Modalities: Kimi image formats https://platform.moonshot.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats (Azure documents text and image input, no video)
 # Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
 schema = 2
@@ -10,7 +14,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
