@@ -1,0 +1,23 @@
+# Sources (accessed 2026-10-26):
+# https://cloudgpu.app/v1/models (available ID and USD per 1M token prices)
+# https://cloudgpu.app/api (public USD per 1M token prices: input 1.3065, cached input 1.3065, output 3.564)
+# https://cloudgpu.app/api/docs (OpenAI-compatible /v1/chat/completions, Bearer auth)
+# Live check on /v1/chat/completions (2026-10-26): thinking = {type = "disabled"} turns reasoning off; reasoning_effort = low is accepted; reasoning returned in reasoning_content.
+# Cached input equals input price: /api notes the upstream gives no cache discount for this model.
+# Live check: reasoning text is returned in message.reasoning_content.
+# Context and output limits are inherited from the base model (vendor model card).
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.3065
+cache = { read = 1.3065 }
+
+[cost.text.output]
+price = 3.564
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

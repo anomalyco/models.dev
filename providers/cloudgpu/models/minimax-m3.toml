@@ -1,0 +1,23 @@
+# Sources (accessed 2026-10-26):
+# https://cloudgpu.app/v1/models (available ID and USD per 1M token prices)
+# https://cloudgpu.app/api (public USD per 1M token prices: input 0.2814, cached input 0.1407, output 1.1055)
+# https://cloudgpu.app/api/docs (OpenAI-compatible /v1/chat/completions, Bearer auth)
+# Live check on /v1/chat/completions (2026-10-26): no reasoning content or reasoning tokens returned by default, nor with thinking = {type = "enabled"|"adaptive"} or reasoning_effort.
+# Live check: image_url input with PNG and JPEG data URLs answered correctly.
+# Context and output limits are inherited from the base model (vendor model card).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.2814
+cache = { read = 0.1407 }
+
+[cost.text.output]
+price = 1.1055
