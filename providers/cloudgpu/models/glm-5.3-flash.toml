@@ -1,0 +1,27 @@
+# Sources (accessed 2026-10-26):
+# https://cloudgpu.app/v1/models (available ID and USD per 1M token prices)
+# https://cloudgpu.app/api (public USD per 1M token prices: input 0.16, cached input 0.04, output 0.55)
+# https://cloudgpu.app/api/docs (OpenAI-compatible /v1/chat/completions, Bearer auth)
+# Live check on /v1/chat/completions (2026-10-26): reasoning_effort is accepted (low reduces reasoning tokens).
+# Live check: image_url input with PNG and JPEG data URLs answered correctly.
+# Live check: reasoning text is returned in message.reasoning_content.
+# Context and output limits are inherited from the base model (vendor model card).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.16
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.55
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

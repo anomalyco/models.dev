@@ -1,0 +1,27 @@
+# Sources (accessed 2026-10-26):
+# https://cloudgpu.app/v1/models (available ID and USD per 1M token prices)
+# https://cloudgpu.app/api (public USD per 1M token prices: input 0.855, cached input 0.5, output 3.6)
+# https://cloudgpu.app/api/docs (OpenAI-compatible /v1/chat/completions, Bearer auth)
+# Live check on /v1/chat/completions (2026-10-26): reasoning is always returned; thinking = {type = "disabled"} has no effect on this route (no caller control).
+# Live check: image_url input with PNG and JPEG data URLs answered correctly.
+# Live check: reasoning text is returned in message.reasoning_content.
+# Context and output limits are inherited from the base model (vendor model card).
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.855
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 3.6
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
