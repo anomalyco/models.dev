@@ -797,6 +797,15 @@ test("factored NanoGPT models inherit missing intrinsic metadata without zero ov
   expect(sparse).not.toHaveProperty("modalities");
 });
 
+test("skips new NanoGPT base_model routes when no source states an output limit", () => {
+  const model = buildNanoGptModel(nanoGptModel({
+    id: "aleph-alpha/kolibri-1",
+    max_output_tokens: null,
+  }), undefined);
+
+  expect(model).toBeUndefined();
+});
+
 test("NanoGPT base_model files leave model facts to the lab", () => {
   const model = buildNanoGptModel(nanoGptModel({
     id: "google/gemini-2.5-pro",

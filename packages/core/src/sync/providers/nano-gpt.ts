@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveModelMetadataBaseModel, withSystemOneImageInput } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel, withSystemOneImageInput } from "./openrouter.js";
 
 const API_ENDPOINT = "https://nano-gpt.com/api/v1/models?detailed=true";
 
@@ -144,6 +144,10 @@ export function buildNanoGptModel(
       input: sourceContext ?? existing?.limit?.input,
       output: sourceOutputLimit ?? existing?.limit?.output,
     };
+    // Some labs state no output limit, so a route NanoGPT also leaves unbounded
+    // would write a file without one. Skip it until either source states one.
+    const labOutput = (modelMetadata(baseModel).limit as { output?: number } | undefined)?.output;
+    if (factoredLimit.output === undefined && labOutput === undefined) return undefined;
     const sourceReasoning = inferredSourceReasoning;
     const sourceReasoningOptions = reasoningOptions(model, sourceReasoning, existing?.reasoning_options);
 
