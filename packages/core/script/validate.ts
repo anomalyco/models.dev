@@ -3,6 +3,7 @@
 import { generate } from "../src/generate";
 import { generateV2 } from "../src/generate-v2";
 import { explicitFalseFlags, isSchemaV2, readLabMetadata } from "../src/translate";
+import { logoErrors } from "../src/logo";
 import path from "path";
 import { ZodError } from "zod";
 
@@ -40,6 +41,18 @@ try {
     console.error(
       "system_updates, effort_updates and tools.updates default to false. Leave them out instead of writing `= false` (see AGENTS.md):\n" +
         falseFlags.map((flag) => `  ${flag}`).join("\n"),
+    );
+    process.exit(1);
+  }
+  const unsafeLogos: string[] = [];
+  const logos = await Array.fromAsync(new Bun.Glob("{providers,labs}/*/logo.svg").scan({ cwd: rootDir }));
+  for (const file of ["providers/logo.svg", ...logos]) {
+    for (const error of logoErrors(await Bun.file(path.join(rootDir, file)).text())) unsafeLogos.push(`${file}: ${error}`);
+  }
+  if (unsafeLogos.length > 0) {
+    console.error(
+      "Logos may only use plain SVG drawing markup (see AGENTS.md):\n" +
+        unsafeLogos.map((error) => `  ${error}`).join("\n"),
     );
     process.exit(1);
   }

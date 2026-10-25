@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generateCatalog, readLabMetadata } from "@models.dev/core";
+import { generateCatalog, logoErrors, readLabMetadata } from "@models.dev/core";
 import type { LabMetadataV2, Model, ModelMetadata, Provider } from "@models.dev/core";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
@@ -1657,10 +1657,8 @@ function providerLogoSvg(providerId: string) {
   if (cached) return cached;
 
   const logoPath = path.join(root, "providers", providerId, "logo.svg");
-  const defaultLogoPath = path.join(root, "providers", "logo.svg");
-  const rawSvg = readFileSync(
-    existsSync(logoPath) ? logoPath : defaultLogoPath,
-    "utf8",
+  const rawSvg = readLogo(
+    existsSync(logoPath) ? logoPath : path.join(root, "providers", "logo.svg"),
   );
   const svg = rawSvg
     .replace(/<svg\b([^>]*)>/i, (_, attributes: string) => {
@@ -1679,10 +1677,8 @@ function labLogoSvg(labId: string) {
   if (cached) return cached;
 
   const logoPath = path.join(root, "labs", labId, "logo.svg");
-  const defaultLogoPath = path.join(root, "providers", "logo.svg");
-  const rawSvg = readFileSync(
-    existsSync(logoPath) ? logoPath : defaultLogoPath,
-    "utf8",
+  const rawSvg = readLogo(
+    existsSync(logoPath) ? logoPath : path.join(root, "providers", "logo.svg"),
   );
   const svg = rawSvg
     .replace(/<svg\b([^>]*)>/i, (_, attributes: string) => {
@@ -1693,5 +1689,12 @@ function labLogoSvg(labId: string) {
     .replace(/\sstroke="(?!none)[^"]*"/gi, ' stroke="currentColor"');
 
   LabLogoSvgs.set(labId, svg);
+  return svg;
+}
+
+function readLogo(file: string) {
+  const svg = readFileSync(file, "utf8");
+  const errors = logoErrors(svg);
+  if (errors.length > 0) throw new Error(`Unsafe logo ${file}: ${errors.join(", ")}`);
   return svg;
 }

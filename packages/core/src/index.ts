@@ -6,3 +6,4 @@ export * from "./describe.js";
 export * from "./family.js";
 export * from "./filter.js";
 export * from "./translate.js";
+export * from "./logo.js";

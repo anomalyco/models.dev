@@ -197,6 +197,7 @@ A v1-only alias provider (for example `azure-cognitive-services`) has a `provide
 - Path: `providers/<provider-id>/logo.svg`
 - Use `currentColor` for fills/strokes; no hardcoded colors, no fixed width/height
 - Prefer square `viewBox` (e.g. `0 0 24 24`)
+- Plain drawing markup only: no scripts, event handlers, `foreignObject`, animation or links to other files (`bun validate` checks this against the allowlist in `packages/core/src/logo.ts`)
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
