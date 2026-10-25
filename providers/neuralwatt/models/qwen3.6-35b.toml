@@ -1,4 +1,6 @@
+# Effort: reasoning_effort = "none" | "high"
 # Budget: thinking_token_budget (integer reasoning tokens)
+# https://portal.neuralwatt.com/docs/api/chat-completions
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B"
@@ -12,7 +14,7 @@ reasoning = { supported = true, effort = ["none", "high"], budget = {} }
 structured_output = true
 
 [limit]
-context = 131_056
+context = 262_128
 output = 131_056
 
 [api.chat-completions]

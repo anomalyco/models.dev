@@ -1,0 +1,25 @@
+# Effort: reasoning_effort = "none" | "low" | "high" | "xhigh" | "max"
+# thinking_token_budget is not documented for the V4.1-Flash generation.
+# https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash (Speed)"
+last_updated = "2026-10-12"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_560
+output = 393_216
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6
