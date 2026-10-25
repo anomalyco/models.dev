@@ -761,6 +761,17 @@ export const ExperimentalV2 = z
 
 export type ExperimentalV2 = z.infer<typeof ExperimentalV2>;
 
+// Unknown privacy facts stay absent. Provider entries publish defaults while
+// model entries may override either field for a specific hosted endpoint.
+export const PrivacyV2 = z
+  .object({
+    data_retention_days: z.number().int().nonnegative().optional(),
+    trains_on_data: z.boolean().optional(),
+  })
+  .strict();
+
+export type PrivacyV2 = z.infer<typeof PrivacyV2>;
+
 export const ModelV2 = z
   .object({
     id: z.string(),
@@ -784,6 +795,7 @@ export const ModelV2 = z
     // file's `recommended_api`, else the first API. It's an opinion, not the
     // default; `api`'s order still says which API to fall back to.
     recommended_api: ApiProtocolV2,
+    privacy: PrivacyV2.optional(),
     experimental: ExperimentalV2.optional(),
     metadata: z.record(JsonValue).optional(),
   })
@@ -951,6 +963,7 @@ export const AuthoredModelV2 = z
     // of the file's own `[api.<protocol>]` tables; the v2 API publishes the
     // first one when it's left out.
     recommended_api: ApiProtocolV2.optional(),
+    privacy: PrivacyV2.optional(),
     experimental: ExperimentalV2.optional(),
     metadata: z.record(JsonValue).optional(),
   })
@@ -981,6 +994,7 @@ export const ProviderV2 = z
         "Please provide a link to the provider documentation where models are listed",
       ),
     env: z.array(z.string()),
+    privacy: PrivacyV2.optional(),
     models: z.record(ModelV2),
   })
   .strict();
