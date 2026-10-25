@@ -13,7 +13,6 @@ base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek-V4-Pro"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 

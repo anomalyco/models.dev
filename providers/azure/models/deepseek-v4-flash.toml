@@ -13,7 +13,6 @@ base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek-V4-Flash"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
