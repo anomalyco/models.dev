@@ -1,31 +1,17 @@
-# Sources (accessed 2026-10-25): https://api.decisionmodels.io/v1/models (live registry), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
-# Prices are USD per 1M input tokens on the Peer-to-Peer (S1-Region: global) tier; output tokens are free. The EU tier (S1-Region: eu)
-#   costs $0.021 per 1M input tokens; it is not modelled because the EU/global ratio differs per model.
-# Model: s1-fast is a host-unique rotating alias of Decision Models, not a fixed lab model. It always answers with the current Fast version;
-#   the alias moves to a new open-weights version with 7 days' notice on https://decisionmodels.io/changelog (pinned version ids are not listed here).
-#   A fixed base_model would therefore go stale at each move, so this file is a full definition (AGENTS.md exception: host alias).
-# release_date: no launch date is published; 2026-09-30 is the snapshot date of the first OpenAPI contract that lists s1-fast, so the real release may be earlier.
+# Sources (accessed 2026-10-25): https://api.decisionmodels.io/v1/models (live registry, "attribution" field), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
+# Prices are USD per 1M input tokens on the Peer-to-Peer (S1-Region: global) tier; output tokens are free. The EU tier (S1-Region: eu) costs slightly more; not modelled.
+# s1-fast is a rotating alias of Decision Models. It moves to a new version with 7 days notice on https://decisionmodels.io/changelog; base_model is updated with each move.
+#   Today it answers with s1-fast-2 = Blink v0.3 26B-A4B (NVFP4), text only, one question per request, 8,000 input tokens.
 schema = 2
-type = "decision"
+base_model = "pixilabai/blink-v0.3-26b-a4b"
 name = "s1-fast"
-description = "Low-latency open decision model for short text decisions: one typed noul, choice or score question per request, answered with probabilities"
-open_weights = true
-release_date = "2026-09-30"
 
 [modalities]
 input = ["text"]
 output = ["decision"]
 
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-top_p = false
-top_k = false
-
 [limit]
 context = 8_000
-output = 0
 
 [api.systemone]
 base_url = "https://api.decisionmodels.io/v1"
