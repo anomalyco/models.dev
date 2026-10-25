@@ -1,8 +1,11 @@
 # Sources (accessed 2026-10-25): https://api.decisionmodels.io/v1/models (live registry), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
 # Prices are USD per 1M input tokens on the Peer-to-Peer (S1-Region: global) tier; output tokens are free. The EU tier (S1-Region: eu)
 #   costs $0.084 per 1M input tokens; it is not modelled because the EU/global ratio differs per model.
-# Model: s1-pro is Decision Models' alias for the current Pro version: since 2026-10-12 s1-pro-3 (vLLM-SR d3 26B, Apache-2.0, FP8). Up to 3 questions per request, 8,192 input tokens per question.
-# release_date: 2026-10-12 is the date s1-pro switched to vLLM-SR d3 (https://decisionmodels.io/models).
+# Model: s1-pro is a host-unique rotating alias of Decision Models, not a fixed lab model. It always answers with the current Pro version;
+#   the alias moves to a new open-weights version with 7 days' notice on https://decisionmodels.io/changelog (pinned version ids are not listed here).
+#   A fixed base_model would therefore go stale at each move, so this file is a full definition (AGENTS.md exception: host alias).
+#   Up to 3 questions per request, 8,192 input tokens per question.
+# release_date: 2026-10-12 is the date of the current s1-pro request contract (up to 3 questions) on https://decisionmodels.io/models.
 schema = 2
 type = "decision"
 name = "s1-pro"
