@@ -6,6 +6,9 @@ import { tmpdir } from "node:os";
 
 import { generate, generateCatalog, generateV2 } from "../src/index.js";
 
+const PROVIDER_RETENTION_DAYS = 30;
+const MODEL_RETENTION_DAYS = 0;
+
 async function withFixture<T>(callback: (root: string) => Promise<T>) {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-test-"));
   try {
@@ -35,6 +38,49 @@ function stable(value: unknown): string {
 }
 
 describe("catalog generation", () => {
+  test("publishes provider and model privacy metadata only in v2", async () => {
+    console.log("[privacy metadata] exercising provider defaults and model overrides");
+
+    await withFixture(async (root) => {
+      await write(
+        root,
+        "providers/provider/provider.toml",
+        `${providerToml("Provider")}
+[privacy]
+data_retention_days = ${PROVIDER_RETENTION_DAYS}
+trains_on_data = false
+`,
+      );
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        `${providerFieldsToml()}
+[privacy]
+data_retention_days = ${MODEL_RETENTION_DAYS}
+trains_on_data = true
+`,
+      );
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      const providersV1 = await generate(path.join(root, "providers"));
+
+      expect(providersV2.provider?.privacy).toEqual({
+        data_retention_days: PROVIDER_RETENTION_DAYS,
+        trains_on_data: false,
+      });
+      expect(providersV2.provider?.models.model?.privacy).toEqual({
+        data_retention_days: MODEL_RETENTION_DAYS,
+        trains_on_data: true,
+      });
+      expect(providersV1.provider).not.toHaveProperty("privacy");
+      expect(providersV1.provider?.models.model).not.toHaveProperty("privacy");
+
+      console.log(
+        `[privacy metadata] v2 provider=${PROVIDER_RETENTION_DAYS}d model=${MODEL_RETENTION_DAYS}d; v1 unchanged`,
+      );
+    });
+  });
+
   test("rejects providers with no models", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/empty/provider.toml", providerToml("Empty"));
