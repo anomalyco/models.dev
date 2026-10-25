@@ -139,15 +139,16 @@ export function buildNanoGptModel(
       input: hasInputMetadata || existing !== undefined ? input : undefined,
       output: hasOutputMetadata || existing !== undefined ? output : undefined,
     };
+    // Some labs state no output limit. When NanoGPT doesn't either, fall back
+    // to the context window so the file still has the required output limit.
+    const labLimit = modelMetadata(baseModel).limit as { context?: number; output?: number } | undefined;
     const factoredLimit = {
       context: sourceContext ?? existing?.limit?.context,
       input: sourceContext ?? existing?.limit?.input,
-      output: sourceOutputLimit ?? existing?.limit?.output,
+      output: sourceOutputLimit
+        ?? existing?.limit?.output
+        ?? (labLimit?.output === undefined ? sourceContext ?? labLimit?.context : undefined),
     };
-    // Some labs state no output limit, so a route NanoGPT also leaves unbounded
-    // would write a file without one. Skip it until either source states one.
-    const labOutput = (modelMetadata(baseModel).limit as { output?: number } | undefined)?.output;
-    if (factoredLimit.output === undefined && labOutput === undefined) return undefined;
     const sourceReasoning = inferredSourceReasoning;
     const sourceReasoningOptions = reasoningOptions(model, sourceReasoning, existing?.reasoning_options);
 
