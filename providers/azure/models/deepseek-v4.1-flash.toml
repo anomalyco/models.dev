@@ -8,11 +8,11 @@
 # https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Deepseek Models'
 # Azure catalog lists context 1000k (same as the base model) and output 128k (base is 384k).
 # Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
-# Reasoning: off unless the request sets reasoning_effort; the model then returns its
-# chain of thought in `reasoning_content` (live 2026-10-25 on a Foundry resource).
-# The endpoint accepts none|minimal|low|medium|high|xhigh|max (from its own 400), but
-# DeepSeek's meaningful levels are low, high, max, matching providers/deepseek and
-# providers/opencode for this model. Microsoft documents `reasoning_content` for
+# Effort: reasoning_effort = none|low|high|max. Off when omitted or none; the model then
+# returns its chain of thought in `reasoning_content` (live 2026-10-24 on a Foundry resource).
+# The endpoint's own validation error lists none|low|medium|high|max. DeepSeek maps medium
+# to high, so the levels match providers/deepseek. thinking.type is ignored here, so off is
+# effort=none rather than a toggle. Microsoft documents `reasoning_content` for
 # non-OpenAI reasoning models:
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning (accessed 2026-10-25)
 # Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
@@ -23,7 +23,7 @@ status = "beta"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [limit]
