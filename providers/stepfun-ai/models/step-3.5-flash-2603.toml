@@ -11,6 +11,7 @@
 # Chat Completions returns reasoning in both `reasoning` and `reasoning_content`.
 # Sampling: Chat documents temperature and top_p; Messages also documents top_k (0-500).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) unset: undocumented, and no StepFun key to test.
+# max_tokens_field: StepFun's Chat Completions API documents max_tokens and not max_completion_tokens (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, accessed 2026-10-24)
 schema = 2
 base_model = "stepfun/step-3.5-flash-2603"
 
@@ -20,7 +21,7 @@ structured_output = true
 cache = { implicit = { min_tokens = 256 } }
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

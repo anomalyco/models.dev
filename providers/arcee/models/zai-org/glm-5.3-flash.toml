@@ -2,6 +2,7 @@
 # Not in the beta launch post; the pricing page is the only listing. Arcee's docs list no input modalities, so the
 #   lab's are inherited. Effort follows the same families on this host (reasoning_effort = high|max; unverified, no key).
 # APIs on this host: OpenAI Chat Completions (https://api.arcee.ai/api/v1/chat/completions) and /api/v1/models.
+# max_tokens_field: Arcee's Chat Completions API reference lists max_tokens and not max_completion_tokens (https://docs.arcee.ai/api-reference/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 status = "beta"
@@ -11,7 +12,7 @@ reasoning = { supported = true, effort = ["high", "max"] }
 structured_output = true
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.15

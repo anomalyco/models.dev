@@ -10,6 +10,7 @@
 # reasoning stays false as published: both engines reason, but the router documents no reasoning control and
 #   nothing was tested live. knowledge is unsourced.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) unset: undocumented, and no StepFun key to test.
+# max_tokens_field: StepFun's Chat Completions API documents max_tokens and not max_completion_tokens (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, accessed 2026-10-24)
 schema = 2
 name = "Step Router v1"
 description = "StepFun routing model that dispatches requests to the appropriate Step model."
@@ -32,6 +33,7 @@ input = 256_000
 output = 256_000
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
