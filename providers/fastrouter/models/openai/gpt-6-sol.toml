@@ -6,8 +6,10 @@
 #   Baseline: lab providers/openai gpt-6-sol = effort none|low|medium|high|xhigh|max; peer providers/openrouter openai/gpt-6-sol = effort none|low|medium|high|xhigh|max.
 #   effort = none disables reasoning on FastRouter (same as reasoning.enabled = false), so no separate toggle.
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Limit: catalog context_length 400000 and max_completion_tokens 128000 for this route; the lab's input = 922_000 is omitted via base_model_omit because it exceeds the served window.
 schema = 2
 base_model = "openai/gpt-6-sol"
+base_model_omit = ["limit.input"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
@@ -16,6 +18,7 @@ service_tier = ["flex", "fast"]
 
 [limit]
 context = 400_000
+output = 128_000
 
 [cost.text.input]
 price = 2
@@ -24,6 +27,7 @@ cache = { read = 0.2, write = 2.5 }
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 4
+cache = { read = 0.4, write = 5 }
 
 [cost.text.output]
 price = 10

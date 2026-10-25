@@ -8,6 +8,7 @@
 #   Lab/peer set is low|medium|high|xhigh|max (providers/anthropic claude-sonnet-5-5, providers/openrouter
 #   claude-sonnet-5.5); this route exposes the truncated enum above.
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
+# Cache: the catalog lists input_cache_read = $0.0000002 per token ($0.2 per MTok, 10% of input) for this route, double Anthropic's own 5% rate ($0.1 in providers/anthropic claude-sonnet-5-5); the FastRouter list price is published as served.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 

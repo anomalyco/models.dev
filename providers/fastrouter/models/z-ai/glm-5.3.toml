@@ -4,6 +4,7 @@
 #   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-25): supported_parameters lists reasoning (schemas empty, no enum).
 #   Baseline: lab providers/zhipuai glm-5.3 = effort low|high|max; peer providers/openrouter z-ai/glm-5.3 = effort low|high|max.
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Limit: catalog context_length 1048576 and max_completion_tokens 131072 for this route (top_provider.context_length 1048576), above the lab's 1_000_000 context.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
@@ -14,6 +15,7 @@ service_tier = ["flex"]
 
 [limit]
 context = 1_048_576
+output = 131_072
 
 [cost.text.input]
 price = 0.563

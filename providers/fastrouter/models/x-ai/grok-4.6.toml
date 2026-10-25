@@ -18,6 +18,7 @@ cache = { read = 0.5 }
 [[cost.text.input.overrides]]
 when = { context = { gt = 200_000 } }
 price = 4
+cache = { read = 1 }
 
 [cost.text.output]
 price = 6
