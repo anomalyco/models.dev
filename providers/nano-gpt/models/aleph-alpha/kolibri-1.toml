@@ -1,0 +1,17 @@
+schema = 2
+base_model = "aleph-alpha/kolibri-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+input = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.168
+cache = { read = 0.0987 }
+
+[cost.text.output]
+price = 0.588
