@@ -1,3 +1,4 @@
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "siliconflow/deepseek-v3.1-terminus"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
@@ -19,6 +20,9 @@ temperature = true
 [limit]
 context = 163_840
 output = 65_536
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.27

@@ -6,6 +6,7 @@
 # Re-checked live 2026-10-23 (~8k-token first user message): a late system message is accepted (200) but this model didn't follow it in the probe; the control gets no cache hits (implicit or explicit), so system_updates stays.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Image input formats (BMP, JPEG, PNG, TIFF, WEBP, HEIC with their MIME types): https://www.alibabacloud.com/help/en/model-studio/qwen-vl-ocr (Image limits, Supported image formats).
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "Qwen-VL OCR"
 description = "OCR model for extracting structured text from documents and screenshots"
@@ -32,6 +33,9 @@ cache = false
 [limit]
 context = 34_096
 output = 4_096
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.07
