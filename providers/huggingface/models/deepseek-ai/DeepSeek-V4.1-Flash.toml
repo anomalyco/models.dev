@@ -1,5 +1,6 @@
 # Effort: reasoning_effort = none|low|high|xhigh|max; none disables thinking.
 # https://recipes.vllm.ai/deepseek-ai/DeepSeek-V4.1-Flash (accessed 2026-09-10)
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
@@ -13,6 +14,7 @@ structured_output = true
 context = 1_048_576
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

@@ -229,16 +229,27 @@ const RESPONSES_API = {
   sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
 };
 
+// The router's Chat Completions API documents max_tokens, not max_completion_tokens:
+// https://huggingface.co/docs/inference-providers/tasks/chat-completion (accessed 2026-10-24)
+const MAX_TOKENS_FIELD = { max_tokens_field: "max_tokens" };
+
 // A chat model's APIs: its own first table (what v1 reads; an empty table takes the
 // provider's Chat Completions API), then Responses.
 export function chatApis(current: unknown): Record<string, unknown> {
-  const { responses: _responses, ...own } = current !== null && typeof current === "object" && !Array.isArray(current)
-    ? current as Record<string, unknown>
-    : {};
-  return {
-    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
-    responses: structuredClone(RESPONSES_API),
-  };
+  const { responses: _responses, ...own } = isRecord(current) ? current : {};
+  const tables: Record<string, unknown> = Object.keys(own).length > 0 ? own : { "chat-completions": {} };
+  const chat = tables["chat-completions"];
+  if (isRecord(chat)) {
+    tables["chat-completions"] = {
+      ...chat,
+      compatibility: { ...(isRecord(chat.compatibility) ? chat.compatibility : {}), ...MAX_TOKENS_FIELD },
+    };
+  }
+  return { ...tables, responses: structuredClone(RESPONSES_API) };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 function labModel(modelID: string) {

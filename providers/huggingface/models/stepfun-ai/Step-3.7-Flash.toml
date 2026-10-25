@@ -1,3 +1,4 @@
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "stepfun/step-3.7-flash"
 base_model_omit = ["limit.input"]
@@ -10,6 +11,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 context = 262_144
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

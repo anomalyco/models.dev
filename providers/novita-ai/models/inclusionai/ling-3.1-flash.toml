@@ -2,6 +2,7 @@
 # Toggle: thinking.type = enabled|disabled (Ling peer baseline; live checks returned server_overload).
 # The public model page and /models both list zero input/output prices on 2026-10-09.
 # system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+# max_tokens_field: this route ignores max_completion_tokens while max_tokens caps output (live probe 2026-10-24)
 schema = 2
 base_model = "inclusionai/ling-3.1-flash"
 
@@ -15,7 +16,7 @@ system_updates = true
 output = 262_144
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [api.messages]
 base_url = "https://api.novita.ai/anthropic/v1"

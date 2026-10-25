@@ -12,6 +12,7 @@
 #
 # Not supported on this route: Xiaomi-native thinking.type
 # Listed as effort with "none" and no separate toggle, since "none" turns reasoning off.
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
 description = "MiMo model for long-context reasoning, perception, and agentic tasks"
@@ -29,6 +30,7 @@ structured_output = true
 context = 262_144
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

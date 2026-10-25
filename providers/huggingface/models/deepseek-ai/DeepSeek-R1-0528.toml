@@ -1,6 +1,7 @@
 # Lab identity: https://huggingface.co/deepseek-ai/DeepSeek-R1-0528
 # Output: inherits the lab's 32,768. Novita, an upstream, caps max_output_tokens at 32,768 (https://api.novita.ai/openai/v1/models, 2026-10-20).
 # knowledge: kept from the earlier Hugging Face file; unsourced (no cutoff in the model card or lab docs, checked 2026-10-20).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "deepseek/deepseek-r1-0528"
 name = "DeepSeek-R1-0528"
@@ -12,6 +13,7 @@ tools = { supported = true }
 reasoning = { supported = true }
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

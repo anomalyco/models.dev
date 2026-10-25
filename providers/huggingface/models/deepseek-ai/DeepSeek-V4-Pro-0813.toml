@@ -1,5 +1,6 @@
 # The model card documents low, high, and max reasoning effort levels.
 # https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813#chat-template
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
@@ -10,6 +11,7 @@ reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

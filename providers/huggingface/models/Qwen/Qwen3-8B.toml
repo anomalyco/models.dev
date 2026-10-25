@@ -5,6 +5,7 @@
 # - HF Chat Completion https://huggingface.co/docs/inference-providers/en/tasks/chat-completion : top-level reasoning_effort, common values none/minimal/low/medium/high/xhigh, support is provider+model-dependent; no shared toggle/budget field
 # - Effort levels none|low|medium|high per https://docs.deepinfra.com/chat/reasoning (same OpenAI-compatible reasoning_effort surface; HF peer Qwen/Qwen3.5-397B uses the same set); underlying Featherless Qwen3 toggle https://featherless.ai/docs/chat-template-kwargs (enable_thinking:false disables)
 # Effort: reasoning_effort = none|low|medium|high. Effort includes none, so no separate toggle.
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "alibaba/qwen3-8b"
 
@@ -17,6 +18,7 @@ structured_output = true
 context = 40_960
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

@@ -4,6 +4,7 @@
 # https://huggingface.co/zai-org/GLM-5.3-Flash
 # https://huggingface.co/docs/inference-providers/tasks/chat-completion
 # Modalities: the router catalog lists ["text","image"]; exact types are the lab's (zhipuai/glm-5.3-flash).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
@@ -21,6 +22,7 @@ structured_output = true
 context = 1_048_576
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

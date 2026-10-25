@@ -2,6 +2,7 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max (current first-party baseline; all three values verified on Novita).
 # system_updates = false: the turn after a mid-conversation system message missed the cache in two trials while control turns hit (live 2026-10-20).
+# max_tokens_field: this route ignores max_completion_tokens while max_tokens caps output (live probe 2026-10-24)
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
@@ -16,7 +17,7 @@ context = 1_048_576
 output = 393_216
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [api.messages]
 base_url = "https://api.novita.ai/anthropic/v1"

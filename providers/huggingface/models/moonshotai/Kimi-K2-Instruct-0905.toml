@@ -1,5 +1,6 @@
 # Lab identity: https://huggingface.co/moonshotai/Kimi-K2-Instruct-0905
 # knowledge: kept from the earlier Hugging Face file; unsourced (no cutoff in the model card or lab docs, checked 2026-10-20).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "moonshotai/kimi-k2-0905"
 name = "Kimi-K2-Instruct-0905"
@@ -13,6 +14,7 @@ tools = { supported = true }
 output = 16_384
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

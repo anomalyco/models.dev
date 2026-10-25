@@ -1,6 +1,7 @@
 # https://novita.ai/models/model-detail/zai-org-glm-5
 # Toggle: thinking.type = enabled|disabled
 # system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+# max_tokens_field: this route ignores max_completion_tokens while max_tokens caps output (live probe 2026-10-24)
 schema = 2
 base_model = "zhipuai/glm-5"
 
@@ -15,7 +16,7 @@ system_updates = true
 context = 202_800
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [api.messages]
 base_url = "https://api.novita.ai/anthropic/v1"

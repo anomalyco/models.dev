@@ -1,4 +1,5 @@
 # Lab identity: https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3-Coder-480B-A35B-Instruct"
@@ -8,6 +9,7 @@ description = "Qwen coding model for software agents, repository edits, and code
 tools = { supported = true }
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

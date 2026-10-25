@@ -264,7 +264,12 @@ for (const { name, data } of modelsData) {
         ...(effort.length > 0 ? [{ type: "effort" as const, values: effort }] : []),
       ].map((option) => ReasoningOption.parse(option));
     }
-    content = formatModelV2(providerModelToV2(ollamaModel));
+    // Ollama's Chat API takes max_tokens, not max_completion_tokens:
+    // https://docs.ollama.com/api/openai-compatibility (accessed 2026-10-24)
+    content = formatModelV2({
+      ...providerModelToV2(ollamaModel),
+      api: { "chat-completions": { compatibility: { max_tokens_field: "max_tokens" } } },
+    });
   } else {
     const after: Record<string, any> = { ...before };
     const existing = normalizeForComparison(existingData!);

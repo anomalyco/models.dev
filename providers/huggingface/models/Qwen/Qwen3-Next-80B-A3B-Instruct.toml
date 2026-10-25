@@ -1,5 +1,6 @@
 # Lab identity: https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct
 # Output inherits the lab's 32,768: the router reports no output limit.
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3-Next-80B-A3B-Instruct"
@@ -8,6 +9,7 @@ name = "Qwen3-Next-80B-A3B-Instruct"
 tools = { supported = true }
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

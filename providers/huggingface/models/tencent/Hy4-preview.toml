@@ -1,5 +1,6 @@
 # Effort: reasoning_effort = none|high; high is the default.
 # https://huggingface.co/tencent/Hy4-preview#quickstart
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "tencent/hy4-preview"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
@@ -13,6 +14,7 @@ structured_output = true
 context = 1_000_000
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
