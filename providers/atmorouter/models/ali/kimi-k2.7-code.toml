@@ -1,0 +1,14 @@
+# AtmoRouter model catalog: GET https://atmorouter.dev/v1/models (accessed 2026-10-25).
+# Reasoning: always on; AtmoRouter documents no reasoning control for this model.
+# Mid-conversation: system_updates, effort_updates and tools.updates are unset; AtmoRouter documents none of them.
+# Input MIME types: the lab's entries for each kind AtmoRouter lists (text, image); AtmoRouter documents no formats.
+# Cost omitted: the price depends on the offer tier that serves each request (see provider.toml).
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
