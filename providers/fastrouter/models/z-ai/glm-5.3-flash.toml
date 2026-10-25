@@ -1,0 +1,21 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-25); prices are USD per token there, per MTok here.
+# Effort: reasoning.effort = low|high|max
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-25): supported_parameters lists reasoning (schemas empty, no enum).
+#   Baseline: lab providers/zhipuai glm-5.3-flash = effort low|high|max; peer providers/openrouter z-ai/glm-5.3-flash = effort low|high|max.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_310_720
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25
