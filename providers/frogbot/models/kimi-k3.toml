@@ -5,10 +5,16 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|medium|high|max
 # Budget: thinking.budget_tokens (Fireworks: must be >= 1024)
+# Modalities: Fireworks serves image input without video for kimi-k3, so the input matches
+# providers/fireworks-ai/.../kimi-k3.toml.
 # https://docs.fireworks.ai/api-reference/post-chatcompletions
 # https://docs.frogbot.ai/api-reference/chat-completions
 schema = 2
 base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
