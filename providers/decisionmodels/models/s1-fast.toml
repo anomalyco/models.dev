@@ -1,0 +1,36 @@
+# Sources (accessed 2026-10-25): https://api.decisionmodels.io/v1/models (live registry), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
+# Prices are USD per 1M input tokens on the Peer-to-Peer (S1-Region: global) tier; output tokens are free. The EU tier (S1-Region: eu)
+#   costs $0.021 per 1M input tokens; it is not modelled because the EU/global ratio differs per model.
+# Model: s1-fast is Decision Models' alias for the current Fast version (s1-fast-2: Blink v0.3 26B-A4B by PixilabAI, Apache-2.0, NVFP4).
+# release_date: no launch date is published; 2026-09-30 is the snapshot date of the first OpenAPI contract that lists s1-fast, so the real release may be earlier.
+schema = 2
+type = "decision"
+name = "s1-fast"
+description = "Low-latency open decision model for short text decisions: one typed noul, choice or score question per request, answered with probabilities"
+open_weights = true
+release_date = "2026-09-30"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_000
+output = 0
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.019
+
+[cost.text.output]
+price = 0
