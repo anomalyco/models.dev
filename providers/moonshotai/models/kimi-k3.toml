@@ -12,11 +12,15 @@
 # system message and a dynamic tool message were accepted, and the tool was called; tool_choice "required" works but a
 # named function returns 400 ("incompatible with thinking enabled"); temperature/top_p other than 1/0.95 return 400.
 # Per-API flags: system_updates and tools.updates sit on [api.chat-completions] only. The dynamic tool loading guide documents the tool-carrying system message on /v1/chat/completions, and the late system message was checked in place there (live 2026-10-23); the Responses and Anthropic-compatible Messages endpoints document neither.
+# Tools: choice is auto only because the Responses API accepts only tool_choice auto (none/required return 400,
+#   checked live 2026-10-24; https://platform.kimi.ai/docs/api/responses). Chat Completions also takes none (+ required on K3.x),
+#   Messages auto|any|none. strict: Chat Completions defaults function tools to strict = true, Responses takes strict, Messages
+#   requires MFJS input schemas (https://platform.kimi.ai/docs/api/chat, https://platform.kimi.ai/docs/api/messages).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
 stream_usage = true

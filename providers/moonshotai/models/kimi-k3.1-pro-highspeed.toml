@@ -6,12 +6,16 @@
 # Highspeed serves the same model intelligence at 2-3x the output speed.
 # Always thinks: reasoning_effort = "low" | "high" | "max" (default "max"); there is no off toggle.
 # Dynamic tool loading is add-only through a system message with `tools` on Chat Completions.
+# Tools: choice is auto only because the Responses API accepts only tool_choice auto (none/required return 400,
+#   checked live 2026-10-24; https://platform.kimi.ai/docs/api/responses). Chat Completions also takes none (+ required on K3.x),
+#   Messages auto|any|none. strict: Chat Completions defaults function tools to strict = true, Responses takes strict, Messages
+#   requires MFJS input schemas (https://platform.kimi.ai/docs/api/chat, https://platform.kimi.ai/docs/api/messages).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Highspeed"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
 stream_usage = true

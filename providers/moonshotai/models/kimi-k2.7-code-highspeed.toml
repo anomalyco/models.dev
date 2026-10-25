@@ -2,12 +2,16 @@
 # https://platform.kimi.ai/docs/api/models-overview, https://platform.kimi.ai/docs/guide/kimi-k2-7-code-quickstart
 # Pricing: https://platform.kimi.ai/docs/pricing/chat (accessed 2026-10-19)
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked in place on Chat Completions (live 2026-10-23); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# Tools: choice is auto only because the Responses API accepts only tool_choice auto (none/required return 400,
+#   checked live 2026-10-24; https://platform.kimi.ai/docs/api/responses). Chat Completions also takes none (+ required on K3.x),
+#   Messages auto|any|none. strict: Chat Completions defaults function tools to strict = true, Responses takes strict, Messages
+#   requires MFJS input schemas (https://platform.kimi.ai/docs/api/chat, https://platform.kimi.ai/docs/api/messages).
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 name = "Kimi K2.7 Code HighSpeed"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none"] }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true }
 structured_output = true
 stream_usage = true
