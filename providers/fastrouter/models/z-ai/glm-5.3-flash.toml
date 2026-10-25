@@ -3,7 +3,7 @@
 #   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-25): supported_parameters lists reasoning (schemas empty, no enum).
 #   Baseline: lab providers/zhipuai glm-5.3-flash = effort low|high|max; peer providers/openrouter z-ai/glm-5.3-flash = effort low|high|max.
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
-# Limit: catalog context_length 1310720 and max_completion_tokens 131072 for this route (top_provider.context_length 1310720), above the lab's 1_000_000 context.
+# Limit: not overridden. The catalog reports context_length 1310720 and max_completion_tokens 131072 for this route, but the lab window (1_000_000 / 131_072, providers/zhipuai) is the documented maximum, so the lab limits are inherited.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -11,9 +11,6 @@ base_model = "zhipuai/glm-5.3-flash"
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[limit]
-context = 1_310_720
-output = 131_072
 
 [cost.text.input]
 price = 0.075

@@ -1,18 +1,15 @@
 # Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-25); prices are USD per token there, per MTok here.
 # Not represented: web search $0.01 per request (no v2 per-request field).
-# Effort: reasoning.effort = none|low|medium|high|xhigh|max
-#   FastRouter sends Claude 4.6+ and Claude 5 adaptive-thinking effort (low|medium|high|xhigh|max, per
-#   model); effort = none disables reasoning (same as reasoning.enabled = false), so no separate toggle,
-#   the same wire as providers/fastrouter claude-opus-5 and claude-opus-4.7. Lab set is toggle +
-#   low|medium|high|xhigh|max (providers/anthropic claude-sonnet-5); providers/openrouter claude-sonnet-5
-#   is none|low|medium|high|xhigh|max.
+# Toggle: reasoning.enabled = true|false (lab wire field thinking.type = enabled|disabled, as in providers/anthropic claude-sonnet-5)
+# Effort: reasoning.effort = low|medium|high|xhigh|max (the lab set; FastRouter maps it to Anthropic adaptive-thinking effort)
+#   Baseline: lab providers/anthropic claude-sonnet-5 = toggle + effort low|medium|high|xhigh|max; none is not listed because the route publishes no enum.
 #   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-25): supported_parameters lists reasoning (schema empty, no enum).
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
 [cost.text.input]
