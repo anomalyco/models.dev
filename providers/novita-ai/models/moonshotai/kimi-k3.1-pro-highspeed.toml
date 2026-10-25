@@ -1,12 +1,13 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k3.1-pro-highspeed
-# Effort: reasoning_effort = none|low|high|max; none suppresses reasoning on Novita, unlike the native Kimi API.
+# Toggle: thinking.type = enabled|disabled (live 2026-10-25: disabled returns no reasoning; reasoning_effort = none still reasons)
+# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Highspeed"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
 
