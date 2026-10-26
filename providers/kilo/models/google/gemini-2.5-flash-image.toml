@@ -1,16 +1,24 @@
+schema = 2
 base_model = "google/gemini-2.5-flash-image"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-reasoning = false
-structured_output = true
 
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.03
-cache_write = 0.083333
+[modalities]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+structured_output = true
 
 [limit]
 output = 8_192
 
-[modalities]
-input = ["image", "text", "pdf"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.083333 }
+
+[cost.text.output]
+price = 2.5
+reasoning = 2.5
+
+[cost.web_search]
+price = 14

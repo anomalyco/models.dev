@@ -1,32 +1,19 @@
-name = "Kimi K2 Thinking"
+# Mid-conversation flags left out: moonshotai has no provider file for moonshotai/kimi-k2-thinking to follow (Zen passes requests through).
+schema = 2
+base_model = "moonshotai/kimi-k2-thinking"
 description = "Legacy model retained for compatibility with older integrations"
-family = "kimi-thinking"
-release_date = "2025-09-05"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = true
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.4
-output = 2.5
-cache_read = 0.4
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 262_144
-output = 262_144
+[cost.text.input]
+price = 0.4
+cache = { read = 0.4 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 2.5

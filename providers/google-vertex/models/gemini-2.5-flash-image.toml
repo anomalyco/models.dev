@@ -15,10 +15,12 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-reasoning = { supported = false }
-system_updates = false
-effort_updates = false
-cache = { supported = false }
+cache = false
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
 
 [cost.text.input]
 price = 0.3

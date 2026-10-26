@@ -1,28 +1,31 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay DeepSeek's latest vision Flash model (deepseek/deepseek-v4.1-flash). DeepSeek image formats JPEG, PNG, GIF, WebP: https://api-docs.deepseek.com/guides/vision
+schema = 2
 name = "DeepSeek: DeepSeek Flash Latest"
 description = "This model always redirects to the latest model in the DeepSeek Flash family."
 family = "deepseek-flash"
-release_date = "2026-09-14"
-last_updated = "2026-09-14"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-14"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
-[cost]
-input = 0.05
-output = 0.024
-cache_read = 0.01
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
 output = 943_718
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.02
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 1

@@ -1,20 +1,11 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type embedding)
+# https://vercel.com/docs/ai-gateway/modalities/embeddings
 schema = 2
-name = "text-embedding-3-small"
-description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "text-embedding"
-open_weights = false
-release_date = "2024-01-25"
+base_model = "openai/text-embedding-3-small"
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
 
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = true
-
-[limit]
-context = 8_192
-input = 6_656
-output = 1_536
+[cost.text.input]
+price = 0.02

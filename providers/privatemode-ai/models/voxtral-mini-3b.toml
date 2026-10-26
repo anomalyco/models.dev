@@ -5,26 +5,31 @@
 # Upstream: https://huggingface.co/mistralai/Voxtral-Mini-3B-2507
 # Cost: EUR 0.004/minute converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10).
 # cost.input is USD per audio minute (STT; not token-based).
+# type: served only on /v1/audio/transcriptions (models overview, accessed 2026-10-21).
+# Audio MIME types inherit the lab's; the host lists no formats.
+schema = 2
+base_model = "mistral/voxtral-mini-3b-2507"
+type = "transcription"
 name = "Voxtral Mini 3B"
 description = "Speech-to-text model for audio transcription, translation, and audio understanding"
-family = "voxtral"
-attachment = true
-reasoning = false
-structured_output = false
-temperature = true
-tool_call = false
-release_date = "2025-07"
-last_updated = "2025-07"
-open_weights = true
 
-[cost]
-input = 0.00462
-output = 0.00
+[modalities]
+input = ["audio/wav", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
 
 [limit]
 context = 32_000
 output = 32_000
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.text.input]
+price = 0.00462
+
+[cost.text.output]
+price = 0

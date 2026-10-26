@@ -9,16 +9,23 @@
 # matching other Privatemode catalog entries.
 # EUR/MTok: input 0.20 / output 0.65 / cached input 0.05
 # Host exposes text+image only (docs); lab base also lists video/pdf.
+# Status: GA; the models overview no longer marks GLM-5.3 or GLM-5.3-Flash as preview
+# (only DeepSeek-OCR-2), accessed 2026-10-21.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 name = "GLM Flash (latest)"
-status = "beta"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
 
-[cost]
-input = 0.2311
-output = 0.7511
-cache_read = 0.0578
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.2311
+cache = { read = 0.0578 }
+
+[cost.text.output]
+price = 0.7511

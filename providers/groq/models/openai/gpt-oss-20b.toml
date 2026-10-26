@@ -1,29 +1,39 @@
-# Reasoning HTTP format (accessed 2026-06-25):
-# POST https://api.groq.com/openai/v1/chat/completions
-# JSON reasoning_effort: "low" | "medium" | "high".
-# Sources: https://console.groq.com/docs/reasoning#options-for-reasoning-effort-gptoss
-name = "GPT OSS 20B"
+# Reasoning: Chat Completions `reasoning_effort` = low | medium | high
+# (https://console.groq.com/docs/reasoning#options-for-reasoning-effort-gptoss); Responses `reasoning.effort`.
+# Price: $0.075 input, $0.0375 cached input, $0.30 output per 1M tokens (https://console.groq.com/docs/model/openai/gpt-oss-20b,
+# GET /openai/v1/models). Output cap 65,536 (same pages); context 131,072 is the lab's.
+# Cache: implicit prefix caching, on by default, 50% off cached input, expires after 2 hours without use
+# (https://console.groq.com/docs/prompt-caching).
+# Mid-conversation flags are unset: the free-tier cache hit too rarely in the 2026-10-21 probes to tell (2 hits in 60 requests).
+# Flex: https://console.groq.com/docs/flex-processing (all models, paid customers, on-demand pricing).
+# Responses: POST https://api.groq.com/openai/v1/responses ("all models support the Responses API", stateless; https://console.groq.com/docs/responses-api); returned 200 live (2026-10-22).
+# Web search: built-in browser_search, Basic Search $5 per 1,000 requests (Visit Website $1 per 1,000 is not expressible) on the last published price list
+#   (https://web.archive.org/web/20260804151728/https://groq.com/pricing, "Built-In Tools (GPT-OSS)"); supported models: https://console.groq.com/docs/browser-search.
+schema = 2
+base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-09-25"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
-[cost]
-input = 0.075
-output = 0.30
-cache_read = 0.0375
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = { ttl = ["2h"] } }
+service_tier = ["flex"]
 
 [limit]
-context = 131_072
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 0.3
+
+[cost.web_search]
+price = 5

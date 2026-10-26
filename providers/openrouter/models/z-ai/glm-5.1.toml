@@ -7,22 +7,25 @@ schema = 2
 base_model = "zhipuai/glm-5.1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 204_800
-output = 128_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
-price = 0.966
-cache = { read = 0.1794 }
+price = 1.4
+cache = { read = 0.26 }
 
 [cost.text.output]
-price = 3.036
+price = 4.4

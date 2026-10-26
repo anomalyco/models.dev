@@ -5,10 +5,15 @@
 # USD 0.15 in / 0.6 out / 0.075 cache read per MTok.
 # Another route can serve a request (the key's routing policy, or a failover); usage.cost on the
 # response carries the amount debited.
+schema = 2
 base_model = "openai/gpt-4o-mini"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.075
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.6

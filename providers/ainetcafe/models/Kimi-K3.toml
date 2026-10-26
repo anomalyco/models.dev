@@ -4,22 +4,27 @@
 # Default context 256K; 1M is enabled per account on request, so the limit here is the default.
 # Max output 32K per the host guides (https://ainetcafe.com/k3/guides/kilo-code.html, cline.html, openhands.html).
 # Pricing: https://ainetcafe.com/k3/compare.html
+schema = 2
 base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 2.10
-output = 10.50
-cache_read = 0.30
 
 [limit]
 context = 262_144
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.1
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 10.5

@@ -21,18 +21,23 @@
 # verified on the public path: 3 of 3 json_object responses parsed and 3 of 3 strict
 # json_schema responses validated, at 0.35x baseline latency, so structured_output now
 # inherits true from the lab entry
-name = "Qwen3.8 2.4T A95B (NVFP4)"
+# Deprecated: the model page now redirects to https://runinfra.ai/inference-api and the model is
+# missing from https://runinfra.ai/api/providers/openrouter/models (checked 2026-10-21).
+schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
+name = "Qwen3.8 2.4T A95B (NVFP4)"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[cost]
-input = 2.00
-output = 6.00
-cache_read = 0.20
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 6

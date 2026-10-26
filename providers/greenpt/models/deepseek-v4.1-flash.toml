@@ -4,11 +4,16 @@
 # GreenPT accepts reasoning_effort = none|minimal|low|medium|high.
 # Source: https://docs.greenpt.ai/reasoning
 # Cache writes are not charged: https://docs.greenpt.ai/prompt-caching
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 
-[cost]
-input = 0.255552
-cache_read = 0.0127776
-output = 1.27776
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.255552
+cache = { read = 0.0127776 }
+
+[cost.text.output]
+price = 1.27776

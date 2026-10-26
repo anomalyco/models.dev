@@ -1,9 +1,14 @@
 # Costs: Moark USD price list, https://moark.ai/serverless-api (accessed 2026-10-10)
 # No user-selectable reasoning control on Moark's chat API: https://moark.com/docs/openapi/v1 (accessed 2026-10-10)
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.50
-output = 0.50
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 0.5

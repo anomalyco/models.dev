@@ -1,13 +1,20 @@
+# Image and video formats: GET https://api.vultrinference.com/v1/models input_modalities[].supported_inputs.formats (2026-10-21)
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[cost]
-input = 0.10
-output = 0.35
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/webm"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text", "image", "video"]
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.35

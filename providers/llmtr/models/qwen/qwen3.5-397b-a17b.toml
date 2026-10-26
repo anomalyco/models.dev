@@ -4,18 +4,18 @@
 # Budget: $.thinking_budget (integer reasoning tokens).
 # Measured: `thinking_budget` is honoured exactly: 64 -> 64 reasoning tokens, 600 -> 600.
 # The bare `$.reasoning` boolean also toggles thinking here, but `enable_thinking` is the lab-native field and is documented instead for consistency across these routes.
+schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
-structured_output = true
 
-[cost]
-input = 0.6
-output = 3.6
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
 
 [limit]
 context = 256_000
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.6
 
-[[reasoning_options]]
-type = "budget_tokens"
+[cost.text.output]
+price = 3.6

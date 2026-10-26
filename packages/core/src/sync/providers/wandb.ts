@@ -172,7 +172,9 @@ export function buildWandbModel(
   };
 
   if (baseModel === undefined) return synced;
-  return factorBaseModel(baseModel, synced, limit, existing?.base_model_omit);
+  // Model facts belong to the lab file; a base_model file only carries host fields.
+  const { family: _family, release_date: _release, last_updated: _updated, knowledge: _knowledge, open_weights: _open, ...host } = synced;
+  return factorBaseModel(baseModel, host, limit, existing?.base_model_omit);
 }
 
 // The endpoint is authoritative for on/off: a toggle means thinking can be

@@ -3,14 +3,16 @@
 # - Public hub $1.40/$4.40: https://www.tokengo.com/models
 # - Exact console rates incl. cache $1.40/$4.40/$0.26 (TokenGo model table ratios)
 # TokenGo OpenAI-compatible extra_body; same effort set as typical GLM-5.3 openai-compat peers.
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[cost.text.output]
+price = 4.4

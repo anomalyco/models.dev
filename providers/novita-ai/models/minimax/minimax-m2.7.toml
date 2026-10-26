@@ -1,13 +1,26 @@
 # https://novita.ai/models/model-detail/minimax-minimax-m2.7
 # Always-on reasoning: thinking.type, enable_thinking, chat_template_kwargs.enable_thinking, and effort=none did not suppress it.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+cache = { implicit = true }
 structured_output = true
-reasoning_options = []
+system_updates = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

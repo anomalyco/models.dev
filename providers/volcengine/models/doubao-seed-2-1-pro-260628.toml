@@ -4,17 +4,19 @@
 # Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
 # none/minimal disable thinking, so no separate toggle: sending effort alone
 # already enables it, and thinking.type=disabled + a graded effort is rejected.
+schema = 2
 base_model = "bytedance-seed/seed-2.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.8906
+cache = { read = 0.17812 }
 
-[cost]
-input = 0.8906
-output = 4.45301
-cache_read = 0.17812
+[cost.text.output]
+price = 4.45301

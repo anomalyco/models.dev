@@ -14,22 +14,25 @@
 # Tool calls with reasoning on this family go through OpenAI's Responses API (verified 2026-10-12:
 # a tool call came back with reasoning_effort = high and nothing disclosed).
 # Long-context tier over 272,000 tokens copied from OpenAI's published pricing (same as providers/openai).
+schema = 2
 base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 20
-output = 75
-cache_read = 2
-cache_write = 25
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

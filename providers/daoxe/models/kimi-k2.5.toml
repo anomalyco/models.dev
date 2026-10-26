@@ -1,12 +1,17 @@
 # Pricing and endpoint support: https://daoxe.com/api/pricing (accessed 2026-07-11)
 # USD quota basis: https://daoxe.com/api/status (accessed 2026-07-11)
+# Price rechecked 2026-10-21: /api/pricing lists kimi-k2.5 at model_ratio 2, completion_ratio 4, cache_ratio 0.2 in the
+# default group (ratio 1), i.e. $4 input, $16 output, $0.80 cache read per 1M tokens on the USD quota basis.
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
-structured_output = true
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
 
-[cost]
-input = 0.6
-output = 3
-cache_read = 0.1
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 4
+cache = { read = 0.8 }
+
+[cost.text.output]
+price = 16

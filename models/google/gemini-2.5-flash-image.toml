@@ -1,3 +1,4 @@
+# Thinking: not supported (https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-image; GET v1beta/models/gemini-2.5-flash-image reports no thinking, 2026-10-22).
 # Image output formats: https://ai.google.dev/gemini-api/docs/image-generation (response_format mime_type image/png or image/jpeg).
 schema = 2
 type = "image"
@@ -14,7 +15,7 @@ output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = true }
+reasoning = { supported = false }
 temperature = true
 top_p = true
 top_k = true

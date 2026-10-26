@@ -1,27 +1,25 @@
-name = "GLM-5.1"
+# Lab identity: https://huggingface.co/zai-org/GLM-5.1
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+schema = 2
+base_model = "zhipuai/glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-04-03"
-last_updated = "2026-04-03"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.00
-output = 3.20
-cache_read = 0.20
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 
 [limit]
 context = 202_752
-output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

@@ -1,10 +1,17 @@
+# Image and video formats: GET https://api.vultrinference.com/v1/models input_modalities[].supported_inputs.formats (2026-10-21)
+schema = 2
 base_model = "meta/muse-glimmer-30b"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
-
-[cost]
-input = 0.25
-output = 1.00
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/webm"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 1

@@ -1,11 +1,14 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.16
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
 
-[modalities]
-input = ["text", "image"]
+[cost.text.output]
+price = 4

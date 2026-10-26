@@ -1,4 +1,16 @@
+# AI_COMPLETE (SQL) only (accessed 2026-10-20): https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability lists gemini-3.1-pro as public preview (*); the Cortex REST API model table doesn't list it.
+# Status beta: public preview.
+# Limits: AI_COMPLETE model restrictions (https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql-regional-availability#model-restrictions). gemini-3.1-pro: 1,000,000 context, 64,000 output.
+# Pricing: only the AI_COMPLETE row exists (Table 6(a), 1.20/7.20 AI Credits per 1M input/output tokens), so no REST cost.
+# Mid-conversation flags are unset: the docs don't say where system messages may appear, and there is no Snowflake key to test.
+schema = 2
 base_model = "google/gemini-3.1-pro-preview"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
 
-reasoning_options = []
+[limit]
+context = 1_000_000
+output = 64_000

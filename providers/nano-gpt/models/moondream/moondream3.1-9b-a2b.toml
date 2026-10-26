@@ -1,23 +1,27 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "Moondream 3.1 9B A2B"
 description = "Moondream 3.1 is the successor to Moondream 3 Preview: a distinct 9B mixture-of-experts vision-language checkpoint with 2B active parameters, for visual question answering, captioning, OCR, and visual reasoning. It accepts text or one image with optional reasoning, a 32,000-token context, and up to 4,096 output tokens."
-release_date = "2026-10-16"
-last_updated = "2026-10-16"
-attachment = true
-reasoning = true
-tool_call = false
-structured_output = false
 open_weights = false
-reasoning_options = []
+release_date = "2026-10-16"
 
-[cost]
-input = 0.3
-output = 2.5
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 32_000
 input = 32_000
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.5

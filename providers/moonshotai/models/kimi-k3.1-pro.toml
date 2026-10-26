@@ -1,0 +1,42 @@
+# Sources (accessed 2026-10-24):
+# - Guide: https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart
+# - Pricing: https://platform.kimi.ai/docs/pricing/chat
+# - Protocols: https://platform.kimi.ai/docs/api/overview
+# - Request capabilities: https://platform.kimi.ai/docs/api/chat (stream_options.include_usage, prompt_cache_key)
+# Always thinks: reasoning_effort = "low" | "high" | "max" (default "max"); there is no off toggle.
+# Dynamic tool loading is add-only through a system message with `tools` on Chat Completions.
+# Tools: choice is auto only because the Responses API accepts only tool_choice auto (none/required return 400,
+#   checked live 2026-10-24; https://platform.kimi.ai/docs/api/responses). Chat Completions also takes none (+ required on K3.x),
+#   Messages auto|any|none. strict: Chat Completions defaults function tools to strict = true, Responses takes strict, Messages
+#   requires MFJS input schemas (https://platform.kimi.ai/docs/api/chat, https://platform.kimi.ai/docs/api/messages).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { ttl = ["5m", "1h"] } }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { tools = { updates = true } }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
+
+[api.messages]
+base_url = "https://api.moonshot.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/moonshot/messages" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = { "5m" = 2, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

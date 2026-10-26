@@ -8,14 +8,23 @@ description = "Image model for prompt-driven generation, editing, and visual des
 tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 58_982
+
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.text.input]
 price = 0.25
 
 [cost.text.output]
 price = 1.5
+
+[cost.image.output]
+price = 30
+
+[cost.web_search]
+price = 14

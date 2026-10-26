@@ -1,21 +1,30 @@
 # $.chat_template_kwargs.enable_thinking = true|false; default false. The
 # template ignores $.chat_template_kwargs.thinking when sent alone.
 # https://docs.getlilac.com/inference/chat-completions#reasoning (accessed 2026-06-25)
-reasoning_options = [{ type = "toggle" }]
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+# Deprecated: Lilac discontinued inference. GET https://api.getlilac.com/v1/models returns HTTP 410 "Lilac inference has been discontinued." (checked 2026-10-21); https://getlilac.com now sells GPU cluster operations.
+schema = 2
 base_model = "google/gemma-4-31b-it"
-structured_output = true
 knowledge = "2025-01"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video"]
+output = ["text"]
 
-[cost]
-input = 0.11
-output = 0.35
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 262_100
 output = 262_100
 
-[modalities]
-input = ["text", "image", "video"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11
+
+[cost.text.output]
+price = 0.35

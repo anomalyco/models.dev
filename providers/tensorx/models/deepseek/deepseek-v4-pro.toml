@@ -1,14 +1,20 @@
+# Retired 2026-10-04 (rerouted to its replacement): https://docs.tensorx.ai/api-reference/model-deprecation (accessed 2026-10-21).
+# Toggle: chat_template_kwargs.thinking = true (default off). Effort: reasoning_effort = high|max, only with thinking on ("low"/"medium" map to "high").
+# https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-10-21), DeepSeek V4 section.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"thinking": true}} (default off)
-
-[cost]
-input = 1.75
-output = 3.5
-cache_read = 0.4375
-cache_write = 2.185
-
 [limit]
-context = 1048576
+context = 1_048_576
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.4375, write = 2.185 }
+
+[cost.text.output]
+price = 3.5

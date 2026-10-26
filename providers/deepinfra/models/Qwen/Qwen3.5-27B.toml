@@ -1,7 +1,21 @@
+schema = 2
 base_model = "alibaba/qwen3.5-27b"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.26
-output = 2.6
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+service_tier = ["flex", "priority"]
+
+[cost.text.input]
+price = 0.26
+
+[cost.text.output]
+price = 2.6
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

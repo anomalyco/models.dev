@@ -1,15 +1,17 @@
+schema = 2
 base_model = "meta/muse-wonder-1.0"
-structured_output = true
 name = "Muse Wonder 1.0 (Meta)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
 
 [limit]
 output = 1_048_576
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20

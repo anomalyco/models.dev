@@ -4,19 +4,26 @@
 # - https://api.githubcopilot.com/models
 # Pricing: Gemini 3.8 Flash promo $0.75/$0.075/$3.75 per 1M tokens through 2026-12-31
 # Reasoning: effort low|medium|high (matches lab + github-copilot gemini-3.7-flash peer)
+# Input MIME types: capabilities.limits.vision.supported_media_types from authenticated GET https://api.githubcopilot.com/models (2026-10-21).
+schema = 2
 base_model = "google/gemini-3.8-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 1_000_000
 input = 936_000
 output = 64_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75

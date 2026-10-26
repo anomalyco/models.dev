@@ -1,18 +1,26 @@
+# GMI documents text-only chat for this model (no image input in the API examples):
+# https://docs.gmicloud.ai/model-quickstarts/text/moonshotai-kimi-k2-6.md (accessed 2026-10-21).
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.855
-output = 3.6
-cache_read = 0.144
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.855
+cache = { read = 0.144 }
+
+[cost.text.output]
+price = 3.6

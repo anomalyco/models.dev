@@ -1,0 +1,16 @@
+# https://developers.cloudflare.com/workers-ai/models/dreamshaper-8-lcm/
+# API: POST /accounts/{ACCOUNT_ID}/ai/run/<model> (https://developers.cloudflare.com/workers-ai/get-started/rest-api/).
+# Request: JSON { prompt, negative_prompt, width, height, num_steps, guidance, seed, image_b64, strength }; response is
+#   the raw PNG (schema output image/png). img2img via image_b64 accepts PNG, JPEG and WebP (live check 2026-10-25).
+# No [cost]: neither the pricing page nor the models search API lists a price.
+schema = 2
+v2_only = true
+base_model = "lykon/dreamshaper-8-lcm"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/png"]
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/cloudflare-workers-ai-images" }

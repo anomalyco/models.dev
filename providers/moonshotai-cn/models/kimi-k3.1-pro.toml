@@ -1,0 +1,42 @@
+# China platform (api.moonshot.cn). Sources accessed 2026-10-24:
+# - Guide: https://platform.kimi.com/docs/guide/kimi-k3-1-pro-quickstart
+# - CNY pricing: https://platform.kimi.com/docs/pricing/chat (input ¥13, cache hit ¥1.30, cache write ¥13/¥26 by TTL, output ¥68)
+# - CNY→USD rate: 6.688225, updated 2026-10-23, source: https://open.er-api.com/v6/latest/USD
+# - Request capabilities: https://platform.kimi.ai/docs/api/chat (stream_options.include_usage, prompt_cache_key)
+# Always thinks: reasoning_effort = "low" | "high" | "max" (default "max"); there is no off toggle.
+# Dynamic tool loading is add-only through a system message with `tools` on Chat Completions.
+# Tools: choice is auto only because the Responses API accepts only tool_choice auto (none/required return 400,
+#   checked live 2026-10-24; https://platform.kimi.ai/docs/api/responses). Chat Completions also takes none (+ required on K3.x),
+#   Messages auto|any|none. strict: Chat Completions defaults function tools to strict = true, Responses takes strict, Messages
+#   requires MFJS input schemas (https://platform.kimi.ai/docs/api/chat, https://platform.kimi.ai/docs/api/messages).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { ttl = ["5m", "1h"] } }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { tools = { updates = true } }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
+
+[api.messages]
+base_url = "https://api.moonshot.cn/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/moonshot/messages" }
+
+[cost.text.input]
+price = 1.9437
+cache = { read = 0.1944, write = { "5m" = 1.9437, "1h" = 3.8874 } }
+
+[cost.text.output]
+price = 10.1671

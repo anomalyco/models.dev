@@ -20,5 +20,13 @@
 name = "Alibaba Token Plan (China)"
 env = ["ALIBABA_TOKEN_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/alibaba/chat"
+# Tools (accessed 2026-10-24): every API accepts tool_choice auto and none (Chat Completions:
+# https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling; Anthropic Messages auto|any|none|tool:
+# https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages; Responses auto|none|required:
+# https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-responses). Model files set
+# choice = ["auto", "none"]: Qwen rejects required on Chat Completions, a named function only works outside
+# thinking mode, and Responses has no named choice. none was checked live on glm-5.3, kimi-k2.7-code and
+# qwen3.6-plus. No strict flag for function tools is documented. Realtime models don't support tool_choice.
 doc = "https://www.alibabacloud.com/help/zh/model-studio/token-plan-overview"
 api = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"

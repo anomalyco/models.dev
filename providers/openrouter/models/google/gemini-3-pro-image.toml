@@ -5,14 +5,17 @@ schema = 2
 base_model = "google/gemini-3-pro-image"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 131_072
+
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.text.input]
 price = 2
@@ -21,3 +24,16 @@ cache = { read = 0.2, write = 0.375 }
 [cost.text.output]
 price = 12
 reasoning = 12
+
+[cost.image.input]
+price = 2
+
+[cost.image.output]
+price = 120
+
+[cost.audio.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.web_search]
+price = 14

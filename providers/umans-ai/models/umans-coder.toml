@@ -1,24 +1,30 @@
-base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
-name = "Umans Coder"
-temperature = false
 # This alias routes to GLM-5.3-Flash since 2026-09-09 (it rode Kimi K2.7 Code
 # before): reasoning is always on (`can_disable=false`) WITH effort levels
 # low|high|max, default max (accessed 2026-09-08):
 # https://api.code.umans.ai/v1/models/info
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "Umans Coder"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.50
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 1_048_576
 output = 131_071
 
-[modalities]
-input = ["text", "image", "video"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

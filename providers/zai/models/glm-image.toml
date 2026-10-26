@@ -12,6 +12,9 @@ base_model = "zhipuai/glm-image"
 input = ["text"]
 output = ["image"]
 
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/zai-images" }
+
 [cost.image.output]
 unit = "image"
 price = 0.015

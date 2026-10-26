@@ -1,10 +1,13 @@
 # Prices listed in EUR on Regolo; converted to USD at 1 EUR = 1.1537 USD (2026-08-05)
+schema = 2
 base_model = "swiss-ai/apertus-70b"
-
-[cost]
-input = 0.46
-output = 2.42
 
 [limit]
 context = 30_000
 output = 30_000
+
+[cost.text.input]
+price = 0.46
+
+[cost.text.output]
+price = 2.42

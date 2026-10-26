@@ -1,0 +1,43 @@
+# Spot serving path for Kimi K3 — same weights and OpenAI-compatible API as Standard, best-effort at 30% discount.
+# Sources (accessed 2026-10-22):
+# - Spot docs: Kimi K3 Spot $2.10 / $0.21 / $10.50 per 1M (input / cached input / output), 30% below Standard $3.00 / $0.30 / $15.00; same API as Standard; service_tier does not select Spot: https://docs.fireworks.ai/guides/spot-serverless
+# - Standard pricing source of truth: https://docs.fireworks.ai/serverless/pricing
+# - Catalog sync found remote ID accounts/fireworks/routers/kimi-k3-spot (docs table lists accounts/fireworks/models/kimi-k3-spot for the same offering; router namespace used here per sync).
+# - Capabilities mirror sibling Standard entry accounts/fireworks/models/kimi-k3 (toggle + effort low/medium/high/max + budget min 1024; reasoning_content; implicit cache; system_updates true, effort/tools updates false): https://docs.fireworks.ai/guides/reasoning, https://docs.fireworks.ai/guides/prompt-caching, https://docs.fireworks.ai/structured-responses/structured-response-formatting
+# - Lab identity Moonshot Kimi K3: https://www.kimi.com/blog/kimi-k3. Spot path not independently probed; assumed same as Standard sibling.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|medium|high|max
+# Budget: thinking.budget_tokens (min 1024; conflicts with reasoning_effort)
+# Image types: the lab's image types that Fireworks accepts. Fireworks documents .png, .jpg/.jpeg, .gif, .bmp, .tiff and .ppm (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations); webp and avif also decoded in live Standard-path tests (2026-10-21), heic failed.
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Spot"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.1
+cache = { read = 0.21 }
+
+[cost.text.output]
+price = 10.5

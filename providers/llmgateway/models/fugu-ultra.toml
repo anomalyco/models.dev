@@ -1,27 +1,19 @@
-name = "Fugu Ultra"
-description = "Quality-first multi-agent model for hard research, analysis, and competitions"
-release_date = "2026-06-22"
-last_updated = "2026-06-22"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
+base_model = "sakana/fugu-ultra"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = false
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
-
-[cost]
-input = 5
-output = 30
-cache_read = 0.5
+temperature = true
 
 [limit]
-context = 1_000_000
 output = 1_000_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 30

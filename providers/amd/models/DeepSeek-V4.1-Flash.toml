@@ -1,22 +1,36 @@
 # Live probes against the AMD Radeon Cloud Model API (accessed 2026-09-14):
 # GET /v1/models reports 1048576 context (higher than the lab entry's
 # 1_000_000, hence the [limit] override), text+image input, tools, reasoning,
-# streaming, and the same per-token pricing as DeepSeek-V4-Flash.
+# and streaming.
 # reasoning_effort could not be measured on this pool: every attempt returned
 # 503 no_available_workers. The enum below is taken from the sibling
 # DeepSeek-V4-Flash deployment on the same host, which was verified live on
 # 2026-08 as none|minimal|low|medium|high|xhigh|max with no reasoning_content.
-base_model = "deepseek/deepseek-v4.1-flash"
+# Token Factory catalog (accessed 2026-10-21):
+# https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3ADeepSeek-V4.1-Flash
+# - display name "DeepSeek-V4.1-Flash-1017" ("DeepSeek-V4.1-Flash-1017 served by the AMD GPU Cloud"), so the model ID
+#   now serves the 1017 checkpoint; the file links to that lab and keeps its existing display name.
+# - Pricing note "Free to use. Points show relative usage, not a charge." The listed 0.28 / 0.56 / 0.0056 per MTok
+#   are usage points, so every price is 0.
+# - vision: true, context_length 1048576, supported_parameters temperature, max_tokens, top_p, stream,
+#   response_format, tools, tool_choice (no top_k).
+# APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-
-reasoning_options = [
-  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
-]
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
+top_k = false
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

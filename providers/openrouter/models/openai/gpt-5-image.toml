@@ -1,4 +1,4 @@
-# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live: cache prefix kept on gpt-4.1, gpt-5.4, gpt-6-sol)
+# Mid-conversation: system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live 2026-10-23 on gpt-4.1-nano pinned to OpenAI: cache kept and followed on Chat Completions, Responses and Messages)
 # effort_updates = false: no per-turn effort control
 # Cache: automatic from 1,024 tokens (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
 schema = 2
@@ -9,12 +9,22 @@ description = "Image model for prompt-driven generation, editing, and visual des
 reasoning = { supported = true }
 structured_output = true
 system_updates = true
-effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 
 [cost.text.input]
 price = 10
 cache = { read = 1.25 }
 
 [cost.text.output]
+price = 10
+
+[cost.image.output]
+price = 40
+
+[cost.web_search]
 price = 10

@@ -4,21 +4,22 @@
 # RouteLLM output_modalities: ['text']
 # RouteLLM context_length: 128000
 # RouteLLM max_completion_tokens: 16384
-# RouteLLM input_token_rate: 0.00000008
-# RouteLLM output_token_rate: 0.00000044
+# RouteLLM input_token_rate: 0.000000037
+# RouteLLM output_token_rate: 0.00000017
+# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+schema = 2
 base_model = "openai/gpt-oss-120b"
-structured_output = true
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 0.08
-output = 0.44
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.037
+
+[cost.text.output]
+price = 0.17

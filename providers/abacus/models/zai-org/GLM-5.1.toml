@@ -4,23 +4,23 @@
 # RouteLLM output_modalities: ['text']
 # RouteLLM context_length: 204800
 # RouteLLM max_completion_tokens: 131072
-# RouteLLM input_token_rate: 0.0000014
+# RouteLLM input_token_rate: 0.00000138
 # RouteLLM output_token_rate: 0.0000044
 # RouteLLM cached_input_token_rate: 0.00000026
+# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+schema = 2
 base_model = "zhipuai/glm-5.1"
-structured_output = true
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 204_800
-output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.38
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

@@ -10,22 +10,24 @@
 # mapped to high. Live calls confirm none disables reasoning and that no
 # better-than-high achievable output differs, so the lab-effective levels
 # (high/max) are authored per AGENTS.md policy for DeepSeek V4.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-structured_output = true
 name = "DeepSeek V4 Pro"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["high", "max"] },
-]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 65_536
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

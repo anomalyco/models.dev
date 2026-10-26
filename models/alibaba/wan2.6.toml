@@ -1,0 +1,26 @@
+# Released 2025-12-03 (wan2.6-t2v): https://www.alibabacloud.com/help/en/model-studio/newly-released-models
+# Formats: images JPEG, JPG, PNG, BMP or WEBP; audio WAV or MP3:
+#   https://www.alibabacloud.com/help/en/model-studio/image-to-video-api-reference
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "Wan2.6"
+description = "Video model for text- and image-to-video with audio input and synchronized sound"
+open_weights = false
+release_date = "2025-12-03"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

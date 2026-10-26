@@ -1,14 +1,20 @@
-base_model = "zhipuai/glm-5.3"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
-
 # cost as described on the AKI.IO pricing page at https://aki.io/#pricing
-[cost]
-input = 1.00
-output = 3.50
-cache_read = 0.25
+# Prices: https://aki.io/#pricing lists EUR per 1M tokens (net); converted to USD at the ECB
+# reference rate of 1.1215 USD/EUR (2026-10-20). They were stored as unconverted EUR values.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 524_288
 output = 81_920
 
+[cost.text.input]
+price = 1.1215
+cache = { read = 0.280375 }
+
+[cost.text.output]
+price = 3.92525

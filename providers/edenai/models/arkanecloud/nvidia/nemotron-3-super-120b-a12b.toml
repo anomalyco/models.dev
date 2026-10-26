@@ -1,0 +1,17 @@
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+name = "Nemotron 3 Super 120B A12B (Arkanecloud)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
+structured_output = false
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 0.8

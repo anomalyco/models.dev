@@ -1,0 +1,19 @@
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI.
+# Live 2026-10-20: response_format json_schema is enforced; reasoning_effort none and xhigh are rejected (code 7003). Effort tokens below: two trials, mean, on the same math prompt. Mid-conversation flags not checked.
+# Vertex serves it as gemini-3-flash-preview (the response's model field). Effort: reasoning_effort = minimal|low|medium|high (0 / 1913 / 9571 / 12277 reasoning tokens).
+schema = 2
+base_model = "google/gemini-3-flash-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3

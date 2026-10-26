@@ -7,16 +7,25 @@
 # 16,384 tokens and rejects images with 422 invalid_request, so this entry is text
 # only. System One has no temperature parameter, so temperature is false. Reasoning
 # is always off; there is no caller control.
+schema = 2
 base_model = "cloudflare/clef"
-attachment = false
-temperature = false
 
-[cost]
-input = 0.2245
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+temperature = false
+structured_output = true
 
 [limit]
 context = 16_384
 
-[modalities]
-input = ["text"]
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.2245
+
+[cost.text.output]
+price = 0

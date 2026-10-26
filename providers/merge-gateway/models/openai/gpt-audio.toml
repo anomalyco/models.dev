@@ -1,10 +1,17 @@
+schema = 2
 base_model = "openai/gpt-audio"
 name = "GPT Audio"
-structured_output = true
-
-[cost]
-input = 2.5
-output = 10
 
 [modalities]
+input = ["text", "audio/wav", "audio/mpeg"]
 output = ["text"]
+
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10

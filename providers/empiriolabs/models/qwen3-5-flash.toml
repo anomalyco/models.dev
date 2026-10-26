@@ -1,18 +1,22 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/qwen3-5-flash.md
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget (integer reasoning tokens)
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/qwen3-5-flash:generateContent
+schema = 2
 base_model = "alibaba/qwen3.5-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1, max = 81_920 } }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 81_920
-
-[cost]
-input = 0.09
-output = 0.368
-cache_read = 0.09
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.09 }
+
+[cost.text.output]
+price = 0.368

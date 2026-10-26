@@ -1,16 +1,18 @@
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
-structured_output = true
 name = "DeepSeek V4.1 Flash 1017 (Together AI)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "xhigh", "max"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 393_216
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

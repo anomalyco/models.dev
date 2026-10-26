@@ -1,0 +1,22 @@
+# https://developers.cloudflare.com/workers-ai/models/stable-diffusion-xl-lightning/ (Beta)
+# API: POST /accounts/{ACCOUNT_ID}/ai/run/<model> (https://developers.cloudflare.com/workers-ai/get-started/rest-api/).
+# Request: JSON { prompt, negative_prompt, width, height, num_steps, guidance, seed }; the response is raw JPEG bytes
+#   although the schema and the Content-Type header say image/png. Text input only: the schema lists img2img fields, but
+#   image_b64 fails with "input tensor `image` is not present in the model" (live check 2026-10-25).
+# Price: $0 per step (Workers AI models search API, price property of this beta model; not on the pricing page).
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/stable-diffusion-xl-lightning"
+status = "beta"
+
+[modalities]
+input = ["text"]
+output = ["image/jpeg"]
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/cloudflare-workers-ai-images" }
+
+[cost.image.output]
+unit = "image"
+price = 0

@@ -1,17 +1,22 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/seed-2-1-turbo.md
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|high
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/seed-2-1-turbo:generateContent
+schema = 2
 base_model = "bytedance-seed/seed-2.1-turbo"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.63
-output = 3.13
-cache_read = 0.63
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0.63
+cache = { read = 0.63 }
+
+[cost.text.output]
+price = 3.13

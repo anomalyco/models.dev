@@ -1,14 +1,20 @@
 # Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 Fast"
-structured_output = true
 status = "deprecated"
-reasoning_options = []
-
-[cost]
-input = 1.655
-output = 8.778
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.655
+
+[cost.text.output]
+price = 8.778

@@ -1,16 +1,15 @@
 # Reasoning controls verified against https://modelishub.com/v1 on 2026-08-02.
 #   Effort:        {"reasoning_effort": "<value>"}
 #   Budget tokens: {"reasoning": {"max_tokens": <n>}}
+schema = 2
 base_model = "google/gemini-2.5-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = {} }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
+[cost.text.input]
+price = 1.25
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 1.25
-output = 10
+[cost.text.output]
+price = 10

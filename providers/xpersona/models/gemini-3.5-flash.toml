@@ -1,21 +1,25 @@
+schema = 2
 base_model = "google/gemini-3.5-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-interleaved = { field = "reasoning_content" }
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 1.55
-output = 12.20
-reasoning = 12.20
-cache_read = 0.155
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.55
+cache = { read = 0.155 }
+
+[cost.text.output]
+price = 12.2
+reasoning = 12.2

@@ -3,9 +3,11 @@
 # `audio` and `video` stay generic: xAI documents only jpg/jpeg or png image input for its language models
 # (https://docs.x.ai/developers/models, "Image input models") and no audio or video input for Grok 4 Fast, so no
 # format exists for them. They come from the Qiniu catalogue entry above.
+# family: "grok", as on the other xAI Grok labs; xAI lists this model in its Grok lineup (https://docs.x.ai/developers/models).
 schema = 2
 name = "X-Ai/Grok-4-Fast-Non-Reasoning"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
+family = "grok"
 open_weights = false
 release_date = "2025-12-18"
 

@@ -11,13 +11,15 @@
 #   https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 #   https://api.deepinfra.com/models/list?type=text-generation
 #   https://deepinfra.com/anthropic/claude-fable-5
+schema = 2
 base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 10
 
-[cost]
-input = 10
-output = 50
+[cost.text.output]
+price = 50

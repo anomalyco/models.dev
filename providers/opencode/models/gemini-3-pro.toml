@@ -1,37 +1,33 @@
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|high (deprecated; not re-verified on Zen)
+# Mid-conversation flags left out: google has no provider file for google/gemini-3-pro-preview to follow (Zen passes requests through).
+# Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes (auto/any/none, allowed function names); Zen passes requests through.
+schema = 2
+base_model = "google/gemini-3-pro-preview"
 name = "Gemini 3 Pro"
 description = "Legacy model retained for compatibility with older integrations"
-family = "gemini-pro"
-release_date = "2025-11-18"
-last_updated = "2025-11-18"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
-open_weights = false
 status = "deprecated"
 
-[cost]
-input = 2.00
-output = 12.00
-cache_read = 0.20
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 4.00
-output = 18.00
-cache_read = 0.40
+[api.generate-content]
+base_url = "https://opencode.ai/inference/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
 
-[limit]
-context = 1_048_576
-output = 65_536
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
 
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://opencode.ai/inference/google/v1beta"
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18

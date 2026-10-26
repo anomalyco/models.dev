@@ -1,0 +1,32 @@
+# https://novita.ai/models/model-detail/moonshotai-kimi-k3.1-pro
+# Toggle: thinking.type = enabled|disabled (live 2026-10-25: disabled returns no reasoning; reasoning_effort = none still reasons)
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

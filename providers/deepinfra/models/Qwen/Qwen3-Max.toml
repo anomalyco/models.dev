@@ -1,23 +1,36 @@
+schema = 2
 base_model = "alibaba/qwen3-max"
-structured_output = true
 status = "deprecated"
 
-[cost]
-input = 1.2
-output = 6
-cache_read = 0.24
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 2.4
-output = 12
-cache_read = 0.48
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 3
-output = 15
-cache_read = 0.6
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
 
 [limit]
 context = 256_000
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.24 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.4
+cache = { read = 0.48 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 3
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 15

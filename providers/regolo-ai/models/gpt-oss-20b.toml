@@ -1,26 +1,22 @@
-name = "GPT-OSS-20B"
-description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2026-03-01"
-last_updated = "2026-03-01"
-attachment = false
-reasoning = true
 # Regolo documents these fields with gpt-oss-120b; it does not separately map
 # them to gpt-oss-20b (accessed 2026-06-25).
 # https://docs.regolo.ai/models/features/thinking/
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-open_weights = true
+# Price: https://regolo.ai/pricing lists EUR (accessed 2026-10-21); converted to USD at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# EUR 0.10 / 0.42 per 1M tokens.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+name = "GPT-OSS-20B"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
-[cost]
-input = 0.40
-output = 1.80
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
-context = 128000
-output = 16384
+context = 128_000
+output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.11215
+
+[cost.text.output]
+price = 0.47103

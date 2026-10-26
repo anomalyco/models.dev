@@ -1,11 +1,17 @@
+schema = 2
 base_model = "mistral/devstral-2512"
-attachment = true
-structured_output = true
-
-[cost]
-input = 0.4
-output = 2
-cache_read = 0.04
 
 [modalities]
-input = ["text", "pdf"]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 2

@@ -1,23 +1,28 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 name = "Doubao 1.5 Pro 32k"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+open_weights = false
 release_date = "2024-11-20"
 last_updated = "2025-01-22"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
 
-[cost]
-input = 0.1343
-output = 0.3349
-cache_read = 0.06715
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 32_000
 input = 32_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1343
+cache = { read = 0.06715 }
+
+[cost.text.output]
+price = 0.3349

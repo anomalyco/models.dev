@@ -11,6 +11,8 @@
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/nano-banana-2-1
 # The documented text/plain document type is covered by `text`.
 # PDF input is documented on the model page (the lab entry lists text, image and video).
+# Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed). Price: https://cloud.google.com/vertex-ai/generative-ai/pricing; support (supported models list): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/grounding-with-google-search
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Priority PayGo (https://cloud.google.com/vertex-ai/generative-ai/docs/priority-paygo).
 schema = 2
 base_model = "google/gemini-nano-banana-2.1"
 
@@ -21,10 +23,13 @@ output = ["text", "image/png", "image/jpeg"]
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "medium", "high"] }
 structured_output = false
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 service_tier = ["priority"]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
 
 [cost.text.input]
 price = 1.5
@@ -36,6 +41,9 @@ price = 30
 [cost.image.output]
 price = 30
 
+[cost.web_search]
+price = 14
+
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }
-factor = 1.8
+factor = { text = 1.8, image = 1.8 }

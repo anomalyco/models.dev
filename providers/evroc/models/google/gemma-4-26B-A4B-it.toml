@@ -1,12 +1,13 @@
 # Toggle: chat_template_kwargs: enable_thinking true|false
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.144
 
-[cost]
-input = 0.144
-output = 0.575
-
-
+[cost.text.output]
+price = 0.575

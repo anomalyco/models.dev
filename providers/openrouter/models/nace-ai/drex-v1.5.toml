@@ -7,6 +7,9 @@ structured_output = true
 [limit]
 context = 131_072
 
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }
+
 [cost.text.input]
 price = 0.04
 

@@ -16,17 +16,20 @@
 # change. "max" is still rejected and is still not published. enable_thinking /
 # chat_template_kwargs / thinking_budget are accepted but have no effect.
 # cache_read is the cached input price, verified live on 2026-08-16
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "xhigh"]
-
-[cost]
-input = 0.10
-output = 0.40
-cache_read = 0.01
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4

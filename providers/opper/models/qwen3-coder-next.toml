@@ -1,7 +1,14 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# Status: every pool member retired by 2026-10-09 (geodd:us 2026-10-02, regolo 2026-10-08, novita 2026-10-09) per GET https://api.opper.ai/v3/models?model=qwen3-coder-next&retired=true (2026-10-21).
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
+status = "deprecated"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.5811
-output = 2.3244
+[cost.text.input]
+price = 0.5811
+
+[cost.text.output]
+price = 2.3244

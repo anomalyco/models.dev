@@ -5,18 +5,18 @@ schema = 2
 base_model = "anthropic/claude-opus-4-8"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, updates = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_000_000
 
 [api.messages]
-sdk = { aisdk = "@ai-sdk/anthropic" }
+base_url = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
 
 [cost.text.input]
 price = 5

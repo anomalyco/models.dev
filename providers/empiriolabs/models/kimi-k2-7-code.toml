@@ -1,12 +1,21 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/kimi-k2-7-code.md
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/kimi-k2-7-code:generateContent
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.95
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 131_072
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.95 }
+
+[cost.text.output]
+price = 4

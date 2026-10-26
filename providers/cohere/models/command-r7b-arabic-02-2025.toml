@@ -13,15 +13,22 @@
 #   json_schema returned schema-valid JSON.
 # Tools: strict_tools = true is accepted; tool_choice requests timed out live, so choice is left unset.
 # Not listed on https://docs.cohere.com/docs/models but served (GET /v1/models, live /v2/chat 2026-10-19).
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
 base_model = "cohere/command-r7b-arabic-02-2025"
 
 [capabilities]
-tools = { supported = true, strict = true, updates = false }
+tools = { supported = true, strict = true }
 structured_output = true
-system_updates = true
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
+
+[api.cohere-chat]
+capabilities = { system_updates = true }
+
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
 
 [cost.text.input]
 price = 0.0375

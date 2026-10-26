@@ -1,24 +1,29 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
 name = "GLM Z1 AirX"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "glm"
-release_date = "2025-04-15"
-last_updated = "2025-04-15"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2025-04-15"
 
-[cost]
-input = 0.7
-output = 0.7
-cache_read = 0.35
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 32_000
 input = 32_000
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.7
+cache = { read = 0.35 }
+
+[cost.text.output]
+price = 0.7

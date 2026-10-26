@@ -1,6 +1,10 @@
 # Rerank API (POST https://api.cohere.com/v2/rerank): https://docs.cohere.com/reference/rerank
 # Served: GET /v1/models lists it with the `rerank` endpoint; live rerank returned 200 (2026-10-19).
 # Pricing: not on https://cohere.com/pricing (2026-10-19), so no cost is set.
+# API: POST https://api.cohere.com/v2/rerank (https://docs.cohere.com/reference/rerank).
 schema = 2
 v2_only = true
 base_model = "cohere/rerank-english-v3.0"
+
+[api.rerank]
+sdk = { opencodeai = "none" }

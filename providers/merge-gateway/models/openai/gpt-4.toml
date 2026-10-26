@@ -1,8 +1,13 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-4 (accessed 2026-07-21)
+schema = 2
 base_model = "openai/gpt-4"
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
 structured_output = false
 
-[cost]
-input = 30
-output = 60
+[cost.text.input]
+price = 30
+
+[cost.text.output]
+price = 60

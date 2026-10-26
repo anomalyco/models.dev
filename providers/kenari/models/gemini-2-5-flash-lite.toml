@@ -1,7 +1,11 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Retired: absent from GET /v1/models and /api/public/pricing ("every model that is for sale") on 2026-10-21;
+#   removed before the changes feed's first entry (2026-10-11).
+# Price: unknown. Retired before the changes feed began, so no last price is published; cost omitted.
+schema = 2
 base_model = "google/gemini-2.5-flash-lite"
-structured_output = true
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+reasoning = { supported = true }
+structured_output = true

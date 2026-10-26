@@ -1,19 +1,25 @@
 # Source: https://nan.builders/docs/models (accessed 2026-09-11)
-# 125B-6B MoE, multimodal with vision, 262K token context (the model's native
-# window), 500M token monthly quota per member. qwen-community-1.0 license.
 # Included in the membership, so no per-token price.
-# Reasoning: on by default, with no caller control on this surface. NaN exposes
-# no request field to disable it.
+# NaN reasoning table (checked 2026-10-21): reasoning_effort values none, minimal, low, medium,
+# high, xhigh, max; https://nan.builders/docs/models#controlling-reasoning
+# Update: on by default, none turns it off, minimal..max steer its depth (hints, not caps).
+# Context is now 1M tokens (1,048,576), max answer 131K.
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-structured_output = true
-reasoning_options = []
-
-[cost]
-input = 0
-output = 0
-
-[limit]
-context = 262_144
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,6 +1,9 @@
+schema = 2
 base_model = "zhipuai/glm-5.2"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

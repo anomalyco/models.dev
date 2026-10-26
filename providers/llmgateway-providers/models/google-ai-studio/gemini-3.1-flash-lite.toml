@@ -1,13 +1,17 @@
+schema = 2
 base_model = "google/gemini-3.1-flash-lite"
-structured_output = true
 name = "Gemini 3.1 Flash Lite (Google AI Studio)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.25
-output = 1.5
-cache_read = 0.025
-cache_write = 0.08333
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025, write = 0.08333 }
+
+[cost.text.output]
+price = 1.5
+
+[cost.audio.input]
+price = 0.5

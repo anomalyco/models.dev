@@ -4,6 +4,7 @@
 # CNY→USD rate: 6.693661, 2026-10-19, source: https://open.er-api.com/v6/latest/USD
 # Input is text only: the image API (https://docs.bigmodel.cn/api-reference/模型-api/图像生成) takes a prompt and no image.
 # Output stays generic (format undocumented; live URLs say .png / image/png but carry JPEG bytes).
+# API: POST /api/paas/v4/images/generations (https://docs.bigmodel.cn/api-reference/模型-api/图像生成)
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-image"
@@ -11,6 +12,9 @@ base_model = "zhipuai/glm-image"
 [modalities]
 input = ["text"]
 output = ["image"]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/zai-images" }
 
 [cost.image.output]
 unit = "image"

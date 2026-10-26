@@ -1,15 +1,17 @@
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-structured_output = true
 name = "GLM-5.3 Flash (entrim)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.1
-output = 0.35
-cache_read = 0.0175
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.0175 }
+
+[cost.text.output]
+price = 0.35

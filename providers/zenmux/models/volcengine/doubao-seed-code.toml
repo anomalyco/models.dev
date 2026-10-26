@@ -1,25 +1,29 @@
+# Retired: absent from GET https://zenmux.ai/api/v1/models and its model page redirects to /bytedance/doubao-seed-code (2026-10-21).
+# Modalities: image formats from the Volcengine Ark image understanding, 图片格式说明 table (https://www.volcengine.com/docs/82379/1362931).
+schema = 2
 name = "Doubao-Seed-Code"
 description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
-release_date = "2025-11-11"
-last_updated = "2025-11-11"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
 open_weights = false
+knowledge = "2025-01-01"
+release_date = "2025-11-11"
 status = "deprecated"
 
-[cost]
-input = 0.17
-output = 1.12
-cache_read = 0.03
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
 
 [limit]
 context = 256_000
 output = 64_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.17
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.12

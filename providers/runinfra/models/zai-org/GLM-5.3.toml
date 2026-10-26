@@ -21,21 +21,23 @@
 # context is this deployment's window, prompt plus output, 1,048,576 tokens. output is 32,768, the
 # output length our provider feed advertises for this model, the same rule as the GLM-5.3-Flash
 # entry.
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.30
-output = 4.20
-cache_read = 0.13
 
 [limit]
 context = 1_048_576
 output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.3
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 4.2

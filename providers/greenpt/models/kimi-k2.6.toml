@@ -4,14 +4,20 @@
 # Values verified against the production API. See https://docs.greenpt.ai/chat-completion
 # cache_read: discounted rate for cached prompt tokens. Cache writes are not
 # charged. See https://docs.greenpt.ai/prompt-caching
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
-
-[cost]
-input = 0.7524
-cache_read = 0.2508
-output = 4.275
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.7524
+cache = { read = 0.2508 }
+
+[cost.text.output]
+price = 4.275

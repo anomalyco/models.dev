@@ -1,11 +1,18 @@
 # https://docs.cline.bot/getting-started/clinepass
 # Lab Moonshot K2.6: thinking on/off only (providers/moonshotai/models/kimi-k2.6.toml)
 # Toggle: thinking / reasoning enabled|disabled (OpenAI-compatible relay; no graded effort on lab)
+# Retired: "no longer available on ClinePass" per https://docs.cline.bot/getting-started/clinepass (accessed 2026-10-21).
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-structured_output = true
-reasoning_options = [{ type = "toggle" }]
+status = "deprecated"
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.16
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

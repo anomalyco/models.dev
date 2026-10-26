@@ -5,17 +5,22 @@
 # larger API cap, so 16,384 is used here.
 # Effort: reasoning_effort = low|medium|high (accepted on this endpoint, 2026-09-14).
 # Reasoning is streamed in `reasoning_content` deltas.
+schema = 2
 base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.15
-output = 0.60
 
 [limit]
 context = 128_000
 output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

@@ -7,12 +7,18 @@ base_model = "google/gemini-3.8-flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
+cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.825
@@ -21,3 +27,13 @@ cache = { read = 0.0825, write = 0.041667 }
 [cost.text.output]
 price = 4.125
 reasoning = 4.125
+
+[cost.image.input]
+price = 0.825
+
+[cost.audio.input]
+price = 0.825
+cache = { read = 0.0825 }
+
+[cost.web_search]
+price = 14

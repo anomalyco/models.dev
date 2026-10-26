@@ -1,17 +1,22 @@
+# Deprecated: the model page shows "State: Deprecated" (https://www.siliconflow.com/models/qwen3-5-397b-a17b, 2026-10-21); SiliconFlow China
+# retired the same model on 2026-09-11 (https://docs.siliconflow.cn/docs/release-notes/overview).
+schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
-attachment = false
-reasoning = false
-structured_output = true
-open_weights = false
-
-[cost]
-input = 0.39
-output = 2.34
-
-[limit]
-context = 262_144
-output = 262_144
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 0.39
+
+[cost.text.output]
+price = 2.34

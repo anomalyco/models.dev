@@ -14,7 +14,7 @@ export type ModelTypeValue = (typeof MODEL_TYPES)[number];
 export type ModelTypeFilter = "default" | "all" | ModelTypeValue[];
 
 interface TypedModel {
-  type?: ModelTypeValue;
+  type?: string;
 }
 
 interface TypedProvider {
@@ -48,7 +48,7 @@ function includesModel(model: TypedModel, filter: ModelTypeFilter) {
   if (filter === "all") return true;
   const type = model.type ?? "chat";
   if (filter === "default") return type !== "decision";
-  return filter.includes(type);
+  return filter.includes(type as ModelTypeValue);
 }
 
 export function filterProvidersByModelType<

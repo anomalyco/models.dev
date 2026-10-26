@@ -5,16 +5,20 @@
 #   control; Highspeed is the same surface. The kimi-k2.6 sibling does have a toggle,
 #   but 2.7-Code is a separate surface contract.
 # Output ceiling: capped at the host context window (prompt plus completion).
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
 
-reasoning_options = []
-
 [limit]
-output = 262000
-context = 262000
+output = 262_000
+context = 262_000
 
-[cost]
-input = 1.9
-output = 8
-cache_read = 0.38
+[cost.text.input]
+price = 1.9
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 8

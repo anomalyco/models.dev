@@ -1,18 +1,25 @@
-base_model = "google/gemini-2.5-pro"
-structured_output = true
-
 # Auriko derives a Gemini thinking budget from effort. Although schema-level
 # "off" exists, this model metadata does not claim a toggle.
 # https://docs.auriko.ai/guides/extensions-and-thinking
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+schema = 2
+base_model = "google/gemini-2.5-pro"
 
-[cost]
-input = 1.25
-output = 10
-cache_read = 0.125
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2.5
-output = 15
-cache_read = 0.25
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 15

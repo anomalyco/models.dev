@@ -1,18 +1,19 @@
 # Toggle: chat_template_kwargs: enable_thinking true|false
 # Effort: reasoning_effort = low|medium|xhigh
-name = "Qwen3.8-27B"
+# evroc catalogue: https://docs.evroc.com/products/think/supported-models.html (2026-10-21) describes Qwen3.8 27B as covering image and video understanding, so the lab's modalities apply.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
+name = "Qwen3.8-27B"
 
-[cost]
-input = 0.87
-output = 3.50
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
 
 [limit]
-context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.87
+
+[cost.text.output]
+price = 3.5

@@ -11,17 +11,23 @@
 # level lands at 57-73 tokens.
 # 'none' is kept rather than a toggle because thinking.type=disabled sent together
 # with a graded effort is rejected as an invalid combination here.
+# Deprecated: no longer in the Coding Plan's supported Model Name list at https://www.volcengine.com/docs/82379/1928261
+# (checked 2026-10-21: doubao-seed-evolving, -2.1-pro, -2.1-lite, -2.0-mini, glm-5.3, glm-5.3-flash, deepseek-v4.1-flash(-economy),
+# deepseek-v4-flash, deepseek-v4-pro, kimi-k2.8-preview, kimi-k3).
+schema = 2
 base_model = "bytedance-seed/seed-2.0-lite"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.output]
+price = 0

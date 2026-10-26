@@ -1,26 +1,26 @@
 # Chat `reasoning_effort` supports none|low|medium|high; `none` disables it.
 # https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/qwen-3-5-397b/
-
+# Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/
+# Input MIME types: the lab's image list; OVHcloud's catalog reports image input without formats (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5-397B-A17B"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-05-18"
-last_updated = "2026-05-18"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
-
-[cost]
-input = 0.71
-output = 4.25
-
-[limit]
-context = 262_144
-output = 262_144
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 0.71
+
+[cost.text.output]
+price = 4.25

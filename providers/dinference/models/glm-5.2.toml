@@ -1,13 +1,21 @@
-reasoning_options = []
+# Deprecated: missing from the live price list https://panel.dinference.com/api/v1/pricing and from
+# the model list on https://dinference.com (checked 2026-10-21).
+schema = 2
 base_model = "zhipuai/glm-5.2"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.25
-output = 3.89
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 3.89

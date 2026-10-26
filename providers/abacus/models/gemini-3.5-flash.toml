@@ -7,20 +7,20 @@
 # RouteLLM output_token_rate: 0.000009
 # RouteLLM cached_input_token_rate: 0.00000015
 # RouteLLM thinking: True
+schema = 2
 base_model = "google/gemini-3.5-flash"
-structured_output = true
-reasoning = true
-reasoning_options = []
-
-[cost]
-input = 1.5
-output = 9
-cache_read = 0.15
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 9

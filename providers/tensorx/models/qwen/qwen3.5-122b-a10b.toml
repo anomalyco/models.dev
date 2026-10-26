@@ -1,15 +1,19 @@
+# Retired 2026-10-04 (rerouted to its replacement): https://docs.tensorx.ai/api-reference/model-deprecation (accessed 2026-10-21).
+# Effort: reasoning_effort = <value>; "none" disables reasoning (from the v1 file's inline comment; the model is retired, so the current docs no longer cover it).
+schema = 2
 base_model = "alibaba/qwen3.5-122b-a10b"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.5
-output = 3.5
-cache_read = 0.125
-cache_write = 0.625
-
 [limit]
-output = 262144
+output = 262_144
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.125, write = 0.625 }
+
+[cost.text.output]
+price = 3.5

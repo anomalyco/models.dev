@@ -1,0 +1,23 @@
+# Liquid Auto ranks live seller offers for each request and routes to the cheapest eligible one,
+# so the underlying model and price vary per request. No fixed price is published.
+# Model list and limits: GET https://router.inference.ai.exchange/v1/models (accessed 2026-10-20)
+schema = 2
+name = "Liquid Auto"
+description = "Routes each request to the lowest-priced eligible offer on the Liquid Inference exchange"
+family = "auto"
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "audio/wav", "audio/mpeg", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 10_000_000
+output = 1_048_576

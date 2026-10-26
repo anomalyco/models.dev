@@ -1,14 +1,23 @@
+# Deprecated: retired from Copilot on 2026-10-02 (https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history).
+schema = 2
 base_model = "google/gemini-3.5-flash"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }, { type = "budget_tokens", min = 256, max = 24_000 }]
+status = "deprecated"
 
-[cost]
-input = 1.5
-output = 9
-cache_read = 0.15
-input_audio = 1.5
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"], budget = { min = 256, max = 24_000 } }
+structured_output = true
 
 [limit]
 context = 200_000
 input = 128_000
 output = 64_000
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 9
+
+[cost.audio.input]
+price = 1.5

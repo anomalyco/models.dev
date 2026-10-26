@@ -1,18 +1,26 @@
-base_model = "deepseek/deepseek-v4.1-flash"
-structured_output = true
-
 # attachment are for security reasons not supported on AKI.IO and are therefore disabled
-attachment = false
-
 # AKI.IO offers discrete reasoning settings instead of a range, values map to 0, 25, 50, 75 and 100
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-
 # cost as described on the AKI.IO pricing page at https://aki.io/#pricing
-[cost]
-input = 0.25
-output = 1.00
-cache_read = 0.10
+# Prices: https://aki.io/#pricing lists EUR per 1M tokens (net); converted to USD at the ECB
+# reference rate of 1.1215 USD/EUR (2026-10-20). They were stored as unconverted EUR values.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 81_920
+
+[cost.text.input]
+price = 0.280375
+cache = { read = 0.11215 }
+
+[cost.text.output]
+price = 1.1215

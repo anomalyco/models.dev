@@ -7,10 +7,13 @@ base_model = "google/gemini-2.5-flash-tts"
 
 [capabilities]
 temperature = false
-cache = { supported = false }
+cache = false
 
 [limit]
 input = 8_192
+
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/google-speech" }
 
 [cost.text.input]
 price = 0.5

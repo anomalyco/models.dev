@@ -4,29 +4,39 @@
 # Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
 # none/minimal disable thinking, so no separate toggle: sending effort alone
 # already enables it, and thinking.type=disabled + a graded effort is rejected.
+# Deprecated: in Ark's 10th deprecation batch (no new purchases from 2026-09-24, EOS 2026-11-24 14:00 UTC+8). https://www.volcengine.com/docs/ark/model-deprecation-notice
+schema = 2
 base_model = "bytedance-seed/seed-2.0-pro"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.47499
+cache = { read = 0.095 }
 
-[cost]
-input = 0.47499
-output = 2.37494
-cache_read = 0.095
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.71248
+cache = { read = 0.1425 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.71248
-output = 3.56241
-cache_read = 0.1425
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.42496
+cache = { read = 0.28499 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 1.42496
-output = 7.12482
-cache_read = 0.28499
+[cost.text.output]
+price = 2.37494
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.56241
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 7.12482

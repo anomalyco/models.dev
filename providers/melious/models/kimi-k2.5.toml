@@ -19,21 +19,30 @@
 # at the served context rather than inheriting the lab's larger 262_144.
 # modalities.input: this host routes ["text", "image"], narrower than the lab's
 # ["text", "image", "video"].
+# Deprecated: no longer listed on https://melious.ai/hub/models (44 models, accessed
+# 2026-10-21); its hub page no longer loads.
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
-structured_output = true
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.5796
-output = 2.95596
-cache_read = 0.139104
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 262_000
 output = 262_000
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.5796
+cache = { read = 0.139104 }
+
+[cost.text.output]
+price = 2.95596

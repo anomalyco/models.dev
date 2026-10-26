@@ -1,10 +1,13 @@
 # Toggle: chat_template_kwargs: enable_thinking true|false
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.345
 
-[cost]
-input = 0.345
-output = 1.38
+[cost.text.output]
+price = 1.38

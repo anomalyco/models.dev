@@ -1,7 +1,12 @@
+schema = 2
 base_model = "nousresearch/hermes-3-llama-3.1-70b"
 name = "Hermes 3 70B Instruct (Deep Infra)"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 0.7
-output = 0.7
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 0.7

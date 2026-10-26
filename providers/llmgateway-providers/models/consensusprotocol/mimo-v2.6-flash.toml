@@ -1,16 +1,18 @@
+schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 name = "MiMo V2.6 Flash (Consensus Protocol)"
-attachment = false
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.12
-output = 0.25
-cache_read = 0.0025
 
 [modalities]
 input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.0025 }
+
+[cost.text.output]
+price = 0.25

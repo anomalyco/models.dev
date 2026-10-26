@@ -5,16 +5,18 @@
 # - https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-3-1-flash-live/
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-3.8-live; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-live-preview and https://ai.google.dev/gemini-api/docs/live-api/tools
 schema = 2
 base_model = "google/gemini-3.1-flash-live-preview"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = false
-cache = { supported = false }
-system_updates = false
-effort_updates = false
+cache = false
+
+[api.bidi-generate-content]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.75
@@ -33,3 +35,6 @@ price = 1
 
 [cost.video.input]
 price = 1
+
+[cost.web_search]
+price = 14

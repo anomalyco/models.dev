@@ -2,15 +2,20 @@
 # Inco; reasoning_effort and thinking.type are accepted but ignored). Reasons
 # by default; reasoning_content interleaved field verified against Inco
 # responses.
+# Prices from https://api.inco.ai/v1/models (public, checked 2026-10-21), including cached input.
+schema = 2
 base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
 
-[cost]
-input = 1.4
-output = 4.4
+[cost.text.output]
+price = 4.4

@@ -1,5 +1,11 @@
+schema = 2
 base_model = "mistral/codestral-latest"
 
-[cost]
-input = 0.3
-output = 0.9
+[capabilities]
+tools = { supported = true }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.9

@@ -1,16 +1,21 @@
 # Standard-speed endpoint at 2x credit pricing.
 # Toggle: chat_template_kwargs.enable_thinking = true|false
 # Verified against Inco; reasons by default.
+# Prices from https://api.inco.ai/v1/models (public, checked 2026-10-21), including cached input.
+schema = 2
 base_model = "zhipuai/glm-5.3"
-structured_output = true
 name = "GLM-5.3 Fast"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 2.8
-output = 8.8
+[cost.text.input]
+price = 2.8
+cache = { read = 0.52 }
+
+[cost.text.output]
+price = 8.8

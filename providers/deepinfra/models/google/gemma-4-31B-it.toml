@@ -1,12 +1,28 @@
+# Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
+# Video input: catalog tag input-video; DeepInfra documents no video formats and the lab lists none.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+schema = 2
 base_model = "google/gemma-4-31b-it"
-structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.2
-output = 0.4
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+service_tier = ["flex", "priority"]
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

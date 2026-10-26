@@ -1,0 +1,39 @@
+# Fireworks MiniMax M3.1 Flash (accounts/fireworks/models/minimax-m3p1-flash):
+# - https://fireworks.ai/models/fireworks/minimax-m3p1-flash (serverless $0.15/$0.015/$0.60 per 1M input/cached/output, 1040k context, image input + function calling supported, 428B MoE, HF MiniMaxAI/MiniMax-M3.1-Flash)
+# - https://www.minimax.io/blog/minimax-m31f (M3.1 Flash GA 2026-10-19, flat pricing $0.15 input / $0.60 output / $0.015 cached input)
+# - https://platform.minimax.io/docs/guides/text-generation (1M context, text/image/video in, effort low|medium|high|xhigh|max default max, always-on thinking, reasoning_content on OpenAI-compatible)
+# - Effort: $.reasoning_effort = low|medium|high|xhigh|max (lab baseline; always-on, cannot be disabled: https://platform.minimax.io/docs/guides/text-generation, https://docs.fireworks.ai/guides/reasoning)
+# - Lab identity: providers/minimax/models/MiniMax-M3.1-Flash.toml (same effort set, no toggle)
+# - Cache: prompt caching on by default for every Serverless model, prefix-based, no request field (https://docs.fireworks.ai/guides/prompt-caching)
+# - Structured output: response_format json_schema (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+# - Image types: lab JPEG/PNG/GIF/WEBP subset that Fireworks accepts; Fireworks documents .png/.jpg/.jpeg/.gif/.bmp/.tiff/.ppm
+#   (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations), webp also decoded in live tests on this host.
+#   Video is not listed for this model on Fireworks (only GLM 5.3 Flash supports Serverless video per https://docs.fireworks.ai/guides/video-audio-inputs),
+#   so lab video inputs are dropped; server context/output ceilings are inherited from the lab pending a live probe.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

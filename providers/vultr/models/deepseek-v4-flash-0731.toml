@@ -1,12 +1,19 @@
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning_effort = low|high|max
+# Deprecated: no longer listed by GET https://api.vultrinference.com/v1/models (2026-10-21)
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
-structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+status = "deprecated"
 
-[cost]
-input = 0.10
-output = 0.25
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.25

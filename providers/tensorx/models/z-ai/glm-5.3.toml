@@ -1,21 +1,20 @@
-base_model = "zhipuai/glm-5.3"
-structured_output = true
 # GLM-5.3 reasons by default; toggle enable_thinking, effort low|high|max (default max).
 # Unlike first-party Z.AI, TensorX allows thinking to be disabled (enable_thinking).
 # https://docs.tensorx.ai/api-reference/reasoning
+schema = 2
+base_model = "zhipuai/glm-5.3"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.75
-output = 4.5
-cache_read = 0.44
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
-context = 1048576
-output = 64000
+context = 1_048_576
+output = 64_000
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.44 }
+
+[cost.text.output]
+price = 4.5

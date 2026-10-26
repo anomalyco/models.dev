@@ -12,15 +12,21 @@
 # - cost: pricing.prompt / input_cache_read are USD per token (no FX conversion) x1e6
 #   -> 0.303 / 0.0303, completion -> 2.5253 USD/MTok
 # - modalities: architecture.input_modalities lists no pdf -> pdf dropped from input
+schema = 2
 base_model = "google/gemini-3.5-flash-lite"
-structured_output = true
 name = "Gemini-3.5-Flash-Lite"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-
-[cost]
-input = 0.303
-output = 2.5253
-cache_read = 0.0303
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.303
+cache = { read = 0.0303 }
+
+[cost.text.output]
+price = 2.5253

@@ -1,15 +1,17 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 (SCX.ai)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 3.135
-output = 15.675
-cache_read = 0.319
 
 [limit]
 output = 1_048_576
+
+[cost.text.input]
+price = 3.135
+cache = { read = 0.319 }
+
+[cost.text.output]
+price = 15.675

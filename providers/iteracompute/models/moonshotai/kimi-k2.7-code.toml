@@ -3,19 +3,24 @@
 # https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
 # https://iteracompute.com/models/kimi-k2-7-code/ (retail USD/MTok prices, context, and vision)
 # The host explicitly advertises mandatory = true, effort_support = not_supported, and no toggle.
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-attachment = false
-temperature = true
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.69
-output = 3.29
-cache_read = 0.15
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 output = 235_929
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.69
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.29

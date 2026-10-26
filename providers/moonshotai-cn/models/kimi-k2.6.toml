@@ -5,23 +5,35 @@
 # api.moonshot.ai (the CN key returns 401 on api.moonshot.cn); the CN docs list the same parameter.
 # Capabilities match the global platform (same docs at https://platform.kimi.com/docs); see
 # providers/moonshotai/models/kimi-k2.6.toml for the live checks.
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked in place on Chat Completions (live 2026-10-23); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# Tools: choice is auto only because the Responses API accepts only tool_choice auto (none/required return 400,
+#   checked live 2026-10-24; https://platform.kimi.ai/docs/api/responses). Chat Completions also takes none (+ required on K3.x),
+#   Messages auto|any|none. strict: Chat Completions defaults function tools to strict = true, Responses takes strict, Messages
+#   requires MFJS input schemas (https://platform.kimi.ai/docs/api/chat, https://platform.kimi.ai/docs/api/messages).
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
 temperature = false
 top_p = false
 top_k = false
-system_updates = true
 stream_usage = true
 prompt_cache_key = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
+
+[api.messages]
+base_url = "https://api.moonshot.cn/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/moonshot/messages" }
 
 [cost.text.input]
 price = 0.9711

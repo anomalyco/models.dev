@@ -2,8 +2,14 @@
 #   lab's image inputs are not inherited; v2 modalities replace the base as a whole, so output restates the lab's embedding.
 schema = 2
 base_model = "cohere/embed-v5.0-pro"
-description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 
 [modalities]
 input = ["text"]
 output = ["embedding"]
+
+[api.embeddings]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.12

@@ -1,14 +1,27 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types. Audio and video, which the lab
+# doesn't list, use the Gemini API formats as Google writes them, as in the other Gemini lab files
+# (https://ai.google.dev/gemini-api/docs/audio, https://ai.google.dev/gemini-api/docs/video).
+# Images: POST /v3/images/generations only (https://www.edenai.co/docs/v3/llms/image-generation)
+schema = 2
 base_model = "google/gemini-2.5-flash-image"
-structured_output = true
-reasoning_options = []
-
-[cost]
-input = 0.3
-output = 2.5
-reasoning = 2.5
-cache_read = 0.03
-cache_write = 0.083333
-input_audio = 1
 
 [modalities]
-input = ["audio", "image", "text", "video"]
+input = ["audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+structured_output = true
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.083333 }
+
+[cost.text.output]
+price = 2.5
+
+[cost.audio.input]
+price = 1

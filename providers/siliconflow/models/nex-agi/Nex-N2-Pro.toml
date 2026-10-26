@@ -1,16 +1,25 @@
 # Sources: https://www.siliconflow.com/models (2026-09-08)
+# Deprecated: the model page shows "State: Deprecated" (https://www.siliconflow.com/models/nex-n2-pro, 2026-10-21); SiliconFlow China
+# retired the same model on 2026-09-11 (https://docs.siliconflow.cn/docs/release-notes/overview).
+# Budget: thinking_budget = 128..32768 (top-level request field)
+# https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions
+schema = 2
 base_model = "nex-agi/nex-n2-pro"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
 structured_output = true
-
-reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.5
-output = 2.5
-cache_read = 0.25
 
 [limit]
 output = 256_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 2.5
