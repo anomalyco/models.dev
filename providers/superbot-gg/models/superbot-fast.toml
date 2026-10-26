@@ -1,39 +1,63 @@
-# Sources (pricing and API pages accessed 2026-10-20; GET /v1/models read 2026-10-17):
-# https://superbot.gg/pricing  list prices, API and MCP lane, USD per 1M tokens; reasoning tokens bill as output; fast mode bills 2x every rate
-# https://superbot.gg/api  the house models and their context windows
-# GET https://api.superbot.gg/v1/models (needs a caller key)  context_length 500000, reasoning_efforts, default_reasoning_effort, service_tiers
-# Effort: reasoning_effort = none|low (default low). On /v1/responses the field is reasoning.effort.
-# Fast mode: service_tier = "priority" (or "fast"), 2x every rate.
-# Formerly superbot-flash; that id is still accepted.
-# A model served only at this host, not a lab release, so this is a full definition and not a base_model file.
+# superbot did not train this model. The house ids superbot and superbot-fast run one DeepSeek V4.1 Flash
+# derivative checkpoint, so they use base_model and state only what differs on this host. The lab's knowledge date
+# is dropped. superbot publishes no weights for these ids (open_weights = false).
+# Sources (accessed 2026-10-26):
+# - https://superbot.gg/docs#api-models ("House models", "Effort and Fast"): superbot-fast runs at low, or none,
+#   and at low when the request names no effort. A request naming a higher effort is served, not refused, and runs
+#   at low, so the effort list is the levels this id serves: none and low. none is the documented way to turn
+#   reasoning off and no thinking toggle is documented, so effort includes none and there is no toggle. The request
+#   field is reasoning_effort (reasoning.effort on /v1/responses). Fast mode: service_tier = "priority" (or "fast"),
+#   2x every rate.
+# - https://superbot.gg/api ("One rate card for every call": superbot and superbot-fast bill the same API and MCP
+#   rates, USD per 1M tokens: input 1.00, output 5.00, cache write 1.25, cache read 0.05; "Reasoning tokens bill as
+#   output"; "Fast mode bills 2x every rate"), repeated under "API pricing" on https://superbot.gg/pricing.
+#   Context window 500k: https://superbot.gg/api ("House models") and context_length in GET /v1/models.
+# - Tool calls: a request that declares its own tools is answered by the superbot model driving them, and the tool
+#   calls come back in the caller's dialect (https://superbot.gg/developers/gateway/createChatCompletion).
+# - Modalities are the lab's (text in; jpeg, png, gif and webp images in; text out) and match this host. Checked
+#   2026-10-26 with a keyless trial key (POST https://api.superbot.gg/v1/keys/trial, documented at
+#   https://superbot.gg/docs#api-auth): a chat completion with an image_url part (png, jpeg, webp, gif) is answered
+#   from the image on both ids. A PDF file part is not read (the reply says it was undelivered), and the lab lists no PDF input.
+# - Sampling: temperature, top_p and top_k do not steer a superbot turn. Checked 2026-10-26 on superbot-fast:
+#   requests with temperature 0 (4 calls) and top_p 0.0001 (5 calls) were accepted and still returned different
+#   answers; the Chat Completions body has no top_k.
+# - limit.output = 131072 is the per-request output ceiling superbot sets for these ids (the lab's own figure is
+#   384000; this host's ceiling is lower). No public page or API field prints it and a response cannot show it:
+#   GET /v1/models carries no output ceiling, and a request naming a larger max_tokens is accepted and answered. The
+#   figure comes from the operator's configuration (disclosure: the author works on superbot).
+# - Formerly superbot-flash; that id is still accepted (https://superbot.gg/docs#api-models, "Model ids").
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+base_model_omit = ["knowledge"]
 name = "superbot-fast"
-description = "The quick superbot model, for small jobs. Low reasoning effort or none, a 500k-token window, tool calls, same rates as superbot."
+description = "Quick and cheap, for small jobs. Reasoning effort low or none, a 500k-token window."
+open_weights = false
 release_date = "2026-09"
 last_updated = "2026-10"
-attachment = false
-reasoning = true
-tool_call = true
-open_weights = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low"]
-
-[cost]
-input = 1.00
-output = 5.00
-reasoning = 5.00
-cache_read = 0.05
-cache_write = 1.25
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low"] }
+temperature = false
+top_p = false
+top_k = false
+service_tier = ["priority"]
 
 [limit]
 context = 500_000
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[cost.text.output]
+price = 5
+reasoning = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
 
 [experimental.modes.fast]
-cost = { input = 2.00, output = 10.00, reasoning = 10.00, cache_read = 0.10, cache_write = 2.50 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }
