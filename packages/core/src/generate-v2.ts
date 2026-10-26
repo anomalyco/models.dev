@@ -395,11 +395,14 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "@ai-sdk/togetherai": "https://api.together.xyz/v1",
   "@ai-sdk/cohere": "https://api.cohere.com/v2",
   "@ai-sdk/perplexity": "https://api.perplexity.ai",
-  "@ai-sdk/gateway": "https://ai-gateway.vercel.sh/v1/ai",
+  // OpenAI-compatible base for chat-completions, responses and messages; `/v1/ai` is the AI SDK's own protocol.
+  "@ai-sdk/gateway": "https://ai-gateway.vercel.sh/v1",
   "@ai-sdk/vercel": "https://api.v0.dev/v1",
   "venice-ai-sdk-provider": "https://api.venice.ai/api/v1",
+  // The catalog-aware REST API (`/ai/v1/chat/completions`, `/responses`, `/messages`); provider
+  // passthroughs such as `/openai` are authored on their models.
   "ai-gateway-provider":
-    "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}",
+    "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
   "@aihubmix/ai-sdk-provider": "https://aihubmix.com/v1",
   "@saladtechnologies-oss/ai-sdk-provider":
     "https://api.salad.com/api/public",
