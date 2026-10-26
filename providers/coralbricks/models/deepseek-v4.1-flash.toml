@@ -1,0 +1,24 @@
+# Public standard-plan rates verified 2026-10-26: https://www.coralbricks.ai/pricing
+# and https://inference.coralbricks.ai/v1/models. Cache write is the total written-token
+# price (input rate, no surcharge). Existing Fast legacy account prices can differ.
+# reasoning_effort accepts none|low|high|max; both tiers share model capabilities.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.19
+cache = { read = 0.008, write = 0.19 }
+
+[cost.text.output]
+price = 0.6
