@@ -1,18 +1,24 @@
-# Reasoning HTTP format (sibling deployment of Jalapeno Cloud, AU site):
-# Docs (https://www.watt-cloud.com/docs/inference/features/deep-thinking)
-# document chat_template_kwargs.thinking = true|false as the thinking toggle.
-# TODO(live audit): confirm against POST https://api.watt-cloud.com/v1/chat/completions
-# before PR — on Jalapeno thinking=true emits reasoning_content /
-# reasoning_tokens; thinking=false drops reasoning_tokens on GLM-5.1;
-# dedicated always-on IDs still reason when thinking=false.
-# Interleaved reasoning is returned as reasoning_content.
+# Reasoning HTTP format (Watt Cloud, AU site):
+# Docs (https://www.watt-cloud.com/docs/inference/features/deep-thinking/)
+# document the thinking toggle via chat_template_kwargs.thinking
+# (cURL/Python/JS/Go examples send thinking = true).
+# TODO(live audit, WATT_API_KEY required): confirm against POST
+# https://api.watt-cloud.com/v1/chat/completions before merge -
+# (a) thinking = false disables thinking (sibling Jalapeno behavior),
+# (b) reasoning is returned as reasoning_content (sibling behavior),
+# (c) dedicated always-on IDs (Kimi-K2.7-Code) still reason when
+# thinking = false,
+# (d) GET /v1/models requires auth (403 unauthenticated) - verify
+# listed IDs and per-model limits against the catalog.
 # Do not invent reasoning_effort / thinking_budget unless this host is
 # shown to honor those fields.
 # Pricing and limits in providers/watt/models are from the Watt
-# Cloud official catalog (2026-10-23).
+# Cloud official catalog (2026-10-23), one cited row per model file.
 # Sources:
 # https://www.watt-cloud.com/
-# https://api.watt-cloud.com/v1/models
+# https://www.watt-cloud.com/docs/inference/features/deep-thinking/
+# https://www.watt-cloud.com/models/
+# https://api.watt-cloud.com/v1/models (auth required)
 name = "Watt Cloud"
 env = ["WATT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
