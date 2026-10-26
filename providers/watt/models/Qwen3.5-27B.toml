@@ -1,0 +1,17 @@
+# Toggle: chat_template_kwargs.thinking true|false
+# Pricing & limits: Watt Cloud official catalog (2026-10-23)
+schema = 2
+base_model = "alibaba/qwen3.5-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.4

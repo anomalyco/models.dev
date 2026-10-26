@@ -1,0 +1,21 @@
+# Toggle: chat_template_kwargs.thinking true|false
+# Pricing & limits: Watt Cloud official catalog (2026-10-23)
+# Note: no Jalapeno twin; capabilities copied from Jalapeno's GLM-5.2 entry
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+
+[cost.text.output]
+price = 4.4
