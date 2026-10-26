@@ -1,6 +1,7 @@
 # superbot did not train this model. The house ids superbot and superbot-fast run one DeepSeek V4.1 Flash
-# derivative checkpoint, so they use base_model and state only what differs on this host. The lab's knowledge date
-# is dropped. superbot publishes no weights for these ids (open_weights = false).
+# derivative checkpoint, so they use base_model and state only what differs on this host. open_weights = false:
+# superbot publishes no weights for these ids and the checkpoint they run has no public repository (an
+# anonymous lookup of its repository name returned 404 on 2026-10-26).
 # Sources (accessed 2026-10-26):
 # - https://superbot.gg/docs#api-models ("House models", "Effort and Fast"): superbot-fast runs at low, or none,
 #   and at low when the request names no effort. A request naming a higher effort is served, not refused, and runs
@@ -18,28 +19,32 @@
 #   2026-10-26 with a keyless trial key (POST https://api.superbot.gg/v1/keys/trial, documented at
 #   https://superbot.gg/docs#api-auth): a chat completion with an image_url part (png, jpeg, webp, gif) is answered
 #   from the image on both ids. A PDF file part is not read (the reply says it was undelivered), and the lab lists no PDF input.
-# - Sampling: temperature, top_p and top_k do not steer a superbot turn. Checked 2026-10-26 on superbot-fast:
-#   requests with temperature 0 (4 calls) and top_p 0.0001 (5 calls) were accepted and still returned different
-#   answers; the Chat Completions body has no top_k.
+# - Sampling: temperature, top_p and top_k do not steer a superbot turn. Checked 2026-10-26 on both ids with a
+#   keyless trial key, asking for a random 8-digit number in a fresh session each time: temperature 0 gave 7 distinct
+#   answers in 8 calls on superbot and 8 in 8 on superbot-fast; top_p 0.0001 gave 8 in 8 on each; temperature 2
+#   gave 4 in 4 on each, and every answer was still a clean number. The fields are accepted, not applied. The Chat
+#   Completions body has no top_k.
+# - Caching is automatic: a request that repeats an earlier prefix is billed at the cache read rate with no request
+#   field (usage.prompt_tokens_details.cached_tokens was 30464 of 31301 prompt tokens on a repeat, trial key,
+#   2026-10-26), and the rate card prices cache reads and writes, so cache = { implicit = true }.
 # - limit.output = 131072 is the per-request output ceiling superbot sets for these ids (the lab's own figure is
 #   384000; this host's ceiling is lower). No public page or API field prints it and a response cannot show it:
 #   GET /v1/models carries no output ceiling, and a request naming a larger max_tokens is accepted and answered. The
-#   figure comes from the operator's configuration (disclosure: the author works on superbot).
+#   figure comes from the operator's configuration, read for the derivative checkpoint both ids run (disclosure:
+#   the author works on superbot).
 # - Formerly superbot-flash; that id is still accepted (https://superbot.gg/docs#api-models, "Model ids").
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-base_model_omit = ["knowledge"]
 name = "superbot-fast"
 description = "Quick and cheap, for small jobs. Reasoning effort low or none, a 500k-token window."
 open_weights = false
-release_date = "2026-09"
-last_updated = "2026-10"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low"] }
 temperature = false
 top_p = false
 top_k = false
+cache = { implicit = true }
 service_tier = ["priority"]
 
 [limit]
