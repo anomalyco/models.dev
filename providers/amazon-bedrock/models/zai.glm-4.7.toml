@@ -10,12 +10,14 @@
 # Status: Legacy 2026-09-30, EOL 2027-03-30 per https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle.html.
 # APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
 # tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-4-7.html
+#   Mantle Chat Completions has no documented strict tool use: the structured outputs page lists Converse, InvokeModel and Mantle's Anthropic Messages
+#   as supported APIs, not Mantle Chat Completions, so strict sits on [api.converse] only.
 schema = 2
 base_model = "zhipuai/glm-4.7"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, strict = true }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 service_tier = ["flex", "priority"]
@@ -25,6 +27,7 @@ context = 202_752
 
 [api.converse]
 legacy_interleaved = true
+capabilities = { tools = { strict = true } }
 
 [api.chat-completions]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"

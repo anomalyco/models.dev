@@ -16,6 +16,7 @@
 #   drops the cache after the system prompt (live 2026-10-22).
 # APIs: the /v1/models capabilities (completion_fim: POST /v1/fim/completions; moderation: /v1/moderations; ocr: /v1/ocr), https://docs.mistral.ai/api. No AI SDK or OpenCode package calls them.
 # Per-API flags: system_updates sits on [api.chat-completions] only. FIM takes a prompt and suffix, not messages, so there is no system message to send.
+# Tools: FIM takes no tools, so strict and choice sit on [api.chat-completions] only.
 schema = 2
 name = "Codestral (latest)"
 description = "Mistral code model for completions, refactors, and developer IDE workflows"
@@ -30,7 +31,7 @@ input = ["text", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
@@ -45,7 +46,7 @@ context = 256_000
 output = 4_096
 
 [api.chat-completions]
-capabilities = { system_updates = true }
+capabilities = { system_updates = true, tools = { strict = true, choice = ["auto", "none", "required", "tool"] } }
 
 [api.fim]
 sdk = { aisdk = "none", opencodeai = "none" }

@@ -6,6 +6,8 @@
 # Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card lists image input.
 # APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
 # tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-magistral-small-2509.html
+#   Mantle Chat Completions has no documented strict tool use: the structured outputs page lists Converse, InvokeModel and Mantle's Anthropic Messages
+#   as supported APIs, not Mantle Chat Completions, so strict sits on [api.converse] only.
 schema = 2
 base_model = "mistral/magistral-small-2509"
 
@@ -14,7 +16,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 service_tier = ["flex", "priority"]
@@ -24,6 +26,7 @@ context = 128_000
 output = 40_000
 
 [api.converse]
+capabilities = { tools = { strict = true } }
 
 [api.chat-completions]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"
