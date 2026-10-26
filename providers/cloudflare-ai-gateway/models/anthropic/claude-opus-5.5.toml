@@ -5,7 +5,7 @@ schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
-tools = { supported = true, updates = true, choice = ["auto", "none"] }
+tools = { supported = true, updates = true, choice = ["auto", "none"], strict = true, search = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 structured_output = true

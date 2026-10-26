@@ -5,7 +5,7 @@ schema = 2
 base_model = "openai/gpt-5-nano"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], grammar = ["lark", "regex"] }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true

@@ -5,7 +5,7 @@ schema = 2
 base_model = "openai/gpt-4.1-nano"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 system_updates = true

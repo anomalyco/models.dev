@@ -5,7 +5,7 @@ schema = 2
 base_model = "openai/o4-mini"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
