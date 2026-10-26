@@ -1,0 +1,18 @@
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+name = "OpenAI: GPT-6.1 Terra"
+description = "GPT-6.1 Terra is the mid-tier model in OpenAI's GPT-6.1 series, built for fast, capable computer use at a lower price than GPT-6.1 Sol. It reads what is on screen, takes..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[cost.text.output]
+price = 5
+
+[cost.web_search]
+price = 10
