@@ -404,8 +404,8 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "ai-gateway-provider":
     "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
   "@aihubmix/ai-sdk-provider": "https://aihubmix.com/v1",
-  "@saladtechnologies-oss/ai-sdk-provider":
-    "https://api.salad.com/api/public",
+  // The AI Gateway, not SaladCloud's management API. https://docs.salad.com/ai-gateway/tutorials/getting-started
+  "@saladtechnologies-oss/ai-sdk-provider": "https://ai.salad.cloud/v1",
   "watsonx-ai-provider": "https://${WATSONX_REGION}.ml.cloud.ibm.com",
   "@qvac/ai-sdk-provider": "http://localhost:8080/v1",
   "@jerome-benoit/sap-ai-provider-v2": "${AICORE_DEPLOYMENT_URL}",
