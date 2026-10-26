@@ -1,6 +1,6 @@
-# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (grammar lark/regex, GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
+# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
 # tools.search: tool_search on the Responses API only (gpt-5.4 and later, per the model page's Supported tools): https://developers.openai.com/api/docs/guides/tools-tool-search
-# Per-API tools: tool_search is Responses-only (Chat Completions returns 400 "Invalid value: 'tool_search'. Supported values are: 'function' and 'custom'", live 2026-10-26), so tools.search sits on [api.responses]. Strict function tools, tool_choice and custom grammar tools (lark and regex) work on both APIs (Chat Completions `ChatCompletionCustomTool`: https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create; live 2026-10-26).
+# Per-API tools: tool_search is Responses-only (Chat Completions returns 400 "Invalid value: 'tool_search'. Supported values are: 'function' and 'custom'", live 2026-10-26), so tools.search sits on [api.responses]. Strict function tools, tool_choice and custom tools (text, lark and regex) work on both APIs (Chat Completions `ChatCompletionCustomTool`: https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create; live 2026-10-26).
 # gpt-6-astra takes function tools on Chat Completions only with reasoning_effort "none", which it doesn't support (https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/guides/latest-model; live 2026-10-26: 400 "Function tools with reasoning_effort are not supported"), so tools.strict sits on [api.responses]. Custom tools still work there.
 # Pricing: https://developers.openai.com/api/docs/models/gpt-6-astra
 # Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra
@@ -13,7 +13,7 @@ schema = 2
 base_model = "openai/gpt-6-astra"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"], grammar = ["lark", "regex"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

@@ -460,11 +460,11 @@ test("each gateway API takes the lab's tool fields for its protocol", () => {
   const choice = ["auto", "none", "required", "tool"];
   const lab = {
     top: {},
-    apis: { responses: { strict: true, choice, search: true, grammar: ["lark"] }, "chat-completions": { strict: true, choice, grammar: ["lark"] } },
+    apis: { responses: { strict: true, choice, search: true, freeform: ["text", "lark"] }, "chat-completions": { strict: true, choice, freeform: ["text", "lark"] } },
   };
   // Values every gateway API holds go top-level, the rest on their API; a protocol the gateway doesn't list is ignored.
   expect(splitLabTools({ ...lab, apis: { ...lab.apis, decisions: {} } }, ["responses", "chat-completions"])).toEqual({
-    top: { strict: true, choice, grammar: ["lark"] },
+    top: { strict: true, choice, freeform: ["text", "lark"] },
     apis: { responses: { search: true }, "chat-completions": {} },
   });
   // A value one API leaves out stays off the top level.
@@ -472,7 +472,7 @@ test("each gateway API takes the lab's tool fields for its protocol", () => {
     top: { choice },
     apis: { responses: { strict: true }, messages: {} },
   });
-  expect(splitLabTools(lab, ["responses"])).toEqual({ top: { strict: true, choice, search: true, grammar: ["lark"] }, apis: { responses: {} } });
+  expect(splitLabTools(lab, ["responses"])).toEqual({ top: { strict: true, choice, search: true, freeform: ["text", "lark"] }, apis: { responses: {} } });
 
   const main = "@opencode/ai/providers/cloudflare-ai-gateway";
   const current = {

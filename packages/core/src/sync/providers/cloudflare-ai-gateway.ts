@@ -1263,7 +1263,7 @@ function baseReasoning(id: string) {
     .parse(readLabModel(file, id)).reasoning === true;
 }
 
-const TOOL_FIELDS = ["strict", "choice", "search", "grammar"];
+const TOOL_FIELDS = ["strict", "choice", "search", "freeform"];
 
 // Native routes forward the body unchanged, so once the lab's own API
 // (providers/<lab>) states its tool fields they are the model's: `lab` is the
@@ -1299,7 +1299,7 @@ function toolFields(tools: unknown) {
 
 // Each gateway API takes the lab's values for the same protocol (native routes
 // forward the body unchanged; the REST Chat Completions route reaches OpenAI's own
-// Chat Completions, which takes grammar and strict tools and rejects tool_search,
+// Chat Completions, which takes custom and strict tools and rejects tool_search,
 // live 2026-10-26). A value every API holds goes top-level; one that holds on
 // only some APIs goes on each of those APIs. A value an API leaves out means no.
 export function splitLabTools(lab: LabTools, protocols: string[]) {

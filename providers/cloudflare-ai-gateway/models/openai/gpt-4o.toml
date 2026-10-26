@@ -1,7 +1,7 @@
 # Route: provider-native passthrough /openai (Responses body forwarded unchanged): https://developers.cloudflare.com/ai-gateway/usage/providers/openai/
 # v2 capabilities and cache follow OpenAI's own API (providers/openai). Live via the gateway 2026-10-19: mid-conversation developer messages and additional_tools keep the cached prefix (gpt-4.1-nano, gpt-5-nano, gpt-5.4-nano), configuration_update is accepted on gpt-6-luna and gpt-5.6-luna, json_schema output is enforced.
 # Per-API flags: additional_tools and configuration_update exist only on the Responses API (the /openai passthrough), so tools.updates and effort_updates sit on [api.responses] for models that also list the REST chat-completions route. Developer messages are documented on both OpenAI APIs, so system_updates stays top-level.
-# Tools: each API takes providers/openai's tool fields for the same protocol, so tools.search sits on [api.responses]. The REST chat-completions route forwards custom grammar tools (lark and regex) and strict function tools and rejects tool_search, like OpenAI's own Chat Completions (openai/gpt-5.4-nano, live 2026-10-26).
+# Tools: each API takes providers/openai's tool fields for the same protocol, so tools.search sits on [api.responses]. The REST chat-completions route forwards custom tools (text, lark and regex) and strict function tools and rejects tool_search, like OpenAI's own Chat Completions (openai/gpt-5.4-nano, live 2026-10-26).
 schema = 2
 base_model = "openai/gpt-4o"
 

@@ -92,24 +92,27 @@ export type ModelFamilyV2 = z.infer<typeof ModelFamilyV2>;
 export const ToolChoiceV2 = z.enum(["auto", "none", "required", "tool"]);
 export type ToolChoiceV2 = z.infer<typeof ToolChoiceV2>;
 
-export const ToolGrammarV2Values = [
+// Input formats for custom (free-form) tools, whose input is plain text instead
+// of JSON: `text` is unconstrained, `lark` and `regex` constrain it with a grammar.
+export const ToolFreeformV2Values = [
+  "text",
   "lark",
   "regex",
 ] as const;
 
-export const ToolGrammarV2 = z.enum(ToolGrammarV2Values);
-export type ToolGrammarV2 = z.infer<typeof ToolGrammarV2>;
+export const ToolFreeformV2 = z.enum(ToolFreeformV2Values);
+export type ToolFreeformV2 = z.infer<typeof ToolFreeformV2>;
 
 // How a model takes tools. These depend on the API, so the v2 API publishes them
 // on each API (`api[<protocol>].capabilities.tools`), not on the model.
-// `grammar` (custom tools constrained by a Lark or regex grammar) only exists on
-// OpenAI-style APIs (`responses`, `chat-completions`).
+// `freeform` lists the formats an API accepts for custom tools; leaving it out
+// means the API has no free-form tools.
 export const ToolDetailsV2 = z
   .object({
     strict: z.boolean().optional(),
     choice: z.array(ToolChoiceV2).optional(),
     search: z.boolean().optional(),
-    grammar: z.array(ToolGrammarV2).optional(),
+    freeform: z.array(ToolFreeformV2).optional(),
     updates: z.boolean().optional(),
   })
   .strict();

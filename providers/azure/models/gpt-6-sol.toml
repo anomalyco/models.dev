@@ -1,5 +1,5 @@
 # tools.choice: tool_choice none/auto/required/named (https://learn.microsoft.com/en-us/azure/foundry/openai/latest); tools.strict: Structured outputs in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure and https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs#supported-models
-# tools.grammar: GPT-5 series lark custom tools (Azure documents lark only): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#python-lark
+# tools.freeform: GPT-5 series custom tools take raw text ("Enables raw text (non-JSON) outputs") or a lark grammar (Azure documents lark only, no regex): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#python-lark
 # tools.search: tool_search on the Responses API only, gpt-5.4 and later: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/tool-search
 # Per-API tools: tool_search is Responses-only (Azure Chat Completions returns 400 "Invalid value: 'tool_search'", live 2026-10-26), so tools.search sits on [api.responses]. Strict function tools, tool_choice and lark custom tools work on both APIs (lark custom tool and strict function accepted on Azure Chat Completions, gpt-5.4-nano and gpt-5.6-luna, live 2026-10-26).
 # Availability: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability
@@ -15,7 +15,7 @@ schema = 2
 base_model = "openai/gpt-6-sol"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], grammar = ["lark"] }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 store = true

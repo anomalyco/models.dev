@@ -4,12 +4,12 @@
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/openai/models/gpt-6-luna.toml (Zen passes requests through).
 #   Surface: Responses carries the in-history messages (configuration_update for effort_updates; additional_tools for tools.updates, add only).
-# Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with lark/regex grammars), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
+# Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with text, lark or regex format), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, grammar = ["lark", "regex"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }

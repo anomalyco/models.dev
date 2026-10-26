@@ -505,7 +505,7 @@ function toModelApis(
   ) as ApiV2;
 }
 
-const TOOL_DETAILS = ["strict", "choice", "search", "grammar"] as const;
+const TOOL_DETAILS = ["strict", "choice", "search", "freeform"] as const;
 
 // Each API of a model that supports tools gets its own tool details: the
 // model's top-level values, replaced field by field by its table's.

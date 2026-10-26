@@ -1,5 +1,5 @@
 # tools.choice: tool_choice none/auto/required/named (https://learn.microsoft.com/en-us/azure/foundry/openai/latest); tools.strict: Structured outputs in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure and https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs#supported-models
-# tools.grammar: GPT-5 series lark custom tools (Azure documents lark only): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#python-lark
+# tools.freeform: GPT-5 series custom tools take raw text ("Enables raw text (non-JSON) outputs") or a lark grammar (Azure documents lark only, no regex): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#python-lark
 # Cached input: Azure Retail Prices API, Global Standard, skuName "GPT 5 Nano cchd Inpt Glbl" (meterId 60057ae6-2310-5760-af18-e2cc5e1a9fc9): 0.005 per 1M.
 # https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Foundry Models' and skuName eq 'GPT 5 Nano cchd Inpt Glbl' (accessed 2026-10-19)
 # Modalities: Azure OpenAI Responses image inputs (PNG, JPEG, WebP, non-animated GIF) and PDF input for vision models: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#image-input-requirements
@@ -23,7 +23,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], grammar = ["lark"] }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark"] }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 temperature = false
 store = true

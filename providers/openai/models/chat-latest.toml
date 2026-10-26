@@ -1,4 +1,4 @@
-# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (grammar lark/regex, GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
+# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
 # Sources:
 # https://developers.openai.com/api/docs/models/chat-latest (knowledge cutoff Apr 20, 2026;
 # the alias tracks the current ChatGPT Instant snapshot, newer than the gpt-5.5-instant lab's 2025-12-01)
@@ -15,7 +15,7 @@ name = "Chat Latest"
 knowledge = "2026-04-20"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], grammar = ["lark", "regex"] }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true }
 structured_output = true
 temperature = false
