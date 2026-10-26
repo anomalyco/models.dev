@@ -1,0 +1,15 @@
+schema = 2
+base_model = "openai/o3-mini"
+name = "o3-mini (Microsoft)"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4
