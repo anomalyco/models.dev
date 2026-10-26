@@ -4546,7 +4546,7 @@ test("OpenRouter base_model files leave model facts to the lab", async () => {
   const doc = {
     schema: 2,
     base_model: "aion-labs/aion-2.0",
-    family: "aion",
+    family: "llama",
     open_weights: true,
     knowledge: "2024-01",
     release_date: "2020-01-01",

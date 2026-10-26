@@ -692,7 +692,7 @@ opencodeai = "@opencode/ai/providers/cohere"
         model(`
 [api.chat-completions]
 
-[api.completions]
+[api.fim]
 sdk = { aisdk = "@ai-sdk/openai-compatible" }
 
 [api.messages]
@@ -710,7 +710,7 @@ sdk = { aisdk = "none" }
       const inherited = { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" };
       expect(models?.tables?.api).toEqual({
         "chat-completions": { base_url: "https://example.com/v1", sdk: inherited },
-        completions: { base_url: "https://example.com/v1", sdk: inherited },
+        fim: { base_url: "https://example.com/v1", sdk: inherited },
         messages: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/anthropic" } },
         responses: {
           base_url: "https://example.com/v1",
