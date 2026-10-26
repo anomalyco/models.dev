@@ -50,6 +50,13 @@ describe("catalog API model type filtering", () => {
     expect(Object.keys(body.providers.example.models)).toEqual(["decision"]);
   });
 
+  test("combines repeated type parameters", async () => {
+    const response = await request("/models.json?type=chat&type=decision");
+    const body = await response.json();
+
+    expect(Object.keys(body)).toEqual(["text", "decision"]);
+  });
+
   test("returns the complete static catalog for all", async () => {
     const response = await request("/models.json?type=all");
     const body = await response.json();

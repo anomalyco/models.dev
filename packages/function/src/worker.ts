@@ -178,7 +178,7 @@ async function catalogResponse(
 ) {
   let filter;
   try {
-    filter = parseModelTypes(url.searchParams.get("type"));
+    filter = parseModelTypes(url.searchParams.getAll("type").join(","));
   } catch (error) {
     if (!(error instanceof InvalidModelTypeError)) throw error;
     return Response.json(
