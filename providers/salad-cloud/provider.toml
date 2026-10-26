@@ -1,5 +1,9 @@
+# opencodeai = "none": @saladtechnologies-oss/ai-sdk-provider turns reasoning off with
+# `chat_template_kwargs.enable_thinking = false` and clamps effort to low/medium/high.
+# The generic OpenAI-compatible entry point does neither.
+# Source: @saladtechnologies-oss/ai-sdk-provider 0.2.0 dist/index.js
 name = "SaladCloud AI Gateway"
 env = ["SALAD_CLOUD_API_KEY"]
 npm = "@saladtechnologies-oss/ai-sdk-provider"
-opencodeai = "@opencode/ai/providers/openai-compatible"
+opencodeai = "none"
 doc = "https://docs.salad.com/ai-gateway/explanation/overview"
