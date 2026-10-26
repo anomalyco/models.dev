@@ -13,6 +13,9 @@ output = ["text"]
 tools = { supported = true }
 structured_output = true
 
+[limit]
+output = 942_818
+
 [cost.text.input]
 price = 0.1
 cache = { read = 0.025 }
