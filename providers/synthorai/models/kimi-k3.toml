@@ -1,0 +1,22 @@
+# Effort: reasoning_effort = low|high|max (forwarded unchanged)
+# Price: https://synthorai.io/api/pricing (read 2026-10-26), USD per million tokens.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+input = 1_000_000
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

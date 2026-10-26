@@ -1,0 +1,18 @@
+name = "Synthorai"
+env = ["SYNTHORAI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://synthorai.io/v1"
+# Multi-model gateway: one OpenAI-compatible base URL, each model served by its lab's API
+# or a cloud host of it (Anthropic, Bedrock, Vertex, Azure OpenAI, DeepSeek, Alibaba, ...).
+# Reasoning over POST /v1/chat/completions (gateway source, read 2026-10-26):
+# - OpenAI models: top-level reasoning_effort is forwarded as sent; a value outside the
+#   model's accepted levels is moved to the nearest accepted one (GPT-6.1 Sol: none -> low).
+# - Claude models: reasoning_effort low|medium|high|xhigh|max becomes thinking.type =
+#   adaptive with output_config.effort at the same level; minimal -> low; none turns
+#   thinking off where the model allows it, otherwise runs at low.
+# - Gemini models: reasoning_effort becomes generationConfig.thinkingConfig.thinkingLevel
+#   (low|medium|high); xhigh and max are clamped to high.
+# - DeepSeek, GLM and Kimi models: reasoning_effort and thinking are forwarded unchanged.
+# Pricing: https://synthorai.io/pricing/ (machine-readable: https://synthorai.io/api/pricing).
+doc = "https://synthorai.io/docs/"
