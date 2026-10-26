@@ -1,5 +1,5 @@
 # Effort: reasoning_effort none|low|medium|xhigh (none = off); high, max and minimal are rejected with 400.
-# Per-model docs list reasoning_effort "none" (or chat_template_kwargs.enable_thinking = false) as the off switch: https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
+# Off: reasoning_effort "none" or chat_template_kwargs {"enable_thinking": false}, the same switch, so no toggle. Lyceum documents no reasoning budget field, so no budget. https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
 schema = 2
 base_model = "alibaba/qwen3.8-flash-next"
 
