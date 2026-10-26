@@ -2,6 +2,7 @@
 # with provider-specific fields (cost, reasoning_options, status) stripped.
 # Sampling: Morph's docs take temperature ("Always set temperature: 0 for Apply") and document no top_p or top_k
 # (https://docs.morphllm.com/llms-full.txt).
+# Limits: 262,144 context and 131,072 output (https://www.morphllm.com/api/models/json?prices=list, accessed 2026-10-25).
 schema = 2
 name = "Morph V3 Fast"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
@@ -21,5 +22,5 @@ top_p = false
 top_k = false
 
 [limit]
-context = 81_920
-output = 38_000
+context = 262_144
+output = 131_072
