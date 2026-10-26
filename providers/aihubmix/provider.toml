@@ -1,5 +1,7 @@
 # opencodeai = "none": @aihubmix/ai-sdk-provider sends the APP-Code header on every request,
 # routes claude-* to Messages and gemini* to the native Gemini API. The generic entry points do none of that.
+# Source: @aihubmix/ai-sdk-provider 2.2.1 dist/index.js (APP-Code header; startsWith("claude-") and "gemini" routing), https://github.com/AIhubmix/ai-sdk-provider
+# Image models use the same package: its imageModel sends the same headers. There is no @opencode/ai/providers/aihubmix entry.
 name = "AIHubMix"
 npm = "@aihubmix/ai-sdk-provider"
 opencodeai = "none"
