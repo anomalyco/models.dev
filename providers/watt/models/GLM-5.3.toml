@@ -1,15 +1,14 @@
-# Toggle: chat_template_kwargs.thinking true|false (Watt docs:
-# https://www.watt-cloud.com/docs/inference/features/deep-thinking/)
-# (the zhipuai lab exposes no off switch for this model;
-# toggle per the audited same-surface peer GLM baseline -
-# live check queued in provider.toml)
+# Effort: reasoning_effort = low|high|max
+# (the zhipuai lab exposes no off switch for this
+# model; toggle only if live-proof shows
+# thinking = false works - see provider.toml)
 # Pricing & limits: Watt catalog (2026-10-23), GLM-5.3 row:
 # 1.4/4.4 USD per MTok, context 1_048_576
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [limit]

@@ -12,20 +12,22 @@
 # TODO(live audit, WATT_API_KEY required): POST
 # https://api.watt-cloud.com/v1/chat/completions to confirm -
 # (a) whether reasoning_effort / thinking_budget are
-#     forwarded; if yes, author the lab levels per model
-#     (DeepSeek low|high|max, GLM-5.2 high|max,
-#     GLM-5.3 low|high|max, Kimi-K3 low|high|max,
-#     Hy4-preview none|high, Qwen thinking_budget),
-# (b) thinking = false disables thinking on the toggled
-#     IDs (incl. GLM-5.3/GLM-5.3-Flash, whose lab has
-#     no off switch),
-# (c) Kimi-K2.7-Code still reasons when thinking = false
-#     (authored always-on),
+#     forwarded on the toggled IDs; if yes, author the
+#     lab levels per model (DeepSeek low|high|max,
+#     GLM-5.2 high|max, Kimi-K3 low|high|max, Qwen
+#     thinking_budget),
+# (b) GLM-5.3/GLM-5.3-Flash/Hy4-preview: the lab
+#     effort shapes are authored (no off switch in
+#     the lab templates); if thinking = false does
+#     disable thinking on Watt, switch them to the
+#     toggle,
+# (c) Kimi-K2.7-Code still reasons when thinking =
+#     false (authored always-on),
 # (d) reasoning is returned as reasoning_content,
 # (e) GET /v1/models requires auth (403 unauthenticated) -
 #     verify listed IDs and per-model limits against the
 #     catalog (Kimi-K2.5 271_360/180_224 and Hy4-preview
-#     output 131_072 override the lab values).
+#     1_048_576/131_072 override the lab values).
 # If the audit shows a control this host does not honor,
 # remove it with the observed behavior in the comment.
 # Pricing and limits in providers/watt/models are from the Watt
