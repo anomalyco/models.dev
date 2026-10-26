@@ -68,9 +68,13 @@ export const morph = {
   translateModel(model, context) {
     const existing = context.existing(model.id);
     if (existing === undefined || ALIASES.has(model.id) || model.is_ready === false) return undefined;
+    // The v1 view reduces MIME types to generic kinds, which can factor a
+    // hand-authored format list away against the lab file; keep it verbatim.
+    const modalities = context.v2?.(model.id)?.modalities;
     return {
       id: model.id,
       model: buildMorphModel(model, existing),
+      v2Set: modalities === undefined ? undefined : { modalities },
     };
   },
 } satisfies SyncProvider<MorphModel>;

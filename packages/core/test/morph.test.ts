@@ -95,3 +95,12 @@ test("reads the list-price feed, not the OpenRouter feed", async () => {
   expect(urls).toEqual(["https://www.morphllm.com/api/models/json?prices=list"]);
   expect(response.data.map((model) => model.id)).toEqual(["morph-dsv4flash"]);
 });
+
+test("keeps the hand-authored MIME list that the v1 view would collapse", () => {
+  const modalities = { input: ["text", "image/jpeg", "image/png"], output: ["text"] };
+  const translated = morph.translateModel(morphModel(), {
+    ...context({ "morph-dsv4flash": authored() }),
+    v2: () => ({ schema: 2, base_model: "deepseek/deepseek-v4-flash-0731", modalities }),
+  });
+  expect(translated?.v2Set).toEqual({ modalities });
+});
