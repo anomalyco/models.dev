@@ -4,7 +4,7 @@ name = "GPT-6.1 Terra (Fast)"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 cache = { implicit = true, explicit = true }
 
