@@ -1,18 +1,23 @@
 # Stable Hy4, the production follow-up to Hy4 preview (Tencent iterates a preview first, then
-#   ships the stable version ~2 months later). Context/output limits follow the Hy4 preview lab
-#   entry; Tencent has not published a separate spec page for the stable id yet.
+#   ships the stable version ~2 months later). Tencent has not published a separate spec page for
+#   the stable id yet.
+# Limits (Tencent, 2026-10-26): 1 MiB total window (1024*1024) with a 983_040 prompt ceiling.
+#   The vendor states the input cap as "1M - 64K" using the binary 64 KiB; `output` below is the
+#   separately documented decimal 64_000, so the three numbers are not meant to sum (same shape as
+#   the Hy3 entry, where input + output also exceeds context).
 # open_weights = false: Hy4 preview shipped Apache-2.0 weights on Hugging Face, but no weights
 #   release exists for the stable id. Flip to true and add [[weights]] once one does.
+# Modalities: unlike the text-only Hy4 preview, stable Hy4 accepts image input (text out).
 # Sampling: same knobs as the rest of the Hy family (temperature/top_p/top_k accepted).
 schema = 2
 name = "Hy4"
-description = "A next-generation productivity model with significantly enhanced Agent and complex task execution capabilities."
+description = "A next-generation multimodal productivity model with significantly enhanced Agent and complex task execution capabilities."
 family = "Hy"
 open_weights = false
 release_date = "2026-10-20"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
@@ -23,5 +28,6 @@ top_p = true
 top_k = true
 
 [limit]
-context = 1_024_000
+context = 1_048_576
+input = 983_040
 output = 64_000
