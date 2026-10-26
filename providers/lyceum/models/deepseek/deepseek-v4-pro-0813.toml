@@ -1,4 +1,5 @@
 # Effort: reasoning_effort none|low|high|max (none = off).
+# Trace comes back in message.reasoning, which v1 can't express, so no reasoning field is pinned. https://docs.lyceum.technology/docs/inference/serverless#reasoning-models
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
@@ -10,9 +11,6 @@ effort_updates = false
 
 [limit]
 output = 131_072
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 2
