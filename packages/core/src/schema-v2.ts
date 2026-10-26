@@ -824,10 +824,11 @@ export const LabMetadataV2 = z
 export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
 
 // `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
-// point: `@opencode/ai/providers/<path>` for a provider's chat, responses or
-// messages model (`@opencode/ai/providers/openai/chat`), or
+// point: `@opencode/ai/providers/<path>` for a provider's chat, responses,
+// messages, images or decisions model (`@opencode/ai/providers/openai/chat`,
+// `@opencode/ai/providers/openrouter/images`), or
 // `@opencode/ai/protocols/<name>` for an API with no provider entry point, such
-// as media (`@opencode/ai/protocols/openai-images`, `openai-speech`,
+// as speech and transcription (`@opencode/ai/protocols/openai-speech`,
 // `openai-transcription`). `"none"` (here or in `sdk.aisdk`) says no package
 // supports the API: nothing is filled in and the v2 output has no such key.
 export const OpencodePackageV2 = z.union([

@@ -16,7 +16,7 @@ reasoning = { supported = true, effort = ["minimal", "high"] }
 legacy_interleaved = true
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.text.input]
 price = 0.5

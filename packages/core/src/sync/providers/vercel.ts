@@ -504,19 +504,19 @@ const MEDIA_SDK = { opencodeai: "none" };
 // https://vercel.com/docs/ai-gateway/sdks-and-apis
 const STANDARD_BASE_URL = "https://ai-gateway.vercel.sh/v1";
 const STANDARD_MEDIA_APIS: Partial<Record<MediaType, Doc>> = {
-  image: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" } },
+  image: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
   embedding: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
   reranking: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
 };
 // Decision models: POST /v1/decisions, OpenAI's Decisions format, which
-// @ai-sdk/openai's decisionModel and OpenCode's openai-decisions protocol
+// @ai-sdk/openai's decisionModel and OpenCode's vercel-ai-gateway/decisions entry
 // speak with this baseURL. @ai-sdk/gateway's decisionModel uses its own
 // /v4/ai/decision-model endpoint instead.
 // https://vercel.com/docs/ai-gateway/modalities/decision
 const DECISION_APIS = {
   decisions: {
     base_url: STANDARD_BASE_URL,
-    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-decisions" },
+    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/decisions" },
   },
 };
 // v1 reads the first API as `provider`.

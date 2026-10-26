@@ -6477,7 +6477,7 @@ test("Vercel sync maps every catalog type and lists the standard endpoint where 
   const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
   const base_url = "https://ai-gateway.vercel.sh/v1";
   const standard: Record<string, unknown> = {
-    image: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" } },
+    image: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
     embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
     reranking: { base_url, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
   };
@@ -6507,7 +6507,7 @@ test("Vercel sync maps every catalog type and lists the standard endpoint where 
   const evaluation = vercel.translateModel(vercelMedia({ id: "example/decision-model", type: "evaluation" }), context) as any;
   expect(evaluation.v2Set).toEqual({
     api: {
-      decisions: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-decisions" } },
+      decisions: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/decisions" } },
     },
   });
   // v1 reads the first API.
@@ -6553,7 +6553,7 @@ test("Vercel media files already in v1 publish the standard endpoint there too",
   expect(doc.api).toEqual({
     images: {
       base_url: "https://ai-gateway.vercel.sh/v1",
-      sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" },
+      sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" },
     },
   });
   expect(modelV2ToV1({ ...doc, id: "bfl/flux-2-pro" }, undefined, "@ai-sdk/gateway").provider)
@@ -7249,7 +7249,7 @@ test("factors OpenRouter image models onto lab files with the Images API protoco
     api: {
       images: {
         base_url: "https://openrouter.ai/api/v1",
-        sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/protocols/openai-images" },
+        sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
       },
     },
     cost: { image: { output: { unit: "megapixel", price: 0.03 } } },
@@ -7691,7 +7691,7 @@ test("syncs OpenRouter decision models with no supported parameters as decision 
   // OpenRouter reads images as `image_url` items in a `state` list.
   expect(translated?.v2Set?.api).toEqual({
     systemone: {
-      sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" },
+      sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter/decisions" },
       compatibility: { media_input: "state" },
     },
   });
@@ -7750,7 +7750,7 @@ test("lists the Images API next to chat for OpenRouter chat models with an image
   expect(translated?.model.base_model).toBe("google/gemini-2.5-flash-image");
   expect(translated?.v2Set?.api).toEqual({
     "chat-completions": {},
-    images: { sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
+    images: { sdk: { opencodeai: "@opencode/ai/providers/openrouter/images" } },
   });
 });
 

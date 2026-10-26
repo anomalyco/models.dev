@@ -12,7 +12,7 @@ context = 32_000
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
 path = "/run"
-sdk = { opencodeai = "@opencode/ai/protocols/cloudflare-run-decisions" }
+sdk = { opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway/decisions" }
 
 [cost.text.input]
 price = 0.042

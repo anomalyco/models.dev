@@ -10,7 +10,7 @@ base_model = "black-forest-labs/flux-2-klein-4b"
 
 [api.images]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/providers/openrouter/images" }
 
 [cost.image.output]
 unit = "megapixel"

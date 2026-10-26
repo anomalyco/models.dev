@@ -128,10 +128,10 @@ export function basetenV2Set(cacheRead: number | undefined, current: Record<stri
   };
 }
 
-// Both packages post to `${baseURL}/systemone`. OpenCode's baseten entry, not
+// Both packages post to `${baseURL}/systemone`. OpenCode's baseten/decisions entry, not
 // the generic system-one protocol (which sends images as `assets`), puts images
 // where Baseten reads them: parts of a user message in state.messages.
-const SYSTEMONE_SDK = { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/baseten" };
+const SYSTEMONE_SDK = { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/baseten/decisions" };
 
 // Decision models are served on POST /v1/systemone, not chat completions, so
 // they are v2-only. The catalog's `name` is the Base Labs lab model ID.

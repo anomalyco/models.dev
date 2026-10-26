@@ -323,14 +323,14 @@ function isDecisionModel(model: OpenRouterModel) {
   return model.architecture.output_modalities.includes("decisions");
 }
 
-// Decision models answer POST /api/v1/systemone, which OpenCode's openrouter
-// entry (experimental.evaluation) and @ai-sdk/typesafe-ai's decisionModel (with
+// Decision models answer POST /api/v1/systemone, which OpenCode's openrouter/decisions
+// entry and @ai-sdk/typesafe-ai's decisionModel (with
 // this baseURL) call. POST /api/alpha/decisions takes the same System One body,
 // so it isn't listed separately.
 // https://openrouter.ai/docs/api/api-reference/systemone/submit-a-system-one-request
 // https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request
 const DECISION_APIS = {
-  systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" } },
+  systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter/decisions" } },
 };
 // OpenRouter and NanoGPT read System One images as chat-style `image_url` items in a
 // `state` list (OpenRouter ignores TypeSafe's `assets`). Sets `media_input = "state"` on every
@@ -355,7 +355,7 @@ export function withSystemOneMediaInput(api: unknown, images: boolean) {
 // (https://openrouter.ai/api/v1/images/models), which answers OpenAI's format.
 const IMAGE_CHAT_APIS = {
   "chat-completions": {},
-  images: { sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
+  images: { sdk: { opencodeai: "@opencode/ai/providers/openrouter/images" } },
 };
 // Text models are also served on POST /api/v1/responses (OpenAI Responses format, stateless) and
 // POST /api/v1/messages (Anthropic Messages format), which take any OpenRouter model ID. The catalog
@@ -430,7 +430,7 @@ const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodea
   },
   embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
   reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
-  image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/protocols/openai-images" },
+  image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
   video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
 };
 

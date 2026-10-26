@@ -8,7 +8,7 @@ reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.text.input]
 price = 2

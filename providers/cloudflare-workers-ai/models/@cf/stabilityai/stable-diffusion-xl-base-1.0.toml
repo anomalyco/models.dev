@@ -15,7 +15,7 @@ output = ["image/png"]
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/cloudflare-workers-ai-images" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/cloudflare-workers-ai/images" }
 
 [cost.image.output]
 unit = "image"
