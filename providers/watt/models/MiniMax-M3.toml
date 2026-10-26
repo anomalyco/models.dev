@@ -1,12 +1,13 @@
-# Always-on thinking (the MiniMax lab entry authors no caller
-# control; Watt docs list the MiniMax M2.x series as thinking-only).
+# Toggle: chat_template_kwargs.thinking true|false
+# (MiniMax first-party authors the toggle too:
+# thinking.type = adaptive|disabled)
 # Pricing & limits: Watt catalog (2026-10-23), MiniMax-M3 row:
 # 0.6/2.4 USD per MTok, context 524_288 (output 512_000 lab, inherited)
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [limit]

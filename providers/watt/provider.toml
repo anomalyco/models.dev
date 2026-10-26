@@ -3,25 +3,29 @@
 # document the thinking toggle via chat_template_kwargs.thinking
 # (cURL/Python/JS/Go examples send thinking = true) and
 # enumerate GLM-5.1/5/4.7 (hybrid, reasoning on by default)
-# and MiniMax-M2.x (thinking-only); DeepSeek/Kimi are named
-# generically in the intro.
-# Model reasoning controls in providers/watt/models mirror the
-# lab entries (providers/deepseek, providers/zhipuai,
-# providers/moonshotai, providers/alibaba,
-# providers/tencent-token-plan, models/minimax) per the
-# relay rule in AGENTS.md: relays copy the underlying lab's
-# controls instead of leaving them off while the host is
-# untested.
+# and MiniMax-M2.x (thinking-only).
+# Controls in providers/watt/models follow the audited
+# same-surface peer baseline: toggle via
+# chat_template_kwargs.thinking, no reasoning_effort or
+# thinking_budget authored until a live POST shows this
+# host honors them.
 # TODO(live audit, WATT_API_KEY required): POST
 # https://api.watt-cloud.com/v1/chat/completions to confirm -
-# (a) reasoning_effort / thinking_budget are forwarded (the
-#     levels mirror the lab entries),
-# (b) thinking = false disables thinking on the toggled IDs,
-# (c) the always-on IDs (Kimi-K2.7-Code, Kimi-K3, GLM-5.3,
-#     MiniMax-M3, Kimi-K2.5) ignore thinking = false,
+# (a) whether reasoning_effort / thinking_budget are
+#     forwarded; if yes, author the lab levels per model
+#     (DeepSeek low|high|max, GLM-5.2 high|max,
+#     GLM-5.3 low|high|max, Kimi-K3 low|high|max,
+#     Hy4-preview none|high, Qwen thinking_budget),
+# (b) thinking = false disables thinking on the toggled
+#     IDs (incl. GLM-5.3/GLM-5.3-Flash, whose lab has
+#     no off switch),
+# (c) Kimi-K2.7-Code still reasons when thinking = false
+#     (authored always-on),
 # (d) reasoning is returned as reasoning_content,
 # (e) GET /v1/models requires auth (403 unauthenticated) -
-#     verify listed IDs and per-model limits against the catalog.
+#     verify listed IDs and per-model limits against the
+#     catalog (Kimi-K2.5 271_360/180_224 and Hy4-preview
+#     output 131_072 override the lab values).
 # If the audit shows a control this host does not honor,
 # remove it with the observed behavior in the comment.
 # Pricing and limits in providers/watt/models are from the Watt

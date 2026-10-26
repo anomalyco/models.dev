@@ -1,11 +1,13 @@
-# Effort: reasoning_effort = none|high (none disables thinking)
+# Toggle: chat_template_kwargs.thinking true|false
+# (tencent lab: thinking.type enabled|disabled; graded
+# effort none|high pending the live audit in provider.toml)
 # Pricing & limits: Watt catalog (2026-10-23), Hy4-preview row:
 # 0.83/2.5 USD per MTok, context 1_048_576, output 131_072
 schema = 2
 base_model = "tencent/hy4-preview"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high"] }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [limit]
