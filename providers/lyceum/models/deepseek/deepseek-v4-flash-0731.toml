@@ -4,10 +4,8 @@ schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-tools = { supported = true, updates = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
-cache = { supported = true, implicit = true }
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 output = 131_072

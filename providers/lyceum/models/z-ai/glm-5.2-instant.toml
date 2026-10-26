@@ -5,10 +5,8 @@ base_model = "zhipuai/glm-5.2"
 name = "GLM-5.2 Instant"
 
 [capabilities]
-tools = { supported = true, updates = false }
 reasoning = { supported = false }
-cache = { supported = true, implicit = true }
-effort_updates = false
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1.5
