@@ -25,7 +25,6 @@ output = 0
 [api.rerank]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/cohere", opencodeai = "none" }
-legacy_provider = { api = "https://ai-gateway.vercel.sh/v4/ai" }
 
 [cost.text.input]
 price = 0.02

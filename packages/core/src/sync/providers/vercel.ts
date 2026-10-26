@@ -681,7 +681,7 @@ export function buildVercelMediaModel(
 
   doc.api = LIVE_MODELS.has(model.id)
     ? { live: { base_url: MEDIA_BASE_URL, sdk: { ...LIVE_SDK } } }
-    : { [MEDIA_PROTOCOLS[type]]: mediaApi(type, doc.v2_only === true) };
+    : { [MEDIA_PROTOCOLS[type]]: structuredClone(STANDARD_MEDIA_APIS[type] ?? { base_url: MEDIA_BASE_URL, sdk: MEDIA_SDK }) };
   const { cost, issue } = vercelMediaCost(model, type);
   if (issue !== undefined) console.warn(`Vercel ${model.id}: no cost written, ${issue}`);
   if (cost !== undefined) doc.cost = cost;
@@ -689,14 +689,6 @@ export function buildVercelMediaModel(
     if (existing?.[key] !== undefined) doc[key] = existing[key];
   }
   return doc;
-}
-
-// A file v1 already publishes keeps the /v4/ai endpoint there, as @ai-sdk/gateway
-// calls it, while v2 lists the standard one.
-function mediaApi(type: MediaType, v2Only: boolean): Doc {
-  const standard = STANDARD_MEDIA_APIS[type];
-  if (standard === undefined) return { base_url: MEDIA_BASE_URL, sdk: { ...MEDIA_SDK } };
-  return v2Only ? structuredClone(standard) : { ...structuredClone(standard), legacy_provider: { api: MEDIA_BASE_URL } };
 }
 
 // Limits come from Vercel's catalog for the model's type, else the lab's. Embedding

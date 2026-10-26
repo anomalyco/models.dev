@@ -137,7 +137,6 @@ compatibility = { reasoning_field = "reasoning_content" }
 - Name the protocol by its wire format, not the model type, nor the host's path. `decisions` is only OpenAI's Decisions format; every host that takes System One's `{model, state, questions}` body is `systemone`, whatever its path. `realtime` is OpenAI's Realtime API; Google's Live API is `bidi-generate-content` and Lyria RealTime is `bidi-generate-music` (after their `BidiGenerateContent` / `BidiGenerateMusic` WebSocket methods).
 - `legacy_shape = "responses" | "completions"` is v1-only: it keeps a v1 `provider.shape` that repeats the SDK's default. Sync writes and keeps it; don't add it by hand.
 - `legacy_interleaved = true` is v1-only: it keeps v1's bare `interleaved: true` (replaying reasoning is the default in v2). Sync writes and keeps it; don't add it by hand.
-- `legacy_provider = { npm, api }` is v1-only: v1 publishes it as `provider.npm` / `provider.api` instead of the first table's `aisdk` and `base_url` (`{}` publishes neither). It keeps v1 on the endpoint it already published when the table moves to a standard one (Vercel's image models list `/v1` in v2 and keep `/v4/ai` in v1). Sync writes and keeps it.
 
 ## When to use `base_model` (blocker)
 

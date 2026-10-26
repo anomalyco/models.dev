@@ -6529,7 +6529,7 @@ test("Vercel text models keep their default API first and add Responses and Mess
   expect(chatApis(flagged)).toEqual(flagged);
 });
 
-test("Vercel media files already in v1 keep publishing the /v4/ai endpoint there", () => {
+test("Vercel media files already in v1 publish the standard endpoint there too", () => {
   const image = vercelMedia({ id: "bfl/flux-2-pro", name: "FLUX.2 [pro]", type: "image" });
   const doc = buildVercelMediaModel(image, "image", { schema: 2, base_model: "bfl/flux-2-pro" });
   expect(doc.v2_only).toBeUndefined();
@@ -6537,11 +6537,10 @@ test("Vercel media files already in v1 keep publishing the /v4/ai endpoint there
     images: {
       base_url: "https://ai-gateway.vercel.sh/v1",
       sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" },
-      legacy_provider: { api: "https://ai-gateway.vercel.sh/v4/ai" },
     },
   });
   expect(modelV2ToV1({ ...doc, id: "bfl/flux-2-pro" }, undefined, "@ai-sdk/gateway").provider)
-    .toEqual({ api: "https://ai-gateway.vercel.sh/v4/ai" });
+    .toEqual({ npm: "@ai-sdk/openai", api: "https://ai-gateway.vercel.sh/v1" });
 });
 
 test("Vercel media models drop chat capabilities and take exact MIME types", () => {
