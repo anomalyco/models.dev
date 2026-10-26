@@ -1,13 +1,13 @@
-# Toggle: chat_template_kwargs.thinking (Watt docs:
-# https://www.watt-cloud.com/docs/inference/features/deep-thinking/)
+# Always-on thinking (the Moonshot lab entry authors no
+# caller control; the Watt toggle docs do not list Kimi).
 # Pricing & limits: Watt catalog (2026-10-23), Kimi-K2.5 row:
 # 0.6/3 USD per MTok, context 271_360, output 180_224
-# (differs from Jalapeno: 262_144/262_144)
+# (lab base: 262_144/262_144)
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 structured_output = true
 
 [limit]
@@ -18,7 +18,7 @@ output = 180_224
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.6
+price = 0.60
 
 [cost.text.output]
-price = 3
+price = 3.0

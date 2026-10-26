@@ -1,6 +1,7 @@
-# Always-on thinking on this host (dedicated coding ID; Moonshot first-party
-# also publishes no caller control). Interleaved as reasoning_content.
-# Pricing & limits: Watt Cloud official catalog (2026-10-23)
+# Always-on thinking (dedicated coding ID; the Moonshot lab
+# entry authors no caller control).
+# Pricing & limits: Watt catalog (2026-10-23), Kimi-K2.7-Code row:
+# 0.95/4 USD per MTok, context 271_360
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
@@ -15,7 +16,7 @@ context = 271_360
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.95
+price = 0.950
 
 [cost.text.output]
-price = 4
+price = 4.0

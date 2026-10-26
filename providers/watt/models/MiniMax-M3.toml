@@ -1,10 +1,12 @@
-# Toggle: chat_template_kwargs.thinking true|false
-# Pricing & limits: Watt Cloud official catalog (2026-10-23)
+# Always-on thinking (the MiniMax lab entry authors no caller
+# control; Watt docs list the MiniMax M2.x series as thinking-only).
+# Pricing & limits: Watt catalog (2026-10-23), MiniMax-M3 row:
+# 0.6/2.4 USD per MTok, context 524_288 (output 512_000 lab, inherited)
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 structured_output = true
 
 [limit]
@@ -14,7 +16,7 @@ context = 524_288
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.6
+price = 0.60
 
 [cost.text.output]
-price = 2.4
+price = 2.40

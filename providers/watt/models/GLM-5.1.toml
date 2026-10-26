@@ -1,5 +1,7 @@
-# Toggle: chat_template_kwargs.thinking true|false
-# Pricing & limits: Watt Cloud official catalog (2026-10-23)
+# Toggle: chat_template_kwargs.thinking true|false (Watt docs:
+# https://www.watt-cloud.com/docs/inference/features/deep-thinking/)
+# Pricing & limits: Watt catalog (2026-10-23), GLM-5.1 row:
+# 1.38/4.4 USD per MTok, context 202_752
 schema = 2
 base_model = "zhipuai/glm-5.1"
 
@@ -14,7 +16,7 @@ context = 202_752
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 1.38
+price = 1.380
 
 [cost.text.output]
-price = 4.4
+price = 4.40
