@@ -1,6 +1,8 @@
 # tools.choice: tool_choice none/auto/required/named (https://learn.microsoft.com/en-us/azure/foundry/openai/latest); tools.strict: Structured outputs in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure and https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs#supported-models
 # tools.grammar: GPT-5 series lark custom tools (Azure documents lark only): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#python-lark
 # tools.search: tool_search on the Responses API only, gpt-5.4 and later: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/tool-search
+# Per-API tools: tool_search is Responses-only (Azure Chat Completions returns 400 "Invalid value: 'tool_search'", live 2026-10-26), so tools.search sits on [api.responses]. Strict function tools, tool_choice and lark custom tools work on both APIs (lark custom tool and strict function accepted on Azure Chat Completions, gpt-5.4-nano and gpt-5.6-luna, live 2026-10-26).
+# gpt-6.1-sol takes function tools on Chat Completions only with reasoning_effort "none", which it doesn't support (OpenAI: https://developers.openai.com/api/docs/guides/latest-model; Azure gpt-6.1-sol live 2026-10-26: 400 "Function tools with reasoning_effort are not supported" and "'reasoning_effort' does not support 'none'"), so tools.strict sits on [api.responses].
 # Availability: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-6
 # Region matrix: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability
 # Provisional Global Standard rates: Azure's published GPT-6 Astra/Sol/Luna Global Standard
@@ -18,7 +20,7 @@ schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, grammar = ["lark"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], grammar = ["lark"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 store = true
@@ -28,7 +30,7 @@ service_tier = ["flex"]
 system_updates = true
 
 [api.responses]
-capabilities = { effort_updates = true, tools = { updates = true } }
+capabilities = { effort_updates = true, tools = { strict = true, search = true, updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
