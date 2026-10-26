@@ -6,12 +6,12 @@
 # https://help.aliyun.com/zh/model-studio/coding-plan
 # https://help.aliyun.com/zh/model-studio/deep-thinking
 # Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates is left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
-# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none"] }
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true }
 
 [api.chat-completions]
@@ -19,6 +19,7 @@ reasoning = { supported = true, toggle = true }
 [api.messages]
 base_url = "https://coding.dashscope.aliyuncs.com/apps/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
 
 [cost.text.input]
 price = 0

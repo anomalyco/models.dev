@@ -6,7 +6,7 @@
 # Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 # Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/qwen-plus, accessed 2026-10-23).
 # max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
-# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
 schema = 2
 name = "Qwen Plus"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -21,7 +21,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none"] }
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = { max = 81_920 } }
 structured_output = true
 temperature = true
@@ -43,6 +43,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/r
 [api.messages]
 base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
 
 [cost.text.input]
 price = 0.115

@@ -4,12 +4,12 @@
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: 0-256K $0.165/$0.99, 256K-1M $0.66/$3.961 (previously a discounted Singapore rate). Explicit cache: read 10%, creation 125% of input.
 # Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
-# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "alibaba/qwen3.6-flash"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none"] }
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 131_072 } }
 structured_output = true
 stream_usage = true
@@ -23,6 +23,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/r
 [api.messages]
 base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
 
 [cost.text.input]
 price = 0.165

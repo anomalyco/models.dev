@@ -4,12 +4,12 @@
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: $1.65/$3.301 (¥12/¥24 on the China site). The previous $0.435/$0.87 and cache price are not Model Studio prices; the cache-hit price is not published ("see the console").
 # Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
-# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Tools: tool_choice auto|none|required|named on every API except Responses (no required with more than one tool); no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["high", "max"] }
 structured_output = true
 top_k = false
@@ -21,6 +21,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+capabilities = { tools = { choice = ["auto", "none", "tool"] } }
 
 [api.messages]
 base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
