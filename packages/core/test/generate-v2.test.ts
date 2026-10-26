@@ -145,7 +145,7 @@ describe("v2 catalog generation", () => {
         base_url: "https://opencode.ai/inference/systemone/v1",
         sdk: {
           aisdk: "@ai-sdk/typesafe-ai",
-          opencodeai: "@opencode/ai/providers/openai-compatible/decisions",
+          opencodeai: "@opencode/ai/providers/opencode/decisions",
         },
       },
     });
