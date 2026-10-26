@@ -28,14 +28,19 @@ opencodeai = "@opencode/ai/providers/alibaba/chat"
 # - Anthropic Messages: auto, any (required), none and tool
 #   (https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages).
 # Model files with several APIs set the values most of their APIs share and override the API that differs:
-# Qwen gets auto|none|tool with required added on [api.messages]; DeepSeek, GLM and Kimi get all four with
-# required removed on [api.responses]. In thinking mode, most Qwen models and kimi-k2.7-code reject required
-# and named choices on every API (400 "does not support being set to required or object in thinking mode");
-# they work with thinking off (enable_thinking = false, reasoning.effort = "none", thinking.type = "disabled").
-# Live on dashscope-intl 2026-10-26: every multi-API model accepted them on every API it lists, except
-# qwen3.8-2.4t-a95b, which always thinks and keeps auto|none. Qwen also accepted required on Chat Completions
-# with thinking off, but the docs say it can't guarantee a call, so it isn't listed there.
-# glm-5, kimi-k2.5, kimi-k2.6 and MiniMax-M2.5 aren't served on dashscope-intl, so they keep auto|none.
+# Qwen gets auto|none|tool with required added on [api.messages]; DeepSeek and Kimi K3 get all four with
+# required removed on [api.responses].
+# Live on dashscope-intl 2026-10-26 ("Say hi." with two tools, forcing the tool the prompt doesn't need):
+# - Hybrid Qwen models reject required and named choices in thinking mode on every API (400 "does not
+#   support being set to required or object in thinking mode") or accept and ignore them; with thinking off
+#   (enable_thinking = false, reasoning.effort = "none", thinking.type = "disabled") they force the call.
+#   Qwen also forced a call with required on Chat Completions, but the docs say it can't guarantee one, so
+#   it isn't listed there.
+# - qwen-max forces a named tool but ignores required and Messages any, so it lists auto|none|tool.
+# - These accept required and named choices but ignore them on every API, so they keep auto|none:
+#   glm-5.1, glm-5.2, glm-5.3, kimi-k2.7-code, qwen3-omni-flash, qwen3-vl-30b-a3b, qwen3-vl-plus,
+#   qwen3.7-max, and qwen3.8-2.4t-a95b (always thinks).
+# - glm-5, kimi-k2.5, kimi-k2.6 and MiniMax-M2.5 aren't served on dashscope-intl, so they keep auto|none.
 # Single-API (Chat Completions only) models still list auto|none. No strict flag for function tools is
 # documented. Realtime models don't support tool_choice.
 doc = "https://www.alibabacloud.com/help/en/model-studio/models"
