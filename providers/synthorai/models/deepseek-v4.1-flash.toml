@@ -1,12 +1,13 @@
 # Toggle: thinking.type = enabled|disabled (forwarded unchanged)
 # Effort: reasoning_effort = low|high|max (forwarded unchanged)
+# Structured output: inherited (true). A strict json_schema request through
+# https://synthorai.io/v1 on 2026-10-26 returned schema-valid JSON (2/2 runs).
 # Price: https://synthorai.io/api/pricing (read 2026-10-26), USD per million tokens.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
-structured_output = false
 
 [limit]
 output = 393_216
