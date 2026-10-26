@@ -1,0 +1,22 @@
+# Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
+# tool schemas: rejects JSON Schema keyword(s) `not` (probe: HTTP 400).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+# No effort or toggle controls are documented for this host.
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

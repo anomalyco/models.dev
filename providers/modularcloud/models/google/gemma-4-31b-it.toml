@@ -1,0 +1,17 @@
+# Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+# No effort or toggle controls are documented for this host.
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 0.65
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

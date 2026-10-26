@@ -1,0 +1,25 @@
+# context: the API's own limit, as named in its error for an over-long request.
+# Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+# No effort or toggle controls are documented for this host.
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,20 @@
+# context: the API's own limit, as named in its error for an over-long request.
+# Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
+# Reasoning is returned in message.reasoning (probe). reasoning_field = "reasoning" is valid in v2,
+#   but v1's interleaved.field only allows reasoning_content|reasoning_details, so it is left unset.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+# No effort or toggle controls are documented for this host.
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.17
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 1.2
