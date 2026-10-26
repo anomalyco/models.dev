@@ -61,7 +61,7 @@ context = 1_000_000
 output = 128_000
 ```
 
-Required: `name`, `description`, `open_weights`, `release_date`, `[modalities]`, `[capabilities]` (`tools`, `reasoning = { supported = … }`, and explicit `temperature`, `top_p`, `top_k`), and `[limit]`. Recommended: `family`, `knowledge`, `type` (defaults to `"chat"`; set it on `image`, `video`, `embedding`, `reranking`, `decision`, `transcription`, `speech`, `realtime` models), `license`, `links`, `weights`, `benchmarks`.
+Required: `name`, `description`, `open_weights`, `release_date`, `[modalities]`, `[capabilities]` (`tools`, `reasoning = { supported = … }`, and explicit `temperature`, `top_p`, `top_k`), and `[limit]`. Recommended: `family`, `knowledge`, `type` (defaults to `"chat"`; set it on `image`, `video`, `embedding`, `reranking`, `decision`, `transcription`, `speech`, `realtime`, and `audio` (music and sound effect generation, not speech) models), `license`, `links`, `weights`, `benchmarks`.
 
 - There is no `attachment` field. It is derived from whether `modalities.input` has anything besides text.
 - Use MIME types where the lab documents them (`image/png`, `application/pdf`) instead of generic `image` / `pdf`.

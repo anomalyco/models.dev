@@ -20,6 +20,8 @@ export const ModelTypeV2Values = [
   "speech",
   "realtime",
   "extraction",
+  // Non-speech audio generation (music, sound effects); text-to-speech is `speech`.
+  "audio",
 ] as const;
 
 export const ModelTypeV2 = z.enum(ModelTypeV2Values);
