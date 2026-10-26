@@ -6,8 +6,12 @@
 # Serving: GLM-5.3-Flash, global processing only (no EU alias). The flash lab file is multimodal; this host is text-only.
 # top_k: not forwarded by the API (temperature and top_p are).
 # Reasoning: always on, no caller control (thinking is selected by alias, not by a request field).
-# Limit: the API's local preflight serves a 128,000-token context window; output is the
-# default output reserve (64,000) that the preflight assumes when max_tokens is omitted.
+#   Evidence: the OpenAPI CreateChatCompletionRequest schema has no reasoning_effort or thinking
+#   field; effort is fixed per alias on the server.
+# Output cap field: max_tokens and max_completion_tokens are both accepted (OpenAPI request schema).
+# Limit: 128,000-token context window per request, enforced with HTTP 400 context_length_exceeded;
+# input and output share it; 64,000 is the default output reserve:
+# https://docs.ismscopilot.com/docs/api/models-and-regions#context-window
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "ISMS Mini"
