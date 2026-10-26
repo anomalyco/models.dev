@@ -1,0 +1,60 @@
+# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (grammar lark/regex, GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
+# tools.search: tool_search on the Responses API only (gpt-5.4 and later, per the model page's Supported tools): https://developers.openai.com/api/docs/guides/tools-tool-search
+# Model and pricing: https://developers.openai.com/api/docs/models/gpt-6.1-terra
+# Reasoning: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6.1-terra
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6.1-terra
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, grammar = ["lark", "regex"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+store = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
+
+[api.responses]
+capabilities = { effort_updates = true, tools = { updates = true } }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }
+
+[experimental.modes.pro]
+body = { reasoning = { mode = "pro" } }
