@@ -13,12 +13,17 @@
 # 'reasoning_effort "max" is not valid (expected one of: none, minimal, low, medium, high, xhigh)'.
 # No thinking.type is exposed, so there is no separate on/off control; none sends no thinking
 # parameter. https://lowrouter.ai/docs/guides/request-parameters
-# Anthropic routes return no trace on chat completions; thinking tokens are billed as output tokens.
+# Reasoning: chat completions return it as signed reasoning_details (plus reasoning_content/reasoning
+# text), and only reasoning_details is replayed (live 2026-10-26 on Bedrock and Anthropic routes: the
+# other two are dropped on replay); thinking tokens are billed as output tokens.
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
 [cost.text.input]
 price = 5.5

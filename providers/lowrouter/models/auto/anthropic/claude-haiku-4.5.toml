@@ -16,12 +16,17 @@
 # none sends no thinking parameter. Each level is distinct live (2026-10-26, a 12-coin weighing puzzle,
 # max_tokens = budget + 2,048): 1,017 completion tokens at minimal, 1,502 at low, 5,103 at medium,
 # 8,523 at high and 9,873 at xhigh, each finish_reason stop.
-# Anthropic routes return no trace on chat completions; thinking tokens are billed as output tokens.
+# Reasoning: chat completions return it as signed reasoning_details (plus reasoning_content/reasoning
+# text), and only reasoning_details is replayed (live 2026-10-26 on Bedrock and Anthropic routes: the
+# other two are dropped on replay); thinking tokens are billed as output tokens.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
 [cost.text.input]
 price = 1.1

@@ -14,13 +14,18 @@
 # LowRouter exposes no thinking.type, so there is no separate on/off control on this host: none sends no
 # thinking parameter and leaves Anthropic's default behaviour for the model.
 # Verified live 2026-10-10 and 2026-10-12: the four values accepted, nothing disclosed as unapplied.
-# Anthropic routes return no trace on chat completions; thinking tokens are billed as output tokens.
+# Reasoning: chat completions return it as signed reasoning_details (plus reasoning_content/reasoning
+# text), and only reasoning_details is replayed (live 2026-10-26 on Bedrock and Anthropic routes: the
+# other two are dropped on replay); thinking tokens are billed as output tokens.
 # Anthropic rejects thinking.type = disabled on this model; thinking is adaptive by default.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
 [cost.text.input]
 price = 2.2

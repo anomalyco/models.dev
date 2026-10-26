@@ -17,12 +17,17 @@
 # Below 3,000 with max_tokens = budget + 2,048: 439 completion tokens at minimal, 3,498 at low, 8,349 at
 # medium, and high still thinking at its 18,432 cap. Below 1,000, streamed with max_tokens 34,816:
 # 10,999 at high and 17,455 at xhigh, both finish_reason stop. Opus 4.5 can think past its budget.
-# Anthropic routes return no trace on chat completions; thinking tokens are billed as output tokens.
+# Reasoning: chat completions return it as signed reasoning_details (plus reasoning_content/reasoning
+# text), and only reasoning_details is replayed (live 2026-10-26 on Bedrock and Anthropic routes: the
+# other two are dropped on replay); thinking tokens are billed as output tokens.
 schema = 2
 base_model = "anthropic/claude-opus-4-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
 [cost.text.input]
 price = 5.5
