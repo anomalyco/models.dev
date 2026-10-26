@@ -10,7 +10,9 @@
 #   (https://docs.near.ai/cloud/reasoning-models.md); NEAR's Kimi section covers only the TEE-hosted K2.5/K2.6
 #   (chat_template_kwargs.thinking). Moonshot: https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart
 # Reasoning comes back in reasoning_content (https://docs.near.ai/cloud/reasoning-models.md).
-# Input: text and images as NEAR's catalog lists; the lab's video input is left out because the catalog doesn't list it.
+# Input: text and images. The gateway refuses video parts up front for models whose catalog input_modalities don't
+#   declare video (GATED_INPUT_MODALITIES in https://github.com/nearai/cloud-api/blob/main/crates/api/src/models.rs),
+#   and this one declares only text and image. Image parts aren't gated and go through to Moonshot, which takes them.
 #   Not tested live (no NEARAI_API_KEY).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
