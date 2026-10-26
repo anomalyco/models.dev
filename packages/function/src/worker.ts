@@ -100,10 +100,7 @@ export default {
     }
 
     if (url.pathname === "/experimental/v2.0/api.json") {
-      const assetUrl = new URL(url);
-      assetUrl.pathname = "/_experimental_v2.0_api.json";
-      assetUrl.search = "";
-      return await env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return catalogResponse(url, request, env, "experimental_v2.0_api");
     } else if (url.pathname === "/api.json") {
       return catalogResponse(url, request, env, "api");
     } else if (url.pathname === "/models.json") {
@@ -171,7 +168,7 @@ async function sendHit(endpoint: string, token: string, body: string) {
   }
 }
 
-type CatalogEndpoint = "api" | "models" | "catalog";
+type CatalogEndpoint = "api" | "models" | "catalog" | "experimental_v2.0_api";
 
 async function catalogResponse(
   url: URL,
@@ -212,7 +209,7 @@ async function catalogResponse(
   if (!assetResponse.ok || suffix !== undefined) return assetResponse;
 
   const value = await assetResponse.json();
-  const filtered = endpoint === "api"
+  const filtered = endpoint === "api" || endpoint === "experimental_v2.0_api"
     ? filterProvidersByModelType(
         value as Record<string, CatalogProvider>,
         filter,
