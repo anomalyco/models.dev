@@ -459,20 +459,20 @@ test("native routes take the lab's own tool fields, with the schema's choice whe
 test("each gateway API takes the lab's tool fields for its protocol", () => {
   const choice = ["auto", "none", "required", "tool"];
   const lab = {
-    top: { choice, grammar: ["lark", "regex"] },
-    apis: { responses: { strict: true, search: true }, "chat-completions": {}, decisions: { strict: false, choice: [], grammar: [] } },
+    top: {},
+    apis: { responses: { strict: true, choice, search: true, grammar: ["lark"] }, "chat-completions": { strict: true, choice, grammar: ["lark"] } },
   };
-  // Shared values go top-level; Responses-only ones stay on Responses; a protocol the gateway doesn't list is ignored.
-  expect(splitLabTools(lab, ["responses", "chat-completions"])).toEqual({
-    top: { choice, grammar: ["lark", "regex"] },
-    apis: { responses: { strict: true, search: true }, "chat-completions": {} },
+  // Values every gateway API holds go top-level, the rest on their API; a protocol the gateway doesn't list is ignored.
+  expect(splitLabTools({ ...lab, apis: { ...lab.apis, decisions: {} } }, ["responses", "chat-completions"])).toEqual({
+    top: { strict: true, choice, grammar: ["lark"] },
+    apis: { responses: { search: true }, "chat-completions": {} },
   });
-  // A false or empty value is left out rather than written.
-  expect(splitLabTools({ top: { strict: true, choice }, apis: { messages: { strict: false } } }, ["responses", "messages"])).toEqual({
+  // A value one API leaves out stays off the top level.
+  expect(splitLabTools({ top: { choice }, apis: { responses: { strict: true } } }, ["responses", "messages"])).toEqual({
     top: { choice },
     apis: { responses: { strict: true }, messages: {} },
   });
-  expect(splitLabTools(lab, ["responses"])).toEqual({ top: { strict: true, choice, search: true, grammar: ["lark", "regex"] }, apis: { responses: {} } });
+  expect(splitLabTools(lab, ["responses"])).toEqual({ top: { strict: true, choice, search: true, grammar: ["lark"] }, apis: { responses: {} } });
 
   const main = "@opencode/ai/providers/cloudflare-ai-gateway";
   const current = {

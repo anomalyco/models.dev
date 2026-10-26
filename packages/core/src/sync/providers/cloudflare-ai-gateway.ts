@@ -1300,20 +1300,16 @@ function toolFields(tools: unknown) {
 // Each gateway API takes the lab's values for the same protocol (native routes
 // forward the body unchanged; the REST Chat Completions route reaches OpenAI's own
 // Chat Completions, which takes grammar and strict tools and rejects tool_search,
-// live 2026-10-26). Values every API shares go top-level, the rest on their API;
-// false and empty values are left out, as in authored files.
+// live 2026-10-26). A value every API holds goes top-level; one that holds on
+// only some APIs goes on each of those APIs. A value an API leaves out means no.
 export function splitLabTools(lab: LabTools, protocols: string[]) {
   const resolved = protocols.map((protocol) => [protocol, { ...lab.top, ...lab.apis[protocol] }] as const);
   const shared = (key: string) => resolved.every(([, tools]) => JSON.stringify(tools[key]) === JSON.stringify(resolved[0]![1][key]));
-  const stated = (fields: Record<string, unknown>, keep: (key: string) => boolean) =>
-    Object.fromEntries(
-      TOOL_FIELDS.filter((key) => keep(key) && fields[key] !== undefined && fields[key] !== false)
-        .filter((key) => !Array.isArray(fields[key]) || (fields[key] as unknown[]).length > 0)
-        .map((key) => [key, fields[key]]),
-    );
+  const pick = (fields: Record<string, unknown>, keep: (key: string) => boolean) =>
+    Object.fromEntries(TOOL_FIELDS.filter((key) => keep(key) && fields[key] !== undefined).map((key) => [key, fields[key]]));
   return {
-    top: stated(resolved[0]?.[1] ?? {}, shared),
-    apis: Object.fromEntries(resolved.map(([protocol, tools]) => [protocol, stated(tools, (key) => !shared(key))])),
+    top: pick(resolved[0]?.[1] ?? {}, shared),
+    apis: Object.fromEntries(resolved.map(([protocol, tools]) => [protocol, pick(tools, (key) => !shared(key))])),
   };
 }
 

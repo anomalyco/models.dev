@@ -7,13 +7,13 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6-luna
 # Decisions API (POST /v1/decisions, gpt-6-luna is its only model): https://developers.openai.com/api/docs/guides/decisions
-# Decisions takes no tools (only `model`, `input` and `questions`; tool calls appear only as evidence in `input`), so [api.decisions] clears strict, choice and grammar.
+# Decisions takes no tools (only `model`, `input` and `questions`; tool calls appear only as evidence in `input`), so the tool values sit on [api.responses] and [api.chat-completions] and Decisions has none.
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on Chat Completions and Responses but not on Decisions, so system_updates sits on those two APIs.
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], grammar = ["lark", "regex"] }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 store = true
@@ -22,15 +22,14 @@ prompt_cache_key = true
 service_tier = ["flex", "priority"]
 
 [api.responses]
-capabilities = { system_updates = true, effort_updates = true, tools = { search = true, updates = true } }
+capabilities = { system_updates = true, effort_updates = true, tools = { strict = true, choice = ["auto", "none", "required", "tool"], search = true, grammar = ["lark", "regex"], updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
-capabilities = { system_updates = true }
+capabilities = { system_updates = true, tools = { strict = true, choice = ["auto", "none", "required", "tool"], grammar = ["lark", "regex"] } }
 
 [api.decisions]
 sdk = { opencodeai = "@opencode/ai/protocols/openai-decisions" }
-capabilities = { tools = { strict = false, choice = [], grammar = [] } }
 
 [cost.text.input]
 price = 0.1
