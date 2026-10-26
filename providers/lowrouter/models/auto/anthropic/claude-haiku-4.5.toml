@@ -13,9 +13,9 @@
 # (https://lowrouter.ai/docs/guides/request-parameters).
 # max is not a LowRouter value: 400 'reasoning_effort "max" is not valid (expected one of: none,
 # minimal, low, medium, high, xhigh)'. No thinking.type is exposed, so there is no separate on/off control;
-# none sends no thinking parameter. The budgets are distinct live (2026-10-12, a 12-coin weighing puzzle,
-# max_tokens unset): Haiku 4.5 returned 2,062 completion tokens at minimal, 2,567 at low, 7,138 at high,
-# 13,353 at xhigh; Opus 4.5 2,719 at minimal and 6,157 at high; nothing disclosed as unapplied.
+# none sends no thinking parameter. Each level is distinct live (2026-10-26, a 12-coin weighing puzzle,
+# max_tokens = budget + 2,048): 1,017 completion tokens at minimal, 1,502 at low, 5,103 at medium,
+# 8,523 at high and 9,873 at xhigh, each finish_reason stop.
 # Anthropic routes return no trace on chat completions; thinking tokens are billed as output tokens.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
