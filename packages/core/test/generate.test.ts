@@ -457,6 +457,59 @@ price = 2
     });
   });
 
+  test("legacy_provider replaces the first table's package and URL in v1 only", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      const model = (table: string) => `schema = 2
+name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
+open_weights = true
+release_date = "2026-01-02"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 0
+output = 0
+
+${table}
+`;
+      await write(
+        root,
+        "providers/provider/models/moved.toml",
+        model(`[api.images]
+base_url = "https://example.com/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+legacy_provider = { api = "https://example.com/v4/ai" }`),
+      );
+      await write(
+        root,
+        "providers/provider/models/defaults.toml",
+        model(`[api.chat-completions]
+base_url = "https://example.com/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible" }
+legacy_provider = {}`),
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.provider?.models.moved?.provider).toEqual({ api: "https://example.com/v4/ai" });
+      // `{}` publishes neither field; the shape is judged against the provider's npm.
+      expect(providers.provider?.models.defaults?.provider).toEqual({ shape: "completions" });
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(providersV2.provider?.models.moved?.api).toEqual({
+        images: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai-compatible" } },
+      });
+      expect(JSON.stringify(providersV2)).not.toContain("legacy_provider");
+    });
+  });
+
   test("web search prices are published in v2 and never in v1", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/provider/provider.toml", providerToml("Provider"));

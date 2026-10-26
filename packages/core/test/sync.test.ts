@@ -6456,8 +6456,15 @@ function vercelMedia(fields: Record<string, unknown>) {
   })[0]!;
 }
 
-test("Vercel sync maps every catalog type and serves media models on their own endpoint", () => {
+test("Vercel sync maps every catalog type and lists the standard endpoint where there is one", () => {
   const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  const base_url = "https://ai-gateway.vercel.sh/v1";
+  const standard: Record<string, unknown> = {
+    image: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" } },
+    embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
+    reranking: { base_url, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
+  };
+  const vercelOnly = { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { opencodeai: "none" } };
   const cases: Array<[string, string, string]> = [
     ["image", "image", "images"],
     ["video", "video", "videos"],
@@ -6470,9 +6477,7 @@ test("Vercel sync maps every catalog type and serves media models on their own e
   for (const [catalogType, type, protocol] of cases) {
     const translated = vercel.translateModel(vercelMedia({ id: `example/${catalogType}-model`, type: catalogType }), context) as any;
     expect(translated.v2.type).toBe(type);
-    expect(translated.v2.api).toEqual({
-      [protocol]: { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { opencodeai: "none" } },
-    });
+    expect(translated.v2.api).toEqual({ [protocol]: standard[catalogType] ?? vercelOnly });
     expect(translated.model).toBeUndefined();
     // The written file reads back as a typed v1 model.
     expect(modelV2ToV1({ ...translated.v2, id: "x" }).type).toBe(type);
@@ -6485,17 +6490,9 @@ test("Vercel sync maps every catalog type and serves media models on their own e
   const evaluation = vercel.translateModel(vercelMedia({ id: "example/decision-model", type: "evaluation" }), context) as any;
   expect(evaluation.v2Set).toEqual({
     api: {
-      decisions: {
-        base_url: "https://ai-gateway.vercel.sh/v1",
-        sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" },
-      },
-      evaluate: {
-        base_url: "https://ai-gateway.vercel.sh/v1",
-        sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/vercel-ai-gateway" },
-      },
+      decisions: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-decisions" } },
     },
   });
-  expect(Object.keys(evaluation.v2Set.api)).toEqual(["decisions", "evaluate"]);
   // v1 reads the first API.
   expect(evaluation.model.provider).toEqual({ npm: "@ai-sdk/openai", api: "https://ai-gateway.vercel.sh/v1" });
   expect(vercel.translateModel(vercelMedia({ id: "example/chat-model", type: "language" }), context)).toHaveProperty("v2Set.api", chatApis);
@@ -6530,6 +6527,21 @@ test("Vercel text models keep their default API first and add Responses and Mess
   // Per-API capabilities on the extra tables survive a sync.
   const flagged = { ...chatApis(own), responses: { ...extra.responses, capabilities: { effort_updates: true } } };
   expect(chatApis(flagged)).toEqual(flagged);
+});
+
+test("Vercel media files already in v1 keep publishing the /v4/ai endpoint there", () => {
+  const image = vercelMedia({ id: "bfl/flux-2-pro", name: "FLUX.2 [pro]", type: "image" });
+  const doc = buildVercelMediaModel(image, "image", { schema: 2, base_model: "bfl/flux-2-pro" });
+  expect(doc.v2_only).toBeUndefined();
+  expect(doc.api).toEqual({
+    images: {
+      base_url: "https://ai-gateway.vercel.sh/v1",
+      sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" },
+      legacy_provider: { api: "https://ai-gateway.vercel.sh/v4/ai" },
+    },
+  });
+  expect(modelV2ToV1({ ...doc, id: "bfl/flux-2-pro" }, undefined, "@ai-sdk/gateway").provider)
+    .toEqual({ api: "https://ai-gateway.vercel.sh/v4/ai" });
 });
 
 test("Vercel media models drop chat capabilities and take exact MIME types", () => {

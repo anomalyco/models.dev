@@ -491,23 +491,28 @@ const MEDIA_PROTOCOLS: Record<MediaType, string> = {
 // realtime one, and @ai-sdk/gateway has no Live model:
 // https://vercel.com/docs/ai-gateway/modalities/realtime/gpt-live
 const LIVE_MODELS = new Set(["openai/gpt-live-1"]);
-// OpenCode's vercel-ai-gateway entry point only speaks the chat APIs, not
-// these endpoints.
+// The gateway's other endpoints have no standard equivalent:
+// POST /v1/audio/speech, /v1/audio/transcriptions and /v1/videos return 404.
 const MEDIA_SDK = { opencodeai: "none" };
-// Decision models: first POST /v1/decisions, OpenAI's Decisions format, which
-// @ai-sdk/openai's decisionModel speaks with this baseURL; then POST
-// /v1/evaluate, which OpenCode's vercel-ai-gateway entry calls
-// (experimental.evaluation). @ai-sdk/gateway's decisionModel uses its own
+// Image, embedding and rerank models are also served on the gateway's standard
+// endpoints, under the same model IDs: OpenAI's /v1/images/generations (and
+// /v1/images/edits), OpenAI's /v1/embeddings and Cohere's /v1/rerank.
+// https://vercel.com/docs/ai-gateway/sdks-and-apis
+const STANDARD_BASE_URL = "https://ai-gateway.vercel.sh/v1";
+const STANDARD_MEDIA_APIS: Partial<Record<MediaType, Doc>> = {
+  image: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" } },
+  embedding: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
+  reranking: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
+};
+// Decision models: POST /v1/decisions, OpenAI's Decisions format, which
+// @ai-sdk/openai's decisionModel and OpenCode's openai-decisions protocol
+// speak with this baseURL. @ai-sdk/gateway's decisionModel uses its own
 // /v4/ai/decision-model endpoint instead.
 // https://vercel.com/docs/ai-gateway/modalities/decision
 const DECISION_APIS = {
   decisions: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
-    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" },
-  },
-  evaluate: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
-    sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/vercel-ai-gateway" },
+    base_url: STANDARD_BASE_URL,
+    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-decisions" },
   },
 };
 // v1 reads the first API as `provider`.
@@ -522,11 +527,11 @@ const LIVE_SDK = { aisdk: "none", opencodeai: "none" };
 // https://ai-sdk.dev/providers/ai-sdk-providers/open-responses
 const CHAT_EXTRA_APIS = {
   responses: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
+    base_url: STANDARD_BASE_URL,
     sdk: { aisdk: "@ai-sdk/open-responses", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/responses" },
   },
   messages: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
+    base_url: STANDARD_BASE_URL,
     sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/messages" },
   },
 };
@@ -676,7 +681,7 @@ export function buildVercelMediaModel(
 
   doc.api = LIVE_MODELS.has(model.id)
     ? { live: { base_url: MEDIA_BASE_URL, sdk: { ...LIVE_SDK } } }
-    : { [MEDIA_PROTOCOLS[type]]: { base_url: MEDIA_BASE_URL, sdk: { ...MEDIA_SDK } } };
+    : { [MEDIA_PROTOCOLS[type]]: mediaApi(type, doc.v2_only === true) };
   const { cost, issue } = vercelMediaCost(model, type);
   if (issue !== undefined) console.warn(`Vercel ${model.id}: no cost written, ${issue}`);
   if (cost !== undefined) doc.cost = cost;
@@ -684,6 +689,14 @@ export function buildVercelMediaModel(
     if (existing?.[key] !== undefined) doc[key] = existing[key];
   }
   return doc;
+}
+
+// A file v1 already publishes keeps the /v4/ai endpoint there, as @ai-sdk/gateway
+// calls it, while v2 lists the standard one.
+function mediaApi(type: MediaType, v2Only: boolean): Doc {
+  const standard = STANDARD_MEDIA_APIS[type];
+  if (standard === undefined) return { base_url: MEDIA_BASE_URL, sdk: { ...MEDIA_SDK } };
+  return v2Only ? structuredClone(standard) : { ...structuredClone(standard), legacy_provider: { api: MEDIA_BASE_URL } };
 }
 
 // Limits come from Vercel's catalog for the model's type, else the lab's. Embedding

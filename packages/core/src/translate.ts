@@ -226,19 +226,21 @@ function withoutReasoningPrice(cost: unknown): unknown {
 // tables, the first one in the file is the default and becomes the v1 API.
 // The protocol only becomes a v1 `shape` where it isn't the SDK's default
 // (OpenAI, Azure and xAI default to Responses), unless `legacy_shape` keeps one.
-// `legacy_interleaved` keeps a bare `interleaved: true`. A table without its own
-// `aisdk` takes the provider's.
+// `legacy_interleaved` keeps a bare `interleaved: true`, and `legacy_provider`
+// replaces the table's `aisdk` and `base_url`. A table without its own `aisdk`
+// takes the provider's.
 function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNpm?: string) {
   const first = Object.entries(api ?? {})[0];
   if (first === undefined) return {};
-  const [protocol, { base_url, sdk, compatibility, legacy_shape, legacy_interleaved }] = first;
+  const [protocol, { base_url, sdk, compatibility, legacy_shape, legacy_interleaved, legacy_provider }] = first;
   // `aisdk = "none"` (no AI SDK package) is v2-only; v1 keeps the provider's npm.
-  const npm = sdk?.aisdk === "none" ? undefined : sdk?.aisdk;
+  const npm = legacy_provider !== undefined ? legacy_provider.npm : sdk?.aisdk === "none" ? undefined : sdk?.aisdk;
   if (legacy_shape !== undefined && toProtocol(legacy_shape) !== protocol) {
     throw new Error(`legacy_shape = "${legacy_shape}" doesn't match [api.${protocol}]`);
   }
-  const shape = legacy_shape ?? toV1Shape(protocol, sdk?.aisdk === undefined ? providerNpm : npm);
-  const provider = withoutUndefined({ npm, api: base_url, shape });
+  const shapeNpm = legacy_provider === undefined && sdk?.aisdk !== undefined ? npm : npm ?? providerNpm;
+  const shape = legacy_shape ?? toV1Shape(protocol, shapeNpm);
+  const provider = withoutUndefined({ npm, api: legacy_provider !== undefined ? legacy_provider.api : base_url, shape });
   const field = compatibility?.reasoning_field;
   return withoutUndefined({
     interleaved: field !== undefined ? { field } : legacy_interleaved,

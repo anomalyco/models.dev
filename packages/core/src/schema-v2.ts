@@ -877,6 +877,14 @@ export const AuthoredApiEntryV2 = z
     // Legacy, v1-only: v1's bare `interleaved: true`. The v2 API never emits it;
     // replaying reasoning is the default there.
     legacy_interleaved: z.literal(true).optional(),
+    // Legacy, v1-only: the v1 `provider.npm` and `provider.api` to publish
+    // instead of the table's `aisdk` and `base_url` (`{}` publishes neither,
+    // so v1 takes the provider's). It keeps a model on the endpoint v1 already
+    // published when its table moves to another one.
+    legacy_provider: z
+      .object({ npm: z.string().min(1).optional(), api: ApiBaseUrlV2.optional() })
+      .strict()
+      .optional(),
   })
   .strict();
 
