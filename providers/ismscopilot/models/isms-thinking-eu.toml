@@ -1,0 +1,30 @@
+# Sources (accessed 2026-10-26):
+# - Aliases and serving models: https://docs.ismscopilot.com/docs/api/models-and-regions
+# - Rates (USD per million tokens): https://www.ismscopilot.com/products/api
+# - Wire surface: https://docs.ismscopilot.com/model-api-openapi.json (text-only subset of
+#   OpenAI chat completions: no tools, no response_format, no attachments; streaming supported)
+# Serving: GLM 5.3 on Mistral's EU inference host (EU processing path), higher reasoning effort.
+# top_k: not forwarded by the API (temperature and top_p are).
+# Reasoning: always on, no caller control (thinking is selected by alias, not by a request field).
+# Limit: the API's local preflight serves a 128,000-token context window; output is the
+# default output reserve (64,000) that the preflight assumes when max_tokens is omitted.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "ISMS Thinking EU"
+description = "Compliance reasoning lane on the EU processing path: GLM 5.3 on Mistral's EU inference host, with curated compliance framework modules injected when relevant and disclosed per response. Text-only chat completions."
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 64_000
+
+[cost.text.input]
+price = 2.8
+
+[cost.text.output]
+price = 8.8
