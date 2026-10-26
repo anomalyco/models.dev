@@ -9,7 +9,12 @@
 # v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the explicit cache (in place); enable_thinking and thinking_budget changes kept the cache; adding tools missed the cache.
+# Re-checked live 2026-10-23 (~8k-token first user message): with cache_control on that message, enable_thinking and thinking_budget changes keep the explicit cache (7.2k-9.3k cached, same as the control); without markers the implicit cache misses after an enable_thinking flip.
+# effort_updates: left out. Changing enable_thinking or thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qwencloud.com/models/qwen3.7-plus, accessed 2026-10-23).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 name = "Qwen3.7 Plus"
 description = "Multimodal Qwen workhorse for long-context agents, visual inputs, and coding"
@@ -24,16 +29,14 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
-system_updates = true
-effort_updates = true
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
@@ -41,15 +44,23 @@ output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0.4
-cache = { read = 0.04, write = 0.5 }
+cache = { read = 0.08, explicit = { read = 0.04, write = 0.5 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 1.2
-cache = { read = 0.12, write = 1.5 }
+cache = { read = 0.24, explicit = { read = 0.12, write = 1.5 } }
 
 [cost.text.output]
 price = 1.6
@@ -57,3 +68,6 @@ price = 1.6
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }
 price = 4.8
+
+[cost.web_search]
+price = 10

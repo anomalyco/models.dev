@@ -1,5 +1,6 @@
 # Deprecated: listed under Deprecated models (June 15, 2026); requests return 400 "Model is unavailable" (live 2026-10-21) (https://opencode.ai/v2/docs/console/models/#deprecated-models, accessed 2026-10-21).
 # Budget: thinking.budget_tokens (min 1024) with thinking.type = enabled (deprecated; not re-verified on Zen)
+# Mid-conversation flags left out: anthropic has no provider file for anthropic/claude-sonnet-4-0 to follow (Zen passes requests through).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-0"
 name = "Claude Sonnet 4"

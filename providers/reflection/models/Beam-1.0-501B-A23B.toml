@@ -21,12 +21,10 @@ schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 top_k = false
-system_updates = false
-effort_updates = false
 store = false
 stream_usage = true
 prompt_cache_key = false

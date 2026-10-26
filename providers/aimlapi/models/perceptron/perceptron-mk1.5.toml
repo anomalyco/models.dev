@@ -1,0 +1,13 @@
+schema = 2
+base_model = "perceptron/perceptron-mk1.5"
+name = "Mk1.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.1587
+
+[cost.text.output]
+price = 1.587

@@ -3,20 +3,27 @@
 # Thinking only: enable_thinking accepts only true; Effort: reasoning_effort = low|high|max (default max); thinking_budget is ignored (Chat API reference).
 # Cache: implicit (context-cache model lists); the hit price is not set.
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: enable_thinking=false rejected; reasoning_effort outside low|high|max rejected; late system message accepted, obeyed and kept the implicit cache; reasoning_effort changes missed it; adding tools missed it.
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
-system_updates = true
-effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 1.4

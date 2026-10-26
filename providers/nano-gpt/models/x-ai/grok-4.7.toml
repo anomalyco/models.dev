@@ -11,8 +11,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 500_000

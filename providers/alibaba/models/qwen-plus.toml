@@ -1,8 +1,12 @@
 # v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted and obeyed but missed the explicit cache (moved, not in place); enable_thinking and thinking_budget changes kept the cache; adding tools missed the cache.
+# Re-checked live 2026-10-23 (~8k-token first user message): with cache_control on that message, enable_thinking and thinking_budget changes keep the explicit cache (7.2k-9.3k cached, same as the control); without markers the implicit cache misses after an enable_thinking flip.
+# effort_updates: left out. Changing enable_thinking or thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 # Prices (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19)
 # Tiers: 0-256K $0.4 in, $1.2 out ($4 thinking); 256K-1M $1.2 in, $3.6 out ($12 thinking).
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qwencloud.com/models/qwen-plus, accessed 2026-10-23).
+# max_tokens_field: ignores max_completion_tokens, max_tokens caps output (live probe 2026-10-24); Model Studio lists it outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions)
 schema = 2
 name = "Qwen Plus"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -17,27 +21,37 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = {} }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
-system_updates = false
-effort_updates = true
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
 output = 32_768
 
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.4
+cache = { read = 0.08, explicit = { read = 0.04, write = 0.5 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 1.2
+cache = { read = 0.24, explicit = { read = 0.12, write = 1.5 } }
 
 [cost.text.output]
 price = 1.2

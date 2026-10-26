@@ -1,4 +1,5 @@
 # Status: no longer on the plan's supported model list (https://www.alibabacloud.com/help/en/model-studio/coding-plan, accessed 2026-10-19).
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "Qwen3 Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
@@ -13,14 +14,16 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
-effort_updates = false
 
 [limit]
 context = 262_144
 output = 32_768
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0

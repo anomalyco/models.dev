@@ -84,7 +84,7 @@ const OllamaModelDetails = z.object({
     quantization_level: z.string(),
   }),
   model_info: z.record(z.union([z.string(), z.number()])),
-  capabilities: z.array(z.enum(["thinking", "completion", "tools", "vision"])),
+  capabilities: z.array(z.string()),
   thinking: z.object({ values: z.array(z.union([z.boolean(), z.string()])) }).nullish(),
 });
 
@@ -166,6 +166,7 @@ for (const existingName of existingModelNames) {
 let created = 0;
 let skipped = 0;
 let needsControls = 0;
+let needsManual = 0;
 for (const { name, data } of modelsData) {
   const fileName = modelFileName(name);
   const filePath = path.join(modelsDir, fileName);
@@ -178,6 +179,36 @@ for (const { name, data } of modelsData) {
   }
 
   const doc = existingText === null ? null : (Bun.TOML.parse(existingText) as Record<string, any>);
+
+  // Only chat and decision models are synced; anything else needs a person.
+  if (!data.capabilities.includes("completion") && !data.capabilities.includes("decision")) {
+    console.warn(`Needs manual authoring (not a chat or decision model: ${data.capabilities.join(", ")}): ${fileName}`);
+    needsManual++;
+    continue;
+  }
+
+  // Decision models are served on POST /v1/systemone, not chat completions, so
+  // they're v2-only. The catalog gives no lab identity, so only an existing
+  // hand-authored decision file is synced.
+  if (data.capabilities.includes("decision")) {
+    const type = doc?.type
+      ?? (doc?.base_model === undefined ? undefined : readLabModel(path.join(labsDir, `${doc.base_model}.toml`), doc.base_model).type);
+    if (doc === null || type !== "decision") {
+      console.warn(`Needs manual authoring (decision model without a decision file): ${fileName}`);
+      needsManual++;
+      continue;
+    }
+    const content = leadingComments(existingText!) + formatModelV2({ ...doc, v2_only: true });
+    if (content === existingText) {
+      console.log(`Skipped (no changes): ${fileName}`);
+      skipped++;
+      continue;
+    }
+    await Bun.write(filePath, content);
+    console.log(`Created: ${fileName}`);
+    created++;
+    continue;
+  }
   const { id: _id, ...before }: Record<string, any> =
     doc === null ? {} : modelV2ToV1({ ...doc, id: name });
   const lab: Record<string, any> =
@@ -233,7 +264,12 @@ for (const { name, data } of modelsData) {
         ...(effort.length > 0 ? [{ type: "effort" as const, values: effort }] : []),
       ].map((option) => ReasoningOption.parse(option));
     }
-    content = formatModelV2(providerModelToV2(ollamaModel));
+    // Ollama's Chat API takes max_tokens, not max_completion_tokens:
+    // https://docs.ollama.com/api/openai-compatibility (accessed 2026-10-24)
+    content = formatModelV2({
+      ...providerModelToV2(ollamaModel),
+      api: { "chat-completions": { compatibility: { max_tokens_field: "max_tokens" } } },
+    });
   } else {
     const after: Record<string, any> = { ...before };
     const existing = normalizeForComparison(existingData!);
@@ -262,5 +298,5 @@ for (const { name, data } of modelsData) {
 }
 
 console.log(
-  `\nDone. Created: ${created}, Skipped: ${skipped}, Deleted: ${deleted}, Needs reasoning controls: ${needsControls}`
+  `\nDone. Created: ${created}, Skipped: ${skipped}, Deleted: ${deleted}, Needs reasoning controls: ${needsControls}, Needs manual authoring: ${needsManual}`
 );

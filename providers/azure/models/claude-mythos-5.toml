@@ -10,11 +10,9 @@ base_model = "anthropic/claude-mythos-5"
 status = "beta"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [api.messages]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

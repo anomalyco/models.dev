@@ -7,10 +7,9 @@ base_model = "alibaba/qwen3-32b"
 name = "Qwen3 32B TEE"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 40_960

@@ -5,7 +5,6 @@ base_model = "cloudflare/clef-flash"
 
 [capabilities]
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 1_800
@@ -13,9 +12,7 @@ input = 1_800
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
-
-[api.decisions]
-sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
+compatibility = { image_input = "state" }
 
 [cost.text.input]
 price = 0.09

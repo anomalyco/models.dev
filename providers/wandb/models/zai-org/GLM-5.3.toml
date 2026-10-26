@@ -8,10 +8,9 @@ name = "GLM 5.3"
 description = "GLM-5.3 is a 744B-parameter MoE model built for advanced reasoning, software engineering, and long-horizon agentic tasks."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

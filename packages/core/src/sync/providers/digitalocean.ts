@@ -16,6 +16,12 @@ export const DigitalOceanModel = z.object({
   type: z.string().optional(),
   thinking: z.boolean().optional(),
   reasoning_efforts: z.array(z.string()).optional(),
+  // Feature flags; `responses` marks models served on POST /v1/responses.
+  capabilities: z.array(z.string()).optional(),
+  // DigitalOcean-hosted models list their own inference endpoints.
+  endpoints: z.array(z.object({
+    capabilities: z.array(z.string()).optional(),
+  }).passthrough()).optional(),
   context_window: z.union([z.number(), z.string()]).optional(),
   modalities: z.object({
     input: z.array(z.string()).optional(),
@@ -43,12 +49,17 @@ const DigitalOceanCatalogPricing = z.object({
   output_price_per_million: z.number().optional(),
   cache_read_input_price_per_million: z.number().optional(),
   cache_write_5m_input_price_per_million: z.number().optional(),
+  cache_write_1h_input_price_per_million: z.number().optional(),
+  image_input_price_per_million: z.number().optional(),
+  image_output_price_per_million: z.number().optional(),
+  image_cache_read_input_price_per_million: z.number().optional(),
 }).passthrough();
 
 const DigitalOceanCatalogModel = z.object({
   id: z.string().min(1).optional(),
   model_id: z.string().min(1),
   name: z.string().min(1),
+  creator: z.string().optional(),
   context_window: z.union([z.number(), z.string()]).nullish(),
   max_output_tokens: z.union([z.number(), z.string()]).nullish(),
   availability: z.array(z.string()).optional(),
@@ -60,6 +71,7 @@ const DigitalOceanCatalogModel = z.object({
   pricing_detail: z.object({
     variants: z.array(z.object({
       tier: z.string().optional(),
+      label: z.string().optional(),
       mode: z.string().optional(),
       prices: DigitalOceanCatalogPricing.nullish(),
     }).passthrough()),
@@ -92,18 +104,19 @@ const DigitalOceanResponse = z.object({
 export type DigitalOceanModel = z.infer<typeof DigitalOceanModel>;
 type DigitalOceanCatalogModel = z.infer<typeof DigitalOceanCatalogModel>;
 
-interface ModelPricing {
+interface Prices {
   input?: number;
   output?: number;
   cacheRead?: number;
   cacheWrite?: number;
-  extended?: {
-    context: number;
-    input?: number;
-    output?: number;
-    cacheRead?: number;
-    cacheWrite?: number;
-  };
+  cacheWrite1h?: number;
+}
+
+interface ModelPricing extends Prices {
+  extended?: Prices & { context: number };
+  // Interactive service-tier variants (Fast, Flex, Ultrafast), by catalog label.
+  serviceTiers?: Array<{ label: string; prices: Prices }>;
+  image?: { input?: number; output?: number; cacheRead?: number };
 }
 
 type ReasoningEffort =
@@ -118,6 +131,7 @@ type ReasoningEffort =
   | "default";
 
 export interface DigitalOceanSourceModel extends DigitalOceanModel {
+  creator?: string;
   max_output_tokens?: string | number | null;
   availability?: string[];
   pricing?: ModelPricing;
@@ -177,9 +191,158 @@ export const digitalocean = {
     return {
       id: model.id,
       model: buildDigitalOceanModel(model, existing, baseModel),
+      v2Set: digitalOceanV2Set(model),
     };
   },
 } satisfies SyncProvider<DigitalOceanSourceModel>;
+
+// Chat models answer POST /v1/chat/completions (the provider default). Models the
+// catalog flags `responses` also answer POST /v1/responses. POST /v1/messages
+// (Anthropic format) serves those and the DigitalOcean-hosted models (the ones
+// with their own `endpoints`); for the rest it 404s "not available via the
+// Responses API" (live 2026-10-22).
+// https://docs.digitalocean.com/products/inference/how-to/si-endpoints/
+// https://docs.digitalocean.com/products/inference/how-to/use-messages-api/
+// OpenAI models are relayed to OpenAI, where every model answers Responses; the
+// catalog leaves the flag off older ones (gpt-4o, gpt-4.1, gpt-5, o1, o3 all
+// answered /v1/responses and /v1/messages live 2026-10-22).
+const RESPONSES_CREATORS = new Set(["OpenAI"]);
+const RESPONSES_API = {
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+};
+const MESSAGES_API = {
+  sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" },
+};
+
+// Web search: $10 per 1,000 requests, not charged on Anthropic models.
+// https://docs.digitalocean.com/products/inference/details/pricing/#tools-usage
+const WEB_SEARCH_PRICE = 10;
+
+// The request's service tier for each catalog price mode. OpenAI models take
+// OpenAI's `service_tier` (fast mode is `priority`); Anthropic fast mode is
+// DigitalOcean's `speed = "fast"`, Anthropic's `fast` tier (live 2026-10-22).
+const SERVICE_TIERS: Record<string, Partial<Record<"fast" | "flex" | "ultrafast", string>>> = {
+  OpenAI: { fast: "priority", flex: "flex", ultrafast: "ultrafast" },
+  Anthropic: { fast: "fast" },
+};
+const SERVICE_TIER_ORDER = ["flex", "priority", "fast", "ultrafast"];
+
+type Override = { when: Record<string, unknown>; [key: string]: unknown };
+
+// v2 data v1 fields can't carry: the model's APIs, web search price, cache-write
+// prices per TTL, image token prices and service-tier prices.
+export function digitalOceanV2Set(model: DigitalOceanSourceModel): Record<string, unknown> {
+  const pricing = model.pricing;
+  const output = normalizeModalities(model.modalities?.output ?? [], []);
+  const chat = model.type === "chat" && output.every((value) => value === "text");
+  const tiers = serviceTierOverrides(model);
+  const set: Record<string, unknown> = {
+    "cost.text.input.overrides": (current: unknown) => {
+      const extended = pricing?.extended;
+      const context = contextOverrides(current).map((override) => {
+        const cache = override.cache as { write?: unknown } | undefined;
+        const write = cacheWrite(firstWrite(cache?.write), extended?.cacheWrite1h);
+        const gt = (override.when.context as { gt?: unknown } | undefined)?.gt;
+        return extended !== undefined && gt === extended.context && typeof write === "object"
+          ? { ...override, cache: { ...cache, write } }
+          : override;
+      });
+      const next = [...context, ...tiers.input];
+      return next.length > 0 ? next : undefined;
+    },
+    "cost.text.output.overrides": (current: unknown) => {
+      const next = [...contextOverrides(current), ...tiers.output];
+      return next.length > 0 ? next : undefined;
+    },
+    "capabilities.service_tier": tiers.names.length > 0 ? tiers.names : undefined,
+  };
+  const write = cacheWrite(pricing?.cacheWrite, pricing?.cacheWrite1h);
+  if (typeof write === "object") set["cost.text.input.cache.write"] = write;
+  if (pricing?.image !== undefined) {
+    set["cost.image"] = withoutUndefined({
+      input: pricing.image.input === undefined
+        ? undefined
+        : withoutUndefined({
+            price: pricing.image.input,
+            cache: pricing.image.cacheRead === undefined ? undefined : { read: pricing.image.cacheRead },
+          }),
+      output: pricing.image.output === undefined ? undefined : { price: pricing.image.output },
+    });
+  }
+  if (chat) {
+    const responses = model.capabilities?.includes("responses") === true || RESPONSES_CREATORS.has(model.creator ?? "");
+    const hosted = model.endpoints?.some((endpoint) => endpoint.capabilities?.includes("chat_completions")) === true;
+    const extra = {
+      ...(responses ? { responses: RESPONSES_API } : {}),
+      ...(responses || hosted ? { messages: MESSAGES_API } : {}),
+    };
+    // The first table stays as it is (v1 reads it).
+    set.api = (current: unknown) => {
+      const tables = isRecord(current) ? current : {};
+      if (current === undefined && Object.keys(extra).length === 0) return undefined;
+      const first = Object.keys(tables)[0] ?? "chat-completions";
+      return { [first]: tables[first] ?? {}, ...structuredClone(extra) };
+    };
+    set["cost.web_search"] = { price: model.creator === "Anthropic" ? 0 : WEB_SEARCH_PRICE };
+  }
+  return set;
+}
+
+function serviceTierOverrides(model: DigitalOceanSourceModel) {
+  const input: Override[] = [];
+  const output: Override[] = [];
+  const names = new Set<string>();
+  for (const { label, prices } of model.pricing?.serviceTiers ?? []) {
+    const parsed = serviceTierLabel(label);
+    const tier = parsed === undefined ? undefined : SERVICE_TIERS[model.creator ?? ""]?.[parsed.mode];
+    if (parsed === undefined || tier === undefined) continue;
+    names.add(tier);
+    const when = {
+      service_tier: { equals: tier },
+      ...(parsed.context === undefined ? {} : { context: { gt: parsed.context } }),
+    };
+    const write = cacheWrite(prices.cacheWrite, prices.cacheWrite1h);
+    const cache = withoutUndefined({ read: prices.cacheRead, write });
+    if (prices.input !== undefined) {
+      input.push(withoutUndefined({ when, price: prices.input, cache: Object.keys(cache).length > 0 ? cache : undefined }));
+    }
+    if (prices.output !== undefined) output.push({ when, price: prices.output });
+  }
+  // Long-context tier prices come after the plain ones, so they win when both match.
+  const byContext = (a: Override, b: Override) => Number("context" in a.when) - Number("context" in b.when);
+  return {
+    input: input.sort(byContext),
+    output: output.sort(byContext),
+    names: [...names].sort((a, b) => SERVICE_TIER_ORDER.indexOf(a) - SERVICE_TIER_ORDER.indexOf(b)),
+  };
+}
+
+function contextOverrides(current: unknown): Override[] {
+  if (!Array.isArray(current)) return [];
+  return current.filter((override): override is Override =>
+    isRecord(override)
+    && isRecord(override.when)
+    && Object.keys(override.when).every((key) => key === "context")
+  );
+}
+
+function cacheWrite(write5m: number | undefined, write1h: number | undefined) {
+  if (write5m === undefined) return undefined;
+  return write1h === undefined ? write5m : { "5m": write5m, "1h": write1h };
+}
+
+function firstWrite(write: unknown) {
+  if (typeof write === "number") return write;
+  return isRecord(write) && typeof write["5m"] === "number" ? write["5m"] : undefined;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function withoutUndefined<T extends Record<string, unknown>>(value: T): T {
+  return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined)) as T;
+}
 
 export async function fetchDigitalOceanModels(key: string, fetcher: typeof fetch = fetch) {
   const [models, catalog] = await Promise.all([
@@ -275,6 +438,7 @@ function mergeCatalogModel(
   return {
     ...model,
     name: catalog?.name ?? model.name,
+    creator: catalog?.creator,
     context_window: catalog?.context_window ?? model.context_window,
     max_output_tokens: catalog?.max_output_tokens,
     modalities: catalog?.modalities ?? model.modalities,
@@ -299,24 +463,65 @@ function catalogPricing(model: DigitalOceanCatalogModel | undefined): ModelPrici
   )?.prices;
   const extended = model.pricing_detail?.variants.find((variant) =>
     variant.mode === "MODEL_BILLING_MODE_INTERACTIVE"
-    && variant.tier?.startsWith("MODEL_PRICING_TIER_EXTENDED_") === true
+    && (
+      variant.tier?.startsWith("MODEL_PRICING_TIER_EXTENDED_") === true
+      || longContextLabel(variant.label) !== undefined
+    )
   );
-  const extendedContext = pricingTierContext(extended?.tier);
+  const extendedContext = pricingTierContext(extended?.tier) ?? longContextLabel(extended?.label);
+  const serviceTiers = (model.pricing_detail?.variants ?? []).flatMap((variant) =>
+    variant.mode === "MODEL_BILLING_MODE_INTERACTIVE"
+      && variant.label !== undefined
+      && serviceTierLabel(variant.label) !== undefined
+      && variant.prices != null
+      ? [{ label: variant.label, prices: variantPrices(variant.prices) }]
+      : []
+  );
+  const image = {
+    input: perMillion(model.pricing.image_input_price_per_million),
+    output: perMillion(model.pricing.image_output_price_per_million),
+    cacheRead: perMillion(model.pricing.image_cache_read_input_price_per_million),
+  };
   return {
     input: perMillion(model.pricing.input_price_per_million),
     output: perMillion(model.pricing.output_price_per_million),
     cacheRead: perMillion(model.pricing.cache_read_input_price_per_million),
     cacheWrite: perMillion(standard?.cache_write_5m_input_price_per_million),
+    cacheWrite1h: perMillion(standard?.cache_write_1h_input_price_per_million),
     extended: extendedContext === undefined || extended?.prices == null
       ? undefined
-      : {
-          context: extendedContext,
-          input: perMillion(extended.prices.input_price_per_million),
-          output: perMillion(extended.prices.output_price_per_million),
-          cacheRead: perMillion(extended.prices.cache_read_input_price_per_million),
-          cacheWrite: perMillion(extended.prices.cache_write_5m_input_price_per_million),
-        },
+      : { context: extendedContext, ...variantPrices(extended.prices) },
+    serviceTiers: serviceTiers.length > 0 ? serviceTiers : undefined,
+    image: image.input !== undefined || image.output !== undefined ? image : undefined,
   };
+}
+
+function variantPrices(prices: z.infer<typeof DigitalOceanCatalogPricing>): Prices {
+  return {
+    input: perMillion(prices.input_price_per_million),
+    output: perMillion(prices.output_price_per_million),
+    cacheRead: perMillion(prices.cache_read_input_price_per_million),
+    cacheWrite: perMillion(prices.cache_write_5m_input_price_per_million),
+    cacheWrite1h: perMillion(prices.cache_write_1h_input_price_per_million),
+  };
+}
+
+// Catalog labels: "Fast Mode", "Flex Mode", "Ultrafast Mode", each optionally
+// followed by " (Prompts > 272K tokens)" for its long-context price.
+function serviceTierLabel(label: string) {
+  const match = label.match(/^(Fast|Flex|Ultrafast) Mode(?: \(Prompts > (\d+)K tokens\))?$/);
+  if (match === null) return undefined;
+  return {
+    mode: match[1]!.toLowerCase() as "fast" | "flex" | "ultrafast",
+    context: match[2] === undefined ? undefined : Number(match[2]) * 1_000,
+  };
+}
+
+// Untiered long-context variants carry the threshold in the label, e.g.
+// "Long form context (> 100k)".
+function longContextLabel(label: string | undefined) {
+  const match = label?.match(/^Long form context \(> (\d+)k\)$/i);
+  return match ? Number(match[1]) * 1_000 : undefined;
 }
 
 function pricingTierContext(tier: string | undefined) {

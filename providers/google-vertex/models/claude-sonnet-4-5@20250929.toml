@@ -9,17 +9,17 @@
 # - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
 # status = "deprecated": Vertex publishes a retirement date of "not sooner than September 29, 2026", which has passed
 # (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/sonnet-4-5).
+# Web search: $10 per 1,000 searches: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (supported models: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search)
+# Token-only multipliers (object factor, so cost.web_search is unscaled): non-global regional premium: Vertex lists one web search price ($10 per 1,000 searches) for every endpoint, a separate SKU the regional premium doesn't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5-20250929"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/google-vertex/anthropic", opencodeai = "@opencode/ai/providers/google-vertex/messages" }
@@ -31,6 +31,9 @@ cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
 [cost.text.output]
 price = 15
 
+[cost.web_search]
+price = 10
+
 [[cost.multipliers]]
 when = { not = { region = { equals = "global" } } }
-factor = 1.1
+factor = { text = 1.1 }

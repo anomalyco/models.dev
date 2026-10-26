@@ -9,12 +9,10 @@ schema = 2
 base_model = "google/gemini-3.5-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = true }
+cache = { implicit = true, explicit = true }
 
 [api.generate-content]
 base_url = "https://api.ofox.ai/gemini/v1beta"

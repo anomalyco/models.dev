@@ -4,13 +4,14 @@
 # Effort (Messages): output_config.effort = low|medium|xhigh
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
-# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-flash.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
+system_updates = true
 
 [api.messages]
 base_url = "https://opencode.ai/inference/go/anthropic/v1"

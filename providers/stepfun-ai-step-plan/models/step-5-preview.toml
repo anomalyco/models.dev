@@ -3,6 +3,7 @@
 # https://platform.stepfun.ai/docs/en/step-plan/integrations/reasoning-api
 # Step 5 Preview's model card lists 64k maximum output:
 # https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
+# max_tokens_field: StepFun's Chat Completions API documents max_tokens and not max_completion_tokens (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, accessed 2026-10-24)
 schema = 2
 base_model = "stepfun/step-5-preview"
 
@@ -14,4 +15,4 @@ structured_output = true
 output = 65_536
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }

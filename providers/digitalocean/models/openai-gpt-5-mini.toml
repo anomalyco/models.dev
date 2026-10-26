@@ -8,16 +8,45 @@ name = "OpenAI GPT-5 Mini"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
+service_tier = ["flex", "priority"]
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.25
 cache = { read = 0.025 }
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 0.45
+cache = { read = 0.045 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.125
+cache = { read = 0.0125 }
+
 [cost.text.output]
 price = 2
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 3.6
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 1
+
+[cost.web_search]
+price = 10

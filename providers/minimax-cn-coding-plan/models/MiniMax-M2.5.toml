@@ -20,11 +20,22 @@ reasoning = { supported = true }
 temperature = true
 top_p = true
 top_k = false
-cache = { supported = true, implicit = { min_tokens = 512 }, explicit = false }
+cache = { implicit = { min_tokens = 512 } }
 
 [limit]
 context = 204_800
 output = 131_072
+
+[api.messages]
+
+[api.chat-completions]
+base_url = "https://api.minimax.cn/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/minimax/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://api.minimax.cn/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/minimax/responses" }
 
 [cost.text.input]
 price = 0

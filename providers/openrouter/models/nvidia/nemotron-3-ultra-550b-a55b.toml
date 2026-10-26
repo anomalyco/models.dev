@@ -7,15 +7,21 @@ schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "medium", "high"], budget = {} }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 262_144
 output = 182_520
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.6

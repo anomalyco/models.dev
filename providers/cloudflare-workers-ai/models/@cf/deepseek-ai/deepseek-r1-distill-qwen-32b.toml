@@ -12,10 +12,8 @@ name = "Deepseek R1 Distill Qwen 32B"
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
-cache = { supported = false }
+cache = false
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 80_000

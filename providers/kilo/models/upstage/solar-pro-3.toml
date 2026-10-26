@@ -6,10 +6,9 @@ base_model = "upstage/solar-pro3"
 name = "Upstage: Solar Pro 3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 117_964

@@ -1,21 +1,18 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # The docs list Mistral Large 4 at 50% off ($0.68/$2.09/$0.07, struck-through $1.36/$4.18/$0.14) with no end date; the discounted price is used.
 # Effort: reasoning_effort = none|high
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a system message before the next user turn was kept in place (cached 8684 -> 8684)
-#   effort_updates = false: reasoning_effort high -> none dropped the cache (cached 8684 -> 0)
-#   tools.updates = false: adding a tool dropped the cache (cached 8684 -> 0)
 # Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/mistral/models/mistral-large-4.toml (Zen passes requests through).
+#   effort_updates left out: there's no in-history effort message, and changing reasoning_effort on the next request wouldn't count anyway (it also dropped the cache on Zen, live 2026-10-23: 0/0 each way, control 7148/7660).
 schema = 2
 base_model = "mistral/mistral-large-4"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 524_288

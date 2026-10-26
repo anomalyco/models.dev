@@ -1,20 +1,16 @@
 # Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: reasoning.effort = low|medium|high|xhigh
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a developer message before the next user turn was kept in place (cached 1152 -> 9984)
-#   effort_updates = false: reasoning.effort high -> low dropped the cache (cached 9856 -> 1152)
-#   tools.updates = false: additional_tools returned 422 and adding a tool dropped the cache (cached 9984 -> 1152)
 # Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xai/models/grok-4.7.toml (Zen passes requests through).
 schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
-effort_updates = false
 
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"

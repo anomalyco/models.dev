@@ -10,7 +10,7 @@ base_model = "meta/muse-spark-1.3"
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1.375

@@ -8,6 +8,7 @@
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 name = "Qwen3.5 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -22,14 +23,14 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 81_920 } }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
 stream_usage = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
@@ -37,6 +38,13 @@ output = 65_536
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0.029
@@ -62,3 +70,6 @@ reasoning = 1.147
 when = { context = { gt = 256_000 } }
 price = 1.72
 reasoning = 1.72
+
+[cost.web_search]
+price = 0.573411

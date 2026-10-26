@@ -12,11 +12,10 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 512_000

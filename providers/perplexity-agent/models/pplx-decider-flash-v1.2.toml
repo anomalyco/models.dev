@@ -1,14 +1,17 @@
 # Decisions API (accessed 2026-10-21): https://docs.perplexity.ai/docs/decisions/quickstart and
 #   https://docs.perplexity.ai/docs/getting-started/pricing: billed per input token, output tokens free, no per-request fee.
 #   Alias pplx-decider-flash-latest.
-# AI SDK: @ai-sdk/perplexity decisionModel posts to `${baseURL}/v1/decisions`, so base_url leaves out /v1.
+# System One body at POST /v1/decisions, so path = "/v1/decisions". @ai-sdk/perplexity decisionModel posts to
+#   `${baseURL}/v1/decisions`, so base_url leaves out /v1.
 schema = 2
 v2_only = true
 base_model = "perplexity/pplx-decider-flash-v1.2"
 
-[api.decisions]
+[api.systemone]
 base_url = "https://api.perplexity.ai"
+path = "/v1/decisions"
 sdk = { aisdk = "@ai-sdk/perplexity", opencodeai = "none" }
+compatibility = { image_input = "state" }
 
 [cost.text.input]
 price = 0.01

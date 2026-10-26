@@ -7,10 +7,15 @@
 # reasoning_tokens per response) shows no measurable difference for
 # minimal/max, so this file declares the established same-host peer set
 # used by cline-pass/mimo-v2.5* (none, low, medium, high, xhigh).
-# Retired: absent from the model list on https://docs.cline.bot/getting-started/clinepass (accessed 2026-10-21).
+# Restored (2026-10-23): the serving API still offers this model even though
+# the docs page omits it. GET https://api.cline.bot/api/v1/models lists
+# xiaomi/mimo-v2.6-flash, and POST /api/v1/chat/completions with
+# model = "cline-pass/mimo-v2.6-flash" returns HTTP 200 (non-streaming;
+# reasoning-controlled Cline API key). The docs page
+# https://docs.cline.bot/getting-started/clinepass does not list it
+# (accessed 2026-10-23); the serving API is treated as authoritative.
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
-status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }

@@ -30,7 +30,7 @@ import {
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
-import { isSchemaV2, modelV2ToV1, providerTomlToV1 } from "./translate.js";
+import { modelV2ToV1, providerTomlToV1, v1ModelType, withoutV1ReasoningCost } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -104,15 +104,12 @@ async function loadProviderV2(
       .join("/")
       .slice(0, -5);
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
-    const v1Model = isSchemaV2(rawModel) ? modelV2ToV1(rawModel, { modelPath }) : rawModel;
+    const v1Model = modelV2ToV1(rawModel, { modelPath }, v1Provider.npm);
     const resolved = resolveV1Model(v1Model, baseModels, modelPath);
     const model = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
-    const tables = isSchemaV2(rawModel) ? ((rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined) : undefined;
-    if (tables !== undefined) model.api = toModelApis(tables, resolved, v1Provider, opencodeai);
-    else if (opencodeai !== undefined) {
-      const npm = resolved.provider?.npm;
-      model.api = withOpencodePackage(model.api, npm === undefined || npm === v1Provider.npm ? opencodeai : "none");
-    }
+    const tables = (rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined;
+    if (tables !== undefined) model.api = toModelApis(tables, v1Provider, opencodeai);
+    else if (opencodeai !== undefined && opencodeai !== "none") model.api = withOpencodePackage(model.api, opencodeai);
     models[modelID] = model;
   }
 
@@ -140,7 +137,6 @@ async function loadLabsV2(modelsDir: string) {
   if (!existsSync(modelsDir)) return labs;
   for await (const modelPath of scanTomls(modelsDir, "**/*.toml")) {
     const raw = await readToml(modelPath);
-    if (!isSchemaV2(raw)) continue;
     const id = path.relative(modelsDir, modelPath).split(path.sep).join("/").slice(0, -5);
     labs[id] = parseWithCause(LabModelV2, { ...withoutSchema(raw), id }, { modelPath, toml: raw });
   }
@@ -157,9 +153,7 @@ function withV2Fields(
 ): ModelV2 {
   const lab =
     typeof rawModel.base_model === "string" ? labsV2[rawModel.base_model] : undefined;
-  const authored = isSchemaV2(rawModel)
-    ? parseWithCause(AuthoredModelV2, withoutSchema(rawModel), { modelPath, toml: rawModel })
-    : undefined;
+  const authored = parseWithCause(AuthoredModelV2, withoutSchema(rawModel), { modelPath, toml: rawModel });
   const omit = Array.isArray(rawModel.base_model_omit) ? rawModel.base_model_omit : [];
   const inheritsModalities =
     rawModel.modalities === undefined &&
@@ -168,16 +162,21 @@ function withV2Fields(
   const result: ModelV2 = {
     ...model,
     modalities:
-      authored?.modalities ??
+      authored.modalities ??
       (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities),
     capabilities: mergeDeep(
       mergeDeep(lab?.capabilities ?? {}, model.capabilities),
-      authored?.capabilities ?? {},
+      authored.capabilities ?? {},
     ) as ModelV2["capabilities"],
   };
-  if (authored?.cost !== undefined) result.cost = authored.cost;
-  if (authored?.experimental !== undefined) result.experimental = authored.experimental;
-  if (authored?.metadata !== undefined) result.metadata = authored.metadata;
+  // v1 leaves v2-only types out, so they come from the files.
+  const type = authored.type ?? (omit.includes("type") ? undefined : lab?.type);
+  if (type !== undefined && v1ModelType(type, authored.v2_only, { modelPath, toml: rawModel }) === undefined) {
+    result.type = type;
+  }
+  if (authored.cost !== undefined) result.cost = authored.cost;
+  if (authored.experimental !== undefined) result.experimental = authored.experimental;
+  if (authored.metadata !== undefined) result.metadata = authored.metadata;
   return result;
 }
 
@@ -219,7 +218,10 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
       output: outputModalities,
     },
     capabilities: {
-      tools: model.tool_call ? { supported: true } : { supported: false },
+      // An update flag that isn't authored means the host doesn't support it.
+      tools: model.tool_call ? { supported: true, updates: false } : { supported: false },
+      system_updates: false,
+      effort_updates: false,
       reasoning: toReasoningSupportV2(model),
       ...(model.structured_output !== undefined && type !== "decision"
         ? { structured_output: model.structured_output }
@@ -403,84 +405,6 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "gitlab-ai-provider": "https://gitlab.com/api/v4",
 };
 
-const OPENCODE_PACKAGES: Record<string, string> = {
-  "@ai-sdk/amazon-bedrock": "@opencode/ai/providers/amazon-bedrock",
-  "@ai-sdk/alibaba": "@opencode/ai/providers/alibaba/chat",
-  "@ai-sdk/anthropic": "@opencode/ai/providers/anthropic",
-  "@ai-sdk/azure": "@opencode/ai/providers/azure/responses",
-  "@ai-sdk/cerebras": "@opencode/ai/providers/cerebras",
-  "@ai-sdk/cohere": "@opencode/ai/providers/cohere/chat",
-  "@ai-sdk/deepinfra": "@opencode/ai/providers/deepinfra",
-  "@ai-sdk/google": "@opencode/ai/providers/google",
-  "@ai-sdk/google-vertex": "@opencode/ai/providers/google-vertex/gemini",
-  "@ai-sdk/google-vertex/anthropic":
-    "@opencode/ai/providers/google-vertex/messages",
-  "@ai-sdk/groq": "@opencode/ai/providers/groq",
-  "@ai-sdk/mistral": "@opencode/ai/providers/mistral",
-  "@ai-sdk/openai": "@opencode/ai/providers/openai/responses",
-  "@ai-sdk/openai-compatible": "@opencode/ai/providers/openai-compatible",
-  "@ai-sdk/togetherai": "@opencode/ai/providers/togetherai",
-  "@ai-sdk/xai": "@opencode/ai/providers/xai",
-  "@ai-sdk/gateway": "@opencode/ai/providers/vercel-ai-gateway",
-  "@openrouter/ai-sdk-provider": "@opencode/ai/providers/openrouter",
-  "ai-gateway-provider": "@opencode/ai/providers/cloudflare-ai-gateway",
-  "venice-ai-sdk-provider": "@opencode/ai/providers/venice",
-};
-
-const hostProtocols = (name: string) => ({
-  "@ai-sdk/openai-compatible": `@opencode/ai/providers/${name}/chat`,
-  "@ai-sdk/anthropic": `@opencode/ai/providers/${name}/messages`,
-  "@ai-sdk/openai": `@opencode/ai/providers/${name}/responses`,
-});
-
-const OPENCODE_HOSTS: Record<string, Record<string, string>> = {
-  alibaba: hostProtocols("alibaba"),
-  "alibaba-cn": hostProtocols("alibaba"),
-  "alibaba-coding-plan": hostProtocols("alibaba"),
-  "alibaba-coding-plan-cn": hostProtocols("alibaba"),
-  "alibaba-token-plan": hostProtocols("alibaba"),
-  "alibaba-token-plan-cn": hostProtocols("alibaba"),
-  baseten: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/baseten" },
-  "cloudflare-ai-gateway": {
-    "@ai-sdk/anthropic": "@opencode/ai/providers/cloudflare-ai-gateway",
-    "@ai-sdk/openai": "@opencode/ai/providers/cloudflare-ai-gateway",
-    "@ai-sdk/openai-compatible":
-      "@opencode/ai/providers/cloudflare-ai-gateway",
-    "ai-gateway-provider": "@opencode/ai/providers/cloudflare-ai-gateway",
-  },
-  cohere: {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/cohere/chat",
-  },
-  "cloudflare-workers-ai": {
-    "@ai-sdk/openai-compatible":
-      "@opencode/ai/providers/cloudflare-workers-ai",
-  },
-  deepseek: {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/deepseek",
-  },
-  digitalocean: {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/digitalocean",
-  },
-  "fireworks-ai": {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/fireworks",
-  },
-  "google-vertex": {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/google-vertex/chat",
-  },
-  "kimi-for-coding": hostProtocols("moonshot"),
-  meta: hostProtocols("meta"),
-  minimax: hostProtocols("minimax"),
-  "minimax-cn": hostProtocols("minimax"),
-  "minimax-coding-plan": hostProtocols("minimax"),
-  "minimax-cn-coding-plan": hostProtocols("minimax"),
-  moonshotai: hostProtocols("moonshot"),
-  "moonshotai-cn": hostProtocols("moonshot"),
-  zai: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/zai/chat" },
-  "zai-coding-plan": hostProtocols("zai-coding-plan"),
-  zhipuai: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/zai/chat" },
-  "zhipuai-coding-plan": hostProtocols("zai-coding-plan"),
-};
-
 function toApiV2(model: Model, provider: Provider): ApiV2 {
   const npm = model.provider?.npm ?? provider.npm;
   const shape = model.provider?.shape;
@@ -492,15 +416,11 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
   const base_url = rawBaseUrl.replace(/\/+$/, "");
 
   const protocol = resolveProtocol(model, provider, npm, shape);
-  const opencodeai = resolveOpencodePackage(model, provider, npm, shape);
   const compatibility = toCompatibilityV2(model);
 
   const entry: ApiEntryV2 = {
     base_url,
-    sdk: {
-      ...(model.type === "decision" ? {} : { aisdk: npm }),
-      ...(opencodeai !== undefined ? { opencodeai } : {}),
-    },
+    sdk: { aisdk: npm },
     ...(compatibility !== undefined ? { compatibility } : {}),
   };
 
@@ -515,14 +435,14 @@ export function resolveProtocol(
 ): ApiProtocolV2 {
   if (model.type === "decision") {
     if (provider.id === "cloudflare-workers-ai") return "workers-ai-run";
-    if (provider.id === "vercel") return "evaluate";
+    if (provider.id === "vercel") return "decisions";
     return "systemone";
   }
 
   if (npm === "@ai-sdk/anthropic" || npm === "@ai-sdk/google-vertex/anthropic") {
     return "messages";
   }
-  if (npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure") {
+  if (npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure" || npm === "@ai-sdk/xai") {
     return shape === "completions" ? "chat-completions" : "responses";
   }
   if (npm === "@ai-sdk/amazon-bedrock") {
@@ -546,11 +466,9 @@ export function resolveProtocol(
 // default URL), `sdk.aisdk` from its `npm`, and `sdk.opencodeai` from its
 // `opencodeai` only when the table takes the provider's `npm` too: a table
 // naming another `aisdk` names its own `opencodeai` or gets none. `"none"`
-// stops a package from being filled in. Until providers author `opencodeai`,
-// the package is guessed as for the default API.
+// stops a package from being filled in.
 function toModelApis(
   tables: Record<string, AuthoredApiEntryV2>,
-  model: Model,
   provider: Provider,
   opencodeai: string | undefined,
 ): ApiV2 {
@@ -559,74 +477,29 @@ function toModelApis(
       const aisdk = table.sdk?.aisdk ?? provider.npm;
       const npm = aisdk === "none" ? provider.npm : aisdk;
       const base_url = (table.base_url ?? provider.api ?? DEFAULT_NPM_BASE_URLS[npm] ?? "").replace(/\/+$/, "");
-      const shape = protocol === "responses" ? "responses" : protocol === "chat-completions" ? "completions" : undefined;
       const sdk = {
         aisdk,
-        opencodeai:
-          table.sdk?.opencodeai ??
-          (opencodeai === undefined
-            ? resolveOpencodePackage(model, provider, npm, shape)
-            : aisdk === provider.npm
-              ? opencodeai
-              : undefined),
+        opencodeai: table.sdk?.opencodeai ?? (aisdk === provider.npm ? opencodeai : undefined),
       };
       const entry: ApiEntryV2 = {
         base_url,
+        ...(table.path !== undefined ? { path: table.path } : {}),
         // `"none"`: no package supports this API, so the key is left out.
         sdk: Object.fromEntries(Object.entries(sdk).filter(([, value]) => value !== undefined && value !== "none")),
         ...(table.compatibility !== undefined ? { compatibility: table.compatibility } : {}),
+        ...(table.capabilities !== undefined ? { capabilities: table.capabilities } : {}),
       };
       return [protocol, entry];
     }),
   ) as ApiV2;
 }
 
-// A model without its own tables uses the provider's default API, so the
-// provider's `opencodeai` replaces the guessed package (`"none"` removes it).
-// A model naming another AI SDK package can't name an OpenCode one, so it gets
-// none.
+// A model without its own tables uses the provider's default API, so it takes
+// the provider's `opencodeai`.
 function withOpencodePackage(api: ApiV2, opencodeai: string): ApiV2 {
   return Object.fromEntries(
-    Object.entries(api).map(([protocol, entry]) => {
-      const { opencodeai: _guess, ...sdk } = entry.sdk ?? {};
-      return [protocol, { ...entry, sdk: opencodeai === "none" ? sdk : { ...sdk, opencodeai } }];
-    }),
+    Object.entries(api).map(([protocol, entry]) => [protocol, { ...entry, sdk: { ...entry.sdk, opencodeai } }]),
   ) as ApiV2;
-}
-
-function resolveOpencodePackage(
-  model: Model,
-  provider: Provider,
-  npm: string,
-  shape: "responses" | "completions" | undefined,
-): string | undefined {
-  if (model.type === "decision") {
-    if (provider.id === "cloudflare-workers-ai")
-      return "@opencode/ai/providers/cloudflare-workers-ai";
-    if (provider.id === "vercel")
-      return "@opencode/ai/providers/vercel-ai-gateway";
-    if (provider.id === "openrouter")
-      return "@opencode/ai/providers/openrouter";
-    return "@opencode/ai/providers/typesafe-ai";
-  }
-
-  const host = OPENCODE_HOSTS[provider.id]?.[npm];
-  if (host) return host;
-  if (npm === "@ai-sdk/amazon-bedrock/mantle") {
-    return `@opencode/ai/providers/amazon-bedrock/mantle/${
-      model.id.includes("gpt-oss") ? "chat" : "responses"
-    }`;
-  }
-  if (npm === "@ai-sdk/openai" && shape === "completions") {
-    return "@opencode/ai/providers/openai/chat";
-  }
-  if (npm === "@ai-sdk/azure" && shape === "completions") {
-    return "@opencode/ai/providers/azure/chat";
-  }
-  if (npm === "@ai-sdk/openai-compatible" && shape === "responses") {
-    return "@opencode/ai/providers/openai-compatible/responses";
-  }
-  return OPENCODE_PACKAGES[npm];
 }
 
 function toCompatibilityV2(model: Model): CompatibilityV2 | undefined {
@@ -696,7 +569,7 @@ function resolveV1Model(
   );
   omitPaths(merged, omit ?? []);
 
-  const authored = parseWithCause(AuthoredModel, merged, {
+  const authored = parseWithCause(AuthoredModel, withoutV1ReasoningCost(merged), {
     modelPath,
     toml: merged,
   });

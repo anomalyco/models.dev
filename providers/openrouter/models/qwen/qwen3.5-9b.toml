@@ -9,15 +9,23 @@ base_model = "alibaba/qwen3.5-9b"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = false
-effort_updates = false
+
+[limit]
+output = 235_929
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.08
-cache = { read = 0.04 }
+price = 0.17
 
 [cost.text.output]
-price = 0.13
+price = 0.25

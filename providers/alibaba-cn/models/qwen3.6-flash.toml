@@ -3,24 +3,34 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: 0-256K $0.165/$0.99, 256K-1M $0.66/$3.961 (previously a discounted Singapore rate). Explicit cache: read 10%, creation 125% of input.
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 base_model = "alibaba/qwen3.6-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 131_072 } }
 structured_output = true
 stream_usage = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0.165
-cache = { read = 0.0165, write = 0.20625 }
+cache = { read = 0.0165, explicit = { write = 0.20625 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 0.66
-cache = { read = 0.066, write = 0.825 }
+cache = { read = 0.066, explicit = { write = 0.825 } }
 
 [cost.text.output]
 price = 0.99
@@ -28,3 +38,6 @@ price = 0.99
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }
 price = 3.961
+
+[cost.web_search]
+price = 0.573411

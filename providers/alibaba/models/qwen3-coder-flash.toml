@@ -3,6 +3,8 @@
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted and obeyed but missed the explicit cache (moved, not in place); adding tools missed the cache; no reasoning control.
 # Prices (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19)
 # Tiers: 0-32K $0.3/$1.5, 32K-128K $0.5/$2.5, 128K-256K $0.8/$4, 256K-1M $1.6/$9.6.
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qwencloud.com/models/qwen3-coder-flash, accessed 2026-10-23).
+# max_tokens_field: ignores max_completion_tokens, max_tokens caps output (live probe 2026-10-24); Model Studio lists it outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions)
 schema = 2
 name = "Qwen3 Coder Flash"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
@@ -16,35 +18,47 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
-system_updates = false
-effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
 output = 65_536
 
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.3
+cache = { read = 0.06, explicit = { read = 0.03, write = 0.375 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 32_000 } }
 price = 0.5
+cache = { read = 0.1, explicit = { read = 0.05, write = 0.625 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128_000 } }
 price = 0.8
+cache = { read = 0.16, explicit = { read = 0.08, write = 1 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 1.6
+cache = { read = 0.32, explicit = { read = 0.16, write = 2 } }
 
 [cost.text.output]
 price = 1.5

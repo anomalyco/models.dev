@@ -7,6 +7,9 @@ base_model = "openai/gpt-image-2.5-sunburst"
 input = ["text"]
 output = ["image/png", "image/jpeg", "image/webp"]
 
+[capabilities]
+cache = { implicit = true }
+
 [api.images]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
 sdk = { opencodeai = "none" }

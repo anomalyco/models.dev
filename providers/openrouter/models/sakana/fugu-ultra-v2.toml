@@ -6,10 +6,17 @@ base_model = "sakana/fugu-ultra-v2"
 description = "Quality-first multi-agent model for hard research, analysis, and competitions"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 5
@@ -26,3 +33,6 @@ price = 30
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 45
+
+[cost.web_search]
+price = 10

@@ -10,10 +10,9 @@ base_model = "deepseek/deepseek-v4-flash"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 131_072

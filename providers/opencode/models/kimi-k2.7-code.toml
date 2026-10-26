@@ -1,11 +1,12 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
-# Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/moonshotai/models/kimi-k2.7-code.toml (Zen passes requests through).
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+system_updates = true
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

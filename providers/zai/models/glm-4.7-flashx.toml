@@ -5,20 +5,31 @@
 # - Caching (automatic, no write price): https://docs.z.ai/guides/capabilities/cache
 # - Chat API (temperature and top_p, no top_k; images jpg/png; video mp4/mkv/mov): https://docs.z.ai/api-reference/llm/chat-completion
 # Toggle: thinking.type = enabled|disabled (default enabled)
-# Mid-conversation (checked live 2026-10-19 on api.z.ai and open.bigmodel.cn): a late system message
-# is accepted and keeps the cache; adding or removing tools between turns drops it.
+# Mid-conversation (live 2026-10-23 on api.z.ai and open.bigmodel.cn, ~7k-token first user message):
+# a late system message is followed but not kept in place (cached tokens drop to ~0 vs ~7.5k on the
+# unchanged control), so system_updates is left out.
+# effort_updates: left out. Flipping thinking.type on the next request keeps the cache (reasoning tokens
+# ~100 vs 0), but there's no in-history effort message, so it doesn't count.
+# Adding or removing tools between turns drops the cache (2026-10-19).
 schema = 2
 base_model = "zhipuai/glm-4.7-flashx"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 top_k = false
-system_updates = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.z.ai/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-coding-plan/messages" }
+
+[api.responses]
+base_url = "https://api.z.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
 
 [cost.text.input]
 price = 0.07

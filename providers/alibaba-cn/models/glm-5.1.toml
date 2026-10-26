@@ -1,12 +1,12 @@
 # Chinese mainland deployment is tiered on input tokens per request; every
 # token in a request bills at its tier's unit price. The 0.87/3.48 previously
 # published here matches neither band; both bands below are taken from the
-# vendor page. No cache-read price is published for either band, so the
-# existing curated cache_read is retained on the base and not restated.
+# vendor page. Cache prices are set per band from the Qianwen AI ratios below.
 # https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-08-26)
 # v2 capabilities (docs for China (Beijing), accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling incl. top_k, which the DeepSeek, Kimi and MiniMax series do not support; enable_thinking defaults; stream_options.include_usage);
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/glm-5.1, accessed 2026-10-23).
 schema = 2
 name = "GLM-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
@@ -19,12 +19,12 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 131_072 } }
 structured_output = true
 temperature = true
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 202_752
@@ -33,13 +33,18 @@ output = 128_000
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.825
-cache = { read = 0.17 }
+cache = { read = 0.165, explicit = { read = 0.0825, write = 1.03125 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 32_000 } }
 price = 1.1
+cache = { read = 0.22, explicit = { read = 0.11, write = 1.375 } }
 
 [cost.text.output]
 price = 3.301

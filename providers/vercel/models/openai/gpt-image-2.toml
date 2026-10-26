@@ -8,6 +8,9 @@ name = "GPT Image 2"
 input = ["text"]
 output = ["image/png", "image/jpeg", "image/webp"]
 
+[capabilities]
+cache = { implicit = true }
+
 [api.images]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
 sdk = { opencodeai = "none" }

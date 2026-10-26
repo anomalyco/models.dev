@@ -1,0 +1,21 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (Go list price at launch).
+# Release: Moonshot announcement (Oct 24, 2026 Beijing time); weights announced for release by Nov 4, 2026.
+# Context: 1,048,576 tokens. Image and video input, always-on thinking, reasoning_effort = low|high|max (default max)
+# and tool calls confirmed live upstream on 2026-10-23.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2 }
+
+[cost.text.output]
+price = 10

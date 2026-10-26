@@ -5,17 +5,16 @@ schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 524_288
 
 [cost.text.input]
-price = 0.3
-cache = { read = 0.06 }
+price = 0.224
+cache = { read = 0.0448 }
 
 [cost.text.output]
-price = 1.2
+price = 0.88

@@ -1,19 +1,15 @@
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: output_config.effort = low|medium|high|xhigh|max
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a role:system message after the last user turn was kept in place (cached 11939 -> 11953)
-#   effort_updates = false: per-message output_config.effort rejected (400: output_config.effort)
-#   tools.updates = false: tool_addition rejected (400: tool_addition/tool_re)
 # Cache: explicit cache_control only, as on Anthropic (https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Zen forwards it: block and top-level cache_control and ttl 1h were honored, and no read happened without it (live on claude-haiku-5-5, claude-opus-5-5, claude-sonnet-5 and claude-sonnet-5-5). Zen lists only the 5m write price.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/anthropic/models/claude-sonnet-5.toml (Zen passes requests through).
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 system_updates = true
-effort_updates = false
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"

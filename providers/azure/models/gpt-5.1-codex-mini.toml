@@ -21,9 +21,8 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = false
 store = true
-cache = { supported = true, implicit = { ttl = ["24h"], min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { ttl = ["24h"], min_tokens = 1_024 } }
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 400_000

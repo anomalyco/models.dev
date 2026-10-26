@@ -1,6 +1,13 @@
 import { expect, test } from "bun:test";
 
-import { buildWorkersAiModel, cloudflareWorkersAi } from "../src/sync/providers/cloudflare-workers-ai.js";
+import {
+  buildWorkersAiModel,
+  cloudflareWorkersAi,
+  takesResponsesBody,
+  workersAiApis,
+} from "../src/sync/providers/cloudflare-workers-ai.js";
+import { patchModelV2 } from "../src/model-file-v2.js";
+import { modelV2ToV1 } from "../src/translate.js";
 
 test("preserves OpenRouter pricing overrides as context tiers", () => {
   const [source] = cloudflareWorkersAi.parseModels({
@@ -95,8 +102,8 @@ test("never raises a context window or pins other models", () => {
   expect(translatedContext("@cf/test/unpinned", 1_310_720)).toBe(1_310_720);
 });
 
-test("marks Clef and Clairic routes as decisions even when Workers AI search labels them text generation", () => {
-  for (const id of ["@cf/cloudflare/clairic", "@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
+test("marks Clef routes as decisions even when Workers AI search labels them text generation", () => {
+  for (const id of ["@cf/cloudflare/clef", "@cf/cloudflare/clef-flash", "@cf/cloudflare/clef-omni"]) {
     const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow(id, 65_536)] } });
     const translated = cloudflareWorkersAi.translateModel(source!, {
       existing: () => undefined,
@@ -109,6 +116,30 @@ test("marks Clef and Clairic routes as decisions even when Workers AI search lab
     existing: () => undefined,
     authored: () => undefined,
   })?.model.type).toBeUndefined();
+});
+
+test("keeps Clairic's authored extraction type when search labels it text generation", () => {
+  const doc = {
+    schema: 2,
+    v2_only: true,
+    type: "extraction",
+    name: "Clairic",
+    description: "Extracts typed fields",
+    open_weights: true,
+    release_date: "2026-10-14",
+    modalities: { input: ["text"], output: ["text"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false }, temperature: true },
+    limit: { context: 65_536, output: 65_536 },
+    cost: { text: { input: { price: 0.1 }, output: { price: 0 } } },
+  };
+  const before = modelV2ToV1({ ...doc, id: "@cf/cloudflare/clairic" });
+  const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow("@cf/cloudflare/clairic", 65_536)] } });
+  const after: Record<string, unknown> = cloudflareWorkersAi.translateModel(source!, {
+    existing: () => before as never,
+    authored: () => undefined,
+  })!.model;
+  expect(after.type).toBeUndefined();
+  expect(patchModelV2(doc, before, after).type).toBe("extraction");
 });
 
 test("lists search efforts weakest first so v2 files stay unchanged", () => {
@@ -132,4 +163,24 @@ test("keeps the file's own API address, which search does not report", () => {
   const provider = { api: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run" };
   expect(buildWorkersAiModel(source!, { provider }).provider).toEqual(provider);
   expect(buildWorkersAiModel(source!, undefined).provider).toBeUndefined();
+});
+
+test("detects Workers AI request schemas that take a Responses body", () => {
+  const prompt = { title: "Prompt", properties: { prompt: {}, max_tokens: {} } };
+  const messages = { title: "Messages", properties: { messages: {}, tools: {} } };
+  // GPT-OSS: a Responses variant with top-level `input` next to the chat variants.
+  expect(takesResponsesBody({ oneOf: [{ oneOf: [prompt, messages] }, { properties: { input: {}, reasoning: {} } }] })).toBe(true);
+  expect(takesResponsesBody({ anyOf: [{ oneOf: [prompt, messages] }, { properties: { requests: {} } }] })).toBe(false);
+});
+
+test("lists the Responses API after a Workers AI model's first table only when its schema takes it", () => {
+  const responses = { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } };
+  expect(workersAiApis(undefined, true)).toEqual({ "chat-completions": {}, responses });
+  const once = workersAiApis(undefined, true);
+  expect(workersAiApis(once, true)).toEqual(once);
+  // No Responses body: nothing is added, and a stale table is dropped.
+  expect(workersAiApis(undefined, false)).toBeUndefined();
+  expect(workersAiApis(once, false)).toEqual({ "chat-completions": {} });
+  const run = { "workers-ai-run": { base_url: "https://example.com/ai/run" } };
+  expect(workersAiApis(run, false)).toEqual(run);
 });

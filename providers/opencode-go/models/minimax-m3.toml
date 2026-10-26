@@ -1,9 +1,9 @@
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # The docs list only $0.30/$1.20/$0.06; the >512K tier is MiniMax's long-context price (https://platform.minimax.io/docs/pricing/overview#models/text), kept from the existing file.
 # Toggle: thinking.type = adaptive|disabled (not verified on Go: no Go subscription key was available)
-# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
 # knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
 # family: kept as "minimax-m3" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M3.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
 base_model = "minimax/MiniMax-M3"
 family = "minimax-m3"
@@ -12,6 +12,7 @@ description = "MiniMax multimodal coding model for long-context reasoning and ag
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+system_updates = true
 
 [limit]
 context = 1_000_000

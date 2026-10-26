@@ -9,11 +9,9 @@ base_model = "writer/palmyra-x4"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 122_880

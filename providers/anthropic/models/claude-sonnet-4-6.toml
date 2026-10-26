@@ -1,3 +1,6 @@
+# Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
+# Token-only multipliers (object factor, so cost.web_search is unscaled): US data residency (https://platform.claude.com/docs/en/manage-claude/data-residency#pricing).
+# APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
 schema = 2
 name = "Claude Sonnet 4.6"
 description = "Claude workhorse for coding agents, careful analysis, and production cost control"
@@ -12,17 +15,21 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
 temperature = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
 output = 128_000
+
+[api.messages]
+
+[api.chat-completions]
+base_url = "https://api.anthropic.com/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 3
@@ -31,6 +38,9 @@ cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
 [cost.text.output]
 price = 15
 
+[cost.web_search]
+price = 10
+
 [[cost.multipliers]]
 when = { region = { equals = "us" } }
-factor = 1.1
+factor = { text = 1.1 }

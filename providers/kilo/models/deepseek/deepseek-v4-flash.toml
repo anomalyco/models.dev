@@ -6,18 +6,17 @@ base_model = "deepseek/deepseek-v4-flash"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [limit]
-context = 1_048_575
-output = 943_717
+context = 1_048_576
+output = 943_718
 
 [cost.text.input]
-price = 0.091
-cache = { read = 0.0182 }
+price = 0.05
+cache = { read = 0.05 }
 
 [cost.text.output]
-price = 0.182
+price = 0.45

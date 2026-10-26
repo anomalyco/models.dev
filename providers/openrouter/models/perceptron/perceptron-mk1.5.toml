@@ -13,15 +13,22 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 36_864
 output = 8_192
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.15

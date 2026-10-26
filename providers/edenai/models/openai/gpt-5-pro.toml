@@ -8,10 +8,9 @@ input = ["image/jpeg", "image/png", "image/gif", "image/webp", "text", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 15

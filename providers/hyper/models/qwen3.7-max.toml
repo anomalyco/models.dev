@@ -3,9 +3,8 @@ schema = 2
 base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
-effort_updates = false
 
 [limit]
 output = 64_000

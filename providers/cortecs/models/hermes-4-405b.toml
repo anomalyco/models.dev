@@ -5,12 +5,11 @@ base_model = "nousresearch/hermes-4-405b"
 description = "Hermes 4 405B is a frontier hybrid-mode reasoning model built on Llama 3.1, optimized for advanced logic, math, coding, and structured output generation."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
-cache = { supported = false }
+cache = false
 structured_output = true
 temperature = false
-effort_updates = false
 
 [limit]
 context = 128_000

@@ -1,17 +1,25 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 name = "Qwen 3 Coder 30B A3B Instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 8_192
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.15

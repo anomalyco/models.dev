@@ -4,20 +4,29 @@
 # Contributor tier prompts and completions may be used to improve Meta's products.
 # v2 capabilities: https://dev.meta.ai/docs/structured-output, https://dev.meta.ai/docs/prompt-caching,
 # https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/api-reference/chat-completions/schemas
+# APIs: Responses, Chat Completions and Messages (https://dev.meta.ai/docs/models, "Models at a glance"), all confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.responses] only. The mid-conversation developer message was checked in place on the Responses API (live 2026-10-23); Chat Completions and Messages have no documented or tested in-place system message.
 schema = 2
 base_model = "meta/muse-spark-1.2"
 name = "Muse Spark 1.2 Contributor"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
-system_updates = true
-effort_updates = false
 store = true
 stream_usage = true
 prompt_cache_key = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
+
+[api.responses]
+capabilities = { system_updates = true }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/meta/chat" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/meta/messages" }
 
 [cost.text.input]
 price = 0.1

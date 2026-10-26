@@ -7,10 +7,9 @@ name = "Cohere: Command A+"
 description = "Command A+ is Cohere's flagship model for enterprise agentic workflows. It accepts text and image inputs with a 192K context window, supports native tool calling with strict tool schemas, structured..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 192_000

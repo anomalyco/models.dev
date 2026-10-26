@@ -8,15 +8,24 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 context = 1_000_000
 output = 65_535
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.75

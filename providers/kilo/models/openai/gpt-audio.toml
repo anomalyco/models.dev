@@ -10,9 +10,8 @@ input = ["text", "audio/wav", "audio/mpeg", "application/pdf"]
 output = ["text", "audio/wav", "audio/aac", "audio/mpeg", "audio/flac", "audio/opus", "audio/pcm"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 2.5

@@ -19,10 +19,9 @@ const ENABLE_THINKING_MODELS = new Set([
   "@cf/zai-org/glm-5.2",
 ]);
 // Workers AI search reports these as text generation, but their served API takes
-// state + typed questions (or fields, for Clairic) and returns typed answers rather
-// than chat completions.
+// state + typed questions and returns typed answers rather than chat completions.
+// Clairic (typed fields) is an `extraction` model; its file's type is kept.
 const DECISION_MODELS = new Set([
-  "@cf/cloudflare/clairic",
   "@cf/cloudflare/clef",
   "@cf/cloudflare/clef-flash",
   "@cf/cloudflare/clef-omni",
@@ -50,7 +49,11 @@ const METADATA_PUBLISHERS: Record<string, string> = {
 };
 
 const WorkersAiReasoning = OpenRouterModel.shape.reasoning.unwrap().partial({ mandatory: true });
-const WorkersAiModel = OpenRouterModel.extend({ reasoning: WorkersAiReasoning.optional() });
+const WorkersAiModel = OpenRouterModel.extend({
+  reasoning: WorkersAiReasoning.optional(),
+  // Whether the model's request schema takes a Responses body; unset when the schema couldn't be read.
+  responses_api: z.boolean().optional(),
+});
 type WorkersAiModel = z.infer<typeof WorkersAiModel>;
 
 const CloudflareModel = z.object({
@@ -70,6 +73,7 @@ const CloudflareModel = z.object({
   supported_sampling_parameters: z.array(z.string()).optional(),
   // Validate reasoning separately so malformed controls do not discard the model.
   reasoning: z.unknown().optional(),
+  responses_api: z.boolean().optional(),
 }).passthrough();
 
 const CloudflareResponse = z.object({
@@ -120,6 +124,16 @@ export const cloudflareWorkersAi = {
       if (response !== undefined) rows.push(...modelRows(response));
     }
 
+    // Search has no API list; a model's request schema shows whether it takes a Responses body.
+    for (let index = 0; index < rows.length; index += 6) {
+      await Promise.all(rows.slice(index, index + 6).map(async (row) => {
+        const id = (row as { id?: unknown }).id;
+        if (typeof id !== "string") return;
+        const input = await fetchSchemaInput(accountID, token, id);
+        if (input !== undefined) (row as Record<string, unknown>).responses_api = takesResponsesBody(input);
+      }));
+    }
+
     return { data: rows };
   },
   parseModels(raw) {
@@ -159,9 +173,61 @@ export const cloudflareWorkersAi = {
       model: translated,
       header: (translated.reasoning_options?.some((option) => option.type === "toggle") && !hasToggleWire ? toggleHeader : "")
         + preservedHeader,
+      ...apiSet(model),
     };
   },
 } satisfies SyncProvider<WorkersAiModel>;
+
+// Models whose schema takes a Responses body are also served on POST /ai/v1/responses
+// ("only for Workers AI models that support the Responses API, such as GPT-OSS"):
+// https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/
+const RESPONSES_API = {
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+};
+
+function apiSet(model: WorkersAiModel) {
+  if (model.responses_api === undefined) return {};
+  return { v2Set: { api: (current: unknown) => workersAiApis(current, model.responses_api!) } };
+}
+
+// A model's APIs: its own first table (what v1 reads; an empty table takes the provider's
+// Chat Completions API), then Responses when the model takes it.
+export function workersAiApis(current: unknown, responses: boolean): Record<string, unknown> | undefined {
+  const { responses: _responses, ...own } = current !== null && typeof current === "object" && !Array.isArray(current)
+    ? current as Record<string, unknown>
+    : {};
+  if (!responses) return Object.keys(own).length > 0 ? own : undefined;
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    responses: structuredClone(RESPONSES_API),
+  };
+}
+
+// Whether a request schema has a variant with a top-level Responses `input` field
+// (prompt and messages variants are the Chat Completions shapes).
+export function takesResponsesBody(schema: unknown, depth = 0): boolean {
+  if (schema === null || typeof schema !== "object" || depth > 4) return false;
+  const node = schema as { properties?: Record<string, unknown>; oneOf?: unknown[]; anyOf?: unknown[] };
+  if (node.properties !== undefined && "input" in node.properties) return true;
+  return [...node.oneOf ?? [], ...node.anyOf ?? []].some((variant) => takesResponsesBody(variant, depth + 1));
+}
+
+async function fetchSchemaInput(accountID: string, token: string, id: string) {
+  const url = new URL(`${API_BASE}/${accountID}/ai/models/schema`);
+  url.searchParams.set("model", id);
+  try {
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+    const body = z.object({ result: z.object({ input: z.unknown() }).passthrough() }).passthrough().parse(await response.json());
+    return body.result.input;
+  } catch (error) {
+    console.warn(`Workers AI schema for ${id} failed: ${error instanceof Error ? error.message : String(error)}`);
+    return undefined;
+  }
+}
 
 function hasReasoning(model: WorkersAiModel) {
   return model.supported_parameters.includes("reasoning") || model.supported_parameters.includes("include_reasoning")
@@ -214,7 +280,7 @@ export function buildWorkersAiModel(
     existing?.base_model ?? resolveCloudflareBaseModel(model),
   );
   const type = DECISION_MODELS.has(model.id) ? "decision" : existing?.type;
-  const decision = type === undefined ? synced : { ...synced, type: "decision" as const };
+  const decision = type === undefined ? synced : { ...synced, type };
   // Workers AI search has no API address, so the file's own one (v1 `provider`) is kept.
   const typed = existing?.provider === undefined ? decision : { ...decision, provider: existing.provider };
   if ("base_model" in typed) return typed;
@@ -389,6 +455,7 @@ function normalizeModel(model: CloudflareModel) {
       ...model.supported_features ?? [],
     ],
     reasoning,
+    responses_api: model.responses_api,
   });
 }
 

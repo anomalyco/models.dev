@@ -5,10 +5,10 @@ schema = 2
 base_model = "thinkingmachines/inkling-small"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 system_updates = true
 

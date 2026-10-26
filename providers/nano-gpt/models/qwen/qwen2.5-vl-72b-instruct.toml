@@ -1,0 +1,26 @@
+schema = 2
+name = "Qwen25 VL 72b"
+description = "Qwen25 VL 72b model with 32k context window"
+family = "qwen"
+open_weights = true
+release_date = "2025-05-10"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 32_000
+input = 32_000
+output = 32_000
+
+[cost.text.input]
+price = 0.69989
+
+[cost.text.output]
+price = 0.69989

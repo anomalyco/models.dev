@@ -1,5 +1,6 @@
 # Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/images/generations)
-# Prices: https://docs.digitalocean.com/products/inference/details/pricing/
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ("Image input: $8.00 per 1M tokens; Image output: $30.00 per 1M tokens;
+#   Image cache read: $2.00 per 1M tokens"; catalog image_input/image_output/image_cache_read_input_price_per_million)
 schema = 2
 base_model = "openai/gpt-image-2"
 name = "OpenAI GPT Image 2"
@@ -18,4 +19,11 @@ sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
 price = 8
 
 [cost.text.output]
+price = 30
+
+[cost.image.input]
+price = 8
+cache = { read = 2 }
+
+[cost.image.output]
 price = 30

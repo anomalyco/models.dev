@@ -4,6 +4,7 @@
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Toggle: enable_thinking true|false (default on); Effort: reasoning_effort = high|max (default high; low/medium map to high, xhigh to max) per the Chat API reference.
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
@@ -12,11 +13,11 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["high", "max"] }
 structured_output = true
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
@@ -25,9 +26,19 @@ output = 128_000
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 1.1
 cache = { read = 0.275, write = 0 }
 
 [cost.text.output]
 price = 3.851
+
+[cost.web_search]
+price = 0.573411

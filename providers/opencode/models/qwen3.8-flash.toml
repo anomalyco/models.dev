@@ -4,21 +4,17 @@
 # Effort (Messages): output_config.effort = low|medium|xhigh
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Budget: thinking.budget_tokens with thinking.type = enabled
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a role:system message after the last user turn was kept in place (cached 14548 -> 14571)
-#   effort_updates = false: output_config.effort xhigh -> low dropped the cache (cached 14545 -> 0)
-#   tools.updates = false: adding a tool dropped the cache (cached 14805 -> 0)
 # Cache (live): implicit read without markers, and explicit cache_control; a 1h ttl is written as 5m.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-flash.toml (Zen passes requests through).
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m"] } }
+cache = { implicit = true, explicit = { ttl = ["5m"] } }
 system_updates = true
-effort_updates = false
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"

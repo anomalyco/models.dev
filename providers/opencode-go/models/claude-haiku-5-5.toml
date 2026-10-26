@@ -3,13 +3,17 @@
 # Effort: output_config.effort = low|medium|high|xhigh|max
 # https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
-# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/anthropic/models/claude-haiku-5-5.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+#   Surface: Messages carries the in-history messages (per-message output_config for effort_updates; tool_addition/tool_removal for tools.updates).
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
+tools = { supported = true, updates = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+system_updates = true
+effort_updates = true
 
 [api.messages]
 base_url = "https://opencode.ai/inference/go/anthropic/v1"

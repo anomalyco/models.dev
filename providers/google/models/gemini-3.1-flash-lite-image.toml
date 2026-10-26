@@ -3,18 +3,22 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://ai.google.dev/gemini-api/docs/thinking
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "high"] }
 structured_output = false
-cache = { supported = false }
+cache = false
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
 
 [api.generate-content]
+
+[api.interactions]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.25

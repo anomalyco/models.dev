@@ -2,6 +2,7 @@
 # and tools are per-request fields (effort_updates = false, tools.updates = false).
 # system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
 # Cache: automatic for prompts of 1024+ tokens. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+# Cache writes: https://docs.digitalocean.com/products/inference/details/pricing/ (the catalog has no cache-write price for OpenAI models)
 schema = 2
 base_model = "openai/gpt-6-luna"
 name = "OpenAI GPT-6 Luna"
@@ -11,21 +12,49 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 system_updates = true
-effort_updates = false
+service_tier = ["flex", "priority"]
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.01 }
+cache = { read = 0.01, write = 0.125 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 0.2
 cache = { read = 0.02 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.05
+cache = { read = 0.005 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" }, context = { gt = 272_000 } }
+price = 0.4
+cache = { read = 0.04 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 0.1
+cache = { read = 0.01 }
 
 [cost.text.output]
 price = 0.5
@@ -33,3 +62,22 @@ price = 0.5
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 0.75
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 1
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.25
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" }, context = { gt = 272_000 } }
+price = 1.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 0.375
+
+[cost.web_search]
+price = 10

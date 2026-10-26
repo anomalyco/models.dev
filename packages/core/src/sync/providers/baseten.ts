@@ -15,7 +15,8 @@ import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 const API_ENDPOINT = "https://inference.baseten.co/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const DECISION_PREFIX = "decision-models/";
-const DECISION_HEADER = "# Decision model: POST /v1/systemone (https://docs.baseten.co/inference/model-apis/decision-models)\n";
+const DECISION_HEADER = "# Decision model: POST /v1/systemone (https://docs.baseten.co/inference/model-apis/decision-models)\n"
+  + "# Images go as image_url parts in a user message inside state.messages, which no image_input value describes (https://docs.baseten.co/reference/inference-api/system-one.md).\n";
 
 const Price = z.union([z.string(), z.number()]);
 
@@ -94,10 +95,28 @@ export const baseten = {
       model: built,
       // Model APIs cache prompt prefixes automatically and bill cached input
       // at the catalog's input_cache_read price.
-      v2Set: basetenV2Set(built.cost?.cache_read, context.v2?.(model.id)),
+      v2Set: { ...basetenV2Set(built.cost?.cache_read, context.v2?.(model.id)), api: chatApis },
     };
   },
 } satisfies SyncProvider<BasetenModel>;
+
+// Model APIs also serve the Anthropic Messages API (beta) at POST /v1/messages,
+// for the same model slugs: https://docs.baseten.co/inference/model-apis/overview
+const MESSAGES_API = {
+  sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" },
+};
+
+// A chat model's APIs: its own first table (what v1 reads; an empty table takes
+// the provider's Chat Completions API), then Messages.
+export function chatApis(current: unknown): Record<string, unknown> {
+  const { messages: _messages, ...own } = current !== null && typeof current === "object" && !Array.isArray(current)
+    ? current as Record<string, unknown>
+    : {};
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    messages: structuredClone(MESSAGES_API),
+  };
+}
 
 // Model APIs cache prompt prefixes automatically ("Caching is automatic and
 // requires no request flags") and bill cached input at input_cache_read.
@@ -105,7 +124,7 @@ export function basetenV2Set(cacheRead: number | undefined, current: Record<stri
   const capabilities = current?.capabilities as Record<string, unknown> | undefined;
   if (cacheRead === undefined && capabilities?.cache === undefined) return undefined;
   return {
-    "capabilities.cache": cacheRead === undefined ? undefined : { supported: true, implicit: true },
+    "capabilities.cache": cacheRead === undefined ? undefined : { implicit: true },
   };
 }
 

@@ -4,21 +4,29 @@
 # Peak/off-peak pricing: busy hours 08:00-22:00 UTC+8, idle 22:00-08:00 UTC+8 (14:00-24:00 UTC) at half price. Base = busy price, idle multiplier 0.5.
 # Cache: implicit (context-cache model lists); the hit price is not published ("see the console").
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache (hits observed although the model is not in the context-cache lists); enable_thinking and reasoning_effort changes missed it.
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 v2_only = true
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 top_k = false
-system_updates = true
-effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 1.32
@@ -28,4 +36,7 @@ price = 3.96
 
 [[cost.multipliers]]
 when = { utc_hours = { gte = "14:00" } }
-factor = 0.5
+factor = { text = 0.5 }
+
+[cost.web_search]
+price = 10

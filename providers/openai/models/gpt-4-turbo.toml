@@ -1,3 +1,5 @@
+# tools.updates: left out. This model has no prompt caching (no cached-input price), so there is no cache for a tool change to keep.
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4-turbo
 schema = 2
 name = "GPT-4 Turbo"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
@@ -13,18 +15,22 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
 temperature = true
 system_updates = true
-effort_updates = false
 store = true
-cache = { supported = false }
+cache = false
 
 [limit]
 context = 128_000
 output = 4_096
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 10

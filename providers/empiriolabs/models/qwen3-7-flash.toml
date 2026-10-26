@@ -12,7 +12,7 @@ base_model = "alibaba/qwen3.7-flash"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 131_072 } }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 output = 65_536

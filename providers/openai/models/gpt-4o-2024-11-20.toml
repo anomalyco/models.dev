@@ -1,3 +1,5 @@
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4o
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
 schema = 2
 name = "GPT-4o (2024-11-20)"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
@@ -11,19 +13,24 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
 system_updates = true
-effort_updates = false
 store = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 prompt_cache_key = true
 
 [limit]
 context = 128_000
 output = 16_384
+
+[api.responses]
+capabilities = { tools = { updates = true } }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 2.5

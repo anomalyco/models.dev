@@ -8,17 +8,16 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.54
-cache = { read = 0.1238, write = 0 }
+price = 0.603
+cache = { read = 0.126, write = 0 }
 
 [cost.text.output]
 price = 3.2

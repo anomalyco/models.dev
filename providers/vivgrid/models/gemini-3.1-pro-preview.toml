@@ -3,8 +3,11 @@
 # https://docs.vivgrid.com/models/gemini-3.1-pro-preview (accessed 2026-06-25)
 # https://docs.vivgrid.com/api/model-api (accessed 2026-06-25)
 # Base pricing: https://docs.vivgrid.com/models/gemini-3.1-pro-preview (accessed 2026-10-21); the page lists no long-context rate, so the >200K override is unchanged.
+# Sunset: Vivgrid legacy model, superseded by gemini-4-argon.
+# https://docs.vivgrid.com/models#legacy-models (accessed 2026-10-23)
 schema = 2
 base_model = "google/gemini-3.1-pro-preview"
+status = "deprecated"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 
 [capabilities]

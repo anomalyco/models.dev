@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
 
-import { AuthoredModel, Provider } from "../src/index.js";
+import { AuthoredModel, AuthoredModelV2, Provider } from "../src/index.js";
 
 type AuthoredModelData = z.infer<typeof AuthoredModel>;
 
@@ -134,6 +134,34 @@ describe("provider schema", () => {
     const { api: _api, ...providerWithoutApi } = mergeGatewayProvider;
 
     expect(Provider.safeParse(providerWithoutApi).success).toBe(false);
+  });
+});
+
+describe("v2 API tables", () => {
+  const issues = (api: Record<string, unknown>) => {
+    const result = AuthoredModelV2.safeParse({ id: "m", base_model: "lab/m", api });
+    return result.success ? [] : result.error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`);
+  };
+
+  test("image_input is only allowed on systemone tables", () => {
+    expect(issues({ systemone: { compatibility: { image_input: "state" } } })).toEqual([]);
+    expect(issues({ "chat-completions": { compatibility: { image_input: "state" } } })).toEqual([
+      "api.chat-completions.compatibility.image_input: compatibility.image_input is only allowed on [api.systemone], not [api.chat-completions]",
+    ]);
+  });
+
+  test("max_tokens_field is only allowed on chat-completions tables", () => {
+    expect(issues({ "chat-completions": { compatibility: { max_tokens_field: "max_tokens" } } })).toEqual([]);
+    expect(issues({ messages: { compatibility: { max_tokens_field: "max_tokens" } } })).toEqual([
+      "api.messages.compatibility.max_tokens_field: compatibility.max_tokens_field is only allowed on [api.chat-completions], not [api.messages]",
+    ]);
+  });
+
+  test("reasoning_field is only allowed on chat-completions tables", () => {
+    expect(issues({ "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } })).toEqual([]);
+    expect(issues({ responses: { compatibility: { reasoning_field: "reasoning_content" } } })).toEqual([
+      "api.responses.compatibility.reasoning_field: compatibility.reasoning_field is only allowed on [api.chat-completions], not [api.responses]",
+    ]);
   });
 });
 

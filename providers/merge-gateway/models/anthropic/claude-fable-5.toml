@@ -11,9 +11,8 @@ base_model = "anthropic/claude-fable-5"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"] } }
+tools = { supported = true }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 10

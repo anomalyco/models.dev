@@ -1,21 +1,29 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Alibaba)
-# effort_updates = false: no per-turn effort control
+# effort_updates: left out. Toggling reasoning.enabled on the next request keeps the cache (live 2026-10-23 pinned to Alibaba), but there's no in-history effort message (configuration_update is rejected with a 400), so it doesn't count.
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 base_model = "alibaba/qwen3.7-flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = false
-system_updates = true
-effort_updates = false
 
 [limit]
 output = 65_536
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.03

@@ -8,10 +8,8 @@ base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 last_updated = "2025-09-18"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]

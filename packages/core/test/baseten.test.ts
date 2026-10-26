@@ -9,6 +9,7 @@ import {
   basetenV2Set,
   buildBasetenDecisionModel,
   buildBasetenModel,
+  chatApis,
   type BasetenModel,
 } from "../src/sync/providers/baseten.js";
 
@@ -90,10 +91,10 @@ test("reads Baseten cache-read prices from the catalog", () => {
   expect(built.cost).toMatchObject({ input: 0.3, output: 1.2, cache_read: 0.007 });
 
   expect(basetenV2Set(0.007, undefined)).toEqual({
-    "capabilities.cache": { supported: true, implicit: true },
+    "capabilities.cache": { implicit: true },
   });
   expect(basetenV2Set(undefined, undefined)).toBeUndefined();
-  expect(basetenV2Set(undefined, { capabilities: { cache: { supported: true } } })).toEqual({
+  expect(basetenV2Set(undefined, { capabilities: { cache: { implicit: true } } })).toEqual({
     "capabilities.cache": undefined,
   });
 });
@@ -189,4 +190,20 @@ test("Baseten decision models get the systemone table, new or stale", async () =
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test("Baseten chat models list the Messages API after their first table", () => {
+  const messages = { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } };
+  // No table: the provider's Chat Completions API comes first.
+  expect(chatApis(undefined)).toEqual({ "chat-completions": {}, messages });
+  const first = { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } };
+  const once = chatApis(first);
+  expect(Object.keys(once)).toEqual(["chat-completions", "messages"]);
+  expect(once).toEqual({ ...first, messages });
+  expect(chatApis(once)).toEqual(once);
+  const translated = baseten.translateModel(basetenModel(), {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+  expect(translated?.v2Set?.api).toBe(chatApis);
 });

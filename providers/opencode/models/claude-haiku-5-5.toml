@@ -3,11 +3,9 @@
 # Effort: output_config.effort = low|medium|high|xhigh|max
 # https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a role:system message after the last user turn was kept in place (cached 11937 -> 11951)
-#   effort_updates = true: per-message output_config.effort with beta mid-conversation-output-config-2026-07-01 kept the cache (cached 11938 -> 11952) and took effect (effect.jsonl)
-#   tools.updates = true: tool_addition with beta inline-tools-2026-09-15 kept the cache (cached 12310 -> 12324)
 # Cache: explicit cache_control only, as on Anthropic (https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Zen forwards it: block and top-level cache_control and ttl 1h were honored, and no read happened without it (live on claude-haiku-5-5, claude-opus-5-5, claude-sonnet-5 and claude-sonnet-5-5). Zen lists only the 5m write price.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/anthropic/models/claude-haiku-5-5.toml (Zen passes requests through).
+#   Surface: Messages carries the in-history messages (per-message output_config for effort_updates; tool_addition/tool_removal for tools.updates).
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
@@ -15,7 +13,7 @@ base_model = "anthropic/claude-haiku-5-5"
 tools = { supported = true, updates = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 system_updates = true
 effort_updates = true
 

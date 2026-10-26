@@ -7,10 +7,9 @@ base_model = "xiaomi/mimo-v2.5"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_050_000

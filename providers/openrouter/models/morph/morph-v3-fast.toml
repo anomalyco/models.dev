@@ -8,11 +8,18 @@ description = "Efficient model for low-latency assistance, extraction, and routi
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 262_144
 output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.8

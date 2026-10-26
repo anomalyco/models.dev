@@ -6,12 +6,11 @@ base_model = "alibaba/qwen3.8-27b"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
-context = 1_001_536
-input = 1_001_536
+context = 1_048_576
+input = 1_048_576
 
 [cost.text.input]
 price = 0.15

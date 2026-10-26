@@ -7,17 +7,13 @@ name = "Reflection: Beam 1.0 501B A23B"
 description = "Beam 1.0 is Reflection's open-weight reasoning model for coding and long-horizon agentic workflows. It uses a sparse mixture-of-experts architecture with 501B total and 23B active parameters per token, and a..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
-
-[limit]
-output = 943_718
 
 [cost.text.input]
-price = 0.25
-cache = { read = 0.05 }
+price = 0.24
+cache = { read = 0.035 }
 
 [cost.text.output]
-price = 1
+price = 0.98

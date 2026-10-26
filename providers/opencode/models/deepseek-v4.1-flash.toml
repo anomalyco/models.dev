@@ -2,21 +2,17 @@
 # thinking.type = disabled (or reasoning_effort = none) turns reasoning off (live: 53 -> 0 reasoning tokens).
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a system message before the next user turn was kept in place (cached 8704 -> 8704)
-#   effort_updates = false: reasoning_effort high -> low dropped the cache (cached 8616 -> 0)
-#   tools.updates = false: adding a tool dropped the cache (cached 8878 -> 144)
 # Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/deepseek/models/deepseek-v4-flash.toml (Zen passes requests through).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
-effort_updates = false
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

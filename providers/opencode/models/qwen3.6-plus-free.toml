@@ -1,6 +1,8 @@
 # No thinking.budget_tokens bound, as on qwen3.6-plus (live: 100000 accepted on Zen) and Alibaba's first-party entry.
 # Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
 # Budget: thinking.budget_tokens with thinking.type = enabled (deprecated; not re-verified on Zen)
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.6-plus.toml (Zen passes requests through).
+# effort_updates: left out. Changing thinking.type or thinking.budget_tokens on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 schema = 2
 base_model = "alibaba/qwen3.6-plus"
 name = "Qwen3.6 Plus Free"
@@ -9,6 +11,7 @@ status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = {} }
+system_updates = true
 
 [limit]
 context = 262_144

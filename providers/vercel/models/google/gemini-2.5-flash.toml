@@ -1,1 +1,57 @@
-../../../google/models/gemini-2.5-flash.toml
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# - https://ai.google.dev/gemini-api/docs/thinking
+# Flex halves input/output only; cache reads and storage stay at Standard rates.
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $35 per 1,000 grounded prompts (one charge per prompt, however many queries it runs). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Grounding keeps its price under Priority, Flex and the scheduled increases (https://ai.google.dev/gemini-api/docs/pricing).
+schema = 2
+base_model = "google/gemini-2.5-flash"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = {} }
+structured_output = true
+cache = { implicit = { min_tokens = 2_048 } }
+service_tier = ["flex", "priority"]
+
+[limit]
+context = 1_000_000
+output = 65_535
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, storage = 1 }
+
+[cost.text.output]
+price = 2.5
+
+[cost.web_search]
+price = 35
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.8, audio = 1.8 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5 }, output = { price = 0.5 } }, audio = { input = { price = 0.5 } } }

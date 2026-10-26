@@ -1,19 +1,27 @@
-# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "minimax/MiniMax-M2"
 name = "MiniMax M2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, budget = {} }
-effort_updates = false
+cache = { explicit = true }
 
 [limit]
 context = 205_000
 output = 196_608
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.3

@@ -16,11 +16,9 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 262_144

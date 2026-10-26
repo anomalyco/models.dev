@@ -4,8 +4,8 @@
 # Lifecycle: https://docs.mistral.ai/models/magistral-medium-1-2-25-09 (Magistral Medium 1.2 deprecated 2026-05-22, retired
 # 2026-07-31). /v1/models now lists magistral-medium-latest as an alias of mistral-medium-latest (Medium 3.5).
 # Mid-conversation (live 2026-10-19 on this alias): a late system message is accepted in place, keeps the cached prefix
-# and is obeyed; changing tools between requests keeps the cached prefix (tools are rendered after it); switching
-# reasoning_effort keeps it too (as on mistral-medium-latest). Caching:
+# and is obeyed; changing tools between requests drops the cache after the system prompt (live 2026-10-22); switching
+# reasoning_effort drops the whole cached prefix (live 2026-10-23: 0 cached tokens none<->high). Caching:
 # https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic, 64-token blocks, prompt_cache_key).
 schema = 2
 name = "Magistral Medium (latest)"
@@ -22,16 +22,15 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 temperature = true
 top_p = true
 top_k = false
 system_updates = true
-effort_updates = true
 stream_usage = true
 prompt_cache_key = true
-cache = { supported = true, implicit = { min_tokens = 64 }, explicit = false }
+cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 262_144

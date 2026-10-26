@@ -6,15 +6,21 @@ schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 1_024 } }
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 3
@@ -31,3 +37,6 @@ price = 15
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_000 } }
 price = 22.5
+
+[cost.web_search]
+price = 10

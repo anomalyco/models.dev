@@ -10,19 +10,26 @@
 #   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
 # Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
 #   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+# max_tokens_field: Ollama's OpenAI-compatible Chat API lists max_tokens and not max_completion_tokens (https://docs.ollama.com/api/openai-compatibility, accessed 2026-10-24); live probe 2026-10-24 ignored max_completion_tokens
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.15

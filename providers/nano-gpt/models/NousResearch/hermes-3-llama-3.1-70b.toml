@@ -6,9 +6,8 @@ base_model = "nousresearch/hermes-3-llama-3.1-70b"
 name = "Hermes 3 70B"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 65_536

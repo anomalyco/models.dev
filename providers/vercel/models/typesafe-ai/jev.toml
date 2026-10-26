@@ -1,11 +1,20 @@
+# Modalities: text only, Vercel's catalog lists typesafe-ai/jev input as text with no vision tag, unlike jev-1.13.0 and jev-1.14.0 (https://ai-gateway.vercel.sh/v1/models)
 schema = 2
 base_model = "typesafe/jev-latest"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
 
 [capabilities]
 structured_output = true
 
 [limit]
 context = 32_000
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
 
 [api.evaluate]
 base_url = "https://ai-gateway.vercel.sh/v1"

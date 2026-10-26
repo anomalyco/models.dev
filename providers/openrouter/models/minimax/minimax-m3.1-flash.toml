@@ -1,0 +1,29 @@
+# Mid-conversation (Chat Completions, live 2026-10-23 pinned to Minimax): system_updates = true: late system message kept in place (cache read 5,283 -> 5,285 and 5,949 -> 5,951 tokens, control 5,949 -> 5,949) and followed, same as MiniMax's own API
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 524_288
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

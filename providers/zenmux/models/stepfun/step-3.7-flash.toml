@@ -5,7 +5,7 @@ base_model = "stepfun/step-3.7-flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.2

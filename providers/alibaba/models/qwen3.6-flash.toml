@@ -1,9 +1,12 @@
 # v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the explicit cache (in place); enable_thinking and thinking_budget changes kept the cache; adding tools missed the cache.
+# effort_updates: left out. Changing enable_thinking or thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Prices (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19)
 # List price $0.25/$1.50 (0-256K) and $1/$4 (256K-1M); the previous $0.1875/$1.125 was a discounted rate. Explicit cache: read 10%, creation 125% of input.
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 name = "Qwen3.6 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -16,29 +19,37 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
-system_updates = true
-effort_updates = true
 stream_usage = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
 output = 65_536
 
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.25
-cache = { read = 0.025, write = 0.3125 }
+cache = { read = 0.025, explicit = { write = 0.3125 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 1
-cache = { read = 0.1, write = 1.25 }
+cache = { read = 0.1, explicit = { write = 1.25 } }
 
 [cost.text.output]
 price = 1.5
@@ -46,3 +57,6 @@ price = 1.5
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }
 price = 4
+
+[cost.web_search]
+price = 10

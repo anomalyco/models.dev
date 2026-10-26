@@ -134,7 +134,7 @@ export const llmgateway = {
     if (translated === undefined) {
       return undefined;
     }
-    return { id: model.id, model: translated };
+    return { id: model.id, model: translated, v2Set: reasoningPriceV2Set(model) };
   },
   sourceID(model) {
     return model.id;
@@ -202,7 +202,7 @@ export const llmgatewayProviders = {
     if (translated === undefined) {
       return undefined;
     }
-    return { id: model.id, model: translated, header: toggleHeader(translated) };
+    return { id: model.id, model: translated, header: toggleHeader(translated), v2Set: reasoningPriceV2Set(model) };
   },
   sourceID(model) {
     return model.id;
@@ -226,6 +226,14 @@ function price(value: string | undefined) {
 function nonZeroPrice(value: string | undefined) {
   const result = price(value);
   return result !== undefined && result > 0 ? result : undefined;
+}
+
+// v1 leaves out the reasoning price of a model without reasoning, so v2 takes it
+// directly: reasoning tokens are billed whenever the model reasons.
+function reasoningPriceV2Set(model: LLMGatewayModel) {
+  if (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined) return undefined;
+  const reasoning = nonZeroPrice(model.pricing.internal_reasoning);
+  return { "cost.text.output.reasoning": (current: unknown) => reasoning ?? current };
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";

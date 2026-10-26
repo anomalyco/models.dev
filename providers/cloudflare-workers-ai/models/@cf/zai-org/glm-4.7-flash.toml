@@ -12,12 +12,11 @@ base_model = "zhipuai/glm-4.7-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-cache = { supported = false }
+cache = false
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 131_072

@@ -1,12 +1,16 @@
+# Modalities: text only, NanoGPT's Decisions model table lists Jev with Images: No and the catalog sets decision_input.image_input = false (https://docs.nano-gpt.com/api-reference/endpoint/decisions)
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 # Decisions: supported_endpoints lists /api/v1/systemone and /v1/decisions (https://nano-gpt.com/api/v1/models?detailed=true, https://docs.nano-gpt.com/api-reference/endpoint/decisions)
 schema = 2
 base_model = "typesafe/jev-latest"
 name = "Jev Latest"
 
+[modalities]
+input = ["text"]
+output = ["decision"]
+
 [capabilities]
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 32_000
@@ -14,9 +18,6 @@ input = 32_000
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
-
-[api.decisions]
-sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.042

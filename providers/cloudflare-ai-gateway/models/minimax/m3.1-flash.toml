@@ -1,0 +1,21 @@
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 1_000_000
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015, write = 0.15 }
+
+[cost.text.output]
+price = 0.6

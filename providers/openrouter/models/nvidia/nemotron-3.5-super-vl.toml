@@ -9,14 +9,20 @@ name = "Nemotron 3.5 Super VL"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 235_929
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.15

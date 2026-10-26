@@ -1,6 +1,7 @@
 # Image input: https://docs.mistral.ai/models/mistral-small-3-2-25-06 lists text and image input, so attachment is true.
 # Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 # Sampling: the chat API takes temperature and top_p but has no top_k (https://docs.mistral.ai/api/endpoint/chat).
+# tools.updates: adding or removing a tool busts the cache; tools render before the conversation (live 2026-10-22).
 schema = 2
 name = "Mistral Small 3.2"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"

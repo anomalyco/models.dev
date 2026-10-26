@@ -8,21 +8,28 @@
 # v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache; toggle and reasoning_effort changes missed it; adding tools missed the cache.
+# Re-checked live 2026-10-23 (~8k-token first user message, short system prompt): a late system message is followed but the cache drops to 0 (control 7.2k-9k), so it is not kept in place and system_updates is left out.
 # JSON: json_object only (JSON Schema mode is not supported), per https://www.alibabacloud.com/help/en/model-studio/qwen-omni
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 base_model = "alibaba/qwen3.8-omni-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
-system_updates = true
-effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0.15
@@ -30,3 +37,6 @@ cache = { read = 0.016 }
 
 [cost.text.output]
 price = 0.47
+
+[cost.web_search]
+price = 10

@@ -1,6 +1,6 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: reasoning_effort = low|medium|high|xhigh|max (not re-verified on Zen: the free tier only serves OpenCode clients)
-# Mid-conversation flags unset: Zen documents none and this model wasn't testable (the free tier only serves OpenCode clients).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/reflection/models/beam-1.0-501b-a23b.toml (Zen passes requests through).
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 name = "Beam Free"

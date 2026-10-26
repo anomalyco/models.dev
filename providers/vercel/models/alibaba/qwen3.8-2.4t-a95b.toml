@@ -4,7 +4,7 @@
 # Lab: text-only open weights; reasoning_effort low|medium|xhigh.
 # Cost aligned with common public list pricing for this slug ($2/$6, cache_read $0.25).
 # Modalities: Alibaba Model Studio supported image formats (BMP, JPEG, PNG, TIFF, WEBP, HEIC), https://www.alibabacloud.com/help/en/model-studio/vision
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
@@ -13,14 +13,23 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
-system_updates = false
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 2

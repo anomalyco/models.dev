@@ -4,6 +4,8 @@
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) tiers: 0-32K $0.143/$1.434, 32K-128K $0.215/$2.15, 128K-256K $0.43/$4.301; one output price for thinking and non-thinking modes.
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/qwen3-vl-plus, accessed 2026-10-23).
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "Qwen3-VL Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -17,29 +19,39 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = { max = 81_920 } }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 262_144
 output = 32_768
 
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.143353
+cache = { read = 0.028671, explicit = { read = 0.014335, write = 0.179191 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 32_000 } }
 price = 0.215
+cache = { read = 0.043, explicit = { read = 0.0215, write = 0.26875 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128_000 } }
 price = 0.43
+cache = { read = 0.086, explicit = { read = 0.043, write = 0.5375 } }
 
 [cost.text.output]
 price = 1.433525

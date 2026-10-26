@@ -1,5 +1,12 @@
+# Route: REST POST /ai/run with { model, input }, input a System One body; the answer is a run record { result: { state: "Completed", result: { answers, usage } } }. https://developers.cloudflare.com/ai/models/typesafe/jev/
+# Live 2026-10-23: typesafe/jev (answers as jev-1.13.0) and typesafe/jev-1.14.0 answered on /ai/run; the path form /ai/run/typesafe/jev returns 400 "No route for that URI" (code 7000).
+# Modalities: text only, Cloudflare's typesafe/jev input schema has no assets field and its page shows no image input, unlike typesafe/jev-1.14.0 (https://developers.cloudflare.com/ai/models/typesafe/jev/)
 schema = 2
 base_model = "typesafe/jev-latest"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
 
 [capabilities]
 structured_output = true
@@ -7,8 +14,9 @@ structured_output = true
 [limit]
 context = 32_000
 
-[api.systemone]
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.042

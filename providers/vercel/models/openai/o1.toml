@@ -1,1 +1,35 @@
-../../../openai/models/o1.toml
+# Per API: tools.updates on [api.chat-completions] (@ai-sdk/gateway additionalTools) and [api.responses] (/v1/responses passes an additional_tools item through and the model calls the added tool, live 2026-10-23); /v1/messages has no tool-add item. system_updates stays top level: a mid-conversation developer/system message stays in place on all three APIs (gpt-5.4-mini cache read 8832 with and without it on /v1/responses and /v1/messages, live 2026-10-23).
+schema = 2
+base_model = "openai/o1"
+status = "deprecated"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+system_updates = true
+store = true
+cache = { implicit = { min_tokens = 1_024 } }
+prompt_cache_key = true
+
+[limit]
+input = 100_000
+
+[api.chat-completions]
+capabilities = { tools = { updates = true } }
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+capabilities = { tools = { updates = true } }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 15
+cache = { read = 7.5 }
+
+[cost.text.output]
+price = 60

@@ -1,5 +1,10 @@
 # Modalities: Embed images must be image/jpeg, image/png, image/webp or image/gif: https://docs.cohere.com/reference/embed
+# Foundry models endpoint: POST https://<resource>.services.ai.azure.com/models/embeddings?api-version=2024-05-01-preview
+# with an OpenAI-shaped body (input, dimensions, encoding_format, model) and response (data[].embedding, usage).
+# https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-embeddings/get-embeddings
+# Cohere Embed on Foundry: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#cohere-models-sold-by-azure
 schema = 2
+type = "embedding"
 name = "Embed v4"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "cohere-embed"
@@ -8,7 +13,7 @@ release_date = "2025-04-15"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
-output = ["text"]
+output = ["embedding"]
 
 [capabilities]
 tools = { supported = false }
@@ -18,6 +23,10 @@ temperature = false
 [limit]
 context = 128_000
 output = 1_536
+
+[api.embeddings]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.12

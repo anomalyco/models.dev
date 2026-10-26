@@ -8,14 +8,12 @@ v2_only = true
 base_model = "google/gemini-2.5-flash-native-audio-preview-12-2025"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-cache = { supported = false }
-system_updates = false
-effort_updates = false
+cache = false
 
-[api.realtime]
+[api.bidi-generate-content]
 sdk = { opencodeai = "none" }
 
 [cost.text.input]

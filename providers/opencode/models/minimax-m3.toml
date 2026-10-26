@@ -1,20 +1,16 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # thinking.type = disabled turns reasoning off (live: 60 -> 0 reasoning tokens); adaptive is accepted.
 # Toggle: thinking.type = adaptive|disabled
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = false: a system message before the next user turn was dropped: 200 and cache kept, but input tokens unchanged (9266 -> 9266) and the instruction was ignored, in 2 of 2 runs
-#   effort_updates = false: thinking.type adaptive -> disabled dropped the cache (cached 9246 -> 78)
-#   tools.updates = false: adding a tool dropped the cache (cached 9476 -> 205)
 # Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M3.toml (Zen passes requests through).
+#   system_updates left out although the lab claims it: Zen drops a later system message (live 2026-10-21 and 2026-10-23: 200, cache kept, but prompt tokens unchanged and the instruction ignored, 4/4).
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true }
-system_updates = false
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 context = 512_000

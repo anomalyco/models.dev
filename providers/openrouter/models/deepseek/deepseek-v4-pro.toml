@@ -7,10 +7,9 @@ schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
@@ -18,9 +17,15 @@ context = 1_048_576
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
-price = 0.95526
-cache = { read = 0.079605 }
+price = 0.9483
+cache = { read = 0.079025 }
 
 [cost.text.output]
-price = 1.91052
+price = 1.8966

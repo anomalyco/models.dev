@@ -9,17 +9,24 @@ name = "Qwen 3.8 27B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 65_536
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.45
 
 [cost.text.output]
 price = 3.2
+
+[cost.web_search]
+price = 10

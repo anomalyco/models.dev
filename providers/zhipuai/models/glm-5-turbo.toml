@@ -7,22 +7,33 @@
 # CNY→USD rate: 6.693661, 2026-10-19, source: https://open.er-api.com/v6/latest/USD
 # List price: CNY 5/1.2/22 (input/cache read/output per MTok); input >= 32K: CNY 7/1.8/26
 # Toggle: thinking.type = enabled|disabled (default enabled)
-# Mid-conversation (checked live 2026-10-19 on api.z.ai and open.bigmodel.cn): a late system message
-# is accepted and keeps the cache; adding or removing tools between turns drops it.
+# Mid-conversation (live 2026-10-23 on api.z.ai and open.bigmodel.cn, ~7k-token first user message):
+# a late system message is followed but not kept in place (cached tokens drop to ~0 vs ~7.5k on the
+# unchanged control), so system_updates is left out.
+# effort_updates: left out. Flipping thinking.type on the next request keeps the cache (reasoning tokens
+# ~100 vs 0), but there's no in-history effort message, so it doesn't count.
+# Adding or removing tools between turns drops the cache (2026-10-19).
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5-turbo"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
 top_k = false
-system_updates = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://open.bigmodel.cn/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-coding-plan/messages" }
+
+[api.responses]
+base_url = "https://open.bigmodel.cn/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
 
 [cost.text.input]
 price = 0.74698

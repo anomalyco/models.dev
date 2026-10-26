@@ -1,5 +1,5 @@
 # Modalities: generic image kept, Callstack publishes no image format list for Apex
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-23): the mid-conversation system message is dropped: prompt tokens are identical with and without it (12244) and the model never follows it (2 of 2), so system_updates is left out. No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 name = "Apex"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -11,14 +11,23 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
-system_updates = true
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 context = 262_144
 output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.5

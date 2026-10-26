@@ -1,5 +1,6 @@
 # Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 # Sampling: the chat API takes temperature and top_p but has no top_k (https://docs.mistral.ai/api/endpoint/chat).
+# tools.updates: adding or removing a tool busts the cache; tools render before the conversation (live 2026-10-22).
 schema = 2
 name = "Pixtral 12B"
 description = "Mistral vision-language model for image understanding and multimodal chat"

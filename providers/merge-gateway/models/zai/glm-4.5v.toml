@@ -11,9 +11,8 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true, explicit = true }
+tools = { supported = true }
+cache = { implicit = true, explicit = true }
 
 [limit]
 context = 128_000

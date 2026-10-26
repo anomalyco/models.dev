@@ -1,14 +1,22 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-23): Alibaba's API doesn't list mid-conversation system messages for Qwen3 235B, and on the deepinfra route the model never followed one (2 of 2; no cache to compare), so system_updates is left out. No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B A22B Instruct 2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
-system_updates = true
-effort_updates = false
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.22

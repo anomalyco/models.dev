@@ -9,18 +9,27 @@
 # Toggle: thinking.type = enabled|disabled (default enabled)
 # Mid-conversation (checked live 2026-10-19 on api.z.ai and open.bigmodel.cn): a late system message
 # is accepted and keeps the cache; adding or removing tools between turns drops it.
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked on Chat Completions (live 2026-10-23); the Anthropic-compatible Messages and Responses endpoints have no documented or tested in-place system message.
 schema = 2
 base_model = "zhipuai/glm-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 top_k = false
-system_updates = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.messages]
+base_url = "https://open.bigmodel.cn/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-coding-plan/messages" }
+
+[api.responses]
+base_url = "https://open.bigmodel.cn/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
 
 [cost.text.input]
 price = 0.59758

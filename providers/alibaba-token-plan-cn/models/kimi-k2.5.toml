@@ -16,18 +16,21 @@ base_model = "moonshotai/kimi-k2.5"
 family = "kimi-k2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
 top_k = false
-effort_updates = false
 
 [limit]
 output = 98_304
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0

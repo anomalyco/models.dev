@@ -1,14 +1,17 @@
 # Sources (accessed 2026-10-21): https://docs.inceptionlabs.ai/get-started/models and https://docs.inceptionlabs.ai/capabilities/decisions
 # Only input tokens are billed: $0.02 per MTok at launch (50% off the regular $0.04, no end date published); output tokens
 #   are reported but not charged. POST /v1/decisions; no chat completions, streaming or tool calling.
-# AI SDK: @openrouter/ai-sdk-provider evaluationModel posts to `${decisionsBaseURL}/decisions`; base_url is its decisionsBaseURL.
+# System One body at POST /v1/decisions, so path = "/decisions". @openrouter/ai-sdk-provider evaluationModel posts to
+#   `${decisionsBaseURL}/decisions`; base_url is its decisionsBaseURL.
 schema = 2
 v2_only = true
 base_model = "inception/mercury-decide"
 
-[api.decisions]
+[api.systemone]
 base_url = "https://api.inceptionlabs.ai/v1"
+path = "/decisions"
 sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
+compatibility = { image_input = "state" }
 
 [cost.text.input]
 price = 0.02

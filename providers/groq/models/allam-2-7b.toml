@@ -3,11 +3,18 @@
 # Limits: context_window 4096 and max_completion_tokens 4096, same as the lab.
 # Flex: `service_tier: "flex"` is available for all models to paid customers at on-demand pricing
 # (https://console.groq.com/docs/flex-processing, https://console.groq.com/docs/service-tiers).
+# Responses: POST https://api.groq.com/openai/v1/responses ("all models support the Responses API", stateless; https://console.groq.com/docs/responses-api); returned 200 live (2026-10-22).
 schema = 2
 base_model = "sdaia/allam-2-7b"
 
 [capabilities]
 service_tier = ["flex"]
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0

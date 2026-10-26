@@ -24,19 +24,18 @@
 # system_updates = false. A late user message keeps the cache.
 # Changing reasoning effort, the thinking toggle, or the tool list between turns drops the
 # prompt cache (prompt_cache_hit_tokens drops to 0-256), checked live 2026-10-19.
+# APIs: Chat Completions and the Anthropic-compatible Messages API (https://api-docs.deepseek.com/guides/anthropic_api), both confirmed live 2026-10-22.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false
-system_updates = false
-effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
@@ -44,6 +43,10 @@ output = 393_216
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.deepseek.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.66

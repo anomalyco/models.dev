@@ -4,23 +4,28 @@
 # Effort: none|low|medium|high|xhigh|max (Mantle's own validation error lists these).
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 # v2 cache: implicit + prompt_cache_breakpoint (30m TTL only, 4 writes, 1,024 min) on Mantle Responses per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; verified live 2026-10-19.
-# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted.
+# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools (add only) keeps the prompt cache (live 2026-10-23 on GPT-5.4 and 5.6 Sol: full control-level cache hit; a plain top-level tools change gave 0).
 # effort_updates: OpenAI documents configuration_update for GPT-6 models, but Bedrock Mantle rejects it ("not supported with this model", live 2026-10-19).
+# APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
+# Per-API flags: system_updates and tools.updates sit on [api.responses]. Developer messages and additional_tools were checked on Mantle Responses; additional_tools is a Responses item, and Mantle Chat Completions wasn't checked for in-place developer messages.
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-system_updates = true
-effort_updates = false
 prompt_cache_key = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
 sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }
+capabilities = { system_updates = true, tools = { updates = true } }
+
+[api.chat-completions]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/chat" }
 
 [cost.text.input]
 price = 0.11

@@ -1,6 +1,6 @@
 # Pricing and endpoint (Gemini generateContent): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: generationConfig.thinkingConfig.thinkingLevel = minimal|low|medium|high (not re-verified on Zen: model access is disabled for the probe key)
-# Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-3.6-flash.toml (Zen passes requests through).
 schema = 2
 base_model = "google/gemini-3.6-flash"
 

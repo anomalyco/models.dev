@@ -6,10 +6,9 @@ base_model = "zhipuai/glm-5"
 open_weights = false
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 202_752
@@ -17,6 +16,10 @@ output = 16_384
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://token-plan.ap-southeast-1.maas.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0

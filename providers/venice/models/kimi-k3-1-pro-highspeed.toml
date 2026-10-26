@@ -1,0 +1,35 @@
+schema = 2
+name = "Kimi K3.1 Pro Highspeed"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+family = "kimi-k3"
+open_weights = false
+release_date = "2026-10-23"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 6
+cache = { read = 0.6000000000000001 }
+
+[cost.text.output]
+price = 30
+
+[cost.web_search]
+price = 10

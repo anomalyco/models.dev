@@ -8,8 +8,7 @@ base_model = "alibaba/qwen3.5-9b"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = false
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 262_144

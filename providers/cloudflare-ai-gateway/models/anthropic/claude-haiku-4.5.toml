@@ -5,17 +5,16 @@ schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, budget = { min = 1_024 } }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 200_000
 
 [api.messages]
+base_url = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
 
 [cost.text.input]

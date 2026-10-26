@@ -9,6 +9,7 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Toggle: enable_thinking true|false (the Chat API reference: "kimi-k3 supports passing false to disable thinking"); Effort: reasoning_effort = low|high|max (default max).
 # Input: text and image only on Model Studio (https://www.alibabacloud.com/help/en/model-studio/kimi-api: "kimi-k3 does not currently support video input"), which lists no image formats, so the moonshotai/kimi-k3 lab's image MIME list is used.
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -17,12 +18,12 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 output = 1_048_576
@@ -30,9 +31,19 @@ output = 1_048_576
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 2.827
 cache = { read = 0.283 }
 
 [cost.text.output]
 price = 14.133
+
+[cost.web_search]
+price = 0.573411

@@ -2,21 +2,18 @@
 # thinking.budget_tokens has no 81,920 cap on Zen: 81921 and 100000 are accepted (live; 200000 returns 400). Alibaba's first-party entry records no bound either.
 # Toggle: thinking.type = enabled|disabled
 # Budget: thinking.budget_tokens with thinking.type = enabled
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a role:system message after the last user turn was kept in place (cached 14504 -> 14523)
-#   effort_updates = false: thinking.type enabled -> disabled dropped the cache (cached 14507 -> 0)
-#   tools.updates = false: adding a tool dropped the cache (cached 14763 -> 0)
 # Cache (live): explicit cache_control (block or top-level); no read without it; a 1h ttl is written as 5m.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.6-plus.toml (Zen passes requests through).
+# effort_updates: left out. Changing thinking.type or thinking.budget_tokens on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 schema = 2
 base_model = "alibaba/qwen3.6-plus"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = {} }
-cache = { supported = true, explicit = { ttl = ["5m"] } }
+cache = { explicit = { ttl = ["5m"] } }
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 262_144

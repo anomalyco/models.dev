@@ -11,8 +11,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 structured_output = false
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 262_144
@@ -20,7 +19,7 @@ output = 65_536
 
 [cost.text.input]
 price = 0.6712
-cache = { read = 0.18 }
+cache = { read = 0.15 }
 
 [cost.text.output]
 price = 3.35

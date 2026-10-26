@@ -6,6 +6,8 @@
 # Images: jpeg/png/gif/webp data URLs accepted live 2026-10-19; bmp, tiff and heic rejected (code 8006).
 # Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message keeps the cached prefix and is honored;
 # switching reasoning_effort none<->high keeps the cached history (3 runs); adding or removing a tool drops the cached history (tools render ahead of it).
+# Live 2026-10-23 (~7k-token first user message): reasoning_effort none->high read 7232/7289 and 6912/6989 cached (warm equal), high->none 7808/7894 and 6912/6988; reasoning grows from ~1k to ~9k chars.
+# effort_updates: left out. Changing reasoning_effort on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
@@ -14,12 +16,11 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 system_updates = true
-effort_updates = true
 
 [limit]
 output = 256_000

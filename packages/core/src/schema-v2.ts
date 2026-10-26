@@ -113,22 +113,24 @@ export const KnownToolGrammarV2 = z.enum(ToolGrammarV2Values);
 export const ToolGrammarV2 = openEnum(ToolGrammarV2Values);
 export type ToolGrammarV2 = z.infer<typeof ToolGrammarV2>;
 
+const toolsSupportedV2 = {
+  supported: z.literal(true),
+  strict: z.boolean().optional(),
+  choice: z.array(ToolChoiceV2).optional(),
+  search: z.boolean().optional(),
+  grammar: z.array(ToolGrammarV2).optional(),
+  updates: z.boolean().optional(),
+};
+
+// Files may leave `updates` out, which means false. The API always states it.
+export const AuthoredToolsSupportV2 = z.discriminatedUnion("supported", [
+  z.object({ supported: z.literal(false) }).strict(),
+  z.object(toolsSupportedV2).strict(),
+]);
+
 export const ToolsSupportV2 = z.discriminatedUnion("supported", [
-  z
-    .object({
-      supported: z.literal(false),
-    })
-    .strict(),
-  z
-    .object({
-      supported: z.literal(true),
-      strict: z.boolean().optional(),
-      choice: z.array(ToolChoiceV2).optional(),
-      search: z.boolean().optional(),
-      grammar: z.array(ToolGrammarV2).optional(),
-      updates: z.boolean().optional(),
-    })
-    .strict(),
+  z.object({ supported: z.literal(false) }).strict(),
+  z.object({ ...toolsSupportedV2, updates: z.boolean() }).strict(),
 ]);
 
 export type ToolsSupportV2 = z.infer<typeof ToolsSupportV2>;
@@ -217,7 +219,7 @@ export const CacheTargetV2 = openEnum(CacheTargetV2Values);
 export type CacheTargetV2 = z.infer<typeof CacheTargetV2>;
 
 export const ImplicitCacheV2 = z.union([
-  z.boolean(),
+  z.literal(true),
   z
     .object({
       ttl: z.array(DurationStringV2).optional(),
@@ -229,7 +231,7 @@ export const ImplicitCacheV2 = z.union([
 export type ImplicitCacheV2 = z.infer<typeof ImplicitCacheV2>;
 
 export const ExplicitCacheV2 = z.union([
-  z.boolean(),
+  z.literal(true),
   z
     .object({
       ttl: z.array(DurationStringV2).optional(),
@@ -242,19 +244,17 @@ export const ExplicitCacheV2 = z.union([
 
 export type ExplicitCacheV2 = z.infer<typeof ExplicitCacheV2>;
 
-export const CacheSupportV2 = z.discriminatedUnion("supported", [
+export const CacheSupportV2 = z.union([
+  z.literal(false),
   z
     .object({
-      supported: z.literal(false),
-    })
-    .strict(),
-  z
-    .object({
-      supported: z.literal(true),
       implicit: ImplicitCacheV2.optional(),
       explicit: ExplicitCacheV2.optional(),
     })
-    .strict(),
+    .strict()
+    .refine((cache) => cache.implicit !== undefined || cache.explicit !== undefined, {
+      message: "List at least one cache kind (implicit or explicit), or set cache = false",
+    }),
 ]);
 
 export type CacheSupportV2 = z.infer<typeof CacheSupportV2>;
@@ -270,9 +270,11 @@ export const KnownServiceTierV2 = z.enum(ServiceTierV2Values);
 export const ServiceTierV2 = openEnum(ServiceTierV2Values);
 export type ServiceTierV2 = z.infer<typeof ServiceTierV2>;
 
-export const CapabilitiesV2 = z
+// Files may leave `system_updates` / `effort_updates` out, which means false.
+// The API always states them.
+export const AuthoredCapabilitiesV2 = z
   .object({
-    tools: ToolsSupportV2,
+    tools: AuthoredToolsSupportV2,
     reasoning: ReasoningSupportV2,
     cache: CacheSupportV2.optional(),
     structured_output: z.boolean().optional(),
@@ -287,6 +289,12 @@ export const CapabilitiesV2 = z
     service_tier: z.array(ServiceTierV2).optional(),
   })
   .strict();
+
+export const CapabilitiesV2 = AuthoredCapabilitiesV2.extend({
+  tools: ToolsSupportV2,
+  system_updates: z.boolean(),
+  effort_updates: z.boolean(),
+}).strict();
 
 export type CapabilitiesV2 = z.infer<typeof CapabilitiesV2>;
 
@@ -358,27 +366,51 @@ export type MaxTokensFieldV2 = z.infer<typeof MaxTokensFieldV2>;
 export const CompatibilityV2 = z
   .object({
     reasoning_field: ReasoningFieldV2.optional(),
-    replay_reasoning: z.boolean().optional(),
+    // `chat-completions` only: the field that caps output tokens. Unset means OpenAI's current
+    // `max_completion_tokens`; "max_tokens" marks hosts that only take the older field.
     max_tokens_field: MaxTokensFieldV2.optional(),
+    // `systemone` only: where the host wants images. "assets" (the default):
+    // TypeSafe's `assets` map, referenced from strings, with the
+    // `TypeSafe-Danger-Zone-Images: true` header. "images": a top-level `images`
+    // list next to `state`. "state": chat-style `image_url` items in a `state` list.
+    image_input: z.enum(["assets", "images", "state"]).optional(),
   })
   .strict();
 
 export type CompatibilityV2 = z.infer<typeof CompatibilityV2>;
 
-export const CapabilitiesOverrideV2 = CapabilitiesV2.partial();
+export const CapabilitiesOverrideV2 = AuthoredCapabilitiesV2.partial();
 export type CapabilitiesOverrideV2 = z.infer<typeof CapabilitiesOverrideV2>;
+
+// Mid-conversation flags that hold on one API but not on others the model lists.
+// The model's top-level capabilities apply to every API.
+export const ApiCapabilitiesV2 = z
+  .object({
+    system_updates: z.boolean().optional(),
+    effort_updates: z.boolean().optional(),
+    tools: z.object({ updates: z.boolean() }).strict().optional(),
+  })
+  .strict();
+
+export type ApiCapabilitiesV2 = z.infer<typeof ApiCapabilitiesV2>;
 
 export const ApiBaseUrlV2 = z.union([
   z.string().url("Must be a valid URL"),
   z.string().regex(/^\$\{[A-Z0-9_]+\}/, "Must be a valid URL or env var template"),
 ]);
 
+// The request path appended to `base_url`, set only where a host departs from
+// its protocol's usual path: `systemone` normally posts to
+// `{base_url}/systemone`, Inception's System One API is `{base_url}/decisions`.
+export const ApiPathV2 = z.string().regex(/^\//, "Must start with /");
+
 export const ApiEntryV2 = z
   .object({
     base_url: ApiBaseUrlV2,
+    path: ApiPathV2.optional(),
     sdk: SdkV2.optional(),
     compatibility: CompatibilityV2.optional(),
-    capabilities: CapabilitiesOverrideV2.optional(),
+    capabilities: ApiCapabilitiesV2.optional(),
   })
   .strict();
 
@@ -400,6 +432,10 @@ export const ApiProtocolV2Values = [
   "videos",
   "realtime",
   "live",
+  // Google Live API: the `BidiGenerateContent` WebSocket.
+  "bidi-generate-content",
+  // Google Lyria RealTime: the `BidiGenerateMusic` WebSocket.
+  "bidi-generate-music",
   "rerank",
   "speech",
   "transcriptions",
@@ -448,6 +484,12 @@ export const KnownUtcDayV2 = z.enum(UtcDayV2Values);
 export const UtcDayV2 = openEnum(UtcDayV2Values);
 export type UtcDayV2 = z.infer<typeof UtcDayV2>;
 
+export const SearchContextSizeV2Values = ["low", "medium", "high"] as const;
+
+export const KnownSearchContextSizeV2 = z.enum(SearchContextSizeV2Values);
+export const SearchContextSizeV2 = openEnum(SearchContextSizeV2Values);
+export type SearchContextSizeV2 = z.infer<typeof SearchContextSizeV2>;
+
 const PriceV2 = z.number().min(0, "Price cannot be negative");
 
 const CostConditionValueV2 = z.union([z.string(), z.number(), z.boolean()]);
@@ -495,6 +537,7 @@ export const CostConditionKeyV2Values = [
   "input_video",
   "fps",
   "steps",
+  "search_context_size",
 ] as const;
 
 export const KnownCostConditionKeyV2 = z.enum(CostConditionKeyV2Values);
@@ -523,6 +566,7 @@ const KnownCostConditionsV2 = z
     input_video: CostConditionV2,
     fps: CostConditionV2,
     steps: CostConditionV2,
+    search_context_size: choiceCondition(SearchContextSizeV2),
   } satisfies Record<(typeof CostConditionKeyV2Values)[number], z.ZodTypeAny>)
   .partial();
 
@@ -614,6 +658,28 @@ export const ModalityCostV2 = z
 
 export type ModalityCostV2 = z.infer<typeof ModalityCostV2>;
 
+const WebSearchPricesV2 = z
+  .object({
+    price: PriceV2,
+  })
+  .strict();
+
+// USD per 1,000 web searches (or search requests, as the host bills them).
+export const WebSearchCostV2 = WebSearchPricesV2.extend({
+  overrides: z
+    .array(
+      z
+        .object({ when: CostWhenV2 })
+        .extend(WebSearchPricesV2.partial().shape)
+        .strict(),
+    )
+    .optional(),
+}).strict();
+
+export type WebSearchCostV2 = z.infer<typeof WebSearchCostV2>;
+
+// A plain number multiplies every price in the cost, `web_search` included; an object
+// (e.g. `{ text = 2, audio = 2 }`) multiplies only the prices it names.
 export type CostFactorV2 = number | { [key: string]: CostFactorV2 };
 
 export const CostFactorV2: z.ZodType<CostFactorV2> = z.lazy(() =>
@@ -640,6 +706,7 @@ export const CostV2 = z
     image: ModalityCostV2.optional(),
     audio: ModalityCostV2.optional(),
     video: ModalityCostV2.optional(),
+    web_search: WebSearchCostV2.optional(),
     multipliers: z.array(CostMultiplierV2).optional(),
   })
   .strict();
@@ -697,7 +764,7 @@ export type ModelV2 = z.infer<typeof ModelV2>;
 // (reasoning controls, structured output, cache, service tiers…) is per provider.
 export const LabCapabilitiesV2 = z
   .object({
-    tools: ToolsSupportV2,
+    tools: AuthoredToolsSupportV2,
     reasoning: z.object({ supported: z.boolean() }).strict(),
     temperature: z.boolean(),
     top_p: z.boolean(),
@@ -735,6 +802,16 @@ export const LabModelV2 = z
 
 export type LabModelV2 = z.infer<typeof LabModelV2>;
 
+// Lab metadata file (`labs/<lab>/lab.toml`): facts about the lab itself, shown
+// on the website's lab pages. Not part of the v1 or v2 API output.
+export const LabMetadataV2 = z
+  .object({
+    description: z.string().min(1, "Lab description cannot be empty"),
+  })
+  .strict();
+
+export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
+
 // `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
 // point: `@opencode/ai/providers/<path>` for a provider's chat, responses or
 // messages model (`@opencode/ai/providers/openai/chat`), or
@@ -756,10 +833,12 @@ export const OpencodePackageV2 = z.union([
 // complete list, in order, and replace the provider's default API. Anything a
 // table leaves out comes from the provider: `base_url` from `api` (or the SDK's
 // default URL), `sdk.aisdk` from `npm`, `sdk.opencodeai` from `opencodeai`.
-// `"none"` stops a package from being filled in. v1 only gets the first table.
+// `"none"` stops a package from being filled in. v1 only gets the first table,
+// and never its `path`.
 export const AuthoredApiEntryV2 = z
   .object({
     base_url: ApiBaseUrlV2.optional(),
+    path: ApiPathV2.optional(),
     sdk: z
       .object({
         aisdk: z.string().min(1).optional(),
@@ -767,17 +846,45 @@ export const AuthoredApiEntryV2 = z
       })
       .strict()
       .optional(),
-    compatibility: CompatibilityV2.pick({ reasoning_field: true, replay_reasoning: true })
+    compatibility: CompatibilityV2.pick({ reasoning_field: true, max_tokens_field: true })
       .strict()
+      .extend({ image_input: CompatibilityV2.shape.image_input })
       .optional(),
+    capabilities: ApiCapabilitiesV2.optional(),
     // Legacy, v1-only: the v1 `provider.shape` of a file that states its SDK's
     // default protocol (Responses on `@ai-sdk/openai`). It only keeps that
     // published v1 field unchanged; the v2 API never emits it.
     legacy_shape: z.enum(["responses", "completions"]).optional(),
+    // Legacy, v1-only: v1's bare `interleaved: true`. The v2 API never emits it;
+    // replaying reasoning is the default there.
+    legacy_interleaved: z.literal(true).optional(),
   })
   .strict();
 
 export type AuthoredApiEntryV2 = z.infer<typeof AuthoredApiEntryV2>;
+
+// Compatibility fields that only mean something on one protocol.
+const COMPATIBILITY_PROTOCOLS = {
+  reasoning_field: "chat-completions",
+  max_tokens_field: "chat-completions",
+  image_input: "systemone",
+} as const;
+
+export const AuthoredApisV2 = z
+  .record(ApiProtocolV2, AuthoredApiEntryV2)
+  .superRefine((tables, ctx) => {
+    for (const [protocol, table] of Object.entries(tables)) {
+      for (const field of Object.keys(COMPATIBILITY_PROTOCOLS) as (keyof typeof COMPATIBILITY_PROTOCOLS)[]) {
+        const allowed = COMPATIBILITY_PROTOCOLS[field];
+        if (table.compatibility?.[field] === undefined || protocol === allowed) continue;
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [protocol, "compatibility", field],
+          message: `compatibility.${field} is only allowed on [api.${allowed}], not [api.${protocol}]`,
+        });
+      }
+    }
+  });
 
 // Authored provider model file (`providers/<provider>/models/<model>.toml`). With
 // `base_model`, it holds only what differs from the lab file. Without it, it is a
@@ -802,7 +909,7 @@ export const AuthoredModelV2 = z
     capabilities: CapabilitiesOverrideV2.optional(),
     limit: LimitV2.optional(),
     cost: CostV2.optional(),
-    api: z.record(ApiProtocolV2, AuthoredApiEntryV2).optional(),
+    api: AuthoredApisV2.optional(),
     experimental: ExperimentalV2.optional(),
     metadata: z.record(JsonValue).optional(),
   })

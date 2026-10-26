@@ -2,6 +2,7 @@
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (Beijing model lists, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/kimi-k2.6, accessed 2026-10-23).
 schema = 2
 name = "Moonshot Kimi K2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -15,13 +16,13 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = { max = 81_920 } }
 structured_output = false
 temperature = true
 top_k = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 262_144
@@ -30,8 +31,13 @@ output = 16_384
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.929
+cache = { read = 0.1858, explicit = { read = 0.0929, write = 1.16125 } }
 
 [cost.text.output]
 price = 3.858

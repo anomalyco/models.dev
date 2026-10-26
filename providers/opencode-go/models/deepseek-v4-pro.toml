@@ -2,7 +2,7 @@
 # Go lists Off-Peak and Peak prices; Peak is 01:00-04:00 and 06:00-10:00 UTC, Monday through Friday, and every other hour is Off-Peak.
 # Base prices are Off-Peak; the multiplier doubles them at Peak. Go doesn't mention DeepSeek's Chinese-holiday exception, so none is applied.
 # Effort: reasoning_effort = high|max (not verified on Go: no Go subscription key was available)
-# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/deepseek/models/deepseek-v4-pro.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro (New)"

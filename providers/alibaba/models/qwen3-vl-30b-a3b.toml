@@ -1,7 +1,10 @@
 # v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted and obeyed; not in the context-cache model lists and no cache hits observed. Answers live although no longer on the pricing page; thinking is off by default and enable_thinking=true turns it on (toggle).
+# Re-checked live 2026-10-23 (~8k-token first user message): a late system message is accepted (200) but this model didn't follow it in the probe; the control gets no cache hits (implicit or explicit), so system_updates stays.
 # Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits covers the Qwen-VL, QVQ and Qwen2.5-VL/Qwen3-VL series; video lists extensions, registered MIME types used).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# max_tokens_field: ignores max_completion_tokens, max_tokens caps output (live probe 2026-10-24); Model Studio lists it outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions)
 schema = 2
 name = "Qwen3-VL 30B-A3B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -15,18 +18,25 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = {} }
 temperature = true
 top_p = true
 top_k = true
-system_updates = true
 stream_usage = true
-cache = { supported = false }
+cache = false
 
 [limit]
 context = 131_072
 output = 32_768
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0.2

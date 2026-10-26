@@ -8,7 +8,13 @@ base_model = "google/gemini-3-flash-preview"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.generate-content]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/gemini/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
 
 [cost.text.input]
 price = 0.5

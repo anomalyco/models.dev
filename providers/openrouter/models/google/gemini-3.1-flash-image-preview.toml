@@ -11,8 +11,6 @@ output = ["text", "image/png", "image/jpeg"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 58_982
@@ -30,3 +28,6 @@ price = 3
 
 [cost.image.output]
 price = 60
+
+[cost.web_search]
+price = 14

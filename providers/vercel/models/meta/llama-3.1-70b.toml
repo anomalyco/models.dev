@@ -1,15 +1,23 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "meta/llama-3.1-70b-instruct"
 name = "Llama 3.1 70B Instruct"
 
 [capabilities]
-tools = { supported = true, updates = false }
-system_updates = false
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 output = 8_192
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.72

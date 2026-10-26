@@ -5,8 +5,8 @@
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Modalities: image and video input as the file already listed (not PDF); MIME types from the lab.
 # Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
-# Mid-conversation flags unset: Go documents none, and no Go subscription key was available to test them.
 # family: kept as "qwen3.8-max" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-max.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 family = "qwen3.8-max"
@@ -19,6 +19,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
 structured_output = true
+system_updates = true
 
 [api.messages]
 base_url = "https://opencode.ai/inference/go/anthropic/v1"

@@ -2,13 +2,15 @@
 # No thinking.budget_tokens bound recorded, matching Alibaba's first-party entry (qwen3.6-plus on Zen accepts 100000).
 # Toggle: thinking.type = enabled|disabled (not re-verified on Zen: model access is disabled for the probe key)
 # Budget: thinking.budget_tokens with thinking.type = enabled (not re-verified on Zen: model access is disabled for the probe key)
-# Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.5-plus.toml (Zen passes requests through).
+# effort_updates: left out. Changing thinking.type or thinking.budget_tokens on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 schema = 2
 base_model = "alibaba/qwen3.5-plus"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = {} }
+system_updates = true
 
 [limit]
 context = 262_144

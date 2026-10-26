@@ -10,6 +10,8 @@
 # No long-context premium on Vertex: the pricing page lists the same rates for <= 200K and > 200K input tokens
 # (https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing), and Anthropic includes the 1M window at standard pricing for Claude 4.6 and later
 # (https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing).
+# Web search: $10 per 1,000 searches: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (supported models: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search)
+# Token-only multipliers (object factor, so cost.web_search is unscaled): non-global regional premium: Vertex lists one web search price ($10 per 1,000 searches) for every endpoint, a separate SKU the regional premium doesn't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models).
 schema = 2
 base_model = "anthropic/claude-opus-4-8"
 
@@ -18,8 +20,7 @@ tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/google-vertex/anthropic", opencodeai = "@opencode/ai/providers/google-vertex/messages" }
@@ -31,6 +32,9 @@ cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 [cost.text.output]
 price = 25
 
+[cost.web_search]
+price = 10
+
 [[cost.multipliers]]
 when = { not = { region = { equals = "global" } } }
-factor = 1.1
+factor = { text = 1.1 }

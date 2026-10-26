@@ -6,11 +6,10 @@ name = "voxtral-small-2507"
 description = "Voxtral Small is a multimodal model with audio input, combining advanced speech capabilities with strong text performance for transcription, translation, and audio understanding."
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 structured_output = true
 temperature = false
-effort_updates = false
 
 [limit]
 context = 32_000

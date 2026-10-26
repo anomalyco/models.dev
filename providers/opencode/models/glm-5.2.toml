@@ -1,12 +1,13 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: reasoning_effort = high|max (not re-verified on Zen: model access is disabled for the probe key)
-# Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.2.toml (Zen passes requests through).
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
 reasoning = { supported = true, effort = ["high", "max"] }
 structured_output = true
+system_updates = true
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

@@ -1,0 +1,23 @@
+# Current canonical Token Plan host and native route (accessed 2026-10-23):
+# https://platform.qianwenai.com/docs/token-plan/best-practices/multimodal-generation
+# Token Plan lists qwen-image-3.0-pro as image generation:
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview
+# Marketplace details (up to 4.5k-token input; Image+Text in, Image out) and DashScope curl
+# to POST /api/v1/services/aigc/multimodal-generation/generation:
+# https://www.qianwenai.com/models/qwen-image-3.0-pro
+# API on Token Plan China: POST https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation
+# (https://www.alibabacloud.com/help/en/model-studio/token-plan-multimodal-gen)
+# Cost is prepaid Credits subscription, so the applicable media-unit cost is 0; marketplace per-image prices
+# are pay-as-you-go and separate from credit debit. Lab metadata is inherited via base_model.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-image-3.0-pro"
+
+[api.images]
+base_url = "https://token-plan.maas.qianwenaiapi.com/api/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.output]
+price = 0
+unit = "image"

@@ -5,21 +5,22 @@ schema = 2
 base_model = "minimax/MiniMax-M2.5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
-
-[limit]
-output = 32_768
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_details" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
-price = 0.27
+price = 0.3
 cache = { read = 0.03 }
 
 [cost.text.output]
-price = 0.95
+price = 1.2

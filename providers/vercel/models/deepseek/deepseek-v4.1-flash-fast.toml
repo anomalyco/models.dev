@@ -1,19 +1,28 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation: system_updates unset. Vercel doesn't document mid-conversation system messages for this model, and it routes to third-party hosts that don't document it either. The earlier true came from one live run on the default route (cache prefix kept, @ai-sdk/gateway, 2026-10-19), which isn't enough on its own. No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Fast"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-system_updates = true
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
 output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.6

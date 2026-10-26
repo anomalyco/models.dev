@@ -8,13 +8,13 @@ v2_only = true
 base_model = "google/gemini-3.5-transcribe-live"
 
 [capabilities]
-cache = { supported = false }
+cache = false
 
 [limit]
 context = 131_072
 output = 65_536
 
-[api.realtime]
+[api.bidi-generate-content]
 sdk = { opencodeai = "none" }
 
 [cost.text.input]

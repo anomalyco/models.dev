@@ -7,23 +7,23 @@
 # repeats read cached tokens (the model page lists no cached price).
 # Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message keeps the cached prefix and is honored;
 # no effort control; adding or removing a tool drops the cached history (tools render ahead of it).
+# Live 2026-10-23 (~7k-token first user message): a system message after the assistant turn read 8704/8797 and 8704/8793 cached (warm 8704), French 2/2.
+# system_updates left out: undocumented. Neither Workers AI nor Google documents a mid-conversation system message for Gemma 4 (Google's Gemma/Gemini specs list only user and model roles); the live results above are server behavior only.
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-system_updates = true
-effort_updates = false
 
 [limit]
 context = 256_000
 output = 16_384
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 0.1

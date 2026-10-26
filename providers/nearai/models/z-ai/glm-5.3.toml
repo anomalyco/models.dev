@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+# Effort: reasoning_effort = low|high|max
+# Sources (accessed 2026-10-22):
+# - Pricing/model (Private TEE, $1.8 in / $5.75 out / $0.45 cache-read per 1M, 1048K context): https://near.ai/models/z-ai/glm-5.3
+# - NEAR reasoning toggle (chat_template_kwargs.enable_thinking, reasoning_content field): https://docs.near.ai/cloud/reasoning-models
+# - Native GLM-5.3 effort (thinking.type enabled only, reasoning_effort low|high|max default max, text-only): https://docs.z.ai/guides/llm/glm-5.3
+# - Same-surface NEAR peer z-ai/glm-5.3-flash with live-verified toggle+effort low|high|max: providers/nearai/models/z-ai/glm-5.3-flash.toml
+# - Cache: automatic prefix caching on TEE models, no request changes: https://docs.near.ai/cloud/guides/prompt-caching
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 5.75

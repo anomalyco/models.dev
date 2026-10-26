@@ -11,17 +11,27 @@
 # Flex and Priority do not scale cache storage. Rates double from 2027-01-01.
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-3.6-flash; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3.6-flash
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Grounding keeps its price under Priority, Flex and the scheduled increases (https://ai.google.dev/gemini-api/docs/pricing).
+# APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 schema = 2
 base_model = "google/gemini-3.6-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = { min_tokens = 4_096 }, explicit = true }
+cache = { implicit = { min_tokens = 4_096 }, explicit = true }
 service_tier = ["flex", "priority"]
-system_updates = false
-effort_updates = false
+
+[api.generate-content]
+
+[api.chat-completions]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.interactions]
+sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 0.75
@@ -34,6 +44,9 @@ price = 3.75
 price = 0.75
 cache = { read = 0.075, storage = 0.5 }
 
+[cost.web_search]
+price = 14
+
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }
 factor = { text = { input = { price = 1.8, cache = { read = 1.8 } }, output = 1.8 }, audio = { input = { price = 1.8, cache = { read = 1.8 } } } }
@@ -44,4 +57,4 @@ factor = { text = { input = { price = 0.5, cache = { read = 0.5 } }, output = 0.
 
 [[cost.multipliers]]
 when = { date = { gte = "2027-01-01" } }
-factor = 2
+factor = { text = 2, audio = 2 }

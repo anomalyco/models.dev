@@ -16,6 +16,9 @@
 # fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon
 # The documented text/plain document type is covered by `text`.
+# Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed). Price: https://cloud.google.com/vertex-ai/generative-ai/pricing; support (supported models list): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/grounding-with-google-search
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Priority PayGo (https://cloud.google.com/vertex-ai/generative-ai/docs/priority-paygo); the scheduled increase is to token rates (https://cloud.google.com/vertex-ai/generative-ai/pricing); non-global region: Vertex bills Grounding with Google Search as a separate per-query SKU ($14 per 1,000 grounding queries) that these tiers don't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing).
+# APIs: generateContent, and Interactions (https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/models/interactions-api lists this model; global location only).
 schema = 2
 base_model = "google/gemini-4-argon"
 
@@ -24,13 +27,17 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 4_096 } }
+cache = { implicit = { min_tokens = 4_096 } }
 service_tier = ["priority"]
+
+[api.generate-content]
+
+[api.interactions]
+base_url = "https://aiplatform.googleapis.com/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/global"
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/interactions" }
 
 [cost.text.input]
 price = 2
@@ -43,14 +50,17 @@ price = 10
 price = 2
 cache = { read = 0.1 }
 
+[cost.web_search]
+price = 14
+
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }
-factor = 1.8
+factor = { text = 1.8, audio = 1.8 }
 
 [[cost.multipliers]]
 when = { not = { region = { equals = "global" } } }
-factor = 1.1
+factor = { text = 1.1, audio = 1.1 }
 
 [[cost.multipliers]]
 when = { date = { gte = "2026-12-01" } }
-factor = 2
+factor = { text = 2, audio = 2 }

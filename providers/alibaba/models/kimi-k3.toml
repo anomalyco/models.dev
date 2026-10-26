@@ -11,6 +11,8 @@
 # Effort: reasoning_effort = low|high|max (default max); no thinking_budget
 # top_k: the Kimi series does not support top_k (Chat API reference)
 # Input: text and image only on Model Studio (https://www.alibabacloud.com/help/en/model-studio/kimi-api: "kimi-k3 does not currently support video input"), which lists no image formats, so the moonshotai/kimi-k3 lab's image MIME list is used.
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -19,20 +21,26 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false
-system_updates = true
-effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 output = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 3
@@ -40,3 +48,6 @@ cache = { read = 0.3 }
 
 [cost.text.output]
 price = 15
+
+[cost.web_search]
+price = 10

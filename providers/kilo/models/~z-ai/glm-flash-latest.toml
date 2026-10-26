@@ -14,19 +14,18 @@ input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "vi
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 131_072
 
 [cost.text.input]
-price = 0.0058
-cache = { read = 0.0058 }
+price = 0.0513
+cache = { read = 0.03 }
 
 [cost.text.output]
-price = 0.193
+price = 0.0701

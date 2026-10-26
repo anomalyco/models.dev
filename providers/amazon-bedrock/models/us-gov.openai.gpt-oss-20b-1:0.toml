@@ -8,11 +8,9 @@ base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b (GovCloud)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 128_000

@@ -1,20 +1,21 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: reasoning_effort = low|high|max
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a system message before the next user turn was kept in place in 5 of 6 runs (e.g. cached 10376 -> 10376); the one miss had a cold control
-#   effort_updates = false: reasoning_effort high -> low dropped the cache (cached 10368 -> 0)
-#   tools.updates = false: adding a tool dropped the cache (cached 10496 -> 0)
 # Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.3-flash.toml (Zen passes requests through).
+# No PDF input: every Zen upstream for this model rejects file content parts (Fireworks: https://docs.fireworks.ai/guides/querying-vision-language-models#working-with-pdfs; verified live 2026-10-24).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
-effort_updates = false
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

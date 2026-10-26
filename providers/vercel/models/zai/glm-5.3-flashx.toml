@@ -1,6 +1,7 @@
 # GLM-5.3-FlashX uses the same model and forced-thinking effort levels as Flash.
 # https://docs.z.ai/guides/vlm/glm-5.3-flash
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). No per-turn effort or tool-change mechanism reaches this model on this API.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 FlashX"
@@ -10,11 +11,21 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-system_updates = true
-effort_updates = false
+cache = { implicit = true }
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.37

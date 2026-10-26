@@ -9,12 +9,10 @@ base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash 0423"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 
 [limit]
@@ -23,9 +21,16 @@ output = 32_768
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
 [cost.text.input]
 price = 0.138
 cache = { read = 0.028 }
 
 [cost.text.output]
 price = 0.275
+
+[cost.web_search]
+price = 10

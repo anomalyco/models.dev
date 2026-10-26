@@ -1,4 +1,5 @@
 # Status: retired on Model Studio international. Live 2026-10-19 the API answers 429 with a zero quota and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "Qwen Turbo"
 description = "Efficient Qwen model for fast chat, extraction, and high-volume workloads"
@@ -14,13 +15,16 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = {} }
 temperature = true
 
 [limit]
 context = 1_000_000
 output = 16_384
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.05

@@ -9,18 +9,16 @@ base_model = "alibaba/qwen3-32b"
 last_updated = "2025-09-18"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]
 context = 32_768
 
 [api.converse]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 0.15

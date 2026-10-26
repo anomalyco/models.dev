@@ -1,0 +1,36 @@
+# Spot serverless for DeepSeek V4.1 Flash 1017 (30% below Standard, same OpenAI-compatible API; service_tier does not select Spot).
+# Sources: https://docs.fireworks.ai/guides/spot-serverless (Spot is 30% below Standard, same API; table lists DeepSeek V4.1 Flash Standard $0.30 / $0.006 / $1.20 and Spot $0.21 / $0.0042 / $0.84 per 1M) and https://docs.fireworks.ai/serverless/pricing (DeepSeek V4.1 Flash 1017 Standard $0.30 / $0.006 / $1.20 — same as Flash — so Spot is $0.21 / $0.0042 / $0.84; fallback to Standard billed at Standard).
+# Standard pricing detail: https://app.fireworks.ai/models/fireworks/deepseek-v4p1-flash-1017 (Standard $0.30 / $0.006 / $1.20, Created Oct 17 2026).
+# Lab identity, minor update to V4.1 Flash: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Live catalog exposes accounts/fireworks/routers/deepseek-v4p1-flash-1017-spot (issue #11089); docs table lists Spot identifiers under accounts/fireworks/models/*-spot for the same offering — same underlying model and Spot rates applied here, router namespace used per sync.
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|high|max (same surface as sibling accounts/fireworks/models/deepseek-v4p1-flash-1017 and base Spot sibling routers/deepseek-v4p1-flash-spot; native DeepSeek Flash effort set low|high|max: https://api-docs.deepseek.com/guides/thinking_mode/)
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Spot"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.21
+cache = { read = 0.0042 }
+
+[cost.text.output]
+price = 0.84

@@ -22,19 +22,17 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 service_tier = ["flex", "priority"]
 
 [limit]
 output = 128_000
 
 [api.converse]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 3.3

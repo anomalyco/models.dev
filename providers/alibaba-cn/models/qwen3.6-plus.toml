@@ -4,6 +4,7 @@
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: 0-256K $0.276/$1.651, 256K-1M $1.101/$6.602 (previously the Singapore prices). Explicit cache: read 10%, creation 125% of input.
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 name = "Qwen3.6 Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -17,27 +18,36 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 81_920 } }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
 stream_usage = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
 output = 65_536
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.276
-cache = { read = 0.0276, write = 0.345 }
+cache = { read = 0.0276, explicit = { write = 0.345 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 1.101
-cache = { read = 0.1101, write = 1.37625 }
+cache = { read = 0.1101, explicit = { write = 1.37625 } }
 
 [cost.text.output]
 price = 1.651
@@ -45,3 +55,6 @@ price = 1.651
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }
 price = 6.602
+
+[cost.web_search]
+price = 0.573411

@@ -5,6 +5,7 @@
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Deprecated: GET /api/v1/models lists expiration_date 2026-12-31
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 name = "Dots3-Note Preview (free)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -17,16 +18,23 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
-system_updates = true
-effort_updates = false
 
 [limit]
 context = 512_000
 output = 460_800
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0

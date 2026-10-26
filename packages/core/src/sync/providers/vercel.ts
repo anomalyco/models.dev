@@ -98,9 +98,13 @@ export const vercel = {
   translateModel(model, context) {
     const mediaType = MEDIA_TYPES[model.type];
     if (mediaType !== undefined) {
+      const current = context.v2?.(model.id);
+      const v2 = buildVercelMediaModel(model, mediaType, current, context.authored(model.id));
+      const cache = vercelCache(model);
+      if (cache !== undefined) v2.capabilities = { ...v2.capabilities, cache: cache((current?.capabilities as Doc | undefined)?.cache) };
       return {
         id: model.id,
-        v2: buildVercelMediaModel(model, mediaType, context.v2?.(model.id), context.authored(model.id)),
+        v2,
         header: MEDIA_HEADERS[mediaType] + realtimePriceNote(model),
       };
     }
@@ -113,19 +117,41 @@ export const vercel = {
       existing,
       inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
     );
+    const cache = vercelCache(model);
+    const type = existing?.type ?? (baseModel === undefined ? undefined : labDoc(baseModel)?.type);
+    const v2Set = {
+      ...(model.type === "evaluation" ? { api: structuredClone(DECISION_APIS) } : {}),
+      ...(model.type === "language" && (type ?? "chat") === "chat" ? { api: chatApis } : {}),
+      ...(cache === undefined ? {} : { "capabilities.cache": cache }),
+    };
     return {
       id: model.id,
       model: translated,
       header: translated.reasoning_options?.some((option) => option.type === "toggle")
         ? "# Toggle: reasoning.enabled = true|false\n# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning\n"
         : undefined,
-      ...(model.type === "evaluation" ? { v2Set: { api: structuredClone(DECISION_APIS) } } : {}),
+      ...(Object.keys(v2Set).length > 0 ? { v2Set } : {}),
     };
   },
-  sameModel(current, desired) {
-    return sameVercelModel(current, desired);
-  },
 } satisfies SyncProvider<VercelModel>;
+
+// The catalog tags each model `implicit-caching` and/or `explicit-caching`. An
+// untagged model with a cache read price caches implicitly, except Anthropic's,
+// which only cache with explicit markers. Details a file already has for a kind
+// (TTLs, breakpoints) are kept; other untagged models keep whatever the file says.
+export function vercelCache(model: Pick<VercelModel, "id" | "tags" | "pricing">) {
+  const tagged = model.tags.includes("implicit-caching") || model.tags.includes("explicit-caching");
+  const priced = !tagged && model.pricing?.input_cache_read !== undefined;
+  const anthropic = model.id.startsWith("anthropic/");
+  const implicit = model.tags.includes("implicit-caching") || (priced && !anthropic);
+  const explicit = model.tags.includes("explicit-caching") || (priced && anthropic);
+  if (!implicit && !explicit) return undefined;
+  const kind = (current: unknown) => (current !== null && typeof current === "object" ? current : true);
+  return (current: { implicit?: unknown; explicit?: unknown } | false | undefined) => ({
+    ...(implicit ? { implicit: kind(current && current.implicit) } : {}),
+    ...(explicit ? { explicit: kind(current && current.explicit) } : {}),
+  });
+}
 
 export function buildVercelModel(
   model: VercelModel,
@@ -207,7 +233,7 @@ export function buildVercelModel(
     status: existing?.status,
     interleaved: existing?.interleaved,
     experimental: existing?.experimental,
-    provider: existing?.provider,
+    provider: model.type === "evaluation" ? DECISION_V1_PROVIDER : existing?.provider,
     cost,
     limit: { context, input, output },
     modalities: {
@@ -393,48 +419,6 @@ function inferFamily(modelID: string, name: string) {
     });
 }
 
-function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
-  const desiredModel = desired as ExistingModel;
-  const fields: Array<[unknown, unknown, boolean?]> = [
-    [current.base_model, desiredModel.base_model],
-    [current.base_model_omit, desiredModel.base_model_omit],
-    [current.type, desiredModel.type],
-    [current.name, desiredModel.name],
-    [current.description, desiredModel.description],
-    [current.family, desiredModel.family],
-    [current.attachment, desiredModel.attachment],
-    [current.reasoning, desiredModel.reasoning],
-    [current.reasoning_options, desiredModel.reasoning_options],
-    [current.tool_call, desiredModel.tool_call],
-    [current.structured_output, desiredModel.structured_output],
-    [current.open_weights, desiredModel.open_weights],
-    [current.release_date, desiredModel.release_date],
-    [current.cost?.input, desiredModel.cost?.input, true],
-    [current.cost?.output, desiredModel.cost?.output, true],
-    [current.cost?.cache_read, desiredModel.cost?.cache_read, true],
-    [current.cost?.cache_write, desiredModel.cost?.cache_write, true],
-    [current.cost?.tiers, desiredModel.cost?.tiers],
-    [current.limit?.context, desiredModel.limit?.context],
-    [current.limit?.input, desiredModel.limit?.input],
-    [current.limit?.output, desiredModel.limit?.output],
-    [current.modalities?.input, desiredModel.modalities?.input],
-  ];
-
-  return fields.every(([currentValue, desiredValue, cost]) => {
-    if (cost && currentValue === 0 && desiredValue === undefined) return true;
-    if (cost && typeof currentValue === "number" && typeof desiredValue === "number") {
-      return Math.abs(currentValue - desiredValue) <= 0.001;
-    }
-    if (
-      (currentValue === 0 || desiredValue === 0)
-      && (typeof currentValue === "number" || typeof desiredValue === "number")
-    ) {
-      return true;
-    }
-    return JSON.stringify(currentValue) === JSON.stringify(desiredValue);
-  });
-}
-
 // ---------------------------------------------------------------------------
 // Image, video, embedding, rerank, speech, transcription and realtime models
 // ---------------------------------------------------------------------------
@@ -478,17 +462,60 @@ const LIVE_MODELS = new Set(["openai/gpt-live-1"]);
 // OpenCode's vercel-ai-gateway entry point only speaks the chat APIs, not
 // these endpoints.
 const MEDIA_SDK = { opencodeai: "none" };
-// Decision models: POST /v1/evaluate, which OpenCode's vercel-ai-gateway entry
-// calls (experimental.evaluation). @ai-sdk/gateway's decisionModel uses its own
+// Decision models: first POST /v1/decisions, OpenAI's Decisions format, which
+// @ai-sdk/openai's decisionModel speaks with this baseURL; then POST
+// /v1/evaluate, which OpenCode's vercel-ai-gateway entry calls
+// (experimental.evaluation). @ai-sdk/gateway's decisionModel uses its own
 // /v4/ai/decision-model endpoint instead.
 // https://vercel.com/docs/ai-gateway/modalities/decision
 const DECISION_APIS = {
+  decisions: {
+    base_url: "https://ai-gateway.vercel.sh/v1",
+    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" },
+  },
   evaluate: {
     base_url: "https://ai-gateway.vercel.sh/v1",
     sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/vercel-ai-gateway" },
   },
 };
+// v1 reads the first API as `provider`.
+const DECISION_V1_PROVIDER = {
+  npm: DECISION_APIS.decisions.sdk.aisdk,
+  api: DECISION_APIS.decisions.base_url,
+};
 const LIVE_SDK = { aisdk: "none", opencodeai: "none" };
+// Every language model is also served on the OpenAI Responses and Anthropic
+// Messages endpoints, under the same model IDs:
+// https://vercel.com/docs/ai-gateway/sdks-and-apis
+// https://ai-sdk.dev/providers/ai-sdk-providers/open-responses
+const CHAT_EXTRA_APIS = {
+  responses: {
+    base_url: "https://ai-gateway.vercel.sh/v1",
+    sdk: { aisdk: "@ai-sdk/open-responses", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/responses" },
+  },
+  messages: {
+    base_url: "https://ai-gateway.vercel.sh/v1",
+    sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/messages" },
+  },
+};
+
+// A text model's APIs: its default one first (what v1 reads; an empty table
+// takes the provider's), then the extra endpoints, keeping their hand-authored
+// per-API `capabilities`.
+export function chatApis(current: Doc | undefined): Doc {
+  const { responses, messages, ...own } = current ?? {};
+  const capabilities: Doc = { responses: responses?.capabilities, messages: messages?.capabilities };
+  const extra = Object.fromEntries(
+    Object.entries(structuredClone(CHAT_EXTRA_APIS)).map(([key, table]) => [
+      key,
+      capabilities[key] === undefined ? table : { ...table, capabilities: capabilities[key] },
+    ]),
+  );
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    ...extra,
+  };
+}
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
   image: "# Synced from https://ai-gateway.vercel.sh/v1/models (type image)\n# https://vercel.com/docs/ai-gateway/modalities/image-generation\n",

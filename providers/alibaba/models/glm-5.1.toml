@@ -1,26 +1,32 @@
 # Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, Singapore, accessed 2026-10-19).
 # Capabilities: Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions; structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (tool definitions count as part of the system message, so changing tools changes the prefix).
 # Toggle: enable_thinking true|false (default on); Budget: thinking_budget. The Chat API reference lists reasoning_effort high|max for glm-5.1, but live the international endpoint rejects "max" and accepts none|minimal|low|medium|high|xhigh, so no effort list is authored.
-# Cache: explicit and implicit per the context-cache model lists.
-# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted and obeyed but missed the explicit cache (moved); enable_thinking and thinking_budget changes kept it; adding tools missed it.
+# Cache: implicit only. The Singapore explicit-cache list on https://www.alibabacloud.com/help/en/model-studio/context-cache names Qwen models only, and glm-5.1 is on the Singapore implicit list (accessed 2026-10-23). A 2026-10-01 probe with cache_control markers reported no cache creation tokens, so the hits noted below are implicit.
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted and obeyed but missed the cache (moved); enable_thinking and thinking_budget changes kept it; adding tools missed it.
+# Re-checked live 2026-10-23 (~8k-token first user message): with cache_control on that message (accepted, but no cache creation tokens are reported), enable_thinking and thinking_budget changes keep the cached prefix (7.2k-9.3k cached, same as the control); without markers the cache misses after an enable_thinking flip.
+# effort_updates: left out. Changing enable_thinking or thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
+# Implicit cache read: $0.26 per 1M, 18.57% of input (https://www.qwencloud.com/models/glm-5.1 and the context-cache doc, accessed 2026-10-23; no explicit cache price is published).
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
 structured_output = true
-system_updates = false
-effort_updates = true
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 1.4
+cache = { read = 0.26 }
 
 [cost.text.output]
 price = 4.4

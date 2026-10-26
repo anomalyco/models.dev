@@ -1,7 +1,9 @@
 # v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted and obeyed; no cache hits; thinking mode requires streaming; thinking_budget is not supported (toggle only).
+# Re-checked live 2026-10-23 (~8k-token first user message): a late system message is accepted and followed; the control gets no cache hits (implicit or explicit), so there is no cached prefix to lose and system_updates stays.
 # MIME types: image/video per https://www.alibabacloud.com/help/en/model-studio/vision, audio input AMR/WAV/3GP/3GPP/AAC/MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni; output audio "Only wav is supported" per https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 name = "Qwen3-Omni Flash"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
@@ -15,19 +17,24 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text", "audio/wav"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 temperature = true
 top_p = true
 top_k = true
-system_updates = true
-effort_updates = false
 stream_usage = true
-cache = { supported = false }
+cache = false
 
 [limit]
 context = 65_536
 output = 16_384
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0.43

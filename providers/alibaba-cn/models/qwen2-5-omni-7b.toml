@@ -1,6 +1,7 @@
 # Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
 # MIME types: image/video per https://www.alibabacloud.com/help/en/model-studio/vision, audio input AMR/WAV/3GP/3GPP/AAC/MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni; output audio "Only wav is supported" per https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
 # Image input (attachment): the Qwen-Omni page as archived 2025-06-14 (https://web.archive.org/web/20250614083007/https://www.alibabacloud.com/help/en/model-studio/qwen-omni) lists "Image+Text" among the supported input combinations for Qwen-Omni (qwen-omni-turbo and qwen2.5-omni-7b); the current page no longer covers these retired models.
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "Qwen2.5-Omni 7B"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
@@ -15,14 +16,16 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text", "audio/wav"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
-effort_updates = false
 
 [limit]
 context = 32_768
 output = 2_048
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.087

@@ -1,19 +1,28 @@
 # Toggle: reasoning.enabled = true|false
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-23): Xiaomi's API doesn't list cache-kept mid-conversation system messages for this model, so system_updates is left out. No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "xiaomi/mimo-v2.5-pro"
 name = "MiMo V2.5 Pro"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-system_updates = true
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 context = 1_050_000
 output = 131_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.3045

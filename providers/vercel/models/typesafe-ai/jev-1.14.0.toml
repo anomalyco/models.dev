@@ -1,4 +1,4 @@
-# Modalities: TypeSafe images are PNG or JPEG, https://docs.typesafe.ai/images
+# Modalities: inherited PNG/JPEG from the lab (https://docs.typesafe.ai/images.md); Vercel's catalog tags jev-1.14.0 vision (https://ai-gateway.vercel.sh/v1/models)
 schema = 2
 base_model = "typesafe/jev-1.14.0"
 name = "Jev 1.14.0"
@@ -7,12 +7,12 @@ description = "Jev 1.14.0 is TypeSafe AI’s System One evaluation model for fas
 [capabilities]
 structured_output = true
 
-[modalities]
-input = ["text", "image/png", "image/jpeg"]
-output = ["text"]
-
 [limit]
 context = 32_000
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
 
 [api.evaluate]
 base_url = "https://ai-gateway.vercel.sh/v1"

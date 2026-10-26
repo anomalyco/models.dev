@@ -8,12 +8,18 @@ schema = 2
 base_model = "anthropic/claude-opus-4-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 4_096 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 4_096 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 5
@@ -21,3 +27,6 @@ cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
 [cost.text.output]
 price = 25
+
+[cost.web_search]
+price = 10

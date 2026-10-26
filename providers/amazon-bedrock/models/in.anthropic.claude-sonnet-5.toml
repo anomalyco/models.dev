@@ -13,12 +13,11 @@ base_model = "anthropic/claude-sonnet-5"
 name = "Claude Sonnet 5 (India)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
 system_updates = true
-effort_updates = false
-cache = { supported = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 2.2

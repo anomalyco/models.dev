@@ -1,14 +1,21 @@
-# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live: cache prefix kept on gpt-4.1, gpt-5.4, gpt-6-sol)
+# Mid-conversation: system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live 2026-10-23 on gpt-4.1-nano pinned to OpenAI: cache kept and followed on Chat Completions, Responses and Messages). This model has no prompt caching here, so there is no cached prefix to lose
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 base_model = "openai/gpt-4-turbo"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
 system_updates = true
-effort_updates = false
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 10

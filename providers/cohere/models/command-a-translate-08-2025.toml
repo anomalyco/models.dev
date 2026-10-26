@@ -13,15 +13,22 @@
 #   json_schema returned schema-valid JSON.
 # Tools: tool_choice REQUIRED and NONE are honored live; strict_tools returns 400 "cannot use strict_tools with
 #   the specified model".
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
 base_model = "cohere/command-a-translate-08-2025"
 
 [capabilities]
-tools = { supported = true, strict = false, choice = ["auto", "none", "required"], updates = false }
+tools = { supported = true, strict = false, choice = ["auto", "none", "required"] }
 structured_output = true
-system_updates = true
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
+
+[api.cohere-chat]
+capabilities = { system_updates = true }
+
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
 
 [cost.text.input]
 price = 2.5

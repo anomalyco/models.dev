@@ -10,10 +10,9 @@ schema = 2
 base_model = "minimax/MiniMax-M2.5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 top_k = false
-effort_updates = false
 
 [limit]
 context = 196_608
@@ -22,6 +21,10 @@ output = 32_768
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
 price = 0

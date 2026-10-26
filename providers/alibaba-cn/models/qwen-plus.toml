@@ -3,6 +3,9 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) tiers: 0-128K $0.115 in, $0.287 out ($1.147 thinking); 128K-256K $0.345, $2.868 ($3.441); 256K-1M $0.689, $6.881 ($9.175).
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/qwen-plus, accessed 2026-10-23).
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "Qwen Plus"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -17,30 +20,42 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = { max = 81_920 } }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
 output = 32_768
 
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.115
-cache = { read = 0.012, write = 0.144 }
+cache = { read = 0.023, explicit = { read = 0.0115, write = 0.144 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128_000 } }
 price = 0.345
+cache = { read = 0.069, explicit = { read = 0.0345, write = 0.43125 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 0.689
+cache = { read = 0.1378, explicit = { read = 0.0689, write = 0.86125 } }
 
 [cost.text.output]
 price = 0.287
@@ -55,3 +70,6 @@ reasoning = 3.441
 when = { context = { gt = 256_000 } }
 price = 6.881
 reasoning = 9.175
+
+[cost.web_search]
+price = 0.573411

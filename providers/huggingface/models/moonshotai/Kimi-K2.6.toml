@@ -1,16 +1,19 @@
 # Lab identity: https://huggingface.co/moonshotai/Kimi-K2.6
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 name = "Kimi-K2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-effort_updates = false
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.95

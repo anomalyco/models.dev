@@ -1,10 +1,8 @@
 # Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: reasoning.effort = low|medium|high|xhigh|max
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a developer message before the next user turn was kept in place (cached 9120 -> 9120)
-#   effort_updates = true: configuration_update item kept the cache (cached 9120 -> 9120)
-#   tools.updates = true: additional_tools item kept the cache (cached 9158 -> 9158)
 # Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/openai/models/gpt-6-astra.toml (Zen passes requests through).
+#   Surface: Responses carries the in-history messages (configuration_update for effort_updates; additional_tools for tools.updates, add only).
 schema = 2
 base_model = "openai/gpt-6-astra"
 
@@ -12,7 +10,7 @@ base_model = "openai/gpt-6-astra"
 tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
 effort_updates = true
 

@@ -7,6 +7,7 @@
 # GET /openai/v1/models context_window, accessed 2026-10-21). Up to 3 input images, 20 MB max file size.
 # Modalities on Groq: text + images in, text out (no video).
 # Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
+# Responses: POST https://api.groq.com/openai/v1/responses ("all models support the Responses API", stateless; https://console.groq.com/docs/responses-api); returned 200 live (2026-10-22).
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 status = "beta"
@@ -22,6 +23,12 @@ structured_output = true
 [limit]
 context = 131_072
 output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.8

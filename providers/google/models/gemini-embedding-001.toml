@@ -1,5 +1,6 @@
 # v2 capabilities and prices:
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
+# APIs: embedContent, and /embeddings on the OpenAI-compatible endpoint (https://ai.google.dev/gemini-api/docs/openai#embeddings, confirmed live 2026-10-22).
 schema = 2
 type = "embedding"
 name = "Gemini Embedding 001"
@@ -26,6 +27,10 @@ output = 1
 
 [api.embed-content]
 sdk = { opencodeai = "none" }
+
+[api.embeddings]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.15

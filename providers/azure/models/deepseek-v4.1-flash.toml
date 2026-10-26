@@ -8,21 +8,22 @@
 # https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Deepseek Models'
 # Azure catalog lists context 1000k (same as the base model) and output 128k (base is 384k).
 # Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
-# Its published request schema documents no toggle, effort, or reasoning budget.
-# https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-10-08)
-# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
-# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
+# Effort: reasoning_effort = none|low|high|max. Off when omitted or none; the model then
+# returns its chain of thought in `reasoning_content` (live 2026-10-24 on a Foundry resource).
+# The endpoint's own validation error lists none|low|medium|high|max. DeepSeek maps medium
+# to high, so the levels match providers/deepseek. thinking.type is ignored here, so off is
+# effort=none rather than a toggle. Microsoft documents `reasoning_content` for
+# non-OpenAI reasoning models:
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning (accessed 2026-10-25)
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek-V4.1-Flash"
 status = "beta"
 
 [capabilities]
-tools = { supported = true, updates = false }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 128_000
@@ -30,6 +31,7 @@ output = 128_000
 [api.chat-completions]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.3

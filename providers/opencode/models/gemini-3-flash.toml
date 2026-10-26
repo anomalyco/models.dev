@@ -1,22 +1,18 @@
 # Pricing and endpoint (Gemini generateContent): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: generationConfig.thinkingConfig.thinkingLevel = minimal|low|medium|high
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = false: a contents entry with role system was dropped: 200 and cache kept, but input tokens unchanged and the instruction was ignored
-#   effort_updates = false: thinkingConfig.thinkingLevel high -> low dropped the cache (cached 12246 -> 0)
-#   tools.updates = false: adding a function declaration dropped the cache (cached 12225 -> 0)
 # Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-3-flash-preview.toml (Zen passes requests through).
+#   system_updates left out: undocumented. Google's generateContent spec lists only "user" and "model" for Content.role (https://ai.google.dev/api/caching#Content). A contents entry with role system kept the cache and was followed on Zen (live 2026-10-23), but server behavior alone is not a documented mechanism.
 schema = 2
 base_model = "google/gemini-3-flash-preview"
 name = "Gemini 3 Flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true }
-system_updates = false
-effort_updates = false
+cache = { implicit = true }
 
 [api.generate-content]
 base_url = "https://opencode.ai/inference/google/v1beta"

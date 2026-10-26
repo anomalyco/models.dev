@@ -10,19 +10,30 @@
 # - https://ai.google.dev/gemini-api/docs/generate-content/caching
 # - https://ai.google.dev/gemini-api/docs/thinking
 # - https://generativelanguage.googleapis.com/v1beta/models (displayName, limits, topP/topK)
-# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
-# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# system_updates: left out. Undocumented: the generateContent spec lists only "user" and "model" for
+#   Content.role (https://ai.google.dev/api/caching#Content). A {"role": "system"} entry in `contents` was
+#   accepted and kept the cache live (2026-10-23), but server behavior alone is not a documented mechanism.
+#   The Chat Completions endpoint moves a late system message to the top, and Interactions rejects it.
+# Thinking config and tools are request-level; changing the thinking level drops the cache (live 2026-10-23).
+# APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 name = "Gemini Pro Latest"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = { min_tokens = 4_096 }, explicit = true }
-system_updates = false
-effort_updates = false
+cache = { implicit = { min_tokens = 4_096 }, explicit = true }
+
+[api.generate-content]
+
+[api.chat-completions]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.interactions]
+sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 2

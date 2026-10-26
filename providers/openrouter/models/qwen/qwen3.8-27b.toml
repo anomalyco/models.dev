@@ -8,19 +8,25 @@ base_model = "alibaba/qwen3.8-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 1_000_000
-output = 65_536
+output = 235_929
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.04
-cache = { read = 0.018 }
+price = 0.2
+cache = { read = 0.09 }
 
 [cost.text.output]
-price = 1.35
+price = 2.5

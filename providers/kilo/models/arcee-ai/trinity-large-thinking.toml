@@ -5,10 +5,9 @@ schema = 2
 base_model = "arcee-ai/trinity-large-thinking"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 262_144

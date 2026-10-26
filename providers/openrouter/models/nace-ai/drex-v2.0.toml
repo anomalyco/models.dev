@@ -7,10 +7,6 @@ structured_output = true
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }
 
-[api.decisions]
-base_url = "https://openrouter.ai/api/alpha"
-sdk = { opencodeai = "none" }
-
 [cost.text.input]
 price = 0.06
 

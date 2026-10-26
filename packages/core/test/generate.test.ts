@@ -54,23 +54,30 @@ describe("catalog generation", () => {
         root,
         "providers/direct/models/model.toml",
         `${providerFieldsToml()}
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
 
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.125
+[cost.text.output]
+price = 2.50
 `,
       );
       await write(
         root,
         "providers/factored/models/model.toml",
-        `base_model = "lab/model"
-reasoning_options = []
+        `schema = 2
+base_model = "lab/model"
 
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.125
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 2.50
 `,
       );
 
@@ -116,13 +123,18 @@ cache_read = 0.125
       await write(
         root,
         "providers/provider/models/model.toml",
-        `base_model = "lab/model"
-base_model_omit = ["limit.input", "structured_output"]
-reasoning_options = []
+        `schema = 2
+base_model = "lab/model"
+base_model_omit = ["limit.input", "knowledge"]
 
-[cost]
-input = 1.25
-output = 2.50
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 2.50
 
 [limit]
 context = 200_000
@@ -133,7 +145,7 @@ output = 32_000
       const providers = await generate(path.join(root, "providers"));
       const model = providers.provider?.models.model;
 
-      expect(model?.structured_output).toBeUndefined();
+      expect(model?.knowledge).toBeUndefined();
       expect(model?.limit).toEqual({
         context: 200_000,
         output: 32_000,
@@ -148,19 +160,21 @@ output = 32_000
       await write(
         root,
         "providers/provider/models/model.toml",
-        `base_model = "lab/model"
+        `schema = 2
+base_model = "lab/model"
 open_weights = true
-reasoning_options = []
 
-[cost]
-input = 1.25
-output = 2.50
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 2.50
 
 [limit]
 context = 200_000
-
-[modalities]
-input = ["text"]
 `,
       );
 
@@ -173,10 +187,6 @@ input = ["text"]
         input: 272_000,
         output: 128_000,
       });
-      expect(model?.modalities).toEqual({
-        input: ["text"],
-        output: ["text"],
-      });
     });
   });
 
@@ -187,12 +197,14 @@ input = ["text"]
         root,
         "providers/target/models/model.toml",
         `${providerFieldsToml()}
-[cost]
-input = 1
-output = 2
+[api.responses]
+base_url = "https://\${TARGET_RESOURCE}.example.com/v1"
 
-[provider]
-api = "https://\${TARGET_RESOURCE}.example.com/v1"
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
 `,
       );
       await write(
@@ -230,9 +242,11 @@ doc = "https://example.com/models"
 `,
       );
       await write(root, "providers/target/models/plain.toml", `${providerFieldsToml()}
-[cost]
-input = 1
-output = 2
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
 `);
       const alias = `name = "Legacy"
 npm = "@ai-sdk/openai"
@@ -384,7 +398,7 @@ env = { TARGET_RESOURCE = "LEGACY_RESOURCE", TARGET_KEY = "LEGACY_KEY" }
     expect(qualifiedNames).toEqual([]);
   });
 
-  test("legacy_shape is published in v1 and never in v2", async () => {
+  test("legacy_shape and legacy_interleaved are published in v1 and never in v2", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/provider/provider.toml", providerToml("Provider"));
       await write(
@@ -412,6 +426,7 @@ output = 128_000
 base_url = "https://example.com/v1"
 sdk = { aisdk = "@ai-sdk/openai" }
 legacy_shape = "responses"
+legacy_interleaved = true
 
 [cost.text.input]
 price = 1
@@ -427,12 +442,64 @@ price = 2
         api: "https://example.com/v1",
         shape: "responses",
       });
+      expect(providers.provider?.models.model?.interleaved).toBe(true);
 
       const providersV2 = await generateV2(path.join(root, "providers"));
       expect(providersV2.provider?.models.model?.api).toEqual({
-        responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" , opencodeai: "@opencode/ai/providers/openai/responses" } },
+        responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
       });
       expect(JSON.stringify(providersV2)).not.toContain("legacy_shape");
+      expect(JSON.stringify(providersV2)).not.toContain("legacy_interleaved");
+    });
+  });
+
+  test("web search prices are published in v2 and never in v1", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        `schema = 2
+name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
+open_weights = true
+release_date = "2026-01-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+
+[limit]
+context = 400_000
+output = 128_000
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2
+
+[cost.web_search]
+price = 10
+
+[[cost.web_search.overrides]]
+when = { search_context_size = { equals = "high" } }
+price = 25
+`,
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      expect(providers.provider?.models.model?.cost).toEqual({ input: 1, output: 2 });
+
+      const providersV2 = await generateV2(path.join(root, "providers"));
+      expect(providersV2.provider?.models.model?.cost?.web_search).toEqual({
+        price: 10,
+        overrides: [{ when: { search_context_size: { equals: "high" } }, price: 25 }],
+      });
     });
   });
 });
@@ -521,14 +588,27 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-im
     });
   });
 
-  test("without a provider opencodeai, a table's OpenCode package is guessed as before", async () => {
+  test("without a provider opencodeai, only tables naming their own get an OpenCode package", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/openai/provider.toml", providerToml("OpenAI"));
-      await write(root, "providers/openai/models/model.toml", model("\n[api.chat-completions]\n\n[api.responses]\n"));
+      await write(
+        root,
+        "providers/openai/models/model.toml",
+        model('\n[api.chat-completions]\n\n[api.responses]\nsdk = { opencodeai = "@opencode/ai/providers/openai/responses" }\n'),
+      );
+      await write(root, "providers/openai/models/plain.toml", model());
 
-      const api = (await generateV2(path.join(root, "providers"))).openai?.models.model?.api;
-      expect(api?.["chat-completions"]?.sdk?.opencodeai).toBe("@opencode/ai/providers/openai/chat");
-      expect(api?.responses?.sdk?.opencodeai).toBe("@opencode/ai/providers/openai/responses");
+      const models = (await generateV2(path.join(root, "providers"))).openai?.models;
+      expect(models?.model?.api).toEqual({
+        "chat-completions": { base_url: "https://api.openai.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+        responses: {
+          base_url: "https://api.openai.com/v1",
+          sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai/responses" },
+        },
+      });
+      expect(models?.plain?.api).toEqual({
+        responses: { base_url: "https://api.openai.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+      });
     });
   });
 
@@ -554,7 +634,7 @@ sdk = { opencodeai = "none" }
         systemone: { base_url: "https://example.com/v1", sdk: { opencodeai: "@opencode/ai/providers/typesafe-ai" } },
         images: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai-compatible" } },
       });
-      // A provider-level "none" also stops the guessed package.
+      // A provider-level "none" fills in nothing.
       expect(providersV2.silent?.models.model?.api).toEqual({
         "chat-completions": { base_url: "https://api.openai.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
       });
@@ -568,7 +648,6 @@ sdk = { opencodeai = "none" }
 
   test("a provider's opencodeai applies to models without tables", async () => {
     await withFixture(async (root) => {
-      // Cohere-like: the guess would be @opencode/ai/providers/cohere/chat.
       await write(
         root,
         "providers/cohere/provider.toml",
@@ -622,30 +701,6 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "none" }
 `),
       );
-      await write(
-        root,
-        "providers/gateway/models/v1-override.toml",
-        `${providerFieldsToml()}
-[provider]
-npm = "@ai-sdk/openai"
-
-[cost]
-input = 1
-output = 2
-`,
-      );
-      await write(
-        root,
-        "providers/gateway/models/v1-same.toml",
-        `${providerFieldsToml()}
-[provider]
-npm = "@ai-sdk/openai-compatible"
-
-[cost]
-input = 1
-output = 2
-`,
-      );
 
       const models = (await generateV2(path.join(root, "providers"))).gateway?.models;
       const inherited = { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" };
@@ -660,12 +715,42 @@ output = 2
         // `aisdk = "none"` names the table's own (absent) package, so nothing is inherited.
         systemone: { base_url: "https://example.com/v1", sdk: {} },
       });
-      expect(models?.["v1-override"]?.api).toEqual({
-        responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+    });
+  });
+
+  test("a table's path is published in v2 and never in v1", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider());
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(`
+[api.systemone]
+base_url = "https://decide.example.com/v1"
+path = "/decisions"
+`),
+      );
+
+      const v1 = await generate(path.join(root, "providers"));
+      expect(v1.gateway?.models.model?.provider).toEqual({ api: "https://decide.example.com/v1" });
+      expect(JSON.stringify(v1)).not.toContain("/decisions");
+
+      const v2 = await generateV2(path.join(root, "providers"));
+      expect(v2.gateway?.models.model?.api).toEqual({
+        systemone: {
+          base_url: "https://decide.example.com/v1",
+          path: "/decisions",
+          sdk: { aisdk: "@ai-sdk/openai-compatible" },
+        },
       });
-      expect(models?.["v1-same"]?.api).toEqual({
-        "chat-completions": { base_url: "https://example.com/v1", sdk: inherited },
-      });
+    });
+  });
+
+  test("rejects a path that doesn't start with /", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider());
+      await write(root, "providers/gateway/models/model.toml", model(`\n[api.systemone]\npath = "decisions"\n`));
+      await expect(generateV2(path.join(root, "providers"))).rejects.toThrow("Must start with /");
     });
   });
 
@@ -687,28 +772,31 @@ doc = "https://example.com/models"
 }
 
 function modelMetadataToml() {
-  return `name = "Lab Model"
+  return `schema = 2
+name = "Lab Model"
 description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
 knowledge = "2025-12"
 open_weights = true
 license = "Example License"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[links]]
 label = "Model card"
@@ -733,27 +821,28 @@ source = "https://example.com/benchmarks"
 }
 
 function providerFieldsToml() {
-  return `name = "Lab Model"
+  return `schema = 2
+name = "Lab Model"
 description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-tool_call = true
-structured_output = true
 knowledge = "2025-12"
 open_weights = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 `;
 }

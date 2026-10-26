@@ -13,10 +13,12 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 150
 
 [cost.text.output]
 price = 600
+
+[cost.web_search]
+price = 10

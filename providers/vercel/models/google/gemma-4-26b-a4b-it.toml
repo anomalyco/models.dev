@@ -1,4 +1,4 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation: system_updates unset. Vercel and the novita route don't document mid-conversation system messages for this model, and Google's own API moves them to the top. The earlier true came from a live run only (@ai-sdk/gateway, 2026-10-23: the message was rendered and followed, with no cache to check where it landed). No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
@@ -7,14 +7,23 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = true
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.15

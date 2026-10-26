@@ -3,6 +3,8 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) tiers: 0-32K $0.144/$0.574, 32K-128K $0.216/$0.861, 128K-256K $0.359/$1.434, 256K-1M $0.717/$3.584.
+# Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/qwen3-coder-flash, accessed 2026-10-23).
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "Qwen3 Coder Flash"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
@@ -16,34 +18,47 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
-effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
 output = 65_536
 
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
 [cost.text.input]
 price = 0.144
+cache = { read = 0.0288, explicit = { read = 0.0144, write = 0.18 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 32_000 } }
 price = 0.216
+cache = { read = 0.0432, explicit = { read = 0.0216, write = 0.27 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128_000 } }
 price = 0.359
+cache = { read = 0.0718, explicit = { read = 0.0359, write = 0.44875 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
 price = 0.717
+cache = { read = 0.1434, explicit = { read = 0.0717, write = 0.89625 } }
 
 [cost.text.output]
 price = 0.574

@@ -5,9 +5,8 @@ base_model = "alibaba/qwen3-coder-plus"
 
 [capabilities]
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_000_000

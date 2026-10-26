@@ -1,15 +1,24 @@
-# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3 Next 80B A3B Instruct"
 
 [capabilities]
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 262_114
 output = 262_114
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.15

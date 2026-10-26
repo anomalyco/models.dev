@@ -1,17 +1,27 @@
-# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "sakana/fugu-ultra"
 description = "Quality-first multi-agent model for hard research, analysis, and competitions"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
 temperature = true
-effort_updates = false
+cache = { implicit = true }
 
 [limit]
 output = 1_000_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 5

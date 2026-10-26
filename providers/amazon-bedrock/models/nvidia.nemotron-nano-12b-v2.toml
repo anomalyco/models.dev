@@ -7,6 +7,7 @@
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
 # Status: Legacy 2026-09-30, EOL 2027-03-30 per https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle.html.
 # Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card lists image but not video input.
+# APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
 schema = 2
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
 name = "NVIDIA Nemotron Nano 12B v2 VL BF16"
@@ -17,16 +18,20 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-system_updates = false
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]
 context = 131_072
 output = 8_192
+
+[api.converse]
+
+[api.chat-completions]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/chat" }
 
 [cost.text.input]
 price = 0.2

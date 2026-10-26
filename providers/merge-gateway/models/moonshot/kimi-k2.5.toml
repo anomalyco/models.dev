@@ -11,8 +11,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1, max = 262_144 } }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,27 @@
+schema = 2
+name = "DeepSeek V4.1 Flash Uncensored Thinking"
+description = "A lower-refusal finetune of DeepSeek V4.1 Flash with text input, optional reasoning, and tool calling. Supports a context window of up to 1M tokens."
+family = "deepseek"
+open_weights = true
+release_date = "2026-10-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.00825 }
+
+[cost.text.output]
+price = 1.32

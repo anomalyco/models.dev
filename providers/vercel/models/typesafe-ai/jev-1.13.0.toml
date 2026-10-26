@@ -8,7 +8,7 @@ release_date = "2026-09-15"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg"]
-output = ["text"]
+output = ["decision"]
 
 [capabilities]
 tools = { supported = false }
@@ -17,6 +17,10 @@ reasoning = { supported = false }
 [limit]
 context = 32_000
 output = 0
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
 
 [api.evaluate]
 base_url = "https://ai-gateway.vercel.sh/v1"

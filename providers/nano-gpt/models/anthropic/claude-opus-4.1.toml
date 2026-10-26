@@ -8,9 +8,8 @@ name = "Claude 4.1 Opus"
 [capabilities]
 reasoning = { supported = false }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
+tools = { supported = true }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
 
 [limit]
 input = 200_000

@@ -17,16 +17,24 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
 temperature = false
 system_updates = true
-effort_updates = false
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 400_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 2.5
@@ -37,9 +45,39 @@ when = { context = { gt = 272_000 } }
 price = 5
 cache = { read = 0.5 }
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 1.25
+cache = { read = 0.13 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 2.5
+cache = { read = 0.25 }
+
 [cost.text.output]
 price = 15
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 22.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 30
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 7.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 11.25
+
+[cost.web_search]
+price = 10
