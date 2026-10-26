@@ -6,8 +6,11 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-# No effort or toggle controls are documented for this host.
-reasoning = { supported = true }
+# Reasoning controls: providers/deepseek/models/deepseek-flash.toml, narrowed to what this host honours.
+#   Probed on /v1/chat/completions with reasoning.effort and reasoning.enabled (OpenRouter style).
+#   toggle: effort "none" and enabled=false return 0 and 0 reasoning tokens; on by default (172).
+#   effort: the host validates values (400 on an unknown one) and accepts low, high, max. Levels were not separable on the test prompt (one run each).
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_576

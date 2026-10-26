@@ -1,4 +1,6 @@
 # Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
+# Video: video_url is accepted, but the model named the wrong color for solid-color test clips
+#   (red -> 'Black', blue -> 'Black'), so video input is left out.
 # tool schemas: rejects JSON Schema keyword(s) `not` (probe: HTTP 400).
 schema = 2
 base_model = "minimax/MiniMax-M3"
@@ -8,8 +10,10 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-# No effort or toggle controls are documented for this host.
-reasoning = { supported = true }
+# Reasoning controls: providers/minimax/models/MiniMax-M3.toml, narrowed to what this host honours.
+#   Probed on /v1/chat/completions with reasoning.effort and reasoning.enabled (OpenRouter style).
+#   toggle: effort "none" and enabled=false return 0 and 0 reasoning tokens; on by default (328).
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 
 [cost.text.input]
 price = 0.3

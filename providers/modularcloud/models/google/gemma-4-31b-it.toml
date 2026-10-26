@@ -3,8 +3,11 @@ schema = 2
 base_model = "google/gemma-4-31b-it"
 
 [capabilities]
-# No effort or toggle controls are documented for this host.
-reasoning = { supported = true }
+# Reasoning controls: providers/google/models/gemma-4-31b-it.toml, narrowed to what this host honours.
+#   Probed on /v1/chat/completions with reasoning.effort and reasoning.enabled (OpenRouter style).
+#   toggle: off by default (0 reasoning tokens); any effort value turns it on (1296 at high).
+#   effort values are not validated here (an unknown value is accepted), so none are listed.
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }
 
 [cost.text.input]
 price = 0.25
