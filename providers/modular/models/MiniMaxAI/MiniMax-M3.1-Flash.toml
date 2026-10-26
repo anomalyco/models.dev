@@ -1,14 +1,13 @@
 # context: the API's own limit, as named in its error for an over-long request.
 # Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
-# Video: inherited; the model named the color of solid-color mp4 test clips correctly (probe).
+# Video: inherited; video_url (mp4) is accepted and billed as input (+52 prompt tokens for a 2 s clip, probe).
+# Reasoning controls: providers/minimax/models/MiniMax-M3.1-Flash.toml, kept where this host honours them (probe, /v1/chat/completions).
+# No toggle: reasoning.enabled = false still returns 136 reasoning tokens (effort none: 158).
+# Effort: reasoning.effort = low|medium|high|xhigh|max (the host validates values: 400 on an unknown one). Levels were not separable on the test prompt, one run each.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
-# Reasoning controls: providers/minimax/models/MiniMax-M3.1-Flash.toml, narrowed to what this host honours.
-#   Probed on /v1/chat/completions with reasoning.effort and reasoning.enabled (OpenRouter style).
-#   no toggle: effort "none" and enabled=false still return 195 and 111 reasoning tokens.
-#   effort: the host validates values (400 on an unknown one) and accepts low, medium, high, xhigh, max. Levels were not separable on the test prompt (one run each).
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
