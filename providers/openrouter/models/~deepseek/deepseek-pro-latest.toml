@@ -22,7 +22,7 @@ temperature = true
 
 [limit]
 context = 1_048_576
-output = 393_216
+output = 943_718
 
 [api.chat-completions]
 
@@ -33,8 +33,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.2565
-cache = { read = 0.26 }
+price = 0.25
+cache = { read = 0.249 }
 
 [cost.text.output]
-price = 8
+price = 5
