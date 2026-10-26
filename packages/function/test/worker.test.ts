@@ -57,6 +57,19 @@ describe("catalog API model type filtering", () => {
     expect(Object.keys(body)).toEqual(["text", "decision"]);
   });
 
+  test("gives filtered responses an ETag that revalidates", async () => {
+    const response = await request("/models.json?type=decision,chat");
+    const etag = response.headers.get("etag");
+    const again = await request("/models.json?type=chat,decision", {
+      "user-agent": "test",
+      "if-none-match": etag ?? "",
+    });
+
+    expect(etag).toBe('W/"all;type=chat,decision"');
+    expect(again.status).toBe(304);
+    expect(again.headers.get("etag")).toBe(etag);
+  });
+
   test("returns the complete static catalog for all", async () => {
     const response = await request("/models.json?type=all");
     const body = await response.json();
@@ -229,7 +242,12 @@ async function request(
         if (pathname === "/_models.json") {
           return Response.json({ text: textModel });
         }
-        if (pathname === "/_models-all.json") return Response.json(models);
+        if (pathname === "/_models-all.json") {
+          if (input.headers.get("if-none-match") === 'W/"all"') {
+            return new Response(null, { status: 304, headers: { etag: 'W/"all"' } });
+          }
+          return Response.json(models, { headers: { etag: 'W/"all"' } });
+        }
         if (pathname === "/_models-decision.json") {
           return Response.json({ decision: decisionModel });
         }

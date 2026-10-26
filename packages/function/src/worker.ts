@@ -203,10 +203,23 @@ async function catalogResponse(
         : undefined;
   assetUrl.pathname = `/_${endpoint}${suffix ?? "-all"}.json`;
   assetUrl.search = "";
-  const assetResponse = await env.ASSETS.fetch(
-    new Request(assetUrl.toString(), request),
-  );
-  if (!assetResponse.ok || suffix !== undefined) return assetResponse;
+  // A filtered body depends only on the full file and the types, so its ETag is
+  // the file's ETag plus the types, and revalidation is passed to the file.
+  const tag = suffix === undefined ? `;type=${[...filter].sort().join(",")}` : "";
+  const assetRequest = new Request(assetUrl.toString(), request);
+  const conditional = request.headers.get("If-None-Match");
+  if (tag && conditional) {
+    assetRequest.headers.set("If-None-Match", conditional.replaceAll(`${tag}"`, '"'));
+  }
+  const assetResponse = await env.ASSETS.fetch(assetRequest);
+  if (suffix !== undefined) return assetResponse;
+  const etag = assetResponse.headers.get("ETag")?.replace(/"$/, `${tag}"`);
+  if (assetResponse.status === 304) {
+    const headers = new Headers(assetResponse.headers);
+    if (etag) headers.set("ETag", etag);
+    return new Response(null, { status: 304, headers });
+  }
+  if (!assetResponse.ok) return assetResponse;
 
   const value = await assetResponse.json();
   const filtered = endpoint === "api" || endpoint === "experimental_v2.0_api"
@@ -229,7 +242,7 @@ async function catalogResponse(
 
   const headers = new Headers(assetResponse.headers);
   headers.delete("Content-Length");
-  headers.delete("ETag");
+  if (etag) headers.set("ETag", etag);
   headers.set("Content-Type", "application/json");
   headers.set("Cache-Control", "public, max-age=3600");
   return new Response(JSON.stringify(filtered), { headers });
