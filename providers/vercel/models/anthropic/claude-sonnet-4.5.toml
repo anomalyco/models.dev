@@ -1,4 +1,5 @@
 # Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
+# Per-API tools.search: [api.messages] runs Anthropic's tool search tool (tool_search_tool_regex_20251119 with defer_loading tools found and called the deferred tool, live 2026-10-26 on Haiku 4.5, Sonnet 4.6 and Opus 5.5, with providerOptions.gateway.only set to anthropic, bedrock and vertex). /v1/chat/completions rejects the tool type (400 "Invalid discriminator value. Expected 'function' | 'custom' | ..."); /v1/responses ignored both tool_search and tool_search_tool_regex_20251119 and called the deferred tool with no search step (Sonnet 4.6). tool_choice none and a named tool worked on all three APIs (live, Haiku 4.5).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5-20250929"
 
@@ -20,6 +21,7 @@ sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/v
 [api.messages]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+capabilities = { tools = { search = true } }
 
 [cost.text.input]
 price = 3

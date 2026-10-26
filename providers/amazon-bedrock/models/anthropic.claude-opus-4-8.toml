@@ -10,23 +10,25 @@
 # Per-API flags: tools.updates sits on [api.messages] (Mantle Messages / InvokeModel), where AWS documents tool_addition/tool_removal. Converse has no documented tool change block; it only worked by passing the beta and deferred tools through additionalModelRequestFields. system_updates stays top-level: Converse documents role "system" messages and the Messages API documents mid-conversation system messages.
 # tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-8.html
 # tools.choice: Converse toolChoice auto/any/tool, no none (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ToolChoice.html); Claude takes any and tool: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html
-# tools.search: left out. Bedrock offers the tool search tool through InvokeModel only, not Converse: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool
+# tools.search: on [api.messages] only. AWS documents the tool search tool through InvokeModel, not Converse (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool); Mantle Messages ran tool_search_tool_regex_20251119 with deferred tools live (2026-10-26).
+# Per-API tools.choice: Mantle Messages takes Anthropic's tool_choice, including none (live 2026-10-26), so choice is set per API: Converse's list on [api.converse], the same plus none on [api.messages]. Strict tools hold on both APIs (Mantle Messages rejected a strict schema without additionalProperties: false; structured outputs list Mantle Messages: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html).
 schema = 2
 base_model = "anthropic/claude-opus-4-8"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "required", "tool"] }
+tools = { supported = true, strict = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [api.converse]
+capabilities = { tools = { choice = ["auto", "required", "tool"] } }
 
 [api.messages]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/messages" }
-capabilities = { tools = { updates = true } }
+capabilities = { tools = { updates = true, choice = ["auto", "none", "required", "tool"], search = true } }
 
 [cost.text.input]
 price = 5

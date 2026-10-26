@@ -2,6 +2,7 @@
 # tools.choice: auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
 # APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
+# Per-API tools: the OpenAI SDK compatibility layer ignores `strict` and takes only function tools, so strict and search sit on [api.messages] only; tool_choice works on both APIs and stays top-level (https://platform.claude.com/docs/en/api/openai-sdk). Live 2026-10-26 on Chat Completions (claude-sonnet-4-6): a strict tool whose schema strict mode rejects was accepted, and a tool_search_tool_regex tool returned 400 "tools.0.type: Input should be 'function'".
 schema = 2
 name = "Claude Opus 4.5"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
@@ -16,7 +17,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
 structured_output = true
 temperature = true
@@ -27,6 +28,7 @@ context = 200_000
 output = 64_000
 
 [api.messages]
+capabilities = { tools = { strict = true, search = true } }
 
 [api.chat-completions]
 base_url = "https://api.anthropic.com/v1"

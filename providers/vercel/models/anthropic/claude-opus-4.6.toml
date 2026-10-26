@@ -1,4 +1,5 @@
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19): a plain mid-conversation system message is hoisted into the leading system prompt (the next request misses the cache), so system_updates = false. Per-turn effort and tool changes reach Anthropic as providerOptions.anthropic.effort / toolChanges on a mid-conversation system message (https://ai-sdk.dev/providers/ai-sdk-providers/anthropic); true only where Anthropic accepted them and the cache was kept.
+# Per-API tools.search: [api.messages] runs Anthropic's tool search tool (tool_search_tool_regex_20251119 with defer_loading tools found and called the deferred tool, live 2026-10-26 on Haiku 4.5, Sonnet 4.6 and Opus 5.5, with providerOptions.gateway.only set to anthropic, bedrock and vertex). /v1/chat/completions rejects the tool type (400 "Invalid discriminator value. Expected 'function' | 'custom' | ..."); /v1/responses ignored both tool_search and tool_search_tool_regex_20251119 and called the deferred tool with no search step (Sonnet 4.6). tool_choice none and a named tool worked on all three APIs (live, Haiku 4.5).
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 
@@ -17,6 +18,7 @@ sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/v
 [api.messages]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+capabilities = { tools = { search = true } }
 
 [cost.text.input]
 price = 5
