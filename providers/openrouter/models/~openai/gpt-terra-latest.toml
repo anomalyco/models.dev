@@ -36,20 +36,20 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 2
-cache = { read = 0.2, write = 2.5 }
+price = 1
+cache = { read = 0.05, write = 1.25 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
-price = 4
-cache = { read = 0.4, write = 5 }
+price = 2
+cache = { read = 0.1, write = 2.5 }
 
 [cost.text.output]
-price = 12
+price = 5
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
-price = 18
+price = 7.5
 
 [cost.web_search]
 price = 10
