@@ -1,0 +1,27 @@
+# Catalog and price: https://cloud-api.near.ai/v1/models (typesafe/jev-1.13, input text, output decisions;
+#   accessed 2026-10-26). The cache read price of 0 is the catalog's input_cache_read, which the sync writes.
+# API: POST https://cloud-api.near.ai/v1/systemone with the TypeSafe {model, state, questions} body, relayed to
+#   TypeSafe's jev-1.13.0 (https://github.com/nearai/cloud-api/blob/main/docs/jev-systemone.md). Chat Completions,
+#   Completions and Responses reject decision models.
+# Text only: the gateway's System One request takes only model, state and questions and rejects unknown fields
+#   (deny_unknown_fields in https://github.com/nearai/cloud-api/blob/main/crates/inference_providers/src/systemone.rs),
+#   so TypeSafe's `assets` image map can't be sent.
+# Context: inherits TypeSafe's 64,000 (https://docs.typesafe.ai/models.md). The catalog's 32,000 is unconfirmed for
+#   this relayed route; the sync only takes context_length from models NEAR AI hosts itself.
+schema = 2
+base_model = "typesafe/jev-latest"
+name = "Jev 1.13"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.042
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
