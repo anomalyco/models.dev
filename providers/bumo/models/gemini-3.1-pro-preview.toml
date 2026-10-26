@@ -1,0 +1,28 @@
+# Bumo Router relay: official upstream API price + 6% service fee, billed in USD.
+# Prices and model list from https://router.bumo.ai/v1/models (accessed 2026-10-26);
+# see https://bumo.ai/docs/api for the gateway docs.
+# Reasoning and cache metadata mirror the underlying lab provider entries.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
+cache = { implicit = true, explicit = true }
+
+[cost.text.input]
+price = 2.12
+cache = { read = 0.212 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4.24
+cache = { read = 0.424 }
+
+[cost.text.output]
+price = 12.72
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 19.08
