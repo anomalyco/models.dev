@@ -244,6 +244,8 @@ export function buildVercelModel(
           ? ["image"]
           : model.type === "video"
           ? ["video"]
+          : tags.has("video-generation")
+          ? ["video"]
           : tags.has("image-generation")
           ? ["text", "image"]
           : ["text"],
@@ -282,6 +284,8 @@ export function buildVercelModel(
         : model.type === "image"
         ? ["image"]
         : model.type === "video"
+        ? ["video"]
+        : tags.has("video-generation")
         ? ["video"]
         : tags.has("image-generation")
         ? ["text", "image"]

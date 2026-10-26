@@ -5986,6 +5986,23 @@ test("translates Vercel pricing tiers with an implicit zero minimum", () => {
   });
 });
 
+test("maps Vercel language models tagged video-generation to video output", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "example/video-language",
+      name: "Video Language",
+      created: 1_780_963_200,
+      context_window: 1_000_000,
+      max_tokens: 57_920,
+      type: "language",
+      tags: ["vision", "video-generation"],
+      pricing: { input: "0.0000015", output: "0.000009" },
+    }],
+  });
+
+  expect(buildVercelModel(model!, undefined).modalities?.output).toEqual(["video"]);
+});
+
 test("uses verified Vercel output limits over catalog metadata", () => {
   const limits = {
     "alibaba/qwen3.6-27b": 65_536,
