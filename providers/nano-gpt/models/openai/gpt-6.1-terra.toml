@@ -1,0 +1,17 @@
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+name = "GPT 6.1 Terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+input = 1_050_000
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[cost.text.output]
+price = 5
