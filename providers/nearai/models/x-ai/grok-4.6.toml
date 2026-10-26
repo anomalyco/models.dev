@@ -8,17 +8,20 @@
 # accepted levels is claimed, never an ordering.
 # Text only, although the lab entry lists image: the same request carrying an image_url
 # part failed twice with "Provider returned error" while the text-only control succeeded.
+schema = 2
 base_model = "xai/grok-4.6"
-attachment = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
 
 [modalities]
 input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 6

@@ -1,12 +1,26 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k2.7-code
 # Always-on reasoning (native baseline); thinking.type=disabled and effort=none did not suppress it.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.19
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

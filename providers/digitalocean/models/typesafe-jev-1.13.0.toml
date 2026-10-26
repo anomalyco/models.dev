@@ -1,0 +1,25 @@
+# Decision model: POST /v1/systemone; GET /v2/gen-ai/models/catalog lists it as "TypeSafe Jev 1.13.0", type decisions.
+# Pricing: Jev, input $0.042 per 1M tokens, output N/A (https://docs.digitalocean.com/products/inference/details/pricing/, accessed 2026-10-25).
+# Modalities: text only. Live 2026-10-25, a solid red PNG sent as assets (with TypeSafe-Danger-Zone-Images: true), images,
+#   state image_url or state.messages was never seen (color answers at chance; TypeSafe's own API answered red with
+#   the same assets body). assets and images cost the same tokens as no image; the state forms were read as text.
+schema = 2
+v2_only = true
+base_model = "typesafe/jev-latest"
+name = "Jev 1.13"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+structured_output = true
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/protocols/system-one" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

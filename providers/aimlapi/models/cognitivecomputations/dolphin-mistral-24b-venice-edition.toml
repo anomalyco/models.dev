@@ -1,6 +1,12 @@
+schema = 2
 base_model = "cognitivecomputations/dolphin-mistral-24b-venice-edition"
 name = "Venice Uncensored"
 
-[cost]
-input = 0.27508
-output = 1.23786
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 0.2116
+
+[cost.text.output]
+price = 0.9522

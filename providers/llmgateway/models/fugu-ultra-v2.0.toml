@@ -1,28 +1,29 @@
+# Modalities: image formats JPEG, PNG, WebP, GIF (https://docs.llmgateway.io/features/vision)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 name = "Fugu Ultra v2.0"
 description = "Quality-first multi-agent model for hard research, analysis, and competitions"
 family = "fugu"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-11"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
+output = ["text"]
 
-[cost]
-input = 5
-output = 30
-cache_read = 0.5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 1_000_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 30

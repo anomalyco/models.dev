@@ -1,6 +1,12 @@
+schema = 2
 base_model = "openai/gpt-image-2.5-sunburst"
 
-[cost]
-input = 5.00
-output = 30.00
-cache_read = 1.25
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 30

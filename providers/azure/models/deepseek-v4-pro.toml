@@ -1,17 +1,28 @@
 # Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
-# Its published request schema documents no toggle, effort, or reasoning budget.
-# https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-06-25)
+# Effort: reasoning_effort = none|low|high|max. Off when omitted or none; the model then
+# returns its chain of thought in `reasoning_content` (live 2026-10-24 on a Foundry resource).
+# The endpoint's own validation error lists none|low|medium|high|max. DeepSeek maps medium
+# to high, so the levels match providers/deepseek. thinking.type is ignored here, so off is
+# effort=none rather than a toggle. Microsoft documents `reasoning_content` for
+# non-OpenAI reasoning models:
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning (accessed 2026-10-25)
+# Tools: supported. The model returns tool_calls (live 2026-10-24).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek-V4-Pro"
-tool_call = false
 
-reasoning_options = []
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 1.74
-output = 3.48
+[api.chat-completions]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-shape = "completions"
-npm = "@ai-sdk/openai-compatible"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+[cost.text.input]
+price = 1.74
+
+[cost.text.output]
+price = 3.48

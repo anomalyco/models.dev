@@ -1,13 +1,17 @@
+schema = 2
 base_model = "openai/o1"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 19.5
-output = 78
-cache_read = 9.75
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 context = 128_000
+
+[cost.text.input]
+price = 15
+cache = { read = 7.5 }
+
+[cost.text.output]
+price = 60

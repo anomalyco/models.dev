@@ -1,0 +1,24 @@
+# Released 2025-05-29: https://bfl.ai/announcements/flux-1-kontext
+# Output formats (output_format jpeg or png) and input image encoding (JPEG or PNG): https://docs.bfl.ml/kontext/kontext_image_editing
+schema = 2
+v2_only = true
+type = "image"
+name = "FLUX.1 Kontext [pro]"
+description = "Image generation and in-context editing model that edits images from simple text instructions"
+open_weights = false
+release_date = "2025-05-29"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image/jpeg", "image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

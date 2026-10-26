@@ -1,16 +1,28 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Toggle: {"reasoning_effort":"none"}
+schema = 2
 base_model = "alibaba/qwen3.6-flash"
 
-[cost]
-input = 0.25
-output = 1.50
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
-[[cost.tiers]]
-tier = { size = 262_144 }
-input = 1.00
-output = 4.00
-cache_read = 0.20
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
 
-[[reasoning_options]]
-type = "toggle" # API: {"reasoning_effort":"none"}
+[[cost.text.input.overrides]]
+when = { context = { gt = 262_144 } }
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 262_144 } }
+price = 4

@@ -1,18 +1,36 @@
+# Sources (accessed 2026-10-21):
+# - Speech recognition API (POST /v1/audio/asr/sse; format ogg, mp3, wav, pcm, m4a): https://platform.stepfun.com/docs/zh/api-reference/audio/asr-sse
+# - Audio transcription API (POST /v1/audio/transcriptions; mp3, pcm, ogg, wav under 100MB): https://platform.stepfun.com/docs/zh/api-reference/audio/transcriptions
+# - Audio file recognition (wav, mp3, pcm, ogg, m4a): https://platform.stepfun.com/docs/zh/api-reference/audio/asr
+# - Pricing: CNY 0.15 per hour of audio (https://platform.stepfun.com/docs/zh/guides/pricing/details).
+#   Per minute: 0.15 / 60 = CNY 0.0025, at the rate below = USD 0.00037362 (rounded to 5 significant digits).
+# CNY→USD rate: 6.691314, 2026-10-21, source: https://open.er-api.com/v6/latest/USD
+# release_date is unsourced.
+schema = 2
+type = "transcription"
 name = "StepAudio 2.5 ASR"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "step"
+open_weights = false
 release_date = "2026-04-24"
 last_updated = "2026-07-02"
-attachment = false
-reasoning = false
+
+[modalities]
+input = ["audio/ogg", "audio/mpeg", "audio/wav", "audio/pcm", "audio/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = false
-tool_call = false
-open_weights = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.00037362

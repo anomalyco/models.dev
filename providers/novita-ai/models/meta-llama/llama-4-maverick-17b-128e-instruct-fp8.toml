@@ -1,11 +1,18 @@
 # https://novita.ai/models/model-detail/meta-llama-llama-4-maverick-17b-128e-instruct-fp8
+# Tools: no function-calling in the catalog features; a tools request returns 400 "model features function calling not support" (live 2026-10-20).
+schema = 2
 base_model = "meta/llama-4-maverick-17b-instruct"
-structured_output = true
 
-[cost]
-input = 0.27
-output = 0.85
+[capabilities]
+tools = { supported = false }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 8_192
+
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 0.85

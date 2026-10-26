@@ -1,17 +1,27 @@
 # io.net IO Intelligence listing of deepseek-ai/DeepSeek-R1-0528.
 # Always reasons: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400 (no caller control).
-# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
-# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
 # Live check 2026-10-13: effort levels are accepted but the trace length is the same at every level (reasoning_tokens 3838-5189).
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = false for this deployment, so no cache price is listed.
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+schema = 2
 base_model = "deepseek/deepseek-r1-0528"
-reasoning_options = []
+name = "DeepSeek R1"
+description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
+knowledge = "2024-07"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.56775
-output = 2.279
+[capabilities]
+reasoning = { supported = true }
+cache = false
 
 [limit]
 context = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.523667
+
+[cost.text.output]
+price = 2.205333

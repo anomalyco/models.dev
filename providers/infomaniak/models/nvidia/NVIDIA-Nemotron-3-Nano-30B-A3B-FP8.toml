@@ -17,17 +17,25 @@
 #   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+# Deprecated: no longer listed on Infomaniak's model catalog or price list (both checked 2026-10-21).
+# Toggle: reasoning_effort = "none" (off) | "low"|"medium"|"high" (on), e.g. {"reasoning_effort": "none"}
+schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 name = "Nemotron 3 Nano 30B A3B FP8"
-last_updated = "2026-08-01"
-status = "beta"
-reasoning_options = [{ type = "toggle" }] # API: {"reasoning_effort": "none"} off | "low"|"medium"|"high" on
-interleaved = true
+status = "deprecated"
 
-[cost]
-input = 0.06
-output = 0.25
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 1_000_000
 input = 1_000_000
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.25

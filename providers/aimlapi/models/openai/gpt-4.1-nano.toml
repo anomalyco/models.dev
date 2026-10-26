@@ -1,10 +1,17 @@
+schema = 2
 base_model = "openai/gpt-4.1-nano"
 name = "GPT-4.1 Nano"
 
-[cost]
-input = 0.13
-output = 0.52
-cache_read = 0.0325
+[capabilities]
+structured_output = true
+tools = { supported = true }
 
 [limit]
 context = 1_000_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.4

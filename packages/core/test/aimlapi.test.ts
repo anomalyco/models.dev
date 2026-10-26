@@ -1,11 +1,13 @@
 import { expect, test } from "bun:test";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { syncProvider } from "../src/sync/index.js";
+import { patchModelV2 } from "../src/model-file-v2.js";
+import { preserveStructuredOutput, syncProvider, type ExistingModel } from "../src/sync/index.js";
 import { aimlapi, labEffortValues, labLadder, resolveLadder } from "../src/sync/providers/aimlapi.js";
 import { providerDirForMetadataLab } from "../src/sync/providers/openrouter.js";
+import { modelV2ToV1 } from "../src/translate.js";
 
 // The lookup that silently kept the host enum for every GLM id: `base_model`
 // names the metadata lab, the ladder lives under the provider directory, and
@@ -249,4 +251,178 @@ test("a lab-backed model with no card and no statable control is reported, not i
   });
   expect(aimlapi.sourceID(model!)).toBe("alibaba/qwen3.7-max");
   expect(aimlapi.missingModelID(model!)).toBeUndefined();
+});
+
+test("the header cites only what a v2 file carries", () => {
+  const [model] = aimlapi.parseModels({
+    data: [{
+      id: "openai/gpt-4o",
+      type: "openai/chat-completions",
+      info: { name: "GPT-4o", contextLength: 128_000, outputMax: 16_384 },
+      modalities: { input: ["text", "image"], output: ["text"] },
+      pricing: { units: [
+        { name: "token", content: "text", origin: "provided", price: 4, per: 1_000_000 },
+        { name: "token", content: "text", origin: "generated", price: 13, per: 1_000_000 },
+        { name: "token", content: "text", origin: "cached", price: 1.625, per: 1_000_000 },
+      ] },
+    }],
+  });
+  const doc = {
+    schema: 2,
+    base_model: "openai/gpt-4o",
+    capabilities: {
+      structured_output: true,
+    },
+    cost: { text: { input: { price: 3.25, cache: { read: 1.625 } }, output: { price: 13 } } },
+  };
+  const { id: _id, ...existing } = modelV2ToV1({ ...doc, id: "openai/gpt-4o" });
+  const context = {
+    existing: () => existing as ExistingModel,
+    authored: () => existing as ExistingModel,
+    v2: () => doc,
+  };
+
+  const translated = aimlapi.translateModel(model!, context) as { header?: string; model: Record<string, any> };
+  // Left-out mid-conversation flags are false by default, so they need no source line.
+  expect(translated.header).toBeUndefined();
+  const cached = aimlapi.translateModel(model!, {
+    ...context,
+    v2: () => ({ ...doc, capabilities: { ...doc.capabilities, cache: { explicit: { ttl: ["5m", "1h"] } } } }),
+  }) as { header?: string };
+  expect(cached.header).toContain("# Cache: the chat-completions catalog row prices cache writes at 5m");
+  // Model facts and the lab's description stay with the lab.
+  for (const fact of ["family", "open_weights", "knowledge", "release_date", "last_updated", "description", "modalities"]) {
+    expect(translated.model).not.toHaveProperty(fact);
+  }
+
+  // A price change patches the price and keeps the v2-only flags. The engine
+  // carries structured_output over before patching, as it does here.
+  const synced = preserveStructuredOutput(translated.model as never, existing as ExistingModel);
+  const next = patchModelV2(doc, existing as ExistingModel, synced) as Record<string, any>;
+  expect(next.cost.text.input.price).toBe(4);
+  expect(next.capabilities).toMatchObject(doc.capabilities);
+
+  // No flags in the file, no source lines for them.
+  const bare = aimlapi.translateModel(model!, { ...context, v2: () => ({ schema: 2, base_model: "openai/gpt-4o" }) }) as { header?: string };
+  expect(bare.header).toBeUndefined();
+});
+
+function catalogRow(id: string, name: string, prices: Record<string, number>, reasoningEffort: string[]) {
+  return {
+    id,
+    type: "openai/chat-completions",
+    info: { name },
+    modalities: { input: ["text", "image"], output: ["text"] },
+    reasoningEffort,
+    pricing: {
+      units: Object.entries(prices).map(([origin, price]) => ({ name: "token", content: "text", origin, price, per: 1_000_000 })),
+    },
+  };
+}
+
+test("cache write prices: one per TTL from the catalog, matched to the file's explicit cache TTLs", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-aimlapi-cache-write-"));
+  const modelsDir = path.join(root, "providers", "aimlapi", "models");
+  try {
+    await symlink(path.join(import.meta.dirname, "..", "..", "..", "models"), path.join(root, "models"));
+    await mkdir(path.join(modelsDir, "anthropic"), { recursive: true });
+    await mkdir(path.join(modelsDir, "openai"), { recursive: true });
+    const claude = path.join(modelsDir, "anthropic", "claude-sonnet-4.6.toml");
+    const gpt = path.join(modelsDir, "openai", "gpt-6-sol.toml");
+    await writeFile(claude, [
+      "schema = 2",
+      'base_model = "anthropic/claude-sonnet-4-6"',
+      'name = "Claude 4.6 Sonnet"',
+      "",
+      "[capabilities]",
+      'reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }',
+      'cache = { explicit = { ttl = ["5m", "1h"] } }',
+      "",
+      "[cost.text.input]",
+      "price = 4",
+      "cache = { read = 0.4 }",
+      "",
+      "[cost.text.output]",
+      "price = 20",
+      "",
+    ].join("\n"));
+    await writeFile(gpt, [
+      "schema = 2",
+      'base_model = "openai/gpt-6-sol"',
+      "",
+      "[capabilities]",
+      'reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }',
+      "",
+      "[cost.text.input]",
+      "price = 2.6",
+      "cache = { read = 0.26 }",
+      "",
+      "[cost.text.output]",
+      "price = 13",
+      "",
+    ].join("\n"));
+
+    const run = (claudeHour: number) => syncProvider({
+      ...aimlapi,
+      modelsDir,
+      async fetchModels() {
+        return {
+          data: [
+            catalogRow(
+              "anthropic/claude-sonnet-4.6",
+              "Claude 4.6 Sonnet",
+              { provided: 4, generated: 20, cached: 0.4, cache_write: 5, cache_write_1h: claudeHour },
+              ["low", "medium", "high", "max"],
+            ),
+            catalogRow(
+              "openai/gpt-6-sol",
+              "GPT-6 Sol",
+              { provided: 2.6, generated: 13, cached: 0.26, cache_write: 3.25 },
+              ["none", "low", "medium", "high", "xhigh"],
+            ),
+          ],
+        };
+      },
+    }, {});
+
+    await run(8);
+    const claudeDoc = Bun.TOML.parse(await readFile(claude, "utf8")) as Record<string, any>;
+    const gptDoc = Bun.TOML.parse(await readFile(gpt, "utf8")) as Record<string, any>;
+    expect(claudeDoc.cost.text.input.cache).toEqual({ read: 0.4, write: { "5m": 5, "1h": 8 } });
+    expect(claudeDoc.capabilities.cache).toEqual({ explicit: { ttl: ["5m", "1h"] } });
+    expect(gptDoc.cost.text.input.cache).toEqual({ read: 0.26, write: 3.25 });
+    // v1 carries the first TTL only.
+    expect(modelV2ToV1({ ...claudeDoc, id: "anthropic/claude-sonnet-4.6" }).cost?.cache_write).toBe(5);
+
+    // A change to the 1h price alone leaves v1 unchanged but is still written,
+    // with the catalog's number rather than one scaled from the 5m price.
+    const changed = await run(9);
+    expect(changed.files.map((file) => path.basename(file.path))).toEqual(["claude-sonnet-4.6.toml"]);
+    const next = Bun.TOML.parse(await readFile(claude, "utf8")) as Record<string, any>;
+    expect(next.cost.text.input.cache.write).toEqual({ "5m": 5, "1h": 9 });
+
+    const again = await run(9);
+    expect(again.files).toEqual([]);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("TTL cache write prices that don't match the file's explicit cache TTLs fall back to the default write", () => {
+  const [model] = aimlapi.parseModels({
+    data: [catalogRow(
+      "anthropic/claude-sonnet-4.6",
+      "Claude 4.6 Sonnet",
+      { provided: 4, generated: 20, cached: 0.4, cache_write: 5, cache_write_1h: 8 },
+      ["low", "medium", "high", "max"],
+    )],
+  });
+  const doc = { schema: 2, base_model: "anthropic/claude-sonnet-4-6", capabilities: { cache: { implicit: true } } };
+  const translated = aimlapi.translateModel(model!, {
+    existing: () => undefined,
+    authored: () => undefined,
+    v2: () => doc,
+  }) as { model: Record<string, any>; v2Set?: Record<string, unknown> };
+  expect(translated.model.cost.cache_write).toBe(5);
+  expect(translated.v2Set).toEqual({ "cost.text.input.cache.write": 5 });
 });

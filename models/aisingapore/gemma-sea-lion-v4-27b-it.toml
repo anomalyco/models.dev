@@ -1,21 +1,32 @@
+# Sources:
+# - https://huggingface.co/aisingapore/Gemma-SEA-LION-v4-27B-IT (128K context, Gemma Terms of Use)
+# - https://huggingface.co/aisingapore/Gemma-SEA-LION-v4-27B-IT/blob/main/generation_config.json (top_k 64, top_p 0.95)
+# Sampling: open weights, so temperature, top_p and top_k all apply when self-hosted.
+# Image input: the card lists "Image and text understanding capabilities, including document comprehension, visual Q&A, and
+# image-grounded reasoning", and says vision comes from Gemma 3 IT 27B because fine-tuning touched only the text back-end
+# (https://docs.sea-lion.ai/models/sea-lion-v4/gemma-sea-lion-v4-27b). AI Singapore's docs list no image formats, so input
+# keeps the generic image.
+schema = 2
 name = "Gemma-SEA-LION-v4-27B-IT"
 description = "Gemma 3 27B tuned by AI Singapore for Southeast Asian languages and instruction following"
 family = "gemma"
-release_date = "2025-09-23"
-last_updated = "2025-09-23"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
 open_weights = true
+release_date = "2025-09-23"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 128_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

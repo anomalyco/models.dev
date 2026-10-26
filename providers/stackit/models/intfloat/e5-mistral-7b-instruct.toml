@@ -1,23 +1,33 @@
+# Prices: STACKIT lists EUR per 1M tokens (net): https://stackit.com/en/products/data-ai/stackit-ai-model-serving
+# Embedding model (POST /embeddings); only input tokens are billed, so output is 0.
+# EUR 0.02 converted at the ECB reference rate of 1.1215 USD/EUR (2026-10-20); it was stored unconverted.
+schema = 2
+type = "embedding"
 name = "E5 Mistral 7B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "mistral"
-release_date = "2023-12-11"
-last_updated = "2023-12-11"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2023-12-11"
 
-[cost]
-input = 0.02
-output = 0.02
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 4_096
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.02243
+
+[cost.text.output]
+price = 0

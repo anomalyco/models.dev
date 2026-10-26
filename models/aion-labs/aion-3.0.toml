@@ -1,20 +1,24 @@
 # Lab metadata carried over from providers/openrouter/models/aion-labs/aion-3.0.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Release date: the `date` field of https://api.aionlabs.ai/v1/models (2026-05-05).
+# Sampling: https://www.aionlabs.ai/docs/api-reference/ documents temperature only (no top_p or top_k).
+schema = 2
 name = "Aion-3.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2026-07-07"
-last_updated = "2026-07-07"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
-
-[limit]
-context = 131072
-output = 32768
+release_date = "2026-05-05"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 131_072
+output = 32_768

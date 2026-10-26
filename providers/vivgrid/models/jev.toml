@@ -1,7 +1,22 @@
+# Modalities: text only, Vivgrid's Jev page lists Modalities: Text (https://docs.vivgrid.com/models/jev)
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/jev
+# Pricing: USD 0.084 per 1M input tokens, no output charge (accessed 2026-10-21).
+schema = 2
 base_model = "typesafe/jev-latest"
 
-[cost]
-input = 0.042
-output = 0
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+structured_output = true
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.084
+
+[cost.text.output]
+price = 0

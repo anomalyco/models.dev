@@ -1,22 +1,27 @@
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+# Release: Qwen3 blog, published 2025-04-29 04:00 +08:00 (2025-04-28 UTC): https://qwenlm.github.io/blog/qwen3/
+schema = 2
 name = "Qwen3 235B-A22B"
 description = "Large open Qwen MoE for multilingual reasoning, coding, and tool use"
 family = "qwen"
-release_date = "2025-04"
-last_updated = "2025-04"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-04"
 open_weights = true
-
-[limit]
-context = 131_072
-output = 16_384
+knowledge = "2025-04"
+release_date = "2025-04-28"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 16_384
 
 [[weights]]
 label = "Hugging Face"

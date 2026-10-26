@@ -1,7 +1,12 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+schema = 2
 base_model = "perplexity/sonar"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 1
-output = 1
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 1

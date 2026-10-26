@@ -1,21 +1,17 @@
-name = "Qwen3 Embedding 8B"
+# API: POST https://models.think.evroc.com/v1/embeddings (https://docs.evroc.com/products/think/openai-compatibility.html)
+schema = 2
+base_model = "alibaba/qwen3-embedding-8b"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "text-embedding"
-release_date = "2025-07-30"
-last_updated = "2025-07-30"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = true
-
-[cost]
-input = 0.115
-output = 0.115
 
 [limit]
 context = 40_960
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.115
+
+[cost.text.output]
+price = 0.115

@@ -1,24 +1,24 @@
-name = "Weaver (alpha)"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "mancer/weaver"
 description = "General-purpose chat model for instruction following, writing, and analysis"
-family = "alpha"
-release_date = "2023-08-02"
-last_updated = "2023-08-02"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = false
-knowledge = "2023-06-30"
-open_weights = false
 
-[cost]
-input = 0.4
-output = 0.75
+[api.chat-completions]
 
-[limit]
-context = 8_000
-output = 6_000
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 0.75

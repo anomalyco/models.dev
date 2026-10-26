@@ -36,8 +36,16 @@ export function booleanText(value?: boolean) {
   return value ? "Yes" : "No";
 }
 
+// Some prices are fractions of a cent per 1M tokens, so two decimals would
+// round them to $0.00.
+const costFormatter = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 4,
+  useGrouping: false,
+});
+
 export function formatCost(cost?: number) {
-  return cost === undefined ? "-" : `$${cost.toFixed(2)}`;
+  return cost === undefined ? "-" : `$${costFormatter.format(cost)}`;
 }
 
 export function formatNumber(value?: number) {

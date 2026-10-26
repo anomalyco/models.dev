@@ -1,12 +1,16 @@
+schema = 2
 base_model = "openai/o1-pro"
 
-[interleaved]
-field = "reasoning_details"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[cost]
-input = 206.31
-output = 825.24
+[cost.text.input]
+price = 158.7
+
+[cost.text.output]
+price = 634.8

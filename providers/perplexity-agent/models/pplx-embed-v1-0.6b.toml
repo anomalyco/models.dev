@@ -1,0 +1,12 @@
+# Embeddings API (accessed 2026-10-21): https://docs.perplexity.ai/docs/embeddings/quickstart (prices per MTok, 32K context),
+#   POST /v1/embeddings (https://docs.perplexity.ai/api-reference/embeddings-post.md).
+schema = 2
+v2_only = true
+base_model = "perplexity/pplx-embed-v1-0.6b"
+
+[api.embeddings]
+base_url = "https://api.perplexity.ai/v1"
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.004

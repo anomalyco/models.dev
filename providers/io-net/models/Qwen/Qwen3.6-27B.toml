@@ -1,23 +1,26 @@
 # io.net IO Intelligence listing of Qwen/Qwen3.6-27B.
 # Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also switches thinking off)
-# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
-# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
 # Live check 2026-10-13: effort levels are accepted but do not order the trace (reasoning_tokens at temperature 0, five samples each: low 1328-1785, medium 1153-1648, high 1363-1570), so only the on/off control is listed, as on OpenRouter. No reasoning-budget field is forwarded: reasoning.max_tokens (alone, or with reasoning.enabled = true), reasoning.budget_tokens, thinking_budget and chat_template_kwargs.thinking_budget all leave the trace length unchanged.
 # max_tokens is not published for this model; the inherited output limit is capped to the context window.
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = true and a cache_read_token_price; prefixes are cached automatically with no cache_control markers, so the cache is implicit.
+schema = 2
 base_model = "alibaba/qwen3.6-27b"
-reasoning_options = [{ type = "toggle" }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.311
-output = 3.08
-cache_read = 0.1555
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+cache = { implicit = true }
 
 [limit]
 context = 32_768
 output = 32_768
 
-[modalities]
-input = ["text", "image", "video"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.319
+cache = { read = 0.1595 }
+
+[cost.text.output]
+price = 2.87

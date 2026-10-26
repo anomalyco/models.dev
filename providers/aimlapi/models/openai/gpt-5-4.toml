@@ -1,10 +1,14 @@
+schema = 2
 base_model = "openai/gpt-5.4"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
 
-[cost]
-input = 3.25
-output = 19.5
-cache_read = 0.325
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 15

@@ -2,17 +2,35 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|medium|xhigh
 # Budget: thinking_budget (reasoning tokens); cannot be combined with effort.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.42
-output = 3
-cache_read = 0.085
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
 
 [limit]
 context = 1_000_000
 output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.42
+cache = { read = 0.085 }
+
+[cost.text.output]
+price = 3

@@ -21,23 +21,26 @@
 # Alibaba effective set low/medium/xhigh plus the verified `none` off control.
 # No toggle or budget_tokens option is declared: SCX accepts a `thinking` object
 # in the body but there is no evidence it forwards it.
+schema = 2
 base_model = "alibaba/qwen3.8-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
-reasoning_options = [
-  { type = "effort", values = ["none", "low", "medium", "xhigh"] },
-]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.815
-output = 5.4461
-cache_read = 0.17
-cache_write = 2.5
 
 [limit]
 input = 983_616
 
-[modalities]
-input = ["text", "image", "video"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.815
+cache = { read = 0.17, write = 2.5 }
+
+[cost.text.output]
+price = 5.4461

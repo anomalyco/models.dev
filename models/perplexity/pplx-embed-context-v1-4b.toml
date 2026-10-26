@@ -1,0 +1,29 @@
+# Released 2026-02-26 with pplx-embed-v1: https://www.perplexity.ai/hub/blog/pplx-embed-state-of-the-art-embedding-models-for-web-scale-retrieval
+# https://huggingface.co/perplexity-ai/pplx-embed-context-v1-4b (MIT, 32K context)
+schema = 2
+v2_only = true
+type = "embedding"
+name = "pplx-embed-context-v1-4b"
+description = "Open contextual text embedding model for document chunks that share surrounding context"
+open_weights = true
+release_date = "2026-02-26"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/perplexity-ai/pplx-embed-context-v1-4b"

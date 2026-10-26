@@ -1,21 +1,30 @@
+# evroc catalogue: https://docs.evroc.com/products/think/supported-models.html (2026-10-21) lists this under embedding.
+# API: POST https://models.think.evroc.com/v1/embeddings (https://docs.evroc.com/products/think/openai-compatibility.html)
+schema = 2
+type = "embedding"
 name = "E5 Multi-Lingual Large Embeddings 0.6B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
-release_date = "2024-06-01"
-last_updated = "2024-06-01"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = true
+release_date = "2024-06-01"
 
-[cost]
-input = 0.114
-output = 0.114
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 512
 output = 512
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.114
+
+[cost.text.output]
+price = 0.114

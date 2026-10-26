@@ -1,10 +1,17 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-4-turbo (accessed 2026-07-21)
+schema = 2
 base_model = "openai/gpt-4-turbo"
-structured_output = true
-
-[cost]
-input = 10
-output = 30
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 30

@@ -2,23 +2,30 @@
 # https://developers.openai.com/api/docs/pricing
 # https://developers.openai.com/api/docs/models/gpt-5.6-luna
 # Long-context rates apply to the full request above 272K input tokens.
+schema = 2
 base_model = "openai/gpt-5.6-luna"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 0.20
-cache_read = 0.02
-cache_write = 0.25
-output = 1.20
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.40
-cache_read = 0.04
-cache_write = 0.50
-output = 1.80
+[api.responses]
+base_url = "https://api.aixy-gateway.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+legacy_shape = "responses"
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://api.aixy-gateway.com/v1"
-shape = "responses"
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.4
+cache = { read = 0.04, write = 0.5 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.8

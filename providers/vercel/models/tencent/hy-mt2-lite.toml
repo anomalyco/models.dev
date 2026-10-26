@@ -1,21 +1,35 @@
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
+schema = 2
 name = "Tencent Hy-MT2-Lite"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
 family = "Hy"
-release_date = "2026-06-12"
-last_updated = "2026-06-12"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-06-12"
 
-[cost]
-input = 0.044
-output = 0.177
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 8_000
 output = 4_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.044
+
+[cost.text.output]
+price = 0.177

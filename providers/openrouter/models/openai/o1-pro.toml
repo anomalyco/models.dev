@@ -1,14 +1,34 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation: system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live 2026-10-23 on gpt-4.1-nano pinned to OpenAI: cache kept and followed on Chat Completions, Responses and Messages). This model has no prompt caching here, so there is no cached prefix to lose
+# effort_updates = false: no per-turn effort control
+schema = 2
 base_model = "openai/o1-pro"
-tool_call = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 150
-output = 600
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 150
+
+[cost.text.output]
+price = 600
+
+[cost.web_search]
+price = 10

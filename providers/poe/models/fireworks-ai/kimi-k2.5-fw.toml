@@ -1,22 +1,22 @@
+# Status: https://poe.com/Kimi-K2.5-FW is titled "Kimi-K2.5-FW_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
 name = "Kimi-K2.5-FW"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-release_date = "2026-01-27"
-last_updated = "2026-01-27"
-attachment = true
-reasoning = false
-temperature = false
-open_weights = false
-tool_call = true
+status = "deprecated"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
-context = 262_144
 input = 245_760
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

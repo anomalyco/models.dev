@@ -1,11 +1,29 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. No per-turn effort or tool-change mechanism reaches this model on this API.
+schema = 2
 base_model = "deepseek/deepseek-v3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-reasoning = false
-tool_call = false
 
-[cost]
-input = 0.62
-output = 1.85
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 8_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.62
+
+[cost.text.output]
+price = 1.85

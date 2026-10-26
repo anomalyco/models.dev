@@ -1,10 +1,19 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Deprecated: Kilo's catalog names it "ByteDance Seed: Seed-2.0-Code (retires Nov 11)" (GET https://api.kilo.ai/api/gateway/models, 2026-10-20)
+schema = 2
 base_model = "bytedance-seed/seed-2.0-code"
 description = "Seed 2.0 Code is a model from ByteDance Seed optimized for agentic coding. It is suited for frontend development, multilingual programming tasks, and coding-agent workflows in tools such as Claude..."
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.5
-output = 3
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3

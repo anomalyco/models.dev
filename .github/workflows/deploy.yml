@@ -11,13 +11,13 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   deploy:
     if: github.repository == 'anomalyco/models.dev'
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: latest
 

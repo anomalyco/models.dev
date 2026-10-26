@@ -1,10 +1,29 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+# Peak pricing: the catalog lists two levels with no condition (prompt 0.66 / 1.32; completion 1.98 / 3.96; input_cache_read 0.022 / 0.044), exactly 2x apart.
+# ZenMux documents no schedule, so the 2x multiplier assumes DeepSeek's documented peak hours
+# (weekdays 01:00-04:00 and 06:00-10:00 UTC, https://api-docs.deepseek.com/quick_start/pricing);
+# the base is the off-peak price. No CN-holiday exception: ZenMux doesn't mention one.
+# Effort: reasoning_effort = low|high|max (DeepSeek V4 levels; the ZenMux model page lists high / max).
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 0.435
-output = 0.87
-cache_read = 0.003625
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.022 }
+
+[cost.text.output]
+price = 1.98
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

@@ -1,25 +1,58 @@
-# Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
+# codestral-latest is Mistral's alias for Codestral 25.08 (https://docs.mistral.ai/models/codestral-25-08;
+# /v1/models: codestral-latest -> codestral-2508).
+# Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
+# - Pricing: https://docs.mistral.ai/inference/pricing (cached input is billed at 10% of input).
+# - Prompt caching: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic prefix
+#   cache in 64-token blocks, no write price, optional prompt_cache_key). Usage is reported when streaming.
+# - Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named
+#   function; function.strict). All five tool_choice forms worked live.
+# - Structured output: https://docs.mistral.ai/studio/conversations/structured-output (json_schema
+#   response_format returned schema-valid JSON live).
+# - PDF: chat takes document_url PDFs (https://docs.mistral.ai/studio/document-processing/document_qna);
+#   a base64 PDF was read correctly live.
+# - Sampling: temperature and top_p; no top_k (live 400 "top_k sampling is not enabled for this model").
+# - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests
+#   drops the cache after the system prompt (live 2026-10-22).
+# APIs: the /v1/models capabilities (completion_fim: POST /v1/fim/completions; moderation: /v1/moderations; ocr: /v1/ocr), https://docs.mistral.ai/api. No AI SDK or OpenCode package calls them.
+# Per-API flags: system_updates sits on [api.chat-completions] only. FIM takes a prompt and suffix, not messages, so there is no system message to send.
+schema = 2
 name = "Codestral (latest)"
 description = "Mistral code model for completions, refactors, and developer IDE workflows"
 family = "codestral"
+open_weights = true
+knowledge = "2024-10"
 release_date = "2024-05-29"
 last_updated = "2025-01-04"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-10"
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0.30
-cache_read = 0.03
-output = 0.90
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+top_p = true
+top_k = false
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 256_000
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.fim]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.9

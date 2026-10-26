@@ -1,17 +1,21 @@
+schema = 2
 base_model = "openai/gpt-oss-20b"
 
-[interleaved]
-field = "reasoning_details"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.103155
-output = 0.41262
-cache_read = 0.051578
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 context = 131_000
 output = 117_964
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.07935
+cache = { read = 0.039675 }
+
+[cost.text.output]
+price = 0.3174

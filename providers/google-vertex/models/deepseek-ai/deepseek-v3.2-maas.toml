@@ -1,36 +1,41 @@
 # Toggle: chat_template_kwargs.thinking = true|false (reasoning is off by default).
 # https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/capabilities/thinking (accessed 2026-10-08)
 # Live test 2026-10-08: thinking=true returns reasoning_content; thinking=false returns none.
+# Implicit caching (4,096-token minimum): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models#context-caching
+# Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+schema = 2
 name = "DeepSeek V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
+open_weights = true
 release_date = "2025-12-17"
 last_updated = "2026-04-04"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 status = "deprecated"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.56
-output = 1.68
-cache_read = 0.056
-
-[limit]
-context = 163_840
-output = 65_536
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
-api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
+cache = { implicit = { min_tokens = 4_096 } }
+
+[limit]
+context = 163_840
+output = 65_536
+
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/google-vertex/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.56
+cache = { read = 0.056 }
+
+[cost.text.output]
+price = 1.68

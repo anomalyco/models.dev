@@ -1,0 +1,25 @@
+# https://developers.cloudflare.com/workers-ai/models/flux-2-klein-4b/
+# API: POST /accounts/{ACCOUNT_ID}/ai/run/<model> (https://developers.cloudflare.com/workers-ai/get-started/rest-api/).
+# Request: multipart fields only (prompt, width, height, steps, input_image_0...); response JSON { result: { image } }
+#   holding a base64 JPEG. Reference images PNG, JPEG and WebP accepted (live check 2026-10-25).
+# Prices: $0.000059 per input and $0.000287 per output 512x512 tile (https://developers.cloudflare.com/workers-ai/platform/pricing/, accessed 2026-10-25),
+#   written per megapixel (a tile is 0.262144 MP).
+schema = 2
+v2_only = true
+base_model = "black-forest-labs/flux-2-klein-4b"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/jpeg"]
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/cloudflare-workers-ai-images" }
+
+[cost.image.input]
+unit = "megapixel"
+price = 0.000225
+
+[cost.image.output]
+unit = "megapixel"
+price = 0.001095

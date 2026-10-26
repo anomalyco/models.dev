@@ -1,0 +1,33 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Effort: reasoning_effort = low|high|max (not re-verified on Zen: the free tier only serves OpenCode clients)
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.3-flash.toml (Zen passes requests through).
+# No PDF input: same Zen upstreams as glm-5.3-flash, which reject file content parts (not re-tested: the free tier only serves OpenCode clients).
+# Tools follow Z.ai's API: https://docs.z.ai/api-reference/llm/chat-completion (tool_choice: only auto); Zen passes requests through.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-Flash Free"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+
+[limit]
+context = 200_000
+output = 32_000
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

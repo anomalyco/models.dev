@@ -1,8 +1,28 @@
+# v2 capabilities and prices:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/prompt-caching (5m and 1h TTLs; 1h writes cost 2x input)
+# - https://platform.claude.com/docs/en/build-with-claude/prompt-caching (4 breakpoints; minimum cacheable length on Google Cloud)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/structured-outputs (Claude 4.5 and later)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Regional and multi-region (us, eu) endpoints cost 10% more than the global endpoint.
+# Mid-conversation updates follow the per-model lists in Anthropic's docs, which cover Google Cloud:
+# - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
+# - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
+schema = 2
 base_model = "anthropic/claude-haiku-4-5-20251001"
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
 
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, budget = { min = 1_024 } }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
+
+[cost.text.output]
+price = 5
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1

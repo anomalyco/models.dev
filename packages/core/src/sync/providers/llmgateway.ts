@@ -5,6 +5,7 @@ import path from "node:path";
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import { ReasoningOption } from "../../schema.js";
+import { readProviderModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
@@ -31,6 +32,7 @@ const Pricing = z.object({
   prompt: z.string().optional(),
   completion: z.string().optional(),
   internal_reasoning: z.string().optional(),
+  input_audio: z.string().optional(),
   input_cache_read: z.string().optional(),
   input_cache_write: z.string().optional(),
 });
@@ -45,6 +47,16 @@ const ReasoningEffortOrder = new Map([
   "max",
   "default",
 ].map((effort, index) => [effort, index]));
+
+// Low to high: v2 files compare effort lists in order, and the catalog lists
+// them in any order.
+function sortEfforts<T extends string>(efforts: T[]) {
+  return [...efforts].sort((a, b) => {
+    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
+      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return order || a.localeCompare(b);
+  });
+}
 
 export const LLMGatewayModel = z.object({
   id: z.string(),
@@ -122,7 +134,7 @@ export const llmgateway = {
     if (translated === undefined) {
       return undefined;
     }
-    return { id: model.id, model: translated };
+    return { id: model.id, model: translated, v2Set: reasoningPriceV2Set(model) };
   },
   sourceID(model) {
     return model.id;
@@ -190,7 +202,7 @@ export const llmgatewayProviders = {
     if (translated === undefined) {
       return undefined;
     }
-    return { id: model.id, model: translated, header: toggleHeader(translated) };
+    return { id: model.id, model: translated, header: toggleHeader(translated), v2Set: reasoningPriceV2Set(model) };
   },
   sourceID(model) {
     return model.id;
@@ -214,6 +226,14 @@ function price(value: string | undefined) {
 function nonZeroPrice(value: string | undefined) {
   const result = price(value);
   return result !== undefined && result > 0 ? result : undefined;
+}
+
+// v1 leaves out the reasoning price of a model without reasoning, so v2 takes it
+// directly: reasoning tokens are billed whenever the model reasons.
+function reasoningPriceV2Set(model: LLMGatewayModel) {
+  if (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined) return undefined;
+  const reasoning = nonZeroPrice(model.pricing.internal_reasoning);
+  return { "cost.text.output.reasoning": (current: unknown) => reasoning ?? current };
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
@@ -242,6 +262,14 @@ function deploymentModalities(model: LLMGatewayModel, vision: boolean | undefine
   };
 }
 
+// `vision` only covers images: a deployment without vision still takes
+// attachments when it serves audio or video input (e.g. transcription), and
+// v2 derives attachment from the input modalities.
+function deploymentAttachment(model: LLMGatewayModel, vision: boolean | undefined) {
+  if (vision === undefined) return undefined;
+  return vision || deploymentModalities(model, false).input.some((value) => value !== "text");
+}
+
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const AGGREGATED_MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers", "llmgateway", "models");
 const canonicalOutputLimitByID = new Map<string, number | undefined>();
@@ -263,7 +291,7 @@ function siblingCuration(rootID: string): SiblingCuration {
   if (curation === undefined) {
     const filePath = path.join(AGGREGATED_MODELS_DIR, `${rootID}.toml`);
     const authored = existsSync(filePath)
-      ? Bun.TOML.parse(readFileSync(filePath, "utf8")) as SiblingCuration & {
+      ? readProviderModel(filePath) as SiblingCuration & {
           cost?: { tiers?: NonNullable<SyncedFullModel["cost"]>["tiers"] };
         }
       : undefined;
@@ -369,6 +397,9 @@ export function buildLLMGatewayModel(
     return factorBaseModel(
       existing.base_model,
       {
+        // LLM Gateway's display name stays as an override where it differs
+        // from the lab (factorBaseModel drops it when equal).
+        name: existing.name,
         attachment: existing.attachment,
         description: existing.description ?? describeModel({
           id: model.id,
@@ -388,7 +419,8 @@ export function buildLLMGatewayModel(
         structured_output: existing.structured_output,
         status: existing.status,
         interleaved: existing.interleaved,
-        knowledge: existing.knowledge,
+        // Model facts (family, dates, knowledge, open_weights) come from the
+        // lab file; a base_model file never carries them.
         modalities: existing.modalities,
         limit: factoredLimit,
         cost,
@@ -448,6 +480,7 @@ export function buildLLMGatewayModel(
   if (canonical !== undefined) {
     const factoredLimit = { context, input: undefined, output: undefined };
     return factorBaseModel(canonical, {
+      name: model.name,
       reasoning_options: reasoningOptions,
       limit: factoredLimit,
       cost,
@@ -518,7 +551,7 @@ export function buildLLMGatewayMappedModel(
   const deploymentOptions = mapping?.reasoning_efforts?.length
     ? mapping.reasoning_efforts.length === 1 && mapping.reasoning_efforts[0] === "none"
       ? [{ type: "toggle" as const }]
-      : [{ type: "effort" as const, values: mapping.reasoning_efforts }]
+      : [{ type: "effort" as const, values: sortEfforts(mapping.reasoning_efforts) }]
     : undefined;
   // Deployment-declared efforts own the effort/toggle surface; curation falls
   // back from non-empty options on this file to the aggregated llmgateway
@@ -556,6 +589,7 @@ export function buildLLMGatewayMappedModel(
         reasoning: reasoning ? nonZeroPrice(model.pricing.internal_reasoning) ?? existing?.cost?.reasoning : existing?.cost?.reasoning,
         cache_read: nonZeroPrice(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
         cache_write: nonZeroPrice(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
+        input_audio: nonZeroPrice(model.pricing.input_audio) ?? existing?.cost?.input_audio,
         // The gateway API does not expose context pricing tiers, so authored
         // tiers stick and new files seed from the aggregated sibling's curated
         // tiers rather than silently under-stating long-context pricing.
@@ -596,7 +630,7 @@ export function buildLLMGatewayMappedModel(
       existing.base_model,
       {
         name: existing.name ?? model.name,
-        attachment: mapping?.vision ?? existing.attachment,
+        attachment: deploymentAttachment(model, mapping?.vision) ?? existing.attachment,
         // No describeModel fallback: synthesizing a description here would
         // stamp a sticky generic override on every name-pinned factored entry;
         // leaving it unset keeps inheriting the lab text from the base.
@@ -636,7 +670,7 @@ export function buildLLMGatewayMappedModel(
       throw new Error(`LLM Gateway mapped entry ${model.id} has no usable context to author`);
     }
     const resolved = {
-      attachment: mapping?.vision ?? existing.attachment ?? false,
+      attachment: deploymentAttachment(model, mapping?.vision) ?? existing.attachment ?? false,
       tool_call: mapping?.tools ?? existing.tool_call ?? false,
       structured_output: model.structured_outputs ?? existing.structured_output,
       // Same bidirectional vision rule as the factored path; with no base to
@@ -695,7 +729,7 @@ export function buildLLMGatewayMappedModel(
     };
     return factorBaseModel(canonical, {
       name: model.name,
-      attachment: mapping?.vision,
+      attachment: deploymentAttachment(model, mapping?.vision),
       reasoning: mapping?.reasoning,
       reasoning_options: reasoningOptions,
       interleaved,
@@ -733,7 +767,7 @@ export function buildLLMGatewayMappedModel(
     family: inferFamily(model, model.name),
     release_date: dateFromTimestamp(model.created),
     last_updated: dateFromTimestamp(model.created),
-    attachment: mapping?.vision ?? input.some((value) => value !== "text"),
+    attachment: deploymentAttachment(model, mapping?.vision) ?? input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,
     interleaved,
@@ -751,17 +785,18 @@ function llmGatewayReasoningOptions(
   model: LLMGatewayModel,
   existing: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
+  // A curated toggle marks a hand-authored native control set (the upstream's
+  // on/off switch plus its own effort levels). The union of per-mapping
+  // efforts is not a set every route accepts (the gateway forwards efforts
+  // as-is and unsupported values fail upstream), so it never replaces them.
+  if (existing?.reasoning_options?.some((option) => option.type === "toggle")) {
+    return existing.reasoning_options;
+  }
   const advertised = new Set((model.providers ?? []).flatMap((provider) => provider.reasoning_efforts ?? []));
   if (advertised.size === 0) return undefined;
 
-  const efforts = [...advertised].sort((a, b) => {
-    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
-      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
-    return order || a.localeCompare(b);
-  });
-  const preserved = existing?.reasoning_options?.filter((option) =>
-    option.type !== "effort" && !(option.type === "toggle" && advertised.has("none"))
-  ) ?? [];
+  const efforts = sortEfforts([...advertised]);
+  const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
   return [
     ...preserved,
     ReasoningOption.parse({ type: "effort", values: efforts }),

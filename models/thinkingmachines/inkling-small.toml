@@ -1,26 +1,31 @@
 # Sources (accessed 2026-08-01):
 # - https://thinkingmachines.ai/news/inkling-small/
 # - https://huggingface.co/thinkingmachines/Inkling-Small
-
+# Input formats: https://tinker-docs.thinkingmachines.ai/cookbook/inkling/images/ ("Formats: PNG and JPEG") and
+#   https://tinker-docs.thinkingmachines.ai/cookbook/inkling/audio/ (WAV); the model card lists 16kHz WAV audio.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
 name = "Inkling Small"
 description = "Multimodal MoE reasoning model (276B total, 12B active) for text, image, and audio"
 family = "ling"
-release_date = "2026-07-30"
-last_updated = "2026-07-30"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-07-30"
 license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_048_576
 output = 1_048_576
-
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

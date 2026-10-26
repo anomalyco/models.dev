@@ -1,25 +1,16 @@
-name = "Qwen3 Coder Next"
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
+base_model = "alibaba/qwen3-coder-next"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2025-10-15"
-last_updated = "2025-10-15"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 structured_output = true
-open_weights = false
 
-[cost]
-input = 0.108
-output = 0.675
-cache_read = 0.06
+[cost.text.input]
+price = 0.108
+cache = { read = 0.06 }
 
-[limit]
-context = 262_144
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.675

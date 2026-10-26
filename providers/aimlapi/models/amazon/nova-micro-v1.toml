@@ -1,5 +1,12 @@
+schema = 2
 base_model = "amazon/nova-micro-v1"
 
-[cost]
-input = 0.048139
-output = 0.192556
+[capabilities]
+structured_output = false
+tools = { supported = true }
+
+[cost.text.input]
+price = 0.03703
+
+[cost.text.output]
+price = 0.14812

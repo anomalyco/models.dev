@@ -1,9 +1,16 @@
+schema = 2
 base_model = "openai/gpt-4o-2024-05-13"
 name = "GPT-4o"
 
-[cost]
-input = 6.5
-output = 19.5
+[capabilities]
+structured_output = true
+tools = { supported = true }
 
 [limit]
 output = 16_384
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 15

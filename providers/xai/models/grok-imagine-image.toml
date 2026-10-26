@@ -4,5 +4,9 @@
 # - https://docs.x.ai/docs/guides/image-generation
 # Image generation on the images endpoint. The model's own metadata now lives in
 # models/xai/grok-imagine-image.toml, so this file is override-only per AGENTS.md.
-
+# API: POST https://api.x.ai/v1/images/generations (https://docs.x.ai/developers/rest-api-reference/inference/images.md).
+schema = 2
 base_model = "xai/grok-imagine-image"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/xai-images" }

@@ -1,22 +1,28 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 name = "kat-coder-pro"
 description = "KAT-Coder-Pro V2 by KwaiKAT is a non-reasoning model optimized for agentic coding. It delivers strong performance on reasoning-style tasks while requiring significantly fewer output tokens than peer models. With the 1210 release, it achieved a score of 64 on the Artificial Analysis Intelligence Index, placing it in the global Top 10 and ranking first among all non-reasoning models."
 family = "kat-coder"
-release_date = "2026-03-27"
-last_updated = "2026-03-27"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2026-03-27"
 
-[cost]
-input = 0.3
-output = 1.2
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+system_updates = true
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

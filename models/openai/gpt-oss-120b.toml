@@ -1,22 +1,26 @@
+# Knowledge cutoff: June 2024 (gpt-oss model card §2.4, https://openai.com/index/gpt-oss-model-card/; https://developers.openai.com/api/docs/models/gpt-oss-120b).
+schema = 2
 name = "GPT OSS 120B"
 description = "Open GPT reasoning model for self-hosted agents and controllable deployments"
 family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
-
-[limit]
-context = 131_072
-output = 32_768
+knowledge = "2024-06"
+release_date = "2025-08-05"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 32_768
 
 [[weights]]
 label = "Hugging Face"

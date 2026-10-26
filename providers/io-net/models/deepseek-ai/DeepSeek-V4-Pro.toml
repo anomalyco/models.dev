@@ -1,21 +1,27 @@
 # io.net IO Intelligence listing of deepseek-ai/DeepSeek-V4-Pro.
 # Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also switches thinking off)
 # Effort: reasoning.effort = low|high|max
-# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
-# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
 # Live check 2026-10-13, reasoning_tokens per level (five samples each): low 506-764, high 575-797, max 712-1114; medium and xhigh are accepted but add nothing beyond the lab set.
 # limit.output = 600000 is the max_tokens value io.net publishes for this deployment in /api/v1/models (the V4-Pro-0813 listing publishes 393216, the lab entry 384000). The endpoint itself accepts any max_tokens up to the context window, so the published field is the only statement of the served output limit.
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = true and a cache_read_token_price; prefixes are cached automatically with no cache_control markers, so the cache is implicit.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0423"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.402
-output = 4.536
-cache_read = 0.701
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
 output = 600_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.472
+cache = { read = 0.736 }
+
+[cost.text.output]
+price = 2.8862

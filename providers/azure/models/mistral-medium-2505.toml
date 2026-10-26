@@ -1,23 +1,32 @@
+# Modalities: Mistral vision accepts PNG, JPEG, WEBP, non-animated GIF: https://docs.mistral.ai/capabilities/vision/
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 name = "Mistral Medium 3"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral-medium"
-release_date = "2025-05-07"
-last_updated = "2025-05-07"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2025-05"
-tool_call = true
 open_weights = false
+knowledge = "2025-05"
+release_date = "2025-05-07"
 
-[cost]
-input = 0.40
-output = 2.00
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 2

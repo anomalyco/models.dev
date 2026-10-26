@@ -3,12 +3,31 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://firebase.google.com/docs/ai-logic/thinking
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3-pro-image
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
+schema = 2
 base_model = "google/gemini-3-pro-image"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+cache = false
 
-[cost]
-input = 2
-output = 120
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+
+[api.generate-content]
+
+[api.interactions]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 120
+
+[cost.image.output]
+price = 120
+
+[cost.web_search]
+price = 14

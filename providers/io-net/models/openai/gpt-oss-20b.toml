@@ -1,17 +1,27 @@
 # io.net IO Intelligence listing of openai/gpt-oss-20b.
 # Effort: reasoning.effort = low|medium|high
-# Prices, limits, modalities and capability flags come from https://api.intelligence.io.solutions/api/v1/models (public, read 2026-10-13);
-# reasoning controls were verified live against /chat/completions on the same day (see provider.toml).
 # Live check 2026-10-13: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400; reasoning_tokens low 206-327, medium 480-617, high 725-1702.
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = false for this deployment, so no cache price is listed.
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+schema = 2
 base_model = "openai/gpt-oss-20b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+name = "GPT-OSS 20B"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
+knowledge = "2024-10"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.055
-output = 0.194
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = false
 
 [limit]
 context = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.049
+
+[cost.text.output]
+price = 0.18

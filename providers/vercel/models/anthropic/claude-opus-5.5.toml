@@ -1,8 +1,27 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-23): a system message after the last user message stays in place and is followed, matching Anthropic's API (cached on the next turn vs control: Haiku 5.5 5949/5949 vs 5922, Sonnet 5.5 5945/5951, Opus 5.5 5951, Opus 4.8 5951, Fable 5.1 5947, Sonnet 5 5949/5924 but not followed in 2 trials). Placed between an assistant and a user message it is hoisted (Haiku 5.5: 0 vs 16724). Per-turn effort: providerOptions.anthropic.effort on an empty system message, or a top-level effort change, keeps the cache (Haiku 5.5 low->max 6001 and max->low 5999 vs control 5924, reasoning 515->2653/3000). Tool changes go through providerOptions.anthropic.toolChanges (https://ai-sdk.dev/providers/ai-sdk-providers/anthropic).
+# Per API: system_updates, effort_updates, tools.updates on [api.chat-completions] (@ai-sdk/gateway) only, where the mechanisms above were checked. /v1/messages moves a mid-conversation system message to the top (live 2026-10-23, Haiku 5.5 and Sonnet 5.5, after or before the last user turn: cache read 0, full rewrite) and rejects tool_addition; /v1/responses has no Anthropic tool-change or per-message effort item and gave no cache to check where a system message lands.
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = true }
+
+[api.chat-completions]
+capabilities = { system_updates = true, effort_updates = true, tools = { updates = true } }
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

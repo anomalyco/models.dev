@@ -1,8 +1,17 @@
+# structured_output = false: /v1/models structured_outputs, strict json_schema (https://docs.llmgateway.io/learn/structured-outputs)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "mistral/mistral-large-latest"
 
-[cost]
-input = 4
-output = 12
+[capabilities]
+tools = { supported = true }
+structured_output = false
 
 [limit]
 context = 128_000
+
+[cost.text.input]
+price = 4
+
+[cost.text.output]
+price = 12

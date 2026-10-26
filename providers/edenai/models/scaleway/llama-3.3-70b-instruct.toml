@@ -1,7 +1,13 @@
+schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama-3.3-70B-Instruct (Scaleway)"
+
+[capabilities]
+tools = { supported = true }
 structured_output = false
 
-[cost]
-input = 1.00629
-output = 1.00629
+[cost.text.input]
+price = 1.007369
+
+[cost.text.output]
+price = 1.007369

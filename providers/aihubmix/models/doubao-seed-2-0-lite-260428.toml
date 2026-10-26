@@ -1,43 +1,63 @@
+# Prices and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Audio input prices follow the same context tiers as text; v1 keeps only the base audio price.
+# Audio formats: Volcengine Ark audio understanding, 音频格式说明 (mp3 audio/mpeg, wav audio/wav, aac audio/aac,
+#   m4a audio/x-m4a): https://www.volcengine.com/docs/82379/2377589
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
+# Release date: the 260428 snapshot date, as listed in the AIHubMix catalog.
+schema = 2
+base_model = "bytedance-seed/seed-2.0-lite"
 name = "Doubao Seed 2.0 Lite 260428"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "seed"
 release_date = "2026-04-28"
-last_updated = "2026-04-28"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.08
-output = 0.51
-cache_read = 0.01692
-input_audio = 1.269
-
-[[cost.tiers]]
-tier = { size = 32_000 }
-input = 0.13
-output = 0.76
-cache_read = 0.02536
-input_audio = 1.902
-
-[[cost.tiers]]
-tier = { size = 128_000 }
-input = 0.25
-output = 1.52
-cache_read = 0.05072
-input_audio = 3.804
-
-[limit]
-context = 256_000
-output = 128_000
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video/mp4", "video/x-msvideo", "video/quicktime", "audio/mpeg", "audio/wav", "audio/aac", "audio/x-m4a", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.09041
+cache = { read = 0.018082 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.135616
+cache = { read = 0.0271232 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.271232
+cache = { read = 0.0542464 }
+
+[cost.text.output]
+price = 0.54246
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.813696
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.627392
+
+[cost.audio.input]
+price = 1.35615
+
+[[cost.audio.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.03424
+
+[[cost.audio.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 4.06848

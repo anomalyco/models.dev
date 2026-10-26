@@ -1,14 +1,23 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
+# Images: POST /v3/images/generations only (https://www.edenai.co/docs/v3/llms/image-generation)
+schema = 2
 base_model = "google/gemini-3.1-flash-image"
 name = "Nano Banana 2 (Vertex AI)"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
-
-[cost]
-input = 0.5
-output = 3
 
 [modalities]
-input = ["image", "text"]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
+structured_output = true
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3

@@ -1,11 +1,15 @@
+schema = 2
 base_model = "alibaba/qwen3.8-max-prime"
 name = "Qwen3.8 Max Prime"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+tools = { supported = true }
 
-[cost]
-input = 5.5016
-output = 16.5048
-cache_read = 0.6877
+[cost.text.input]
+price = 4.232
+cache = { read = 0.529 }
+
+[cost.text.output]
+price = 12.696

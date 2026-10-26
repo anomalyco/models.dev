@@ -1,25 +1,19 @@
-name = "GPT-5.3 Codex"
-description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
-family = "gpt"
-release_date = "2026-02-15"
-last_updated = "2026-02-15"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
+# knowledge: FrogBot's value, unsourced and different from the lab's. Kept so v1 doesn't change.
+schema = 2
+base_model = "openai/gpt-5.3-codex"
 knowledge = "2026-01-31"
-tool_call = true
-open_weights = false
-
-[cost]
-input = 1.75
-output = 14
-cache_read = 0.175
-
-[limit]
-context = 400_000
-output = 128_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = false
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

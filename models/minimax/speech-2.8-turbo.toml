@@ -1,0 +1,25 @@
+# Released 2026-01-23: https://www.minimax.io/news/minimax-speech-28
+# Output formats (audio_setting.format mp3, pcm, flac, wav, pcmu_raw/pcmu_wav μ-law, opus): https://platform.minimax.io/docs/api-reference/speech-t2a-http
+schema = 2
+v2_only = true
+type = "speech"
+name = "Speech 2.8 Turbo"
+description = "Fast text-to-speech model with sound tags and voice cloning"
+family = "minimax"
+open_weights = false
+release_date = "2026-01-23"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm", "audio/flac", "audio/wav", "audio/basic", "audio/opus"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

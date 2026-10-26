@@ -1,24 +1,21 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
+base_model = "alibaba/qwen3-8b"
 name = "Qwen 3 8B"
-description = "Qwen 3 8B is a 8B model. Supports switching between thinking and non thinking: trigger thinking with /think and /no_think anywhere in a prompt or system message to toggle chain-of-thought reasoning."
-family = "qwen"
-release_date = "2024-01-01"
-last_updated = "2024-01-01"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.47
-output = 0.47
-cache_read = 0.235
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 41_000
 input = 41_000
-output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.47
+cache = { read = 0.235 }
+
+[cost.text.output]
+price = 0.47

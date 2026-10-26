@@ -1,0 +1,66 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing#gemini-4-argon
+# - https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
+# Introductory Standard pricing (50% off) applies through 2026-11-30. From
+# 2026-12-01 the published rates are $4.00 input, $20.00 output, and $0.20
+# cache read. Only implicit caching is supported (explicit caching is not).
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# - https://ai.google.dev/gemini-api/docs/thinking
+# Flex is 0.5x and Priority 1.8x Standard. Rates double from 2026-12-01.
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-4-argon; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-4-argon
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Grounding keeps its price under Priority, Flex and the scheduled increases (https://ai.google.dev/gemini-api/docs/pricing).
+# APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
+# tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+cache = { implicit = { min_tokens = 4_096 } }
+service_tier = ["flex", "priority"]
+
+[limit]
+output = 32_768
+
+[api.generate-content]
+
+[api.chat-completions]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.interactions]
+sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.8, audio = 1.8 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5, audio = 0.5 }
+
+[[cost.multipliers]]
+when = { date = { gte = "2026-12-01" } }
+factor = { text = 2, audio = 2 }
