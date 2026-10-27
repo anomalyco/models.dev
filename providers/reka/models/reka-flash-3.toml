@@ -1,0 +1,25 @@
+# Pricing from https://developer.reka.ai/models (accessed 2026-10-03).
+# Context: 65,536 tokens, verified 2026-10-02 against the live API.
+# Reasoning is always on with no caller control; reasoning_effort is accepted
+# (low|medium|high) but has no effect, so no effort option is authored.
+# tools: not supported on this model.
+# Reasoning trace: message.reasoning_content. Prompt caching is automatic
+# (implicit).
+schema = 2
+base_model = "rekaai/reka-flash-3"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.10
+
+[cost.text.output]
+price = 0.20
+
+[limit]
+context = 65_536

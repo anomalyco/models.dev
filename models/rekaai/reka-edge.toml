@@ -5,6 +5,7 @@
 # - Release 2026-03-11: https://reka.ai/news/reka-edge-frontier-level-edge-intelligence-for-physical-ai
 # - https://huggingface.co/RekaAI/reka-edge-2603 (open weights; image/video + text input)
 # - https://docs.reka.ai/chat/models.md (reka-edge-2603: 16k context, text/image/video input, tools)
+# - Benchmarks: https://huggingface.co/RekaAI/reka-edge-2603 (model card)
 # Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the Reka API
 #   also takes temperature, top_p and top_k
 #   (https://docs.reka.ai/chat/api-reference/create-chat-completion.md).
@@ -16,6 +17,7 @@ description = "Multimodal model for analyzing text, images, documents, and rich 
 family = "reka"
 open_weights = true
 release_date = "2026-03-11"
+license = "Reka Edge 2603 License"
 
 [modalities]
 input = ["image", "text", "video"]
@@ -31,3 +33,50 @@ top_k = true
 [limit]
 context = 16_384
 output = 14_745
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/RekaAI/reka-edge-2603"
+format = "safetensors"
+
+[[benchmarks]]
+name = "VQA-v2"
+score = 88.4
+metric = "accuracy"
+source = "https://huggingface.co/RekaAI/reka-edge-2603"
+
+[[benchmarks]]
+name = "MLVU"
+score = 74.3
+metric = "accuracy"
+source = "https://huggingface.co/RekaAI/reka-edge-2603"
+
+[[benchmarks]]
+name = "MMVU"
+score = 71.68
+metric = "accuracy"
+source = "https://huggingface.co/RekaAI/reka-edge-2603"
+
+[[benchmarks]]
+name = "RefCOCO-A"
+score = 93.13
+metric = "accuracy"
+source = "https://huggingface.co/RekaAI/reka-edge-2603"
+
+[[benchmarks]]
+name = "RefCOCO-B"
+score = 86.7
+metric = "accuracy"
+source = "https://huggingface.co/RekaAI/reka-edge-2603"
+
+[[benchmarks]]
+name = "VideoHallucer"
+score = 59.57
+metric = "accuracy"
+source = "https://huggingface.co/RekaAI/reka-edge-2603"
+
+[[benchmarks]]
+name = "Mobile Actions"
+score = 88.4
+metric = "accuracy"
+source = "https://huggingface.co/RekaAI/reka-edge-2603"

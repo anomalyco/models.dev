@@ -1,0 +1,28 @@
+# Pricing from https://developer.reka.ai/models (accessed 2026-10-03).
+# Context: 262,144 tokens, verified 2026-10-02 against the live API.
+# Effort: reasoning_effort = low|high|max. Thinking is always on; "none" is
+# accepted but maps to low. Verified 2026-10-02.
+# response_format json_schema verified working 2026-10-02 (the public
+# reference omits this model from its response_format list).
+# Reasoning trace: message.reasoning_content. Prompt caching is automatic
+# (implicit).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.15
+cache = { read = 0.10 }
+
+[cost.text.output]
+price = 3.50
+
+[limit]
+context = 262_144

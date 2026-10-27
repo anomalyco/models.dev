@@ -1,0 +1,34 @@
+# Pricing from https://developer.reka.ai/models (accessed 2026-10-03).
+# Context: 262,144 tokens (lab default), verified 2026-10-02 against the live API.
+# Effort: reasoning_effort = none|low|medium|xhigh. Thinking is off unless an
+# effort is sent; "none" is also off (live 2026-10-02: 0 reasoning tokens with
+# none vs 597 with xhigh). The gateway maps none to enable_thinking=false, so
+# effort-only with none per AGENTS.md; no separate toggle. The backend names
+# the tiers ("Supported types are xhigh (default), medium, and low");
+# high/max alias to xhigh, minimal to low.
+# Budget: thinking_token_budget (integer reasoning tokens) is honoured (live
+# 2026-10-03: budget 60 -> 59 reasoning tokens).
+# Reasoning trace: message.reasoning (not message.reasoning_content). v1's
+# interleaved.field cannot name it, so no reasoning_field is set here (v1
+# precedent: providers/nebius/models/deepseek-ai/DeepSeek-V4.1-Flash-1017.toml).
+# Image input verified 2026-10-02; modalities inherited from the lab entry.
+# response_format json_schema verified working 2026-10-02 (the public
+# reference omits this model from its response_format list).
+# Prompt caching is automatic (implicit).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"], budget = {} }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 2.55
+
+[limit]
+context = 262_144

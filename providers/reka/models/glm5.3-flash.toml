@@ -1,0 +1,39 @@
+# Pricing from https://developer.reka.ai/models (accessed 2026-10-03).
+# Context: 262,144 tokens, verified 2026-10-02 against the live API.
+# Effort: reasoning_effort = none|low|high|max. Thinking is on by default.
+# Unlike Zhipu's hosted API, this host exposes an off tier. Wire mapping:
+# reasoning_effort = "none" -> chat_template_kwargs.enable_thinking = false on
+# the vLLM backend, which the GLM chat template honours. Live
+# 2026-10-02: 0 reasoning tokens with none; hundreds with other values.
+# minimal/medium/xhigh are aliases of low/high/max. Effort-only with none per
+# AGENTS.md; no separate toggle.
+# Reasoning trace: message.reasoning (not message.reasoning_content). v1's
+# interleaved.field cannot name it, so no reasoning_field is set here (v1
+# precedent: providers/nebius/models/deepseek-ai/DeepSeek-V4.1-Flash-1017.toml).
+# Modalities: image and video input verified 2026-10-02 against the live API;
+# the lab's pdf input is not offered on this host. Generic image/video because
+# the Reka API docs do not list accepted formats.
+# response_format json_schema verified working 2026-10-02 (the public
+# reference omits this model from its response_format list).
+# Prompt caching is automatic (implicit).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.50
+
+[limit]
+context = 262_144

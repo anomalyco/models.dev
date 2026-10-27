@@ -1,0 +1,18 @@
+# Reka Gateway: OpenAI-compatible POST https://api.reka.ai/v1/chat/completions.
+# reasoning_effort is accepted on reasoning models even though the reference
+# does not list it; accepted values and default state vary per model (see each
+# model's header). The reasoning trace is returned in message.reasoning_content
+# on deepseek4-flash, glm5.3 and reka-flash-3, and in message.reasoning on
+# glm5.3-flash and qwen3.8-27b; each model names its field via
+# compatibility.reasoning_field. Prompt caching is automatic (implicit).
+# Sampling: temperature, top_p and top_k are accepted
+# (https://docs.reka.ai/chat/api-reference/create-chat-completion.md).
+# Sources (accessed 2026-10-02):
+# https://developer.reka.ai/reference
+# https://developer.reka.ai/models
+name = "Reka"
+env = ["REKA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.reka.ai/v1"
+doc = "https://developer.reka.ai/models"

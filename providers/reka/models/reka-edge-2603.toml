@@ -1,0 +1,19 @@
+# Pricing from https://developer.reka.ai/models (accessed 2026-10-03).
+# Context: 16,384 tokens and image input verified 2026-10-02 against the live API.
+# Model card: "the model does not currently support reasoning".
+# Prompt caching is automatic (implicit).
+schema = 2
+base_model = "rekaai/reka-edge"
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.10
+
+[cost.text.output]
+price = 0.10
+
+[limit]
+context = 16_384
