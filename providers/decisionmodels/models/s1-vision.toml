@@ -17,7 +17,7 @@ context = 8_000
 [api.systemone]
 base_url = "https://api.decisionmodels.io/v1"
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
-compatibility = { image_input = "images" }
+compatibility = { media_input = "root" }
 
 [cost.text.input]
 price = 0.031
