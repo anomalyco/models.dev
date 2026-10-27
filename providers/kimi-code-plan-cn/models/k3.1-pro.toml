@@ -1,6 +1,6 @@
-# Kimi Code models (accessed 2026-10-24): https://www.kimi.com/code/docs/kimi-code/models.html
+# Kimi Code models (accessed 2026-10-27): https://www.kimi.com/code/docs/en/kimi-code/models.html and https://www.kimi.com/code/docs/kimi-code/models.html
 # k3.1-pro is the Coding Plan ID; the open-platform ID is kimi-k3.1-pro.
-# Always thinks: reasoning_effort = "low" | "high" | "max" (default "max"); none/disabled returns HTTP 400.
+# Always thinks: reasoning_effort = "low" | "high" | "max" (default "high"); none/disabled returns HTTP 400.
 # Switching reasoning effort invalidates the context cache. Cost is zeroed per this provider's subscription convention.
 # prompt_cache_key is required for good cache hit rates on Kimi Code Plan (https://platform.kimi.ai/docs/api/chat).
 # Mid-conversation (live probe, https://api.kimi.com/coding/v1/chat/completions, 2026-10-27; notes/kimi-code-midconvo-2026-10-27/probe.ts):
@@ -13,7 +13,7 @@ schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "high", "max"] }
 structured_output = true
 prompt_cache_key = true
 cache = { implicit = true }
