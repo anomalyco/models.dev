@@ -1,6 +1,11 @@
-# [cost] intentionally omitted: FlexAI bills this model per generated image
-# ($0.0005/image), which the token-denominated cost schema cannot express —
-# same treatment as providers/mistral/models/voxtral-mini-latest.toml.
-# Kept in the leading block: only that survives re-serialisation.
+# Image generation: POST https://api.flex.ai/v1/images/generations (https://docs.flex.ai/inference-api/guides/images).
+# Price: GET /v1/models media_pricing, $0.0005 per generated image (billing_unit image), 2026-10-22.
 schema = 2
-base_model = "black-forest-labs/flux.1-schnell"
+base_model = "black-forest-labs/flux-1-schnell"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.0005
