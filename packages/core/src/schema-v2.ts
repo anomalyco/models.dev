@@ -369,8 +369,10 @@ export const CompatibilityV2 = z
     // `assets` map, referenced by name from `state`, with the
     // `TypeSafe-Danger-Zone-Images: true` header. "state": media items
     // (`image_url`, `input_audio`, `video_url`) inside a `state` list. "root": one
-    // top-level list per media kind (`images`, `audio`, `videos`) next to `state`.
-    media_input: z.enum(["assets", "state", "root"]).optional(),
+    // top-level list per media kind (`images`, `audio`, `videos`) next to `state`,
+    // as data URLs. "root_base64": the same lists as bare base64 with no data URL
+    // prefix, as Ollama takes.
+    media_input: z.enum(["assets", "state", "root", "root_base64"]).optional(),
   })
   .strict();
 

@@ -146,6 +146,7 @@ describe("v2 API tables", () => {
   test("media_input is only allowed on systemone tables", () => {
     expect(issues({ systemone: { compatibility: { media_input: "state" } } })).toEqual([]);
     expect(issues({ systemone: { compatibility: { media_input: "root" } } })).toEqual([]);
+    expect(issues({ systemone: { compatibility: { media_input: "root_base64" } } })).toEqual([]);
     expect(issues({ "chat-completions": { compatibility: { media_input: "state" } } })).toEqual([
       "api.chat-completions.compatibility.media_input: compatibility.media_input is only allowed on [api.systemone], not [api.chat-completions]",
     ]);
