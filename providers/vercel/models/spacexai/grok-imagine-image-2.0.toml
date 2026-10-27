@@ -8,7 +8,8 @@ input = ["text"]
 output = ["image/jpeg", "image/png"]
 
 [api.images]
-base_url = "https://ai-gateway.vercel.sh/v4/ai"
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
 
 [cost.image.output]
 unit = "image"

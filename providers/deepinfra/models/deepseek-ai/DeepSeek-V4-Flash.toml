@@ -16,11 +16,9 @@ base_model = "deepseek/deepseek-v4-flash"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 1_048_576

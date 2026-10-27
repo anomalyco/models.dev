@@ -11,12 +11,10 @@ base_model = "zhipuai/glm-5"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 4_096 } }
+cache = { implicit = { min_tokens = 4_096 } }
 
 [limit]
 context = 200_000
@@ -24,7 +22,7 @@ output = 128_000
 
 [api.chat-completions]
 base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
-sdk = { aisdk = "@ai-sdk/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/google-vertex/chat" }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]

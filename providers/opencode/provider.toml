@@ -1,6 +1,7 @@
 name = "OpenCode"
 env = ["OPENCODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Every model sets its own `provider.api` for its protocol (accessed 2026-10-15):
 # `/inference/openai/v1`, `/inference/anthropic/v1`, `/inference/google/v1beta`,
 # or `/inference/systemone/v1`. `api` here is required by the schema for

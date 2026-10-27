@@ -1,0 +1,49 @@
+# Sources (accessed 2026-10-24):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 1_048_576, type image2text,
+#   input_cached_price_per_million_tokens = 0.006)
+# - https://tokenfactory.nebius.com/endpoints?modals=endpoint-details&model-id=deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Effort: reasoning_effort = none|low|high|max (none = thinking off). Live probe 2026-10-24 on
+#   /v1/chat/completions: none turns thinking off; minimal is rejected with 400 ("DeepSeek V4.1 reasoning_effort
+#   must be low, medium, high, xhigh, max, ..."); low/medium/high/xhigh are accepted but weren't separable on
+#   test prompts, and max thinks roughly 2x longer. This matches the other DeepSeek V4 entries on this host
+#   (DeepSeek-V4.1-Flash, DeepSeek-V4-Flash-0731), so the same none/low/high/max ladder is used.
+# Reasoning is returned in message.reasoning (not reasoning_content, which DeepSeek-V4.1-Flash on this host
+#   uses), checked live 2026-10-24. reasoning_field = "reasoning" is valid in v2 but v1's interleaved.field
+#   only allows reasoning_content|reasoning_details, so no reasoning_field is set rather than a wrong one.
+# Server reports model type image2text, so modalities are inherited from the lab entry. Live 2026-10-24: a PNG
+#   data URL is read correctly; video_url returns 400 "This model does not support video input".
+# Other live checks 2026-10-24 (/v1/chat/completions unless noted):
+# - Tools: tool_choice auto|required|named function|none all behave as expected.
+# - structured_output: response_format json_schema (strict, enum field) and json_object are enforced.
+# - Cache: automatic prefix cache, no markers; usage reports created_cache_tokens on a miss and
+#   prompt_tokens_details.cached_tokens = 9472 on a hit for a repeated ~9.5k-token prompt (hits are
+#   intermittent, likely per replica), so cache = { implicit = true }.
+# - Limit: max_tokens = 1_048_000 accepted; 1_048_577 rejected ("cannot be greater than max_model_len=1048576").
+# - Responses: returns reasoning + message output items; reasoning.effort = none returns message only.
+# Served window: max_model_len = 1_048_576 with no separate output cap, so context and output both take the
+#   full served window.
+# Responses: POST https://api.tokenfactory.nebius.com/v1/responses (https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response);
+#   models_info lists "responses_api" in this model's use_cases.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

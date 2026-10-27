@@ -13,10 +13,9 @@ output = ["text"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
-cache = { supported = false }
+cache = false
 structured_output = false
 temperature = false
-effort_updates = false
 
 [limit]
 context = 32_000

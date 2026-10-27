@@ -2,6 +2,7 @@
 # Type: realtime (WebSocket) model, not served on chat completions.
 # MIME types: images per the archived model page (https://web.archive.org/web/20251116211940/https://www.alibabacloud.com/help/en/model-studio/qwen3-livetranslate-flash-realtime: "streaming audio and image inputs", sent as input_image_buffer.append frames; JPG/JPEG per https://www.alibabacloud.com/help/en/model-studio/realtime); audio pcm16 in/out (audio/L16).
 # `video` stays generic: the API takes video as a stream of JPEG frames (input_image_buffer.append) with no container format, so there is no video MIME type to list.
+# API: wss://<host>/api-ws/v1/realtime?model=<id> (https://www.alibabacloud.com/help/en/model-studio/realtime)
 schema = 2
 type = "realtime"
 name = "Qwen3-LiveTranslate Flash Realtime"
@@ -20,11 +21,14 @@ output = ["text", "audio/L16"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
-effort_updates = false
 
 [limit]
 context = 53_248
 output = 4_096
+
+[api.realtime]
+base_url = "wss://dashscope-intl.aliyuncs.com/api-ws/v1/realtime"
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 10

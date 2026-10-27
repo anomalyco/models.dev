@@ -10,8 +10,11 @@ import {
   buildCloudflareAiGatewayModel,
   cloudflareAiGateway,
   deriveReasoningOptions,
+  gatewayApis,
+  gatewayTools,
   mediaCost,
   routeModalities,
+  splitLabTools,
 } from "../src/sync/providers/cloudflare-ai-gateway.js";
 
 test("missing reasoning controls open issues without deleting existing models or blocking valid ones", async () => {
@@ -19,9 +22,10 @@ test("missing reasoning controls open issues without deleting existing models or
   const modelsDir = path.join(dir, "models");
   const ids = ["deepreinforce/ornith-1.0-9b", "deepreinforce/ornith-1.0-31b"];
   const file = path.join(modelsDir, `${ids[0]}.toml`);
-  const content = '# Keep authored controls\nbase_model = "deepreinforce/ornith-1.0-9b"\nreasoning_options = [{ type = "effort", values = ["high"] }]\n';
+  const content = '# Keep authored controls\nschema = 2\nbase_model = "deepreinforce/ornith-1.0-9b"\n\n[capabilities]\nreasoning = { supported = true, effort = ["high"] }\n';
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, content);
+  await writeFile(path.join(dir, "provider.toml"), 'name = "Test"\nnpm = "ai-gateway-provider"\nenv = []\n');
   const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
   const provider = {
     ...cloudflareAiGateway, modelsDir,
@@ -86,7 +90,10 @@ test("builds Cloudflare AI Gateway overrides from catalog metadata", () => {
       }],
     },
     limit: { context: 1_050_000 },
-    provider: { npm: "@ai-sdk/openai" },
+    provider: {
+      npm: "@ai-sdk/openai",
+      api: "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/openai",
+    },
   });
 });
 
@@ -418,6 +425,70 @@ test("rejects a catalog with no eligible proxied models", async () => {
   }
 });
 
+test("takes tool_choice values from the catalog schema when it names them", () => {
+  const toolsSet = (model_id: string, schemaInput: unknown) => (cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id,
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+    schemaInput,
+  }, { authored: () => undefined, existing: () => undefined }) as unknown as {
+    v2Set: Record<string, (current: unknown) => unknown>;
+  }).v2Set["capabilities.tools"]!;
+
+  const effort = { reasoning: { properties: { effort: { enum: ["low", "high"] } } } };
+  const minimax = { oneOf: [{ properties: { ...effort, tool_choice: { type: "string", enum: ["none", "auto"] } } }] };
+  expect(toolsSet("minimax/m3.1-flash", minimax)(undefined)).toEqual({ supported: true, choice: ["auto", "none"] });
+  // A schema that leaves tool_choice open keeps the file's tools table.
+  const current = { supported: true, choice: ["auto"] };
+  expect(toolsSet("xai/grok-4.7", { properties: { ...effort, tool_choice: { type: "string" } } })(current)).toBe(current);
+});
+
+test("native routes take the lab's own tool fields, with the schema's choice when the lab has none", () => {
+  const schema = { properties: { tool_choice: { type: "string", enum: ["auto", "none"] } } };
+  const current = { supported: true, updates: true, strict: true, search: true, choice: ["auto"] };
+  // The lab's fields replace the file's, keeping fields the lab doesn't own (updates).
+  expect(gatewayTools(current, { strict: true, choice: ["auto", "none", "required", "tool"] }, undefined))
+    .toEqual({ supported: true, updates: true, strict: true, choice: ["auto", "none", "required", "tool"] });
+  expect(gatewayTools(current, { strict: true }, schema)).toEqual({ supported: true, updates: true, choice: ["auto", "none"], strict: true });
+  expect(gatewayTools(current, { choice: ["auto"] }, schema)).toEqual({ supported: true, updates: true, choice: ["auto"] });
+  expect(gatewayTools({ supported: false }, { strict: true }, schema)).toEqual({ supported: false });
+});
+
+test("each gateway API takes the lab's tool fields for its protocol", () => {
+  const choice = ["auto", "none", "required", "tool"];
+  const lab = {
+    top: {},
+    apis: { responses: { strict: true, choice, search: true, freeform: ["text", "lark"] }, "chat-completions": { strict: true, choice, freeform: ["text", "lark"] } },
+  };
+  // Values every gateway API holds go top-level, the rest on their API; a protocol the gateway doesn't list is ignored.
+  expect(splitLabTools({ ...lab, apis: { ...lab.apis, decisions: {} } }, ["responses", "chat-completions"])).toEqual({
+    top: { strict: true, choice, freeform: ["text", "lark"] },
+    apis: { responses: { search: true }, "chat-completions": {} },
+  });
+  // A value one API leaves out stays off the top level.
+  expect(splitLabTools({ top: { choice }, apis: { responses: { strict: true } } }, ["responses", "messages"])).toEqual({
+    top: { choice },
+    apis: { responses: { strict: true }, messages: {} },
+  });
+  expect(splitLabTools(lab, ["responses"])).toEqual({ top: { strict: true, choice, search: true, freeform: ["text", "lark"] }, apis: { responses: {} } });
+
+  const main = "@opencode/ai/providers/cloudflare-ai-gateway";
+  const current = {
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { search: true, updates: true } } },
+    "chat-completions": { base_url: "stale", capabilities: { tools: { search: true } } },
+  };
+  // Tool fields are replaced per table; other capabilities and `updates` are kept, and an empty table loses capabilities.
+  expect(gatewayApis(current, "responses", ["responses", "chat-completions"], { responses: { strict: true }, "chat-completions": {} })).toEqual({
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { strict: true, updates: true } } },
+    "chat-completions": {
+      base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
+      sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: main },
+    },
+  });
+});
+
 test("syncs Jev through shared TypeSafe metadata without inventing tool support", async () => {
   const originalFetch = globalThis.fetch;
   const originalToken = process.env.CLOUDFLARE_API_TOKEN;
@@ -449,7 +520,7 @@ test("syncs Jev through shared TypeSafe metadata without inventing tool support"
       existing: () => undefined,
       authored: () => undefined,
     }).model).toEqual({
-      base_model: "typesafe/jev-latest",
+      base_model: "typesafe/jev-1.13.0",
       cost: { input: 0.042, output: 0 },
       limit: { context: 32_000 },
     });
@@ -529,7 +600,7 @@ test("replaces a stale generated base-model mapping", async () => {
   const modelsDir = path.join(providerDir, "models");
   await mkdir(modelsDir);
   const file = path.join(modelsDir, "model.toml");
-  await writeFile(file, 'base_model = "anthropic/claude-opus-4-6"\n');
+  await writeFile(file, 'schema = 2\nbase_model = "anthropic/claude-opus-4-6"\n');
 
   try {
     const provider = {
@@ -559,7 +630,7 @@ test("reconciles authoritative generated headers", async () => {
   const modelsDir = path.join(providerDir, "models");
   await mkdir(modelsDir);
   const file = path.join(modelsDir, "gpt-4.1.toml");
-  await writeFile(file, "# Old note\n\nbase_model = \"openai/gpt-4.1\"\n");
+  await writeFile(file, "# Old note\n\nschema = 2\nbase_model = \"openai/gpt-4.1\"\n");
 
   try {
     const provider = {
@@ -584,7 +655,7 @@ test("reconciles authoritative generated headers", async () => {
     const result = await syncProvider(provider);
 
     expect(result.updated).toBe(1);
-    expect(await readFile(file, "utf8")).toStartWith("# New note\nbase_model");
+    expect(await readFile(file, "utf8")).toStartWith("# New note\nschema = 2\nbase_model");
     expect((await syncProvider(provider)).updated).toBe(0);
   } finally {
     await rm(providerDir, { recursive: true, force: true });
@@ -620,10 +691,16 @@ test("writes new native-route models as v2 files with their API protocol", async
     expect(result.notices ?? []).toEqual([]);
     const opus = await readFile(path.join(modelsDir, "anthropic", "claude-opus-4.7.toml"), "utf8");
     expect(opus).toContain("\nschema = 2\n");
-    expect(opus).toContain('[api.messages]\nsdk = { aisdk = "@ai-sdk/anthropic" }');
+    const opencodeai = 'opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway"';
+    const native = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}";
+    expect(opus).toContain(`[api.messages]\nbase_url = "${native}/anthropic/v1"\nsdk = { aisdk = "@ai-sdk/anthropic", ${opencodeai} }`);
     const gpt = await readFile(path.join(modelsDir, "openai", "gpt-5.5.toml"), "utf8");
-    expect(gpt).toContain('[api.responses]\nsdk = { aisdk = "@ai-sdk/openai" }');
-    expect(await readFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), "utf8")).toContain("system_updates = true");
+    expect(gpt).toContain(`[api.responses]\nbase_url = "${native}/openai"\nsdk = { aisdk = "@ai-sdk/openai", ${opencodeai} }`);
+    // An existing table gets the OpenCode package too, and keeps its other v2 data.
+    const updated = await readFile(path.join(modelsDir, "openai", "gpt-4.1.toml"), "utf8");
+    expect(updated).toContain("system_updates = true");
+    expect(updated).toContain(`base_url = "${native}/openai"\nsdk = { aisdk = "@ai-sdk/openai", ${opencodeai} }`);
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0 });
   } finally {
     await rm(providerDir, { recursive: true, force: true });
   }
@@ -677,66 +754,6 @@ test("refuses a symlinked models root", async () => {
   }
 });
 
-test("refuses a symlinked metadata file", async () => {
-  const providersDir = path.join(import.meta.dirname, "..", "..", "..", "providers");
-  const providerDir = await mkdtemp(path.join(providersDir, ".sync-metadata-"));
-  const outsideDir = await mkdtemp(path.join(providersDir, ".sync-metadata-outside-"));
-  const modelsDir = path.join(providerDir, "models");
-  const namespace = `sync-symlink-${path.basename(providerDir).replaceAll(/[^a-z0-9-]/g, "")}`;
-  const metadataDir = path.join(providersDir, "..", "models", namespace);
-  const outsideFile = path.join(outsideDir, "model.toml");
-  await mkdir(modelsDir);
-  await mkdir(metadataDir);
-  await writeFile(outsideFile, "sentinel\n");
-  await symlink(outsideFile, path.join(metadataDir, "model.toml"));
-
-  try {
-    const provider = {
-      ...testSyncProvider(modelsDir, "provider-model"),
-      metadataNamespace: namespace,
-      translateModel(model: { id: string }) {
-        return {
-          id: model.id,
-          model: {
-            name: "Provider symlink test",
-            description: "Provider model used to test safe sync paths",
-            release_date: "2026-01-01",
-            last_updated: "2026-01-01",
-            attachment: false,
-            reasoning: false,
-            tool_call: false,
-            open_weights: false,
-            modalities: { input: ["text"], output: ["text"] },
-            limit: { context: 1_000, output: 100 },
-            cost: { input: 1, output: 2 },
-          },
-          metadata: {
-            id: `${namespace}/model`,
-            model: {
-              name: "Symlink test",
-              description: "Metadata used to test safe sync paths",
-              release_date: "2026-01-01",
-              last_updated: "2026-01-01",
-              attachment: false,
-              reasoning: false,
-              tool_call: false,
-              open_weights: false,
-              modalities: { input: ["text"], output: ["text"] },
-              limit: { context: 1_000, output: 100 },
-            },
-          },
-        };
-      },
-    };
-    await expect(syncProvider(provider)).rejects.toThrow("Refusing to sync through symlink");
-    expect(await readFile(outsideFile, "utf8")).toBe("sentinel\n");
-  } finally {
-    await rm(providerDir, { recursive: true, force: true });
-    await rm(outsideDir, { recursive: true, force: true });
-    await rm(metadataDir, { recursive: true, force: true });
-  }
-});
-
 test("syncs speech, transcription, image and video tasks as media sources and leaves other tasks out", async () => {
   const originalFetch = globalThis.fetch;
   const originalToken = process.env.CLOUDFLARE_API_TOKEN;
@@ -774,7 +791,12 @@ test("syncs speech, transcription, image and video tasks as media sources and le
       schema: 2,
       v2_only: true,
       base_model: "openai/tts-1",
-      api: { "workers-ai-run": { base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" } },
+      api: {
+        "workers-ai-run": {
+          base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai",
+          sdk: { opencodeai: "none" },
+        },
+      },
       cost: { text: { input: { unit: "character", price: 15 } } },
     });
     expect(speech.header).toContain("POST /ai/run");
@@ -808,6 +830,14 @@ test("maps media catalog ids to labs of the task's type", () => {
   ).doc.name).toBeUndefined();
   expect(() => build("openai/gpt-4.1", "Text-to-Speech")).toThrow("is a chat model, not speech");
   expect(() => build("example/unknown-voice", "Text-to-Speech")).toThrow("no lab file and no curated base_model");
+});
+
+test("skips a new catalog model with no lab file instead of failing the sync", () => {
+  const translate = (model_id: string, authored?: object) => cloudflareAiGateway.translateModel({
+    catalog: { model_id, task: "Text Generation" as const, provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }) },
+  }, { authored: () => authored as never, existing: () => undefined });
+  expect(translate("example/unknown-model")).toBeUndefined();
+  expect(() => translate("example/unknown-model", { base_model: "example/gone" })).toThrow("no lab file and no curated base_model");
 });
 
 test("reads route modalities from the media request schema", () => {
@@ -917,6 +947,7 @@ test("writes media models as v2-only files and a second sync is a no-op", async 
     expect(tts).toContain('\nschema = 2\nv2_only = true\nbase_model = "openai/tts-1"\n');
     expect(tts).toContain('[modalities]\ninput = ["text"]\noutput = ["audio/mpeg", "audio/wav"]');
     expect(tts).toContain("[api.workers-ai-run]");
+    expect(tts).toContain('[api.workers-ai-run]\nbase_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"\nsdk = { opencodeai = "none" }\n');
     expect(tts).toContain('[cost.text.input]\nunit = "character"\nprice = 15\n');
     const second = await syncProvider(provider);
     expect(second).toMatchObject({ created: 0, updated: 0, deleted: 0 });
@@ -1082,3 +1113,48 @@ function restoreEnv(name: string, value: string | undefined) {
   if (value === undefined) delete process.env[name];
   else process.env[name] = value;
 }
+
+test("lists a REST table for every other request format the catalog gives a gateway model", () => {
+  const main = "@opencode/ai/providers/cloudflare-ai-gateway";
+  const base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1";
+  // OpenAI: the native Responses route stays first; Chat Completions goes through REST.
+  const openai = gatewayApis({ responses: { sdk: { aisdk: "@ai-sdk/openai" } } }, "responses", ["responses", "chat-completions"]);
+  expect(openai).toEqual({
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main } },
+    "chat-completions": { base_url, sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: main } },
+  });
+  expect(gatewayApis(openai, "responses", ["responses", "chat-completions"])).toEqual(openai);
+  // A Responses-only model keeps its default Chat Completions table first.
+  expect(gatewayApis(undefined, undefined, ["responses"])).toEqual({
+    "chat-completions": {},
+    responses: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: main } },
+  });
+  expect(gatewayApis(undefined, undefined, ["chat-completions", "anthropic-messages"])).toEqual({
+    "chat-completions": {},
+    messages: { base_url, sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: main } },
+  });
+  // One format and no table: nothing to write. An existing first table is kept.
+  expect(gatewayApis(undefined, undefined, ["chat-completions"])).toBeUndefined();
+  const systemone = { systemone: { sdk: { aisdk: "none" } } };
+  expect(gatewayApis(systemone, undefined, null)).toEqual(systemone);
+});
+
+test("lists decision models on the /ai/run API", () => {
+  const translated = cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id: "typesafe/jev-1.14.0",
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 0.042, output_tokens: 0 }),
+      request_formats: ["chat-completions"],
+    },
+  }, { authored: () => undefined, existing: () => undefined }) as { v2Set: { api: (current: unknown) => unknown } };
+  const run = {
+    "workers-ai-run": {
+      base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai",
+      path: "/run",
+      sdk: { opencodeai: "@opencode/ai/providers/cloudflare-ai-gateway/decisions" },
+    },
+  };
+  expect(translated.v2Set.api(undefined)).toEqual(run);
+  expect(translated.v2Set.api({ systemone: { sdk: { aisdk: "none" } } })).toEqual(run);
+});

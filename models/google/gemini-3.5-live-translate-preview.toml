@@ -3,23 +3,27 @@
 # - https://ai.google.dev/gemini-api/docs/live-api/live-translate
 # - https://deepmind.google/models/model-cards/gemini-3-5-audio/
 # - https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/
+# Audio is raw PCM in and out, like every Live API model (https://ai.google.dev/gemini-api/docs/live-api/capabilities).
+schema = 2
 type = "realtime"
 name = "Gemini 3.5 Live Translate Preview"
 description = "Low-latency audio-to-audio model for real-time speech translation across 70+ languages"
 family = "gemini-pro"
-release_date = "2026-06-09"
-last_updated = "2026-06-09"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-knowledge = "2025-01"
 open_weights = false
+knowledge = "2025-01"
+release_date = "2026-06-09"
+
+[modalities]
+input = ["audio/pcm"]
+output = ["audio/pcm", "text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 131_072
 output = 65_536
-
-[modalities]
-input = ["audio"]
-output = ["audio", "text"]

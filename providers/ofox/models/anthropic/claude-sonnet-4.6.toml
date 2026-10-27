@@ -9,18 +9,16 @@ schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 
 [limit]
 output = 128_000
 
 [api.messages]
 base_url = "https://api.ofox.ai/anthropic/v1"
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 3

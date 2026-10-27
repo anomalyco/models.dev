@@ -1,6 +1,10 @@
 # per audio minute
+# API: POST https://models.think.evroc.com/v1/audio/transcriptions (https://docs.evroc.com/products/think/openai-compatibility.html)
 schema = 2
 base_model = "openai/whisper-large-v3"
+
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.text.input]
 price = 0.0023

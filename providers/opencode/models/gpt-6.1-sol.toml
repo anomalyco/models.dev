@@ -3,25 +3,24 @@
 # Endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Pricing: matches OpenAI's gpt-6.1-sol rates ($0.10 cached input, 2x above 272K): https://developers.openai.com/api/docs/models/gpt-6.1-sol
 # Effort: reasoning.effort = low|medium|high|xhigh|max
-# Mid-conversation (live on Zen 2026-10-21; warm prefix, then the change before the next turn vs an unchanged control; cached prompt tokens control -> changed):
-#   system_updates = true: a developer message before the next user turn was kept in place (cached 9123 -> 9123)
-#   effort_updates = true: configuration_update item kept the cache (cached 9119 -> 9119)
-#   tools.updates = true: additional_tools item kept the cache (cached 9161 -> 9161)
 # Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/openai/models/gpt-6.1-sol.toml (Zen passes requests through).
+#   Surface: Responses carries the in-history messages (configuration_update for effort_updates; additional_tools for tools.updates, add only).
+# Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with text, lark or regex format), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
 effort_updates = true
 
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 
 [cost.text.input]
 price = 2

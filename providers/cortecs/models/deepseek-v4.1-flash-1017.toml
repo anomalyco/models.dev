@@ -7,19 +7,18 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 1_048_576
 
 [cost.text.input]
-price = 0.511
-cache = { read = 0.128 }
+price = 0.203
+cache = { read = 0.006 }
 
 [cost.text.output]
-price = 1.534
+price = 0.609

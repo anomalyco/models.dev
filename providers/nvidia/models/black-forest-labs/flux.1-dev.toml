@@ -14,6 +14,10 @@ knowledge = "2024-08"
 input = ["text"]
 output = ["image/jpeg"]
 
+[api.images]
+base_url = "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-dev"
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 price = 0
 

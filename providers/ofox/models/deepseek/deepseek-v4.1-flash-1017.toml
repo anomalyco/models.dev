@@ -10,11 +10,10 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.3

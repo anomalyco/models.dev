@@ -28,6 +28,9 @@ temperature = false
 context = 0
 output = 0
 
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
 [cost.text.input]
 unit = "character"
 price = 86.67954

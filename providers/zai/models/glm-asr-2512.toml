@@ -8,3 +8,6 @@
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-asr-2512"
+
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }

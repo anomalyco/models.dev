@@ -2,10 +2,9 @@ schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.15

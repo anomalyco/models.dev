@@ -23,7 +23,9 @@ runs:
       with:
         app-id: ${{ inputs.opencode-app-id }}
         private-key: ${{ inputs.opencode-app-secret }}
-        owner: ${{ github.repository_owner }}
+        permission-contents: write
+        permission-issues: write
+        permission-pull-requests: write
 
     - name: Configure git user
       run: |

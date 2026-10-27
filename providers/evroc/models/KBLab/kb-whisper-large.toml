@@ -23,6 +23,9 @@ reasoning = { supported = false }
 context = 448
 output = 448
 
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
 [cost.audio.input]
 unit = "minute"
 price = 0.0023

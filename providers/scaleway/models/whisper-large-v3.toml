@@ -3,6 +3,7 @@
 # v1 has no per-minute price, so v1 shows no cost.
 # Audio MIME types: Scaleway lists none; this ID serves Whisper Large v3 (models/openai/whisper-large-v3), so the lab's
 # formats apply: https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create
+# API: POST https://api.scaleway.ai/v1/audio/transcriptions (https://www.scaleway.com/en/docs/generative-apis/how-to/query-audio-models/)
 schema = 2
 type = "transcription"
 name = "Whisper Large v3"
@@ -25,6 +26,9 @@ temperature = false
 [limit]
 context = 0
 output = 8_192
+
+[api.transcriptions]
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.audio.input]
 unit = "minute"

@@ -5,6 +5,9 @@ base_model = "elevenlabs/eleven_multilingual_v2"
 name = "ElevenLabs Multilingual TTS v2"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 
+[api.speech]
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 unit = "character"
 price = 100

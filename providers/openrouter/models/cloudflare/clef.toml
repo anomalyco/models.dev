@@ -20,8 +20,12 @@ temperature = false
 context = 65_537
 output = 0
 
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
+compatibility = { media_input = "state" }
+
 [cost.text.input]
-price = 0.24
+price = 0.042
 
 [cost.text.output]
 price = 0

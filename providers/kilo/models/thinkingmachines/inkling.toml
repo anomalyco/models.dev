@@ -6,18 +6,17 @@ base_model = "thinkingmachines/inkling"
 description = "Inkling is an open-weight multimodal mixture-of-experts model from Thinking Machines Lab, with 41B active parameters out of 975B total. It is designed for general-purpose reasoning, coding, agentic and tool-use systems,..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 524_288
 output = 471_859
 
 [cost.text.input]
-price = 0.95
-cache = { read = 0.16 }
+price = 1
+cache = { read = 0.17 }
 
 [cost.text.output]
 price = 4.05

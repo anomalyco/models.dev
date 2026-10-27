@@ -1,0 +1,43 @@
+# Live endpoint and pricing: https://openrouter.ai/api/v1/models/openai/gpt-6.1-terra/endpoints
+# Mid-conversation: system_updates = true: OpenAI keeps mid-conversation system/developer messages in place (live 2026-10-23 on gpt-4.1-nano pinned to OpenAI: cache kept and followed on Chat Completions, Responses and Messages)
+# effort_updates = true: configuration_update keeps the cache on Responses (input item) and Chat Completions (content-less system message). Live 2026-10-23 on gpt-6-luna: full prefix read on the update turn on both; xhigh -> none takes effect on both, none -> xhigh only on Chat (OpenAI's own Responses API ignores it too) (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort) Top level: OpenRouter documents the in-history update on Chat Completions, Responses and Messages and converts between them, so it holds on every listed API.
+# tools.updates = true on [api.responses] only (/api/v1/responses, add only): an `additional_tools` input item keeps the cache (live 2026-10-23, pinned to OpenAI). OpenRouter's Responses docs don't mention it (https://openrouter.ai/docs/api/reference/responses/overview); lab mechanism: https://developers.openai.com/api/docs/guides/prompt-caching. Chat Completions has no mechanism.
+# Cache: automatic from 1,024 tokens; GPT-5.6+ explicit prompt_cache_breakpoint, 30m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { updates = true } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5
+
+[cost.web_search]
+price = 10

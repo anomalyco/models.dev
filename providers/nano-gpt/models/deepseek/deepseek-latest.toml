@@ -13,10 +13,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
@@ -24,8 +23,8 @@ input = 1_048_576
 output = 384_000
 
 [cost.text.input]
-price = 0.1452
-cache = { read = 0.00462 }
+price = 0.13992
+cache = { read = 0.004452 }
 
 [cost.text.output]
-price = 0.4356
+price = 0.41976

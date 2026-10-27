@@ -7,6 +7,7 @@
 #   is returned in reasoning_content, which the API also accepts back on assistant messages
 #   (https://docs.arcee.ai/capabilities/reasoning-traces.md).
 # Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+# max_tokens_field: Arcee's Chat Completions API reference lists max_tokens and not max_completion_tokens (https://docs.arcee.ai/api-reference/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "moonshotai/kimi-k3"
 status = "beta"
@@ -21,7 +22,7 @@ structured_output = true
 temperature = true
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 3

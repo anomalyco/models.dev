@@ -11,11 +11,10 @@ base_model = "deepseek/deepseek-v4.1-flash"
 status = "beta"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

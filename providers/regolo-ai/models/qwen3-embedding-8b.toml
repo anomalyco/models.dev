@@ -1,4 +1,5 @@
 # Priced per request on https://regolo.ai/pricing (EUR 0.001, accessed 2026-10-21), which v2 can't express; the per-token cost below is stale.
+# API: POST https://api.regolo.ai/v1/embeddings (https://docs.regolo.ai/models/families/embedding/)
 schema = 2
 base_model = "alibaba/qwen3-embedding-8b"
 name = "Qwen3-Embedding-8B"
@@ -6,6 +7,9 @@ description = "Embedding model for semantic search, retrieval, clustering, and r
 
 [limit]
 output = 8_192
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.1

@@ -5,11 +5,10 @@ schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_000_000
@@ -17,6 +16,10 @@ output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.3

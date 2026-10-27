@@ -6,6 +6,7 @@ base_model = "perplexity/pplx-embed-context-v1-0.6b"
 
 [api.contextualized-embeddings]
 base_url = "https://api.perplexity.ai/v1"
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.008

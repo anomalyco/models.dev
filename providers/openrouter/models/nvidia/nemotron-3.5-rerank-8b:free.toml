@@ -24,6 +24,7 @@ output = 0
 
 [api.rerank]
 base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/cohere", opencodeai = "none" }
 
 [cost.text.input]
 price = 0

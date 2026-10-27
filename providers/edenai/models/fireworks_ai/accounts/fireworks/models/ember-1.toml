@@ -3,10 +3,9 @@ base_model = "fireworks/ember-1"
 name = "Ember-1 (Fireworks AI)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 3

@@ -7,6 +7,9 @@ base_model = "baai/bge-reranker-v2-m3"
 [limit]
 context = 8_000
 
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 price = 0.01
 

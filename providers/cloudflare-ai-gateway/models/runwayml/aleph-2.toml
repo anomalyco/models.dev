@@ -6,6 +6,7 @@ base_model = "runwayml/aleph-2"
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
 
 [cost.video.output]
 unit = "second"

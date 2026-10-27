@@ -9,9 +9,8 @@ base_model = "anthropic/claude-haiku-4-5"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, budget = { min = 1_024 } }
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

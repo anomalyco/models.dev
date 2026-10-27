@@ -7,8 +7,7 @@
 #   pricing page no longer lists Sonar. A live POST /v1/sonar on 2026-10-21 still answered; usage.cost billed tokens at
 #   rates that differ from that table plus a request_cost of $0.0025 (the Agent API web_search fee), so the listed
 #   prices may be stale for reformulated requests.
-# Not representable in v2 (no per-request unit): request fee per 1,000 requests by search context size, $5 low /
-#   $8 medium / $12 high (archived pricing page).
+# Request fee (cost.web_search): per 1,000 requests by search context size, $5 low (the default) / $8 medium / $12 high (archived pricing page).
 schema = 2
 base_model = "perplexity/sonar"
 status = "deprecated"
@@ -18,3 +17,14 @@ price = 1
 
 [cost.text.output]
 price = 1
+
+[cost.web_search]
+price = 5
+
+[[cost.web_search.overrides]]
+when = { search_context_size = { equals = "medium" } }
+price = 8
+
+[[cost.web_search.overrides]]
+when = { search_context_size = { equals = "high" } }
+price = 12

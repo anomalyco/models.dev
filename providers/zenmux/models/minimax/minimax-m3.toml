@@ -6,14 +6,14 @@ base_model = "minimax/MiniMax-M3"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_000_000
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.3

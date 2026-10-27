@@ -13,16 +13,19 @@ input = ["image/png", "image/jpeg", "image/webp", "text"]
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = true
 temperature = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 65_536
 output = 58_982
+
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openrouter/images" }
 
 [cost.text.input]
 price = 1.5
@@ -32,3 +35,6 @@ price = 7.5
 
 [cost.image.output]
 price = 30
+
+[cost.web_search]
+price = 14

@@ -2,26 +2,28 @@
 # https://huggingface.co/lightonai/LightOnOCR-3-0.8B
 # https://huggingface.co/blog/lightonai/lightonocr-3
 # Paper: https://arxiv.org/abs/2601.14251
-
+schema = 2
 name = "LightOnOCR-3 0.8B"
 description = "LightOnOCR-3-0.8B is the lightest model of LightOn's LightOnOCR-3 family, with the same layout and visual understanding features as its larger siblings."
+open_weights = true
 release_date = "2026-10-08"
 last_updated = "2026-10-14"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-open_weights = true
 license = "apache-2.0"
-
-[limit]
-context = 262_144
-output = 16_384
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 16_384
 
 [[weights]]
 label = "Hugging Face"

@@ -6,7 +6,7 @@ base_model = "xai/grok-4.5"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 output = 1_000_000

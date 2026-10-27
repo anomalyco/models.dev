@@ -88,6 +88,8 @@ skip = [
 "openai/" = [
   "Route: provider-native passthrough /openai (Responses body forwarded unchanged): https://developers.cloudflare.com/ai-gateway/usage/providers/openai/",
   "v2 capabilities and cache follow OpenAI's own API (providers/openai). Live via the gateway 2026-10-19: mid-conversation developer messages and additional_tools keep the cached prefix (gpt-4.1-nano, gpt-5-nano, gpt-5.4-nano), configuration_update is accepted on gpt-6-luna and gpt-5.6-luna, json_schema output is enforced.",
+  "Per-API flags: additional_tools and configuration_update exist only on the Responses API (the /openai passthrough), so tools.updates and effort_updates sit on [api.responses] for models that also list the REST chat-completions route. Developer messages are documented on both OpenAI APIs, so system_updates stays top-level.",
+  "Tools: each API takes providers/openai's tool fields for the same protocol, so tools.search sits on [api.responses]. The REST chat-completions route forwards custom tools (text, lark and regex) and strict function tools and rejects tool_search, like OpenAI's own Chat Completions (openai/gpt-5.4-nano, live 2026-10-26).",
 ]
 "anthropic/" = [
   "Route: provider-native passthrough /anthropic (Messages body and anthropic-beta headers forwarded): https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/",
@@ -97,6 +99,7 @@ skip = [
 "alibaba/" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19 (qwen3.7-plus): a mid-conversation system message keeps the cached prefix (in place).",
+  "Per-API flags: for models that also list the REST /ai/v1/responses route, system_updates sits on [api.chat-completions] only; it was checked on Chat Completions and the Responses route has no documented or tested in-place system message.",
 ]
 "deepseek/" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
@@ -105,6 +108,7 @@ skip = [
 "fireworks/" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).",
+  "Per-API flags: for models that also list the REST /ai/v1/responses route, system_updates sits on [api.chat-completions] only; it was checked on Chat Completions and the Responses route has no documented or tested in-place system message.",
 ]
 "google/gemini-2" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI.",
@@ -148,11 +152,15 @@ skip = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (grok-4.3, in place); response_format json_schema is enforced (grok-4.3, grok-4.20-0309-non-reasoning).",
 ]
+"typesafe/" = [
+  "Route: REST POST /ai/run with { model, input }, input a System One body; the answer is a run record { result: { state: \"Completed\", result: { answers, usage } } }. https://developers.cloudflare.com/ai/models/typesafe/jev/",
+  "Live 2026-10-23: typesafe/jev (answers as jev-1.13.0) and typesafe/jev-1.14.0 answered on /ai/run; the path form /ai/run/typesafe/jev returns 400 \"No route for that URI\" (code 7000).",
+]
 
-# Cloudflare exposes TypeSafe's evaluation-only Jev alias over /ai/run. The shared
-# metadata marks its structured output support and lack of tool calling.
+# Cloudflare's typesafe/jev answers as jev-1.13.0 (the response examples on
+# https://developers.cloudflare.com/ai/models/typesafe/jev/), so it is Jev 1.13, not the moving alias.
 [models."typesafe/jev"]
-base_model = "typesafe/jev-latest"
+base_model = "typesafe/jev-1.13.0"
 
 # Muse Spark 1.x / Muse Wonder: the catalog schema's reasoning.effort enum (none..max) is the generic
 # Responses schema, not what the model accepts. Cloudflare's own validation error lists the values:
@@ -349,14 +357,17 @@ reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
 
 [models."openai/gpt-5.6-luna"]
 structured_output = true
+note = ["effort_updates: a Responses `configuration_update` item between turns changes effort and keeps the cache (live via the gateway 2026-10-23, BYOK, same as providers/openai; OpenAI's docs list only GPT-6)."]
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [models."openai/gpt-5.6-sol"]
 structured_output = true
+note = ["effort_updates: a Responses `configuration_update` item between turns changes effort and keeps the cache (live via the gateway 2026-10-23, BYOK, same as providers/openai; OpenAI's docs list only GPT-6)."]
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [models."openai/gpt-5.6-terra"]
 structured_output = true
+note = ["effort_updates: a Responses `configuration_update` item between turns changes effort and keeps the cache (live via the gateway 2026-10-23, BYOK, same as providers/openai; OpenAI's docs list only GPT-6)."]
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 # GPT-6 Astra has conflicting validation layers on Cloudflare's Responses route. The catalog
@@ -420,6 +431,9 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhig
 note = ["Toggle: enable_thinking = true|false (top-level field on POST /ai/v1/chat/completions; live 2026-10-19: false -> no reasoning).", "Budget: thinking_budget = <integer reasoning tokens> (top-level field; live 2026-10-19: 100 -> 100 reasoning tokens)."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
+[models."alibaba/qwen3-max"]
+note = ["system_updates: left out. Not tested live on this route (the REST route has no unified billing credit), and Alibaba's own API doesn't set it for Qwen3 Max (providers/alibaba)."]
+
 [models."alibaba/qwen3.5-397b-a17b"]
 note = ["Toggle: enable_thinking = true|false (top-level field on POST /ai/v1/chat/completions; live 2026-10-19: false -> no reasoning).", "Budget: thinking_budget = <integer reasoning tokens> (top-level field; live 2026-10-19: 100 -> 100 reasoning tokens)."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
@@ -472,6 +486,10 @@ note = [
   "Sources: https://platform.kimi.ai/docs/api/models-overview ; https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3/",
 ]
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+# Catalog id is lowercase with dots; the lab file is MiniMax-M3.1-Flash.
+[models."minimax/m3.1-flash"]
+base_model = "minimax/MiniMax-M3.1-Flash"
 
 # Ember-1 is Fireworks' Kimi K3 derivative, served on the Fireworks route. The catalog
 # schema advertises a generic none|low|medium|high|xhigh|max enum, but Fireworks' K3 tiers

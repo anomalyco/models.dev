@@ -1,6 +1,7 @@
 name = "IO.NET"
 env = ["IOINTELLIGENCE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Reasoning HTTP format (accessed 2026-06-25): POST /api/v1/chat/completions uses
 # `reasoning.effort` = none, low, medium, or high; none disables and omission uses
 # the model default. Legacy top-level `reasoning_effort` accepts low, medium, or

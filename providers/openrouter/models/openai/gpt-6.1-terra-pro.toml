@@ -1,0 +1,47 @@
+schema = 2
+name = "GPT-6.1 Terra Pro"
+description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
+family = "gpt"
+open_weights = false
+release_date = "2026-10-26"
+
+[modalities]
+input = ["application/pdf", "image", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5
+
+[cost.web_search]
+price = 10

@@ -8,6 +8,10 @@ base_model = "black-forest-labs/flux-2-klein-4b"
 name = "FLUX.2 Klein 4B"
 knowledge = "2025-06"
 
+[api.images]
+base_url = "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.2-klein-4b"
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 price = 0
 

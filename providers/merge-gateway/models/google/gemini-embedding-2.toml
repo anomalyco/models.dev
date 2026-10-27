@@ -1,3 +1,4 @@
+# Embeddings: POST /v1/ai-sdk/embeddings (merge-gateway-ai-sdk-provider embedding model)
 schema = 2
 base_model = "google/gemini-embedding-2"
 
@@ -10,6 +11,9 @@ structured_output = false
 
 [limit]
 output = 8_192
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.2

@@ -12,11 +12,19 @@ name = "OpenAI GPT-5.4 Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 system_updates = true
-effort_updates = false
+service_tier = ["flex"]
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 30
@@ -25,9 +33,28 @@ price = 30
 when = { context = { gt = 272_000 } }
 price = 60
 
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 15
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 30
+
 [cost.text.output]
 price = 180
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 270
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 90
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 135
+
+[cost.web_search]
+price = 10

@@ -9,11 +9,10 @@ schema = 2
 base_model = "zhipuai/glm-5-turbo"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1.2

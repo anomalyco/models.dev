@@ -5,8 +5,21 @@ schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
 [limit]
 output = 8_192
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.72

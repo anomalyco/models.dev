@@ -2,9 +2,8 @@ schema = 2
 base_model = "amazon/nova-lite"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.06

@@ -4,17 +4,16 @@ base_model = "deepseek/deepseek-v4.1-flash"
 description = "DeepSeek V4.1 Flash is a multimodal MoE model for coding, reasoning, and agentic workloads with long contexts."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 1_048_576
 
 [cost.text.input]
-price = 0.15
+price = 0.13
 cache = { read = 0.002 }
 
 [cost.text.output]

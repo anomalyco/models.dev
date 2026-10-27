@@ -10,14 +10,13 @@ input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "vi
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
-context = 1_048_576
-output = 943_718
+context = 1_048_575
+output = 943_717
 
 [cost.text.input]
 price = 0.15

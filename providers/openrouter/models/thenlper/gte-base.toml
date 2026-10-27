@@ -6,7 +6,7 @@ base_model = "thenlper/gte-base"
 
 [api.embeddings]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.005

@@ -7,12 +7,20 @@ base_model = "mistral/mistral-small-3.2-24b-instruct"
 name = "Mistral Small 3.2 24B Instruct"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-system_updates = false
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.09375
 
 [cost.text.output]
 price = 0.25
+
+[cost.web_search]
+price = 10

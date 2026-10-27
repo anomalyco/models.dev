@@ -8,7 +8,7 @@ base_model = "microsoft/mai-voice-2.1-flash"
 
 [api.speech]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
 
 [cost.text.input]
 unit = "character"

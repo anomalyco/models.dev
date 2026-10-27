@@ -8,8 +8,12 @@ name = "GPT Image 1.5"
 input = ["text"]
 output = ["image/png", "image/jpeg", "image/webp"]
 
+[capabilities]
+cache = { implicit = true }
+
 [api.images]
-base_url = "https://ai-gateway.vercel.sh/v4/ai"
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
 
 [cost.text.input]
 price = 5

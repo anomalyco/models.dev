@@ -4,10 +4,9 @@ schema = 2
 base_model = "mistral/mistral-large-2512"
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 256_000

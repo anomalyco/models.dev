@@ -13,18 +13,17 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
 output = 393_216
 
 [cost.text.input]
-price = 0.1307
+price = 0.1259
 cache = { read = 0.13 }
 
 [cost.text.output]

@@ -7,7 +7,7 @@ name = "gpt-5-nano"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 
 [cost.text.input]

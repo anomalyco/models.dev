@@ -122,9 +122,9 @@ export const crossmodel = {
     const built = buildCrossModel(model, existing);
     if (built === undefined) return undefined;
     // The catalog says whether a model caches prompts but not how (implicit or
-    // explicit, TTLs), so only `supported` is synced.
+    // explicit, TTLs), so a file's cache kinds are kept and otherwise assumed implicit.
     const v2Set = model.capabilities?.context?.caching === true
-      ? { "capabilities.cache.supported": true }
+      ? { "capabilities.cache": (current: unknown) => (current !== null && typeof current === "object" ? current : { implicit: true }) }
       : undefined;
     return { id: model.id, model: built, v2Set };
   },

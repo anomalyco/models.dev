@@ -8,7 +8,7 @@ base_model = "google/gemini-3.5-transcribe"
 
 [api.transcriptions]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.text.input]
 price = 2

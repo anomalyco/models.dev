@@ -13,7 +13,7 @@ base_model = "alibaba/qwen3.5-plus"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = {} }
-cache = { supported = true }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

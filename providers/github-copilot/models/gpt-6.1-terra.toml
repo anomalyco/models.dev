@@ -1,0 +1,31 @@
+# Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# Availability: GA in Copilot on 2026-10-26, "billed at provider list pricing under usage-based billing":
+#   https://github.blog/changelog/2026-10-26-gpt-6-1-terra-in-github-copilot
+#   The docs pricing table doesn't list it yet (accessed 2026-10-26), so token prices are OpenAI's list price:
+#   https://developers.openai.com/api/docs/models/gpt-6.1-terra
+# Effort: GPT-6.1 Terra's native none|low|medium|high|xhigh|max (as on the OpenAI provider entry).
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5

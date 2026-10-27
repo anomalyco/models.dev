@@ -1,5 +1,6 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Reka)
 # effort_updates = false: no per-turn effort control
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 base_model = "rekaai/reka-flash-3"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
@@ -8,8 +9,15 @@ description = "Efficient model for low-latency assistance, extraction, and routi
 tools = { supported = false }
 reasoning = { supported = true }
 structured_output = true
-system_updates = true
-effort_updates = false
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.1

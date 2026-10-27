@@ -13,9 +13,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = false }
 structured_output = false
-effort_updates = false
-system_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 input = 65_536

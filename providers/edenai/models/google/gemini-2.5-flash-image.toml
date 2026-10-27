@@ -2,6 +2,7 @@
 # input/output set than the lab; listed media kinds use the lab's MIME types. Audio and video, which the lab
 # doesn't list, use the Gemini API formats as Google writes them, as in the other Gemini lab files
 # (https://ai.google.dev/gemini-api/docs/audio, https://ai.google.dev/gemini-api/docs/video).
+# Images: POST /v3/images/generations only (https://www.edenai.co/docs/v3/llms/image-generation)
 schema = 2
 base_model = "google/gemini-2.5-flash-image"
 
@@ -10,8 +11,10 @@ input = ["audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audi
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-reasoning = { supported = true }
 structured_output = true
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.text.input]
 price = 0.3
@@ -19,7 +22,6 @@ cache = { read = 0.03, write = 0.083333 }
 
 [cost.text.output]
 price = 2.5
-reasoning = 2.5
 
 [cost.audio.input]
 price = 1

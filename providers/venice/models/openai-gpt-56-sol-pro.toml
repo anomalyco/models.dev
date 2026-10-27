@@ -16,16 +16,20 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 
 [limit]
 context = 1_000_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 4
@@ -42,3 +46,6 @@ price = 20
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 30
+
+[cost.web_search]
+price = 10

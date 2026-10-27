@@ -8,11 +8,10 @@ input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 output = 1_000_000

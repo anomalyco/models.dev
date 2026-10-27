@@ -12,6 +12,7 @@ output = ["text"]
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
 
 [cost.audio.input]
 unit = "minute"

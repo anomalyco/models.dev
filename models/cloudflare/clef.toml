@@ -2,31 +2,33 @@
 # https://developers.cloudflare.com/workers-ai/models/clef/ and
 # https://huggingface.co/Cloudflare/clef (both accessed 2026-10-20).
 # Clef returns one probability per allowed option and generates no free-form text,
-# so output is 0 and structured_output is true. The hosted context window is 64K;
+# so output is 0 (provider entries set structured_output = true). The hosted context window is 64K;
 # the weights are published under Apache-2.0. Input follows the same-model Workers AI
-# and OpenRouter entries: text and images. Temperature follows Cloudflare's
+# and OpenRouter entries: text and images (PNG, JPEG, WebP per the Workers AI model page). Temperature follows Cloudflare's
 # first-party Workers AI entry (true); Melious's System One surface takes only model,
 # state, questions and images, so that provider entry overrides temperature = false.
+schema = 2
 type = "decision"
 name = "Clef"
 description = "Cloudflare's open-weight decision model that returns probabilities for typed choice, score and yes/no questions about text or images"
-release_date = "2026-10-01"
-last_updated = "2026-10-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = true
+release_date = "2026-10-01"
 license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 65_536
 output = 0
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[links]]
 label = "Announcement"

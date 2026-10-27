@@ -9,6 +9,9 @@ description = "Reranking model for improving retrieval quality in search and rec
 context = 40_960
 output = 1_024
 
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 price = 0.01
 

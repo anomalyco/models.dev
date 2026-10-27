@@ -11,11 +11,11 @@ base_model = "anthropic/claude-sonnet-5-5"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 512 } }
+cache = { explicit = { ttl = ["5m", "1h"], min_tokens = 512 } }
 
 [api.messages]
 base_url = "https://api.ofox.ai/anthropic/v1"
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 2

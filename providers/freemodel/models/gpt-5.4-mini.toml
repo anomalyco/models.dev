@@ -8,7 +8,7 @@ structured_output = true
 
 [api.chat-completions]
 base_url = "https://api.freemodel.dev/v1"
-sdk = { aisdk = "@ai-sdk/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 0.75

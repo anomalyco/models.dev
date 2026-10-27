@@ -1,0 +1,25 @@
+schema = 2
+name = "Bielik 11B v3.0"
+description = "SpeakLeash’s Polish-focused multilingual model for conversation, writing and text analysis across European languages. Supports tool calling with a 32K context window."
+open_weights = true
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 32_768
+input = 32_768
+output = 32_768
+
+[cost.text.input]
+price = 0.48
+
+[cost.text.output]
+price = 0.48

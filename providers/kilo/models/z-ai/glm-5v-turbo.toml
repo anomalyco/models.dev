@@ -10,10 +10,9 @@ input = ["image/jpeg", "image/png", "text", "video/mp4", "video/quicktime", "vid
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 202_752

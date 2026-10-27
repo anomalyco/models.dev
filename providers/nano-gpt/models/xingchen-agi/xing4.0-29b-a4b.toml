@@ -1,0 +1,27 @@
+schema = 2
+name = "Xing 4.0 29B A4B"
+description = "China Telecom’s Xing 4.0 is an Apache 2.0 open-weight mixture-of-experts model with 29B total and 4B active parameters, designed for coding, reasoning and tool use. Supports text input, structured output and a shared 262,144-token input/output context. This route does not use a TEE."
+family = "agi"
+open_weights = true
+release_date = "2026-10-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.22
+cache = { read = 0.011 }
+
+[cost.text.output]
+price = 0.9

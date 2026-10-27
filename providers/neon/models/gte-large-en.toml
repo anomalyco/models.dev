@@ -7,5 +7,8 @@ v2_only = true
 base_model = "alibaba/gte-large-en-v1.5"
 name = "GTE Large (En)"
 
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 0.13

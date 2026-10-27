@@ -7,11 +7,11 @@ knowledge = "2025-01-01"
 
 [capabilities]
 reasoning = { supported = true }
-cache = { supported = true }
+cache = { implicit = true }
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"
-sdk = { aisdk = "@ai-sdk/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.6

@@ -5,10 +5,9 @@ base_model = "alibaba/qwen3-8b"
 name = "Qwen 3 8B"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 41_000

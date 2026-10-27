@@ -1,4 +1,5 @@
 # evroc catalogue: https://docs.evroc.com/products/think/supported-models.html (2026-10-21) lists this under embedding.
+# API: POST https://models.think.evroc.com/v1/embeddings (https://docs.evroc.com/products/think/openai-compatibility.html)
 schema = 2
 type = "embedding"
 name = "E5 Multi-Lingual Large Embeddings 0.6B"
@@ -18,6 +19,9 @@ reasoning = { supported = false }
 [limit]
 context = 512
 output = 512
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.114

@@ -7,6 +7,7 @@ import type { CostV2, CostWhenV2 } from "../../schema-v2.js";
 import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { schemaToolChoice, toolsWith } from "./cloudflare-workers-ai.js";
 
 const API_BASE = "https://api.cloudflare.com/client/v4/accounts";
 const PROVIDER_DIR = path.join(
@@ -27,10 +28,72 @@ const MAX_CATALOG_PAGES = 1_000;
 const MAX_BACKOFF_DELAY_MS = 8_000;
 const MAX_RETRY_DELAY_MS = 60_000;
 
-const NATIVE_NPM: Record<string, string> = {
-  anthropic: "@ai-sdk/anthropic",
-  openai: "@ai-sdk/openai",
+// OpenAI and Anthropic models use their own SDK and API on the gateway's native
+// routes. The gateway's OpenCode entry point serves those routes too.
+// Their base URLs are the gateway's provider-native routes, not the SDKs' defaults:
+// https://developers.cloudflare.com/ai-gateway/usage/providers/openai/
+// https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/
+const NATIVE_BASE = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}";
+const NATIVE_API: Record<string, { npm: string; api: string; protocol: string }> = {
+  anthropic: { npm: "@ai-sdk/anthropic", api: `${NATIVE_BASE}/anthropic/v1`, protocol: "messages" },
+  openai: { npm: "@ai-sdk/openai", api: `${NATIVE_BASE}/openai`, protocol: "responses" },
 };
+const OPENCODE_PACKAGE = "@opencode/ai/providers/cloudflare-ai-gateway";
+
+// The REST API also serves POST /ai/v1/chat/completions, /ai/v1/responses and
+// /ai/v1/messages; the catalog's request_formats lists the ones each model takes.
+// https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+// The gateway's OpenCode entry point has no per-API entry points yet, so every
+// table names the main one.
+const REST_BASE_URL = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1";
+const REST_APIS: Record<string, { protocol: string; aisdk: string }> = {
+  "chat-completions": { protocol: "chat-completions", aisdk: "@ai-sdk/openai-compatible" },
+  responses: { protocol: "responses", aisdk: "@ai-sdk/openai" },
+  "anthropic-messages": { protocol: "messages", aisdk: "@ai-sdk/anthropic" },
+};
+
+// A text model's APIs: its first table (what v1 reads: the native route for OpenAI
+// and Anthropic, else the provider's default), then a REST table for every other
+// format the catalog lists.
+// `apiTools` (the lab's per-API tool fields, see `splitLabTools`) replaces each
+// table's tool fields when given.
+export function gatewayApis(
+  current: unknown,
+  nativeProtocol: string | undefined,
+  requestFormats: unknown,
+  apiTools?: Record<string, Record<string, unknown>>,
+): Record<string, unknown> | undefined {
+  const tables = isRecord(current) ? current : {};
+  const [firstKey, firstValue] = Object.entries(tables)[0] ?? [nativeProtocol ?? "chat-completions", {}];
+  const first = isRecord(firstValue) ? firstValue : {};
+  const { opencodeai: _opencodeai, ...sdk } = isRecord(first.sdk) ? first.sdk : {};
+  const api: Record<string, unknown> = {
+    [firstKey]: firstKey === nativeProtocol ? { ...first, sdk: { ...sdk, opencodeai: OPENCODE_PACKAGE } } : first,
+  };
+  for (const format of Array.isArray(requestFormats) ? requestFormats : []) {
+    const rest = typeof format === "string" ? REST_APIS[format] : undefined;
+    if (rest === undefined || rest.protocol in api) continue;
+    api[rest.protocol] = { base_url: REST_BASE_URL, sdk: { aisdk: rest.aisdk, opencodeai: OPENCODE_PACKAGE } };
+  }
+  if (Object.keys(tables).length === 0 && nativeProtocol === undefined && Object.keys(api).length === 1) return undefined;
+  if (apiTools === undefined) return api;
+  return Object.fromEntries(
+    Object.entries(api).map(([protocol, table]) => [protocol, withTableTools(table as Record<string, unknown>, apiTools[protocol] ?? {})]),
+  );
+}
+
+function withTableTools(table: Record<string, unknown>, fields: Record<string, unknown>) {
+  const { tools, ...capabilities } = isRecord(table.capabilities) ? table.capabilities : {};
+  const kept = Object.entries(isRecord(tools) ? tools : {}).filter(([key]) => !TOOL_FIELDS.includes(key));
+  const nextTools = { ...fields, ...Object.fromEntries(kept) };
+  const next = { ...capabilities, ...(Object.keys(nextTools).length > 0 ? { tools: nextTools } : {}) };
+  const { capabilities: _capabilities, ...rest } = table;
+  return Object.keys(next).length > 0 ? { ...rest, capabilities: next } : rest;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
 
 const Price = z.number().nonnegative();
 const ProviderDetail = z.object({
@@ -43,6 +106,7 @@ const CatalogEntry = z.object({
   task: z.string(),
   context_length: z.number().int().positive().nullish(),
   provider_details: z.array(ProviderDetail).nullish(),
+  request_formats: z.array(z.string()).nullish(),
 }).passthrough();
 // Some proxied rows (e.g. reflection-ai/beam-1.0-501b-a23b at launch) ship with
 // provider_details = null. Those need a curated cost; see catalogCost.
@@ -186,6 +250,16 @@ export const cloudflareAiGateway = {
   modelsDir: "providers/cloudflare-ai-gateway/models",
   preserveDescriptions: false,
   authoritativeHeaders: true,
+  sourceID(source) {
+    return source.catalog.model_id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} new catalog models were not created because they have no lab file and no curated base_model; map or skip them in curation.toml.`,
+      `Skipped catalog IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+    ];
+  },
   async fetchModels() {
     const catalog = CatalogEntry.array().parse(await loadCatalog());
     const catalogIDs = new Set(catalog.map((model) => model.model_id));
@@ -235,7 +309,12 @@ export const cloudflareAiGateway = {
   translateModel(source, context) {
     const id = source.catalog.model_id;
     const curated = curation.models[id] ?? {};
-    if (source.catalog.task !== TEXT_GENERATION) {
+    const isText = source.catalog.task === TEXT_GENERATION;
+    // A new model with no lab file is reported in the PR instead of failing
+    // the whole sync; an existing file still fails loudly if its lab is gone.
+    const base = curated.base_model ?? (isText ? resolveBaseModel(id) : resolveMediaBaseModel(id));
+    if (base === undefined && context.authored(id) === undefined) return undefined;
+    if (!isText) {
       const catalog = source.catalog as MediaCatalogModel;
       const type = MEDIA_TASKS[catalog.task]!;
       const { doc, unpriced } = buildCloudflareAiGatewayMediaModel(catalog, source.schemaInput, curated);
@@ -250,6 +329,12 @@ export const cloudflareAiGateway = {
         ]),
       };
     }
+    const native = NATIVE_API[id.split("/")[0]!];
+    // Decision models are listed under Text Generation but only answer on POST /ai/run.
+    const decision = base !== undefined && labType(base) === "decision";
+    const tools = !decision && base !== undefined && baseToolCall(base);
+    const lab = tools && native ? firstPartyTools(base) : undefined;
+    const labTools = lab && native && splitLabTools(lab, Object.keys(gatewayApis(undefined, native.protocol, source.catalog.request_formats) ?? {}));
     return {
       id,
       model: buildCloudflareAiGatewayModel(
@@ -259,6 +344,14 @@ export const cloudflareAiGateway = {
         context.authored(id),
       ),
       header: noteHeader([...prefixNotes(id), ...curated.note ?? []]),
+      v2Set: {
+        api: decision
+          ? () => DECISION_RUN_API
+          : (current: unknown) => gatewayApis(current, native?.protocol, source.catalog.request_formats, labTools?.apis),
+        ...(tools
+          ? { "capabilities.tools": (current: unknown) => gatewayTools(current, labTools?.top, source.schemaInput) }
+          : {}),
+      },
     };
   },
 } satisfies SyncProvider<SourceModel>;
@@ -305,8 +398,8 @@ export function buildCloudflareAiGatewayModel(
   };
   if (Object.keys(limit).length > 0) model.limit = limit;
 
-  const npm = NATIVE_NPM[id.split("/")[0]!];
-  if (npm !== undefined) model.provider = { npm };
+  const native = NATIVE_API[id.split("/")[0]!];
+  if (native !== undefined) model.provider = { npm: native.npm, api: native.api };
   return model;
 }
 
@@ -317,8 +410,22 @@ export function buildCloudflareAiGatewayModel(
 // Third-party media models run on the REST API's universal endpoint: POST
 // `{base_url}/run` with `{ model, input }`, where `input` follows the model's catalog
 // schema. Generated media comes back as a URL (or a data URI), transcripts as text.
+// Decision models (TypeSafe Jev) take a System One body as `input` and answer in a run
+// record: `{ result: { state: "Completed", result: { answers, usage } } }`.
+// @opencode/ai speaks /ai/run for decision models only, through its
+// cloudflare-ai-gateway/decisions entry, which posts to the full Run URL (Workers AI
+// tables put it all in base_url). v1 publishes base_url, so `/run` goes in path.
+// Media models have no OpenCode package.
+const RUN_BASE_URL = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai";
 const RUN_API = {
-  "workers-ai-run": { base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" },
+  "workers-ai-run": { base_url: RUN_BASE_URL, sdk: { opencodeai: "none" } },
+};
+const DECISION_RUN_API = {
+  "workers-ai-run": {
+    base_url: RUN_BASE_URL,
+    path: "/run",
+    sdk: { opencodeai: "@opencode/ai/providers/cloudflare-ai-gateway/decisions" },
+  },
 };
 
 const MEDIA_NOTES: Record<MediaType, string[]> = {
@@ -1145,10 +1252,71 @@ function labFileExists(id: string) {
   return existsSync(path.join(MODELS_ROOT, `${id}.toml`));
 }
 
+function labType(id: string) {
+  const file = path.join(MODELS_ROOT, `${id}.toml`);
+  return existsSync(file) ? (Bun.TOML.parse(readFileSync(file, "utf8")) as LabFile).type ?? "chat" : undefined;
+}
+
 function baseReasoning(id: string) {
   const file = path.join(MODELS_ROOT, `${id}.toml`);
   return existsSync(file) && z.object({ reasoning: z.boolean().optional() }).passthrough()
     .parse(readLabModel(file, id)).reasoning === true;
+}
+
+const TOOL_FIELDS = ["strict", "choice", "search", "freeform"];
+
+// Native routes forward the body unchanged, so once the lab's own API
+// (providers/<lab>) states its tool fields they are the model's: `lab` is the
+// top-level part from `splitLabTools`. The catalog schema's tool_choice values
+// fill in `choice` when the lab doesn't state it.
+export function gatewayTools(current: unknown, lab: Record<string, unknown> | undefined, schemaInput: unknown) {
+  const choice = schemaToolChoice(schemaInput);
+  if (lab === undefined) return toolsWith(current, { choice });
+  if (isRecord(current) && current.supported === false) return current;
+  const rest = Object.fromEntries(Object.entries(isRecord(current) ? current : {}).filter(([key]) => !TOOL_FIELDS.includes(key)));
+  return { supported: true, ...(choice === undefined ? {} : { choice }), ...lab, ...rest };
+}
+
+// The tool fields of the lab's own provider file, top-level and per API, when it states any.
+function firstPartyTools(base: string): LabTools | undefined {
+  const [lab, ...rest] = base.split("/");
+  const file = path.join(path.dirname(PROVIDER_DIR), lab!, "models", `${rest.join("/")}.toml`);
+  if (!existsSync(file)) return undefined;
+  const doc = Bun.TOML.parse(readFileSync(file, "utf8")) as {
+    capabilities?: { tools?: unknown };
+    api?: Record<string, { capabilities?: { tools?: unknown } }>;
+  };
+  const top = toolFields(doc.capabilities?.tools);
+  const apis = Object.fromEntries(Object.entries(doc.api ?? {}).map(([protocol, table]) => [protocol, toolFields(table.capabilities?.tools)]));
+  return [top, ...Object.values(apis)].some((fields) => Object.keys(fields).length > 0) ? { top, apis } : undefined;
+}
+
+type LabTools = { top: Record<string, unknown>; apis: Record<string, Record<string, unknown>> };
+
+function toolFields(tools: unknown) {
+  return Object.fromEntries(Object.entries(isRecord(tools) ? tools : {}).filter(([key]) => TOOL_FIELDS.includes(key)));
+}
+
+// Each gateway API takes the lab's values for the same protocol (native routes
+// forward the body unchanged; the REST Chat Completions route reaches OpenAI's own
+// Chat Completions, which takes custom and strict tools and rejects tool_search,
+// live 2026-10-26). A value every API holds goes top-level; one that holds on
+// only some APIs goes on each of those APIs. A value an API leaves out means no.
+export function splitLabTools(lab: LabTools, protocols: string[]) {
+  const resolved = protocols.map((protocol) => [protocol, { ...lab.top, ...lab.apis[protocol] }] as const);
+  const shared = (key: string) => resolved.every(([, tools]) => JSON.stringify(tools[key]) === JSON.stringify(resolved[0]![1][key]));
+  const pick = (fields: Record<string, unknown>, keep: (key: string) => boolean) =>
+    Object.fromEntries(TOOL_FIELDS.filter((key) => keep(key) && fields[key] !== undefined).map((key) => [key, fields[key]]));
+  return {
+    top: pick(resolved[0]?.[1] ?? {}, shared),
+    apis: Object.fromEntries(resolved.map(([protocol, tools]) => [protocol, pick(tools, (key) => !shared(key))])),
+  };
+}
+
+function baseToolCall(id: string) {
+  const file = path.join(MODELS_ROOT, `${id}.toml`);
+  return existsSync(file) && z.object({ tool_call: z.boolean().optional() }).passthrough()
+    .parse(readLabModel(file, id)).tool_call === true;
 }
 
 function prefixNotes(id: string) {

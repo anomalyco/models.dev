@@ -1,5 +1,6 @@
 # Type: image generation model (https://help.aliyun.com/zh/model-studio/token-plan-team-overview).
 # MIME types: input images JPEG, JPG, PNG, BMP, WEBP; output PNG, per https://www.alibabacloud.com/help/en/model-studio/wan-image-generation-and-editing-api-reference.
+# API: POST https://token-plan.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation (https://help.aliyun.com/zh/model-studio/token-plan-multimodal-gen)
 schema = 2
 type = "image"
 name = "Wan2.7 Image"
@@ -19,6 +20,10 @@ temperature = true
 [limit]
 context = 8_192
 output = 0
+
+[api.images]
+base_url = "https://token-plan.cn-beijing.maas.aliyuncs.com/api/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/alibaba/images" }
 
 [cost.text.input]
 price = 0

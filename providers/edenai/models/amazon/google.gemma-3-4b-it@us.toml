@@ -3,9 +3,8 @@ base_model = "google/gemma-3-4b-it"
 name = "Gemma 3 4B IT (Amazon Bedrock, US)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 128_000

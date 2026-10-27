@@ -1,0 +1,20 @@
+schema = 2
+base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
+name = "Gemma SEA-LION v4 27B"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
+
+[limit]
+context = 131_072
+input = 131_072
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0.48

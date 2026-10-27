@@ -3,6 +3,9 @@
 schema = 2
 base_model = "alibaba/qwen3-embedding-8b"
 
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 0.07
 

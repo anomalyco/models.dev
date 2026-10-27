@@ -1,3 +1,4 @@
+# API: POST https://models.think.evroc.com/v1/embeddings (https://docs.evroc.com/products/think/openai-compatibility.html)
 schema = 2
 base_model = "alibaba/qwen3-embedding-8b"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
@@ -5,6 +6,9 @@ description = "Embedding model for semantic search, retrieval, clustering, and r
 [limit]
 context = 40_960
 output = 4_096
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.115

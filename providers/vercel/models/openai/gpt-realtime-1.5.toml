@@ -9,9 +9,11 @@ output = ["text", "audio/pcm", "audio/pcmu", "audio/pcma"]
 
 [capabilities]
 temperature = true
+cache = { implicit = true }
 
 [api.realtime]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 4

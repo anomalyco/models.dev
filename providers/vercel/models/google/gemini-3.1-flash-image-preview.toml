@@ -8,6 +8,7 @@ output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high"] }
+cache = { implicit = true }
 
 [limit]
 context = 131_072

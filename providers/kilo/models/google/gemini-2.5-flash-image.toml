@@ -7,7 +7,6 @@ input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "t
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-reasoning = { supported = false }
 structured_output = true
 
 [limit]
@@ -19,3 +18,7 @@ cache = { read = 0.03, write = 0.083333 }
 
 [cost.text.output]
 price = 2.5
+reasoning = 2.5
+
+[cost.web_search]
+price = 14

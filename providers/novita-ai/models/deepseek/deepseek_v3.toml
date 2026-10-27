@@ -5,9 +5,8 @@ schema = 2
 base_model = "deepseek/deepseek-v3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 64_000

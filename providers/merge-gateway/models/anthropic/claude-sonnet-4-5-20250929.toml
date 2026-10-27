@@ -9,9 +9,8 @@ name = "Claude Sonnet 4.5 (20250929)"
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 63_999 } }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"] } }
+tools = { supported = true }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 3

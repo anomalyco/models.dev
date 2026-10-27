@@ -1,9 +1,13 @@
 # Per-token price is 0 on Regolo (input_cost_per_token = 0, output_cost_per_token = 0 per API 2026-08-05 and 2026-10-21)
 # Faster-Whisper (CTranslate2) build of Whisper Large v3, not the OpenAI reference model
 # Now priced per second of audio on https://regolo.ai/pricing (EUR 0.00015, accessed 2026-10-21); not changed here because v1 drops audio-only costs.
+# API: POST https://api.regolo.ai/v1/audio/transcriptions (https://docs.regolo.ai/models/families/stt/)
 schema = 2
 base_model = "openai/whisper-large-v3"
 name = "Faster Whisper Large v3"
+
+[api.transcriptions]
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.text.input]
 price = 0

@@ -1,10 +1,14 @@
 # Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
 # Billed in EUR: €0.10 input / €0 output per 1M tokens; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# API: POST https://api.scaleway.ai/v1/embeddings (https://www.scaleway.com/en/docs/generative-apis/how-to/query-embedding-models/)
 schema = 2
 base_model = "baai/bge-multilingual-gemma2"
 
 [limit]
 context = 8_191
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.11215

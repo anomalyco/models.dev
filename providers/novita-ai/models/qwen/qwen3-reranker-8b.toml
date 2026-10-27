@@ -5,6 +5,9 @@
 schema = 2
 base_model = "alibaba/qwen3-reranker-8b"
 
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.text.input]
 price = 0.05
 

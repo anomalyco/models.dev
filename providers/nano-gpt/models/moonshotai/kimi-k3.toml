@@ -6,16 +6,15 @@ base_model = "moonshotai/kimi-k3"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 1_048_576
 output = 943_718
 
 [cost.text.input]
-price = 1.2
-cache = { read = 0.2 }
+price = 1.65
+cache = { read = 0.165 }
 
 [cost.text.output]
-price = 5.5
+price = 8.25

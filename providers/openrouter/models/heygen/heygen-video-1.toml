@@ -10,7 +10,7 @@ base_model = "heygen/heygen-video-1"
 
 [api.videos]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@openrouter/ai-sdk-provider" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
 
 [cost.image.input]
 unit = "image"

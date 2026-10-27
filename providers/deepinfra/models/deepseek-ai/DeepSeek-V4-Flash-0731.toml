@@ -11,14 +11,13 @@ schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

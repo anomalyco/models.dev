@@ -1,0 +1,35 @@
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5
+
+[cost.web_search]
+price = 10

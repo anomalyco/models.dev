@@ -6,8 +6,11 @@ base_model = "google/gemini-3-pro-image-preview"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
+
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openrouter/images" }
 
 [cost.text.input]
 price = 2
@@ -22,3 +25,10 @@ price = 2
 
 [cost.image.output]
 price = 120
+
+[cost.audio.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.web_search]
+price = 14

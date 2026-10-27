@@ -23,6 +23,9 @@ temperature = false
 context = 32_000
 output = 4_096
 
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 0.09
 

@@ -7,7 +7,7 @@ v2_only = true
 base_model = "k2-fsa/omnivoice"
 
 [api.speech]
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
 
 [cost.text.input]
 unit = "character"

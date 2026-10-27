@@ -3,16 +3,15 @@ base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Greenpt)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 128_000
 
 [cost.text.input]
-price = 0.22468
+price = 0.22376
 
 [cost.text.output]
-price = 0.78638
+price = 0.78316

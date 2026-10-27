@@ -9,10 +9,9 @@ schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_050_000

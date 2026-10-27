@@ -10,21 +10,20 @@
 #   function; function.strict). All five tool_choice forms worked live.
 # - Structured output: json_schema response_format returned schema-valid JSON live (model page lists it).
 # - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
-#   keeps the cached prefix and is obeyed. Adding or removing tools between requests keeps the cached
-#   prefix. Switching reasoning_effort between turns drops it (cached_tokens 0 after each switch).
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests
+#   drops the cache after the system prompt (live 2026-10-22). Switching reasoning_effort between turns drops it (cached_tokens 0 after each switch).
 schema = 2
 base_model = "zhipuai/glm-5.2"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 stream_usage = true
 prompt_cache_key = true
-cache = { supported = true, implicit = { min_tokens = 64 }, explicit = false }
+cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 1_048_576

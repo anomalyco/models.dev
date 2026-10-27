@@ -11,8 +11,11 @@ output = ["text", "image/png", "image/jpeg"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
+
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openrouter/images" }
 
 [cost.text.input]
 price = 0.5
@@ -22,3 +25,6 @@ price = 3
 
 [cost.image.output]
 price = 60
+
+[cost.web_search]
+price = 14

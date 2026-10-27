@@ -3,6 +3,7 @@
 # GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # Tempr serves this model on /v1/embeddings, which takes OpenAI's embeddings shape, and
 # Gemini gets text input only there: image, audio, video and PDF input isn't reachable.
+# API: POST https://api.temprhq.io/v1/embeddings (https://temprhq.io/docs/gateway-reference.html)
 schema = 2
 base_model = "google/gemini-embedding-2"
 
@@ -12,6 +13,9 @@ output = ["text"]
 
 [limit]
 output = 1
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.2

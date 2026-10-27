@@ -5,10 +5,9 @@ base_model = "openai/gpt-4o-mini"
 name = "GPT-4o mini (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 output = 16_000

@@ -11,6 +11,9 @@ description = "Speech transcription model for accurate audio-to-text and caption
 [limit]
 output = 448
 
+[api.transcriptions]
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
 [cost.text.input]
 price = 0.01
 

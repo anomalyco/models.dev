@@ -1,0 +1,56 @@
+# Availability: gpt-6.1-terra (2026-10-26) is listed under GPT-6.1 on https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-61 and in GET /openai/v1/models (generally-available, live 2026-10-26).
+# Region matrix: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability
+# Provisional Global Standard rates: Azure has no GPT-6.1 Terra meters yet (Retail Prices API and https://azure.microsoft.com/en-us/pricing/details/azure-openai/, 2026-10-26).
+# Azure's GPT-6 and GPT-6.1 Sol Global Standard meters match OpenAI's direct rates, and Data Zone meters are 1.1x, so this uses OpenAI's list price:
+# https://developers.openai.com/api/docs/models/gpt-6.1-terra and https://developers.openai.com/api/docs/pricing
+# Live (aiden-azury-group, GlobalStandard deployment, 2026-10-26): Responses effort accepts none|low|medium|high|xhigh|max ("minimal" is rejected); Chat Completions accepts none..xhigh.
+# Chat Completions takes function tools only with reasoning_effort "none" (400 otherwise), as OpenAI documents; strict function tools and lark custom tools were accepted there with effort none, so tools.strict stays top-level.
+# service_tier: left out. service_tier=flex returned 400 "Flex tier is not supported for this deployment" and service_tier=priority was answered at the default tier (live 2026-10-26), and Azure publishes no Terra flex or priority meters.
+# tools.choice: tool_choice none/auto/required/named (https://learn.microsoft.com/en-us/azure/foundry/openai/latest); tools.strict: Structured outputs in https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs#supported-models
+# tools.freeform: GPT-5 series custom tools take raw text or a lark grammar (Azure documents lark only, no regex): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#python-lark
+# tools.search: tool_search on the Responses API only (accepted live 2026-10-26): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/tool-search
+# Mid-conversation (live 2026-10-26 on Responses): a developer message after an assistant turn, an `additional_tools` item and `configuration_update` (4/4 requests) were accepted (https://developers.openai.com/api/docs/guides/reasoning).
+# Web search: billed as Grounding with Bing Search, $14 per 1,000 Bing search requests (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing): https://www.microsoft.com/en-us/bing/apis/grounding-pricing
+# Token-only multipliers (object factor, so cost.web_search is unscaled): web search is billed separately as Grounding with Bing Search.
+# APIs: Responses (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses) and Chat Completions, both listed for gpt-6.1-terra on the availability page above.
+# Per-API flags: additional_tools and configuration_update exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Mid-conversation developer messages work on both Responses and Chat Completions, so system_updates stays top-level.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+store = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+system_updates = true
+
+[api.responses]
+capabilities = { effort_updates = true, tools = { search = true, updates = true } }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = { text = 1.1 }

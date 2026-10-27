@@ -2,9 +2,8 @@ schema = 2
 base_model = "mistral/mistral-medium-3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 262_144

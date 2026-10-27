@@ -1,20 +1,27 @@
 # Source: https://vercel.com/ai-gateway/models/gemini-3.5-transcribe-live
 # Live transcription has no token context/output window; zero denotes not applicable.
+# temperature = true: Google's own entry (providers/google/models/gemini-3.5-transcribe-live.toml)
+# reads topP/topK from https://generativelanguage.googleapis.com/v1beta/models.
+# Audio input is raw PCM, like every Live API model (https://ai.google.dev/gemini-api/docs/live-api/capabilities).
+schema = 2
 type = "transcription"
 name = "Gemini 3.5 Transcribe Live"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 family = "gemini"
-release_date = "2026-08-26"
-last_updated = "2026-08-26"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-08-26"
+
+[modalities]
+input = ["audio/pcm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["audio"]
-output = ["text"]

@@ -1,0 +1,17 @@
+schema = 2
+base_model = "meituan/longcat-2.5-preview"
+name = "LongCat 2.5 Preview"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+
+[limit]
+input = 1_000_000
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 2.95

@@ -1,5 +1,4 @@
-// Builds, patches, and writes v2 provider model files from v1 fields. Shared by
-// the migration script and sync, so both write the same TOML.
+// Builds, patches, and writes v2 provider model files from v1 fields.
 
 import { toCostV2 } from "./generate-v2.js";
 import { ReasoningOption } from "./schema.js";
@@ -23,8 +22,9 @@ const IDENTITY = [
 
 // v1 fields → the v2 provider model file they stand for (without the header).
 // `protocol` is the API the model is served on, for `provider` and `interleaved`
-// fields that don't set a shape (the migration script resolves it).
-export function providerModelToV2(model: Record<string, any>, protocol?: string): Doc {
+// fields that don't set a shape (the caller resolves it).
+// `providerNpm` is the provider's `npm`, which an API table without its own `aisdk` uses.
+export function providerModelToV2(model: Record<string, any>, protocol?: string, providerNpm?: string): Doc {
   for (const field of ["body", "headers"]) {
     if (model.provider?.[field] !== undefined) throw new Error(`provider.${field} has no v2 field yet`);
   }
@@ -54,7 +54,7 @@ export function providerModelToV2(model: Record<string, any>, protocol?: string)
   }
   if (Object.keys(capabilities).length > 0) doc.capabilities = capabilities;
   if (model.limit !== undefined) doc.limit = model.limit;
-  const api = apiEntry(model, protocol);
+  const api = apiEntry(model, protocol, providerNpm);
   if (api !== undefined) doc.api = api;
 
   const cost: Doc | undefined = model.cost && toCostV2(model.cost);
@@ -87,7 +87,7 @@ export function providerModelToV2(model: Record<string, any>, protocol?: string)
 }
 
 // v1 `provider` and `interleaved` → the model's `[api.<protocol>]` table.
-function apiEntry(model: Record<string, any>, fallback: string | undefined) {
+function apiEntry(model: Record<string, any>, fallback: string | undefined, providerNpm?: string) {
   const { provider, interleaved } = model;
   if (provider === undefined && interleaved === undefined) return undefined;
   const shape = provider?.shape;
@@ -97,10 +97,10 @@ function apiEntry(model: Record<string, any>, fallback: string | undefined) {
   const entry: Doc = {};
   if (provider?.api !== undefined) entry.base_url = provider.api;
   if (provider?.npm !== undefined) entry.sdk = { aisdk: provider.npm };
-  if (interleaved === true) entry.compatibility = { replay_reasoning: true };
+  if (interleaved === true) entry.legacy_interleaved = true;
   else if (interleaved !== undefined) entry.compatibility = { reasoning_field: interleaved.field };
   // A shape v1 would drop as the SDK's default stays as the legacy field.
-  if (shape !== undefined && toV1Shape(protocol, provider?.npm) === undefined) entry.legacy_shape = shape;
+  if (shape !== undefined && toV1Shape(protocol, provider?.npm ?? providerNpm) === undefined) entry.legacy_shape = shape;
   return { [protocol]: entry };
 }
 
@@ -112,8 +112,9 @@ export function patchModelV2(
   before: Record<string, any>,
   after: Record<string, any>,
   resolved?: { before: InheritedFlags; after: InheritedFlags },
+  providerNpm?: string,
 ): Doc {
-  const next = providerModelToV2(after, Object.keys(doc.api ?? {})[0]);
+  const next = providerModelToV2(after, Object.keys(doc.api ?? {})[0], providerNpm);
   // `reasoning` and `tool_call` may be inherited from the lab on one side, as in
   // sameV1Model. With the lab's values (`resolved`), they compare resolved.
   const same = (...keys: string[]) =>
@@ -125,6 +126,8 @@ export function patchModelV2(
       return stable(before[key]) === stable(after[key]);
     });
 
+  // A type v1 doesn't know (Clairic's `extraction`) has no v1 value, so an unchanged type keeps the file's.
+  if (doc.type !== undefined && same("type")) next.type = doc.type;
   if (doc.modalities !== undefined) {
     if (same("modalities")) next.modalities = doc.modalities;
     else if (next.modalities !== undefined) {
@@ -195,11 +198,19 @@ function patchApis(first: Doc | undefined, current: Doc) {
   if (protocol === undefined) return first;
   const { opencodeai, aisdk } = current[protocol]?.sdk ?? {};
   const v2Only = { ...(opencodeai !== undefined ? { opencodeai } : {}), ...(aisdk === "none" ? { aisdk } : {}) };
+  const path = current[protocol]?.path;
+  const capabilities = current[protocol]?.capabilities;
   let head = first;
-  if (Object.keys(v2Only).length > 0 || rest.length > 0) {
+  if (Object.keys(v2Only).length > 0 || path !== undefined || capabilities !== undefined || rest.length > 0) {
     const [key, entry] = Object.entries<Doc>(first ?? { [protocol]: {} })[0]!;
-    const keep = Object.keys(v2Only).length > 0 && key === protocol;
-    head = { [key]: keep ? { ...entry, sdk: { ...v2Only, ...entry.sdk } } : entry };
+    const same = key === protocol;
+    const { base_url, ...others } = entry;
+    const withPath =
+      same && path !== undefined ? { ...(base_url !== undefined ? { base_url } : {}), path, ...others } : entry;
+    const withSdk = same && Object.keys(v2Only).length > 0 ? { ...withPath, sdk: { ...v2Only, ...entry.sdk } } : withPath;
+    head = {
+      [key]: same && capabilities !== undefined ? { ...withSdk, capabilities } : withSdk,
+    };
   }
   if (rest.length === 0) return head;
   return {
@@ -346,10 +357,11 @@ export function sameV1Model(a: Record<string, any>, b: Record<string, any>) {
 export function normalizeV1(model: Record<string, any>) {
   const { id: _id, ...copy } = structuredClone(model) as Doc;
   for (const tier of copy.cost?.tiers ?? []) tier.tier = { type: "context", ...tier.tier };
+  // v2 files don't keep the order of reasoning options.
   if (copy.reasoning_options !== undefined) {
-    copy.reasoning_options = copy.reasoning_options.map((option: unknown) =>
-      ReasoningOption.parse(option),
-    );
+    copy.reasoning_options = copy.reasoning_options
+      .map((option: unknown) => ReasoningOption.parse(option))
+      .sort((a: { type: string }, b: { type: string }) => a.type.localeCompare(b.type));
   }
   return copy;
 }
@@ -405,27 +417,25 @@ export function formatModelV2(doc: Doc) {
 
 function costLines(cost: CostV2, prefix = "cost") {
   const out: string[] = [];
+  const entryLines = (table: string, entry: Doc) => {
+    const { overrides, ...rest } = entry;
+    out.push("", `[${table}]`, ...tableLines(rest));
+    for (const override of overrides ?? []) {
+      const { when, ...fields } = override as { when: CostWhenV2 };
+      out.push("", `[[${table}.overrides]]`, `when = ${formatTomlValue(when)}`, ...tableLines(fields));
+    }
+  };
   for (const [modality, prices] of Object.entries(cost)) {
-    if (modality === "multipliers" || prices === undefined) continue;
+    if (modality === "multipliers" || modality === "web_search" || prices === undefined) continue;
     const { input, output } = prices as { input?: InputCostV2; output?: OutputCostV2 };
     for (const [direction, entry] of [
       ["input", input],
       ["output", output],
     ] as const) {
-      if (entry === undefined) continue;
-      const { overrides, ...rest } = entry as Doc;
-      out.push("", `[${prefix}.${modality}.${direction}]`, ...tableLines(rest));
-      for (const override of overrides ?? []) {
-        const { when, ...fields } = override as { when: CostWhenV2 };
-        out.push(
-          "",
-          `[[${prefix}.${modality}.${direction}.overrides]]`,
-          `when = ${formatTomlValue(when)}`,
-          ...tableLines(fields),
-        );
-      }
+      if (entry !== undefined) entryLines(`${prefix}.${modality}.${direction}`, entry);
     }
   }
+  if (cost.web_search !== undefined) entryLines(`${prefix}.web_search`, cost.web_search);
   for (const multiplier of cost.multipliers ?? []) {
     out.push("", `[[${prefix}.multipliers]]`, ...tableLines(multiplier));
   }

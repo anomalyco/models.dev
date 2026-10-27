@@ -11,10 +11,9 @@ schema = 2
 base_model = "zhipuai/glm-4.7-flashx"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 output = 128_000

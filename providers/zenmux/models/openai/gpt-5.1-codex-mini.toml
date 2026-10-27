@@ -7,7 +7,7 @@ name = "GPT-5.1-Codex-Mini"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 temperature = true
 
 [limit]
@@ -15,7 +15,7 @@ output = 100_000
 
 [api.responses]
 base_url = "https://zenmux.ai/api/v1"
-sdk = { aisdk = "@ai-sdk/openai" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 
 [cost.text.input]
 price = 0.25
