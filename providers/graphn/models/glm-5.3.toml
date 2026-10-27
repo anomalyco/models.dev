@@ -1,5 +1,6 @@
-# Alias and limits: GET https://model.graphn.ai/v1/models (checked 2026-10-21); 250K context
-# and the platform's 32K output cap.
+# Alias and limits: GET https://model.graphn.ai/v1/models (checked 2026-10-21); 250K context.
+# No separate output cap on the host (live 2026-10-27: max_tokens accepted well above 32K),
+# so output inherits the lab's 131_072.
 # Pricing: https://graphn.ai/pricing — $1.40 input, $0.14 cached input, $4.40 output per 1M
 # tokens (checked 2026-10-21).
 # Effort: reasoning_effort = low|high|max (default max; verified live). Thinking is always on
@@ -16,7 +17,6 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
 context = 250_000
-output = 32_768
 
 [cost.text.input]
 price = 1.4

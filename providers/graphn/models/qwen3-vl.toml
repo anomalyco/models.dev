@@ -3,7 +3,7 @@
 # reasoning_effort is accepted here but leaves the response unchanged, so it is not offered.
 # Pricing: https://graphn.ai/pricing (checked 2026-10-27) marks this row "Billed as input"
 # — no cache hits are reported, so no cache capability or cache.read price is authored.
-# Output 32_768 is the host's platform cap, below the lab's 65_536.
+# No separate output cap on the host (live 2026-10-27), so output inherits the lab's 65_536.
 schema = 2
 base_model = "alibaba/qwen3.5-9b"
 name = "Qwen3 VL"
@@ -14,9 +14,6 @@ structured_output = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-
-[limit]
-output = 32_768
 
 [cost.text.input]
 price = 0.1
