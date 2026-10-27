@@ -3,3 +3,7 @@
 # Served context probed live 2026-10-27 (max_model_len 65536), same as the lab file; GWDG's docs say 256k.
 schema = 2
 base_model = "alibaba/qwen3-omni-30b-a3b-instruct"
+
+# GWDG serves text output only.
+[modalities]
+output = ["text"]
