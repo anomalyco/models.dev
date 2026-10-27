@@ -1,4 +1,4 @@
-# Sources (accessed 2026-10-27): https://inference.tinfoil.sh/v1/models (USD/MTok, context 32768, created 2026-10-21; experimental).
+# Sources (accessed 2026-10-27): https://inference.tinfoil.sh/v1/models (USD/MTok, context 32768; experimental).
 # https://docs.tinfoil.sh/models/decisions and https://docs.tinfoil.sh/guides/decision-outputs
 # Checkpoint mapping, text-only input and disabled prefix caching:
 # https://github.com/tinfoilsh/confidential-decision-models/blob/main/tinfoil-config.yml
@@ -11,7 +11,6 @@ v2_only = true
 base_model = "vllm-sr/d3"
 name = "Decision Large"
 status = "beta"
-release_date = "2026-10-21"
 
 [modalities]
 input = ["text"]
