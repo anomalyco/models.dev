@@ -6,6 +6,7 @@
 # Aliases may change checkpoints; recheck base_model against the deployment config when updating.
 # This is OpenAI's {model,input,questions} Decisions protocol, not System One; no generated/output tokens are billed.
 # status beta: the public catalog marks experimental=true, matching Tinfoil's existing experimental-model convention.
+# AuthoredModelV2 requires input and output together, so the text-only override repeats the base output.
 schema = 2
 v2_only = true
 base_model = "vllm-sr/d3"
