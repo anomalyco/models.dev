@@ -3,6 +3,12 @@
 # Always thinks: reasoning_effort = "low" | "high" | "max" (default "max"); none/disabled returns HTTP 400.
 # Switching reasoning effort invalidates the context cache. Cost is zeroed per this provider's subscription convention.
 # prompt_cache_key is required for good cache hit rates on Kimi Code Plan (https://platform.kimi.ai/docs/api/chat).
+# Mid-conversation (live probe, https://api.kimi.com/coding/v1/chat/completions, 2026-10-27; notes/kimi-code-midconvo-2026-10-27/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 14336/14608 -> 14336/14632; 14848/15008 -> 14848/15032]
+#   a tool-carrying system message appended after turn 2 (dynamic tool loading, add only) keeps the cached prefix and the new tool is called [cached/prompt tokens, control -> test: 14336/14617 -> 14592/14720; 14848/15017 -> 14848/15120]
+# Per-API flags: system_updates and tools.updates sit on [api.chat-completions] only. GET /coding/v1/models reports
+# tools.dynamic_load = true for this model, and the form is documented for Chat Completions at
+# https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading; the Responses and Messages endpoints document neither.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -14,6 +20,7 @@ cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true, tools = { updates = true } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
