@@ -1,0 +1,26 @@
+# Thinking is not exposed on this model ID, and video is refused with 400 unsupported_input.
+# https://graphn.ai/inference/kimi-k2.5
+# Live 2026-10-27: PNG, JPEG, GIF and WebP images are read; json_schema honoured; no
+# reasoning returned. No cached tokens reported on a repeated ~10K-token prefix. There is no
+# separate output cap: max_tokens = 256,000 is accepted and 262,144 is refused with 400
+# context_length_exceeded.
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 256_000
+output = 256_000
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3

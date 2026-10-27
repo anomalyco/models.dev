@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs.enable_thinking true|false (thinking is on by default)
+# GraphN serves Qwen3.5-9B under the model ID qwen3-vl.
+# https://graphn.ai/inference/qwen3-vl
+# Live 2026-10-27: PNG, JPEG, GIF and WebP images and MP4 video are read; enable_thinking =
+# false returns no reasoning; json_schema honoured. No cached tokens reported on a repeated
+# ~15K-token prefix, so no cache price is listed.
+schema = 2
+base_model = "alibaba/qwen3.5-9b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.15

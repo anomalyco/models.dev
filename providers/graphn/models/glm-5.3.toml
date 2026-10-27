@@ -1,0 +1,25 @@
+# Effort: reasoning_effort = low|high bound reasoning; max, medium or unset run at max
+# https://graphn.ai/inference/glm-5.3
+# Live 2026-10-27: low and high cut reasoning (45 tokens) against 148-155 for medium, max
+# and unset on the same prompt; reasoning is returned in reasoning_content. json_schema
+# honoured; a repeated ~11K-token prefix reported 11,328 cached tokens.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

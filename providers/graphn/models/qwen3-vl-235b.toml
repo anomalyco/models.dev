@@ -1,0 +1,22 @@
+# Image input only; served at 262,144 context.
+# https://graphn.ai/inference/qwen3-vl-235b
+# Live 2026-10-27: PNG, JPEG, GIF and WebP images are read; json_schema honoured. No cached
+# tokens reported on a repeated ~15K-token prefix.
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.53
+
+[cost.text.output]
+price = 2.66

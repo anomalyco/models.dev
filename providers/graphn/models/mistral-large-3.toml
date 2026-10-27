@@ -1,0 +1,20 @@
+# Served at 256,000 context; video is not supported.
+# https://graphn.ai/inference/mistral-large-3
+# Live 2026-10-27: PNG, JPEG, GIF and WebP images accepted; json_schema honoured. No cached
+# tokens reported on a repeated ~15K-token prefix. There is no separate output cap:
+# max_tokens = 256,000 is accepted and 262,144 is refused with 400 context_length_exceeded.
+schema = 2
+base_model = "mistral/mistral-large-2512"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 256_000
+output = 256_000
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

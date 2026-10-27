@@ -1,0 +1,18 @@
+# Qwen3-Next-80B-A3B-Instruct served at 131,072 context (the weights support 262K).
+# https://graphn.ai/inference/qwen3-80b
+# Live 2026-10-27: json_schema response_format honoured; no cached tokens reported on a
+# repeated ~15K-token prefix, so no cache price is listed.
+schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6

@@ -1,0 +1,12 @@
+# OpenAI-compatible Chat Completions at https://model.graphn.ai/v1, authenticated
+# with a workspace API key as a Bearer token. Prices, context windows and
+# reasoning controls checked live against the production endpoint on 2026-10-27.
+# https://graphn.ai/docs/inference-quickstart
+# https://graphn.ai/docs/models
+# https://graphn.ai/pricing
+name = "GraphN"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["GRAPHN_API_KEY"]
+api = "https://model.graphn.ai/v1"
+doc = "https://graphn.ai/docs/inference-quickstart"

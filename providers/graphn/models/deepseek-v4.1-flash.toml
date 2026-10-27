@@ -1,0 +1,27 @@
+# Effort: reasoning_effort = none|low|high|max (medium is rejected with 400)
+# Thinking can also be turned off with chat_template_kwargs.enable_thinking = false.
+# GraphN serves DeepSeek-V4.1-Flash-1017 under the model ID deepseek-v4.1-flash.
+# https://graphn.ai/inference/deepseek-v4.1-flash
+# Live 2026-10-27: none returns no reasoning, low/high/max scale it (224/253/316 tokens on
+# one prompt); PNG, JPEG, GIF and WebP images are read and video is refused; json_schema
+# honoured; a repeated ~10K-token prefix reported 9,728 cached tokens.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2
