@@ -24,6 +24,10 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "zai/glm-5-turbo": 131_072,
 };
 
+// The catalog has no `vision` tag for these, but Vercel's docs say they take images:
+// https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-decisions#input
+const VISION_MODELS = new Set(["openai/gpt-6-luna-decisions"]);
+
 const KnownModelType = z.enum([
   "language",
   "embedding",
@@ -190,7 +194,7 @@ export function buildVercelModel(
   existing: ExistingModel | undefined,
   base: ExistingModel | undefined = undefined,
 ): SyncedModel {
-  const tags = new Set(model.tags);
+  const tags = new Set(VISION_MODELS.has(model.id) ? [...model.tags, "vision"] : model.tags);
   const releaseDate = model.released
     ? dateFromTimestamp(model.released)
     : existing?.release_date ?? new Date().toISOString().slice(0, 10);

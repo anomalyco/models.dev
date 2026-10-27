@@ -1,6 +1,7 @@
 # https://developers.cloudflare.com/workers-ai/models/clef-omni/
-# Images: embedded PNG, JPEG or WebP (model page). Audio and video inputs are also documented,
-# without formats; not listed here (Search reports text and image only).
+# Images: embedded PNG, JPEG or WebP (model page). Audio (up to 4 clips) and video (up to 2) are separate `audio` and
+# `videos` lists; the input schema takes any audio/* or video/* data URL and names audio/wav, audio/mpeg, video/mp4 and
+# video/webm (https://developers.cloudflare.com/workers-ai/models/clef-omni/schema-input.json).
 # API: POST /accounts/{ACCOUNT_ID}/ai/run/@cf/cloudflare/clef-omni (https://developers.cloudflare.com/workers-ai/models/clef-omni/).
 schema = 2
 type = "decision"
@@ -10,7 +11,7 @@ open_weights = true
 release_date = "2026-10-09"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "audio/wav", "audio/mpeg", "video/mp4", "video/webm"]
 output = ["text"]
 
 [capabilities]

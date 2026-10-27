@@ -34,6 +34,9 @@ const SERVED_CONTEXT = new Map([
   ["@cf/zai-org/glm-5.3-flash", 1_048_576],
   ["@cf/deepseek-ai/deepseek-v4-flash-0731", 1_048_576],
 ]);
+// Search reports only text and image input for Clef Omni, but its request schema also takes `audio` and `videos`
+// (https://developers.cloudflare.com/workers-ai/models/clef-omni/). The sync adds the kinds search leaves out.
+const EXTRA_INPUTS = new Map([["@cf/cloudflare/clef-omni", ["audio", "video"]]]);
 const ROOT_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 const MODELS_DIR = path.join(ROOT_DIR, "models");
 const metadataFilesByPublisher = new Map<string, string[]>();
@@ -353,6 +356,10 @@ export function buildWorkersAiModel(
   const context = Math.min(model.context_length, SERVED_CONTEXT.get(model.id) ?? model.context_length);
   const source = {
     ...model,
+    architecture: {
+      ...model.architecture,
+      input_modalities: [...new Set([...model.architecture.input_modalities, ...EXTRA_INPUTS.get(model.id) ?? []])],
+    },
     context_length: context,
     reasoning: undefined,
     supported_parameters: [

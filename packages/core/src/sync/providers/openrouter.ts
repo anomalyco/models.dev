@@ -32,7 +32,7 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
   "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
   "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
-  "typesafe/jev-1.13": "typesafe/jev-latest",
+  "typesafe/jev-1.13": "typesafe/jev-1.13.0",
   "~typesafe/jev-latest": "typesafe/jev-latest",
 } as const;
 

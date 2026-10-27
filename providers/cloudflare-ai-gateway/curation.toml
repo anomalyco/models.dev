@@ -157,10 +157,10 @@ skip = [
   "Live 2026-10-23: typesafe/jev (answers as jev-1.13.0) and typesafe/jev-1.14.0 answered on /ai/run; the path form /ai/run/typesafe/jev returns 400 \"No route for that URI\" (code 7000).",
 ]
 
-# Cloudflare exposes TypeSafe's evaluation-only Jev alias over /ai/run. The shared
-# metadata marks its structured output support and lack of tool calling.
+# Cloudflare's typesafe/jev answers as jev-1.13.0 (the response examples on
+# https://developers.cloudflare.com/ai/models/typesafe/jev/), so it is Jev 1.13, not the moving alias.
 [models."typesafe/jev"]
-base_model = "typesafe/jev-latest"
+base_model = "typesafe/jev-1.13.0"
 
 # Muse Spark 1.x / Muse Wonder: the catalog schema's reasoning.effort enum (none..max) is the generic
 # Responses schema, not what the model accepts. Cloudflare's own validation error lists the values:

@@ -1,3 +1,5 @@
+# Modalities: Vercel's Decisions docs say images work with openai/gpt-6-luna-decisions (https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-decisions#input),
+#   though the catalog has no vision tag. Formats are OpenAI's image inputs; Decisions takes no files (https://developers.openai.com/api/docs/guides/decisions).
 schema = 2
 type = "decision"
 name = "GPT-6 Luna Decisions"
@@ -7,7 +9,7 @@ open_weights = false
 release_date = "2026-10-06"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]

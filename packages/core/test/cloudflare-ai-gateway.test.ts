@@ -520,7 +520,7 @@ test("syncs Jev through shared TypeSafe metadata without inventing tool support"
       existing: () => undefined,
       authored: () => undefined,
     }).model).toEqual({
-      base_model: "typesafe/jev-latest",
+      base_model: "typesafe/jev-1.13.0",
       cost: { input: 0.042, output: 0 },
       limit: { context: 32_000 },
     });

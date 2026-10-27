@@ -6272,6 +6272,20 @@ test("Vercel family inference requires word boundaries", () => {
   expect(buildVercelModel(rerank!, { family: "o" }).family).toBeUndefined();
 });
 
+test("Vercel GPT-6 Luna Decisions takes images though the catalog has no vision tag", () => {
+  const [luna] = vercel.parseModels({
+    data: [{
+      id: "openai/gpt-6-luna-decisions",
+      name: "GPT-6 Luna Decisions",
+      created: 1_791_244_800,
+      context_window: 1_050_000,
+      max_tokens: 0,
+      type: "evaluation",
+    }],
+  });
+  expect(buildVercelModel(luna!, undefined).modalities?.input).toEqual(["text", "image"]);
+});
+
 test("Vercel empty existing reasoning_options falls back to the route base menu", () => {
   const [model] = vercel.parseModels({
     data: [{
