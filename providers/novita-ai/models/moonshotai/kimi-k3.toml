@@ -27,7 +27,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 
 [cost.text.input]
 price = 3
-cache = { read = 0.3 }
+cache = { read = 0.3, write = 3 }
 
 [cost.text.output]
 price = 15
