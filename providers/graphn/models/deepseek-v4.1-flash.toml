@@ -9,7 +9,6 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [api.chat-completions]

@@ -1,6 +1,7 @@
 name = "GraphN"
 env = ["GRAPHN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Verified live against https://model.graphn.ai/v1 (accessed 2026-10-21):
 # - OpenAI-compatible Chat Completions (POST /v1/chat/completions) and GET /v1/models.
 # - Reasoning is returned in choices[].message.reasoning_content.
