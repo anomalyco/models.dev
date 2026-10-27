@@ -6,6 +6,7 @@ base_model = "alibaba/qwen3.5-9b"
 name = "Qwen3 VL"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 

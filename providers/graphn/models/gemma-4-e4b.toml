@@ -5,6 +5,7 @@ base_model = "google/gemma-4-E4B-it"
 name = "Gemma 4 E4B"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, toggle = true }
 
 [api.chat-completions]

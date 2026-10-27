@@ -6,6 +6,7 @@ base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3 80B"
 
 [capabilities]
+cache = { implicit = true }
 structured_output = true
 
 [limit]

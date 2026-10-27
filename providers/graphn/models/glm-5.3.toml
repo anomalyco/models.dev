@@ -8,6 +8,7 @@ schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 
 [api.chat-completions]
