@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { roundPrice } from "../../translate.js";
 import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = process.env.FLEXAI_MODELS_URL ?? "https://api.flex.ai/v1/models";
@@ -13,7 +14,8 @@ const API_ENDPOINT = process.env.FLEXAI_MODELS_URL ?? "https://api.flex.ai/v1/mo
 const BaseModels: Record<string, string> = {
   "DeepSeek-V4-Flash-0731": "deepseek/deepseek-v4-flash-0731",
   "DeepSeek-V4.1-Flash": "deepseek/deepseek-v4.1-flash",
-  "FLUX.1-schnell": "black-forest-labs/flux.1-schnell",
+  "DeepSeek-V4.1-Flash-1017": "deepseek/deepseek-v4.1-flash-1017",
+  "FLUX.1-schnell": "black-forest-labs/flux-1-schnell",
   "GLM-4.5-Air-FP8": "zhipuai/glm-4.5-air",
   "GLM-5.2": "zhipuai/glm-5.2",
   "GLM-5.3-Flash": "zhipuai/glm-5.3-flash",
@@ -60,12 +62,24 @@ const FlexAIPricing = z
   })
   .passthrough();
 
+// Per-unit price for a media model. Tiered rows (resolution or quality) carry
+// a tier or preset name; FlexAI's current media models each publish one untiered row.
+const FlexAIMediaPrice = z
+  .object({
+    billing_unit: z.string(),
+    unit_price_usd: z.number().nonnegative(),
+    resolution_tier: z.string().nullish(),
+    quality_tier: z.string().nullish(),
+    preset: z.string().nullish(),
+  })
+  .passthrough();
+
 const FlexAIModel = z
   .object({
     id: z.string(),
     context_length: z.number().int().positive().nullish(),
     pricing: FlexAIPricing.nullish(),
-    media_pricing: z.unknown().nullish(),
+    media_pricing: z.array(FlexAIMediaPrice).nullish(),
   })
   .passthrough();
 
@@ -113,10 +127,13 @@ export const flexai = {
     if (baseModel === undefined) return undefined;
     const existing = context.existing(model.id);
     const translated = buildFlexAIModel(model, existing?.base_model ?? baseModel, existing);
+    const media = mediaCost(model);
     return {
       id: model.id,
       model: translated,
       header: reasoningHeader(model.id, translated),
+      ...(media.set === undefined ? {} : { v2Set: media.set }),
+      ...(media.notice === undefined ? {} : { notices: [media.notice] }),
     };
   },
   missingModelID(model) {
@@ -159,12 +176,37 @@ function reasoningHeader(id: string, model: SyncedModel): string | undefined {
   return lines.join("\n") + "\n";
 }
 
+// FlexAI media billing units -> v2 cost path and unit. Character prices are
+// stored per 1M characters (the schema's unit for `character`); the others per
+// single unit.
+const MediaUnits: Record<string, { path: string; unit: string; scale: number }> = {
+  character: { path: "cost.text.input", unit: "character", scale: 1_000_000 },
+  minute_audio: { path: "cost.audio.input", unit: "minute", scale: 1 },
+  second_audio: { path: "cost.audio.input", unit: "second", scale: 1 },
+  image: { path: "cost.image.output", unit: "image", scale: 1 },
+};
+
+/**
+ * Per-unit cost of a media model (image, speech, transcription) as v2 values,
+ * which v1's per-token cost fields can't carry. Only a single untiered row is
+ * published; anything else is left to the authored file and reported.
+ */
+function mediaCost(model: FlexAIModel): { set?: Record<string, unknown>; notice?: string } {
+  const rows = model.media_pricing;
+  if (!rows || rows.length === 0) return {};
+  const row = rows[0]!;
+  const mapping = MediaUnits[row.billing_unit];
+  if (rows.length > 1 || row.resolution_tier || row.quality_tier || row.preset || mapping === undefined) {
+    return { notice: `${model.id}: media pricing not synced (${rows.map((r) => r.billing_unit).join(", ")})` };
+  }
+  return { set: { [mapping.path]: { unit: mapping.unit, price: roundPrice(row.unit_price_usd * mapping.scale) } } };
+}
+
 /**
  * Token cost from the API, in the catalog's per-1M unit.
  *
- * Media models (image, speech, transcription) are priced per unit rather than
- * per token and carry `media_pricing` instead; they get no `[cost]` block, in
- * line with the other per-unit entries in the catalog.
+ * Media models carry `media_pricing` instead and get their per-unit cost from
+ * mediaCost as v2 values.
  */
 function flexaiCost(model: FlexAIModel): SyncedFullModel["cost"] {
   if (model.media_pricing !== null && model.media_pricing !== undefined) return undefined;

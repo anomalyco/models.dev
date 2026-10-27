@@ -9,13 +9,13 @@
 # rejected by the gateway's enum, and low has no measurable effect.
 # Modalities: reads images (verified on two solid-colour fixtures), but video
 # is NOT served here -- a video_url part is coerced to image_url and rejected,
-# and input_video returns 500 -- so the base entry's video input is overridden.
+# and input_video returns 500 -- so input is the lab's image MIME list without video.
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "alibaba/qwen3.8-flash-next"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
 
 [capabilities]

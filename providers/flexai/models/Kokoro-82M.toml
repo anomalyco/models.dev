@@ -1,7 +1,12 @@
-# [cost] intentionally omitted: FlexAI bills this model per character of
-# input text ($9.9e-07/character), which the token-denominated cost schema
-# cannot express — same treatment as
-# providers/mistral/models/voxtral-mini-latest.toml.
-# Kept in the leading block: only that survives re-serialisation.
+# Speech: POST https://api.flex.ai/v1/audio/speech (https://docs.flex.ai/inference-api/guides/audio).
+# Price: GET /v1/models media_pricing, $9.9e-07 per input character (billing_unit character), 2026-10-22;
+# stored per 1M characters as the schema requires: 0.99.
 schema = 2
 base_model = "hexgrad/kokoro-82m"
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+unit = "character"
+price = 0.99
