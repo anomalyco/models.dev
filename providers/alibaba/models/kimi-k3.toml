@@ -12,7 +12,8 @@
 # top_k: the Kimi series does not support top_k (Chat API reference)
 # Input: text and image only on Model Studio (https://www.alibabacloud.com/help/en/model-studio/kimi-api: "kimi-k3 does not currently support video input"), which lists no image formats, so the moonshotai/kimi-k3 lab's image MIME list is used.
 # Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
-# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# tools.updates = true on Chat Completions (add only, live on dashscope-intl.aliyuncs.com 2026-10-27): Kimi's tool-carrying system message ({role: "system", tools: [...]}, no content) after the last user turn was answered with a call to the added tool and kept the cache [cached/prompt tokens, control -> test: 7680/8228 -> 7680/8338]; a late system message was obeyed in the same run [7680/8228 -> 7680/8247]. The 2026-10-19 "adding tools" miss changed the top-level tools list, which doesn't count.
+# Per-API flags: system_updates and tools.updates sit on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 # Tools: tool_choice auto|none|required|named on every API except Responses (no required with more than one tool); no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "moonshotai/kimi-k3"
@@ -34,7 +35,7 @@ output = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-capabilities = { system_updates = true }
+capabilities = { system_updates = true, tools = { updates = true } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
