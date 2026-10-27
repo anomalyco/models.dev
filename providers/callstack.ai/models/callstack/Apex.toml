@@ -17,13 +17,18 @@
 #   prefix selects api.callstack.ai and the remainder is the upstream model id.
 # Callstack's model page (https://apex.callstack.com/models) documents the same alias as the
 # bare `apex`; the pinned snapshot next to this file is `apex-20261001`.
+# Cache: cached input is billed at $0.20 / 1M (https://apex.callstack.com/), with no
+# cache_control markers documented, so caching is implicit.
+schema = 2
 base_model = "callstack/apex"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+cache = { implicit = true }
 
-[cost]
-input = 0.50
-output = 3.00
-cache_read = 0.20
+[cost.text.input]
+price = 0.5
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3
