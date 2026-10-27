@@ -1,0 +1,21 @@
+# Price: https://cheapaimodel.ai/api/models (fetched 2026-10-27).
+# Effort: reasoning_effort = low|high|max (mapped from providers/moonshotai); always thinks.
+# Cache: automatic upstream prefix cache; the catalog lists a cache-write price.
+# Live 2026-10-27: reasoning returned in reasoning_content.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.093511
+cache = { read = 0.2093511, write = 2.093511 }
+
+[cost.text.output]
+price = 10.467555
