@@ -1,0 +1,19 @@
+schema = 2
+name = "NYTE ZDR"
+description = "NYTE ZDR"
+open_weights = false
+release_date = "2026-10-27"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 1_050_000
+output = 1_050_000

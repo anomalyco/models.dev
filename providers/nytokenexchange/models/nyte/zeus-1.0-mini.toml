@@ -1,0 +1,19 @@
+schema = 2
+name = "NYTE Zeus 1.0 Mini"
+description = "NYTE Zeus 1.0 Mini"
+open_weights = false
+release_date = "2026-10-27"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 1_048_576
+output = 1_048_576

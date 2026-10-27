@@ -42,6 +42,7 @@ import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
 import { kilo } from "./providers/kilo.js";
+import { nytokenexchange } from "./providers/nytokenexchange.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
@@ -206,6 +207,7 @@ export const providers: {
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
   kilo: SyncProvider<any>;
+  nytokenexchange: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
@@ -252,6 +254,7 @@ export const providers: {
   huggingface,
   inceptron,
   kilo,
+  nytokenexchange,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
   "merge-gateway": mergeGateway,
@@ -285,6 +288,7 @@ export const groups = {
     "huggingface",
     "inceptron",
     "kilo",
+    "nytokenexchange",
     "llmgateway",
     "llmgateway-providers",
     "merge-gateway",
