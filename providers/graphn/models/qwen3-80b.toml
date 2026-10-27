@@ -1,8 +1,8 @@
 # Served as Qwen/Qwen3-Next-80B-A3B-Instruct, instruct-only: no thinking mode and no
-# reasoning_content (live 2026-10-21). Prefix caching is not observable on this host:
-# repeated ~10K-token prompts on 2026-10-27 report cached_tokens = 0 and no
-# created_cache_tokens, so no cache capability or cache.read price is authored despite
-# the published cached-input rate.
+# reasoning_content (live 2026-10-21). Pricing (https://graphn.ai/pricing, checked
+# 2026-10-27) marks this row "Billed as input" — no cache hits are reported; confirmed
+# live on 2026-10-27 with repeated ~10K-token prompts (cached_tokens = 0 on every call,
+# no created_cache_tokens), so no cache capability or cache.read price is authored.
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3 80B"

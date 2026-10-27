@@ -1,12 +1,14 @@
 # Served as Qwen/Qwen3.5-9B under the `qwen3-vl` alias.
 # Toggle: chat_template_kwargs.enable_thinking true|false
 # reasoning_effort is accepted here but leaves the response unchanged, so it is not offered.
+# Pricing: https://graphn.ai/pricing (checked 2026-10-27) marks this row "Billed as input"
+# — no cache hits are reported, so no cache capability or cache.read price is authored.
+# Output 32_768 is the host's platform cap, below the lab's 65_536.
 schema = 2
 base_model = "alibaba/qwen3.5-9b"
 name = "Qwen3 VL"
 
 [capabilities]
-cache = { implicit = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 
@@ -18,7 +20,6 @@ output = 32_768
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.01 }
 
 [cost.text.output]
 price = 0.15
