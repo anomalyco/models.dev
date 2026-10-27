@@ -1,9 +1,13 @@
+# Unsloth's llama-server-backed /v1 surface documents no per-request reasoning-effort
+# control (thinking behavior is configured via server launch flags), so only support is
+# asserted here.
+# https://unsloth.ai/docs/basics/api (accessed 2026-10-27)
 schema = 2
 base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true }
 
 [cost.text.input]
 price = 0
