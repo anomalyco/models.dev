@@ -6,7 +6,7 @@ open_weights = false
 release_date = "2026-10-21"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
@@ -21,6 +21,7 @@ output = 0
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
+compatibility = { media_input = "state" }
 
 [cost.text.input]
 price = 0.12
