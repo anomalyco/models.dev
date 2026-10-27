@@ -132,4 +132,3 @@ function compareSearchDates(a?: string, b?: string) {
 function searchSortDate(item: SearchIndexItem) {
   return item.releaseDate ?? item.updated;
 }
-
