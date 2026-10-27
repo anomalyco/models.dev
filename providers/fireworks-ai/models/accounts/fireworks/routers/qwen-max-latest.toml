@@ -2,7 +2,11 @@
 # https://api.fireworks.ai/v1/serverless/models on 2026-09-16 as
 # accounts/fireworks/routers/qwen-max-latest. The same response supplies
 # standard and Priority pricing, text/image input, and the Priority recipe.
-# Toggle: thinking.type = enabled|disabled (matches the pinned Qwen 3.8 Max route).
+# Off is effort=none; graded levels, no toggle (matches the pinned Qwen 3.8 Max route).
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (https://docs.fireworks.ai/api-reference/post-chatcompletions, accessed 2026-10-27)
+#   high and max select the same prompt tier as xhigh (also the default when omitted); false matches none.
+#   Live Chat Completions, temperature 0, "Is 391 prime? Answer yes or no." (2026-10-27), value -> prompt / reasoning tokens:
+#   none 24 / 0; low 52 / 240; medium 22 / 228; xhigh, high, max and omitted 64 / 129; adaptive returns 400.
 # Image types: the lab's image types that Fireworks accepts. Fireworks documents .png, .jpg/.jpeg, .gif, .bmp, .tiff and .ppm
 #   (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations); webp and avif also decoded in live tests (2026-10-21), heic failed.
 # Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
@@ -23,7 +27,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
 
