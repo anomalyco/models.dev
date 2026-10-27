@@ -239,6 +239,7 @@ description = "One or two sentences on what the lab builds."
 - Text prices live in `[cost.text.input]` (`price`, `cache = { read, write }`) and `[cost.text.output]` (`price`, `reasoning`). Audio/image/video use `[cost.audio.input]` etc.; non-token units set `unit` (`character`, `image`, `megapixel`, `second`, `minute`; priced per unit).
 - Cache writes with several TTLs: `write = { "5m" = 6.25, "1h" = 10 }`. v1 only gets the first TTL listed.
 - **Context-based pricing → overrides** keyed on `context`. The threshold is where that band starts; no duplicate thresholds.
+- **API-specific pricing → overrides** keyed on `api` with `equals` or `in`, using `[api.<protocol>]` keys (e.g. `decisions`), never URLs or paths. Place the API override after context overrides when it must win at every context length. These rules stay v2-only; v1 keeps base prices and pure-context tiers. Consumer semantics: `README.md`.
 - Service tiers, regions, and time-of-day pricing → `[[cost.multipliers]]`.
 
 ```toml

@@ -7,6 +7,7 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6-luna
 # Decisions API (POST /v1/decisions, gpt-6-luna is its only model): https://developers.openai.com/api/docs/guides/decisions
+# Decisions output is free; input, cache and long-context input rates use the Standard card: https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability
 # Decisions takes no tools (only `model`, `input` and `questions`; tool calls appear only as evidence in `input`), so the tool values sit on [api.responses] and [api.chat-completions] and Decisions has none.
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on Chat Completions and Responses but not on Decisions, so system_updates sits on those two APIs.
 schema = 2
@@ -46,6 +47,10 @@ price = 0.5
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 0.75
+
+[[cost.text.output.overrides]]
+when = { api = { equals = "decisions" } }
+price = 0
 
 [cost.web_search]
 price = 10
