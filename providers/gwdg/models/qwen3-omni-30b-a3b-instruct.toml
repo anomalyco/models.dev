@@ -6,4 +6,5 @@ base_model = "alibaba/qwen3-omni-30b-a3b-instruct"
 
 # GWDG serves text output only.
 [modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv", "audio/amr", "audio/wav", "audio/3gpp", "audio/aac", "audio/mpeg"]
 output = ["text"]
