@@ -1,20 +1,20 @@
 schema = 2
-name = "NYTE Auto"
-description = "NYTE Auto"
-family = "auto"
+name = "Auto"
+description = "NY Token Exchange automatic routing alias that chooses a healthy supported model endpoint for the request."
 open_weights = false
-release_date = "2026-10-27"
+release_date = "2026-05-01"
+last_updated = "2026-06-27"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "application/pdf"]
 output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
-structured_output = false
-temperature = false
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
-context = 1_048_576
-output = 1_048_576
+context = 1_000_000
+output = 131_072

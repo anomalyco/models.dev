@@ -1,0 +1,18 @@
+schema = 2
+base_model = "alibaba/qwen3.5-plus"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[cost.text.input]
+price = 0.422
+cache = { read = 0.0422 }
+
+[cost.text.output]
+price = 2.532

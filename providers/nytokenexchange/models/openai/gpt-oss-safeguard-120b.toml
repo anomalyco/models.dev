@@ -1,0 +1,13 @@
+schema = 2
+base_model = "openai/gpt-oss-safeguard-120b"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[cost.text.input]
+price = 0.15825
+
+[cost.text.output]
+price = 0.633

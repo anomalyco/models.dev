@@ -1,0 +1,13 @@
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[cost.text.input]
+price = 0.422
+
+[cost.text.output]
+price = 4.22

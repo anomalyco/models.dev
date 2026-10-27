@@ -1,0 +1,14 @@
+schema = 2
+base_model = "minimax/MiniMax-M2.1"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[cost.text.input]
+price = 0.3165
+
+[cost.text.output]
+price = 1.266

@@ -1,0 +1,17 @@
+schema = 2
+base_model = "nvidia/nemotron-nano-9b-v2"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 4_096
+
+[cost.text.input]
+price = 0.0633
+
+[cost.text.output]
+price = 0.24265

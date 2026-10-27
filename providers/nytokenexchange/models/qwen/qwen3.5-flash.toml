@@ -1,0 +1,18 @@
+schema = 2
+base_model = "alibaba/qwen3.5-flash"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[cost.text.input]
+price = 0.1055
+cache = { read = 0.1055 }
+
+[cost.text.output]
+price = 0.422
