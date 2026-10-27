@@ -23,7 +23,8 @@ output = 0
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
 
 [cost.text.input]
-price = 0.06
+price = 0.12
+cache = { read = 0.12 }
 
 [cost.text.output]
 price = 0
