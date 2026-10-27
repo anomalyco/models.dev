@@ -5,32 +5,39 @@
 #   collection September 2026; weights not distributed (hosted service only)
 # - https://github.com/callstack/apex-cli/blob/beb91307a6a0dcfc627ca758ade41d3cc951546b/src/assistants.js#L48-L57
 #   (accessed 2026-10-14; @callstack/apex 0.4.2) — the limits and capabilities Callstack ships
-#   to coding tools: context 262_144, output 32_768, attachment true, input ["text","image"]
-#   (vision), tool_call true, reasoning true. No separate input budget is set; the CLI README
-#   states input limits and compaction thresholds are left to each harness's defaults.
+#   to coding tools: context 262_144, output 32_768, input ["text","image"] (vision), tools,
+#   reasoning. No separate input budget is set; the CLI README states input limits and
+#   compaction thresholds are left to each harness's defaults. Unchanged in 0.4.5 (a83fde6).
+# - https://ai-gateway.vercel.sh/v1/models (entry "callstack/apex", relayed to Callstack,
+#   accessed 2026-10-27) — supported_parameters lists temperature but not top_p or top_k.
+#   Callstack publishes no image format list, so input stays generic "image".
 # - https://rn-evals.vercel.app — React Native agent evals by Callstack, Apex listed by name
 # - https://apex.callstack.com/llms.txt — Callstack's published model summary; claims the
 #   Next.js Agent Evals pass@4 figures (31 tasks, run 2026-09-25, 28/31 without docs and
 #   30/31 with Next.js docs in context) at the leaderboard's exact scores
 # Apex is general-purpose but strongest on React Native, Next.js, and React.
+schema = 2
 name = "Apex"
 description = "Agentic coding model for React Native and React work on mobile and web"
 family = "apex"
-release_date = "2026-10-01"
-last_updated = "2026-10-01"
-attachment = true
-reasoning = true
-tool_call = true
-knowledge = "2026-09"
 open_weights = false
-
-[limit]
-context = 262_144
-output = 32_768
+knowledge = "2026-09"
+release_date = "2026-10-01"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 32_768
 
 [[links]]
 label = "Model page"
