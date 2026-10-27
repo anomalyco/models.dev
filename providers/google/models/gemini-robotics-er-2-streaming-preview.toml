@@ -1,0 +1,33 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-streaming-preview
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - Introductory rates through 2026-12-31 double from 2027-01-01.
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-robotics-er-2-streaming; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-streaming-preview
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Grounding keeps its price under Priority, Flex and the scheduled increases (https://ai.google.dev/gemini-api/docs/pricing).
+schema = 2
+v2_only = true
+base_model = "google/gemini-robotics-er-2-streaming-preview"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+cache = false
+
+[api.bidi-generate-content]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 5
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = { text = 2 }

@@ -1,28 +1,23 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Cache: implicit (automatic) for OpenAI models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+schema = 2
+base_model = "openai/o3-mini"
 name = "OpenAI o3-mini (High)"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-mini"
-release_date = "2024-01-01"
-last_updated = "2025-01-31"
-attachment = false
-reasoning = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.55
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
-context = 200_000
 input = 200_000
-output = 100_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.1
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 4.4

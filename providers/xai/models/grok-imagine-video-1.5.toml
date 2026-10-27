@@ -1,4 +1,6 @@
+# API: POST https://api.x.ai/v1/videos/generations (https://docs.x.ai/developers/rest-api-reference/inference/videos.md).
+schema = 2
 base_model = "xai/grok-imagine-video-1.5"
 
-[modalities]
-input = ["text", "image", "audio", "pdf"]
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/protocols/xai-video" }

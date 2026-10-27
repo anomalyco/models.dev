@@ -1,30 +1,46 @@
-# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [api] override.
 # Model IDs, routes and Geo CRIS pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html
 # Effort levels match OpenAI-native 6.1 Sol (low|medium|high|xhigh|max, no none): https://developers.openai.com/api/docs/models/gpt-6.1-sol
 # Converse Ultrafast: additionalModelRequestFields.service_tier=ultrafast at 6x Standard: https://developers.openai.com/api/docs/guides/ultrafast-mode
 # Ultrafast availability: https://aws.amazon.com/about-aws/whats-new/2026/10/openai-gpt-sol-ultrafast-amazon/
 # Ultrafast is 6x Standard per Bedrock Astra card and OpenAI ultrafast table: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html and https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast
 # Converse input is text+image per AWS card and OpenAI model docs; overrides lab pdf.
+# v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card says Converse rejects document blocks, so no application/pdf here.
+schema = 2
 base_model = "openai/gpt-6.1-sol"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 name = "GPT-6.1 Sol (US)"
 
-[cost]
-input = 2.20
-output = 11.00
-cache_read = 0.11
-cache_write = 2.75
-
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 4.40
-output = 16.50
-cache_read = 0.22
-cache_write = 5.50
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 2.2
+cache = { read = 0.11, write = { "30m" = 2.75 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.4
+cache = { read = 0.22, write = { "30m" = 5.5 } }
+
+[cost.text.output]
+price = 11
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" } }
+factor = 6
 
 [experimental.modes.ultrafast]
-cost = { input = 13.20, output = 66.00, cache_read = 0.66, cache_write = 16.50 }
-provider = { body = { additionalModelRequestFields = { service_tier = "ultrafast" } } }
+body = { additionalModelRequestFields = { service_tier = "ultrafast" } }

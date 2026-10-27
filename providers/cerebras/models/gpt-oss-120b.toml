@@ -1,15 +1,38 @@
+# Cerebras docs and live checks (accessed 2026-10-21):
+# - Model page https://inference-docs.cerebras.ai/models/openai-oss: $0.35 input, $0.75 output per MTok; context 131K and
+#   max output 40K on paid tiers (65K / 32K on the free tier; the paid-tier maxima are used). GET
+#   https://api.cerebras.ai/public/v1/models reports max_context_length 131072 and max_completion_tokens 40960.
+# - Reasoning https://inference-docs.cerebras.ai/capabilities/reasoning: reasoning_effort = low|medium|high, default
+#   medium, reasoning cannot be disabled. Reasoning is returned in choices[0].message.reasoning (reasoning_format parsed).
+# - Prompt caching https://inference-docs.cerebras.ai/capabilities/prompt-caching: automatic prefix caching in 128-token
+#   blocks, guaranteed TTL 5 minutes (up to 1 hour), "No manual cache management is required or available", optional
+#   prompt_cache_key routing hint; cached input tokens are billed at the standard input rate.
+# - Sampling: top_k returns 400 "property 'top_k' is unsupported" (live).
+# - Streaming with stream_options.include_usage returns a usage chunk (live).
+# - Mid-conversation, live 2026-10-21 (a ~2.1K-token conversation with the long text in
+#   the history, comparing usage.prompt_tokens_details.cached_tokens): a system message after the first assistant turn returns 200, is
+#   obeyed, and keeps the cached history prefix (2048 cached tokens), so it is sent in place. Changing
+#   reasoning_effort, adding a tool, or removing every tool drops the cache to 0.
+# APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models, /public/v1/models.
+schema = 2
 base_model = "openai/gpt-oss-120b"
-last_updated = "2026-06-10"
-# Model-specific reasoning HTTP values (accessed 2026-06-25):
-# reasoning_effort = "low"|"medium"|"high"; default is "medium".
-# Sources:
-# https://inference-docs.cerebras.ai/capabilities/reasoning#gpt-oss-reasoning-effort
-# https://inference-docs.cerebras.ai/models/openai-oss
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.35
-output = 0.75
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
+structured_output = true
+top_k = false
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { ttl = ["5m"], min_tokens = 128 } }
 
 [limit]
 output = 40_960
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.35 }
+
+[cost.text.output]
+price = 0.75

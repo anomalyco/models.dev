@@ -1,10 +1,16 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
 
-[cost]
-input = 1.04
-output = 2.08
-cache_read = 0.0352
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 1.04
+cache = { read = 0.0352 }
+
+[cost.text.output]
+price = 2.08

@@ -1,13 +1,18 @@
+# Mid-conversation: Hyper serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://hyper.charm.land/v1/models
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
-release_date = "2026-06-05"
-last_updated = "2026-07-22"
-reasoning_options = []
 
-[cost]
-input = 0.484
-output = 1.852
-cache_read = 0.242
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 
 [limit]
 context = 262_100
 output = 6_553
+
+[cost.text.input]
+price = 0.484
+cache = { read = 0.242 }
+
+[cost.text.output]
+price = 1.852

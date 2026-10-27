@@ -1,0 +1,29 @@
+# Published May 2023 (MIT, 512-token input): https://huggingface.co/intfloat/e5-base-v2
+# Paper: https://arxiv.org/abs/2212.03533
+schema = 2
+v2_only = true
+type = "embedding"
+name = "E5 Base v2"
+description = "English text embedding model for retrieval and semantic similarity"
+open_weights = true
+release_date = "2023-05"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 512
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/intfloat/e5-base-v2"

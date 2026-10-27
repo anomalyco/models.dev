@@ -18,16 +18,23 @@
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
 # modalities.input: this host routes ["text", "image", "video"], narrower than the
 # lab's ["text", "image", "video", "pdf"].
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
-
-[cost]
-input = 0.11592
-output = 0.46368
-cache_read = 0.023184
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11592
+cache = { read = 0.023184 }
+
+[cost.text.output]
+price = 0.46368

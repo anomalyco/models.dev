@@ -1,13 +1,22 @@
+# Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/meta/models/muse-spark-1.2.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+schema = 2
 base_model = "meta/muse-spark-1.2"
 name = "Muse Spark 1.2 Contributor"
 
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+system_updates = true
 
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.002
+[api.responses]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://opencode.ai/inference/go/openai/v1"
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

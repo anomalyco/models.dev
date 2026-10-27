@@ -1,0 +1,25 @@
+# Released 2026-02-03 ("Today we're releasing Universal-3 Pro"): https://www.assemblyai.com/blog/introducing-universal-3-pro
+# Superseded by Universal-3.5 Pro; AssemblyAI retires universal-3-pro for new accounts: https://www.assemblyai.com/changelog
+# Input formats: common types from https://www.assemblyai.com/docs/faq/what-audio-and-video-file-types-are-supported-by-your-api
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Universal-3 Pro"
+description = "Promptable speech-to-text model with natural-language prompting, keyterms and speaker diarization"
+open_weights = false
+release_date = "2026-02-03"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

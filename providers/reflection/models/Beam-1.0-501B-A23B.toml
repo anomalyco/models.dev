@@ -1,22 +1,40 @@
 # Reflection: Beam-1.0-501B-A23B, first-party host; limits and capabilities come from the lab entry.
 # Effort: reasoning_effort = low|medium|high|xhigh|max; omitted or null uses the default effort
-#   reported by GET /models (reasoning.default_effort).
+#   reported by GET /models (reasoning.default_effort, which can differ between organizations).
 #   Reasoning is always on: there is no toggle, and "none"/"minimal" return 400 unsupported_value.
 #   https://developers.reflection.ai/reasoning
 # Interleaved: reasoning is returned in reasoning_content, and every prior assistant message
 #   must include it (400 missing_required_parameter otherwise).
 # Cost: Beam is currently free on the Reflection API; usage reports cached prompt tokens,
-#   so cache_read is set too.
+#   so cache_read is set too. The docs publish no price list (accessed 2026-10-21).
+# OpenAI compatibility (https://developers.reflection.ai/openai-compatibility, accessed 2026-10-21):
+# - Endpoints: POST /chat/completions, GET /models, GET /models/{model}; Responses and other endpoints are not supported.
+# - stream_options.include_usage is supported; tool_choice auto|none|required or a named function
+#   (https://developers.reflection.ai/tool-calling), with function.strict for strict schemas.
+# - store accepts only false; prompt_cache_key and the other prompt cache parameters are accepted but have no effect.
+# - top_k is applied from the model's defaults and "a request can't set" it (https://developers.reflection.ai/models).
+# Mid-conversation (Beam chat template, https://developers.reflection.ai/harmony-format): the reasoning effort is
+#   written into the system message at the start of the prompt, and tools are declared in the developer message at the
+#   start, so changing either changes the prompt prefix. "A system or developer message that comes after a message with
+#   another role isn't rendered."
+schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+top_k = false
+store = false
+stream_usage = true
+prompt_cache_key = false
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

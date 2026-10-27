@@ -16,13 +16,19 @@
 # https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
+schema = 2
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 1.1592
-output = 3.4776
-cache_read = 0.23184
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.1592
+cache = { read = 0.23184 }
+
+[cost.text.output]
+price = 3.4776

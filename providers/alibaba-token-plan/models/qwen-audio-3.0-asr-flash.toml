@@ -1,0 +1,25 @@
+# Current canonical Token Plan host and native route (accessed 2026-10-23):
+# https://docs.qwencloud.com/token-plan/best-practices/integrate-multimodal-gen
+# Token Plan lists qwen-audio-3.0-asr-flash as speech recognition:
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview
+# Marketplace (Audio in, Text out; 30 languages; up to 5 minutes) and DashScope curl to
+# POST /api/v1/services/aigc/multimodal-generation/generation with input_audio:
+# https://www.qwencloud.com/models/qwen-audio-3.0-asr-flash
+# Native route is DashScope sync (multimodal-generation with input_audio), not OpenAI chat:
+# only the Qwen3-ASR-Flash series supports OpenAI-compatible chat
+# (https://www.alibabacloud.com/help/en/model-studio/non-realtime-speech-recognition-user-guide).
+# API on Token Plan: POST https://token-plan.maas.qwencloudapi.com/api/v1/services/aigc/multimodal-generation/generation
+# Cost is prepaid Credits subscription, so the applicable media-unit cost is 0; marketplace $0.000035/sec is
+# pay-as-you-go and separate from unmeasured credit debit. Lab metadata via base_model.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-audio-3.0-asr-flash"
+
+[api.transcriptions]
+base_url = "https://token-plan.maas.qwencloudapi.com/api/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+price = 0
+unit = "second"

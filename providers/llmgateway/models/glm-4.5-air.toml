@@ -1,11 +1,19 @@
+# structured_output = false: /v1/models structured_outputs, strict json_schema (https://docs.llmgateway.io/learn/structured-outputs)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "zhipuai/glm-4.5-air"
-reasoning_options = []
 
-[cost]
-input = 0.13
-output = 0.85
-cache_read = 0.025
-cache_write = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 131_000
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03, write = 0 }
+
+[cost.text.output]
+price = 1.1

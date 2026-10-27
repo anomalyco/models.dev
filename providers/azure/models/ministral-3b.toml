@@ -1,23 +1,31 @@
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 name = "Ministral 3B"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "ministral"
-release_date = "2024-10-22"
-last_updated = "2024-10-22"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-03"
-tool_call = true
 open_weights = true
+knowledge = "2024-03"
+release_date = "2024-10-22"
 
-[cost]
-input = 0.04
-output = 0.04
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.04

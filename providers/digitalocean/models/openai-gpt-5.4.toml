@@ -2,38 +2,82 @@
 # `reasoning.effort = none|low|medium|high|xhigh`.
 # https://docs.digitalocean.com/products/inference/details/models/index.html.md (accessed 2026-06-25)
 # https://developers.openai.com/api/docs/models/gpt-5.4 (accessed 2026-06-25)
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: automatic for prompts of 1024+ tokens. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "openai/gpt-5.4"
+base_model_omit = ["limit.input"]
 name = "OpenAI GPT-5.4"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
-family = "gpt"
-release_date = "2026-03-05"
-last_updated = "2026-03-05"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
-knowledge = "2025-08-31"
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 2.5
-output = 15
-cache_read = 0.25
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 5
-output = 22.5
-cache_read = 0.5
+temperature = false
+system_updates = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 400_000
-output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 1.25
+cache = { read = 0.13 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 22.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 30
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 7.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" }, context = { gt = 272_000 } }
+price = 11.25
+
+[cost.web_search]
+price = 10

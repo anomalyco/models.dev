@@ -1,0 +1,18 @@
+schema = 2
+base_model = "xai/grok-4.7"
+name = "Grok 4.7 (Vertex AI (OpenAI-compatible))"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 524_288
+output = 524_288
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 6

@@ -2,19 +2,39 @@
 # json_schema on /v1/chat/completions is translated via forced tool use; this
 # model rejects that ("Structured output is not supported for this model because
 # its translation requires forced tool use"). Measured 2026-10-13.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Cache: explicit. POST /anthropic/v1/messages forwards `cache_control` unchanged and caching "works exactly as described"
+# in Anthropic's docs (https://neon.com/docs/ai-gateway/anthropic-messages#prompt-caching); breakpoints, targets and
+# min_tokens follow providers/anthropic. Only 5m is listed because Neon publishes a single cache_write price.
+# Toggle: {"thinking": {"type": "enabled"|"disabled"}} on POST /anthropic/v1/messages, which forwards `thinking` unchanged
+# (https://neon.com/docs/ai-gateway/anthropic-messages#extended-thinking); Neon's page doesn't list this model either way, so the existing toggle + budget values stay.
+# Budget: {"thinking": {"type": "enabled", "budget_tokens": <n>}}, with max_tokens greater than budget_tokens.
+schema = 2
 base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 63_999 } }
 structured_output = false
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[api.chat-completions]
 
-[[cost.tiers]]
-tier = { type = "context", size = 100_000 }
-input = 0.5
-output = 2.5
-cache_read = 0.05
-cache_write = 0.625
+[api.messages]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

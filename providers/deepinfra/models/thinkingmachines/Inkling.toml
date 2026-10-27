@@ -1,11 +1,23 @@
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 11136/11275 -> None/11291; 11136/11275 -> None/11291]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 10880/10987 -> None/11029; 10880/10987 -> None/11029]
+schema = 2
 base_model = "thinkingmachines/inkling"
-structured_output = true
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.95
-output = 4.05
-cache_read = 0.16
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
 
 [limit]
 context = 524_288
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4.05

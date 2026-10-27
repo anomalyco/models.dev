@@ -5,13 +5,18 @@
 #   answered 400 for "minimal" and "medium" and 500 for "xhigh".
 # Pricing: free endpoint on NVIDIA's API trial tier; no list rate is published.
 # https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

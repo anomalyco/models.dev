@@ -1,24 +1,27 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Deprecated: Amazon Nova Premier reached end of life on Bedrock (2026-09-14). Kilo serves it through OpenRouter (Vercel AI Gateway doesn't list it), where it is deprecated.
+schema = 2
+base_model = "amazon/nova-premier"
 name = "Amazon: Nova Premier 1.0"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "nova"
-release_date = "2025-10-31"
-last_updated = "2025-10-31"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
-
-[cost]
-input = 2.5
-output = 12.5
-cache_read = 0.625
-
-[limit]
-context = 1_000_000
-output = 32_000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = false
+
+[limit]
+output = 32_000
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.625 }
+
+[cost.text.output]
+price = 12.5

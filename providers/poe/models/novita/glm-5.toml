@@ -1,23 +1,16 @@
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-release_date = "2026-02-15"
-last_updated = "2026-02-15"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-open_weights = false
-tool_call = true
+# Toggle: extra_body.enable_thinking true|false (Poe's parameter for Novita-hosted bots in https://api.poe.com/v1/models, e.g. deepseek-v3.2, glm-4.6; this bot isn't in the public listing)
+schema = 2
+base_model = "zhipuai/glm-5"
 
-[cost]
-input = 1
-output = 3.2
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 205_000
-output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

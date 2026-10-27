@@ -1,15 +1,85 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation: system_updates unset. OpenRouter doesn't document mid-conversation system messages for this model, and it routes to about 20 upstreams; DeepSeek's own API moves them to the leading prompt on V4 Pro (providers/deepseek). The earlier true came from one live run (cache kept on Sail Research, 2026-10-19), which isn't enough on its own.
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 0.66
-output = 1.98
-cache_read = 0.022
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.022 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["sat", "sun"] } }
+price = 0.66
+cache = { read = 0.022 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { lt = "01:00" } }
+price = 0.66
+cache = { read = 0.022 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }
+price = 1.32
+cache = { read = 0.044 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "04:00" } }, { utc_hours = { lt = "06:00" } }] }
+price = 0.66
+cache = { read = 0.022 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }
+price = 1.32
+cache = { read = 0.044 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { gte = "10:00" } }
+price = 0.66
+cache = { read = 0.022 }
+
+[cost.text.output]
+price = 1.98
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["sat", "sun"] } }
+price = 1.98
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { lt = "01:00" } }
+price = 1.98
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }
+price = 3.96
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "04:00" } }, { utc_hours = { lt = "06:00" } }] }
+price = 1.98
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }
+price = 3.96
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { gte = "10:00" } }
+price = 1.98

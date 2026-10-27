@@ -1,6 +1,13 @@
+schema = 2
 base_model = "relace/relace-search"
 name = "Search"
 
-[cost]
-input = 1.3754
-output = 4.1262
+[capabilities]
+structured_output = false
+tools = { supported = true }
+
+[cost.text.input]
+price = 1.058
+
+[cost.text.output]
+price = 3.174

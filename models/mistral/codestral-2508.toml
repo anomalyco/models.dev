@@ -3,22 +3,25 @@
 # https://mistral.ai/news/codestral-25-08 (Codestral 25.08 announcement July 30 2025)
 # https://docs.mistral.ai/resources/known-limitations (Codestral 128k max context)
 # Fallback for max output: https://opper.ai/mistral/codestral-2508 (Mistral-route 8K max output, text in/out)
+# Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
+schema = 2
 name = "Codestral 25.08"
 description = "Mistral code model for low-latency completion, fill-in-the-middle, and code generation"
 family = "codestral"
-release_date = "2025-07-30"
-last_updated = "2025-07-30"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[limit]
-context = 128_000
-output = 8_192
+release_date = "2025-07-30"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 128_000
+output = 8_192

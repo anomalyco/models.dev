@@ -1,0 +1,30 @@
+# Model card: https://huggingface.co/upstage/SOLAR-10.7B-Instruct-v1.0 (depth-upscaled 10.7B instruction model;
+# cc-by-nc-4.0). Published 2023-12-12 (Hugging Face createdAt). Context 4,096: config.json max_position_embeddings
+# (the card's example also uses max_length=4096). No function calling is documented; output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "SOLAR 10.7B Instruct v1.0"
+description = "Upstage depth-upscaled 10.7B instruction model for single-turn chat"
+family = "solar"
+open_weights = true
+release_date = "2023-12-12"
+license = "CC-BY-NC-4.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 4_096
+output = 4_096
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/upstage/SOLAR-10.7B-Instruct-v1.0"

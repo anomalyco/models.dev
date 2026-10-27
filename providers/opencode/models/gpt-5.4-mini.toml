@@ -1,31 +1,31 @@
+# Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Modalities: PDF input via input_file (https://developers.openai.com/api/docs/guides/pdf-files); Zen forwards Responses requests to OpenAI.
+# Effort: reasoning.effort = none|low|medium|high|xhigh (not re-verified on Zen: model access is disabled for the probe key)
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/openai/models/gpt-5.4-mini.toml (Zen passes requests through).
+#   Surface: Responses carries the in-history messages (additional_tools for tools.updates, add only).
+# Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with text, lark or regex format), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
+schema = 2
+base_model = "openai/gpt-5.4-mini"
 name = "GPT-5.4 Mini"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2026-03-17"
-last_updated = "2026-03-17"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
-temperature = false
-knowledge = "2025-08-31"
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 0.75
-output = 4.50
-cache_read = 0.075
-
-[limit]
-context = 400_000
-input = 272_000
-output = 128_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+system_updates = true
+
+[api.responses]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 4.5

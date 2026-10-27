@@ -1,30 +1,43 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/qwen3-7-flash.md
+# Effort: reasoning_effort = none|low|medium|high|max
+#   (model page: "low, medium, high, and max set bounded thinking budgets sized to the selected model")
+# Budget: thinking_budget (integer reasoning tokens)
+# Cache: model page prices an "Implicit cache read" row.
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/qwen3-7-flash:generateContent
+schema = 2
 base_model = "alibaba/qwen3.7-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 131_072
-
-[cost]
-input = 0.03
-output = 0.13
-cache_read = 0.006
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.1
-output = 0.4
-cache_read = 0.02
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 0.2
-output = 0.8
-cache_read = 0.04
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 131_072 } }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 65_536
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1
+cache = { read = 0.02 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.13
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.8

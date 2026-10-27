@@ -14,17 +14,24 @@
 # https://iteracompute.com/models/qwen3-8-2-4t-a95b/ also marks Vision as supported
 # in its pricing/capabilities header (beside Tool Calling, Reasoning, and Streaming).
 # These are host declarations of support; image quality remains unverified.
+# Prices updated 2026-10-21 from the public GET https://api.iteracompute.com/v1/models pricing object (USD per 1M tokens).
+schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
-attachment = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
 
-[cost]
-input = 1.95
-output = 5.7
-cache_read = 0.245
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.95
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 5.7

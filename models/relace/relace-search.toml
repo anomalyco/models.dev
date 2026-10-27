@@ -1,20 +1,26 @@
-# Lab metadata carried over from providers/openrouter/models/relace/relace-search.toml (curated catalogue data already in this repo),
+# Lab metadata carried over from providers/openrouter/models/relace/relace-search.toml (curated catalogue data
+#   already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: Relace's endpoint advertises temperature and top_p but not top_k
+#   (https://openrouter.ai/api/v1/models/relace/relace-search/endpoints, provider Relace, 2026-10-20);
+#   https://docs.relace.ai/api-reference/fast-agentic-search/search.md documents no other sampling fields.
+schema = 2
 name = "Relace Search"
 description = "Tool-capable chat model for instruction following and agentic application workflows"
-release_date = "2025-12-08"
-last_updated = "2025-12-08"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
-
-[limit]
-context = 256000
-output = 128000
+release_date = "2025-12-08"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 256_000
+output = 128_000

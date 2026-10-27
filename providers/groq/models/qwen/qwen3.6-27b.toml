@@ -1,15 +1,26 @@
+# Status: deprecated. Groq shut qwen/qwen3.6-27b down for free and developer-tier usage on 2026-09-14 (replacement:
+# qwen/qwen3.8-27b): https://console.groq.com/docs/deprecations. It is gone from GET /openai/v1/models and a request
+# returns 404 model_not_found (2026-10-21).
+# Effort: reasoning_effort = none|default (https://console.groq.com/docs/reasoning)
+schema = 2
 base_model = "alibaba/qwen3.6-27b"
-reasoning_options = [{ type = "effort", values = ["none", "default"] }]
+status = "deprecated"
 
-[cost]
-input = 0.60
-output = 3.00
-cache_read = 0.30
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "default"] }
+structured_output = true
 
 [limit]
 context = 131_072
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.6
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 3

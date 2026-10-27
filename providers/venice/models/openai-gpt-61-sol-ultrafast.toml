@@ -1,35 +1,47 @@
+# Modalities: image from openai/gpt-6.1-sol. Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+# Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+schema = 2
+base_model = "openai/gpt-6.1-sol"
 name = "GPT-6.1 Sol Ultrafast"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2026-10-08"
-last_updated = "2026-10-10"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 12
-output = 60
-cache_read = 0.6
-cache_write = 15
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 24
-output = 90
-cache_read = 1.2
-cache_write = 30
-
-[limit]
-context = 1_050_000
-output = 128_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 12
+cache = { read = 0.6, write = 15 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 24
+cache = { read = 1.2, write = 30 }
+
+[cost.text.output]
+price = 60
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 90
+
+[cost.web_search]
+price = 10

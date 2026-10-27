@@ -1,5 +1,25 @@
+# Prices and context tiers: https://api.orcarouter.ai/v1/models (accessed 2026-10-21).
+schema = 2
 base_model = "alibaba/qwen3-max"
 
-[cost]
-input = 0.359
-output = 1.434
+[cost.text.input]
+price = 0.359
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.574
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.004
+
+[cost.text.output]
+price = 1.434
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.294
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 4.014

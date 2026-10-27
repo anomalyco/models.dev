@@ -1,24 +1,70 @@
+# tools.choice: tool_choice none/auto/required/named (https://learn.microsoft.com/en-us/azure/foundry/openai/latest); tools.strict: Structured outputs in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure and https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs#supported-models
+# tools.freeform: GPT-5 series custom tools take raw text ("Enables raw text (non-JSON) outputs") or a lark grammar (Azure documents lark only, no regex): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#python-lark
+# tools.search: tool_search on the Responses API only, gpt-5.4 and later: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/tool-search
+# Per-API tools: tool_search is Responses-only (Azure Chat Completions returns 400 "Invalid value: 'tool_search'", live 2026-10-26), so tools.search sits on [api.responses]. Strict function tools, tool_choice and lark custom tools work on both APIs (lark custom tool and strict function accepted on Azure Chat Completions, gpt-5.4-nano and gpt-5.6-luna, live 2026-10-26).
+# effort_updates: live 2026-10-23 `configuration_update` was accepted (cache kept) on only some requests and 400 on the rest (luna 4/6, sol 1/4, terra 1/4), so it stays false.
 # Fast mode is Azure priority processing (Global Standard): https://azure.microsoft.com/en-us/pricing/details/azure-openai/ and https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/priority-processing
 # Pricing: https://azure.microsoft.com/en-us/blog/gpt-5-6-now-available-in-microsoft-foundry/
 # Rates: https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
-# $4 input / $20 output promotion: 2026-09-01 through at least 2026-11-30.
-# Keep published cache and long-context rates; the announcement does not specify discounts for them.
+# Global Standard meters (Azure Retail Prices API, "5.6 sol ShortCo/LongCo ... Std Gl", effective 2026-09-01):
+# 4 / 20 / cached 0.4 / cache write 5; above 272K: 8 / 30 / 0.8 / 10.
+# Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
+# system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
+# `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
+# Web search: billed as Grounding with Bing Search, $14 per 1,000 Bing search requests (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing): https://www.microsoft.com/en-us/bing/apis/grounding-pricing
+# Token-only multipliers (object factor, so cost.web_search is unscaled): web search is billed separately as Grounding with Bing Search (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing).
+# APIs: Responses (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models) and Chat Completions (API and feature support tables at https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning).
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Mid-conversation developer messages work on both Responses and Chat Completions (OpenAI documents both; Azure Chat kept the cache live on 2026-10-23), so system_updates stays top-level.
+schema = 2
 base_model = "openai/gpt-5.6-sol"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 4.00
-output = 20.00
-cache_read = 0.50
-cache_write = 6.25
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+store = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
+system_updates = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 10.00
-output = 45.00
-cache_read = 1.00
-cache_write = 12.50
+[api.responses]
+capabilities = { tools = { search = true, updates = true } }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4, write = 5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 8
+cache = { read = 0.8, write = 10 }
+
+[cost.text.output]
+price = 20
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 30
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = { text = 1.1 }
 
 [experimental.modes.fast]
-cost = { input = 8.00, output = 40.00, cache_read = 0.80, cache_write = 10.00 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }

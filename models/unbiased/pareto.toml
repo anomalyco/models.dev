@@ -2,21 +2,27 @@
 # - https://unbiased.ai/model-card/
 # - https://developers.cloudflare.com/ai/models/unbiased/pareto/
 # - https://openrouter.ai/api/v1/models/unbiased/pareto/endpoints
+# Sampling: the published request schema takes temperature and top_p but no top_k
+#   (https://developers.cloudflare.com/ai/models/unbiased/pareto/, Parameters).
+# Image input: the Unbiased model card says only "Pareto accepts text and image inputs" and no Unbiased doc lists
+#   formats, so the input stays generic `image`.
+schema = 2
 name = "Pareto"
 description = "Blended multimodal model that runs multiple language models in parallel and returns a synthesized answer"
-release_date = "2026-09-17"
-last_updated = "2026-09-17"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
-
-[limit]
-context = 262_144
-output = 131_072
+release_date = "2026-09-17"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 262_144
+output = 131_072

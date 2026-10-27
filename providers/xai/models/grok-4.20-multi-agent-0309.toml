@@ -1,34 +1,69 @@
+# Sources (docs.x.ai):
+# - Model page: https://docs.x.ai/developers/models/grok-4.20-multi-agent-0309
+# - Models/pricing: https://docs.x.ai/developers/models, https://docs.x.ai/developers/pricing (long context: prompts ≥ 200k tokens)
+# - Reasoning: https://docs.x.ai/developers/model-capabilities/text/reasoning
+# - Caching (automatic prefix cache, prompt_cache_key): https://docs.x.ai/developers/advanced-api-usage/prompt-caching
+# - Priority (service_tier = priority, 2x): https://docs.x.ai/developers/advanced-api-usage/priority-processing
+# - API params (store, stream_options.include_usage, top_k): https://docs.x.ai/developers/rest-api-reference/inference/responses, https://docs.x.ai/developers/rest-api-reference/inference/chat-completions
+# - Responses API (Chat Completions is its legacy predecessor): https://docs.x.ai/developers/model-capabilities/text/comparison
+# Responses API only: Chat Completions rejects multi-agent requests, so stream_usage doesn't apply.
+# Client-side function tools need beta access ("Client-side tools for multi-agent models require
+# beta access", live API 2026-10-19), so tools stay off for general access.
+# Mid-conversation: system/developer messages are accepted in any order (docs.x.ai/developers/models);
+# changing reasoning effort or tools between turns drops the prompt cache, and there is no per-turn
+# mechanism (configuration_update/additional_tools return 422), checked live 2026-10-19.
+# Web search: $5 per 1,000 web_search tool calls: https://docs.x.ai/developers/pricing#tools-pricing
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Priority (https://docs.x.ai/developers/pricing).
+# APIs: Responses only; Chat Completions rejects multi-agent requests (confirmed live 2026-10-22).
+schema = 2
 name = "Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2026-03-09"
-last_updated = "2026-03-09"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2026-03-09"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 2.5
-output = 5
-cache_read = 0.4
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
+system_updates = true
+store = true
+prompt_cache_key = true
+cache = { implicit = true }
+service_tier = ["priority"]
 
 [limit]
 context = 1_000_000
 output = 30_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.responses]
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 5
+
+[cost.web_search]
+price = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }

@@ -3,15 +3,19 @@
 # https://api.commandcode.ai/provider/v1/models
 # Output ceiling: capped at the host context window (prompt plus completion).
 # Live /chat/completions (2026-10-14): reasoning_effort = minimal|none -> HTTP 400 invalid option.
+schema = 2
 base_model = "thinkingmachines/inkling-small"
 
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 
 [limit]
-output = 1000000
-context = 1000000
+output = 1_000_000
+context = 1_000_000
 
-[cost]
-input = 0.5
-output = 1.2
-cache_read = 0.1
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.2

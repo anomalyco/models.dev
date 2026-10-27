@@ -1,29 +1,17 @@
+schema = 2
+base_model = "google/gemini-4-argon"
 name = "Gemini 4 Argon (Google Vertex AI)"
-description = "Gemini multimodal model for text, image, audio, video, and document tasks"
-family = "gemini"
-release_date = "2026-09-30"
-last_updated = "2026-09-30"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 0.375
 
 [limit]
-context = 1_048_576
 output = 1_048_576
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 0.375 }
+
+[cost.text.output]
+price = 20

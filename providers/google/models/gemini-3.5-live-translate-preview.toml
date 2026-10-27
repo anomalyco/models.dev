@@ -4,15 +4,28 @@
 # - https://ai.google.dev/gemini-api/docs/live-api/live-translate
 # - https://deepmind.google/models/model-cards/gemini-3-5-audio/
 # - https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/
+schema = 2
 base_model = "google/gemini-3.5-live-translate-preview"
-temperature = true
 
-[cost]
-input = 3.5
-output = 21
-input_audio = 3.5
-output_audio = 21
+[capabilities]
+temperature = true
+cache = false
 
 [limit]
 context = 16_384
 output = 32_768
+
+[api.bidi-generate-content]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 3.5
+
+[cost.text.output]
+price = 21
+
+[cost.audio.input]
+price = 3.5
+
+[cost.audio.output]
+price = 21

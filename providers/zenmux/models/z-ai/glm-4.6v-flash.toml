@@ -2,23 +2,32 @@
 # Host naming: the 2026-09-19 live route z-ai/glm-4.6v-flash is labeled "GLM 4.6V FlashX".
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+schema = 2
 base_model = "zhipuai/glm-4.6v-flash"
 name = "GLM 4.6V FlashX"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.0218
-output = 0.2184
-cache_read = 0.0044
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.0437
-output = 0.4367
-cache_read = 0.0044
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
 [limit]
 context = 200_000
 output = 128_000
+
+[cost.text.input]
+price = 0.0218
+cache = { read = 0.0044 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 32_000 } }
+price = 0.0437
+cache = { read = 0.0044 }
+
+[cost.text.output]
+price = 0.2184
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 32_000 } }
+price = 0.4367

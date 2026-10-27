@@ -25,6 +25,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
+- `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -43,6 +44,7 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 - Resolves existing `base_model` / `base_model_omit` metadata before passing local metadata to provider modules.
 - Calls the provider module to fetch, parse, and translate source models.
 - Validates translated models with `AuthoredModel` before writing.
+- Patches the result into the existing v2 file (new files are written in v2). Provider modules return the v1-shaped `AuthoredModel` (`reasoning_options`, `cost.input`, `tool_call`, `attachment`, `interleaved`, …), so the per-provider notes below use those names; the runner maps them to v2 fields (`capabilities.reasoning`, `cost.text.input.price`, `capabilities.tools`, modalities, `[api.*] compatibility`) and keeps v2 data it doesn't own (cache, overrides, multipliers). Hand-authored files always use v2 fields (see `AGENTS.md`).
 - Formats TOML consistently for all synced providers.
 - Compares authored TOML shapes before writing so existing factored TOMLs stay factored instead of being expanded.
 - Replaces symlinked files safely by removing the symlink before writing.
@@ -158,7 +160,7 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 - Latest aliases (`alias_of` plus an ID ending in `-latest`) get a distinct display name such as `Claude Fable Latest (Claude Fable 5.1)` so they do not collide with the versioned target in UIs that key on `name`. Case-only `alias_of` duplicates are not treated as latest aliases.
 - Extra labels (current target, host, region) share one parenthetical, e.g. `Gemini Flash Latest (Gemini 3.8 Flash, Vertex AI)` and `GPT OSS 120B (Deep Infra)`. The lab's own API keeps the unsuffixed canonical name; other hosts (Vertex AI, Deep Infra, Groq, Together AI, …) are named.
 - Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels.
-- When the effort mapper cannot resolve controls, preserve the existing route's authored `reasoning_options` while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
+- When the effort mapper cannot resolve controls, preserve the existing route's authored reasoning controls (`capabilities.reasoning`) while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
 - New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
 - Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
 
@@ -168,8 +170,11 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 
 - Source endpoint: `https://www.crossmodel.ai/api/models`.
 - Pricing, context/output limits, modalities, and reasoning controls come from CrossModel's public catalog.
-- `structured_output` comes from `capabilities.json`; when that field is absent, the sync preserves an existing authored override.
-- Other intrinsic model facts remain inherited from the canonical `base_model` metadata.
+- `structured_output` comes from `capabilities.json` (documented `/v1/models` shape) or `capabilities.structured_output.json_schema` (the public catalog); when both are absent or null, the sync preserves an existing authored override.
+- `identity.release_stage = "deprecated"` sets `status = "deprecated"`; otherwise an existing status is kept.
+- `capabilities.context.caching = true` sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet (CrossModel documents no mechanism or TTL). Authored `implicit` / `explicit` details are kept.
+- Effort lists are sorted low to high, because v2 compares them in order.
+- Intrinsic model facts (`knowledge`, dates, `family`, `open_weights`) are never synced; they stay inherited from the canonical `base_model` metadata. Display names are not synced either, so v1 names remain the lab's.
 
 ## Prime Inference Notes
 
@@ -179,6 +184,17 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 - Sparse metadata, unresolved lab identities and missing or unknown reasoning controls are reported for manual follow-up. Existing files for those still-listed IDs are retained; no placeholder controls or lab facts are invented, and the sync does not automatically open issues for sparse upstream rows.
 - Models absent from the API or explicitly lacking tool/text support are removed. Empty, malformed and duplicate-ID inventories fail before writes. Internal/frontier namespaces, deployment-qualified IDs and uppercase namespaces are excluded; exact wire IDs are preserved on case-insensitive filesystems.
 - Cache prices are omitted when unavailable, including removal of stale cache rates. Unpublished input-token limits are omitted; generic `file` input does not imply PDF support. Reasoning options use the published per-model `reasoning_effort` values, including `none` when advertised.
+
+## EmpirioLabs Notes
+
+EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
+
+- Source endpoint: the public `https://api.empiriolabs.ai/v1/models`. Only `category = "text"` models without a `:` lane suffix are synced.
+- Prices, limits, modalities, `supported_parameters` reasoning controls (`enable_thinking`, `reasoning_effort`, `thinking_budget`) and display names come from the catalog. Effort lists are sorted low to high.
+- `structured_output` is `"json_schema"`, `"json_object"` or `"none"` (https://docs.empiriolabs.ai/compatibility.md); `"none"` syncs as false.
+- `deprecated = true` sets `status = "deprecated"`; otherwise an existing status is kept.
+- A `cache` or `prompt_cache` feature sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet. Authored `implicit` / `explicit` details are kept.
+- `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
 
 ## OpenRouter Notes
 
@@ -215,6 +231,10 @@ Merge Gateway is implemented in `packages/core/src/sync/providers/merge-gateway.
 - The canonical provider's available vendor route supplies pricing, limits, and capabilities. When it is unavailable, the sync matches Gateway's default resolver by selecting the active route with the lowest combined input and output price; the API's CMS-priority order breaks ties.
 - Canonical model IDs emit `base_model` references to model metadata when a matching `models/` entry exists.
 - Local models missing from the response are retained because API-key policy can affect catalog visibility.
+- `pricing.long_context` becomes a context tier; a null long-context rate keeps the base rate.
+- Routes whose `pricing.unit` isn't `per_token` (per second, image or character) report 0 per-token prices, so the sync writes no token price for them and the file's own unit price (e.g. `cost.audio.input` with `unit = "second"`) is kept by hand.
+- Effort values are written low to high. New files with a reasoning toggle get the `thinking.type` wire-path header.
+- `capabilities.cache` and the mid-conversation flags are hand-authored (see `providers/merge-gateway/provider.toml`); the catalog doesn't list a route's caching family.
 
 ## Cloudflare Workers AI Notes
 
@@ -232,7 +252,7 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - Cloudflare AI Gateway is implemented in `packages/core/src/sync/providers/cloudflare-ai-gateway.ts`.
 - Source endpoints: `GET /accounts/{id}/ai/catalog/models` for model availability, context limits, and pricing, plus `GET /accounts/{id}/ai/catalog/models/{model}/schema` for reasoning controls exposed by compatible schemas.
 - Required auth: `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`, or the production-token aliases documented in the provider README for local runs. The hourly workflow uses the canonical secret names.
-- The sync manages proxied third-party text-generation models only. Workers AI `@cf/...` models remain under `providers/cloudflare-workers-ai`.
+- The sync manages proxied third-party models. Text-generation rows become normal model files. `Text-to-Speech`, `Automatic Speech Recognition`, image (`Text-to-Image`, `Image-to-Image`) and video (`Text-to-Video`, `Image-to-Video`, `video-to-video`) rows become v2-only files (`v2_only = true`) on the REST API's `POST /ai/run` route, with per-character, per-minute, per-image, per-megapixel, per-second or per-token costs. Music generation, image-to-document and `websocket` rows are left out on purpose, and image/video ids without a lab file stay in `skip`. Workers AI `@cf/...` models remain under `providers/cloudflare-workers-ai`.
 - `providers/cloudflare-ai-gateway/curation.toml` supplies base-model mappings, live-tested reasoning controls, structured-output support, limit overrides, and intentional skips that the catalog cannot express authoritatively.
 - New catalog entries without canonical lab metadata or required reasoning controls fail closed instead of generating incomplete TOMLs.
 
@@ -279,9 +299,10 @@ Mistral is implemented in `packages/core/src/sync/providers/mistral.ts`.
 - `deprecation` is incomplete: the API still serves some models Mistral's docs list as deprecated with `deprecation: null`. Those IDs are pinned in `DEPRECATED_IDS` in `mistral.ts` so the sync keeps them deprecated instead of clearing an authored `status`. Models absent from `/v1/models` are never touched, so mark them deprecated in their TOML.
 - Pricing, output limits, reasoning controls, dates, and other metadata stay hand-authored because the endpoint does not expose them.
 - Reasoning controls are checked, not written. For each reasoning model the sync sends one chat request with `reasoning_effort: "minimal"` and `max_tokens: 1`; Mistral's rejection lists the accepted values. If they differ from the authored `effort` values, the model's file is left unchanged and a missing-model issue is opened with the diagnostic. This catches aliases that move to a model with different controls. Accepted values can include aliases (Mistral silently accepts `minimal` on `zai-glm-5-2`), so a probe that succeeds or returns an unrecognized message is treated as unknown and skips the check rather than writing guessed values.
-- A model that newly reports reasoning without authored `reasoning_options` also fails closed with a missing-model issue.
+- A model that newly reports reasoning without authored `capabilities.reasoning` controls also fails closed with a missing-model issue.
 - Ordinary auto-merge rules apply: context, tool-calling, and modality updates can auto-merge, while any change to reasoning metadata still requires manual review because Mistral is not a reviewed reasoning provider.
-- Embedding, OCR, moderation, transcription, and TTS rows are ignored; existing TOMLs for them are kept unchanged.
+- Embedding, OCR, moderation, transcription, and TTS rows carry no chat metadata; their existing TOMLs are kept unchanged except for API tables.
+- API tables follow the capabilities: `completion_fim` adds `[api.fim]` (`/v1/fim/completions`), `moderation` adds `[api.moderations]` and `ocr` adds `[api.ocr]`, each with `aisdk = "none"` and `opencodeai = "none"`. They come after the file's first table, which v1 reads and the sync leaves alone; a file with none starts with Chat Completions, or with the model's only API.
 - New chat models are not created automatically (`skipCreates`). Each opens one deduped missing-model issue under its canonical ID (the row whose `id` equals its `name`), not once per alias.
 - Local models absent from the response are retained (`deleteMissing: false`) because the listing is scoped to the key's workspace and drops retired models.
 
@@ -306,6 +327,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 
+## Morph Notes
+
+- Morph is implemented in `packages/core/src/sync/providers/morph.ts`.
+- Source endpoint: `https://www.morphllm.com/api/models/json?prices=list`, the direct API list rates. The bare URL is Morph's OpenRouter provider feed and carries OpenRouter channel prices, so the sync never reads it.
+- No authentication is required; the catalog is public.
+- Existing Morph models are updated from the feed's input, cached-input and output prices and its context and output limits.
+- Reasoning controls, input MIME types, standby tiers, Messages API support and mid-conversation flags stay hand-authored from live probes.
+- New models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. OpenRouter alias IDs (`morph-dsv4flash-0731`) and entries with `is_ready: false` are skipped silently. Files absent from the feed, such as `auto`, are kept.
+
 ## NEAR AI Cloud Notes
 
 - NEAR AI Cloud is implemented in `packages/core/src/sync/providers/nearai.ts`.
@@ -316,9 +346,9 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - `context` is synced only for models NEAR AI hosts itself (`owned_by = "nearai"`), where `context_length` is the serving `max_model_len`. On relayed routes the figure comes from the upstream aggregator and is often rounded below the lab entry, so syncing it would publish a cap the host does not impose. Where it is synced it is taken as the lower of the two values, so a smaller verified cap survives.
 - `limit.output` is never synced. `max_output_length` is advisory rather than enforced: a request above it is accepted, and only exceeding the context window is rejected.
 - No capability is taken from the endpoint, because its capability fields are wrong in both directions. `supported_features` lists `reasoning` for relayed routes that accept every documented reasoning parameter and still return no reasoning content, and omits it for others that plainly reason. `input_modalities` advertises image input for routes that reject it, and also reports an `embedding` modality the schema has no value for.
-- `tool_call`, `structured_output` and lifecycle `status` are hand-authored.
+- `capabilities.tools`, `structured_output` and lifecycle `status` are hand-authored.
 - New models are created as `base_model` overlays carrying only `cost`, keyed to the lab entry at `models/<lab>/<model>.toml` (NEAR AI namespaces such as `qwen`, `x-ai` and `z-ai` are mapped to `alibaba`, `xai` and `zhipuai`). Everything else, including limits, modalities, release date and knowledge cutoff, is inherited from the lab entry.
-- A new model whose lab entry has `reasoning = true` is not created. The endpoint says nothing about how a route turns reasoning on, off or up, so the run opens a deduped GitHub issue asking for the route's controls to be researched and its `reasoning_options` hand-authored. Once that file exists, the sync keeps it priced like any other. Reasoning is judged from the lab entry, never from `supported_features`.
+- A new model whose lab entry has `reasoning = true` is not created. The endpoint says nothing about how a route turns reasoning on, off or up, so the run opens a deduped GitHub issue asking for the route's controls to be researched and hand-authored in `capabilities.reasoning`. Once that file exists, the sync keeps it priced like any other. Reasoning is judged from the lab entry, never from `supported_features`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
 
@@ -388,7 +418,7 @@ Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
 - Source endpoint: `https://llm.chutes.ai/v1/models`; no auth required (the model list is public).
 - Model IDs map directly to TOML paths under `providers/chutes/models`.
 - `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
-- `reasoning_options` is hand-authored, not derived: the API advertises a `reasoning` capability but no toggle or effort parameter, while the models accept a `chat_template_kwargs` thinking switch (`enable_thinking` for Qwen/Gemma, `thinking` for Kimi/GLM/DeepSeek). The sync leaves the field unset so authored options survive; new reasoners without an entry still default to an empty array.
+- Reasoning controls (`capabilities.reasoning`) are hand-authored, not derived: the API advertises a `reasoning` capability but no toggle or effort parameter, while the models accept a `chat_template_kwargs` thinking switch (`enable_thinking` for Qwen/Gemma, `thinking` for Kimi/GLM/DeepSeek). The sync leaves the field unset so authored options survive; new reasoners without an entry still default to an empty array.
 - TEE model IDs emit `base_model` references to matching `models/` metadata; checkpoints without a canonical entry (e.g. `Qwen3-235B-A22B-Thinking-2507`, `DeepSeek-V3.2`) are written inline.
 - `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
 - `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
@@ -399,8 +429,11 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 
 - Run it with `bun models:sync requesty` or `bun requesty:sync`.
 - Source endpoint: `https://router.requesty.ai/v1/models/managed`; no auth required (the managed catalog is public).
-- The endpoint is the sole source of truth. `preserveBaseModels` and `preserveDescriptions` are both `false` so an upstream correction always wins over a previously committed value; local TOMLs are never read back into the translation.
-- Managed IDs are bare (`claude-opus-4-7`) or region-pinned (`gpt-5.4@eu`) rather than OpenRouter-shaped, so they resolve through `resolveModelMetadataBaseModel` after the `@<region>` qualifier is stripped. Every model emits `base_model` plus provider-specific overrides only.
+- The endpoint is the source of truth for prices, limits and capability flags. `preserveBaseModels` and `preserveDescriptions` are both `false`, so an upstream correction wins over a previously committed value. The translation reads two things back from the existing file:
+  - `base_model`, but only when `resolveRequestyBaseModel` has no match for the ID. This keeps a route linked to its lab by hand (e.g. `seed-1.8` → `bytedance-seed/seed-1-8`). A hand-linked file also keeps a curated `name` (e.g. `inkling-256k` → "Inkling 256K"); it is dropped when it equals the lab's.
+  - A curated `status`. The catalog's `retires` date is not synced, so `status = "deprecated"` is set by hand once a route retires.
+- A catalog `max_output_tokens` of 0 means unknown. A linked file then inherits the lab's `limit.output` instead of the context-window fallback, unless the lab's output exceeds the context the route serves (then the context is the cap).
+- Managed IDs are bare (`claude-opus-4-7`) or region-pinned (`gpt-5.4@eu`) rather than OpenRouter-shaped, so they resolve through `resolveModelMetadataBaseModel` after the `@<region>` qualifier is stripped. Resolved and hand-linked models emit `base_model` plus provider-specific overrides only; unmatched IDs are written as standalone files.
 - Anthropic files `.0` releases with an explicit `-0` (`claude-sonnet-4-0.toml`) while later point releases drop it, so bare `claude-<tier>-<major>` IDs retry against the `-0` filename.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
@@ -428,6 +461,9 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
 - `skipCreates` and `trackMissingModels` are set: a created file would ship `limit.output = 0`. Unseen IDs open deduped `[missing-model]` issues.
 - `deleteMissing` is `false`: the list is unauthenticated and `{"data":[]}` passes the schema, so a truncated 200 must not delete hand-measured files; they are retained and reported.
 - An authored `base_model` wins over the resolver, so a miss never de-factors a committed file.
+- Authoring a model from a `[missing-model]` issue:
+  - Take `limit.input` and `limit.output` from `max_input_tokens` and `max_output_tokens` in the authenticated list. If the id is absent there, do not copy a sibling's split without saying so in the header; engy accepts an over-cap `max_tokens` (65,537 passes where the listed cap is 65,536), so a request cannot confirm the cap.
+  - Point `base_model` at the lab entry for the exact id, adding it under `models/` if it is missing. Pointing at a sibling is not a substitute: because an authored `base_model` wins, the sync never corrects it later.
 - Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
 - Modalities are sorted into catalogue order; wire order is arbitrary.
 

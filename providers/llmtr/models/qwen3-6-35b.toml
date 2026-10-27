@@ -4,14 +4,20 @@
 # so it is pinned false here. Limits and pricing from
 # https://llmtr.com/api/models (accessed 2026-08-16).
 # Toggle: reasoning = true|false
+schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
-tool_call = false
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 5.0
-output = 10.0
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 16_384
 output = 16_384
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 10

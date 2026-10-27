@@ -1,13 +1,16 @@
+# Prices (accessed 2026-10-21): OrcaRouter lists one flat rate with no context tiers
+# (https://api.orcarouter.ai/v1/models and https://api.orcarouter.ai/api/pricing,
+# tiered_pricing off), equal to Google's above-200K rate.
+schema = 2
 base_model = "google/gemini-3.1-pro-preview-customtools"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4
-output = 18
-cache_read = 0.4
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 18

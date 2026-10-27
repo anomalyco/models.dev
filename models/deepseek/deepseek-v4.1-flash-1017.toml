@@ -2,27 +2,30 @@
 # Release date, API capabilities, and limits: https://api-docs.deepseek.com/updates/
 # https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-10-17)
 # Benchmark harnesses are recorded only where the release explicitly specifies them.
+# Image formats (JPEG, PNG, GIF, WebP): https://api-docs.deepseek.com/guides/vision (accessed 2026-10-19)
+schema = 2
 name = "DeepSeek V4.1 Flash 1017"
 description = "October 17 update of DeepSeek V4.1 Flash with improved reasoning, coding, agentic tasks, and visual understanding"
 family = "deepseek-flash"
-release_date = "2026-10-17"
-last_updated = "2026-10-17"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-05"
 open_weights = true
+knowledge = "2025-05"
+release_date = "2026-10-17"
 license = "MIT"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_000_000
 output = 384_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

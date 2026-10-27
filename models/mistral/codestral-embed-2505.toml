@@ -1,0 +1,27 @@
+# Sources:
+#   https://docs.mistral.ai/models/codestral-embed-25-05 (Codestral Embed, released 2025-05-28, 8k context, no open weights)
+#   https://docs.mistral.ai/studio/knowledge-rag/embeddings/code_embeddings (output_dimension defaults to 1536, max 3072)
+#   GET https://api.mistral.ai/v1/models (codestral-embed, alias codestral-embed-2505, max_context_length 8192)
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Codestral Embed"
+description = "Embedding model for code search, retrieval, and code-aware RAG pipelines"
+family = "codestral-embed"
+open_weights = false
+release_date = "2025-05-28"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 3_072

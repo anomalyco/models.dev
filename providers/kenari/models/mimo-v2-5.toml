@@ -1,6 +1,15 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Retired: GET /v1/models/changes reports kind=removed at 2026-10-11 16:16 UTC.
+# Price: last listed PAYG input/output (changes feed "old"), / 17,500 IDR per USD; cache prices not recorded.
+schema = 2
 base_model = "xiaomi/mimo-v2.5"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.16571429
+
+[cost.text.output]
+price = 0.33142857

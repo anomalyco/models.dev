@@ -16,13 +16,19 @@
 # https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 0.11592
-output = 0.2898
-cache_read = 0.023184
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11592
+cache = { read = 0.023184 }
+
+[cost.text.output]
+price = 0.2898

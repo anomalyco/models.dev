@@ -1,0 +1,19 @@
+schema = 2
+name = "DeepSeek V4.1 Flash 1017"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+family = "deepseek"
+open_weights = true
+release_date = "2026-10-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 0
+output = 0

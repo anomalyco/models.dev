@@ -1,29 +1,43 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: automatic for prompts of 1024+ tokens. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "openai/gpt-5-nano"
 name = "OpenAI GPT-5 Nano"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-nano"
-release_date = "2025-08-07"
-last_updated = "2025-08-07"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+cache = { implicit = { min_tokens = 1_024 } }
 structured_output = true
-knowledge = "2024-05-30"
-open_weights = false
+system_updates = true
+service_tier = ["flex"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[api.chat-completions]
 
-[cost]
-input = 0.05
-output = 0.4
-cache_read = 0.005
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[limit]
-context = 400_000
-output = 128_000
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.025
+cache = { read = 0.0025 }
+
+[cost.text.output]
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.2
+
+[cost.web_search]
+price = 10

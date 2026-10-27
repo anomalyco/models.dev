@@ -1,18 +1,23 @@
 # Not included in subscription
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
 base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1 TEE"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.7
-output = 2.5
-cache_read = 0.18
+tools = { supported = true }
 
 [limit]
 context = 202_752
 input = 202_752
 output = 65_535
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 2.5
