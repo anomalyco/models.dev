@@ -3,7 +3,7 @@ import path from "node:path";
 import { z } from "zod";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel } from "./openrouter.js";
 
 // NY Token Exchange (NYTE) serves TrustedRouter's catalog at its own hostname:
 // same keys, balance, model ids and request format, with prompts terminating in
@@ -13,16 +13,24 @@ const API_ENDPOINT = "https://api.nytokenexchange.com/v1/models";
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
-// The lab file's own output limit, when it states one.
-function labOutputLimit(baseModel: string): number | undefined {
+// The lab file's own limits, where it states them.
+function labLimit(baseModel: string): { context?: number; output?: number } {
   try {
     const lab = Bun.TOML.parse(fs.readFileSync(path.join(MODELS_DIR, `${baseModel}.toml`), "utf8")) as {
-      limit?: { output?: unknown };
+      limit?: { context?: unknown; output?: unknown };
     };
-    return typeof lab.limit?.output === "number" ? lab.limit.output : undefined;
+    return {
+      context: typeof lab.limit?.context === "number" ? lab.limit.context : undefined,
+      output: typeof lab.limit?.output === "number" ? lab.limit.output : undefined,
+    };
   } catch {
-    return undefined;
+    return {};
   }
+}
+
+// The catalog reports an unknown window as null or 0.
+function knownLimit(value: number | null | undefined) {
+  return value !== null && value !== undefined && value > 0 ? value : undefined;
 }
 
 const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
@@ -131,6 +139,9 @@ function isLabModel(model: NyteModel) {
     tr.configuration_hidden !== true &&
     (tr.route_kind ?? "model") === "model" &&
     !model.id.startsWith("trustedrouter/") &&
+    // Mixed-case ids (`Qwen/...`, `zai-org/GLM-5.2`) cannot live beside their
+    // lowercase spellings on a case-insensitive checkout; only lowercase ids sync.
+    model.id === model.id.toLowerCase() &&
     model.architecture.output_modalities.includes("text") &&
     model.supported_parameters.length > 0 &&
     price(model.pricing.prompt) !== undefined &&
@@ -177,7 +188,10 @@ export function buildNyteModel(
   const params = new Set(model.supported_parameters);
   const input = modalities(model.architecture.input_modalities, ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
-  const reasoning = params.has("reasoning") || params.has("include_reasoning");
+  // A catalog row that omits the reasoning parameter does not make a reasoning
+  // model non-reasoning; the lab's flag stands.
+  const reasoning = params.has("reasoning") || params.has("include_reasoning")
+    || model.reasoning !== undefined || modelMetadata(canonical).reasoning === true;
   // Publish only controls the gateway states it honors; without them a reasoning
   // model waits for someone to probe the route, and authored controls are kept.
   const reasoning_options = reasoning
@@ -190,11 +204,16 @@ export function buildNyteModel(
         + " reasoning.supported_efforts; probe the route and author its reasoning_options by hand",
     );
   }
-  const context = model.top_provider.context_length ?? model.context_length ?? existing?.limit?.context ?? 128_000;
-  // An absent output cap is unknown, not equal to the context window: the file
-  // inherits the lab's, and only a lab without one needs a bound here.
-  const outputCap = model.top_provider.max_completion_tokens ?? existing?.limit?.output
-    ?? (labOutputLimit(canonical) === undefined ? context : undefined);
+  // Unknown limits are inherited from the lab (stating the lab's value factors
+  // it out); only a lab without an output cap needs the context window as one.
+  const lab = labLimit(canonical);
+  const context = knownLimit(model.top_provider.context_length) ?? knownLimit(model.context_length)
+    ?? existing?.limit?.context ?? lab.context ?? 128_000;
+  const outputCap = knownLimit(model.top_provider.max_completion_tokens) ?? existing?.limit?.output
+    ?? (lab.output === undefined ? context : undefined);
+  const prompt = price(model.pricing.prompt)!;
+  // A cached read priced above an uncached one is a catalog error; omit it.
+  const cacheRead = price(model.pricing.input_cache_read);
   return factorBaseModel(
     canonical,
     {
@@ -213,9 +232,9 @@ export function buildNyteModel(
       limit: { context, output: outputCap },
       modalities: { input, output },
       cost: {
-        input: price(model.pricing.prompt)!,
+        input: prompt,
         output: price(model.pricing.completion)!,
-        cache_read: price(model.pricing.input_cache_read),
+        cache_read: cacheRead !== undefined && cacheRead <= prompt ? cacheRead : undefined,
         cache_write: price(model.pricing.input_cache_write),
         tiers: existing?.cost?.tiers,
       },
