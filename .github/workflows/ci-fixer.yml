@@ -7,10 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: read
-  contents: write
-  issues: write
-  pull-requests: write
+  contents: read
 
 concurrency: dev-ci-fixer
 
@@ -19,32 +16,30 @@ jobs:
     if: |
       github.repository == 'anomalyco/models.dev' &&
       (
-        github.event_name == 'workflow_dispatch' ||
+        (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev') ||
         (
           github.event.workflow_run.conclusion == 'failure' &&
           github.event.workflow_run.head_branch == 'dev'
         )
       )
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
     env:
       GH_REPO: ${{ github.repository }}
       FAILED_RUN_ID: ${{ github.event.workflow_run.id }}
       FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
       FAILED_WORKFLOW: ${{ github.event.workflow_run.name }}
+    outputs:
+      ran: ${{ steps.save.outputs.ran }}
 
     steps:
-      - name: Create app token
-        id: apptoken
-        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
-        with:
-          app-id: ${{ vars.OPENCODE_APP_ID }}
-          private-key: ${{ secrets.OPENCODE_APP_SECRET }}
-          owner: ${{ github.repository_owner }}
-
       - name: Check run budget
         id: budget
         env:
-          GH_TOKEN: ${{ steps.apptoken.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
@@ -77,7 +72,7 @@ jobs:
       - name: Check budget marker
         id: budget-cache
         if: steps.budget.outputs.run == 'true'
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: .ci-fixer-budget
           key: ${{ steps.budget-key.outputs.key }}
@@ -91,25 +86,17 @@ jobs:
 
       - name: Save budget marker
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: .ci-fixer-budget
           key: ${{ steps.budget-key.outputs.key }}
 
       - name: Checkout code
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: dev
+          ref: ${{ github.sha }}
           persist-credentials: false
-
-      - name: Setup git committer
-        id: committer
-        if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
-        uses: ./.github/actions/setup-git-committer
-        with:
-          opencode-app-id: ${{ vars.OPENCODE_APP_ID }}
-          opencode-app-secret: ${{ secrets.OPENCODE_APP_SECRET }}
 
       - name: Install opencode
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
@@ -118,7 +105,7 @@ jobs:
       - name: Collect failed logs
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
         env:
-          GH_TOKEN: ${{ steps.committer.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           LOG_FILE="$RUNNER_TEMP/dev-ci-failure.log"
@@ -144,8 +131,8 @@ jobs:
           OPENCODE_CONFIG_CONTENT: '{"snapshot":false}'
         run: |
           set -o pipefail
-          RESPONSE_FILE="$RUNNER_TEMP/ci-fixer-response.md"
-          echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/out"
+          RESPONSE_FILE="$RUNNER_TEMP/out/response.md"
 
           {
             cat <<EOF
@@ -163,22 +150,93 @@ jobs:
             cat "$LOG_FILE"
           } | opencode run --agent ci-fixer -m opencode/muse-spark-1.3 --variant xhigh | tee "$RESPONSE_FILE"
 
-      - name: Check changed paths
+      - name: Save editable files
+        id: save
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
-          rm -rf .ci-fixer-budget
+          tar -cf "$RUNNER_TEMP/out/files.tar" models providers packages package.json bun.lock sst.config.ts sst-env.d.ts tsconfig.json
+          echo "ran=true" >> "$GITHUB_OUTPUT"
 
-          while IFS= read -r line; do
-            path="${line:3}"
+      - name: Upload editable files
+        if: steps.save.outputs.ran == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ci-fixer
+          path: ${{ runner.temp }}/out
+          retention-days: 3
+
+  publish:
+    needs: fix
+    if: needs.fix.outputs.ran == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup git committer
+        id: committer
+        uses: ./.github/actions/setup-git-committer
+        with:
+          opencode-app-id: ${{ vars.OPENCODE_APP_ID }}
+          opencode-app-secret: ${{ secrets.OPENCODE_APP_SECRET }}
+
+      - name: Download changes
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ci-fixer
+          path: ${{ runner.temp }}/out
+
+      - name: Check changes
+        id: check
+        run: |
+          set -euo pipefail
+          STAGE="$RUNNER_TEMP/stage"
+          mkdir "$STAGE"
+          tar -xf "$RUNNER_TEMP/out/files.tar" -C "$STAGE"
+          bad="$({
+            find "$STAGE" -mindepth 1 -maxdepth 1 ! -name models ! -name providers ! -name packages ! -name package.json ! -name bun.lock ! -name sst.config.ts ! -name sst-env.d.ts ! -name tsconfig.json
+            find "$STAGE" \( -name .git -o -name '.git*' \)
+            find "$STAGE" ! -type f ! -type d ! -type l
+            find "$STAGE" -type f -links +1
+          } | head -20)"
+          if [ -n "$bad" ]; then
+            echo "Unexpected entries in the agent's files:" >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+          for entry in models providers packages package.json bun.lock sst.config.ts sst-env.d.ts tsconfig.json; do
+            rm -rf "$entry"
+            if [ -e "$STAGE/$entry" ] || [ -L "$STAGE/$entry" ]; then
+              cp -a "$STAGE/$entry" .
+            fi
+          done
+          git add -A models providers packages package.json bun.lock sst.config.ts sst-env.d.ts tsconfig.json
+          if git diff --cached --quiet; then
+            echo "No safe repository changes were made."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          while IFS= read -r path; do
             case "$path" in
               models/*.toml|providers/*.toml|packages/*|package.json|bun.lock|sst.config.ts|sst-env.d.ts|tsconfig.json) ;;
-              *) echo "Unexpected changed path: $path"; exit 1 ;;
+              *) echo "Unexpected changed path: $path" >&2; exit 1 ;;
             esac
-          done < <(git status --porcelain)
+          done < <(git diff --cached --no-renames --name-only)
+          git diff --cached --no-renames --raw --no-abbrev | awk '$2 != "100644" && $2 != "100755" && $2 != "000000" { print "Unexpected file mode: " $0; bad = 1 } END { exit bad }' >&2
+          echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Create pull request
-        if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
+        if: steps.check.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ steps.committer.outputs.token }}
           BRANCH: ci-fixer-${{ github.event.workflow_run.id || github.run_id }}
@@ -186,18 +244,12 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "No safe repository changes were made."
-            exit 0
-          fi
-
           git switch -c "$BRANCH"
-          git add -A
           git commit -m "$TITLE"
-          git push origin "$BRANCH"
+          git push --force origin "$BRANCH"
 
-          gh label create automation --color "0E8A16" --description "Automated repository maintenance" >/dev/null 2>&1 || true
-          gh label create ci-fixer --color "D93F0B" --description "Automated fix for failed dev CI" >/dev/null 2>&1 || true
+          gh label create automation --repo "$GITHUB_REPOSITORY" --color "0E8A16" --description "Automated repository maintenance" >/dev/null 2>&1 || true
+          gh label create ci-fixer --repo "$GITHUB_REPOSITORY" --color "D93F0B" --description "Automated fix for failed dev CI" >/dev/null 2>&1 || true
 
           PR_BODY="$RUNNER_TEMP/ci-fixer-pr-body.md"
           {
@@ -205,9 +257,9 @@ jobs:
             echo
             echo "Failed run: $FAILED_RUN_URL"
             echo
-            if [ -s "$RESPONSE_FILE" ]; then
-              cat "$RESPONSE_FILE"
+            if [ -s "$RUNNER_TEMP/out/response.md" ]; then
+              cat "$RUNNER_TEMP/out/response.md"
             fi
           } > "$PR_BODY"
 
-          gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY" --label automation --label ci-fixer
+          gh pr create --repo "$GITHUB_REPOSITORY" --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY" --label automation --label ci-fixer
