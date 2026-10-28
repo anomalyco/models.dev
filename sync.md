@@ -26,6 +26,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
+- `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -326,6 +327,17 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Reasoning controls are preserved for reasoners and removed when the API reports `reasoning: false`. A reasoner without authored controls fails sync for manual review rather than inventing an empty control set.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
+
+## Modular Notes
+
+- Modular is implemented in `packages/core/src/sync/providers/modular.ts`.
+- Source endpoint: `https://console.modular.com/api/v1/docs/models`, the public catalog behind <https://docs.modular.com/models>.
+- No authentication is required; the catalog is public.
+- A catalog row is public only when `shared_endpoint` is true, `billing_type` is `token`, `gateway_model_id` is set, and both input and output prices are non-zero. Rows that are deployed but not yet sold on the shared endpoint carry `"0"` prices and are ignored.
+- Model IDs come from `gateway_model_id`, the ID the API serves, not the display `model_id`.
+- Existing Modular models are updated from catalog-authoritative input, output, and cached-input pricing. Context limits, reasoning controls, and modalities stay hand-authored: the catalog's context window is rounded display text (`"1M"`) and its modalities are incomplete.
+- New models are not created automatically (`skipCreates`) and do not open missing-model issues (`trackMissingModels: false`); Modular opens a PR with measured limits and reasoning controls instead.
+- Local models absent from the public set are retained (`deleteMissing: false`) because catalog edits can lag deployments.
 
 ## Morph Notes
 
