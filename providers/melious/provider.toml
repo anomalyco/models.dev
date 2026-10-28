@@ -15,8 +15,9 @@
 # Off is reachable through reasoning_effort, so entries whose model has graded levels
 # publish `none` inside their effort list rather than a toggle; models with no graded
 # level (kimi-k2.6, kimi-k2.7-code) publish `toggle` alone. The catalog's own
-# reasoning_type is not a reliable guide: glm-5.3-flash is typed always-on yet honours
-# "none", and glm-5 is typed hybrid yet ignores it. Reasoning text is returned in
+# reasoning_type is not a reliable guide for either the off state or the grades
+# (models typed always-on accept an off switch, and typed hybrid ones ignore it), so
+# every entry was measured on this deployment. Reasoning text is returned in
 # choices[].message.reasoning_content.
 # https://melious.ai/docs/reference/chat-completions#reasoning (accessed 2026-10-28)
 # Decisions: Clef and Clef Flash are served on POST /v1/systemone, not chat
