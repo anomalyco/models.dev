@@ -1,20 +1,31 @@
-# Cost: Melious list price for the default `balanced` route -- EUR 0.70 in / EUR 3.00
-# out / EUR 0.25 cache read per 1M tokens -- converted at 1.1215 USD/EUR (ECB euro
-# reference rate, 2026-10-20). Prices from https://melious.ai/hub/models/kimi-k2.6
-# (accessed 2026-10-21).
+# Cost: Melious list price for the default `balanced` route -- EUR 0.60 in / EUR 3.60
+# out / EUR 0.15 cache read per 1M tokens -- converted at 1.1150 USD/EUR (ECB euro
+# reference rate, 2026-10-27; prices re-checked against
+# GET /v1/models?include_meta=true on 2026-10-28).
 # Sources: GET https://api.melious.ai/v1/models?include_meta=true and
-# https://melious.ai/hub/models/kimi-k2.6 (both accessed 2026-09-14)
+# https://melious.ai/hub/models/kimi-k2.6 (both accessed 2026-10-28)
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
-# Effort: reasoning_effort is the only reasoning control this host exposes, and it
-# forwards no lab-native thinking field and no reasoning budget, so no toggle or
-# budget_tokens. Measured against this deployment on 2026-09-14:
-# reasoning_effort="none" is a real off state (usage.reasoning_tokens = 0 and no
-# reasoning_content), while low/medium/high all return reasoning with no ordered
-# difference in depth, so they are not published as separate grades. The host also
-# accepts undocumented values without a 4xx, so acceptance is not evidence. Because
-# off is reachable through the effort field this is an effort list containing none,
-# not a toggle.
-# https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
+# Effort: reasoning_effort is the only effort control this host exposes; it forwards
+# no lab-native thinking field and no reasoning budget, so no toggle or budget_tokens.
+# Off is reachable through the effort field (reasoning_effort="none") and through
+# chat_template_kwargs = { enable_thinking = false }, with effort winning when both
+# are sent -- so off lives in this effort list and there is no separate toggle. The HF
+# card describes the lab's own two modes, Thinking (the default) and Instant
+# (thinking.type = "disabled"), which map onto that on/off here.
+# Levels: the endpoint accepts none, minimal, low, medium, high, xhigh and max, folds
+# them to three before they reach the model (minimal -> low, xhigh and max -> high,
+# none -> off) and only glm-5.3 / glm-5.3-flash receive xhigh/max as sent. max is
+# therefore not published: measured here it overlaps high without consistently
+# exceeding it (331-489 vs 192-388 reasoning tokens), which is what the documented
+# fold predicts, and acceptance is not evidence.
+# Measured against this deployment on 2026-10-28, 2 samples per level, fixed prompt,
+# plus the field omitted: none always returns usage.reasoning_tokens = 0 with no
+# reasoning_content (0/0), while low (336-460), medium (238-261), high (192-388) and
+# the omitted default (200/228) all reason, overlapping in both directions -- so
+# low/medium/high are published as documented forwarded levels, not as an observed
+# order. The same test on 2026-09-14 reached the same conclusion.
+# https://huggingface.co/moonshotai/Kimi-K2.6 (Thinking and Instant modes)
+# https://melious.ai/docs/reference/chat-completions#reasoning (accessed 2026-10-28)
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
 # limit.context: the catalog reports 256_000 for this deployment, not the lab's
@@ -24,7 +35,7 @@ schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [limit]
@@ -35,8 +46,8 @@ output = 256_000
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.78505
-cache = { read = 0.280375 }
+price = 0.669
+cache = { read = 0.16725 }
 
 [cost.text.output]
-price = 3.3645
+price = 4.014
