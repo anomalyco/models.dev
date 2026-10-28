@@ -5,15 +5,15 @@
 # Sources: GET https://api.melious.ai/v1/models?include_meta=true and
 # https://melious.ai/hub/models/glm-5.3-flash (both accessed 2026-09-14)
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
-# Effort: the lab's low/high/max (default max) plus the host's off state `none`, which
-# lives inside the effort list -- no toggle. medium and xhigh are not published: the lab
-# has neither, and only glm-5.3 / glm-5.3-flash receive xhigh/max as sent by this host.
-# Measured on 2026-10-28, 5 samples per level across an easy and a hard prompt: none
-# (1-27 reasoning tokens) and low (1-36) sit in one shallow band, high stays at 12-27,
-# while medium (211-3170) and max (210-532) reason -- so low/high are the shallow end
-# of this host's ladder, published because they are the lab's levels. With no control
-# sent the host reasons shallowly (18), not at the lab's max default, so no default is
-# claimed.
+# Effort: the lab's low/high/max (default max), which is also what this host
+# forwards; medium and xhigh are not published because the lab has neither. `none`
+# is accepted but is not an off state on this deployment (1-27 reasoning tokens, no
+# 0-token sample), so it is not published either. Measured on 2026-10-28, 5 samples
+# per level across an easy and a hard prompt: none (1-27) and low (1-36) sit in one
+# shallow band, high stays at 12-27, while medium (211-3170) and max (210-532)
+# reason -- so low/high are the shallow end of this host's ladder, published because
+# they are the lab's levels. With no control sent the host reasons shallowly (18),
+# not at the lab's max default, so no default is claimed.
 # https://melious.ai/docs/reference/chat-completions#reasoning (accessed 2026-10-28)
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
@@ -27,7 +27,7 @@ input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "vi
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
