@@ -8,13 +8,21 @@
 #   to coding tools: context 262_144, output 32_768, input ["text","image"] (vision), tools,
 #   reasoning. No separate input budget is set; the CLI README states input limits and
 #   compaction thresholds are left to each harness's defaults. Unchanged in 0.4.5 (a83fde6).
-# - https://ai-gateway.vercel.sh/v1/models (entry "callstack/apex", relayed to Callstack,
-#   accessed 2026-10-27) — supported_parameters lists temperature but not top_p or top_k.
-#   Callstack publishes no image format list, so input stays generic "image".
+# - Sampling flags, live on https://api.callstack.ai/v1/chat/completions (2026-10-28), model
+#   callstack/Apex, reasoning_effort "none", 8 samples per setting: temperature 0 returns
+#   only the greedy completions, temperature 1.5 returns 8 distinct ones; at temperature 1.5,
+#   top_p 0.0001 and top_k 1 each collapse back to the greedy completions, and top_k -7 is
+#   rejected by the vLLM backend ("top_k must be 0 (disable), or at least 1"). So all three
+#   are honoured.
+# - Callstack publishes no image format list, so input stays generic "image".
 # - https://rn-evals.vercel.app — React Native agent evals by Callstack, Apex listed by name
-# - https://apex.callstack.com/llms.txt — Callstack's published model summary; claims the
-#   Next.js Agent Evals pass@4 figures (31 tasks, run 2026-09-25, 28/31 without docs and
-#   30/31 with Next.js docs in context) at the leaderboard's exact scores
+# - https://www.callstack.com/blog/apex-agetic-coding-for-mobile-and-web-spcialied-in-react
+#   (Callstack's GA announcement, 2026-10-01) — "we released Apex anonymously on Vercel AI
+#   Gateway under the name Pixel Canary", and on Vercel's Next.js evaluation (nextjs.org/evals)
+#   "Pixel Canary completed 28 of 31 tasks … With Next.js documentation supplied through
+#   AGENTS.md, it completed 30 of 31". That leaderboard row is the 2026-09-25 run; 28/31 and
+#   30/31 are its pass@4 rates, as Callstack's summary https://apex.callstack.com/llms.txt
+#   also states for Apex.
 # Apex is general-purpose but strongest on React Native, Next.js, and React.
 schema = 2
 name = "Apex"
@@ -32,8 +40,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
-top_p = false
-top_k = false
+top_p = true
+top_k = true
 
 [limit]
 context = 262_144
@@ -63,16 +71,13 @@ dataset = "66 React Native tasks across navigation, animation, async state, list
 source = "https://rn-evals.vercel.app"
 date = "2026-10-01"
 
-# Claimed by Callstack for Apex in the model summary cited as `source`; the run it refers to
-# on nextjs.org/evals is published under a name other than Apex, so only the figures Callstack
-# states for Apex are carried here (date, task count, pass@4, docs in/out of context).
 [[benchmarks]]
 name = "Next.js Agent Evals"
 score = 96.8
 metric = "pass@4"
 variant = "with Next.js docs in context"
 dataset = "31 Next.js agent tasks, run 2026-09-25"
-source = "https://apex.callstack.com/llms.txt"
+source = "https://www.callstack.com/blog/apex-agetic-coding-for-mobile-and-web-spcialied-in-react"
 date = "2026-09-25"
 
 [[benchmarks]]
@@ -81,5 +86,5 @@ score = 90.3
 metric = "pass@4"
 variant = "without Next.js docs"
 dataset = "31 Next.js agent tasks, run 2026-09-25"
-source = "https://apex.callstack.com/llms.txt"
+source = "https://www.callstack.com/blog/apex-agetic-coding-for-mobile-and-web-spcialied-in-react"
 date = "2026-09-25"
