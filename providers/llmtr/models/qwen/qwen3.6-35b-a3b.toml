@@ -1,0 +1,22 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-10-22).
+# Toggle: $.enable_thinking = true|false (Alibaba native field, forwarded by the gateway).
+# Measured: enable_thinking = false and the gateway's $.reasoning = false both turn reasoning off.
+# thinking_budget is not honoured (64 -> 874 reasoning tokens), so no budget is listed.
+# reasoning_effort -> 400 "exposes thinking as an on/off mode", so no effort is listed.
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.7
