@@ -1,0 +1,30 @@
+# Served on POST https://llm.scalefrequency.com/v2/chat/completions. The host also accepts `mira-llm`
+# as an alias for this model; google/gemma-4-26b-a4b-it is the canonical id.
+# Prices: https://scalefrequency.com/pricing (accessed 2026-10-28). Billed in INR: ₹15 input, ₹9.30 cached
+# input, ₹55 output per 1M tokens. The page lists USD reference prices of $0.15 / $0.093 / $0.55 (₹100 = $1),
+# which are used here.
+# Reasoning: not exposed on this host. Thinking is off and there is no toggle, effort or budget field.
+# Limits and modalities on this host: 32,768-token context, 8,192 output tokens, text in and text out only.
+# Cache: automatic prefix caching; a repeated prompt start is billed at the cached input price.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 32_768
+output = 8_192
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.093 }
+
+[cost.text.output]
+price = 0.55
