@@ -7,7 +7,10 @@ base_model = "openai/gpt-6.1-terra"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"] }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+structured_output = true
+system_updates = true
 
 [limit]
 context = 1_050_000
@@ -15,6 +18,7 @@ context = 1_050_000
 [api.responses]
 base_url = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/openai"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
+capabilities = { effort_updates = true, tools = { search = true, updates = true } }
 
 [api.chat-completions]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"

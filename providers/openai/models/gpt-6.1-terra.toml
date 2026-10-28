@@ -10,7 +10,7 @@ schema = 2
 base_model = "openai/gpt-6.1-terra"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"] }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
@@ -20,7 +20,7 @@ prompt_cache_key = true
 service_tier = ["flex", "priority"]
 
 [api.responses]
-capabilities = { effort_updates = true, tools = { updates = true } }
+capabilities = { effort_updates = true, tools = { search = true, updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
