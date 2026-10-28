@@ -11,7 +11,7 @@ description = "Nemotron multimodal model for visual reasoning and agentic AI wor
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true }
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
@@ -27,11 +27,11 @@ base_url = "https://api.venice.ai/api/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.25
-cache = { read = 0.125 }
+price = 0.2
+cache = { read = 0.04 }
 
 [cost.text.output]
-price = 1.25
+price = 0.5
 
 [cost.web_search]
 price = 10
