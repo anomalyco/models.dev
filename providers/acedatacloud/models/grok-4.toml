@@ -1,0 +1,15 @@
+# Public catalog: https://platform.acedata.cloud/models/grok-4
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/aff80c74-b190-445b-9124-6422ed763c50
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort = low|medium|high; host exposes graded effort on this model
+# Same-prompt low/high probes returned the correct answer; reported reasoning tokens: 420/444.
+base_model = "xai/grok-4"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.1037985
+output = 5.51899285
+
+[provider]
+api = "https://api.acedata.cloud/grok"

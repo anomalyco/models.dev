@@ -1,0 +1,20 @@
+# https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/
+name = "o1-mini"
+description = "Compact reasoning model for mathematics, science, and coding"
+family = "o-mini"
+release_date = "2024-09-12"
+last_updated = "2024-09-12"
+knowledge = "2023-10"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 128_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
