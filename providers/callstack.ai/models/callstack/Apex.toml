@@ -1,6 +1,12 @@
 # Latest alias. Effort: reasoning_effort = none|low|medium|xhigh (OpenAI-compatible request
 # field; Callstack's CLI defaults it to "medium" and exposes exactly these four levels).
-# Anthropic-compatible shape is served on the same host at POST /v1/messages.
+# Live 2026-10-28: an unsupported level is rejected by the chat template with "Supported
+# types are xhigh (default), medium, and low"; "none" turns reasoning off.
+# Only Chat Completions is listed. The host also answers POST /v1/messages in Anthropic shape
+# (Callstack's CLI points Claude Code at ANTHROPIC_BASE_URL=https://api.callstack.ai), and
+# live it returns thinking blocks, tool_use with every tool_choice, and honours
+# thinking.type = disabled, but output_config.effort is ignored (any value is accepted and
+# reasoning length doesn't change), so the effort list above doesn't hold there.
 #
 # Model ID — evidence that "callstack/Apex" is the `model` string this API receives
 # (public sources, accessed 2026-10-14):

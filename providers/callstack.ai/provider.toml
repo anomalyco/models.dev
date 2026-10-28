@@ -9,7 +9,8 @@ name = "Callstack"
 #   model ID, effort levels, limits)
 # Effort: reasoning_effort = none|low|medium|xhigh on POST /v1/chat/completions
 # (OpenAI-compatible surface; the CLI sets "medium" by default).
-# The same endpoint also serves POST /v1/messages in Anthropic-compatible shape.
+# The host also answers POST /v1/messages (Anthropic shape); it isn't listed as an API because
+# reasoning effort isn't honoured there (see models/callstack/Apex.toml).
 # API keys are created in the console at https://platform.callstack.ai.
 env = ["CALLSTACK_AUTH_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
