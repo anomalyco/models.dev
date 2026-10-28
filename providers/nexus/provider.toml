@@ -1,0 +1,9 @@
+name = "Nexus"
+env = ["NEXUS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# OpenAI Chat Completions at POST /v1/chat/completions, with GET /v1/models listing every model with its prices,
+# context window and output limit (accessed 2026-10-27). The chat endpoint takes no reasoning field: each model
+# runs with its own default and the caller has no reasoning control.
+api = "https://api.nexus.inc/v1"
+doc = "https://nexus-factory-web.vercel.app/docs"
