@@ -337,7 +337,7 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Model IDs come from `gateway_model_id`, the ID the API serves, not the display `model_id`.
 - Existing Modular models are updated from catalog-authoritative input, output, and cached-input pricing. Context limits, reasoning controls, and modalities stay hand-authored: the catalog's context window is rounded display text (`"1M"`) and its modalities are incomplete.
 - New models are not created automatically (`skipCreates`) and do not open missing-model issues (`trackMissingModels: false`); Modular opens a PR with measured limits and reasoning controls instead.
-- Local models absent from the public set are retained (`deleteMissing: false`) because catalog edits can lag deployments.
+- Local models that leave the public set (unshared, unpriced, or gone from the catalog) are removed: the catalog is authoritative for what the shared endpoint sells. A catalog with no public models fails the sync instead of removing every file.
 
 ## Morph Notes
 

@@ -37,9 +37,6 @@ export const modular = {
   // published in the catalog, so new models are added by hand.
   skipCreates: true,
   trackMissingModels: false,
-  // A model can drop out of the catalog's public set while it is still served
-  // (catalog edits lag deployments), so absence is not treated as retirement.
-  deleteMissing: false,
   sourceID(model) {
     return isPublic(model) ? model.gateway_model_id : undefined;
   },
@@ -55,6 +52,8 @@ export const modular = {
   },
   parseModels(raw) {
     const models = ModularResponse.parse(raw).models;
+    // Leaving the public set retires a model, so an empty public set must fail
+    // rather than delete every local file.
     if (!models.some(isPublic)) throw new Error("Modular returned no public models; refusing to sync an empty model catalog");
     return models;
   },

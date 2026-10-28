@@ -56,8 +56,8 @@ test("rejects a catalog with no public models", () => {
   expect(() => modular.parseModels({ models: [{ ...model, shared_endpoint: false }] })).toThrow("no public models");
 });
 
-test("never deletes or opens issues for models missing from the public set", () => {
-  expect(modular.deleteMissing).toBe(false);
+test("removes models that leave the public set but never creates or opens issues", () => {
+  expect(modular.deleteMissing).toBeUndefined();
   expect(modular.skipCreates).toBe(true);
   expect(modular.trackMissingModels).toBe(false);
 });
