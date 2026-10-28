@@ -23,6 +23,12 @@
 #   AGENTS.md, it completed 30 of 31". That leaderboard row is the 2026-09-25 run; 28/31 and
 #   30/31 are its pass@4 rates, as Callstack's summary https://apex.callstack.com/llms.txt
 #   also states for Apex.
+# - https://www.reactbench.com (Million's ReactBench v1.2, accessed 2026-10-28; dated by access
+#   since the page doesn't date individual runs) — 39 React tasks across 37 repositories
+#   (28 Writing React, 11 Fixing React; https://github.com/millionco/reactbench, v1.2 tagged
+#   2026-10-08), pass@1 averaged over 5 trials per task, each solution must pass behavioral
+#   tests and React Doctor. Rows callstack/apex:low|medium|xhigh, 195 trials each: pass@1
+#   0.2974 / 0.3538 / 0.3436. The harness used per model isn't published, so it's left out.
 # Apex is general-purpose but strongest on React Native, Next.js, and React.
 schema = 2
 name = "Apex"
@@ -88,3 +94,30 @@ variant = "without Next.js docs"
 dataset = "31 Next.js agent tasks, run 2026-09-25"
 source = "https://www.callstack.com/blog/apex-agetic-coding-for-mobile-and-web-spcialied-in-react"
 date = "2026-09-25"
+
+[[benchmarks]]
+name = "ReactBench"
+score = 35.4
+metric = "pass@1"
+variant = "medium effort"
+dataset = "ReactBench v1.2: 39 React tasks across 37 repositories, 5 trials each"
+source = "https://www.reactbench.com"
+date = "2026-10-28"
+
+[[benchmarks]]
+name = "ReactBench"
+score = 34.4
+metric = "pass@1"
+variant = "xhigh effort"
+dataset = "ReactBench v1.2: 39 React tasks across 37 repositories, 5 trials each"
+source = "https://www.reactbench.com"
+date = "2026-10-28"
+
+[[benchmarks]]
+name = "ReactBench"
+score = 29.7
+metric = "pass@1"
+variant = "low effort"
+dataset = "ReactBench v1.2: 39 React tasks across 37 repositories, 5 trials each"
+source = "https://www.reactbench.com"
+date = "2026-10-28"
