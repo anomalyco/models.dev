@@ -1,0 +1,42 @@
+# Source: https://huggingface.co/chinhnc/Quyet-1.0-Large (model card, accessed 2026-10-20). Gemma 4
+# 31B IT with a merged LoRA fine-tune (31.3B parameters) that reads the option letters' next-token
+# probabilities, so it generates no text. The card gives a state of up to 6,000 tokens inside an
+# 8,000-token prompt and at most 10 options per question; English and Vietnamese.
+schema = 2
+v2_only = true
+type = "decision"
+name = "Quyet 1.0 Large"
+description = "Chinh Nguyen's open-weight 31B decision model that returns calibrated probabilities for typed choice, score and yes/no questions about a text or JSON state"
+open_weights = true
+release_date = "2026-10-03"
+last_updated = "2026-10-10"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_000
+output = 0
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/chinhnc/Quyet-1.0-Large"
+type = "model_card"
+
+[[links]]
+label = "Homepage"
+url = "https://quyet.ai"
+type = "other"
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/chinhnc/Quyet-1.0-Large"

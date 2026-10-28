@@ -1,0 +1,25 @@
+# Perplexity Decider v1.1 27B in NVFP4, text only. The previous s1-pro, kept to at least 2026-11-11.
+# Prices, limit: https://api.decisionmodels.io/v1/models (2026-10-21), global tier; EU as override.
+# Launch pricing; output tokens are free.
+schema = 2
+v2_only = true
+base_model = "perplexity/pplx-decider-v1.1-27b"
+name = "S1 Pro 2"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.08
+
+[[cost.text.input.overrides]]
+when = { region = { equals = "eu" } }
+price = 0.084
+
+[cost.text.output]
+price = 0
