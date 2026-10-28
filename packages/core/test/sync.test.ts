@@ -1922,6 +1922,11 @@ test("lists DigitalOcean Responses and Messages APIs from catalog capabilities",
     responses,
     messages,
   });
+  // Hand-authored per-API capabilities survive the rewrite.
+  const freeform = { tools: { freeform: ["text", "lark", "regex"] } };
+  expect(applyV2Set(digitalOceanV2Set(digitalOceanModel({ creator: "OpenAI" })), {
+    api: { "chat-completions": {}, responses: { ...responses, capabilities: freeform }, messages },
+  }).api).toEqual({ "chat-completions": {}, responses: { ...responses, capabilities: freeform }, messages });
   // Neither flagged nor hosted: Chat Completions only, so no table is written.
   expect(applyV2Set(digitalOceanV2Set(digitalOceanModel())).api).toBeUndefined();
   // Image models get no chat APIs.
@@ -4503,6 +4508,10 @@ test("Venice sync lists Responses after the first API and prices web search", ()
   const once = withResponsesApi(first);
   expect(Object.keys(once)).toEqual(["chat-completions", "responses"]);
   expect(withResponsesApi(once)).toEqual(once);
+  // Hand-authored per-API capabilities on Responses survive the rewrite.
+  const freeform = { tools: { freeform: ["text", "lark", "regex"] } };
+  expect(withResponsesApi({ ...first, responses: { ...responses, capabilities: freeform } }))
+    .toEqual({ ...first, responses: { ...responses, capabilities: freeform } });
 
   const capabilities = veniceModel().model_spec.capabilities;
   expect(veniceV2Set(veniceModel({ capabilities: { ...capabilities, supportsWebSearch: true } }))["cost.web_search"])
