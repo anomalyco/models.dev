@@ -1,0 +1,23 @@
+# Hanzo Enso Ultra
+# Documentation: https://docs.hanzo.ai
+schema = 2
+name = "Enso Ultra"
+description = "Highest-tier model in Hanzo's Enso family, with a million-token context window and vision"
+family = "enso"
+open_weights = false
+release_date = "2026-10-22"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 128_000
