@@ -1,0 +1,28 @@
+# io.net IO Intelligence listing of XiaomiMiMo/MiMo-V2.6-Flash.
+# Toggle: reasoning.effort = "none" switches thinking off; reasoning.enabled = false is ignored by this deployment (the trace is still generated and ends up in content)
+# Live check 2026-10-13: thinking on 286-570 reasoning tokens, reasoning.effort = "none" gives 0; effort levels did not change the trace.
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = true and a cache_read_token_price; prefixes are cached automatically with no cache_control markers, so the cache is implicit.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_320
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1318
+cache = { read = 0.0659 }
+
+[cost.text.output]
+price = 0.2716
