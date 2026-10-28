@@ -1,0 +1,22 @@
+# GLM-5.2's faster "Turbo" lane, sharing the zhipuai/glm-5.2 base entry's
+# limits and reasoning capability. `none` turns thinking off on this lane (no
+# reasoning returned, n=3). high and max follow scx-ai GLM-5.2; low, medium and
+# xhigh are accepted but not separated at n=3.
+# Thinking is returned as `reasoning_content` on the message.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 Turbo"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.9910
+cache = { read = 0.3995 }
+
+[cost.text.output]
+price = 6.1603

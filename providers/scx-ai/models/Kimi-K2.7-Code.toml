@@ -1,0 +1,19 @@
+# Thinking is returned as `reasoning_content` on the message and cannot be turned
+# off: `none`, `thinking.type = disabled` and `enable_thinking = false` all still
+# return reasoning, and SCX rejects `max`. No effort set is offered.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.8051
+cache = { read = 0.1623 }
+
+[cost.text.output]
+price = 3.3392

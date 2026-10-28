@@ -1,5 +1,3 @@
-# Cost is USD per 1M tokens, matching the SCX rates carried in
-# theopenco/llmgateway (packages/models/src/models/alibaba.ts).
 # Limits and capabilities verified directly against https://api.scx.ai/v1:
 # max_tokens is hard-capped at 131072 by the API ("Range of max_tokens should be
 # [1, 131072]"). Input is separately capped below the 1M context inherited from
@@ -39,8 +37,8 @@ input = 983_616
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 1.815
-cache = { read = 0.17, write = 2.5 }
+price = 1.6477
+cache = { read = 0.2122 }
 
 [cost.text.output]
-price = 5.4461
+price = 4.9869
