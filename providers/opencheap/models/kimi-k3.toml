@@ -8,10 +8,6 @@ base_model = "moonshotai/kimi-k3"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
-output = ["text"]
-
 [cost.text.input]
 price = 0.0026
 cache = { read = 0.0023 }

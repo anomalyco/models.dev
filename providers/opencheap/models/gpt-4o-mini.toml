@@ -4,10 +4,6 @@
 schema = 2
 base_model = "openai/gpt-4o-mini"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
-output = ["text"]
-
 [cost.text.input]
 price = 0.0067
 cache = { read = 0.0034 }
