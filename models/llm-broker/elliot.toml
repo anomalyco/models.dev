@@ -1,0 +1,20 @@
+# Own model of LLM Broker (27B, served on own GPUs). Limits from the serving config:
+# max-model-len 163840, one image per request, OpenAI tool calling. https://llm-broker.net/llms.txt
+name = "Elliot"
+description = "LLM Broker's own 27B model, served on its own hardware, with tool calling and image input"
+release_date = "2026-09-30"
+last_updated = "2026-09-30"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 163_840
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

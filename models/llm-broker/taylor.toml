@@ -1,0 +1,21 @@
+# Routed product of LLM Broker: each request runs through the broker's harness on the strongest model
+# measured by its own benchmarks. Tools, response_format and data: image URLs are passed through.
+# https://llm-broker.net/llms.txt
+name = "Taylor"
+description = "Routes each request through LLM Broker's harness to the strongest model on its own benchmarks"
+release_date = "2026-09-24"
+last_updated = "2026-10-02"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
