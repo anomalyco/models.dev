@@ -4,12 +4,11 @@ import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "
 import { factorBaseModel } from "./openrouter.js";
 
 // Public model catalog behind https://docs.modular.com/models (no auth).
-const API_ENDPOINT = process.env.MODULAR_CATALOG_URL ?? "https://console.modular.com/api/v1/docs/models";
+const API_ENDPOINT = "https://console.modular.com/api/v1/docs/models";
 
 const TokenPrice = z.string().regex(/^\d+(?:\.\d+)?$/);
 
 export const ModularModel = z.object({
-  model_id: z.string().min(1),
   // The ID the API serves (GET https://api.modular.com/v1/models). Empty for
   // models without a public route.
   gateway_model_id: z.string(),
@@ -82,8 +81,8 @@ export function isPublic(model: ModularModel) {
   return model.shared_endpoint
     && model.gateway_model_id !== ""
     && model.billing_type === "token"
-    && (perMillion(model.pricing.input) ?? 0) > 0
-    && (perMillion(model.pricing.output) ?? 0) > 0;
+    && Number(model.pricing.input ?? 0) > 0
+    && Number(model.pricing.output ?? 0) > 0;
 }
 
 function perMillion(value: string | undefined) {
