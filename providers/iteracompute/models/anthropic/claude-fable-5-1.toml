@@ -1,3 +1,4 @@
+# Cache write TTL prices rechecked in the public /v1/models pricing parameters on 2026-10-28.
 # Sources (accessed 2026-10-22):
 # https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
 # https://iteracompute.com/models/claude-fable-5-1/ (host capabilities and pricing)
@@ -20,7 +21,7 @@ structured_output = true
 
 [cost.text.input]
 price = 5
-cache = { read = 0.125, write = 6.25 }
+cache = { read = 0.125, write = { "5m" = 6.25, "1h" = 10 } }
 
 [cost.text.output]
 price = 25

@@ -1,3 +1,5 @@
+# Prices rechecked 2026-10-28 against the exact /v1/models pricing object:
+# $0.11 input, $0.016 cache read, $0.38 output per 1M tokens.
 # Sources (accessed 2026-10-22):
 # https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
 # https://iteracompute.com/models/qwen3-8-flash/ (host capabilities and pricing)
@@ -24,8 +26,8 @@ structured_output = true
 context = 1_048_576
 
 [cost.text.input]
-price = 0.13
-cache = { read = 0.02 }
+price = 0.11
+cache = { read = 0.016 }
 
 [cost.text.output]
-price = 0.42
+price = 0.38
