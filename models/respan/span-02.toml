@@ -1,0 +1,51 @@
+# Sources:
+# - https://www.respan.ai/docs/documentation/span-02/concept
+# - https://www.respan.ai/blog/introducing-span-2
+# - https://huggingface.co/respanai/span-02
+# Images: https://huggingface.co/respanai/span-02/blob/63cbdd774391f1b7d9bc3829179efe996d0191ce/README.md#images
+#   documents PNG/JPEG; assets.format accepts png, jpg, or jpeg.
+# Reasoning: https://www.respan.ai/docs/documentation/span-02/concept#anytime-reasoning
+#   reasoning.mode = auto|on|off; reasoning.budget_ms is a time deadline, not a token budget.
+# Context is per question, including prompt, images, and thought.
+# Numeric output: https://huggingface.co/respanai/span-02/blob/63cbdd774391f1b7d9bc3829179efe996d0191ce/engine/crates/runtime/src/engine.rs#L29-L30
+#   ANSWER_MAX = 32 limits each number answer; enforced at L1740. Other answer types generate no tokens.
+schema = 2
+type = "decision"
+name = "Span-02"
+description = "Open-weight decision model with optional anytime reasoning over text, JSON state, and images, returning typed choices, yes/no probabilities, scores, and numbers"
+open_weights = true
+release_date = "2026-10-15"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 131_072
+output = 32
+
+[[links]]
+type = "docs"
+url = "https://www.respan.ai/docs/documentation/span-02/concept"
+
+[[links]]
+type = "announcement"
+url = "https://www.respan.ai/blog/introducing-span-2"
+
+[[links]]
+type = "model_card"
+url = "https://huggingface.co/respanai/span-02"
+
+[[weights]]
+label = "NVFP4/FP8 weights and Rust/CUDA inference engine"
+url = "https://huggingface.co/respanai/span-02"
+format = "safetensors"
+quantization = "NVFP4/FP8"
