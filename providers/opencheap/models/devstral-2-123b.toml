@@ -1,0 +1,12 @@
+# Prices are USD per million tokens: a snapshot of GET https://api.opencheap.si/v1/models taken 2026-10-28.
+# They can change at any time (https://docs.opencheap.si/models).
+# Tool calls checked live on 2026-10-28, streaming and non-streaming.
+schema = 2
+base_model = "mistral/devstral-2512"
+
+[cost.text.input]
+price = 0.013
+cache = { read = 0.0013 }
+
+[cost.text.output]
+price = 0.062
