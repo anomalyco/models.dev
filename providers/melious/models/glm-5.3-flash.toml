@@ -5,24 +5,15 @@
 # Sources: GET https://api.melious.ai/v1/models?include_meta=true and
 # https://melious.ai/hub/models/glm-5.3-flash (both accessed 2026-09-14)
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
-# Effort: reasoning_effort is the only effort control this host exposes; it forwards no
-# reasoning budget, so no budget_tokens. Off is reachable through the effort field
-# (reasoning_effort="none") and through chat_template_kwargs = { enable_thinking =
-# false }, with effort winning when both are sent -- so off lives in this effort list
-# and there is no separate toggle.
-# Levels: the endpoint accepts none, minimal, low, medium, high, xhigh and max, folds
-# them to three before they reach the model (minimal -> low, xhigh and max -> high,
-# none -> off) -- except on glm-5.3 and glm-5.3-flash, which receive xhigh and max as
-# sent. Measured against this deployment on 2026-10-28, 5 samples per level across an
-# easy and a hard prompt: none (1-27 reasoning tokens) and low (1-36) are one and the
-# same off state, high stays at 12-27 tokens with at most 45 chars of
-# reasoning_content, while the levels that actually reason are medium (211-3170), xhigh
-# (187-889) and max (210-532) -- a clean gap, 36 vs 187, with no sample crossing it.
-# low and high are therefore not published: they are accepted, but acceptance is not
-# evidence, and here both behave like off. medium, xhigh and max are published as the
-# documented levels that reason; they do not order against each other (medium ran
-# deepest here). With no control sent the host reasons shallowly (18 tokens), not like
-# Z.ai's native max default, so no default is claimed.
+# Effort: the lab's low/high/max (default max) plus the host's off state `none`, which
+# lives inside the effort list -- no toggle. medium and xhigh are not published: the lab
+# has neither, and only glm-5.3 / glm-5.3-flash receive xhigh/max as sent by this host.
+# Measured on 2026-10-28, 5 samples per level across an easy and a hard prompt: none
+# (1-27 reasoning tokens) and low (1-36) sit in one shallow band, high stays at 12-27,
+# while medium (211-3170) and max (210-532) reason -- so low/high are the shallow end
+# of this host's ladder, published because they are the lab's levels. With no control
+# sent the host reasons shallowly (18), not at the lab's max default, so no default is
+# claimed.
 # https://melious.ai/docs/reference/chat-completions#reasoning (accessed 2026-10-28)
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
@@ -36,7 +27,7 @@ input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "vi
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "medium", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
