@@ -1,0 +1,18 @@
+# Live probe of Unsloth's /v1/chat/completions (Studio 0.1.910-beta, 2026-10-27): the
+# server validates reasoning_effort per request and rejects invalid values with a 400
+# naming the field — "Input should be 'none', 'minimal', 'low', 'medium', 'high',
+# 'max' or 'xhigh'". Unlike the sibling llama-server host lmstudio (which documents
+# effort on /v1/responses only), Unsloth exposes the control on chat-completions;
+# a /v1/responses probe did not answer.
+# https://unsloth.ai/docs/basics/api (accessed 2026-10-27)
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max", "xhigh"] }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
