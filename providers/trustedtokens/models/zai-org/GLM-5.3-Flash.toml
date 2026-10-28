@@ -1,0 +1,31 @@
+# Costs and catalog: https://api.trustedtokens.eu/v1/models (accessed 2026-10-28).
+# Cost: EUR 0.30 in / 0.60 out / 0.06 cache read per 1M tokens, converted at 1.1150 USD/EUR (ECB reference rate, 2026-10-27).
+# Effort: reasoning_effort = low|high|max
+# Measured 2026-10-28: none 566 (not off), low 38, high 38, max 430 reasoning_content
+# chars. low/high do not grade; max is distinct; there is no caller off control.
+# No toggle: reasoning.enabled, thinking.type and chat_template_kwargs.enable_thinking
+# all leave reasoning on.
+# Image input accepted; video_url and file (PDF) return 422, so video and PDF are omitted.
+# Cache: implicit prefix caching measured (repeat prompt reports cached_tokens); first request is cold.
+# Reasoning side channel: message.reasoning_content.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3345
+cache = { read = 0.0669 }
+
+[cost.text.output]
+price = 0.669

@@ -1,0 +1,27 @@
+# Costs and catalog: https://api.trustedtokens.eu/v1/models (accessed 2026-10-28).
+# Cost: EUR 0.30 in / 0.80 out / 0.05 cache read per 1M tokens, converted at 1.1150 USD/EUR (ECB reference rate, 2026-10-27).
+# Effort: reasoning_effort = none|high
+# Measured 2026-10-28: none 0, medium 667, high 667 reasoning_content chars.
+# `none` is an off state; medium/high do not grade, so the Kilo peer's single
+# on-level (high) is published. No toggle: reasoning.enabled, thinking.type and
+# chat_template_kwargs.enable_thinking were probed and ignored on this host.
+# Image input accepted; the lab's image formats are inherited.
+# Cache: implicit prefix caching measured (repeat prompt reports cached_tokens); first request is cold.
+# Reasoning side channel: message.reasoning_content.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3345
+cache = { read = 0.05575 }
+
+[cost.text.output]
+price = 0.892

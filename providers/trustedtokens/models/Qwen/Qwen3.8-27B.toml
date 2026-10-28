@@ -1,0 +1,31 @@
+# Costs and catalog: https://api.trustedtokens.eu/v1/models (accessed 2026-10-28).
+# Cost: EUR 0.40 in / 2.70 out / 0.08 cache read per 1M tokens, converted at 1.1150 USD/EUR (ECB reference rate, 2026-10-27).
+# Effort: reasoning_effort = none|low|medium|xhigh
+# Measured 2026-10-28: none 0, low 366, medium 351, high 396, xhigh 396 reasoning_content
+# chars. `none` is an off state; high and xhigh are identical.
+# No toggle: reasoning.enabled, thinking.type and chat_template_kwargs.enable_thinking
+# all leave reasoning on.
+# Image input accepted; video_url returns 422, so the lab's video formats are omitted.
+# Cache: implicit prefix caching measured (repeat prompt reports cached_tokens); first request is cold.
+# Reasoning side channel: message.reasoning_content.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.446
+cache = { read = 0.0892 }
+
+[cost.text.output]
+price = 3.0105

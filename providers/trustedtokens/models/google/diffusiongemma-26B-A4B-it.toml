@@ -1,0 +1,29 @@
+# Costs and catalog: https://api.trustedtokens.eu/v1/models (accessed 2026-10-28).
+# Cost: EUR 0.30 in / 0.80 out / 0.05 cache read per 1M tokens, converted at 1.1150 USD/EUR (ECB reference rate, 2026-10-27).
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (NVIDIA peer set)
+# Measured 2026-10-28: none 0; minimal/low/medium/high/xhigh/max all reason
+# (483-633 chars) with overlapping lengths. `none` is the only distinct off state;
+# the ladder is copied from the NVIDIA peer.
+# temperature is rejected with 422 and is disabled.
+# response_format is rejected with 422: "Structured outputs are not yet supported for diffusion language models".
+# Image input accepted; video and PDF are not published.
+# Cache: implicit prefix caching measured (repeat prompt reports cached_tokens); first request is cold.
+# Reasoning side channel: message.reasoning_content.
+schema = 2
+base_model = "google/diffusiongemma-26b-a4b-it"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+cache = { implicit = true }
+temperature = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3345
+cache = { read = 0.05575 }
+
+[cost.text.output]
+price = 0.892
