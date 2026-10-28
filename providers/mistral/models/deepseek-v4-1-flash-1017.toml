@@ -3,7 +3,8 @@
 # GET https://api.mistral.ai/v1/models: max_context_length 1,048,576, vision false, function_calling and reasoning true.
 # Modalities: Mistral serves it text only (vision false), unlike DeepSeek's own API.
 # Effort (live 2026-10-28): reasoning_effort = none|low|high|xhigh|max; "medium" returns 400 listing those values.
-#   Omitting reasoning_effort returned 0 reasoning tokens, so the default is none.
+#   Omitting reasoning_effort returned 0 reasoning tokens, so the default is none. xhigh is accepted but left out: DeepSeek
+#   maps xhigh to high (providers/deepseek/models/deepseek-v4-flash.toml) and the served model is unmodified.
 # Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named function; function.strict).
 #   All five tool_choice forms worked live with a strict function (2026-10-28).
 # Structured output: json_schema response_format returned schema-valid JSON live (model page lists Structured Outputs).
@@ -19,7 +20,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "high", "xhigh", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "high", "max"] }
 structured_output = true
 stream_usage = true
 cache = { implicit = true }
