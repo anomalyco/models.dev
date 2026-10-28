@@ -1,0 +1,26 @@
+# Max output: https://webwright.ai/models lists "Maximum output: 200,000 tokens" separately from the 200,000-token context window.
+# Reasoning: the provider feed publishes supported_parameters.reasoning as a boolean, but no caller-facing field or allowed values are published, so the listing leaves reasoning = false.
+# Dates: https://webwright.ai/v1/models reports created 1767225600 (2026-01-01) for both ids, and no later update timestamp is published.
+# Limits and pricing: https://webwright.ai/models and https://webwright.ai/pricing.
+name = "Wren R1"
+description = "WebWright's Wren R1 chat model on the Standard plan, served over an OpenAI-compatible API with a 200K context window, tool calling and structured outputs"
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.40
+output = 1.60
+
+[limit]
+context = 200000
+output = 200000
+
+[modalities]
+input = ["text"]
+output = ["text"]
