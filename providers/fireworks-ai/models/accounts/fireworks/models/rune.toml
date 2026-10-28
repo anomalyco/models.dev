@@ -19,6 +19,12 @@ cache = { implicit = true }
 base_url = "https://api.fireworks.ai/inference/v1"
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 0.042
 cache = { read = 0.0084 }
