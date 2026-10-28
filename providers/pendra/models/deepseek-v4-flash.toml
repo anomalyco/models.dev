@@ -1,11 +1,13 @@
-# Pendra forwards OpenAI `reasoning_effort` (low|high|max) on chat completions.
-# Effort-only: no thinking on/off toggle is surfaced through Pendra.
-# Self-hosted on your own workers — no per-token charge at the API.
+# Effort: reasoning_effort = low|high
+# Budget: Pendra's reasoning.max_tokens is not listed: the worker ends thinking early only on think-block models.
+# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Thinking controls: https://pendra.ai/docs/capabilities/thinking
+# Self-hosted on your own workers: no per-token charge at the API.
 schema = 2
-base_model = "deepseek/deepseek-v4-flash"
+base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
 
 [cost.text.input]

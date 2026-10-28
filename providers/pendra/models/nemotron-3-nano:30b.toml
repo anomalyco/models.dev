@@ -1,0 +1,22 @@
+# Toggle: enable_thinking true|false
+# Budget: Pendra's reasoning.max_tokens is not listed: the worker ends thinking early only on think-block models.
+# Context: 131,072 tokens, the window Pendra serves (catalogue context_length).
+# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Thinking controls: https://pendra.ai/docs/capabilities/thinking
+# Self-hosted on your own workers: no per-token charge at the API.
+schema = 2
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

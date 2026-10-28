@@ -1,0 +1,18 @@
+# Input: Pendra takes text and PNG, JPEG, GIF or BMP images only on chat completions.
+# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Self-hosted on your own workers: no per-token charge at the API.
+schema = 2
+base_model = "mistral/ministral-3-14b-instruct-2512"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

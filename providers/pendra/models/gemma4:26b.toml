@@ -1,0 +1,22 @@
+# Toggle: enable_thinking true|false
+# Input: Pendra takes text and PNG, JPEG, GIF or BMP images only on chat completions.
+# Budget: Pendra's reasoning.max_tokens is not listed: the worker ends thinking early only on think-block models.
+# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Thinking controls: https://pendra.ai/docs/capabilities/thinking
+# Self-hosted on your own workers: no per-token charge at the API.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

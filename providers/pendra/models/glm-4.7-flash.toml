@@ -1,10 +1,14 @@
-# Hybrid reasoning; Pendra exposes no configurable effort/budget control.
-# Self-hosted on your own workers — no per-token charge at the API.
+# Toggle: enable_thinking true|false
+# Budget: Pendra's reasoning.max_tokens is not listed: the worker ends thinking early only on think-block models.
+# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Thinking controls: https://pendra.ai/docs/capabilities/thinking
+# Self-hosted on your own workers: no per-token charge at the API.
 schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
 
 [cost.text.input]
 price = 0
