@@ -3,9 +3,14 @@
 # Prices: https://scalefrequency.com/pricing (accessed 2026-10-28). Billed in INR: ₹15 input, ₹9.30 cached
 # input, ₹55 output per 1M tokens. The page lists USD reference prices of $0.15 / $0.093 / $0.55 (₹100 = $1),
 # which are used here.
-# Reasoning: not exposed on this host. Thinking is off and there is no toggle, effort or budget field.
-# Limits and modalities on this host: 32,768-token context, 8,192 output tokens, text in and text out only.
-# Cache: automatic prefix caching; a repeated prompt start is billed at the cached input price.
+# API reference: https://docs.miraiminds.co/v2/llm ("What the API reads", accessed 2026-10-28).
+# Reasoning: not exposed on this host. Thinking is off; the documented request fields include no reasoning,
+# thinking or effort field, so there is no toggle, effort or budget control.
+# Modalities: text in, text out. The docs say any message part other than text (images, audio) is refused.
+# Limits on this host: 32,768-token context, 8,192 output tokens.
+# structured_output: response_format {"type": "json_schema", ...} is accepted (same docs page).
+# Cache: implicit prefix caching. Per the docs, cached input is the part of a prompt that repeats the start
+# of a recent request; it is billed at the cached input price with no cache markers.
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
