@@ -1,0 +1,20 @@
+# Adzuki AI — OpenAI-compatible gateway (https://adzukiai.com), reselling Chinese
+# frontier models to developers outside mainland China.
+#
+# What this host does and does not serve (checked 2026-10-28):
+# - One endpoint, POST https://adzukiai.com/v1/chat/completions, OpenAI Chat
+#   Completions wire format. SSE streaming and OpenAI-style function tools.
+# - No Responses API, no Messages API, no native Gemini — hence every model file
+#   lists [api.chat-completions] only, which replaces the provider default.
+# - Reasoning is not rewritten: whatever the upstream returns in
+#   delta.reasoning_content is passed through, and reasoning_effort / thinking
+#   toggles in the request body are forwarded verbatim, not mapped.
+# - Prices: https://adzukiai.com/pricing.json (USD per 1M tokens, updated with
+#   every catalogue change). Inference runs in mainland China, disclosed on the
+#   site. No free tier; prepaid USD balance, per token, no subscription.
+name = "Adzuki AI"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["ADZUKI_API_KEY"]
+api = "https://adzukiai.com/v1"
+doc = "https://adzukiai.com/docs"

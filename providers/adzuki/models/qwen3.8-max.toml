@@ -1,0 +1,20 @@
+# Served by Adzuki AI (https://adzukiai.com) — OpenAI-compatible gateway, chat
+# completions only. Price: https://adzukiai.com/pricing.json (checked 2026-10-28).
+# Reasoning params are forwarded verbatim to the upstream relay, so the control
+# surface below matches the lab's own entry in this repo rather than a remapping.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3.4286
+cache = { read = 0.4286 }
+
+[cost.text.output]
+price = 10.2857

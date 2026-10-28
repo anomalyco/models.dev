@@ -1,0 +1,20 @@
+# Served by Adzuki AI (https://adzukiai.com) — OpenAI-compatible gateway, chat
+# completions only. Price: https://adzukiai.com/pricing.json (checked 2026-10-28).
+# Reasoning params are forwarded verbatim to the upstream relay, so the control
+# surface below matches the lab's own entry in this repo rather than a remapping.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3.7143
+cache = { read = 0.3714 }
+
+[cost.text.output]
+price = 19.4286
