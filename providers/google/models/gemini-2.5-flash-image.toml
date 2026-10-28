@@ -1,8 +1,10 @@
+# Status: deprecated, shutdown 2027-03-15: https://ai.google.dev/gemini-api/docs/deprecations
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/pricing
 # Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/gemini-2.5-flash-image"
+status = "deprecated"
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/google/images" }

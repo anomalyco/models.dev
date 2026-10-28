@@ -1,3 +1,4 @@
+# Image input: POST https://ai-gateway.vercel.sh/v1/images/edits uses the input image (verified live 2026-10-28)
 # Modalities: MAI image generation output is always PNG, https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-mai
 schema = 2
 type = "image"
@@ -8,7 +9,7 @@ open_weights = false
 release_date = "2026-10-13"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["image/png"]
 
 [capabilities]

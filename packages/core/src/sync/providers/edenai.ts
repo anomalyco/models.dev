@@ -485,6 +485,11 @@ function mapModalities(values: readonly string[] | null | undefined) {
   return mapped.length > 0 ? mapped : undefined;
 }
 
+function withImage(values: ReturnType<typeof mapModalities>, add: boolean | undefined) {
+  if (values === undefined || !add || values.includes("image")) return values;
+  return [...values, "image" as const];
+}
+
 export function buildEdenAIModel(
   model: EdenAIModel,
   existing?: ExistingModel,
@@ -503,8 +508,13 @@ export function buildEdenAIModel(
   }
 
   const capabilities = model.capabilities;
-  const input = mapModalities(capabilities.input_modalities);
-  const output = mapModalities(capabilities.output_modalities);
+  // Some image models are listed as text in, text out (vertex/gemini-nano-banana-2.1)
+  // though they are priced per input and output image, so an image model keeps
+  // the lab's image input and output.
+  const lab = modelMetadata(baseModel) as { type?: string; modalities?: { input?: string[]; output?: string[] } };
+  const imageModel = lab.type === "image";
+  const input = withImage(mapModalities(capabilities.input_modalities), imageModel && lab.modalities?.input?.includes("image"));
+  const output = withImage(mapModalities(capabilities.output_modalities), imageModel && lab.modalities?.output?.includes("image"));
   const modalities =
     input !== undefined && output !== undefined ? { input, output } : undefined;
 

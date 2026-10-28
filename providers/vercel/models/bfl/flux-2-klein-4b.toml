@@ -1,3 +1,4 @@
+# Image input: POST https://ai-gateway.vercel.sh/v1/images/edits uses the input image (verified live 2026-10-28)
 # Modalities: BFL output_format jpeg | png | webp (OutputFormat in https://api.bfl.ai/openapi.json)
 schema = 2
 type = "image"
@@ -9,7 +10,7 @@ release_date = "2026-01-15"
 last_updated = "2026-06-08"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["image/jpeg", "image/png", "image/webp"]
 
 [capabilities]
