@@ -8,6 +8,11 @@
 # Anthropic-compatible /anthropic/v1 base, so provider entries set their own [api.images] base_url.
 # Output MIME type: the image generation guide saves decoded image_base64 results as .jpeg
 # (https://platform.minimax.io/docs/guides/image-generation); a live call on 2026-10-19 returned JPEG.
+# Input is text only on purpose. The only image input MiniMax documents is one `subject_reference`
+# with type "character" (a portrait to keep the same person); there is no edit endpoint. Live checks on
+# api.minimax.io, 2026-10-28: an edit prompt with a photo returns a lookalike person in a new scene, not
+# an edit; other subject types, a second reference and edit-style fields are rejected or ignored.
+# Clients read image input as "can edit", so it stays out until models.dev can express reference-only input.
 schema = 2
 type = "image"
 name = "MiniMax image-01"
@@ -18,7 +23,7 @@ release_date = "2025-02-15"
 last_updated = "2026-08-25"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png"]
+input = ["text"]
 output = ["image/jpeg"]
 
 [capabilities]
