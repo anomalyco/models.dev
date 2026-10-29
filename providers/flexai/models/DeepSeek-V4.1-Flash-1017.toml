@@ -1,12 +1,17 @@
-# Context: 1_048_576 is the served window (GET /v1/models context_length, 2026-10-22).
-# Toggle: /v1/models lists hybrid_thinking for this model (2026-10-22). Effort
-# levels are not yet measured on FlexAI for this snapshot, so none are declared.
+# Context: 1_048_576 is the served window (GET /v1/models context_length, 2026-10-29).
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled); chat_template_kwargs.thinking also works.
+# Effort: reasoning_effort = low | high | max, the lab set. Any effort value on its own turns thinking on.
+# Measured on FlexAI 2026-10-29 (length of reasoning_content, 3 prompts, no max_tokens, all finish_reason stop):
+#   default 0/0/0 · disabled 0/0/0 · enabled 193/551/1674
+#   low 72/349/1959 · high 106/689/2099 · max 162/571/2524
+# low is a distinct on-level (it reasons; disabled does not). max is the longest on the hardest prompt.
+# low and high were not separated at one sample per prompt; both are kept, as in the lab and peers.
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_576

@@ -1,15 +1,11 @@
-# Toggle: thinking.type = "enabled" | "disabled" (default: disabled)
-# Effort: reasoning_effort = high | max
-# Measured on FlexAI 2026-10-02 (reasoning tokens, n=4, max_tokens 4000):
-#   default 0 · minimal 0 · low 0 · medium 1783 · high 1978 · max 4000 (capped)
-# minimal and low return zero reasoning tokens, i.e. they are the disabled
-# state the toggle already expresses; medium and high overlap and are not
-# separable; max saturates the budget. Only the two separable on-levels are
-# declared. The gateway validates reasoning_effort against a uniform
-# minimal|low|medium|high|max enum shared across models, so acceptance of a
-# value is not evidence that it is honoured here.
-# medium and high are one measured band; it is named `high` here because
-# that is the name every peer entry for this model uses.
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled); chat_template_kwargs.thinking also works.
+# Effort: reasoning_effort = low | high | max, the lab set. Any effort value on its own turns thinking on.
+# Measured on FlexAI 2026-10-29 (length of reasoning_content, 3 prompts, no max_tokens, all finish_reason stop):
+#   default 0/0/0 · disabled 0/0/0 · enabled 187/597/1402
+#   low 168/490/1307 · high 154/545/1336 · max 169/1317/3782
+# low is a distinct on-level (it reasons; disabled does not), which supersedes the capped
+# 2026-10-02 measurement that read low as zero. max is the longest; low and high were not
+# separated at one sample per prompt, and both are kept, as in the lab and peers.
 # Context: 1_048_576 is the served window (GET /v1/models context_length, and the
 # server's max_tokens error states "maximum context length of 1048576").
 # https://docs.flex.ai/inference-api/agents/langchain
@@ -17,7 +13,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_576
