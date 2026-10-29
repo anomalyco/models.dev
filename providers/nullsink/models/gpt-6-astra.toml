@@ -1,0 +1,25 @@
+# Pricing (USD/MTok): https://nullsink.is/v1/models
+# API: https://nullsink.is/api/
+# Native OpenAI Responses API; Standard service tier.
+# Reasoning: reasoning.effort, matching the native OpenAI model controls.
+# https://developers.openai.com/api/docs/models/gpt-6-astra
+# Long-context rates apply above 272,000 total input tokens.
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 20
+output = 75
+cache_read = 2
+cache_write = 25
+
+[provider]
+npm = "@ai-sdk/openai"
+shape = "responses"
