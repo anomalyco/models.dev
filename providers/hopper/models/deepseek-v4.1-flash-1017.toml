@@ -9,6 +9,13 @@
 # Live checks: thinking on/off, streaming reasoning_content and usage, a tool/result
 # round trip, an implicit cache hit, and acceptance of max_tokens = 384000.
 # The API also accepts max_completion_tokens; max_tokens = 393217 returns HTTP 400.
+# Structured output: response_format.type = json_schema with strict = true enforced
+# required keys and enum values against two contradictory prompts (live 2026-10-28).
+# Chat Completions system updates: a late system message changed ORIGINAL -> UPDATED
+# while retaining 13824 cached tokens (control 13920 prompt tokens -> update 13941),
+# reproduced with two independent prefixes. No system-message relocation observed.
+# Messages API omitted: x-api-key auth is rejected; with Bearer auth basic chat/tools
+# work, but thinking and output_config.format are not honored (live 2026-10-28).
 # Hopper hosts the model itself; the reasoning controls describe this host's API.
 # The initial entry advertises text input; image input has not been verified on this host.
 schema = 2
@@ -22,6 +29,7 @@ output = ["text"]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 stream_usage = true
+structured_output = true
 
 [limit]
 context = 393_216
@@ -35,3 +43,4 @@ price = 0.85
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
