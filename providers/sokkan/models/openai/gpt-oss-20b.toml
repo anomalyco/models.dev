@@ -1,0 +1,22 @@
+# Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
+#   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
+# Effort: reasoning_effort = low|medium|high (Chat Completions), forwarded unchanged to the serving backend.
+# Live 2026-10-22 (max_tokens 64, one call per value): low -> finish "stop" after 40 tokens with an answer;
+#   medium/high and omitted -> finish "length" at 64 tokens of reasoning; "bogus" -> HTTP 400 literal_error on reasoning_effort.
+# Zone: CH (Geneva). Structured outputs per the gateway's model catalogue.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 0.015
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 0.075
