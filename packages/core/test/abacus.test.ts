@@ -159,3 +159,12 @@ test("curated tier labels keep same-base variants distinguishable", () => {
   expect(contributor?.model).toMatchObject({ name: "Muse Spark 1.3 Contributor" });
   expect(String(contributor?.model.description)).toContain("train future Meta models");
 });
+
+test("a curated deprecated status survives a feed hit", () => {
+  const authored = { base_model: "zhipuai/glm-5.2", status: "deprecated" } as any;
+  const built = buildAbacusModel(
+    abacusModel({ id: "zai-org/GLM-5.2", thinking: true }),
+    authored,
+  );
+  expect(built?.model).toMatchObject({ status: "deprecated" });
+});

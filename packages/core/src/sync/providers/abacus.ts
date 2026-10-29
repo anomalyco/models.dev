@@ -183,6 +183,7 @@ export function buildAbacusModel(
     tool_call: model.tools === true ? true : authored?.tool_call,
     structured_output: authored?.structured_output,
     interleaved: authored?.interleaved,
+    status: authored?.status,
     limit,
     modalities,
     cost,
