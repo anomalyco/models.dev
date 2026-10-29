@@ -10,11 +10,16 @@
 # the omitted default. high is accepted and folded to xhigh, so it is not listed.
 # Modalities: text and image input, checked live on 2026-10-29. Video input is not verified on this host,
 # so the inherited video MIME types are replaced with text and images only.
+# Context: 524,288-token window on this host (input up to 507,904 tokens), checked live on 2026-10-29;
+# the base model file lists 262,144, so limit.context is overridden here. limit.output is inherited.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+
+[limit]
+context = 524_288
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
