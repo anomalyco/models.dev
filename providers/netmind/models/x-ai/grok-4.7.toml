@@ -1,0 +1,18 @@
+# NetMind model ID: x-ai/grok-4.7.
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+# Pricing maps input/output/cache fields and context tiers from that response.
+# Effort: reasoning_effort = <level>
+# https://www.netmind.ai/product/inference
+base_model = "xai/grok-4.7"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.6
+output = 4.8
+cache_read = 0.4
+
+[[cost.tiers]]
+tier = { type = "context", size = 200000 }
+input = 3.2
+output = 9.6
+cache_read = 0.8
