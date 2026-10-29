@@ -49,6 +49,14 @@ const HEADER_NOTES: Record<string, string[]> = {
     "# Host context: the feed publishes context_length 1,000,000; the lab documents",
     "# 262,144 native with extension up to 1M. The host advertises the extended window.",
   ],
+  "zai-org/GLM-5.3": [
+    "# Host context: the feed publishes context_length 1,048,576; the lab documents",
+    "# 1,000,000. The host value is the override below.",
+  ],
+  "zai-org/GLM-5.3-Flash": [
+    "# Host context: the feed publishes context_length 1,048,576; the lab documents",
+    "# 1,000,000. The host value is the override below.",
+  ],
 };
 
 // RouteLLM files these under `text_generation`, but they are transcription
