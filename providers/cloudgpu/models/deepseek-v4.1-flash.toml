@@ -6,13 +6,9 @@
 # Live check: image_url input with PNG and JPEG data URLs answered correctly.
 # Live check (2026-10-30): image_url data URLs in PNG, GIF and WebP answered correctly; BMP was rejected or unreadable on this route. Only image_url input is documented at /api/docs (no video, PDF or HEIC input), so other lab formats are omitted.
 # Live check: reasoning text is returned in message.reasoning_content.
-# Context and output limits are inherited from the base model (vendor model card).
+# Modalities, context and output limits are inherited from the base model (vendor model card).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
