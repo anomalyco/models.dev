@@ -1,0 +1,44 @@
+# Sources (accessed 2026-10-29):
+# - Variant identity and integration: https://withhopper.com/cyber
+# - Model ID, context, and USD-per-million-token prices:
+#   https://withhopper.com/mcp, tools/call list_models (no authentication required).
+# Hopper hosts an abliterated variant of the shared DeepSeek base model.
+# Chat Completions toggle: chat_template_kwargs.thinking = true|false.
+# Effort: reasoning_effort = low|high|max, matching Hopper's shared DeepSeek API;
+# low/high verified on this variant. Relative effort was not benchmarked.
+# Messages toggle: thinking.type = enabled|disabled; effort: output_config.effort.
+# Live checks: text/PNG input, tool/result round trips, streaming usage, implicit
+# cache hits, and strict JSON schemas (response_format and output_config.format).
+# Messages accepts x-api-key auth and returns thinking blocks (empty signatures).
+# Chat reasoning is returned in message.reasoning, verified live. As with Nebius,
+# leave reasoning_field unset: v1 only accepts reasoning_content|reasoning_details.
+# Context is catalog-reported, not load-tested; max_tokens = 384000 was accepted
+# for a short reply. No hard reasoning budget or mid-conversation flags claimed.
+# top_k is omitted by Hopper's Messages adapter, so disable the inherited flag.
+# Keep Chat Completions first for v1 compatibility; both APIs share /v1.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Abliterated"
+description = "Abliterated variant of DeepSeek V4.1 Flash 1017 hosted by Hopper."
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+stream_usage = true
+structured_output = true
+top_k = false
+
+[limit]
+context = 393_216
+
+[cost.text.input]
+price = 0.30
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.20
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

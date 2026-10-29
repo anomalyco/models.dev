@@ -4,7 +4,8 @@
 # - Prices (USD per million tokens):
 #   https://withhopper.com/mcp, tools/call list_models (no authentication required).
 # - Context limit of 1048576 and image input: Hopper maintainer supplied 2026-10-29.
-#   Inherit the lab's text/JPEG/PNG/GIF/WebP modalities; no new live context/image probe.
+#   Inherit the lab's text/JPEG/PNG/GIF/WebP modalities; PNG verified live 2026-10-29.
+#   The full context window has not been load-tested.
 # Chat Completions toggle: chat_template_kwargs.thinking = true|false.
 # Chat Completions effort: reasoning_effort = low|high|max (native DeepSeek levels, accepted live;
 # unknown levels return HTTP 400; relative effort was not benchmarked).
