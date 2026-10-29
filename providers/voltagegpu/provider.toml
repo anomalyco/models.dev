@@ -1,0 +1,16 @@
+# VoltageGPU serves open models over an OpenAI-compatible API. Every model id ends in -TEE and runs
+# in an Intel TDX guest with a confidential-computing GPU; GET /v1/attestation returns the TDX quotes
+# and NVIDIA GPU evidence of a model's running instances, bound to a nonce chosen by the caller.
+# Sources (read 2026-10-23): https://api.voltagegpu.com/v1/models (ids, context_length, live status),
+# https://voltagegpu.com/api/pricing/snapshot (USD per million tokens), https://docs.voltagegpu.com.
+# POST /v1/chat/completions forwards request fields other than model, messages, stream, stream_options
+# and fallback_models unchanged (tools, response_format, chat_template_kwargs, ...), and returns the
+# response unchanged, so reasoning switches are the chat-template kwargs of each checkpoint.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) are unset: VoltageGPU
+# documents none of them and they were not tested live.
+name = "VoltageGPU"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["VOLTAGEGPU_API_KEY"]
+api = "https://api.voltagegpu.com/v1"
+doc = "https://docs.voltagegpu.com"

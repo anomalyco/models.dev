@@ -1,0 +1,23 @@
+# Sources (read 2026-10-23): GET https://api.voltagegpu.com/v1/models (id, context_length) and
+#   GET https://voltagegpu.com/api/pricing/snapshot (inference prices, USD per million tokens).
+# Output limit: the max output length published for the deployment serving this id.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: chat_template_kwargs.reasoning_effort = high|max (max unless high is sent)
+#  chat template: https://huggingface.co/zai-org/GLM-5.2
+schema = 2
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 TEE"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"], default = { type = "effort", value = "max" } }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 65_535
+
+[cost.text.input]
+price = 2.31
+
+[cost.text.output]
+price = 7.31
