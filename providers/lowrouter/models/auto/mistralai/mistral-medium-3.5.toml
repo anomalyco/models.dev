@@ -5,13 +5,16 @@
 # Effort: reasoning_effort = none|high, forwarded unchanged to Mistral
 # (https://lowrouter.ai/docs/guides/request-parameters). Same values as
 # providers/mistral for this model.
+schema = 2
 base_model = "mistral/mistral-medium-2604"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
-[cost]
-input = 1.5688
-output = 7.8442
-cache_read = 0.1569
+[cost.text.input]
+price = 1.5688
+cache = { read = 0.1569 }
+
+[cost.text.output]
+price = 7.8442

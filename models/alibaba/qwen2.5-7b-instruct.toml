@@ -1,0 +1,30 @@
+# Model card (https://huggingface.co/Qwen/Qwen2.5-7B-Instruct): instruction-tuned, "Context Length: Full
+# 131,072 tokens and generation 8192 tokens" (config.json ships 32,768; YaRN extends it); tool use via the chat
+# template; Apache 2.0. Released with the Qwen2.5 family on 2024-09-19 (https://qwenlm.github.io/blog/qwen2.5/).
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Qwen2.5 7B Instruct"
+description = "Small open Qwen2.5 instruction model for chat, structured output, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2024-09-19"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct"

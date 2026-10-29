@@ -1,0 +1,15 @@
+schema = 2
+base_model = "cohere/command-a"
+
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[limit]
+output = 256_000
+
+[cost.text.input]
+price = 2.645
+
+[cost.text.output]
+price = 10.58

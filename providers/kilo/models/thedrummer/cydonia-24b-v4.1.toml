@@ -1,23 +1,16 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "thedrummer/cydonia-24b-v4.1"
 name = "TheDrummer: Cydonia 24B V4.1"
-description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-release_date = "2025-09-27"
-last_updated = "2025-09-27"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
 structured_output = true
-open_weights = false
 
-[cost]
-input = 0.3
-output = 0.5
-cache_read = 0.15
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
 
-[limit]
-context = 131_072
-output = 117_964
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.5

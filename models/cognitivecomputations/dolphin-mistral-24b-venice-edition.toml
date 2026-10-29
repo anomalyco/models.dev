@@ -1,0 +1,27 @@
+# Lab metadata carried over from providers/openrouter/models/cognitivecomputations/dolphin-mistral-24b-venice-edition.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Weights: https://huggingface.co/cognitivecomputations/Dolphin-Mistral-24B-Venice-Edition (Apache-2.0)
+# Sampling: open weights; generation_config.json sets temperature 0.15
+# (https://huggingface.co/cognitivecomputations/Dolphin-Mistral-24B-Venice-Edition/blob/main/generation_config.json).
+schema = 2
+name = "Uncensored"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+family = "mistral"
+open_weights = true
+knowledge = "2024-04-30"
+release_date = "2025-07-09"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 8_192

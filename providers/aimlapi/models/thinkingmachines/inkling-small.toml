@@ -1,0 +1,20 @@
+schema = 2
+base_model = "thinkingmachines/inkling-small"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+tools = { supported = true }
+
+[limit]
+context = 524_288
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.61364
+cache = { read = 0.122728 }
+
+[cost.text.output]
+price = 1.52352

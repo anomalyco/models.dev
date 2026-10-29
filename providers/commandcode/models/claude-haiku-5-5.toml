@@ -1,0 +1,35 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Relay reasoning baseline: providers/anthropic/models/claude-haiku-5-5.toml; providers/cloudflare-ai-gateway/models/claude-sonnet-5.toml
+# Toggle: thinking.type = adaptive|disabled
+# Effort: output_config.effort; disabled thinking requires high effort or below.
+# Mid-conversation flags follow Anthropic's own API for this model: Command Code serves it via @ai-sdk/anthropic. See providers/anthropic/models/claude-haiku-5-5.toml.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

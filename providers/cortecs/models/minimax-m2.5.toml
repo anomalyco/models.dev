@@ -1,16 +1,25 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (amazon_ireland). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+cache = false
 structured_output = true
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.348
-output = 1.39
-cache_read = 0.075
 
 [limit]
 context = 196_000
 output = 196_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.348
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.39

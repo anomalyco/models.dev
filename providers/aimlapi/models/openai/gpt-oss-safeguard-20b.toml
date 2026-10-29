@@ -1,0 +1,18 @@
+schema = 2
+base_model = "openai/gpt-oss-safeguard-20b"
+name = "gpt-oss-safeguard-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 0.07935
+cache = { read = 0.039675 }
+
+[cost.text.output]
+price = 0.3174

@@ -7,24 +7,24 @@
 # Budget: thinking_token_budget (integer reasoning tokens)
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3 Flex"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], budget = {} }
 structured_output = false
-
-interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.9425
-output = 2.925
-cache_read = 0.09425
 
 [limit]
 context = 1_048_560
 output = 1_048_560
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.9425
+cache = { read = 0.09425 }
+
+[cost.text.output]
+price = 2.925

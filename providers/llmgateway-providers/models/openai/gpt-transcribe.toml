@@ -1,0 +1,16 @@
+# API: realtime transcription on /v1/realtime (https://docs.llmgateway.io/features/realtime); /v1/audio/transcriptions only routes `transcriptions: true` mappings, xAI only (https://github.com/theopenco/llmgateway/blob/main/apps/gateway/src/transcriptions/transcriptions.ts)
+schema = 2
+base_model = "openai/gpt-transcribe"
+name = "GPT Transcribe (OpenAI)"
+
+[capabilities]
+structured_output = false
+
+[api.realtime]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

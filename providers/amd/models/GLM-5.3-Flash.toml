@@ -1,0 +1,28 @@
+# AMD Token Factory catalog (accessed 2026-10-21): https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3AGLM-5.3-Flash
+# Section "Public Free Model APIs"; pricing note "Free to use. Points show relative usage, not a charge.", so every price is 0.
+# vision: false, context_length 262144, tools and reasoning true; supported_parameters temperature, max_tokens, top_p,
+#   stream, response_format, tools, tool_choice (no top_k). Input is text only.
+# Effort: reasoning_effort = low|high|max, assumed from Z.ai's own API (providers/zai) and the Modal endpoint; the AMD gateway
+#   validates reasoning_effort per model and ignores thinking.* (see the AMD DeepSeek files). Unverified here (no key).
+# APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

@@ -1,23 +1,15 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-11).
+schema = 2
+base_model = "mistral/mistral-large-2411"
 name = "Mistral-Large"
-description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
-family = "mistral-large"
-release_date = "2024-07-24"
-last_updated = "2024-07-24"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 knowledge = "2024-07"
-open_weights = false
-
-[cost]
-input = 2
-output = 6
 
 [limit]
-context = 128000
-output = 32768
+context = 128_000
+output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 6

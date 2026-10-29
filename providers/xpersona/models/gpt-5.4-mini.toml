@@ -1,21 +1,21 @@
+schema = 2
 base_model = "openai/gpt-5.4-mini"
 base_model_omit = ["limit.input"]
-interleaved = { field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.375
-output = 4.00
-reasoning = 4.00
-cache_read = 0.0375
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 272_000
-output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 4
+reasoning = 4

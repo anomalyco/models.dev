@@ -1,8 +1,13 @@
+schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama-3.3-70B-Instruct (IONOS)"
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.72839
-output = 0.72839
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.723645
+
+[cost.text.output]
+price = 0.723645

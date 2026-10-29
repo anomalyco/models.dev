@@ -1,8 +1,9 @@
 #!/usr/bin/env bun
 
-import { RenderedPages, Providers, Models, renderDocument } from "../src/render";
+import { RenderedPages, Providers, Models, SearchIndexJson, renderDocument } from "../src/render";
 import {
   filterCatalogByModelType,
+  filterProvidersByModelType,
   generateV2,
   MODEL_TYPES,
   type ModelTypeFilter,
@@ -80,6 +81,8 @@ for (const [route, rendered] of RenderedPages) {
   await Bun.write(filePath, renderDocument(template, rendered));
 }
 
+await Bun.write("./dist/search-index.json", SearchIndexJson);
+
 const catalog = { models: Models, providers: Providers };
 const variants: Array<[suffix: string, filter: ModelTypeFilter]> = [
   ["", "default"],
@@ -87,17 +90,18 @@ const variants: Array<[suffix: string, filter: ModelTypeFilter]> = [
   ...MODEL_TYPES.map((type) => [`-${type}`, [type]] as const),
 ];
 
+const providersV2 = await generateV2(providersDir);
+
 for (const [suffix, filter] of variants) {
   const filtered = filterCatalogByModelType(catalog, filter);
   await Bun.write(`./dist/_api${suffix}.json`, JSON.stringify(filtered.providers));
   await Bun.write(`./dist/_models${suffix}.json`, JSON.stringify(filtered.models));
   await Bun.write(`./dist/_catalog${suffix}.json`, JSON.stringify(filtered));
+  // v2 returns every model by default.
+  await Bun.write(
+    `./dist/_experimental_v2.0_api${suffix}.json`,
+    JSON.stringify(filterProvidersByModelType(providersV2, filter === "default" ? "all" : filter)),
+  );
 }
-
-const providersV2 = await generateV2(providersDir);
-await Bun.write(
-  "./dist/_experimental_v2.0_api.json",
-  JSON.stringify(providersV2),
-);
 
 await fs.rm("./dist/index.html", { force: true });

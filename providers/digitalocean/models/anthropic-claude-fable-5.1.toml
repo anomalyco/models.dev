@@ -1,15 +1,35 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: explicit cache_control (ttl 5m|1h); automatic only through the Inference Router. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
 base_model = "anthropic/claude-fable-5-1"
 name = "Anthropic Claude Fable 5.1"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 10
-output = 50
-cache_read = 0.25
-cache_write = 12.5
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+system_updates = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 10
+cache = { read = 0.25, write = { "5m" = 12.5, "1h" = 20 } }
+
+[cost.text.output]
+price = 50
+
+[cost.web_search]
+price = 0

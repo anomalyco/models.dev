@@ -1,12 +1,18 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 base_model = "alibaba/qwen3.6-plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[cost.text.input]
+price = 0.325
+cache = { write = 0.40625 }
 
-[cost]
-input = 0.325
-output = 1.95
-cache_write = 0.40625
+[cost.text.output]
+price = 1.95

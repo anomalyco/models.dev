@@ -10,21 +10,26 @@
 # Image input via base64 image_url is verified live and documented (native
 # multimodal agent model); host docs require base64 (public URLs rejected) and
 # do not document video, so input is limited to text+image.
+schema = 2
 base_model = "moonshotai/kimi-k3"
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

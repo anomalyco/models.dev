@@ -1,0 +1,33 @@
+# Model card (https://huggingface.co/black-forest-labs/FLUX.1-dev, mirrored at
+# https://build.nvidia.com/black-forest-labs/flux_1-dev): 12B rectified-flow text-to-image model; release date
+# "August 1, 2024" (NVIDIA card); FLUX.1 [dev] Non-Commercial License.
+# Output formats: BFL's own API serves FLUX.1 [dev] at POST /v1/flux-dev with output_format jpeg (default), png or
+# webp (https://docs.bfl.ml/api-reference/models/generate-an-image-with-flux1-[dev]).
+# No sampling temperature; prompts are not chat tokens, so context and output are 0.
+schema = 2
+type = "image"
+name = "FLUX.1 [dev]"
+description = "Open-weight FLUX.1 text-to-image model for high-quality guidance-distilled generation"
+family = "flux"
+open_weights = true
+release_date = "2024-08-01"
+license = "FLUX.1 [dev] Non-Commercial License"
+
+[modalities]
+input = ["text"]
+output = ["image/jpeg", "image/png", "image/webp"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/black-forest-labs/FLUX.1-dev"

@@ -1,0 +1,13 @@
+schema = 2
+base_model = "gryphe/mythomax-l2-13b"
+name = "MythoMax 13B"
+
+[limit]
+output = 4_096
+
+[cost.text.input]
+price = 1.98375
+cache = { read = 1.98375 }
+
+[cost.text.output]
+price = 1.98375

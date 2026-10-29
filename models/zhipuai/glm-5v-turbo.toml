@@ -1,18 +1,25 @@
+# Sources (accessed 2026-10-19):
+# - https://docs.z.ai/guides/vlm/glm-5v-turbo (video / image / text / file input, 200K context, 128K output)
+# - https://docs.z.ai/api-reference/llm/chat-completion (images: jpg, png, jpeg; video: mp4, mkv, mov)
+# - Sampling: temperature and top_p are documented; top_k is not.
+schema = 2
 name = "GLM-5V-Turbo"
 description = "Fast GLM vision model for screenshots, documents, and multimodal agent tasks"
 family = "glm"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-04-01"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime", "video/x-matroska", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 200_000
 output = 131_072
-
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]

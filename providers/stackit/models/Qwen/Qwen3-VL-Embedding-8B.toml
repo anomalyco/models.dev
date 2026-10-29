@@ -1,23 +1,33 @@
+# Prices: STACKIT lists EUR per 1M tokens (net): https://stackit.com/en/products/data-ai/stackit-ai-model-serving
+# Embedding model (POST /embeddings); only input tokens are billed, so output is 0.
+# EUR 0.08 converted at about 1.17 USD/EUR (original rate and date not recorded).
+schema = 2
+type = "embedding"
 name = "Qwen3-VL Embedding 8B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "qwen"
-release_date = "2026-02-05"
-last_updated = "2026-02-05"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2026-02-05"
 
-[cost]
-input = 0.09
-output = 0.09
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 32_000
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 0

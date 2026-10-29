@@ -1,0 +1,27 @@
+# Sources:
+# - https://docs.x.ai/developers/models/grok-voice-transcribe-2.0
+# - https://docs.x.ai/developers/model-capabilities/audio/speech-to-text (container formats: WAV, MP3, OGG, Opus, FLAC, AAC, MP4, M4A, MKV)
+# - https://docs.x.ai/developers/release-notes (2026-09-17: grok-voice-transcribe-2.0 available)
+# Transcription has no token context/output window; zero denotes not applicable.
+schema = 2
+type = "transcription"
+name = "Grok Voice Transcribe 2.0"
+description = "Speech-to-text model with word-level timestamps, speaker diarization, multichannel audio, and streaming"
+family = "grok"
+open_weights = false
+release_date = "2026-09-17"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/ogg", "audio/flac", "audio/aac", "audio/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

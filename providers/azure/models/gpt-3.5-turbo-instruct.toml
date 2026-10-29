@@ -1,24 +1,31 @@
+# Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
+# system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
+# `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
+schema = 2
 name = "GPT-3.5 Turbo Instruct"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
-release_date = "2023-09-21"
-last_updated = "2023-09-21"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2021-08"
-tool_call = false
 open_weights = false
+knowledge = "2021-08"
+release_date = "2023-09-21"
 status = "deprecated"
-
-[cost]
-input = 1.50
-output = 2.00
-
-[limit]
-context = 4096
-output = 4096
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+cache = false
+
+[limit]
+context = 4_096
+output = 4_096
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 2

@@ -5,15 +5,22 @@
 # Catalog: https://aihubmix.com/api/v1/models?type=llm&sort_by=order
 # Currency proof: https://aihubmix.com/models/claude-opus-5-5
 # Canon export SHA: 826aa9e2dab1b2920959957c5a0222873f3f5f38
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
-interleaved = true
-[[reasoning_options]]
-type = "toggle"
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 5
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
+
+[cost.text.output]
+price = 20

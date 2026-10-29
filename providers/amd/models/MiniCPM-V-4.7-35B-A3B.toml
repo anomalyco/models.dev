@@ -1,0 +1,24 @@
+# AMD Token Factory catalog (accessed 2026-10-21): https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3AMiniCPM-V-4.7-35B-A3B
+# Section "Public Free Model APIs"; pricing note "Free to use. Points show relative usage, not a charge.", so every price is 0.
+# vision: true (capability "VLM (Vision)", video not listed), context_length 262144, tools and reasoning true;
+#   supported_parameters temperature, max_tokens, top_p, stream, response_format, tools, tool_choice (no top_k).
+# reasoning_effort values are unverified on this host (no key), so no effort list is published.
+# APIs on this host: OpenAI Chat Completions (/v1/chat/completions), /v1/models.
+schema = 2
+base_model = "openbmb/minicpm-v-4.7-35b-a3b"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+top_k = false
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

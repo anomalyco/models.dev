@@ -1,24 +1,35 @@
+# Modalities: Azure OpenAI vision chat image formats (JPEG, PNG, GIF first frame only, WEBP): https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/gpt-with-vision
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 name = "GPT-4 Turbo Vision"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
+open_weights = false
+knowledge = "2023-11"
 release_date = "2023-11-06"
 last_updated = "2024-04-09"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-11"
-tool_call = true
-open_weights = false
 status = "deprecated"
 
-[cost]
-input = 10.00
-output = 30.00
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+cache = false
 
 [limit]
-context = 128000
-output = 4096
+context = 128_000
+output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 30

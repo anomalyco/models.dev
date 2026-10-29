@@ -1,23 +1,17 @@
+# Linked to models/alibaba/qwen3-235b-a22b-instruct-2507.toml (same model).
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+# Reasoning: inherits the lab (false). Instruct-2507 is the non-thinking release (https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507).
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B A22B Instruct"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2025-07-01"
-last_updated = "2025-07-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.13
-output = 0.60
+status = "deprecated"
 
 [limit]
-context = 262_144
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.13
+
+[cost.text.output]
+price = 0.6

@@ -1,13 +1,20 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
+# Cache: OpenAI and Gemini cache automatically with no flag; https://docs.opper.ai/build/gateway/prompt-caching (2026-10-21).
+schema = 2
 base_model = "google/gemini-3.5-flash"
 
-reasoning_options = []
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+structured_output = true
 
-[cost]
-input = 1.5
-output = 9
-cache_read = 0.15
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 9

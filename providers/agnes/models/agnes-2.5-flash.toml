@@ -1,28 +1,29 @@
+# toggle: API: {"chat_template_kwargs": {"enable_thinking": true}}
+schema = 2
 name = "Agnes 2.5 Flash"
 description = "Upgraded model with improved coding, agent workflows, tool calling, and multimodal understanding."
-release_date = "2026-07"
-last_updated = "2026-07"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
 open_weights = false
-
-[cost]
-input = 0
-output = 0
-
-[limit]
-context = 512_000
-output = 65_536
+release_date = "2026-07"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
+[limit]
+context = 512_000
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

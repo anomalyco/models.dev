@@ -1,12 +1,31 @@
+# Sources: Poe API /v1/models, accessed 2026-10-12 (verified live with
+# packages/core/script/poe-reasoning-audit.py) — costs already exact;
+# - modalities: live /v1/models architecture for this bot is uniquely
+#   input_modalities=["text","image","video"] (modality "text,image,video->text") —
+#   no audio; sibling Poe bots (3-flash, 3.1-flash-lite, 3.5-flash-lite, 3.6/3.7/3.8)
+#   all still list audio. Arrays replace on merge, so this override drops both
+#   audio and the lab's pdf.
+# thinking_level enum = minimal|low|high (no medium) verified live.
+# Effort follows the bot's extra_body thinking_level (the control that scales:
+# minimal rt=0, low/high raise rt; medium -> 400). Top-level reasoning_effort=medium
+# returns 200 but its reasoning_tokens overlap baseline/low and do not scale as a
+# distinct level, so it is not filed as an extra effort value (see provider.toml:
+# forwarding is best-effort; acceptance alone is not an effective control).
+schema = 2
 base_model = "google/gemini-3.5-flash"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "high"] }]
 name = "Gemini-3.5-Flash"
-temperature = false
-
-[cost]
-input = 1.5152
-output = 9.0909
-cache_read = 0.1515
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5152
+cache = { read = 0.1515 }
+
+[cost.text.output]
+price = 9.0909

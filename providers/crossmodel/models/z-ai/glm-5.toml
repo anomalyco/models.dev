@@ -1,22 +1,35 @@
+# Synced from CrossModel's catalog, https://www.crossmodel.ai/api/models (accessed 2026-10-21):
+# prices (USD micro/1M, threshold tiers -> context overrides), limits, modalities,
+# reasoning controls, structured_output.json_schema, context.caching, release_stage.
+# Toggle: thinking.type = enabled|disabled on /v1/messages
+# (https://www.crossmodel.ai/docs/api-reference/messages.md)
+# Cache: catalog context.caching = true; CrossModel documents no mechanism (implicit/explicit, TTL).
+# Mid-conversation flags unset: CrossModel documents none and nothing was tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages (https://www.crossmodel.ai/docs/models-and-capabilities.md).
+schema = 2
 base_model = "zhipuai/glm-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.6
-output = 3
-cache_read = 0.16
-cache_write = 0.6
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.8
-output = 3.4
-cache_read = 0.2
-cache_write = 0.8
+cache = { implicit = true }
 
 [limit]
 context = 200_000
 output = 128_000
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.16, write = 0.6 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.8
+cache = { read = 0.2, write = 0.8 }
+
+[cost.text.output]
+price = 3
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.4

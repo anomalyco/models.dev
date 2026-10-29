@@ -1,26 +1,23 @@
-name = "nemotron-3.5-lightning-30b-a3b"
-description = "NVIDIA Nemotron 3.5 Lightning 30B-A3B is a hybrid Mamba-2 + MoE + Attention model with 30B total and 3B active parameters, pre-trained on over 20T tokens with an NVFP4 recipe and Multi-Token Prediction for fast generation. Up to 1M token context for long-running autonomous agents, sub-agent workhorse deployments, and agentic workflows. Supports reasoning and tool calling. English and coding languages plus Spanish, French, German, Italian, and Japanese. Open weights under the OpenMDW License Agreement v1.1. Part of the NVIDIA Nemotron family."
-family = "nemotron"
-release_date = "2026-08-11"
-last_updated = "2026-08-11"
-attachment = false
-reasoning = true
-tool_call = true
+# Identity (https://router.requesty.ai/v1/models/managed (accessed 2026-10-20)): hugging_face_id nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16 (model_lab nvidia, open_weights true);
+#   created 2026-08-11 = lab release_date. Host delta: context_window 1,048,576 (the model card's "up to 1M tokens",
+#   https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16; the lab lists the 262,144 single-H100 context), max_output_tokens 65,536 (lab 262,144).
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = false
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 0
-output = 0
+system_updates = true
 
 [limit]
 context = 1_048_576
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

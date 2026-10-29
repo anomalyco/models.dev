@@ -1,0 +1,17 @@
+schema = 2
+base_model = "xai/grok-4-fast-non-reasoning"
+name = "Grok 4 Fast Non-Reasoning"
+
+[capabilities]
+structured_output = false
+tools = { supported = true }
+
+[limit]
+output = 1_999_000
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.5

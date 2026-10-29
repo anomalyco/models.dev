@@ -1,0 +1,28 @@
+# Voxtral Mini Transcribe 2, API IDs voxtral-mini-2602 and voxtral-mini-latest, released 2026-02-04, audio in, text out:
+#   https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02
+# https://mistral.ai/news/voxtral-transcribe-2
+# Not the open-weight Voxtral Mini Transcribe Realtime (voxtral-mini-transcribe-realtime-2602) or Voxtral Mini 3B.
+# Input formats ("Supported formats: WAV, MP3, FLAC, OGG, WEBM"): https://docs.mistral.ai/resources/known-limitations
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Voxtral Mini Transcribe 2"
+description = "Speech-to-text model with timestamps, optimized for transcription only"
+family = "voxtral"
+open_weights = false
+release_date = "2026-02-04"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/ogg", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

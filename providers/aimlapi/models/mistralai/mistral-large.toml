@@ -1,0 +1,14 @@
+schema = 2
+base_model = "mistral/mistral-large"
+name = "Large"
+
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[cost.text.input]
+price = 2.116
+cache = { read = 0.2116 }
+
+[cost.text.output]
+price = 6.348

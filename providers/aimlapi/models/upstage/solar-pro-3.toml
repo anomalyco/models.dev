@@ -1,0 +1,16 @@
+schema = 2
+base_model = "upstage/solar-pro3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+tools = { supported = true }
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.1587
+cache = { read = 0.01587 }
+
+[cost.text.output]
+price = 0.6348

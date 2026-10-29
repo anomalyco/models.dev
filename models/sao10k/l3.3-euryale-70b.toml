@@ -1,0 +1,28 @@
+# Lab metadata carried over from providers/openrouter/models/sao10k/l3.3-euryale-70b.toml (curated catalogue data
+#   already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the model card
+#   (https://huggingface.co/Sao10K/L3.3-70B-Euryale-v2.3) recommends temperature 1.1,
+#   min_p 0.1, and generation_config.json sets temperature 0.6, top_p 0.9.
+schema = 2
+name = "Llama 3.3 Euryale 70B"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+family = "llama"
+open_weights = true
+knowledge = "2023-12-31"
+release_date = "2024-12-18"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 16_384

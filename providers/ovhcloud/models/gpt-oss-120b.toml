@@ -1,25 +1,21 @@
 # Chat: `reasoning_effort = low|medium|high`; Responses: `reasoning.effort`.
 # https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/gpt-oss-120b/
-
+# Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/
+schema = 2
+base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-release_date = "2025-08-28"
-last_updated = "2025-08-28"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-tool_call = true
-structured_output = true
-open_weights = true
 
-[cost]
-input = 0.09
-output = 0.47
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
-context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 0.47

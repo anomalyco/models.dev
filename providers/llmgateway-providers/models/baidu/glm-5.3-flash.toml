@@ -1,0 +1,17 @@
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3 Flash (Baidu)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

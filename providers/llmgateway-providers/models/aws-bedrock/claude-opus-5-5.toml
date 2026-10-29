@@ -1,13 +1,14 @@
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
 name = "Claude Opus 5.5 (AWS Bedrock)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
 
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 5
+[cost.text.output]
+price = 20

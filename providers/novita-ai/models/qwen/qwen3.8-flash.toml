@@ -2,13 +2,29 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|medium|xhigh
 # Budget: thinking_budget (reasoning tokens); cannot be combined with effort.
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+cache = { implicit = true }
+structured_output = true
 
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016 }
+
+[cost.text.output]
+price = 0.47

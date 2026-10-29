@@ -1,17 +1,27 @@
 # Azure OpenAI deployment adapter: raw Chat uses top-level $.reasoning_effort = "none"|"low"|"medium"|"high"|"xhigh"|"max"; "none" is off. https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/reasoning (accessed 2026-07-09)
-
+# Cost: Azure OpenAI list price (https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/, as in providers/azure), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+schema = 2
 base_model = "openai/gpt-5.6-sol"
-
 name = "gpt-5.6-sol"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 5.00
-output = 30.00
-cache_read = 0.50
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 10.00
-output = 45.00
-cache_read = 1.00
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 8
+cache = { read = 0.8 }
+
+[cost.text.output]
+price = 20
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 30

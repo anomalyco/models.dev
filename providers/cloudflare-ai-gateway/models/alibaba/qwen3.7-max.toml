@@ -1,15 +1,26 @@
-# Toggle: enable_thinking true|false.
-# Budget: thinking_budget (integer reasoning tokens).
-
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
+# Live 2026-10-19 (qwen3.7-plus): a mid-conversation system message keeps the cached prefix (in place).
+# Per-API flags: for models that also list the REST /ai/v1/responses route, system_updates sits on [api.chat-completions] only; it was checked on Chat Completions and the Responses route has no documented or tested in-place system message.
+# Toggle: enable_thinking = true|false (top-level field on POST /ai/v1/chat/completions; live 2026-10-19: false -> no reasoning).
+# Budget: thinking_budget = <integer reasoning tokens> (top-level field; live 2026-10-19: 100 -> 100 reasoning tokens).
+schema = 2
 base_model = "alibaba/qwen3.7-max"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, budget = {} }
+cache = { implicit = true }
 
-[[reasoning_options]]
-type = "budget_tokens"
+[api.chat-completions]
+capabilities = { system_updates = true }
 
-[cost]
-input = 1.25
-output = 3.75
-cache_read = 0.25
+[api.responses]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 3.75

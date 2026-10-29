@@ -1,11 +1,26 @@
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12800/12922 -> 256/12977; 12800/12922 -> 384/12977]
+schema = 2
 base_model = "minimax/MiniMax-M3"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.28
-output = 1.1
-cache_read = 0.056
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 524_288
+
+[cost.text.input]
+price = 0.28
+cache = { read = 0.056 }
+
+[cost.text.output]
+price = 1.1
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

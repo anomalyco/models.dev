@@ -1,0 +1,20 @@
+# Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
+# Video: inherited; video_url (mp4) is accepted and billed as input (+52 prompt tokens for a 2 s clip, probe).
+# Reasoning controls: providers/minimax/models/MiniMax-M3.toml, kept where this host honours them (probe, /v1/chat/completions).
+# Toggle: reasoning.enabled = true|false (true -> 264 reasoning tokens, false -> 0; on by default here, 312 with no control)
+# tool schemas: rejects JSON Schema keyword(s) `not` (probe: HTTP 400).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

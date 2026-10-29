@@ -1,5 +1,5 @@
 import Index from "../index.html";
-import { getRenderedPage, Models, Providers, renderDocument } from "./render";
+import { getRenderedPage, Models, Providers, SearchIndexJson, renderDocument } from "./render";
 import {
   filterCatalogByModelType,
   filterModelsByModelType,
@@ -117,6 +117,13 @@ Bun.serve({
           "Cache-Control": "public, max-age=3600",
         },
       }),
+    "/search-index.json": () =>
+      new Response(SearchIndexJson, {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=3600",
+        },
+      }),
     "/api.json": (req) => catalogResponse(req, "api"),
     "/models.json": (req) => catalogResponse(req, "models"),
     "/catalog.json": (req) => catalogResponse(req, "catalog"),
@@ -126,7 +133,7 @@ Bun.serve({
 function catalogResponse(req: Request, endpoint: "api" | "models" | "catalog") {
   let filter;
   try {
-    filter = parseModelTypes(new URL(req.url).searchParams.get("type"));
+    filter = parseModelTypes(new URL(req.url).searchParams.getAll("type").join(","));
   } catch (error) {
     if (!(error instanceof InvalidModelTypeError)) throw error;
     return Response.json({ error: error.message }, { status: 400 });

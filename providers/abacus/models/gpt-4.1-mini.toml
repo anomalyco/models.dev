@@ -6,18 +6,20 @@
 # RouteLLM input_token_rate: 0.0000004
 # RouteLLM output_token_rate: 0.0000016
 # RouteLLM cached_input_token_rate: 0.0000001
+schema = 2
 base_model = "openai/gpt-4.1-mini"
-reasoning = false
-
-[cost]
-input = 0.4
-output = 1.6
-cache_read = 0.1
-
-[limit]
-context = 1_047_576
-output = 32_768
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.6

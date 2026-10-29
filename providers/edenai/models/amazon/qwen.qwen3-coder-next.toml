@@ -1,6 +1,16 @@
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
 name = "Qwen3 Coder Next (Amazon Bedrock)"
 
-[cost]
-input = 0.6
-output = 1.44
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.2

@@ -1,28 +1,30 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Go lists Off-Peak and Peak prices; Peak is 01:00-04:00 and 06:00-10:00 UTC, Monday through Friday, and every other hour is Off-Peak.
+# Base prices are Off-Peak; the multiplier doubles them at Peak. Go doesn't mention DeepSeek's Chinese-holiday exception, so none is applied.
+# Effort: reasoning_effort = high|max (not verified on Go: no Go subscription key was available)
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/deepseek/models/deepseek-v4-pro.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow DeepSeek's API: https://api-docs.deepseek.com/api/create-chat-completion (tool_choice; strict needs DeepSeek's beta base URL, so it is left out); Go passes requests through.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro (New)"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["high", "max"] }]
-temperature = true
-knowledge = "2025-05"
-tool_call = true
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["high", "max"] }
 structured_output = true
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-[cost]
-input = 0.66
-output = 1.98
-cache_read = 0.022
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 1_000_000
-output = 384_000
+[cost.text.input]
+price = 0.66
+cache = { read = 0.022 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.98
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

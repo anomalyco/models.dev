@@ -1,0 +1,47 @@
+# Sources (accessed 2026-10-19):
+# - API: https://platform.minimax.io/docs/api-reference/text-anthropic-api, https://platform.minimax.io/docs/api-reference/text-chat-anthropic
+# - Caching: https://platform.minimax.io/docs/api-reference/text-prompt-caching
+# - Pricing: https://platform.minimax.io/docs/pricing/overview#models/text
+# Effort: output_config.effort = low|medium|high|xhigh|max, default max. Thinking cannot be
+#   disabled: thinking.type = disabled or effort none returns 400.
+# Caching: automatic prefix cache from 512 input tokens; cache_control is not supported.
+# max_tokens up to 524,288 (CreateMessageReq.max_tokens). service_tier is not supported.
+# tool_choice: only auto (ToolChoice schema); any/tool/none are accepted and ignored.
+# Structured output: not documented; output_format/output_config.format are accepted but the
+#   schema is not enforced.
+# Mid-conversation: role "system" messages after the first turn are accepted in place and keep
+#   the cache (the documented mid_conv_system block is accepted too). Changing the tool list drops
+#   the cache (prefix order is tools → system → messages).
+#   Changing effort also drops the cache.
+# Live checks on api.minimax.io, 2026-10-19.
+# Per-API flags: system_updates sits on [api.messages] only. The late system message was checked in place on the Anthropic-compatible Messages endpoint (live 2026-10-23); Chat Completions dropped it in a passthrough test, and Responses has no documented or tested in-place system message.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+cache = { implicit = { min_tokens = 512 } }
+
+[limit]
+output = 524_288
+
+[api.messages]
+capabilities = { system_updates = true }
+
+[api.chat-completions]
+base_url = "https://api.minimax.io/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/minimax/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://api.minimax.io/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/minimax/responses" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

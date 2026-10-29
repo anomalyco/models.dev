@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/mistral-small-2603"
+name = "Small 4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+tools = { supported = true }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.198375
+cache = { read = 0.01587 }
+
+[cost.text.output]
+price = 0.7935

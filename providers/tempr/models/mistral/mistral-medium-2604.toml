@@ -1,14 +1,20 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # Off: reasoning.effort = "none" (or reasoning.enabled = false)
 # Effort: reasoning.effort = none|high (alias: top-level reasoning_effort)
 # /v1/messages: thinking.type = enabled|disabled; output_config.effort = high
 # /v1/responses: reasoning.effort = none|high
+schema = 2
 base_model = "mistral/mistral-medium-2604"
 
-reasoning_options = [
-  { type = "effort", values = ["none", "high"] },
-]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
-[cost]
-input = 1.5
-output = 7.5
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5
