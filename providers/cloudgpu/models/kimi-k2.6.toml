@@ -4,13 +4,14 @@
 # https://cloudgpu.app/api/docs (OpenAI-compatible /v1/chat/completions, Bearer auth)
 # Live check on /v1/chat/completions (2026-10-26): reasoning is always returned; thinking = {type = "disabled"} has no effect on this route (no caller control).
 # Live check: image_url input with PNG and JPEG data URLs answered correctly.
+# Live check (2026-10-30): image_url data URLs in PNG, GIF and WebP answered correctly; BMP was rejected or unreadable on this route. Only image_url input is documented at /api/docs (no video, PDF or HEIC input), so other lab formats are omitted.
 # Live check: reasoning text is returned in message.reasoning_content.
 # Context and output limits are inherited from the base model (vendor model card).
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
