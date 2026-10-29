@@ -244,7 +244,7 @@ function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNp
   const provider = withoutUndefined({ npm, api: base_url, shape });
   const field = compatibility?.reasoning_field;
   return withoutUndefined({
-    interleaved: field !== undefined ? { field } : legacy_interleaved,
+    interleaved: field === "reasoning_content" || field === "reasoning_details" ? { field } : legacy_interleaved,
     provider: Object.keys(provider).length > 0 ? provider : undefined,
   });
 }

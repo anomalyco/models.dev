@@ -6,6 +6,24 @@ import path from "node:path";
 import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
 import { explicitFalseFlags, modelV2ToV1, readLabMetadata } from "../src/translate.js";
 
+test.each(["reasoning", "reasoning_text", "reasoning_content", "reasoning_details"])(
+  "reasoning field %s survives v2 sync without extending v1",
+  (field) => {
+    const doc = {
+      schema: 2,
+      base_model: "deepseek/deepseek-v4.1-flash",
+      api: { "chat-completions": { compatibility: { reasoning_field: field } } },
+      cost: { text: { input: { price: 1 }, output: { price: 2 } } },
+    };
+    const before = modelV2ToV1({ ...doc, id: "m" });
+    expect(before.interleaved).toEqual(
+      field === "reasoning_content" || field === "reasoning_details" ? { field } : undefined,
+    );
+    const next = patchModelV2(doc, before, { ...before, cost: { input: 3, output: 2 } });
+    expect(next.api).toEqual(doc.api);
+  },
+);
+
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
   const doc = {
     schema: 2,
