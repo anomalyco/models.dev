@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = low|medium|high (verified live: reasoning_content length tracks
+# the level). Thinking is always on here; chat_template_kwargs.enable_thinking has no effect.
+# Pricing: https://graphn.ai/pricing (checked 2026-10-27) marks this row "Billed as input"
+# — no cache hits are reported, so no cache capability or cache.read price is authored.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6
