@@ -1,0 +1,13 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/claude-haiku-4-5-20251001 ($0.353 input / $1.765 output per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("claude-haiku-4-5-20251001")
+base_model = "anthropic/claude-haiku-4-5-20251001"
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 0.353
+output = 1.765
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.apimodels.app/v1"

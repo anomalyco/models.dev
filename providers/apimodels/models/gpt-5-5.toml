@@ -1,0 +1,10 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/gpt-5-5 ($3.00 input / $18.00 output / $0.50 cache read per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("gpt-5-5")
+base_model = "openai/gpt-5.5"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 3.0
+output = 18.0
+cache_read = 0.5
