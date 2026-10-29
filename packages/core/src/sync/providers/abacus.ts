@@ -98,7 +98,6 @@ export const abacus = {
 
     const built = buildAbacusModel(
       model,
-      context.existing(model.id),
       context.authored(model.id),
       context.v2?.(model.id),
     );
@@ -115,7 +114,6 @@ export const abacus = {
 
 export function buildAbacusModel(
   model: AbacusModel,
-  existing: ExistingModel | undefined,
   authored: ExistingModel | undefined,
   existingToml?: Record<string, unknown>,
 ): { model: SyncedModel; header: string; v2Set?: Record<string, unknown> } | undefined {
@@ -160,8 +158,8 @@ export function buildAbacusModel(
   };
 
   const modelValues = {
-    name: authored?.name ?? (existing === undefined ? model.display_name : undefined),
-    description: authored?.description ?? (existing === undefined ? model.description : undefined),
+    name: authored?.name,
+    description: authored?.description,
     attachment: modalities.input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,

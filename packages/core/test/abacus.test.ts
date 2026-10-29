@@ -25,7 +25,7 @@ function abacusModel(overrides: Partial<AbacusModel> = {}): AbacusModel {
 }
 
 test("builds a factored model from RouteLLM rates and limits", () => {
-  const built = buildAbacusModel(abacusModel(), undefined, undefined);
+  const built = buildAbacusModel(abacusModel());
   expect(built).toBeDefined();
   expect(built?.model).toMatchObject({
     base_model: "openai/gpt-6-sol",
@@ -42,7 +42,7 @@ test("builds a factored model from RouteLLM rates and limits", () => {
 });
 
 test("narrows input modalities to the kinds RouteLLM accepts, keeping the lab MIME list", () => {
-  const built = buildAbacusModel(abacusModel(), undefined, undefined);
+  const built = buildAbacusModel(abacusModel());
   expect(built?.v2Set).toEqual({
     "modalities.input": ["text", "image/jpeg", "image/png", "image/gif", "image/webp"],
     "modalities.output": ["text"],
@@ -52,8 +52,6 @@ test("narrows input modalities to the kinds RouteLLM accepts, keeping the lab MI
 test("does not write a modality override when RouteLLM accepts every lab kind", () => {
   const built = buildAbacusModel(
     abacusModel({ id: "zai-org/GLM-5.3", input_modalities: ["text"], thinking: undefined }),
-    undefined,
-    undefined,
   );
   expect(built?.v2Set).toBeUndefined();
 });
@@ -66,7 +64,6 @@ test("reasoning follows thinking and preserves authored controls", () => {
   } as any;
   const built = buildAbacusModel(
     abacusModel({ id: "claude-opus-5-5", thinking: undefined }),
-    undefined,
     authored,
   );
   expect(built?.model).toMatchObject({
@@ -81,7 +78,6 @@ test("a non-thinking feed row never clears an authored reasoner", () => {
   const authored = { base_model: "zhipuai/glm-5.2", reasoning: true, reasoning_options: [] } as any;
   const built = buildAbacusModel(
     abacusModel({ id: "zai-org/GLM-5.2", thinking: undefined, tools: undefined }),
-    undefined,
     authored,
   );
   expect(built?.model).toMatchObject({ reasoning_options: [] });
@@ -98,7 +94,7 @@ test("resolves lab entries from vendor-prefixed and bare RouteLLM ids", () => {
 
 test("an id with no lab entry is reported as missing instead of invented", () => {
   const model = abacusModel({ id: "abacusai/Smaug-Flash" });
-  expect(buildAbacusModel(model, undefined, undefined)).toBeUndefined();
+  expect(buildAbacusModel(model)).toBeUndefined();
   expect(abacus.translateModel(model, {
     existing: () => undefined,
     authored: () => undefined,
@@ -123,7 +119,7 @@ test("lab media models stay out of scope even when RouteLLM calls them text_gene
     output_modalities: ["text", "image"],
     thinking: undefined,
   });
-  expect(buildAbacusModel(model, undefined, undefined)).toBeUndefined();
+  expect(buildAbacusModel(model)).toBeUndefined();
   expect(abacus.missingModelID?.(model)).toBeUndefined();
   expect(abacus.sourceID?.(model)).toBeUndefined();
 });
@@ -132,8 +128,25 @@ test("an existing authored base_model always wins", () => {
   const authored = { base_model: "anthropic/claude-opus-4-6" } as any;
   const built = buildAbacusModel(
     abacusModel({ id: "claude-opus-4-6", thinking: true }),
-    undefined,
     authored,
   );
   expect(built?.model).toMatchObject({ base_model: "anthropic/claude-opus-4-6" });
+});
+
+test("a create inherits lab name and description instead of feed copy", () => {
+  const built = buildAbacusModel(abacusModel({
+    display_name: "GPT-6 Sol (Abacus)",
+    description: "Feed copy that is not a host delta",
+  }));
+  expect(built?.model).not.toHaveProperty("name");
+  expect(built?.model).not.toHaveProperty("description");
+
+  const curated = buildAbacusModel(
+    abacusModel({ display_name: "GPT-6 Sol (Abacus)" }),
+    { name: "GPT-6 Sol (Curated)", description: "Curated host description" } as any,
+  );
+  expect(curated?.model).toMatchObject({
+    name: "GPT-6 Sol (Curated)",
+    description: "Curated host description",
+  });
 });
