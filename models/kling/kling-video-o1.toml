@@ -1,0 +1,23 @@
+# https://klingai.com
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling Video O1"
+description = "Kling Video O1 is the world's first unified multimodal AI video generation model developed by Kuaishou, offering an integrated platform for multiple video creation and editing tasks."
+open_weights = false
+release_date = "2025-12-01"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

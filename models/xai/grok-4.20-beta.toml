@@ -1,0 +1,22 @@
+# https://docs.x.ai/docs/models
+schema = 2
+name = "Grok 4.20 Beta"
+description = "Grok 4.20 Beta is xAI’s newest flagship large language model that uses four specialized “agents” working together to answer complex questions more accurately and with deeper reasoning than prior Grok versions."
+family = "grok"
+open_weights = false
+release_date = "2026-03-12"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 2_000_000
+output = 32_768

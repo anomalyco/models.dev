@@ -1,0 +1,28 @@
+# https://github.com/ace-step/ACE-Step
+schema = 2
+v2_only = true
+type = "speech"
+name = "Prompt-to-Audio"
+description = "ACE-Step is an open-source model built to address the shortcomings of previous music generation systems by combining diffusion techniques, Sana’s Deep Compression AutoEncoder (DCAE), and a lightweight linear transformer."
+open_weights = true
+license = "Apache-2.0"
+release_date = "2025-05-06"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/wav", "audio/flac"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B"

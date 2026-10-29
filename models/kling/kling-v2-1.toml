@@ -1,0 +1,23 @@
+# https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-celebrates-first-anniversary-achieves-annualized
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling V2.1"
+description = "Kling 2.1 is Kuaishou's advanced image-to-video model (2025)."
+open_weights = false
+release_date = "2025-05-29"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
