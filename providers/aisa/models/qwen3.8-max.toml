@@ -1,0 +1,23 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (0..262144), not combinable with reasoning_effort
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.65
+cache = { read = 0.206, write = 2.063 }
+
+[cost.text.output]
+price = 4.951

@@ -1,0 +1,30 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). Token prices are USD per 1M tokens.
+# AIsa is a multi-model relay: reasoning controls follow the underlying lab API and relay peers.
+# Reasoning baseline: providers/openai/models/gpt-realtime-2.1.toml.
+# AIsa lists both Chat Completions and the native realtime WebSocket route.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-realtime-2.1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[api.chat-completions]
+
+[api.realtime]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 24
+
+[cost.audio.input]
+price = 32
+cache = { read = 0.4 }
+
+[cost.audio.output]
+price = 64
