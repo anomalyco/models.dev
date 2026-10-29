@@ -6,8 +6,10 @@
 # Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): a late system message was
 # followed and kept the cache in 2 of 2 trials; changing reasoning_effort (low → high) and adding a tool each
 # dropped the cache to 0.
+# NVIDIA API: HTTP 410 Gone, end of life 2026-10-28T08:00:00Z (probed 2026-10-29 against integrate.api.nvidia.com)
 schema = 2
 base_model = "zhipuai/glm-5.3"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
