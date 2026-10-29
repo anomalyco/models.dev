@@ -1,0 +1,34 @@
+# Prices: https://xxapi.ai/pricing (per-model rates under each plan's details), checked 2026-10-28.
+# xxapi bills in site credits shown as "$". On the recommended Codex plan this model costs 0.4x its list rate in credits.
+# Credits are sold at 6.5 per US$, charged in HKD at USD/HKD 7.8451 (2026-10-28): HK$1.2069 per credit.
+# USD per 1M tokens = list rate x 0.4 / 6.5, rounded to 4 significant digits.
+# List rate (credits per 1M tokens), input up to 272,000 tokens: input 2, cache read 0.2, cache write 2.5, output 10.
+# Above 272,000 input tokens: input 4, cache read 0.4, cache write 5, output 15.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) left unset: xxapi does not document them.
+# API: OpenAI Responses at https://xxapi.ai/v1/responses; prompt caching is automatic.
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+schema = 2
+base_model = "openai/gpt-6-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.1231
+cache = { read = 0.01231, write = 0.1538 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2462
+cache = { read = 0.02462, write = 0.3077 }
+
+[cost.text.output]
+price = 0.6154
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.9231
