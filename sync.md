@@ -9,6 +9,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
+- `bun models:sync abacus` syncs only Abacus.
 - `bun models:sync aiand` syncs only ai&.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
@@ -482,3 +483,13 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `preserveDescriptions` is off: the runner must not re-inject a pre-factor authored description when the translator leaves it unset, or a full-inline → factored transition would recreate a lab-identical override. Created files get a leading header from `translateModel` naming the single reasoning wire path (`reasoning_effort`, "none" = off). `toggle` and `budget_tokens` controls are parsed (so a feed that publishes one never aborts the run) but never written, from feed or authored file: ai& has no separate on/off or token-budget field, so they cannot be true of this host.
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
+
+## Abacus Notes
+
+- Endpoint: `GET https://routellm.abacus.ai/v1/models` (public, no auth). `ABACUS_MODELS_URL` overrides it for staging dry runs.
+- Only `model_type = "text_generation"` is synced. RouteLLM also lists image, video, audio and classification SKUs, which the Abacus catalog has never carried. The four transcription ids it files under `text_generation` are intentional skips, not missing models.
+- RouteLLM is authoritative for rates (per-token, published as strings), context/output limits, input/output modality kinds, and the `thinking` and `tools` flags. Rates are converted to USD per million tokens.
+- `base_model` comes from the authored TOML when present, else from the lab metadata tree: the full id, then the id without its vendor prefix. Two serving tiers resolve through an explicit override (`muse-spark-1.3-contributor` → `meta/muse-spark-1.3`, `claude-opus-5-5-fast` → `anthropic/claude-opus-5-5`). A new id with no lab entry is skipped from `missingModelID`, so the issue-fixer authors the full definition instead of the sync inventing dates or weights.
+- Lab-owned fields are never asserted from the feed; the module passes only the authored deltas. `reasoning` follows `thinking: true` and otherwise keeps the authored value; RouteLLM documents no effort, toggle or budget control, so controls are never invented (an explicit authored `[]` is kept).
+- Input modalities are the lab's MIME list filtered to the kinds RouteLLM accepts, so a narrower RouteLLM surface does not widen the model or fall back to generic `image`. An empty feed fails the run rather than deleting the local catalog.
+- `deleteMissing` is off: retired ids keep their files (the #10776 migration marked 40 `status = "deprecated"` for manual lifecycle review) because the feed has no lifecycle metadata and omitting them is not proof of retirement.
