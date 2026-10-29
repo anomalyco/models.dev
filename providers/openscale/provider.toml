@@ -1,0 +1,11 @@
+# One key and one balance across three request formats (accessed 2026-10-09):
+# OpenAI Chat: POST https://api.openscale.so/v1/chat/completions
+# OpenAI Responses: POST https://api.openscale.so/v1/responses
+# Anthropic Messages: POST https://api.openscale.so/anthropic/v1/messages
+# (x-api-key or Bearer; any claude-* model name runs the provider's model).
+# https://openscale.so/docs
+name = "OpenScale"
+env = ["OPENSCALE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.openscale.so/v1"
+doc = "https://openscale.so/docs"
