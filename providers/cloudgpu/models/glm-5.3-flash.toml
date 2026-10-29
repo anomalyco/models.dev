@@ -1,6 +1,6 @@
-# Sources (accessed 2026-10-26):
+# Sources (accessed 2026-10-30):
 # https://cloudgpu.app/v1/models (available ID and USD per 1M token prices)
-# https://cloudgpu.app/api (public USD per 1M token prices: input 0.16, cached input 0.04, output 0.55)
+# https://cloudgpu.app/api (public USD per 1M token prices: input 0.135, cached input 0.027, output 0.45)
 # https://cloudgpu.app/api/docs (OpenAI-compatible /v1/chat/completions, Bearer auth)
 # Live check on /v1/chat/completions (2026-10-26): reasoning_effort is accepted (low reduces reasoning tokens).
 # Live check: image_url input with PNG and JPEG data URLs answered correctly.
@@ -17,11 +17,11 @@ output = ["text"]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
-price = 0.16
-cache = { read = 0.04 }
+price = 0.135
+cache = { read = 0.027 }
 
 [cost.text.output]
-price = 0.55
+price = 0.45
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
