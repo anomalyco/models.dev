@@ -4,7 +4,12 @@
 # - Prices (USD per million tokens) and served context window:
 #   https://withhopper.com/mcp, tools/call list_models (no authentication required).
 # Toggle: chat_template_kwargs.thinking = true|false.
-# Hopper hosts the model itself; only the documented binary thinking control is listed.
+# Effort: reasoning_effort = low|high|max (native DeepSeek levels, accepted live;
+# unknown levels return HTTP 400; relative effort was not benchmarked).
+# Live checks: thinking on/off, streaming reasoning_content and usage, a tool/result
+# round trip, an implicit cache hit, and acceptance of max_tokens = 384000.
+# The API also accepts max_completion_tokens; max_tokens = 393217 returns HTTP 400.
+# Hopper hosts the model itself; the reasoning controls describe this host's API.
 # The initial entry advertises text input; image input has not been verified on this host.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
@@ -14,8 +19,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
+stream_usage = true
 
 [limit]
 context = 393_216
