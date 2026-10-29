@@ -16,6 +16,9 @@ reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 [limit]
 context = 1_048_576
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [cost.text.input]
 price = 0.15
 cache = { read = 0.0225 }
