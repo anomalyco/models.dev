@@ -1,0 +1,19 @@
+# Toggle: chat_template_kwargs.thinking true|false (Watt docs:
+# https://www.watt-cloud.com/docs/inference/features/deep-thinking/)
+# Pricing & limits: Watt catalog (2026-10-23), Qwen3.5-122B-A10B row:
+# 0.4/3.2 USD per MTok (limits inherit the lab: 262_144/65_536)
+schema = 2
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.40
+
+[cost.text.output]
+price = 3.20
