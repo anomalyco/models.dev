@@ -12,6 +12,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [limit]
+context = 1_048_576
 output = 64_000
 
 [api.chat-completions]
