@@ -1,0 +1,11 @@
+# Source: https://tokenharbor.ai/models (retrieved 2026-10-08); USD per 1M tokens.
+# Toggle: thinking.type = enabled|disabled (matches the native Xiaomi API)
+# Token Harbor lists $0.04 in / $1.28 out (per 1M tokens, last 72h, dynamic
+# pricing), which differs from Xiaomi's native $0.14 in / $0.28 out; the cost
+# below is Token Harbor's listed price, not a transcription of the native one.
+base_model = "xiaomi/mimo-v2.6-flash"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.04
+output = 1.28
