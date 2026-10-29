@@ -1,0 +1,24 @@
+# Catalog row (keyless): context_length 1000000, max_input_tokens 1000000, max_output_tokens 128000
+# Pricing: catalog credit rates x 0.01 USD/credit, expressed per million tokens
+# Source: https://router.hostinger.com/v1/models (public catalog: supported_parameters, pricing, limits)
+# No reasoning control: this model's row in the keyless catalog lists no reasoning or
+# reasoning_effort in supported_parameters (its Claude siblings list them), and a
+# 2026-10-22 probe returned identical completions at effort "none"/"high"/"max"
+# (609 tokens each). Controls return when the catalog lists them and a probe shows an effect
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 3.6
+cache = { read = 0.36, write = { "5m" = 4.5, "1h" = 7.2 } }
+
+[cost.text.output]
+price = 18

@@ -39,6 +39,7 @@ import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
+import { hostingerRouter } from "./providers/hostinger-router.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
 import { kilo } from "./providers/kilo.js";
@@ -203,6 +204,7 @@ export const providers: {
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
+  "hostinger-router": SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
   kilo: SyncProvider<any>;
@@ -249,6 +251,7 @@ export const providers: {
   "github-copilot": githubCopilot,
   google,
   hyper,
+  "hostinger-router": hostingerRouter,
   huggingface,
   inceptron,
   kilo,
@@ -282,6 +285,7 @@ export const groups = {
     "crossmodel",
     "edenai",
     "empiriolabs",
+    "hostinger-router",
     "huggingface",
     "inceptron",
     "kilo",
