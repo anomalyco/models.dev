@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|medium|high|xhigh on POST /v1/chat/completions.
+base_model = "xai/grok-4.7"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.7
+output = 2.1
+cache_read = 0.175

@@ -1,0 +1,19 @@
+# Toggle: reasoning_effort = none turns thinking off; leave it out to think (tested 2026-10-14).
+# thinking.type = disabled doesn't turn MiMo-V2.6-Pro off on this host.
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
+
+[cost]
+input = 0.32
+output = 0.64
+cache_read = 0.0026
