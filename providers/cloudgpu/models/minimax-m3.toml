@@ -2,8 +2,7 @@
 # https://cloudgpu.app/v1/models (available ID and USD per 1M token prices)
 # https://cloudgpu.app/api (public USD per 1M token prices: input 0.2814, cached input 0.1407, output 1.1055)
 # https://cloudgpu.app/api/docs (OpenAI-compatible /v1/chat/completions, Bearer auth)
-# Live check on /v1/chat/completions (2026-10-26): no reasoning content or reasoning tokens returned by default, nor with thinking = {type = "enabled"|"adaptive"} or reasoning_effort.
-# Re-probed 2026-10-30, non-streaming and streaming: thinking = {type = "enabled"|"adaptive"}, reasoning = {enabled = true}, include_reasoning = true and reasoning_split = true all return only message.content (no reasoning_content or reasoning_details field, no reasoning deltas in the stream), with 25-98 completion tokens, so this route does not expose reasoning.
+# Toggle (re-probed 2026-10-30): reasoning is off by default and with reasoning_effort = "low" (no reasoning_content, 11-12 completion tokens over repeated calls); reasoning_effort = "medium" or "high" turns it on and returns message.reasoning_content. thinking = {type = "enabled"|"adaptive"}, reasoning = {enabled = true}, include_reasoning = true and reasoning_split have no effect on this route.
 # Live check: image_url input with PNG and JPEG data URLs answered correctly.
 # Live check (2026-10-30): image_url data URLs in PNG, GIF and WebP answered correctly; BMP was rejected or unreadable on this route. Only image_url input is documented at /api/docs (no video, PDF or HEIC input), so other lab formats are omitted.
 # Context and output limits are inherited from the base model (vendor model card).
@@ -15,7 +14,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0.2814
@@ -23,3 +22,6 @@ cache = { read = 0.1407 }
 
 [cost.text.output]
 price = 1.1055
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
