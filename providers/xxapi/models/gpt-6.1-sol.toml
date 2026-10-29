@@ -12,7 +12,6 @@ schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = true }
 
