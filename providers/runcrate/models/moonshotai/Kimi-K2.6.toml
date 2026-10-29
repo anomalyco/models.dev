@@ -1,0 +1,36 @@
+# Prices: GET https://www.runcrate.ai/api/models/catalog (accessed 2026-10-29), USD per 1M tokens as billed
+# (moonshotai/Kimi-K2.6): input 0.7875, cached input 0.1575, output 3.675. context_length 262,144 there;
+# max_output_length 16,384 and input_modalities text+image in GET https://api.runcrate.ai/v1/models.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables), on POST
+# https://api.runcrate.ai/v1/chat/completions. Live 2026-10-24, 3 prompts per setting, median
+# completion_tokens_details.reasoning_tokens: omitted (on by default) 822, reasoning.enabled true 453,
+# reasoning.enabled false 0, reasoning_effort none 0, low 3,026, high 1,574. Levels other than none do
+# not grade the length (low ran longer than high), so this is a toggle, as on same-model peers.
+# thinking.type disabled (323) and chat_template_kwargs.thinking false (331) do not turn it off.
+# Reasoning is in reasoning_content.
+# Inputs: PNG and JPEG answered (live); the lab entry's video inputs are not claimed for this host.
+# Live 2026-10-24: a tool call round-tripped; a repeated 7,016-token prompt reported 6,976 cached_tokens.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.7875
+cache = { read = 0.1575 }
+
+[cost.text.output]
+price = 3.675
