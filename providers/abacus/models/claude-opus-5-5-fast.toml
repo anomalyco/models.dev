@@ -9,6 +9,8 @@
 # RouteLLM thinking: None
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
+name = "Claude Opus 5.5 Fast"
+description = "Fast lane of Claude Opus 5.5, served by Abacus at a higher per-token rate"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]

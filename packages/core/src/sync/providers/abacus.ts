@@ -7,7 +7,8 @@ import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js"
 
 // Abacus serves third-party models through RouteLLM. Its model endpoint is
 // public and carries the host-specific data the catalog needs (rates,
-// modalities, context, tools, `thinking`).
+// modalities, context, tools, `thinking`). RouteLLM publishes those rates in
+// USD per token: https://abacus.ai/help/route-llm/ (accessed 2026-10-29).
 // https://routellm.abacus.ai/v1/models
 const API_ENDPOINT = process.env.ABACUS_MODELS_URL ?? "https://routellm.abacus.ai/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
@@ -17,6 +18,20 @@ const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", 
 const BASE_MODEL_OVERRIDES: Record<string, string> = {
   "claude-opus-5-5-fast": "anthropic/claude-opus-5-5",
   "muse-spark-1.3-contributor": "meta/muse-spark-1.3",
+};
+
+// Serving tiers of a lab model need a distinct label, and the contributor tier
+// has a privacy-relevant term the lab entry cannot state.
+const CURATED_LABELS: Record<string, { name: string; description: string }> = {
+  "claude-opus-5-5-fast": {
+    name: "Claude Opus 5.5 Fast",
+    description: "Fast lane of Claude Opus 5.5, served by Abacus at a higher per-token rate",
+  },
+  "muse-spark-1.3-contributor": {
+    name: "Muse Spark 1.3 Contributor",
+    description:
+      "Contributor tier of Muse Spark 1.3: the same model at heavily discounted rates in exchange for Meta using prompts and completions to train future Meta models",
+  },
 };
 
 // RouteLLM files these under `text_generation`, but they are transcription
@@ -157,9 +172,10 @@ export function buildAbacusModel(
     output: toV1Modalities([...outputKinds].sort()),
   };
 
+  const label = CURATED_LABELS[model.id];
   const modelValues = {
-    name: authored?.name,
-    description: authored?.description,
+    name: authored?.name ?? label?.name,
+    description: authored?.description ?? label?.description,
     attachment: modalities.input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,

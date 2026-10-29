@@ -150,3 +150,12 @@ test("a create inherits lab name and description instead of feed copy", () => {
     description: "Curated host description",
   });
 });
+
+test("curated tier labels keep same-base variants distinguishable", () => {
+  const fast = buildAbacusModel(abacusModel({ id: "claude-opus-5-5-fast", thinking: undefined }));
+  expect(fast?.model).toMatchObject({ name: "Claude Opus 5.5 Fast" });
+
+  const contributor = buildAbacusModel(abacusModel({ id: "muse-spark-1.3-contributor", thinking: undefined }));
+  expect(contributor?.model).toMatchObject({ name: "Muse Spark 1.3 Contributor" });
+  expect(String(contributor?.model.description)).toContain("train future Meta models");
+});
