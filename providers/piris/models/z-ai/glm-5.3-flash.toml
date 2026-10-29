@@ -1,6 +1,6 @@
 # Prices: https://api.pirislabs.io/v1/models (verified 2026-10-27).
 # Serving behavior verified live 2026-10-27: text-only, 1_048_576-token context;
-# output limit inherited from the base model. reasoning_effort=none disables reasoning.
+# output limit inherited from the base model.
 # The host returns reasoning in `reasoning`, which v1 cannot represent; omit the mapping.
 # Cached input pricing is published, but cache hits were not observed on this deployment.
 schema = 2
@@ -11,7 +11,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
