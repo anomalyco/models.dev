@@ -1,12 +1,17 @@
-# Toggle: chat_template_kwargs.enable_thinking = true | false (default: true)
-# thinking.type is accepted but does NOT disable reasoning on this model; the
-# chat-template switch is the control that works.
-# Measured on FlexAI 2026-10-05 (length of reasoning_content, max_tokens 32000):
-#   default 516 · thinking.type disabled 702 · enable_thinking=false 0 (12/12)
-#   low 690 (no reduction vs default)
-# No effort levels are declared: through FlexAI's gateway, reasoning_effort
-# medium/high/max return 400 ("Unexpected reasoning effort high"), xhigh is
-# rejected by the gateway's enum, and low has no measurable effect.
+# Toggle: chat_template_kwargs.enable_thinking = true | false (default: false; FlexAI's
+# gateway turns thinking off when the switch is unset).
+# thinking.type is accepted but does NOT disable reasoning on this model (measured
+# 2026-10-05); the chat-template switch is the control that works.
+# Measured on FlexAI 2026-10-29 (length of reasoning_content, 3 prompts, no max_tokens,
+# every reply finish_reason stop):
+#   default 0/0/0 · enable_thinking=false 0/0/0 · enable_thinking=true 212/688/1883
+# No effort levels are declared. chat_template_kwargs.reasoning_effort reaches the
+# template (an invalid value returns 400 "Supported types are xhigh (default), medium,
+# and low"), but it has no measurable effect: on the hardest prompt, 3 runs per level
+# with thinking on, median reasoning_content is thinking-on 2275 · low 1808 ·
+# medium 1502 · xhigh 1665, with overlapping ranges. Top-level reasoning_effort
+# medium/high/max return 400 and low has no effect. Accepted values that do not
+# change reasoning give the caller no control.
 # Modalities: reads images (verified on two solid-colour fixtures), but video
 # is NOT served here -- a video_url part is coerced to image_url and rejected,
 # and input_video returns 500 -- so input is the lab's image MIME list without video.
