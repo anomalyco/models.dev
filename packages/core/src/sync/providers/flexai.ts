@@ -13,7 +13,6 @@ const API_ENDPOINT = process.env.FLEXAI_MODELS_URL ?? "https://api.flex.ai/v1/mo
 // API does not express (see translateModel).
 const BaseModels: Record<string, string> = {
   "DeepSeek-V4-Flash-0731": "deepseek/deepseek-v4-flash-0731",
-  "DeepSeek-V4.1-Flash": "deepseek/deepseek-v4.1-flash",
   "DeepSeek-V4.1-Flash-1017": "deepseek/deepseek-v4.1-flash-1017",
   "FLUX.1-schnell": "black-forest-labs/flux-1-schnell",
   "GLM-4.5-Air-FP8": "zhipuai/glm-4.5-air",
@@ -28,7 +27,6 @@ const BaseModels: Record<string, string> = {
   "NVIDIA-Nemotron-3.5-Lightning-30B-A3B": "nvidia/nemotron-3.5-lightning",
   "PaddleOCR-VL": "paddlepaddle/paddleocr-vl",
   "Qwen3-30B-A3B-Thinking-2507-FP8": "alibaba/qwen3-30b-a3b-thinking-2507",
-  "Qwen3-8B-FP8": "alibaba/qwen3-8b",
   "Qwen3-Coder-30B-A3B-Instruct-FP8": "alibaba/qwen3-coder-30b-a3b-instruct",
   "Qwen3.5-9B": "alibaba/qwen3.5-9b",
   "Qwen3.6-27B-FP8": "alibaba/qwen3.6-27b",
@@ -120,9 +118,9 @@ export const flexai = {
     return FlexAIResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    // The catalog id is the served id (e.g. "Qwen3-8B-FP8"): it is what a
+    // The catalog id is the served id (e.g. "GLM-4.5-Air-FP8"): it is what a
     // client sends, and FlexAI rejects the base model's path-style id. The base
-    // model (e.g. "alibaba/qwen3-8b") is only what the entry extends.
+    // model (e.g. "zhipuai/glm-4.5-air") is only what the entry extends.
     const baseModel = BaseModels[model.id];
     if (baseModel === undefined) return undefined;
     const existing = context.existing(model.id);
