@@ -1,19 +1,32 @@
 # Sources (accessed 2026-10-29):
 # - Variant identity and integration: https://withhopper.com/cyber
-# - Model ID, context, and USD-per-million-token prices:
+# - Model ID and USD-per-million-token prices:
 #   https://withhopper.com/mcp, tools/call list_models (no authentication required).
+# - Served limits: live POST https://api.withhopper.com/v1/chat/completions and
+#   https://api.withhopper.com/v1/messages, using this exact model ID, thinking off,
+#   and "Reply with exactly READY." (10 input tokens). On both APIs:
+#   max_tokens=1048576 -> HTTP 200 (3 output tokens); 1048577 -> HTTP 400,
+#   "max_tokens=1048577 cannot be greater than max_model_len=1048576".
+#   MCP contextTokens and GET /v1/models max_model_len still report stale 393216;
+#   the live inference validator is the source for the served window here.
+#   Output records the accepted request cap and shares context with the prompt;
+#   no separate lower output cap observed. Full-window generation was not tested.
 # Hopper hosts an abliterated variant of the shared DeepSeek base model.
 # Chat Completions toggle: chat_template_kwargs.thinking = true|false.
 # Effort: reasoning_effort = low|high|max, matching Hopper's shared DeepSeek API;
-# low/high verified on this variant. Relative effort was not benchmarked.
+# all three verified live on this variant; an unknown value returns HTTP 400.
+# max also returns thinking blocks through Messages output_config.effort.
+# Relative effort was not benchmarked.
 # Messages toggle: thinking.type = enabled|disabled; effort: output_config.effort.
-# Live checks: text/PNG input, tool/result round trips, streaming usage, implicit
-# cache hits, and strict JSON schemas (response_format and output_config.format).
+# Live image checks: JPEG/PNG/GIF/WebP data URLs each returned "Red" for a red
+# image, with 184 image tokens. Other checks: text, tool/result round trips,
+# streaming usage, implicit cache hits, and strict JSON schemas on both APIs.
 # Messages accepts x-api-key auth and returns thinking blocks (empty signatures).
-# Chat reasoning is returned in message.reasoning, verified live. As with Nebius,
-# leave reasoning_field unset: v1 only accepts reasoning_content|reasoning_details.
-# Context is catalog-reported, not load-tested; max_tokens = 384000 was accepted
-# for a short reply. No hard reasoning budget or mid-conversation flags claimed.
+# Same-endpoint comparison at high effort: this variant returned 133 chars only
+# in message.reasoning; standard returned 162 chars in both reasoning and
+# reasoning_content, plus reasoning_details. These are per-model wire differences.
+# As with Nebius, leave reasoning_field unset: v1 only accepts
+# reasoning_content|reasoning_details. No hard budget or mid-conversation flags.
 # top_k is omitted by Hopper's Messages adapter, so disable the inherited flag.
 # Keep Chat Completions first for v1 compatibility; both APIs share /v1.
 schema = 2
@@ -29,7 +42,8 @@ structured_output = true
 top_k = false
 
 [limit]
-context = 393_216
+context = 1_048_576
+output = 1_048_576
 
 [cost.text.input]
 price = 0.30
