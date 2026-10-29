@@ -1,0 +1,17 @@
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+name = "MiMo V2.6 Pro (Tencent Cloud)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.435
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.87
