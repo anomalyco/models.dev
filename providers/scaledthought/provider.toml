@@ -1,0 +1,10 @@
+# ScaledThought: an OpenAI-compatible API for open-weight models, set up by a coding agent.
+# Prepaid credits, no subscription. US region live; Canada coming soon.
+# Models and prices (no key needed): GET https://api.us.scaledthought.com/v1/models?live_only=true
+# and GET https://api.us.scaledthought.com/v1/models/<id> ("pricing", USD per 1M tokens).
+# Reasoning request fields (reasoning_effort, reasoning) are passed through unchanged.
+name = "ScaledThought"
+npm = "@ai-sdk/openai-compatible"
+env = ["ST_API_KEY"]
+api = "https://api.us.scaledthought.com/v1"
+doc = "https://scaledthought.com/go/org-opencode"
