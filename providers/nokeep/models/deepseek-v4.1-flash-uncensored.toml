@@ -10,7 +10,7 @@
 #   The docs list no accepted image formats, so input stays generic "image".
 # Tool choice: auto|none|required|a named function: https://nokeep.ai/docs/tool-calls
 # structured_output: response_format (including json_schema) is passed through: https://nokeep.ai/docs/json-output
-# Cache: prompt_cache_key is honoured and cached input is billed at the cache-read price,
+# Cache: prompt_cache_key (https://nokeep.ai/docs/chat-completions) is honoured and cached input is billed at the cache-read price,
 #   reported in usage.prompt_tokens_details.cached_tokens: https://nokeep.ai/docs/pricing
 schema = 2
 name = "DeepSeek V4.1 Flash Uncensored"
@@ -30,6 +30,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "none" } }
 structured_output = true
 cache = { implicit = true }
+prompt_cache_key = true
 temperature = true
 top_p = true
 top_k = true
