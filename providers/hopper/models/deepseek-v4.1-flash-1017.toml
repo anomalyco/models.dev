@@ -1,14 +1,17 @@
 # Sources (accessed 2026-10-28; Messages verified live 2026-10-29):
 # - Endpoint, model ID, authentication, and thinking toggle:
 #   https://withhopper.com/agents/deepseek-v4.1-flash-1017.md
-# - Prices (USD per million tokens) and served context window:
+# - Prices (USD per million tokens):
 #   https://withhopper.com/mcp, tools/call list_models (no authentication required).
+# - Context limit of 1048576 and image input: Hopper maintainer supplied 2026-10-29.
+#   Inherit the lab's text/JPEG/PNG/GIF/WebP modalities; no new live context/image probe.
 # Chat Completions toggle: chat_template_kwargs.thinking = true|false.
 # Chat Completions effort: reasoning_effort = low|high|max (native DeepSeek levels, accepted live;
 # unknown levels return HTTP 400; relative effort was not benchmarked).
 # Live checks: thinking on/off, streaming reasoning_content and usage, a tool/result
 # round trip, an implicit cache hit, and acceptance of max_tokens = 384000.
-# The API also accepts max_completion_tokens; max_tokens = 393217 returns HTTP 400.
+# The API also accepts max_completion_tokens. The 2026-10-28 probe rejected
+# max_tokens = 393217, before the maintainer-supplied context update above.
 # Structured output: response_format.type = json_schema with strict = true enforced
 # required keys and enum values against two contradictory prompts (live 2026-10-28).
 # Chat Completions system updates: a late system message changed ORIGINAL -> UPDATED
@@ -30,13 +33,8 @@
 # so do not inherit the lab's top_k support across both APIs.
 # Keep Chat Completions first for v1 compatibility; system_updates is chat-only.
 # Hopper hosts the model itself; the reasoning controls describe this host's API.
-# The initial entry advertises text input; image input has not been verified on this host.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
@@ -46,7 +44,7 @@ structured_output = true
 top_k = false
 
 [limit]
-context = 393_216
+context = 1_048_576
 
 [cost.text.input]
 price = 0.09
