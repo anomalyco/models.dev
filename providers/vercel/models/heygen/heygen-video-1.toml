@@ -69,3 +69,35 @@ price = 0.09
 [[cost.video.output.overrides]]
 when = { resolution = { equals = "2k" }, mode = { equals = "reference_to_video" } }
 price = 0.09
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480p" }, mode = { equals = "text_to_video" } }
+price = 0.045
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "768p" }, mode = { equals = "text_to_video" } }
+price = 0.075
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, mode = { equals = "text_to_video" } }
+price = 0.105
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "2k" }, mode = { equals = "text_to_video" } }
+price = 0.105
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480p" }, mode = { equals = "image_to_video" } }
+price = 0.045
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "768p" }, mode = { equals = "image_to_video" } }
+price = 0.075
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, mode = { equals = "image_to_video" } }
+price = 0.105
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "2k" }, mode = { equals = "image_to_video" } }
+price = 0.105

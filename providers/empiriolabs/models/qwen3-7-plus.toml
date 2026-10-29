@@ -9,7 +9,7 @@ schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 256_000 } }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 262_144 } }
 structured_output = true
 
 [limit]
