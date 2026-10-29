@@ -1,0 +1,45 @@
+# Full definition (no base_model): a lower-refusal fine-tune of GLM-5.3-Flash (open weights on Hugging Face), like
+#   providers/nano-gpt/models/z-ai/glm-5.3-flash-uncensored.toml.
+# Name, limits, input modalities, efforts and prices: https://nokeep.ai/v1/models (public, accessed 2026-10-29)
+#   and https://nokeep.ai/docs/models, https://nokeep.ai/docs/pricing
+# Text input only: image parts get 400 unsupported_input: https://nokeep.ai/docs/pictures
+# Effort: reasoning_effort = low|high (400 invalid_reasoning_effort on any other value). Always reasons;
+#   no effort sent runs as "low": https://nokeep.ai/docs/thinking
+# Reasoning is returned in message.reasoning_content / delta.reasoning_content: https://nokeep.ai/docs/chat-completions
+# Tool choice: tool_choice = auto|none (400 unsupported_tool_choice for "required" or a named function): https://nokeep.ai/docs/tool-calls
+# Request fields: tools, tool_choice and reasoning_effort only; samplers and response_format are dropped and
+#   named in the x-nokeep-ignored header: https://nokeep.ai/docs/chat-completions, https://nokeep.ai/docs/json-output
+# Cache: a repeated prompt start is billed at the cache-read price and reported in
+#   usage.prompt_tokens_details.cached_tokens: https://nokeep.ai/docs/pricing
+schema = 2
+name = "GLM 5.3 Flash Uncensored"
+description = "Lower-refusal fine-tune of GLM-5.3-Flash for text chat, writing and tool calling, with reasoning always on"
+family = "glm-flash"
+open_weights = true
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, effort = ["low", "high"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.65

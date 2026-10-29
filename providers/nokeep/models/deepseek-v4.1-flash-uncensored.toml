@@ -1,0 +1,49 @@
+# Full definition (no base_model): a lower-refusal fine-tune of DeepSeek V4.1 Flash, like
+#   providers/venice/models/deepseek-v4-1-flash-uncensored.toml and providers/nano-gpt/models/deepseek/deepseek-v4.1-flash-uncensored.toml.
+# This id follows the newest build; since 2026-10-28 it serves the 17 Oct build (pinned id: deepseek-v4.1-flash-1017-uncensored).
+# Name, limits, input modalities, efforts and prices: https://nokeep.ai/v1/models (public, accessed 2026-10-29)
+#   and https://nokeep.ai/docs/models, https://nokeep.ai/docs/pricing
+# Effort: reasoning_effort = none|low|high|max (400 invalid_reasoning_effort on any other value).
+#   No effort sent runs as "none": https://nokeep.ai/docs/thinking
+# Reasoning is returned in message.reasoning_content / delta.reasoning_content: https://nokeep.ai/docs/chat-completions
+# Images: image_url parts (links or data URLs), up to 10 per request: https://nokeep.ai/docs/pictures
+#   The docs list no accepted image formats, so input stays generic "image".
+# Tool choice: auto|none|required|a named function: https://nokeep.ai/docs/tool-calls
+# structured_output: response_format (including json_schema) is passed through: https://nokeep.ai/docs/json-output
+# Cache: prompt_cache_key is honoured and cached input is billed at the cache-read price,
+#   reported in usage.prompt_tokens_details.cached_tokens: https://nokeep.ai/docs/pricing
+schema = 2
+name = "DeepSeek V4.1 Flash Uncensored"
+description = "Lower-refusal fine-tune of DeepSeek V4.1 Flash with image input, tool calling and optional reasoning"
+family = "deepseek-flash"
+open_weights = true
+knowledge = "2025-05"
+release_date = "2026-10-20"
+last_updated = "2026-10-28"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "none" } }
+structured_output = true
+cache = { implicit = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.011 }
+
+[cost.text.output]
+price = 1.75
