@@ -4669,6 +4669,21 @@ test("factors new LLM Gateway models against the canonical base metadata", () =>
   expect("modalities" in model).toBe(false);
 });
 
+test("authors the served context as output on new LLM Gateway models whose base declares no output", () => {
+  // models/moonshotai/kimi-k2.8-preview.toml declares only limit.context.
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "kimi-k2.8-preview",
+    name: "Kimi K2.8 Preview",
+    family: "moonshot",
+    context_length: 1_000_000,
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "moonshotai/kimi-k2.8-preview",
+    limit: { context: 1_000_000, output: 1_000_000 },
+  });
+});
+
 test("syncs explicitly advertised LLM Gateway reasoning efforts", () => {
   const model = buildLLMGatewayModel(llmGatewayModel({
     id: "seed-2-1-turbo",
