@@ -1,7 +1,14 @@
 # Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 v2_only = true
 base_model = "baai/bge-m3"
 
 [api.embeddings]
 sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

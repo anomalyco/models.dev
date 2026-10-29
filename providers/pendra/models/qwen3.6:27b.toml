@@ -1,14 +1,14 @@
 # Toggle: enable_thinking true|false
-# Input: Pendra takes text and PNG, JPEG, GIF or BMP images only on chat completions.
+# Input: text and PNG, JPEG, GIF or BMP images only. Pendra's workers decode the image for every vision model (WebP and TIFF fail) and take no audio or video.
 # Budget: Pendra's reasoning.max_tokens is not listed: the worker ends thinking early only on think-block models.
 # Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
 # Thinking controls: https://pendra.ai/docs/capabilities/thinking
-# Self-hosted on your own workers: no per-token charge at the API.
+# Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 base_model = "alibaba/qwen3.6-27b"
 
 [modalities]
-input = ["text", "image/bmp", "image/jpeg", "image/png"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/bmp"]
 output = ["text"]
 
 [capabilities]

@@ -1,17 +1,14 @@
-# Input: Pendra takes text and PNG, JPEG, GIF or BMP images only on chat completions.
-# Reasoning: Pendra serves this model without thinking (no reasoning output).
+# Input: text and PNG, JPEG, GIF or BMP images only. Pendra's workers decode the image for every vision model (WebP and TIFF fail) and take no audio or video.
 # Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
-# Thinking controls: https://pendra.ai/docs/capabilities/thinking
-# Self-hosted on your own workers: no per-token charge at the API.
+# Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 base_model = "mistral/mistral-small-2603"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/gif"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/bmp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
 structured_output = true
 
 [cost.text.input]

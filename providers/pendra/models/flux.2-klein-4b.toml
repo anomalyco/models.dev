@@ -1,7 +1,12 @@
 # Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 v2_only = true
 base_model = "black-forest-labs/flux-2-klein-4b"
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0

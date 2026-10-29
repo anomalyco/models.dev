@@ -1,10 +1,10 @@
 # Toggle: enable_thinking true|false
-# Input: Pendra takes text only on chat completions.
+# Input: text only on Pendra's chat completions.
 # Budget: Pendra's reasoning.max_tokens is not listed: the worker ends thinking early only on think-block models.
-# Output: 32,768, Pendra's reply cap when a request sets no max_tokens.
+# Output: up to the 262,144-token window: a reply may run until the window is full, and a larger max_tokens is accepted (32,768 is the default when a request sets none).
 # Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
 # Thinking controls: https://pendra.ai/docs/capabilities/thinking
-# Self-hosted on your own workers: no per-token charge at the API.
+# Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 base_model = "deepreinforce/ornith-1.0-9b"
 
@@ -17,7 +17,7 @@ reasoning = { supported = true, default = { type = "toggle", value = true }, tog
 structured_output = true
 
 [limit]
-output = 32_768
+output = 262_144
 
 [cost.text.input]
 price = 0
