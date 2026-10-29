@@ -1,0 +1,22 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image","video"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.000002
+# RouteLLM output_token_rate: 0.00001
+# RouteLLM cached_input_token_rate: 0.0000002
+# RouteLLM thinking: None
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+description = "Kimi K3.1 Pro is Moonshot AI's most capable open-weight multimodal reasoning model, a post-trained Kimi K3 with a 1M-token context window, built for coding, 3D creation, financial research, and long-horizon agentic work."
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

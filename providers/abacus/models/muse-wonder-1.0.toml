@@ -1,0 +1,27 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image","audio","video"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.000004
+# RouteLLM output_token_rate: 0.00002
+# RouteLLM cached_input_token_rate: 0.0000002
+# RouteLLM thinking: None
+schema = 2
+base_model = "meta/muse-wonder-1.0"
+name = "Muse Wonder 1.0"
+description = "Muse Wonder is Meta's frontier model for coding, long-running agents, and advanced computer use: natively multimodal with a 1M token context window and text, image, video, audio, and PDF inputs, it plans long tasks, delegates work to sub-agents, and recovers from errors, with native tool use and parallel tool calling."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "audio/mpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20

@@ -1,0 +1,25 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image","video"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.00000015
+# RouteLLM output_token_rate: 0.00000047
+# RouteLLM cached_input_token_rate: 0.000000016
+# RouteLLM thinking: None
+schema = 2
+base_model = "alibaba/qwen3.8-flash-next"
+description = "Qwen3.8 Flash Next is a 125B-parameter MoE model (6B active) from Alibaba's Qwen series, featuring hybrid attention (Gated DeltaNet + Qwen Sparse Attention) for ultra-efficient inference, native image and video input, a 1M token context window, and built-in configurable thinking."
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016 }
+
+[cost.text.output]
+price = 0.47

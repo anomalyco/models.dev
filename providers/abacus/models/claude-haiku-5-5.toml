@@ -1,0 +1,26 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.0000001
+# RouteLLM output_token_rate: 0.0000005
+# RouteLLM cached_input_token_rate: 0.00000001
+# RouteLLM thinking: None
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+description = "Claude Haiku 5.5 from Anthropic is the fastest and most affordable Claude model, built for high-volume, latency-sensitive tasks such as classification, extraction, routing and subagent work, with adaptive thinking and a 1M token context window."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.5

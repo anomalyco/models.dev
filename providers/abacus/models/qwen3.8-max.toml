@@ -18,6 +18,9 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 
+[limit]
+context = 262_144
+
 [cost.text.input]
 price = 2
 cache = { read = 0.25 }

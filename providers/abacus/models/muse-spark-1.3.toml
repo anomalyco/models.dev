@@ -1,0 +1,26 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image","audio","video"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.00000125
+# RouteLLM output_token_rate: 0.00000425
+# RouteLLM cached_input_token_rate: 0.00000015
+# RouteLLM thinking: None
+schema = 2
+base_model = "meta/muse-spark-1.3"
+description = "Muse Spark 1.3 is Meta's natively multimodal reasoning model with a 1M token context window and text, image, video, audio, and PDF inputs, tuned for long-running agentic, multi-agent, and coding workflows; it needs roughly 20% fewer tool calls and 25% fewer tokens than Muse Spark 1.2, with native tool use and parallel tool calling."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "audio/mpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

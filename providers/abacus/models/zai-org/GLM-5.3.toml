@@ -1,0 +1,26 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.0000014
+# RouteLLM output_token_rate: 0.0000044
+# RouteLLM cached_input_token_rate: 0.00000026
+# RouteLLM thinking: None
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+description = "GLM-5.3 from Z.AI is a flagship model delivering major advances in complex software engineering and agent tasks over GLM-5.2, with a 1M token context window and strong coding, agentic, and cybersecurity capabilities."
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

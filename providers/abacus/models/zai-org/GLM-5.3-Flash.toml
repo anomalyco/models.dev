@@ -1,0 +1,30 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.00000015
+# RouteLLM output_token_rate: 0.0000005
+# RouteLLM cached_input_token_rate: 0.00000003
+# RouteLLM thinking: None
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+description = "GLM-5.3 Flash from Z.AI is an efficient variant of GLM-5.3 optimized for coding and long-horizon agent tasks, with a 1M token context window and 131K max output tokens at significantly lower cost."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

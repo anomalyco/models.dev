@@ -1,0 +1,26 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.00001
+# RouteLLM output_token_rate: 0.00005
+# RouteLLM cached_input_token_rate: 0.00000025
+# RouteLLM thinking: None
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+description = "Claude Fable 5.1 from Anthropic is the next-generation Claude model, delivering major advances in coding, reasoning, and agentic tasks. It excels in tasks requiring long, complex reasoning chains, but is also expensive."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 10
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 50

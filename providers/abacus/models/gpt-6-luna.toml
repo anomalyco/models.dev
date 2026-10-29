@@ -1,0 +1,30 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.0000001
+# RouteLLM output_token_rate: 0.0000005
+# RouteLLM cached_input_token_rate: 0.00000001
+# RouteLLM thinking: True
+schema = 2
+base_model = "openai/gpt-6-luna"
+base_model_omit = ["limit.input"]
+description = "GPT-6 Luna from OpenAI is a fast, cost-efficient model for high-volume chat, summarization and lightweight agentic tasks, with a 1M context window."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.5

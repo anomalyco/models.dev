@@ -1,0 +1,30 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ["text","image"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.00001
+# RouteLLM output_token_rate: 0.00005
+# RouteLLM cached_input_token_rate: 0.000001
+# RouteLLM thinking: True
+schema = 2
+base_model = "openai/gpt-6-astra"
+base_model_omit = ["limit.input"]
+description = "GPT-6 Astra from OpenAI is its most capable model, built for the hardest end-to-end work: complex reasoning, coding, computer use, research, and document creation, with a 1M context window."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 10
+cache = { read = 1 }
+
+[cost.text.output]
+price = 50
