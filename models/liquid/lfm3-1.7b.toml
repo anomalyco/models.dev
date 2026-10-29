@@ -1,0 +1,26 @@
+schema = 2
+name = "LFM3-1.7B"
+description = "Open-weight 1.73B text model from Liquid AI LFM3 family, 256K context, optimized for on-device agents and tool use."
+family = "lfm3"
+open_weights = true
+release_date = "2026-10-27"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 256_000
+output = 256_000
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LiquidAI/LFM3-1.7B"
+format = "safetensors"

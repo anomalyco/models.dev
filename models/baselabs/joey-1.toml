@@ -1,0 +1,27 @@
+schema = 2
+name = "joey-1"
+type = "decision"
+description = "2B-parameter decision model from Base Labs, post-trained from Qwen3.5-2B for single-pass calibrated probabilities on text and images."
+family = "base-labs"
+open_weights = true
+release_date = "2026-10-29"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 16_384
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/baselabs/joey-1"
+format = "safetensors"
