@@ -1,0 +1,25 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# Upstream route: Fireworks accounts/fireworks/models/kimi-k3 (Standard, not the Fast router).
+# Output: max_completion_tokens can be set up to 1,048,576 (default 131,072), per Moonshot
+# https://platform.moonshot.ai/docs/guide/kimi-k3-quickstart (accessed 2026-10-09); ModelRelay /v1/models
+# reports top_provider.max_completion_tokens = 1048576.
+# Always thinking (Moonshot: "K3 always has thinking mode enabled"): none is an alias for low, so it is not
+# listed, and there is no toggle. ModelRelay rejects reasoning_effort=medium and the thinking / budget fields
+# with HTTP 400 ("unsupported field \"thinking\""; verified 2026-10-09), so there is no budget_tokens.
+# Effort: reasoning_effort (Chat Completions) = low|high|max (Moonshot's levels; max verified with a served request 2026-10-09).
+# Effort table: github.com/tensor-systems/modelrelay providers/effort/matrix.go
+# https://docs.modelrelay.ai/core/reasoning-effort
+base_model = "moonshotai/kimi-k3"
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]

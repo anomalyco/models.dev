@@ -1,0 +1,27 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# Upstream route: Fireworks accounts/fireworks/models/qwen3p8-max. Image input verified 2026-10-09.
+# Context: Fireworks serves a 262,144-token window, not the lab's 1M. A ~300K-token prompt through ModelRelay
+# was rejected 2026-10-09: "model maximum context length: 262141 (provider: fireworks)". Output inherits 131,072.
+# Off is reasoning_effort=none (0 reasoning tokens, verified 2026-10-09); graded levels — no toggle. ModelRelay
+# rejects the thinking, enable_thinking and thinking_budget fields with HTTP 400, so there is no budget_tokens.
+# Effort: reasoning_effort (Chat Completions) = none|low|medium|xhigh (Alibaba's level names; xhigh is the default).
+# Fireworks maps them to hard thinking budgets: low 4096, medium 16384, high/xhigh/max 262144
+# (https://docs.fireworks.ai/api-reference/post-chatcompletions, accessed 2026-10-09). Verified 2026-10-09 with
+# served requests: low stopped at 4109 reasoning tokens on a hard prompt; medium, high, xhigh and max accepted.
+# Effort table: github.com/tensor-systems/modelrelay providers/effort/matrix.go
+# https://docs.modelrelay.ai/core/reasoning-effort
+base_model = "alibaba/qwen3.8-max"
+temperature = false
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]
