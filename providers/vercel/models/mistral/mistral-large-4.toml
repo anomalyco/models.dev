@@ -9,9 +9,6 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "high"] }
 cache = { implicit = true }
 
-[limit]
-context = 524_288
-
 [api.chat-completions]
 capabilities = { system_updates = true }
 
