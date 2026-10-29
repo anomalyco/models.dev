@@ -1,6 +1,6 @@
 # Sources (accessed 2026-10-29):
 # - Variant identity and integration: https://withhopper.com/cyber
-# - Model ID and USD-per-million-token prices:
+# - Model ID, context window, and USD-per-million-token prices:
 #   https://withhopper.com/mcp, tools/call list_models (no authentication required).
 # - Served limits: live POST https://api.withhopper.com/v1/chat/completions and
 #   https://api.withhopper.com/v1/messages, using this exact model ID, thinking off,
@@ -18,8 +18,9 @@
 #   "This model's maximum context length is 1048576 tokens. However, your prompt
 #   contains at least 1048577 input tokens, which exceeds this limit even without
 #   any output tokens." This verifies the input window, not just max_tokens parsing.
-#   MCP contextTokens and GET /v1/models max_model_len still report stale 393216;
-#   the actual near-window input and over-window rejection override that metadata.
+#   Public catalog metadata corrected and rechecked on 2026-10-29:
+#   MCP contextTokens and GET /v1/models max_model_len both report 1048576,
+#   matching the actual near-window input and over-window rejection above.
 #   Output records the accepted request cap and shares context with the prompt;
 #   no separate lower output cap observed. Full-length output generation not tested.
 # Hopper hosts an abliterated variant of the shared DeepSeek base model.
