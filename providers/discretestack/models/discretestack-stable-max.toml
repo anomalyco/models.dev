@@ -1,0 +1,24 @@
+# DiscreteStack's maximum tier, serving moonshotai/kimi-k2.7-code. Limits,
+# modalities, and reasoning behavior verified via https://setup.discretestack.com
+# (accessed 2026-09-17): the surface accepts exactly one reasoning effort string,
+# "medium" (passed as reasoning_effort); callers cannot select another level, so
+# this entry advertises a single-value effort option (cf. merged precedent
+# providers/kilo/models/moonshotai/kimi-k2.7-code.toml). Flat-rate licensed host:
+# no per-token pricing is published, so cost fields are omitted.
+base_model = "moonshotai/kimi-k2.7-code"
+name = "DiscreteStack Stable Max"
+description = "DiscreteStack's maximum-capability tier for the hardest coding, research, and long-horizon agent workloads"
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[interleaved]
+field = "reasoning_content"
