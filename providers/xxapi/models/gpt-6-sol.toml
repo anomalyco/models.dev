@@ -7,15 +7,18 @@
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) left unset: xxapi does not document them.
 # API: OpenAI Responses at https://xxapi.ai/v1/responses; prompt caching is automatic.
 # Effort: reasoning.effort = none|low|medium|high|xhigh|max
+# tools.freeform on [api.responses]: /v1/responses accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ000 when asked to pass "hello world"; the text format returned "hello world"; live 2026-10-29 with this model ID).
 schema = 2
 base_model = "openai/gpt-6-sol"
 
 [capabilities]
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [cost.text.input]
 price = 0.1231
