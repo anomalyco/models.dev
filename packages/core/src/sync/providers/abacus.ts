@@ -34,6 +34,23 @@ const CURATED_LABELS: Record<string, { name: string; description: string }> = {
   },
 };
 
+// Source evidence for values the feed states but the lab does not.
+const HEADER_NOTES: Record<string, string[]> = {
+  "muse-spark-1.3-contributor": [
+    "# Contributor-tier terms: this id's RouteLLM description states \"heavily discounted",
+    "# rates in exchange for Meta using prompts and completions to train future Meta",
+    "# models\" (accessed 2026-10-29).",
+  ],
+  "Qwen/Qwen3.8-27B": [
+    "# Host limit: the feed publishes max_completion_tokens 131,072; the lab documents",
+    "# an output cap of 32,768. The host value is the override below.",
+  ],
+  "Qwen/Qwen3.8-Flash-Next": [
+    "# Host context: the feed publishes context_length 1,000,000; the lab documents",
+    "# 262,144 native with extension up to 1M. The host advertises the extended window.",
+  ],
+};
+
 // RouteLLM files these under `text_generation`, but they are transcription
 // endpoints. The Abacus provider entry has never carried STT SKUs (#4705, #7901).
 const TRANSCRIPTION_IDS = new Set([
@@ -265,6 +282,9 @@ function narrowInputs(labInput: string[], previous: string[] | undefined, accept
 function header(model: AbacusModel) {
   const lines = [
     "# Source: https://routellm.abacus.ai/v1/models",
+    "# RouteLLM reasoning: /v1/models exposes only `thinking`; the provider API has no",
+    "# toggle, effort or budget request field (provider.toml audit, 2026-06-25).",
+    ...(HEADER_NOTES[model.id] ?? []),
     `# RouteLLM input_modalities: ${JSON.stringify(model.input_modalities)}`,
     `# RouteLLM output_modalities: ${JSON.stringify(model.output_modalities)}`,
     `# RouteLLM context_length: ${model.context_length ?? "None"}`,
