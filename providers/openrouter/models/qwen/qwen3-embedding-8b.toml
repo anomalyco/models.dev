@@ -1,0 +1,17 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
+# https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+# Limit: OpenRouter's catalog reports 40,960, the model's max_position_embeddings
+#   (https://huggingface.co/Qwen/Qwen3-Embedding-8B/blob/main/config.json); Qwen documents a 32k context.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-embedding-8b"
+
+[limit]
+context = 40_960
+
+[api.embeddings]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.01

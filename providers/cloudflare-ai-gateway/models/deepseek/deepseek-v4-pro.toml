@@ -1,16 +1,21 @@
-# Off: reasoning_effort = none; effort: low|high|max (Fireworks route).
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
+# system_updates unset: every request returned 500 (code 2002) on 2026-10-19, so it could not be checked live.
+# Off: reasoning_effort = none; effort: low|high|max (POST /ai/v1/chat/completions, Fireworks route; not verified live: every request returned 500, code 2002, on 2026-10-19).
 # Source: https://docs.fireworks.ai/api-reference/post-chatcompletions
-
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.145
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.145 }
+
+[cost.text.output]
+price = 3.48

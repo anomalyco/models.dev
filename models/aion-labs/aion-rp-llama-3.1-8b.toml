@@ -1,0 +1,27 @@
+# Lab metadata carried over from providers/openrouter/models/aion-labs/aion-rp-llama-3.1-8b.toml (curated catalogue data already in this repo),
+# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Open weights: Apache-2.0 checkpoint at https://huggingface.co/aion-labs/Aion-RP-Llama-3.1-8B.
+# Sampling: open weights; generation_config.json sets temperature 0.6 and top_p 0.9, and top_k is a standard
+#   sampling control for this checkpoint.
+schema = 2
+name = "Aion-RP 1.0 (8B)"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+family = "llama"
+open_weights = true
+knowledge = "2023-12-31"
+release_date = "2025-02-04"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 29_491

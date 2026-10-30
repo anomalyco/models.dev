@@ -2,6 +2,7 @@ import { z } from "zod";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
+import { ToolChoiceV2 } from "../../schema-v2.js";
 import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { buildOpenRouterModel, OpenRouterModel } from "./openrouter.js";
@@ -19,10 +20,12 @@ const ENABLE_THINKING_MODELS = new Set([
   "@cf/zai-org/glm-5.2",
 ]);
 // Workers AI search reports these as text generation, but their served API takes
-// state + typed questions and returns decisions rather than chat completions.
+// state + typed questions and returns typed answers rather than chat completions.
+// Clairic (typed fields) is an `extraction` model; its file's type is kept.
 const DECISION_MODELS = new Set([
   "@cf/cloudflare/clef",
   "@cf/cloudflare/clef-flash",
+  "@cf/cloudflare/clef-omni",
 ]);
 // Search and the model pages report 1,310,720 for these, but the serving backend rejects any request over 1,048,576
 // tokens. The sync re-derives context from search, so the served window is pinned here. It only ever lowers a window.
@@ -31,6 +34,9 @@ const SERVED_CONTEXT = new Map([
   ["@cf/zai-org/glm-5.3-flash", 1_048_576],
   ["@cf/deepseek-ai/deepseek-v4-flash-0731", 1_048_576],
 ]);
+// Search reports only text and image input for Clef Omni, but its request schema also takes `audio` and `videos`
+// (https://developers.cloudflare.com/workers-ai/models/clef-omni/). The sync adds the kinds search leaves out.
+const EXTRA_INPUTS = new Map([["@cf/cloudflare/clef-omni", ["audio", "video"]]]);
 const ROOT_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 const MODELS_DIR = path.join(ROOT_DIR, "models");
 const metadataFilesByPublisher = new Map<string, string[]>();
@@ -47,7 +53,13 @@ const METADATA_PUBLISHERS: Record<string, string> = {
 };
 
 const WorkersAiReasoning = OpenRouterModel.shape.reasoning.unwrap().partial({ mandatory: true });
-const WorkersAiModel = OpenRouterModel.extend({ reasoning: WorkersAiReasoning.optional() });
+const WorkersAiModel = OpenRouterModel.extend({
+  reasoning: WorkersAiReasoning.optional(),
+  // Whether the model's request schema takes a Responses body; unset when the schema couldn't be read.
+  responses_api: z.boolean().optional(),
+  // The tool_choice values the request schema lists; unset when it doesn't list them.
+  tool_choice: z.array(ToolChoiceV2).optional(),
+});
 type WorkersAiModel = z.infer<typeof WorkersAiModel>;
 
 const CloudflareModel = z.object({
@@ -67,6 +79,8 @@ const CloudflareModel = z.object({
   supported_sampling_parameters: z.array(z.string()).optional(),
   // Validate reasoning separately so malformed controls do not discard the model.
   reasoning: z.unknown().optional(),
+  responses_api: z.boolean().optional(),
+  tool_choice: z.array(ToolChoiceV2).optional(),
 }).passthrough();
 
 const CloudflareResponse = z.object({
@@ -117,6 +131,18 @@ export const cloudflareWorkersAi = {
       if (response !== undefined) rows.push(...modelRows(response));
     }
 
+    // Search has no API list; a model's request schema shows whether it takes a Responses body.
+    for (let index = 0; index < rows.length; index += 6) {
+      await Promise.all(rows.slice(index, index + 6).map(async (row) => {
+        const id = (row as { id?: unknown }).id;
+        if (typeof id !== "string") return;
+        const input = await fetchSchemaInput(accountID, token, id);
+        if (input === undefined) return;
+        (row as Record<string, unknown>).responses_api = takesResponsesBody(input);
+        (row as Record<string, unknown>).tool_choice = schemaToolChoice(input);
+      }));
+    }
+
     return { data: rows };
   },
   parseModels(raw) {
@@ -156,9 +182,151 @@ export const cloudflareWorkersAi = {
       model: translated,
       header: (translated.reasoning_options?.some((option) => option.type === "toggle") && !hasToggleWire ? toggleHeader : "")
         + preservedHeader,
+      v2Set: {
+        ...apiSet(model),
+        "capabilities.tools": (current: unknown) =>
+          toolsWith(current, { choice: model.supported_parameters.includes("tools") ? model.tool_choice : undefined }),
+      },
     };
   },
 } satisfies SyncProvider<WorkersAiModel>;
+
+// Models whose schema takes a Responses body are also served on POST /ai/v1/responses
+// ("only for Workers AI models that support the Responses API, such as GPT-OSS"):
+// https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/
+const RESPONSES_API = {
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+};
+
+function apiSet(model: WorkersAiModel) {
+  if (model.responses_api === undefined) return {};
+  return { api: (current: unknown) => workersAiApis(current, model.responses_api!) };
+}
+
+// A tool-calling model's tools table with the given fields set. Fields the
+// source doesn't state keep the file's values.
+export function toolsWith(current: unknown, fields: Record<string, unknown>) {
+  const stated = Object.entries(fields).filter(([, value]) => value !== undefined);
+  if (stated.length === 0) return current;
+  if (current !== undefined && (!isRecord(current) || current.supported === false)) return current;
+  return { supported: true, ...current, ...Object.fromEntries(stated) };
+}
+
+const TOOL_CHOICE_VALUES: Record<string, ToolChoiceV2> = {
+  auto: "auto",
+  none: "none",
+  required: "required",
+  any: "required",
+  function: "tool",
+  tool: "tool",
+  custom: "tool",
+};
+
+// The tool_choice values a request schema lists: string enums ("auto", "none",
+// "required") and object variants by their `type` ("function" names a tool;
+// Anthropic's "any" means required). Undefined when the schema has no
+// tool_choice or leaves a string open, as it then doesn't say which values work.
+// Workers AI: GET /ai/models/schema (https://developers.cloudflare.com/api/resources/ai/subresources/models/subresources/schema/methods/get).
+// AI Gateway: GET /ai/catalog/models/{id}/schema (https://developers.cloudflare.com/ai-gateway/usage/rest-api/).
+export function schemaToolChoice(schema: unknown): ToolChoiceV2[] | undefined {
+  const fields = toolChoiceFields(schema, 0);
+  if (fields.length === 0) return undefined;
+  const values = new Set<ToolChoiceV2>();
+  for (const field of fields) {
+    const listed = choiceValues(field, 0);
+    if (listed === undefined) return undefined;
+    for (const value of listed) values.add(value);
+  }
+  if (values.size === 0) return undefined;
+  return ToolChoiceV2.options.filter((value) => values.has(value));
+}
+
+function toolChoiceFields(schema: unknown, depth: number): unknown[] {
+  if (!isRecord(schema) || depth > 8) return [];
+  const properties = isRecord(schema.properties) ? schema.properties : {};
+  const own = "tool_choice" in properties ? [properties.tool_choice] : [];
+  const nested = [
+    ...Object.values(properties),
+    ...arrayOf(schema.anyOf),
+    ...arrayOf(schema.oneOf),
+    ...(isRecord(schema.items) ? [schema.items] : []),
+  ].flatMap((child) => toolChoiceFields(child, depth + 1));
+  return [...own, ...nested];
+}
+
+// Undefined when a variant accepts values the schema doesn't name.
+function choiceValues(node: unknown, depth: number): ToolChoiceV2[] | undefined {
+  if (!isRecord(node) || depth > 4) return undefined;
+  const variants = [...arrayOf(node.anyOf), ...arrayOf(node.oneOf)];
+  if (variants.length > 0) {
+    const lists = variants.map((variant) => choiceValues(variant, depth + 1));
+    if (lists.some((list) => list === undefined)) return undefined;
+    return lists.flatMap((list) => list!);
+  }
+  if (node.type === "null") return [];
+  if (node.type === "string") return named(node);
+  if (node.type === "object" && isRecord(node.properties)) {
+    const type = node.properties.type;
+    return isRecord(type) ? named(type) : undefined;
+  }
+  return undefined;
+}
+
+function named(node: Record<string, unknown>): ToolChoiceV2[] | undefined {
+  const values = node.const !== undefined ? [node.const] : arrayOf(node.enum);
+  if (values.length === 0) return undefined;
+  return values.flatMap((value) => {
+    const choice = typeof value === "string" ? TOOL_CHOICE_VALUES[value] : undefined;
+    return choice === undefined ? [] : [choice];
+  });
+}
+
+function arrayOf(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+// A model's APIs: its own first table (what v1 reads; an empty table takes the provider's
+// Chat Completions API), then Responses when the model takes it.
+export function workersAiApis(current: unknown, responses: boolean): Record<string, unknown> | undefined {
+  const { responses: _responses, ...own } = current !== null && typeof current === "object" && !Array.isArray(current)
+    ? current as Record<string, unknown>
+    : {};
+  if (!responses) return Object.keys(own).length > 0 ? own : undefined;
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    responses: structuredClone(RESPONSES_API),
+  };
+}
+
+// Whether a request schema has a variant with a top-level Responses `input` field
+// (prompt and messages variants are the Chat Completions shapes).
+export function takesResponsesBody(schema: unknown, depth = 0): boolean {
+  if (schema === null || typeof schema !== "object" || depth > 4) return false;
+  const node = schema as { properties?: Record<string, unknown>; oneOf?: unknown[]; anyOf?: unknown[] };
+  if (node.properties !== undefined && "input" in node.properties) return true;
+  return [...node.oneOf ?? [], ...node.anyOf ?? []].some((variant) => takesResponsesBody(variant, depth + 1));
+}
+
+async function fetchSchemaInput(accountID: string, token: string, id: string) {
+  const url = new URL(`${API_BASE}/${accountID}/ai/models/schema`);
+  url.searchParams.set("model", id);
+  try {
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+    const body = z.object({ result: z.object({ input: z.unknown() }).passthrough() }).passthrough().parse(await response.json());
+    return body.result.input;
+  } catch (error) {
+    console.warn(`Workers AI schema for ${id} failed: ${error instanceof Error ? error.message : String(error)}`);
+    return undefined;
+  }
+}
 
 function hasReasoning(model: WorkersAiModel) {
   return model.supported_parameters.includes("reasoning") || model.supported_parameters.includes("include_reasoning")
@@ -188,6 +356,10 @@ export function buildWorkersAiModel(
   const context = Math.min(model.context_length, SERVED_CONTEXT.get(model.id) ?? model.context_length);
   const source = {
     ...model,
+    architecture: {
+      ...model.architecture,
+      input_modalities: [...new Set([...model.architecture.input_modalities, ...EXTRA_INPUTS.get(model.id) ?? []])],
+    },
     context_length: context,
     reasoning: undefined,
     supported_parameters: [
@@ -211,7 +383,9 @@ export function buildWorkersAiModel(
     existing?.base_model ?? resolveCloudflareBaseModel(model),
   );
   const type = DECISION_MODELS.has(model.id) ? "decision" : existing?.type;
-  const typed = type === undefined ? synced : { ...synced, type: "decision" as const };
+  const decision = type === undefined ? synced : { ...synced, type };
+  // Workers AI search has no API address, so the file's own one (v1 `provider`) is kept.
+  const typed = existing?.provider === undefined ? decision : { ...decision, provider: existing.provider };
   if ("base_model" in typed) return typed;
   return {
     ...typed,
@@ -251,7 +425,9 @@ function workersAiReasoningOptions({ id, reasoning }: WorkersAiModel): SyncedFul
     options.push({ type: "toggle" });
   }
 
-  const values = reasoning.mandatory ? efforts?.filter((value) => value !== "none") : efforts;
+  // Search lists efforts strongest first; v2 files keep them weakest first.
+  const values = (reasoning.mandatory ? efforts?.filter((value) => value !== "none") : efforts)
+    ?.toSorted((a, b) => effortRank(a) - effortRank(b));
   // One mandatory effective effort offers no caller choice. Unlike missing or
   // empty metadata, a concrete singleton establishes this explicitly.
   const fixedEffort = reasoning.mandatory === true && values?.length === 1;
@@ -266,6 +442,12 @@ function workersAiReasoningOptions({ id, reasoning }: WorkersAiModel): SyncedFul
 
   // Empty control metadata never clears authored controls; a known fixed effort can.
   return options.length > 0 || fixedEffort ? options : undefined;
+}
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
+
+function effortRank(effort: string) {
+  return EFFORT_ORDER.indexOf(effort);
 }
 
 export function resolveCloudflareBaseModel(model: WorkersAiModel) {
@@ -376,6 +558,8 @@ function normalizeModel(model: CloudflareModel) {
       ...model.supported_features ?? [],
     ],
     reasoning,
+    responses_api: model.responses_api,
+    tool_choice: model.tool_choice,
   });
 }
 

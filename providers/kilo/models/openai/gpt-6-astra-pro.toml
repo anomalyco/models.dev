@@ -1,29 +1,34 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay OpenAI's GPT-6 Astra with pro reasoning (openai/gpt-6-astra). OpenAI image inputs PNG, JPEG, WEBP, non-animated GIF: https://platform.openai.com/docs/guides/images-vision
+schema = 2
 name = "OpenAI: GPT-6 Astra Pro ($$$$)"
 description = "GPT-6 Astra Pro is the same underlying model as [GPT-6 Astra](https://openrouter.ai/openai/gpt-6-astra), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks. Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode"
 family = "gpt"
-release_date = "2026-09-04"
-last_updated = "2026-09-04"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-04"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]
+output = ["text"]
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 1_050_000
 output = 128_000
 
-[modalities]
-input = ["pdf", "image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[cost.text.output]
+price = 50
+
+[cost.web_search]
+price = 10

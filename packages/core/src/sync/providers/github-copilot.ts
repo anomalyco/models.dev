@@ -30,11 +30,6 @@ export interface GitHubCopilotPricingModel {
   rows: GitHubCopilotPricingRow[];
 }
 
-// Map names in pricing YAML to actual filenames in repo
-const FILE_ALIASES: Record<string, string> = {
-  "mai-code-1-flash": "mai-code-1-flash-picker",
-};
-
 const IGNORED_ROWS = new Set([
   // Goes in [experimental.modes.fast] under claude-opus-4.8
   "claude-opus-4.8-fast-mode-preview",
@@ -49,6 +44,7 @@ const IGNORED_ROWS = new Set([
   "gpt-4.1",
   "gpt-5.2",
   "gpt-5.2-codex",
+  "mai-code-1-flash",
   "raptor-mini",
 ]);
 
@@ -158,7 +154,6 @@ export const githubCopilot = {
     if (IGNORED_ROWS.has(model.slug)) return undefined;
     const candidates = [
       model.slug,
-      FILE_ALIASES[model.slug],
       model.releaseStatus === "Public preview" ? `${model.slug}-preview` : undefined,
     ].filter((candidate) => candidate !== undefined);
     const id = candidates.find((candidate) => context.authored(candidate) !== undefined);

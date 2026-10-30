@@ -1,0 +1,27 @@
+# Model ID and use: https://docs.fish.audio/developer-guide/models-pricing/models-overview (transcribe-1: general transcription
+#   of short recordings; served when the model header is missing)
+# Fish Audio publishes no launch date. transcribe-1 first appears in its API pricing docs on 2025-09-13
+#   (https://github.com/fishaudio/docs/commit/dcfa3378fa7876a518ea3e187401562bb7c99cd7, $0.36 per audio hour).
+# Input formats (WAV, MP3, AAC incl. M4A/MP4, FLAC, Ogg): https://docs.fish.audio/api-reference/endpoint/openapi-v1/speech-to-text
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Transcribe 1"
+description = "Speech-to-text model for short recordings with language detection and optional timestamps"
+open_weights = false
+release_date = "2025-09"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/aac", "audio/mp4", "audio/flac", "audio/ogg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

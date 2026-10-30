@@ -1,0 +1,48 @@
+# Recursive Flint. Model card: https://huggingface.co/RecursiveSI/flint
+#   Decoder-only MoE, 39.8B total / ~2.5B active parameters; text in, text out;
+#   262,144-token context shared by prompt and output; stated knowledge cutoff June 2026; Apache 2.0.
+# Announcement: https://www.recursive.com/updates/introducing-recursive-flint
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host;
+#   the card recommends temperature 1.0, top_p 0.95, top_k 20.
+schema = 2
+name = "Flint"
+description = "Open-weight mixture-of-experts model with about 2.5B active parameters for local coding agents"
+family = "flint"
+open_weights = true
+knowledge = "2026-06"
+release_date = "2026-10-21"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/RecursiveSI/flint"
+
+[[weights]]
+label = "Hugging Face (INT4)"
+url = "https://huggingface.co/RecursiveSI/flint-int4"
+quantization = "int4"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/RecursiveSI/flint"
+type = "model_card"
+
+[[links]]
+label = "Introducing Recursive Flint"
+url = "https://www.recursive.com/updates/introducing-recursive-flint"
+type = "announcement"

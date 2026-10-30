@@ -1,0 +1,16 @@
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+name = "Qwen3 235B-A22B Instruct 2507 (Scaleway)"
+
+[capabilities]
+tools = { supported = true }
+structured_output = false
+
+[limit]
+context = 250_000
+
+[cost.text.input]
+price = 0.83475
+
+[cost.text.output]
+price = 2.504249

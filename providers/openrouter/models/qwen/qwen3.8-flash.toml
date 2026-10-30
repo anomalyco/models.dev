@@ -1,16 +1,29 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Alibaba)
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-temperature = true
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
 
-[[reasoning_options]]
-type = "budget_tokens"
+[api.chat-completions]
+capabilities = { system_updates = true }
 
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
-cache_write = 0.2
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016 }
+
+[cost.text.output]
+price = 0.47

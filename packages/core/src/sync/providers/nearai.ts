@@ -1,0 +1,232 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+
+import { z } from "zod";
+
+import type { ExistingModel, SyncedFullModel, SyncedModel, SyncedV2Model, SyncProvider } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { factorBaseModel, modelMetadata } from "./openrouter.js";
+
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+
+const API_ENDPOINT = "https://cloud-api.near.ai/v1/models";
+
+const TOKENS_PER_PRICING_UNIT = 1_000_000;
+
+const HOSTED_BY_NEAR_AI = "nearai";
+
+const MIN_LIVE_MODELS = 20;
+
+// Token classification priced per input token only; the token-cost schema
+// cannot describe it, so it is skipped rather than reported as missing.
+const IGNORED_MODELS = new Set(["openai/privacy-filter"]);
+
+const LAB_NAMESPACE: Record<string, string> = {
+  qwen: "alibaba",
+  "x-ai": "xai",
+  "z-ai": "zhipuai",
+  "zai-org": "zhipuai",
+  "deepseek-ai": "deepseek",
+};
+
+const NearAIPricing = z.object({
+  input: z.number().nonnegative(),
+  output: z.number().nonnegative(),
+  input_cache_read: z.string().optional(),
+  image: z.string().optional(),
+}).passthrough();
+
+export const NearAIModel = z.object({
+  id: z.string().min(1),
+  object: z.literal("model"),
+  created: z.number().int().nonnegative(),
+  owned_by: z.string(),
+  name: z.string().min(1),
+  pricing: NearAIPricing,
+  context_length: z.number().int().positive(),
+  max_output_length: z.number().int().positive().optional(),
+  input_modalities: z.array(z.string()),
+  output_modalities: z.array(z.string()),
+  supported_features: z.array(z.string()),
+}).passthrough();
+
+export const NearAIResponse = z.object({
+  object: z.literal("list"),
+  data: z.array(NearAIModel),
+}).passthrough();
+
+export type NearAIModel = z.infer<typeof NearAIModel>;
+
+export const nearai = {
+  id: "nearai",
+  name: "NEAR AI Cloud",
+  modelsDir: "providers/nearai/models",
+  sourceID(model) {
+    return IGNORED_MODELS.has(model.id) ? undefined : model.id;
+  },
+  // A create is only skipped when no lab entry exists to base it on, so every
+  // non-ignored skip opens a deduped missing-model issue.
+  missingModelID(model) {
+    return IGNORED_MODELS.has(model.id) ? undefined : model.id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} NEAR AI models have no lab entry under models/ to base them on: `
+        + ids.map((id) => `\`${id}\``).join(", "),
+    ];
+  },
+  async fetchModels() {
+    return fetchNearAIModels();
+  },
+  parseModels(raw) {
+    return NearAIResponse.parse(raw).data;
+  },
+  translateModel(model, context) {
+    const existing = context.existing(model.id);
+    if (existing === undefined) return createNearAIModel(model);
+    if (existing.cost === undefined) {
+      const authored = context.authored(model.id);
+      if (authored === undefined) return undefined;
+      const imageCost = perImageCost(model);
+      return {
+        id: model.id,
+        model: authored as SyncedModel,
+        ...(imageCost === undefined ? {} : { v2Set: { "cost.image": imageCost } }),
+      };
+    }
+    return {
+      id: model.id,
+      model: buildNearAIModel(model, existing),
+    };
+  },
+} satisfies SyncProvider<NearAIModel>;
+
+export async function fetchNearAIModels(fetcher: typeof fetch = fetch) {
+  const response = await fetcher(API_ENDPOINT);
+  if (!response.ok) {
+    throw new Error(`NEAR AI models request failed: ${response.status} ${response.statusText}`);
+  }
+  const parsed = NearAIResponse.parse(await response.json());
+  if (parsed.data.length < MIN_LIVE_MODELS) {
+    throw new Error(
+      `NEAR AI returned ${parsed.data.length} models, below the ${MIN_LIVE_MODELS} needed to`
+        + ` distinguish a retirement from a truncated response`,
+    );
+  }
+  return parsed;
+}
+
+export function labModelID(id: string): string {
+  const lowered = id.toLowerCase();
+  const separator = lowered.lastIndexOf("/");
+  if (separator === -1) return lowered;
+  const namespace = lowered.slice(0, separator);
+  return `${LAB_NAMESPACE[namespace] ?? namespace}${lowered.slice(separator)}`;
+}
+
+// New models are created as base_model overlays carrying only cost. The
+// catalog says nothing about how a route controls reasoning, so a model whose
+// lab entry reasons is not created: it opens an issue for someone to research
+// and hand-author its reasoning_options, after which sync keeps it priced.
+export function createNearAIModel(model: NearAIModel) {
+  if (IGNORED_MODELS.has(model.id)) return undefined;
+  const baseModel = labModelID(model.id);
+  if (!existsSync(path.join(MODELS_DIR, `${baseModel}.toml`))) return undefined;
+  if (modelMetadata(baseModel).reasoning === true) {
+    throw new MissingReasoningOptionsError(
+      model.id,
+      `reasoning model (base ${baseModel}) that NEAR AI's /v1/models exposes no reasoning`
+        + " controls for; probe the route and author its reasoning_options by hand",
+    );
+  }
+  const imageCost = perImageCost(model);
+  if (imageCost !== undefined) {
+    // An image model's price has no v1 per-token form, so it is a v2-only file.
+    return {
+      id: model.id,
+      v2: { schema: 2, v2_only: true, base_model: baseModel, cost: { image: imageCost } },
+    } satisfies SyncedV2Model;
+  }
+  const cacheRead = perMillion(model.pricing.input_cache_read);
+  return {
+    id: model.id,
+    model: {
+      base_model: baseModel,
+      cost: {
+        input: price(model.pricing.input),
+        output: price(model.pricing.output),
+        ...(cacheRead === undefined ? {} : { cache_read: cacheRead }),
+      },
+    } as SyncedModel,
+  };
+}
+
+// `pricing.image` is NEAR's per-image price (`costPerImage` on near.ai/models).
+// For a model whose output is images it is what a generation is billed ("billed
+// per image", docs.near.ai/cloud/guides/specialized-endpoints); its per-token
+// input/output are not.
+function perImageCost(model: NearAIModel) {
+  if (!model.output_modalities.includes("image")) return undefined;
+  const parsed = Number(model.pricing.image);
+  if (model.pricing.image === undefined || !Number.isFinite(parsed) || parsed <= 0) return undefined;
+  return { output: { unit: "image", price: price(parsed) } };
+}
+
+function atMost(current: number | undefined, reported: number | undefined): number | undefined {
+  if (current === undefined) return reported;
+  if (reported === undefined) return current;
+  return Math.min(current, reported);
+}
+
+// The catalog returns artifacts like 1.4000000000000001, and scaling per-token
+// strings introduces its own, so every published price is rounded.
+function price(value: number): number {
+  return Number(value.toFixed(6));
+}
+
+// Per-token strings, unlike the per-million `input` and `output` numbers.
+function perMillion(value: string | undefined): number | undefined {
+  if (value === undefined) return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? price(parsed * TOKENS_PER_PRICING_UNIT) : undefined;
+}
+
+export function buildNearAIModel(
+  model: NearAIModel,
+  existing: ExistingModel,
+): SyncedModel {
+  if (existing.cost === undefined) {
+    throw new Error(`NEAR AI model ${model.id} has incomplete local pricing required for sync`);
+  }
+
+  const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;
+
+  const cost = {
+    ...existing.cost,
+    input: price(model.pricing.input),
+    output: price(model.pricing.output),
+    cache_read: perMillion(model.pricing.input_cache_read) ?? existing.cost.cache_read,
+  };
+
+  // `context_length` is the serving `max_model_len` only for models NEAR AI hosts
+  // itself. On relayed routes it is whatever the upstream aggregator reported and
+  // is often rounded below the lab figure, so it would publish a cap the host does
+  // not impose. `max_output_length` is advisory even on hosted models: requests
+  // above it succeed, and only exceeding the context window is rejected. So output
+  // is never synced, and context only for hosted models, capped downward.
+  const limit = model.owned_by === HOSTED_BY_NEAR_AI
+    ? { ...existing.limit, context: atMost(existing.limit?.context, model.context_length) }
+    : existing.limit;
+
+  // Only price and serving limits come from the catalog. Its capability fields are
+  // wrong in both directions: `supported_features` lists reasoning for relayed
+  // routes that return no reasoning content, and `input_modalities` claims image
+  // for routes that reject it. Capabilities, modalities and reasoning controls
+  // therefore stay hand-authored.
+  const values = { ...current, cost, limit } as SyncedFullModel;
+
+  return baseModel === undefined
+    ? values
+    : factorBaseModel(baseModel, values, limit, baseModelOmit);
+}

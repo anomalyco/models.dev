@@ -1,0 +1,31 @@
+# https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Thinking
+# https://qwen.ai/blog?id=qwen3-omni
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Audio input: AMR, WAV, 3GP/3GPP, AAC, MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni (registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
+name = "Qwen3 Omni 30B A3B Thinking"
+description = "Multimodal reasoning model accepting text, images, video, and audio with text output"
+family = "qwen"
+open_weights = true
+release_date = "2025-09-22"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv", "audio/amr", "audio/wav", "audio/3gpp", "audio/aac", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 65_536
+output = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Thinking"

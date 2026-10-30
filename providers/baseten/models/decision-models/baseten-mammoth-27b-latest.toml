@@ -1,0 +1,14 @@
+# Decision model: POST /v1/systemone (https://docs.baseten.co/inference/model-apis/decision-models)
+# Images go as image_url parts in a user message inside state.messages, which no media_input value describes (https://docs.baseten.co/reference/inference-api/system-one.md).
+schema = 2
+v2_only = true
+base_model = "baseten/mammoth-1"
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/baseten/decisions" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0

@@ -1,16 +1,33 @@
+# Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 15160/15260 -> 0/15278; 15160/15260 -> 0/15278]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 15160/15300 -> 0/15351; 15416/15620 -> 0/15671]
+schema = 2
 base_model = "bytedance-seed/seed-2.0-mini"
-reasoning_options = []
-
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.02
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 0.2
-output = 0.8
-cache_read = 0.2
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.02 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.8

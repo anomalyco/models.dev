@@ -1,0 +1,20 @@
+schema = 2
+base_model = "mistral/codestral-2508"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.9

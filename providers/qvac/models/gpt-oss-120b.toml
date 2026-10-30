@@ -1,6 +1,15 @@
+# Deprecated: gpt-oss-120b is no longer in the public catalog of @qvac/ai-sdk-provider 0.10.0
+# (dist/models/catalog.js, published 2026-10-19), which lists gpt-oss-20b only.
+schema = 2
 base_model = "openai/gpt-oss-120b"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

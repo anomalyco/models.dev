@@ -1,12 +1,14 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Runware)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.032
+cache = { read = 0.032 }
 
-[cost]
-input = 0.032
-output = 0.14
-cache_read = 0.032
+[cost.text.output]
+price = 0.14

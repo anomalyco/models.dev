@@ -2,13 +2,25 @@
 # $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
 # $.output_config.effort on /v1/messages, subject to model support.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "google/gemini-3.8-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
 
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075, storage = 0.5 }
+
+[cost.text.output]
+price = 3.75
+
+[cost.audio.input]
+price = 0.75
+
+[cost.video.input]
+price = 0.75

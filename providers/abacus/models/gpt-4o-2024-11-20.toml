@@ -1,23 +1,16 @@
-name = "GPT-4o (2024-11-20)"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2024-11-20"
-last_updated = "2024-11-20"
-attachment = true
-reasoning = false
-temperature = true
+# Linked to models/openai/gpt-4o-2024-11-20.toml (same model).
+# knowledge: unsourced host value kept as an override (lab: 2023-09).
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+# Input: inherited from the lab (text and image). OpenAI lists GPT-4o audio as "Not supported"
+#   (https://developers.openai.com/api/docs/models/gpt-4o); audio input belongs to the gpt-4o-audio-preview models.
+schema = 2
+base_model = "openai/gpt-4o-2024-11-20"
 knowledge = "2024-10"
-tool_call = true
-open_weights = false
+status = "deprecated"
 
-[cost]
-input = 2.50
-output = 10.00
 
-[limit]
-context = 128_000
-output = 16_384
+[cost.text.input]
+price = 2.5
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
+[cost.text.output]
+price = 10

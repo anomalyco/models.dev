@@ -1,12 +1,17 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (IONOS)"
-tool_call = false
-structured_output = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.169035
-output = 0.732485
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.16695
+
+[cost.text.output]
+price = 0.72345

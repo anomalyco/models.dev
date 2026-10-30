@@ -1,10 +1,18 @@
 # Effort: reasoning_effort = high|max
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
-[cost]
-input = 1.4
-output = 4.4
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

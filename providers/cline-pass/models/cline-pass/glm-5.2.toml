@@ -2,10 +2,18 @@
 # Lab Zhipu GLM-5.2: effective effort high|max; none|minimal skip thinking
 # (providers/zhipuai/models/glm-5.2.toml; https://docs.bigmodel.cn/cn/guide/capabilities/thinking)
 # Effort: reasoning_effort = none|high|max
+# Retired: "no longer available on ClinePass" per https://docs.cline.bot/getting-started/clinepass (accessed 2026-10-21).
+schema = 2
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+status = "deprecated"
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

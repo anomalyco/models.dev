@@ -1,0 +1,26 @@
+schema = 2
+name = "OrcaCyber Zero 1.5"
+description = "OrcaRouter's frontier cybersecurity model, post-trained for authorized security research: vulnerability research and reproduction, exploit development, penetration testing, and security auditing. Supports a 1M-token context window, optional reasoning, tool calling, and structured output. Offensive work is permitted only within an authorized security engagement."
+open_weights = false
+release_date = "2026-10-30"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 999_488
+input = 999_488
+output = 128_000
+
+[cost.text.input]
+price = 3
+cache = { read = 0.75 }
+
+[cost.text.output]
+price = 7.5

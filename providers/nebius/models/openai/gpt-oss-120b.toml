@@ -1,31 +1,33 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 131_072)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# - https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion (reasoning_effort)
+# Effort: reasoning_effort = low|medium|high (the model's native levels; gpt-oss has no off switch).
+# Cost: $0.15 in / $0.60 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as Kimi-K3 / GLM-5.3 on this host). The earlier 0.015 read / 0.18 write had no source and is gone.
+# Limits: input 124_000 / output 8_192 are carried over from the original entry; models_info publishes
+#   only max_model_len.
+schema = 2
+base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-tool_call = true
-structured_output = true
-temperature = true
-knowledge = "2025-09"
-release_date = "2026-01-10"
-last_updated = "2026-02-04"
-open_weights = true
 
-[cost]
-input = 0.15
-output = 0.60
-reasoning = 0.60
-cache_read = 0.015
-cache_write = 0.18
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
-context = 131_072
 input = 124_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.15
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 0.6
+reasoning = 0.6

@@ -4,26 +4,30 @@
 # https://research.meta.ai/blog/introducing-muse-spark-1-3
 # https://dev.meta.ai/docs/models
 # https://openrouter.ai/meta/muse-spark-1.3 (OpenRouter Meta-hosted catalog snapshot, 2026-09-02)
-
+# Sampling (temperature, top_p; no top_k): https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/protocols/messages
+# Image MIME types: https://dev.meta.ai/docs/image-understanding
+# Video and audio MIME types: https://dev.meta.ai/docs/video-understanding#supported-formats (video/mp4, audio/mpeg, audio/wav)
+schema = 2
 name = "Muse Spark 1.3"
 description = "Muse Spark 1.3 is a multimodal reasoning model from Meta for long-running agentic, multi-agent, and coding workflows. It improves long-horizon agent collaboration, instruction following, and coding efficiency relative to Muse Spark 1.2."
 family = "muse"
-release_date = "2026-09-02"
-last_updated = "2026-09-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-02"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf", "audio/mpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 1_048_576
 output = 131_072
-
-[modalities]
-input = ["text", "image", "video", "pdf", "audio"]
-output = ["text"]
 
 [[benchmarks]]
 name = "GDPval-AA"

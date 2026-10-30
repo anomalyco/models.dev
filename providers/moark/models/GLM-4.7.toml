@@ -1,30 +1,21 @@
+# Costs corrected to Moark's USD price list: https://moark.ai/serverless-api (accessed 2026-10-10); previous values were RMB published as USD.
 # The Moark raw Chat schema exposes no user-selectable reasoning control for
 # this reasoning-only model.
 # https://moark.com/docs/openapi/v1 (accessed 2026-06-25)
-name = "GLM-4.7"
+# Deprecated: no longer listed by Moark's public GET https://moark.com/v1/models (checked 2026-10-21).
+schema = 2
+base_model = "zhipuai/glm-4.7"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2025-12-22"
-last_updated = "2025-12-22"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2025-04"
-open_weights = true
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 3.50
-output = 14.00
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 204800
-output = 131072
+[cost.text.input]
+price = 0.42
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 2.2

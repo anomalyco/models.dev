@@ -1,24 +1,29 @@
 # Sources (accessed 2026-09-03):
 # https://huggingface.co/openbmb/MiniCPM5-1B (model card, config)
 # https://github.com/OpenBMB/MiniCPM (release announcement 2026-05-19)
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the model card
+#   recommends temperature 0.9 / 0.7 (Think / No Think) with top_p 0.95.
+schema = 2
 name = "MiniCPM5-1B"
 description = "Dense 1B-class open-source model for on-device and resource-constrained use, with native long-context support, Think / No Think chat modes, and tool calling"
-release_date = "2026-05-19"
-last_updated = "2026-05-19"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2026-05-19"
 license = "apache-2.0"
-
-[limit]
-context = 131_072
-output = 131_072
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

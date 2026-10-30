@@ -1,0 +1,35 @@
+# Source: https://huggingface.co/Phocinae/Phocinae-Largha-150M-v1
+# Output: decision probabilities from an encoder, not generated text, so there is nothing to sample
+#   (temperature/top_p/top_k false).
+schema = 2
+type = "decision"
+name = "Phocinae Largha 150M v1"
+description = "Encoder decision model that answers typed questions (noul, choice, score) over text with calibrated probabilities, on CPU and GPU"
+open_weights = true
+release_date = "2026-10-08"
+last_updated = "2026-10-09"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Phocinae/Phocinae-Largha-150M-v1"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/Phocinae/Phocinae-Largha-150M-v1"
+type = "model_card"

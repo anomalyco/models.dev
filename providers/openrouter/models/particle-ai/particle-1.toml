@@ -1,0 +1,34 @@
+schema = 2
+name = "Particle-1"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+open_weights = false
+release_date = "2026-10-28"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 1

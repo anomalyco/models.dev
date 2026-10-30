@@ -1,19 +1,37 @@
-# Sources (accessed 2026-09-15):
-# https://api.iteracompute.com/v1/models (canonical model ID, availability, capabilities, limits, and pricing)
-# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
-# Prices are in USD per million tokens.
+# Sources (accessed 2026-10-10):
+# https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
+# https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
+# https://iteracompute.com/models/qwen3-8-27b/ (retail USD/MTok prices, context, and vision)
+# Effort wire path: reasoning_effort = low|medium|xhigh; reasoning.effort is also accepted.
+# Toggle wire path: reasoning = true|false; reasoning.enabled = true|false is also accepted.
+# Free accounts start at 128K context; the Pro recharge tier unlocks 256K. Maximum output is 8,192.
+# Host capability recheck (2026-10-15), exact record id = "qwen/qwen3.8-27b":
+# /v1/models data[id].reasoning: mandatory=false, supports_enable_disable=true,
+# supported_efforts=["low","medium","xhigh"]; the on/off control is separate.
+# /openrouter/v1/models data[id].output_modalities[0].supported_parameters.reasoning has type="boolean".
+# That supported_parameters object has no thinking_budget entry; no budget control is advertised.
+# Local adapter mapping checks confirm the boolean toggle forwards enable_thinking=true|false.
+# https://iteracompute.com/models/qwen3-8-27b/: Free=128K, Starter=128K, Pro=256K.
+# All three tiers remain $0/token; recharge unlocks allowances/context, not token-price bands.
+# This entry publishes the default Free context, so no paid [[cost.tiers]] apply.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
-
-[cost]
-input = 0.30
-output = 2.50
-cache_read = 0.03
-
-[limit]
-context = 327_680
-input = 262_144
-output = 65_536
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

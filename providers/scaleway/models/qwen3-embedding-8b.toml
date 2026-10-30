@@ -1,22 +1,17 @@
-name = "Qwen3 Embedding 8B"
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
+# Billed in EUR: €0.10 input / €0 output per 1M tokens; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# API: POST https://api.scaleway.ai/v1/embeddings (https://www.scaleway.com/en/docs/generative-apis/how-to/query-embedding-models/)
+schema = 2
+base_model = "alibaba/qwen3-embedding-8b"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "qwen"
-release_date = "2025-06-05"
-last_updated = "2026-03-17"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = false
-
-[cost]
-input = 0.10
-output = 0.00
 
 [limit]
-context = 32_768
-output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.11215
+
+[cost.text.output]
+price = 0

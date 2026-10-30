@@ -1,0 +1,23 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists this route as text in, text out but prices
+# input and output images; it keeps the lab's image MIME types (video isn't listed).
+# Images: POST /v3/images/generations only (https://www.edenai.co/docs/v3/llms/image-generation)
+schema = 2
+base_model = "google/gemini-nano-banana-2.1"
+name = "Nano Banana 2.1 (Vertex AI)"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text", "image/png", "image/jpeg"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "medium", "high"] }
+structured_output = false
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

@@ -1,0 +1,38 @@
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [api] override.
+# Model IDs, routes and Geo CRIS pricing (= in-region): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-terra.html
+# Effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max, matching OpenAI-native 6.1 Terra (https://developers.openai.com/api/docs/models/gpt-6.1-terra) and the Bedrock GPT-5.6 Terra profiles (none..max verified there); not yet re-tested live on this model.
+# Priority and Flex are not supported for this model (model card), so no service tiers.
+# Columns: input / 30m cache write / cache read / output (USD per 1M tokens); above 272K input tokens the long-context rows apply.
+# v2 cache: Converse supports implicit caching only (cachePoint unsupported; explicit caching is Responses-only per the model card) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html.
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); the GPT-6.1 Sol and 5.6 Terra profiles reject them live. No per-turn effort on Converse.
+# Structured outputs: Converse json_schema via outputConfig.textFormat plus additionalModelRequestFields.text.format.strict (model card "JSON Schema output on bedrock-runtime").
+# Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card says Converse rejects document blocks, so no application/pdf here.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+name = "GPT-6.1 Terra (US)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.055, write = { "30m" = 1.375 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2.2
+cache = { read = 0.11, write = { "30m" = 2.75 } }
+
+[cost.text.output]
+price = 5.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 8.25

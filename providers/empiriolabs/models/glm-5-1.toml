@@ -1,27 +1,36 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/glm-5-1.md
+# Effort: reasoning_effort = none|low|medium|high|max
+#   (model page: each level sets a bounded thinking budget, "translated into enable_thinking and thinking_budget for the model service")
+# Budget: thinking_budget (integer reasoning tokens)
+# Cache: model page prices an "Implicit cache read" row.
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/glm-5-1:generateContent
+schema = 2
 base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1"
-last_updated = "2026-06-12"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 38_912
-
-[cost]
-input = 0.825
-output = 3.301
-cache_read = 0.165
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 1.1
-output = 3.851
-cache_read = 0.22
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 38_912 } }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 202_000
 output = 128_000
+
+[cost.text.input]
+price = 0.825
+cache = { read = 0.165 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.1
+cache = { read = 0.22 }
+
+[cost.text.output]
+price = 3.301
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.851

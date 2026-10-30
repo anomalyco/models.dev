@@ -1,0 +1,15 @@
+schema = 2
+base_model = "rekaai/reka-edge"
+
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[limit]
+output = 16_384
+
+[cost.text.input]
+price = 0.1058
+
+[cost.text.output]
+price = 0.1058

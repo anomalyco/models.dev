@@ -1,13 +1,27 @@
 # Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
 # https://docs.z.ai/guides/llm/glm-5.3-flash
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 13056/13264 -> 13056/13278; 13056/13264 -> 13056/13278]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 13312/13569 -> 0/13569 (reasoning tokens 7 -> 23); 12672/12929 -> 0/12929 (reasoning tokens 7 -> 11)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12928/13074 -> 0/13124; 12928/13074 -> 0/13124]
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+system_updates = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

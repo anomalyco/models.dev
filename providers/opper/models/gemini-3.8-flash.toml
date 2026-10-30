@@ -2,15 +2,22 @@
 # All five members have params but omit params.temperature; Opper drops sampling controls
 # for such cards before dispatch, so temperature is accepted but not respected.
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
+# Cache: OpenAI and Gemini cache automatically with no flag; https://docs.opper.ai/build/gateway/prompt-caching (2026-10-21).
+schema = 2
 base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+structured_output = true
 temperature = false
 
-reasoning_options = []
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.825
-output = 4.125
-cache_read = 0.0825
+[cost.text.input]
+price = 0.825
+cache = { read = 0.0825 }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 4.125

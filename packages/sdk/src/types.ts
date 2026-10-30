@@ -81,7 +81,16 @@ export interface ModelCost extends Cost {
 export type Modality = "text" | "audio" | "image" | "video" | "pdf"
 
 /** A model's specialized behavioral contract. Omitted for standard generative models. */
-export type ModelType = "decision"
+export type ModelType =
+  | "chat"
+  | "image"
+  | "video"
+  | "embedding"
+  | "reranking"
+  | "decision"
+  | "transcription"
+  | "speech"
+  | "realtime"
 
 export interface Modalities {
   input: Modality[]

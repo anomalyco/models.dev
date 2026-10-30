@@ -5,6 +5,8 @@
 # reasoning.effort = "low"|"medium"|"high"|"xhigh". Token budget: not documented.
 # Anthropic Messages: POST https://api.deepinfra.com/anthropic/v1/messages;
 # toggle: thinking.enabled = true|false; effort and token budget: not documented.
+# OpenAI Responses: POST https://api.deepinfra.com/v1/responses (reasoning, tools,
+# previous_response_id, prompt_cache_key, prompt_cache_options, service_tier).
 # Native: POST https://api.deepinfra.com/v1/inference/{model_name}; request fields
 # are model-schema-specific, with no shared reasoning control documented.
 # Sources:
@@ -12,7 +14,10 @@
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://docs.deepinfra.com/api-reference/chat-completions/anthropic-messages
 # https://docs.deepinfra.com/apis/deepinfra-native
+# https://docs.deepinfra.com/api-reference/responses/openai-responses
+# OpenAPI (all three APIs): https://api.deepinfra.com/openapi.json (accessed 2026-10-21)
 name = "Deep Infra"
 env = ["DEEPINFRA_API_KEY"]
 npm = "@ai-sdk/deepinfra"
+opencodeai = "@opencode/ai/providers/deepinfra"
 doc = "https://deepinfra.com/models"

@@ -1,7 +1,13 @@
+schema = 2
 base_model = "google/gemma-3-4b-it"
 name = "Gemma 3 4B IT (Deep Infra)"
+
+[capabilities]
+tools = { supported = true }
 structured_output = true
 
-[cost]
-input = 0.05
-output = 0.1
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.1

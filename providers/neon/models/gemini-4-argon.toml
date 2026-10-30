@@ -1,0 +1,32 @@
+# Cost: https://neon.com/models.json gemini-4-argon (USD / 1M tokens).
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high on
+# /gemini/v1beta; `minimal` is rejected: "Thinking level is unsupported: THINKING_LEVEL_MINIMAL".
+# On /v1/chat/completions the Neon gateway currently rejects reasoning_effort for this
+# model ("Unknown name \"reasoning_effort\" at 'generation_config'"); without it the
+# model reasons by default, and tools and streaming work.
+# The Neon gateway answers "Model gemini-4-argon does not support the temperature parameter".
+# Measured 2026-10-26.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-26), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-26).
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.generate-content]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/gemini/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20

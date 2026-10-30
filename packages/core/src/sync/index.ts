@@ -1,12 +1,26 @@
 import path from "node:path";
 import { lstat, mkdir, readdir, rm } from "node:fs/promises";
+import { existsSync, readFileSync } from "node:fs";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
-import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { AuthoredModel, AuthoredModelShape, type Model, type Provider } from "../schema.js";
+import { resolveProtocol } from "../generate-v2.js";
+import {
+  formatModelV2,
+  type InheritedFlags,
+  multiplierModes,
+  patchModelV2,
+  providerModelToV2,
+  resolvedFlags,
+  sameV1Model,
+  withoutModeCosts,
+} from "../model-file-v2.js";
+import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
+import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -19,6 +33,7 @@ import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
+import { engy } from "./providers/engy.js";
 import { fireworksAi } from "./providers/fireworks-ai.js";
 import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
@@ -32,13 +47,17 @@ import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
+import { nearai } from "./providers/nearai.js";
+import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
+import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
+import { morph } from "./providers/morph.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -73,13 +92,11 @@ export type ExistingModel = z.infer<typeof ExistingModelType>;
 export type SyncedFullModel = Omit<z.infer<typeof AuthoredModelShape>, "id">;
 export type SyncedBaseModel = Omit<z.infer<typeof SyncedBaseModel>, "id">;
 export type SyncedModel = SyncedFullModel | SyncedBaseModel;
-export type SyncedMetadata = Omit<z.infer<typeof ModelMetadata>, "id">;
 
 export interface SyncProvider<SourceModel> {
   id: string;
   name: string;
   modelsDir: string;
-  metadataNamespace?: string;
   /**
    * Do not create new local TOMLs for remote-only models. Instead open one
    * deduped GitHub issue per missing model ID.
@@ -93,7 +110,6 @@ export interface SyncProvider<SourceModel> {
   preserveDescriptions?: boolean;
   /** Replace existing leading comments with translateModel.header. */
   authoritativeHeaders?: boolean;
-  sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
   /**
    * Remote ID to report when translateModel skips a source model. Return
@@ -107,6 +123,8 @@ export interface SyncProvider<SourceModel> {
    */
   missingModelID?(model: SourceModel): string | undefined;
   skippedNotice?(ids: string[]): string[];
+  /** Notices about the source list as a whole, such as a model the module expects but the source lacks. */
+  sourceNotices?(models: SourceModel[]): string[];
   fetchModels(): Promise<unknown>;
   parseModels(raw: unknown): SourceModel[];
   translateModel(
@@ -114,18 +132,42 @@ export interface SyncProvider<SourceModel> {
     context: {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
+      /** The existing file's TOML. */
+      v2?(id: string): Record<string, unknown> | undefined;
     },
   ): {
     id: string;
     model: SyncedModel;
-    metadata?: { id: string; model: SyncedMetadata };
     /**
      * Leading comment block for the written file (e.g. the wire-path header
      * every toggle reasoning control requires). Existing headers win unless
      * authoritativeHeaders is enabled.
      */
     header?: string;
-  } | undefined;
+    /**
+     * v2 values the source states that v1 fields can't carry (e.g. a price per
+     * cache TTL), keyed by dotted path as in `base_model_omit`. Each replaces
+     * the value at its path in a v2 file after the v1 patch, and a v2 file is
+     * rewritten when one differs even if its v1 view is unchanged. A function
+     * maps the current value to the new one (undefined removes it), for v2 data
+     * that shares a field with v1 data, such as time-of-day price overrides
+     * next to context tiers.
+     */
+    v2Set?: Record<string, unknown>;
+    /** Source data the module skipped, listed with the sync's notices. */
+    notices?: string[];
+  } | SyncedV2Model | undefined;
+}
+
+/**
+ * A model written straight as a v2 file, for data v1 fields can't carry (media
+ * model types, per-unit prices, API protocols). `v2` is the file body, written
+ * as is; existing header comments win over `header`, as for other models.
+ */
+export interface SyncedV2Model {
+  id: string;
+  v2: Record<string, unknown>;
+  header?: string;
 }
 
 export interface SyncResult {
@@ -142,6 +184,7 @@ export interface SyncResult {
 
 export const providers: {
   aiand: SyncProvider<any>;
+  aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
@@ -154,6 +197,7 @@ export const providers: {
   digitalocean: SyncProvider<any>;
   edenai: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
+  engy: SyncProvider<any>;
   "fireworks-ai": SyncProvider<any>;
   friendli: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
@@ -168,13 +212,17 @@ export const providers: {
   meta: SyncProvider<any>;
   mistral: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
+  nearai: SyncProvider<any>;
+  "novita-ai": SyncProvider<any>;
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
+  prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
+  morph: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -182,6 +230,7 @@ export const providers: {
   xai: SyncProvider<any>;
 } = {
   aiand,
+  aimlapi,
   ambient,
   anthropic,
   baseten,
@@ -194,6 +243,7 @@ export const providers: {
   digitalocean,
   edenai,
   empiriolabs,
+  engy,
   "fireworks-ai": fireworksAi,
   friendli,
   "github-copilot": githubCopilot,
@@ -208,13 +258,17 @@ export const providers: {
   meta,
   mistral,
   "nano-gpt": nanoGpt,
+  nearai,
+  "novita-ai": novitaAi,
   ofox,
   "ollama-cloud": ollamaCloud,
   openai,
   openrouter,
   ovhcloud,
   pioneer,
+  prime,
   requesty,
+  morph,
   tinfoil,
   vercel,
   venice,
@@ -224,6 +278,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "aimlapi",
     "crossmodel",
     "edenai",
     "empiriolabs",
@@ -234,13 +289,15 @@ export const groups = {
     "llmgateway-providers",
     "merge-gateway",
     "nano-gpt",
+    "novita-ai",
     "ofox",
     "requesty",
     "openrouter",
+    "prime",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -261,20 +318,26 @@ export async function syncProvider<SourceModel>(
 ): Promise<SyncResult> {
   console.log(`\nSyncing ${provider.name}...`);
 
-  const existingState = await readExisting(provider.modelsDir);
+  const npm = providerNpm(provider.modelsDir);
+  const existingState = await readExisting(provider.modelsDir, npm);
   const { models: existing, brokenSymlinks } = existingState;
   let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, {
     model: z.infer<typeof SyncedAuthoredModel>;
-    content: string;
     header: string;
+    v2Set?: Record<string, unknown>;
   }>();
+  const desiredV2 = new Map<string, { content: string }>();
   const caseNormalizedDesiredPaths = new Map<string, string>();
-  const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
   const skippedRemote: string[] = [];
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
+  const translateNotices: string[] = [];
+  for (const notice of provider.sourceNotices?.(sourceModels) ?? []) {
+    translateNotices.push(notice);
+    console.warn(notice);
+  }
 
   for (const sourceModel of sourceModels) {
     let translated: ReturnType<typeof provider.translateModel>;
@@ -285,6 +348,9 @@ export async function syncProvider<SourceModel>(
         },
         authored(id) {
           return existing.get(`${id}.toml`)?.authored;
+        },
+        v2(id) {
+          return existing.get(`${id}.toml`)?.v2;
         },
       });
     } catch (error) {
@@ -299,6 +365,13 @@ export async function syncProvider<SourceModel>(
       const missingID = provider.missingModelID?.(sourceModel);
       if (missingID !== undefined) missingRemote.add(missingID);
       continue;
+    }
+
+    if ("notices" in translated) {
+      for (const notice of translated.notices ?? []) {
+        translateNotices.push(notice);
+        console.warn(notice);
+      }
     }
 
     const relativePath = `${translated.id}.toml`;
@@ -317,21 +390,15 @@ export async function syncProvider<SourceModel>(
     }
     caseNormalizedDesiredPaths.set(relativePath.toLowerCase(), relativePath);
 
-    if (translated.metadata !== undefined) {
-      const parsedMetadata = ModelMetadata.safeParse({
-        id: translated.metadata.id,
-        ...stripUndefined(translated.metadata.model),
-      });
-      if (!parsedMetadata.success) {
-        parsedMetadata.error.cause = { provider: provider.id, metadata: translated.metadata.id };
-        throw parsedMetadata.error;
-      }
-      const metadataPath = `${translated.metadata.id}.toml`;
-      if (desiredMetadata.has(metadataPath)) throw new Error(`Duplicate synced metadata path: ${metadataPath}`);
-      desiredMetadata.set(metadataPath, {
-        model: parsedMetadata.data,
-        content: formatMetadataToml(parsedMetadata.data),
-      });
+    if ("v2" in translated) {
+      // Validates the file the same way readers will translate it.
+      modelV2ToV1({ ...translated.v2, id: translated.id }, { provider: provider.id, path: relativePath }, npm);
+      const translatedHeader = translated.header === undefined ? "" : leadingComments(translated.header);
+      const header = provider.authoritativeHeaders
+        ? translatedHeader
+        : existing.get(relativePath)?.header || translatedHeader;
+      desiredV2.set(relativePath, { content: header + formatModelV2(translated.v2) });
+      continue;
     }
 
     const translatedModel = provider.preserveBaseModels === false
@@ -341,15 +408,10 @@ export async function syncProvider<SourceModel>(
     let resolvedReasoning: boolean | undefined;
     let baseReasoningOptions: unknown;
     if (translatedBase !== undefined) {
-      if (translated.metadata?.id === translatedBase) {
-        resolvedReasoning = translated.metadata.model.reasoning;
-        baseReasoningOptions = translated.metadata.model.reasoning_options;
-      } else {
-        modelMetadata ??= await readModelMetadata(provider.modelsDir);
-        const canonicalReasoning = modelMetadata[translatedBase]?.reasoning;
-        resolvedReasoning = typeof canonicalReasoning === "boolean" ? canonicalReasoning : undefined;
-        baseReasoningOptions = modelMetadata[translatedBase]?.reasoning_options;
-      }
+      modelMetadata ??= await readModelMetadata(provider.modelsDir);
+      const canonicalReasoning = modelMetadata[translatedBase]?.reasoning;
+      resolvedReasoning = typeof canonicalReasoning === "boolean" ? canonicalReasoning : undefined;
+      baseReasoningOptions = modelMetadata[translatedBase]?.reasoning_options;
     } else {
       resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
     }
@@ -364,7 +426,10 @@ export async function syncProvider<SourceModel>(
       : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...withDescription,
+      ...preserveStructuredOutput(
+        preserveType(withDescription, existing.get(relativePath)?.authored),
+        existing.get(relativePath)?.authored,
+      ),
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
@@ -379,69 +444,43 @@ export async function syncProvider<SourceModel>(
       : (existing.get(relativePath)?.header || translatedHeader) ?? "";
     desired.set(relativePath, {
       model: parsed.data,
-      content: header + formatToml(parsed.data),
       header,
+      v2Set: translated.v2Set,
     });
   }
 
   const files: SyncResult["files"] = [];
+  const v2Notices: string[] = [];
   let unchanged = 0;
-
-  const metadataDir = modelMetadataDir(provider.modelsDir);
-  for (const [relativePath, file] of desiredMetadata) {
-    const filePath = await safeWritePath(metadataDir, relativePath);
-    const currentFile = Bun.file(filePath);
-    const currentText = await currentFile.exists() ? await currentFile.text() : undefined;
-    const current = currentText !== undefined
-      ? ModelMetadata.safeParse({
-          id: relativePath.slice(0, -5),
-          ...Bun.TOML.parse(currentText) as Record<string, unknown>,
-        })
-      : undefined;
-    if (current?.success && stable(current.data) === stable(file.model)) continue;
-    files.push({ status: current === undefined ? "created" : "updated", path: filePath });
-    if (options.dryRun) {
-      console.log(`Would ${current === undefined ? "create" : "update"} metadata ${relativePath}`);
-    } else {
-      await mkdir(path.dirname(filePath), { recursive: true });
-      await Bun.write(filePath, (currentText !== undefined ? leadingComments(currentText) : "") + file.content);
-    }
-  }
-
-  if (provider.metadataNamespace !== undefined) {
-    if (!/^[a-z0-9-]+$/.test(provider.metadataNamespace)) {
-      throw new Error(`Invalid metadata namespace: ${provider.metadataNamespace}`);
-    }
-    const namespaceDir = path.join(metadataDir, provider.metadataNamespace);
-    for (const { file } of await tomlFiles(namespaceDir)) {
-      const relativePath = path.join(provider.metadataNamespace, file).split(path.sep).join("/");
-      if (desiredMetadata.has(relativePath) || provider.deleteMissing === false) continue;
-      if (options.newOnly) {
-        console.log(`Skipping metadata removal in new-only mode: ${relativePath}`);
-        continue;
-      }
-      const filePath = await safeWritePath(metadataDir, relativePath);
-      files.push({ status: "deleted", path: filePath });
-      if (options.dryRun) {
-        console.log(`Would remove metadata ${relativePath}`);
-      } else {
-        await rm(filePath, { force: true });
-      }
-    }
-  }
 
   for (const [relativePath, file] of desired) {
     const filePath = await safeWritePath(provider.modelsDir, relativePath, true);
     const current = existing.get(relativePath);
 
     if (current === undefined) {
+      modelMetadata ??= await readModelMetadata(provider.modelsDir);
+      const model = withBaseModalities(file.model, modelMetadata);
+      const content = v2Content(
+        relativePath,
+        file.header,
+        undefined,
+        undefined,
+        model,
+        v2Notices,
+        await newModelProtocol(provider.modelsDir, file.model),
+        undefined,
+        resolvedFlags(model, baseMetadata(model, modelMetadata)).reasoning,
+        file.v2Set,
+        npm,
+      );
+      if (content === undefined) continue;
       files.push({ status: "created", path: filePath });
       if (options.dryRun) {
         console.log(`Would create ${relativePath}`);
       } else {
         await mkdir(path.dirname(filePath), { recursive: true });
         if (await isSymlink(filePath)) await rm(filePath, { force: true });
-        await Bun.write(filePath, file.content);
+        await Bun.write(filePath, content);
       }
       continue;
     }
@@ -451,32 +490,73 @@ export async function syncProvider<SourceModel>(
       continue;
     }
 
+    modelMetadata ??= await readModelMetadata(provider.modelsDir);
+    const model = withBaseModalities(file.model, modelMetadata);
     const headerChanged = provider.authoritativeHeaders && current.header !== file.header;
-    if (
-      headerChanged
-      || !(provider.sameModel?.(current.authored, file.model)
-        ?? sameModel(relativePath, current.authored, file.model))
-    ) {
-      if (options.newOnly) {
+    // `reasoning` and `tool_call` compare resolved against the lab, so a switch
+    // between inheriting the lab's value and overriding it is still a change.
+    const resolved = {
+      before: resolvedFlags(current.authored, baseMetadata(current.authored, modelMetadata)),
+      after: resolvedFlags(model, baseMetadata(model, modelMetadata)),
+    };
+    const sameFlags = resolved.before.reasoning === resolved.after.reasoning
+      && resolved.before.tool_call === resolved.after.tool_call;
+    if (!headerChanged && sameFlags && sameV1Model(current.authored, model) && hasV2Values(current.v2, file.v2Set)) {
+      unchanged++;
+      continue;
+    }
+    const content = v2Content(
+      relativePath,
+      provider.authoritativeHeaders ? file.header : current.header,
+      current.v2,
+      current.authored,
+      model,
+      v2Notices,
+      undefined,
+      resolved,
+      resolved.after.reasoning,
+      file.v2Set,
+      npm,
+    );
+    if (content === undefined || options.newOnly) {
+      unchanged++;
+      continue;
+    }
+    files.push({ status: "updated", path: filePath });
+    if (options.dryRun) {
+      console.log(`Would update ${relativePath}`);
+    } else {
+      if (current.symlink) await rm(filePath, { force: true });
+      await Bun.write(filePath, content);
+    }
+  }
+
+  for (const [relativePath, file] of desiredV2) {
+    const filePath = await safeWritePath(provider.modelsDir, relativePath, true);
+    const current = existing.get(relativePath);
+    if (current !== undefined) {
+      if (
+        current.text === file.content
+        || (current.symlink && provider.preserveSymlinks)
+        || options.newOnly
+      ) {
         unchanged++;
         continue;
       }
-
-      files.push({ status: "updated", path: filePath });
-      if (options.dryRun) {
-        console.log(`Would update ${relativePath}`);
-      } else {
-        if (current.symlink) await rm(filePath, { force: true });
-        await Bun.write(filePath, file.content);
-      }
+    }
+    files.push({ status: current === undefined ? "created" : "updated", path: filePath });
+    if (options.dryRun) {
+      console.log(`Would ${current === undefined ? "create" : "update"} ${relativePath}`);
     } else {
-      unchanged++;
+      await mkdir(path.dirname(filePath), { recursive: true });
+      if (await isSymlink(filePath)) await rm(filePath, { force: true });
+      await Bun.write(filePath, file.content);
     }
   }
 
   const missingLocal: string[] = [];
   for (const relativePath of new Set([...existing.keys(), ...brokenSymlinks])) {
-    if (desired.has(relativePath)) continue;
+    if (desired.has(relativePath) || desiredV2.has(relativePath)) continue;
     if (missingRemote.has(relativePath.slice(0, -5))) {
       unchanged++;
       continue;
@@ -507,6 +587,8 @@ export async function syncProvider<SourceModel>(
   }
 
   const notices = [
+    ...translateNotices,
+    ...v2Notices,
     ...missingReasoning.values(),
     ...provider.skippedNotice?.(skippedRemote) ?? [],
     ...provider.missingNotice?.(missingLocal) ?? [],
@@ -549,6 +631,123 @@ export async function syncProvider<SourceModel>(
   return result;
 }
 
+// Writes a synced model into a v2 file: a patch of the existing file, or a new
+// one. Returns undefined (and a notice) when the v2 file can't reproduce the
+// synced v1 fields, so the file is left for a manual update.
+function v2Content(
+  relativePath: string,
+  header: string,
+  doc: Record<string, unknown> | undefined,
+  before: ExistingModel | undefined,
+  model: z.infer<typeof SyncedAuthoredModel>,
+  notices: string[],
+  protocol: string | undefined,
+  resolved: { before: InheritedFlags; after: InheritedFlags } | undefined,
+  // The model's resolved `reasoning`, as v1 leaves out a reasoning price without it.
+  reasoning: boolean | undefined,
+  v2Set?: Record<string, unknown>,
+  providerNpm?: string,
+) {
+  const { id, ...synced } = model;
+  try {
+    const carried = doc === undefined || before === undefined
+      ? []
+      : multiplierModes(doc, before, synced);
+    const after = withoutModeCosts(synced, carried);
+    const next = doc === undefined || before === undefined
+      ? providerModelToV2(after, protocol, providerNpm)
+      : patchModelV2(doc, withoutModeCosts(before, carried), after, resolved, providerNpm);
+    for (const [key, value] of Object.entries(v2Set ?? {})) setPath(next, key, value);
+    const content = header + formatModelV2(next);
+    const translated = withoutV1ReasoningCost(
+      modelV2ToV1({ ...(Bun.TOML.parse(content) as Record<string, unknown>), id }, { modelPath: relativePath }, providerNpm),
+      reasoning,
+    );
+    if (sameV1Model(withoutModeCosts(translated, carried), after)) return content;
+    throw new Error("the v2 file does not reproduce the synced fields");
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const notice = `Could not write v2 model ${relativePath}: ${message}`;
+    notices.push(notice);
+    console.warn(notice);
+    return undefined;
+  }
+}
+
+// Whether a v2 file already holds every `v2Set` value.
+function hasV2Values(doc: Record<string, unknown>, v2Set: Record<string, unknown> | undefined) {
+  return Object.entries(v2Set ?? {}).every(([key, value]) => {
+    const current = getPath(doc, key);
+    return stable(current) === stable(v2Value(value, current));
+  });
+}
+
+function getPath(doc: Record<string, unknown>, key: string) {
+  return key.split(".").reduce<unknown>(
+    (node, part) => (node !== null && typeof node === "object" ? (node as Record<string, unknown>)[part] : undefined),
+    doc,
+  );
+}
+
+function v2Value(value: unknown, current: unknown) {
+  return typeof value === "function" ? value(structuredClone(current)) : value;
+}
+
+function setPath(doc: Record<string, unknown>, key: string, value: unknown) {
+  const parts = key.split(".");
+  const next = v2Value(value, getPath(doc, key));
+  let node = doc;
+  for (const part of parts.slice(0, -1)) {
+    if (node[part] === null || typeof node[part] !== "object") {
+      if (next === undefined) return;
+      node[part] = {};
+    }
+    node = node[part] as Record<string, unknown>;
+  }
+  if (next === undefined) delete node[parts.at(-1)!];
+  else node[parts.at(-1)!] = next;
+}
+
+// A new v2 file puts `provider` and `interleaved` fields under the model's API
+// protocol, resolved from provider.toml.
+async function newModelProtocol(modelsDir: string, model: z.infer<typeof SyncedAuthoredModel>) {
+  const file = Bun.file(path.join(path.dirname(modelsDir), "provider.toml"));
+  if (!(await file.exists())) return undefined;
+  const provider = {
+    ...(Bun.TOML.parse(await file.text()) as Record<string, unknown>),
+    id: path.basename(path.dirname(modelsDir)),
+  } as unknown as Provider;
+  const shape = "provider" in model ? model.provider?.shape : undefined;
+  const npm = ("provider" in model ? model.provider?.npm : undefined) ?? provider.npm;
+  return resolveProtocol(model as unknown as Model, provider, npm, shape);
+}
+
+function baseMetadata(
+  model: Record<string, unknown>,
+  modelMetadata: Record<string, Record<string, unknown>>,
+) {
+  return typeof model.base_model === "string" ? modelMetadata[model.base_model] : undefined;
+}
+
+// v2 files list both modality sides, but a synced base_model override only lists
+// the side that differs from the lab. The other side is the lab's.
+function withBaseModalities<T extends z.infer<typeof SyncedAuthoredModel>>(
+  model: T,
+  modelMetadata: Record<string, Record<string, unknown>>,
+): T {
+  const modalities = model.modalities as { input?: string[]; output?: string[] } | undefined;
+  if (!("base_model" in model) || typeof model.base_model !== "string") return model;
+  if (modalities === undefined || (modalities.input && modalities.output)) return model;
+  const base = modelMetadata[model.base_model]?.modalities as typeof modalities;
+  return {
+    ...model,
+    modalities: {
+      input: modalities.input ?? base?.input,
+      output: modalities.output ?? base?.output,
+    },
+  };
+}
+
 export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
   if (existing?.base_model === undefined) return model;
   const translatedBase = "base_model" in model ? model.base_model : undefined;
@@ -562,6 +761,20 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
     base_model: existing.base_model,
     base_model_omit: existing.base_model_omit,
   };
+}
+
+// Source APIs rarely report a model category, so a curated `type` is kept
+// unless the provider sets one.
+export function preserveType(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
+  if (model.type !== undefined || existing?.type === undefined) return model;
+  return { ...model, type: existing.type } as SyncedModel;
+}
+
+// Lab files no longer carry structured_output (it is per host in v2), so a
+// curated host value is kept unless the provider reports one.
+export function preserveStructuredOutput(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
+  if (model.structured_output !== undefined || existing?.structured_output === undefined) return model;
+  return { ...model, structured_output: existing.structured_output } as SyncedModel;
 }
 
 export function preserveDescription(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
@@ -622,12 +835,22 @@ export function syncProviderMatrix() {
   };
 }
 
-async function readExisting(modelsDir: string) {
+// The provider's `npm`, which a model's first API table without its own `aisdk` uses in v1.
+function providerNpm(modelsDir: string) {
+  const file = path.join(path.dirname(modelsDir), "provider.toml");
+  if (!existsSync(file)) return undefined;
+  const npm = (Bun.TOML.parse(readFileSync(file, "utf8")) as Record<string, unknown>).npm;
+  return typeof npm === "string" ? npm : undefined;
+}
+
+async function readExisting(modelsDir: string, npm?: string) {
   const existing = new Map<string, {
     authored: ExistingModel;
     toml: ExistingModel;
     header: string;
+    text: string;
     symlink: boolean;
+    v2: Record<string, unknown>;
   }>();
   const brokenSymlinks = new Set<string>();
   let modelMetadata: Record<string, Record<string, unknown>> | undefined;
@@ -644,21 +867,27 @@ async function readExisting(modelsDir: string) {
       }
       throw error;
     }
-    const parsed = ExistingModel.safeParse(Bun.TOML.parse(text));
+    const v2 = Bun.TOML.parse(text) as Record<string, unknown>;
+    if (!isSchemaV2(v2)) throw new Error(`Model file is not schema = 2: ${filePath}`);
+    const { id: _id, ...translated } = modelV2ToV1({ ...v2, id: file.slice(0, -5) }, { modelPath: filePath }, npm);
+    const parsed = ExistingModel.safeParse(translated);
     if (!parsed.success) {
       parsed.error.cause = { path: filePath };
       throw parsed.error;
     }
 
-    const authored = parsed.data as ExistingModel;
-    if (authored.base_model !== undefined && modelMetadata === undefined) {
+    const own = parsed.data as ExistingModel;
+    if (own.base_model !== undefined && modelMetadata === undefined) {
       modelMetadata = await readModelMetadata(modelsDir);
     }
-    const toml = authored.base_model === undefined
-      ? authored
-      : resolveBaseModel(authored, modelMetadata ?? {}, filePath);
+    const resolved = own.base_model === undefined
+      ? own
+      : resolveBaseModel(own, modelMetadata ?? {}, filePath);
+    // As in the v1 output, no reasoning price when the resolved model doesn't reason.
+    const authored = withoutV1ReasoningCost(own, resolved.reasoning);
+    const toml = withoutV1ReasoningCost(resolved);
 
-    existing.set(file, { authored, toml, header: leadingComments(text), symlink });
+    existing.set(file, { authored, toml, header: leadingComments(text), text, symlink, v2 });
   }
 
   return { models: existing, brokenSymlinks, modelMetadata };
@@ -711,7 +940,7 @@ async function readModelMetadata(modelsDir: string) {
     const toml = Bun.TOML.parse(
       await Bun.file(modelPath).text(),
     ) as Record<string, unknown>;
-    result[modelID] = inheritableModelMetadata(toml);
+    result[modelID] = inheritableModelMetadata(labModelV2ToV1({ ...toml, id: modelID }, { modelPath }));
   }
 
   return result;
@@ -846,18 +1075,6 @@ function summarize(
   };
 }
 
-function sameModel(
-  relativePath: string,
-  current: ExistingModel,
-  desired: z.infer<typeof SyncedAuthoredModel>,
-) {
-  const parsed = SyncedAuthoredModel.safeParse({
-    id: relativePath.slice(0, -5),
-    ...current,
-  });
-  return parsed.success && stable(parsed.data) === stable(desired);
-}
-
 function stable(value: unknown): string {
   if (Array.isArray(value)) {
     const items = value.map(stable);
@@ -929,15 +1146,6 @@ async function writeReport(target: string, results: SyncResult[]) {
   await Bun.write(".sync/model-sync-report.md", `${lines.join("\n")}\n`);
 }
 
-function quote(value: string) {
-  return `"${value
-    .replaceAll("\\", "\\\\")
-    .replaceAll('"', '\\"')
-    .replaceAll("\n", "\\n")
-    .replaceAll("\r", "\\r")
-    .replaceAll("\t", "\\t")}"`;
-}
-
 // Preserve the leading comment block (header) authored at the top of a TOML file.
 // `Bun.TOML.parse` discards comments, so the serializer must re-attach them or
 // every rewrite would silently delete hand-authored documentation.
@@ -953,187 +1161,6 @@ function leadingComments(text: string) {
   }
   while (header.length > 0 && header[header.length - 1]?.trim() === "") header.pop();
   return header.length > 0 ? `${header.join("\n")}\n` : "";
-}
-
-function formatInteger(n: number) {
-  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "_");
-}
-
-function formatNumber(n: number) {
-  return Number.isInteger(n) ? formatInteger(n) : String(n);
-}
-
-function formatKey(value: string) {
-  return /^[A-Za-z0-9_-]+$/.test(value) ? value : quote(value);
-}
-
-function formatInlineValue(value: unknown): string {
-  if (typeof value === "string") return quote(value);
-  if (typeof value === "number") return formatNumber(value);
-  if (typeof value === "boolean") return String(value);
-  if (Array.isArray(value)) return `[${value.map(formatInlineValue).join(", ")}]`;
-  if (value !== null && typeof value === "object") {
-    const fields = Object.entries(value)
-      .filter(([, item]) => item !== undefined)
-      .map(([key, item]) => `${formatKey(key)} = ${formatInlineValue(item)}`);
-    return `{ ${fields.join(", ")} }`;
-  }
-  throw new Error("Cannot serialize null or undefined as TOML");
-}
-
-function formatReasoningValue(value: string | null) {
-  return value === null ? quote("null") : quote(value);
-}
-
-const ReasoningEffortOrder = new Map<string | null, number>([
-  ["none", 0],
-  ["minimal", 1],
-  ["low", 2],
-  ["medium", 3],
-  ["high", 4],
-  ["xhigh", 5],
-  ["max", 6],
-  ["default", 7],
-  [null, 8],
-]);
-
-function sortReasoningValues(values: Array<string | null>) {
-  return [...values].sort((a, b) => {
-    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
-      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
-    return order || formatReasoningValue(a).localeCompare(formatReasoningValue(b));
-  });
-}
-
-export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
-  const lines: string[] = [];
-
-  if ("base_model" in model && model.base_model !== undefined) {
-    lines.push(`base_model = ${quote(model.base_model)}`);
-  }
-  if ("base_model_omit" in model && model.base_model_omit !== undefined) {
-    lines.push(`base_model_omit = [${model.base_model_omit.map(quote).join(", ")}]`);
-  }
-  if (model.type !== undefined) lines.push(`type = ${quote(model.type)}`);
-  if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
-  if (model.description !== undefined) lines.push(`description = ${quote(model.description)}`);
-  if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);
-  if (model.release_date !== undefined) lines.push(`release_date = ${quote(model.release_date)}`);
-  if (model.last_updated !== undefined) lines.push(`last_updated = ${quote(model.last_updated)}`);
-  if (model.attachment !== undefined) lines.push(`attachment = ${model.attachment}`);
-  if (model.reasoning !== undefined) lines.push(`reasoning = ${model.reasoning}`);
-  if (model.temperature !== undefined) lines.push(`temperature = ${model.temperature}`);
-  if (model.tool_call !== undefined) lines.push(`tool_call = ${model.tool_call}`);
-  if (model.structured_output !== undefined) {
-    lines.push(`structured_output = ${model.structured_output}`);
-  }
-  if (model.knowledge !== undefined) lines.push(`knowledge = ${quote(model.knowledge)}`);
-  if (model.open_weights !== undefined) lines.push(`open_weights = ${model.open_weights}`);
-  if (model.status !== undefined) lines.push(`status = ${quote(model.status)}`);
-  if (model.reasoning_options?.length === 0) lines.push("reasoning_options = []");
-
-  if (model.interleaved !== undefined) {
-    lines.push("");
-    if (model.interleaved === true) {
-      lines.push("interleaved = true");
-    } else {
-      lines.push("[interleaved]");
-      lines.push(`field = ${quote(model.interleaved.field)}`);
-    }
-  }
-
-  for (const option of model.reasoning_options ?? []) {
-    lines.push("", "[[reasoning_options]]");
-    lines.push(`type = ${quote(option.type)}`);
-    if (option.type === "effort") {
-      const values = sortReasoningValues(option.values).map(formatReasoningValue).join(", ");
-      lines.push(`values = [${values}]`);
-    }
-    if (option.type === "budget_tokens") {
-      if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
-      if (option.max !== undefined) lines.push(`max = ${formatInteger(option.max)}`);
-    }
-  }
-
-  if (model.cost !== undefined) {
-    lines.push("", "[cost]");
-    if (model.cost.input !== undefined) lines.push(`input = ${formatNumber(model.cost.input)}`);
-    if (model.cost.output !== undefined) lines.push(`output = ${formatNumber(model.cost.output)}`);
-    if (model.cost.reasoning !== undefined) {
-      lines.push(`reasoning = ${formatNumber(model.cost.reasoning)}`);
-    }
-    if (model.cost.cache_read !== undefined) {
-      lines.push(`cache_read = ${formatNumber(model.cost.cache_read)}`);
-    }
-    if (model.cost.cache_write !== undefined) {
-      lines.push(`cache_write = ${formatNumber(model.cost.cache_write)}`);
-    }
-    if (model.cost.input_audio !== undefined) {
-      lines.push(`input_audio = ${formatNumber(model.cost.input_audio)}`);
-    }
-    if (model.cost.output_audio !== undefined) {
-      lines.push(`output_audio = ${formatNumber(model.cost.output_audio)}`);
-    }
-
-    for (const tier of model.cost.tiers ?? []) {
-      lines.push("", "[[cost.tiers]]");
-      if (tier.tier?.size !== undefined) {
-        lines.push(`tier = { type = ${quote(tier.tier.type ?? "context")}, size = ${formatInteger(tier.tier.size)} }`);
-      }
-      if (tier.input !== undefined) lines.push(`input = ${formatNumber(tier.input)}`);
-      if (tier.output !== undefined) lines.push(`output = ${formatNumber(tier.output)}`);
-      if (tier.reasoning !== undefined) lines.push(`reasoning = ${formatNumber(tier.reasoning)}`);
-      if (tier.cache_read !== undefined) lines.push(`cache_read = ${formatNumber(tier.cache_read)}`);
-      if (tier.cache_write !== undefined) lines.push(`cache_write = ${formatNumber(tier.cache_write)}`);
-    }
-  }
-
-  if (model.limit !== undefined) {
-    lines.push("", "[limit]");
-    if (model.limit.context !== undefined) lines.push(`context = ${formatInteger(model.limit.context)}`);
-    if (model.limit.input !== undefined) lines.push(`input = ${formatInteger(model.limit.input)}`);
-    if (model.limit.output !== undefined) lines.push(`output = ${formatInteger(model.limit.output)}`);
-  }
-
-  if (model.modalities !== undefined) {
-    lines.push("", "[modalities]");
-    if (model.modalities.input !== undefined) {
-      lines.push(`input = [${model.modalities.input.map(quote).join(", ")}]`);
-    }
-    if (model.modalities.output !== undefined) {
-      lines.push(`output = [${model.modalities.output.map(quote).join(", ")}]`);
-    }
-  }
-
-  if (model.provider !== undefined) {
-    lines.push("", "[provider]");
-    if (model.provider.npm !== undefined) lines.push(`npm = ${quote(model.provider.npm)}`);
-    if (model.provider.api !== undefined) lines.push(`api = ${quote(model.provider.api)}`);
-    if (model.provider.shape !== undefined) lines.push(`shape = ${quote(model.provider.shape)}`);
-    if (model.provider.body !== undefined) lines.push(`body = ${formatInlineValue(model.provider.body)}`);
-    if (model.provider.headers !== undefined) lines.push(`headers = ${formatInlineValue(model.provider.headers)}`);
-  }
-
-  for (const [name, mode] of Object.entries(model.experimental?.modes ?? {})) {
-    lines.push("", `[experimental.modes.${formatKey(name)}]`);
-    if (mode.cost !== undefined) lines.push(`cost = ${formatInlineValue(mode.cost)}`);
-    if (mode.provider !== undefined) lines.push(`provider = ${formatInlineValue(mode.provider)}`);
-  }
-
-  return `${lines.join("\n")}\n`;
-}
-
-function formatMetadataToml(model: z.infer<typeof ModelMetadata>) {
-  const content = formatToml(model as unknown as z.infer<typeof SyncedAuthoredModel>).trimEnd();
-  const lines = [content];
-  for (const weight of model.weights ?? []) {
-    lines.push("", "[[weights]]");
-    if (weight.label !== undefined) lines.push(`label = ${quote(weight.label)}`);
-    lines.push(`url = ${quote(weight.url)}`);
-    if (weight.format !== undefined) lines.push(`format = ${quote(weight.format)}`);
-    if (weight.quantization !== undefined) lines.push(`quantization = ${quote(weight.quantization)}`);
-  }
-  return `${lines.join("\n")}\n`;
 }
 
 export async function main(args = process.argv.slice(2)) {

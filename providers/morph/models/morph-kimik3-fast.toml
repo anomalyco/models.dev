@@ -1,0 +1,38 @@
+# Source: https://docs.morphllm.com/llms.txt and https://www.morphllm.com/api/models/json?prices=list (direct API list rates; accessed 2026-10-25).
+# Live probes (api.morphllm.com, 2026-10-25): chat, tool_choice required, json_schema and /v1/messages return 200; reasoning arrives in
+# reasoning_content (Chat Completions) and thinking blocks (Messages).
+# Output limit: max_tokens shares the 1,048,576-token window; 1,048,577 returns 400 "Max tokens must not exceed 1048576".
+# Off: reasoning_effort = none returned 0 reasoning tokens on every probe; thinking.type = disabled is ignored, so there is no toggle.
+# Latency-tuned SKU of the same Kimi K3 weights.
+# Effort: reasoning_effort = none|low|high. max (the native default) and xhigh return 400 on this SKU (live 2026-10-25), as does minimal.
+# Input: the lab's image formats except HEIC/HEIF (HEIC was not read live); video returns 400 "Video input is not supported by this model".
+# tools.updates is add only, on Chat Completions: a system message carrying `tools` and no `content` (https://docs.morphllm.com/sdk/components/dynamic-tool-loading); called live 2026-10-25.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Fast"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { tools = { updates = true } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 6
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 22.5

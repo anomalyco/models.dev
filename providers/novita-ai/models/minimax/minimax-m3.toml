@@ -1,0 +1,38 @@
+# https://novita.ai/models/model-detail/minimax-minimax-m3
+# Toggle: thinking.type = enabled|disabled
+# The second public pricing band starts at 524288 context tokens.
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 524_288 } }
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 524_288 } }
+price = 2.4

@@ -1,0 +1,13 @@
+schema = 2
+base_model = "mistral/devstral-2512"
+name = "Devstral 2 2512"
+
+[capabilities]
+tools = { supported = true }
+
+[cost.text.input]
+price = 0.46552
+cache = { read = 0.046552 }
+
+[cost.text.output]
+price = 2.3276

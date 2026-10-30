@@ -1,29 +1,70 @@
+# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
+# tools.search: tool_search on the Responses API only (gpt-5.4 and later, per the model page's Supported tools): https://developers.openai.com/api/docs/guides/tools-tool-search
+# Per-API tools: tool_search is Responses-only (Chat Completions returns 400 "Invalid value: 'tool_search'. Supported values are: 'function' and 'custom'", live 2026-10-26), so tools.search sits on [api.responses]. Strict function tools, tool_choice and custom tools (text, lark and regex) work on both APIs (Chat Completions `ChatCompletionCustomTool`: https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create; live 2026-10-26).
+# gpt-6-astra takes function tools on Chat Completions only with reasoning_effort "none", which it doesn't support (https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/guides/latest-model; live 2026-10-26: 400 "Function tools with reasoning_effort are not supported"), so tools.strict sits on [api.responses]. Custom tools still work there.
 # Pricing: https://developers.openai.com/api/docs/models/gpt-6-astra
 # Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra
 # Ultrafast mode: https://developers.openai.com/api/docs/guides/ultrafast-mode
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Ultrafast (https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6-astra
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+schema = 2
 base_model = "openai/gpt-6-astra"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 10.00
-output = 50.00
-cache_read = 1.00
-cache_write = 12.50
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+store = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority", "ultrafast"]
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 20.00
-output = 75.00
-cache_read = 2.00
-cache_write = 25.00
+[api.responses]
+capabilities = { effort_updates = true, tools = { strict = true, search = true, updates = true } }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" } }
+factor = { text = 6 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }
 
 [experimental.modes.fast]
-cost = { input = 20.00, output = 100.00, cache_read = 2.00, cache_write = 25.00 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }
 
 [experimental.modes.pro]
-provider = { body = { reasoning = { mode = "pro" } } }
+body = { reasoning = { mode = "pro" } }
 
 [experimental.modes.ultrafast]
-cost = { input = 60.00, output = 300.00, cache_read = 6.00, cache_write = 75.00 }
-provider = { body = { service_tier = "ultrafast" } }
+body = { service_tier = "ultrafast" }

@@ -1,15 +1,22 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning (that page says Claude Fable 5 ignores the disable,
+# while the catalog route reports disable_supported = true, which the sync follows).
 # Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-fable-5 (accessed 2026-07-21)
 # The selected route advertises reasoning.effort and supports disabling reasoning;
 # exact effort values are not exposed, so only the verified toggle is listed.
-
+# Cache: default route anthropic is in the explicit caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
+tools = { supported = true }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[cost.text.output]
+price = 50
