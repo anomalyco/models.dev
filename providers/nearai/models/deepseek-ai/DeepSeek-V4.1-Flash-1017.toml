@@ -1,0 +1,29 @@
+# NEAR-hosted TEE route, not the separate OpenRouter-backed deepseek/... route.
+# Text-only serving, pricing and context: https://cloud-api.near.ai/v1/models (2026-10-29).
+# TEE reasoning passthrough: https://docs.near.ai/cloud/reasoning-models
+# https://github.com/nearai/cloud-api/blob/main/crates/api/tests/e2e_all/reasoning.rs
+# Native serving controls: https://recipes.vllm.ai/deepseek-ai/DeepSeek-V4.1-Flash
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: reasoning_effort = low|high|max (shared native/relay levels).
+# Controls follow the documented TEE passthrough and native model; not live-probed on NEAR.
+# Cache: https://docs.near.ai/cloud/guides/prompt-caching
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2
