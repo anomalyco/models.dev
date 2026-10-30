@@ -1,0 +1,9 @@
+# Served by GWDG SAIA (Chat AI), https://docs.hpc.gwdg.de/services/ai-services/chat-ai/models/index.html
+# (accessed 2026-10-27). GWDG lists these models as free to use, so no prices are published.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (tested live 2026-10-27; reasoning_effort
+# "none" also turns it off, other values are ignored; default on; no budget field)
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }

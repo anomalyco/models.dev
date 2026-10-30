@@ -1,0 +1,9 @@
+# Served by GWDG SAIA (Chat AI), https://docs.hpc.gwdg.de/services/ai-services/chat-ai/models/index.html
+# (accessed 2026-10-27). GWDG lists these models as free to use, so no prices are published.
+# Effort: reasoning_effort = none|low|high|max (tested live 2026-10-27; none turns reasoning off, the
+# levels change the reasoning length; chat_template_kwargs.enable_thinking = false also turns it off)
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }

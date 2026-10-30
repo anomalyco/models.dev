@@ -1,0 +1,31 @@
+# https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Instruct
+# https://qwen.ai/blog?id=qwen3-omni (released 2025-09-22, with the Thinking variant)
+# Input MIME types and context/output limits follow the Thinking sibling (qwen3-omni-30b-a3b-thinking.toml).
+# Speech output is a native capability (the model card saves it as WAV); hosts that only serve text override [modalities].
+# Sampling: vLLM example on the model card uses temperature 0.6, top_p 0.95, top_k 20.
+schema = 2
+name = "Qwen3 Omni 30B A3B Instruct"
+description = "Multimodal instruction model accepting text, images, video, and audio with text and speech output"
+family = "qwen"
+open_weights = true
+release_date = "2025-09-22"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv", "audio/amr", "audio/wav", "audio/3gpp", "audio/aac", "audio/mpeg"]
+output = ["text", "audio/wav"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 65_536
+output = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Instruct"
