@@ -65,8 +65,12 @@ done <<< "$changed"
 [ "$deleted" -le 10 ] || reasons+=("$deleted models deleted (limit 10)")
 [ $((created + deleted)) -le 15 ] || reasons+=("$((created + deleted)) models created or deleted (limit 15)")
 [ "$provider" != cloudflare-ai-gateway ] || [ "$deleted" -eq 0 ] || reasons+=("Cloudflare AI Gateway model deletions require manual review")
+# Small providers stay under the absolute limits even when their source returns nothing, so also cap the share deleted.
+before=$(git ls-tree -r --name-only origin/dev -- "providers/$provider/models/" | grep -c '\.toml$' || true)
+[ $((before + created - deleted)) -gt 0 ] || reasons+=("leaves $provider with no models")
+[ $((deleted * 2)) -le "$before" ] || reasons+=("$deleted of $before $provider models deleted (limit half)")
 if [ "$safe" = true ] && [ ${#reasons[@]} -gt 0 ]; then
-  printf '::warning::%s sync not auto-merged: %s\n' "$provider" "${reasons[@]}"
+  for reason in "${reasons[@]}"; do echo "::warning::$provider sync not auto-merged: $reason"; done
   safe=false
 fi
 
