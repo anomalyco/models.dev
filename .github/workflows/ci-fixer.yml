@@ -6,11 +6,13 @@ on:
     types: [completed]
   workflow_dispatch:
 
+# fix runs the agent with a read-only token and uploads its patch as data. publish runs no repository code: it allows
+# only the expected paths and opens the pull request with a models.dev automation app token from the automation
+# environment, so the pull request runs its checks as usual.
 permissions:
   actions: read
-  contents: write
-  issues: write
-  pull-requests: write
+  contents: read
+  pull-requests: read
 
 concurrency: dev-ci-fixer
 
@@ -32,19 +34,14 @@ jobs:
       FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
       FAILED_WORKFLOW: ${{ github.event.workflow_run.name }}
 
-    steps:
-      - name: Create app token
-        id: apptoken
-        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
-        with:
-          app-id: ${{ vars.OPENCODE_APP_ID }}
-          private-key: ${{ secrets.OPENCODE_APP_SECRET }}
-          owner: ${{ github.repository_owner }}
+    outputs:
+      changed: ${{ steps.changes.outputs.changed }}
 
+    steps:
       - name: Check run budget
         id: budget
         env:
-          GH_TOKEN: ${{ steps.apptoken.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
@@ -103,14 +100,6 @@ jobs:
           ref: dev
           persist-credentials: false
 
-      - name: Setup git committer
-        id: committer
-        if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
-        uses: ./.github/actions/setup-git-committer
-        with:
-          opencode-app-id: ${{ vars.OPENCODE_APP_ID }}
-          opencode-app-secret: ${{ secrets.OPENCODE_APP_SECRET }}
-
       - name: Install opencode
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
         run: curl -fsSL https://opencode.ai/install | bash -s -- --version 1.19.4
@@ -118,7 +107,7 @@ jobs:
       - name: Collect failed logs
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
         env:
-          GH_TOKEN: ${{ steps.committer.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           LOG_FILE="$RUNNER_TEMP/dev-ci-failure.log"
@@ -163,38 +152,95 @@ jobs:
             cat "$LOG_FILE"
           } | opencode run --agent ci-fixer -m opencode/muse-spark-1.3 --variant xhigh | tee "$RESPONSE_FILE"
 
-      - name: Check changed paths
+      - name: Prepare changes
+        id: changes
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
+        env:
+          OUT: ${{ runner.temp }}/ci-fixer
         run: |
           set -euo pipefail
           rm -rf .ci-fixer-budget
-
-          while IFS= read -r line; do
-            path="${line:3}"
-            case "$path" in
-              models/*.toml|providers/*.toml|packages/*|package.json|bun.lock|sst.config.ts|sst-env.d.ts|tsconfig.json) ;;
-              *) echo "Unexpected changed path: $path"; exit 1 ;;
-            esac
-          done < <(git status --porcelain)
-
-      - name: Create pull request
-        if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
-        env:
-          GH_TOKEN: ${{ steps.committer.outputs.token }}
-          BRANCH: ci-fixer-${{ github.event.workflow_run.id || github.run_id }}
-          TITLE: "fix: dev CI failure"
-        run: |
-          set -euo pipefail
+          mkdir -p "$OUT"
+          if [ -s "$RESPONSE_FILE" ]; then
+            cp "$RESPONSE_FILE" "$OUT/response.md"
+          fi
 
           if [ -z "$(git status --porcelain)" ]; then
             echo "No safe repository changes were made."
             exit 0
           fi
 
-          git switch -c "$BRANCH"
           git add -A
-          git commit -m "$TITLE"
-          git push origin "$BRANCH"
+          git diff --cached --binary > "$OUT/changes.patch"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload changes
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ci-fixer
+          path: ${{ runner.temp }}/ci-fixer
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: fix
+    if: needs.fix.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    environment: automation
+    env:
+      GH_REPO: ${{ github.repository }}
+      FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
+
+    steps:
+      - name: Create app token
+        id: app
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
+        with:
+          app-id: ${{ vars.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          repositories: models.dev
+          permission-contents: write
+          permission-issues: write
+          permission-pull-requests: write
+
+      # Holds the push credential; nothing from this checkout runs.
+      - name: Check out dev
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: dev
+          token: ${{ steps.app.outputs.token }}
+
+      - name: Download changes
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ci-fixer
+          path: ${{ runner.temp }}/ci-fixer
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          SLUG: ${{ steps.app.outputs.app-slug }}
+          IN: ${{ runner.temp }}/ci-fixer
+          BRANCH: ci-fixer-${{ github.event.workflow_run.id || github.run_id }}
+          TITLE: "fix: dev CI failure"
+        run: |
+          set -euo pipefail
+          email="$(gh api "/users/${SLUG}%5Bbot%5D" --jq .id)+${SLUG}[bot]@users.noreply.github.com"
+          git=(git -c core.hooksPath=/dev/null -c "user.name=${SLUG}[bot]" -c "user.email=$email")
+
+          "${git[@]}" switch -c "$BRANCH"
+          "${git[@]}" apply --index --binary "$IN/changes.patch"
+
+          while IFS= read -r path; do
+            case "$path" in
+              models/*.toml|providers/*.toml|packages/*|package.json|bun.lock|sst.config.ts|sst-env.d.ts|tsconfig.json) ;;
+              *) echo "Unexpected changed path: $path"; exit 1 ;;
+            esac
+          done < <(git diff --cached --name-only --no-renames)
+
+          "${git[@]}" commit -q --no-verify -m "$TITLE"
+          "${git[@]}" push -q --no-verify origin "HEAD:refs/heads/$BRANCH"
 
           gh label create automation --color "0E8A16" --description "Automated repository maintenance" >/dev/null 2>&1 || true
           gh label create ci-fixer --color "D93F0B" --description "Automated fix for failed dev CI" >/dev/null 2>&1 || true
@@ -205,8 +251,8 @@ jobs:
             echo
             echo "Failed run: $FAILED_RUN_URL"
             echo
-            if [ -s "$RESPONSE_FILE" ]; then
-              cat "$RESPONSE_FILE"
+            if [ -s "$IN/response.md" ]; then
+              cat "$IN/response.md"
             fi
           } > "$PR_BODY"
 

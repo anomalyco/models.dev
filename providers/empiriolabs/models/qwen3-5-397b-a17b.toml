@@ -11,7 +11,7 @@ base_model = "alibaba/qwen3.5-397b-a17b"
 status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 80_000 } }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 81_920 } }
 structured_output = true
 
 [limit]
