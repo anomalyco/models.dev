@@ -1,0 +1,24 @@
+# Source: https://api.uberllm.dev/api/v1/public/models (read 2026-10-30): listed price (price_now), context_length,
+#   max_output_tokens, input_modalities. The listed price is what a request typically costs;
+#   it follows the marketplace and the billed amount is in usage.cost_usd on every response.
+# Lab model: anthropic/claude-opus-5-5 (same id as providers/openrouter/models/anthropic/claude-opus-5.5.toml).
+# Live probe 2026-10-30 on POST /v1/chat/completions:
+# Tools: tool_choice auto returned a get_weather call (finish_reason tool_calls).
+# Reasoning: a plain request (harder prompt) returns no reasoning.
+#   Second pass on a harder prompt (reasoning tokens): plain 0, reasoning_effort none 0 +text / high 0 +text, thinking 0.
+#   reasoning_effort accepted (reasoning tokens, +text = reasoning text returned): none 0, minimal 0, low 0, medium 0, high 0, xhigh 0, max 0.
+#   reasoning_effort was accepted at every level with no on/off difference, so no effort control is claimed.
+# structured_output: response_format json_schema (strict) returned schema-valid JSON.
+# Image input: a solid red PNG (data URL) was read correctly.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 2.76
+
+[cost.text.output]
+price = 13.8

@@ -1,0 +1,34 @@
+# Source: https://api.uberllm.dev/api/v1/public/models (read 2026-10-30): listed price (price_now), context_length,
+#   max_output_tokens, input_modalities. The listed price is what a request typically costs;
+#   it follows the marketplace and the billed amount is in usage.cost_usd on every response.
+# Lab model: minimax/MiniMax-M3 (same id as providers/openrouter/models/minimax/minimax-m3.toml).
+# Live probe 2026-10-30 on POST /v1/chat/completions:
+# Tools: tool_choice auto returned a get_weather call (finish_reason tool_calls).
+# Reasoning: a plain request reasons (? reasoning tokens, text in message.reasoning_content).
+#   reasoning_effort accepted (reasoning tokens, +text = reasoning text returned): none 0, minimal 0 +text, low 92 +text, medium 108 +text, high 53 +text, xhigh 0 +text, max 92 +text.
+#   Effort: reasoning_effort =  (levels from the OpenRouter entry that this host accepted; none turned reasoning off and high turned it on).
+# structured_output: response_format json_schema (strict) returned schema-valid JSON.
+# Cache: automatic prefix cache; 5 requests with cached prompt tokens in the last 14 days.
+# Image input: a solid red PNG (data URL) was read correctly.
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 200_000
+output = 32_768
+
+[cost.text.input]
+price = 0.186
+cache = { read = 0.0372 }
+
+[cost.text.output]
+price = 0.744

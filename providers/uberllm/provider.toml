@@ -1,0 +1,13 @@
+# UberLLM is an OpenAI-compatible marketplace API: one key, and each request is routed to an
+# available third-party provider for the model. Auth: Authorization: Bearer <key>.
+# Cost: the listed price, which is the rate a request typically costs and follows the
+# marketplace (refreshed every few minutes, not a ceiling). The amount actually billed is
+# returned in usage.cost_usd on every response. https://uberllm.dev/docs/pricing
+# Reasoning: top-level reasoning_effort and reasoning.enabled are passed through to the
+# provider serving the request; per-model results are in each model file's header.
+name = "UberLLM"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["UBERLLM_API_KEY"]
+api = "https://api.uberllm.dev/v1"
+doc = "https://uberllm.dev/models"
