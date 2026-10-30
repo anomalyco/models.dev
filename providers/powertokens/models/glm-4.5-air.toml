@@ -1,0 +1,14 @@
+# Pricing: https://powertokens.ai/pricing (USD per 1M tokens, accessed 2026-10-01)
+# Request fields: https://docs.powertokens.ai/en/zmodelChat/zhipu/glm-4.5-air.md (accessed 2026-10-01)
+# Endpoint matrix: https://docs.powertokens.ai/en/ecosystem-tools/text-model-protocols.md
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-4.5-air"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.2
+output = 1.1
+cache_read = 0.03
+cache_write = 0
