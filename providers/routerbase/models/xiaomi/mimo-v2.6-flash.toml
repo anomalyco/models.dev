@@ -1,0 +1,11 @@
+# Prices: GET https://routerbase.com/api/models/xiaomi/mimo-v2.6-flash/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

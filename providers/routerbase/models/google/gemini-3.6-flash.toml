@@ -1,0 +1,11 @@
+# Prices: GET https://routerbase.com/api/models/google/gemini-3.6-flash/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "google/gemini-3.6-flash"
+
+[cost.text.input]
+price = 0.525
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 2.625

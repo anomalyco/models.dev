@@ -1,0 +1,11 @@
+# Prices: GET https://routerbase.com/api/models/zai/glm-5.3-flash/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[cost.text.input]
+price = 0.1275
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.425

@@ -1,0 +1,13 @@
+# Prices: GET https://routerbase.com/api/models/qwen/qwen3-vl-30b-a3b-instruct/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.17
+
+[cost.text.output]
+price = 0.595

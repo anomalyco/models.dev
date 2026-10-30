@@ -1,0 +1,11 @@
+# Prices: GET https://routerbase.com/api/models/anthropic/claude-fable-5/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[cost.text.input]
+price = 10
+cache = { read = 1, write = { "5m" = 12.5, "1h" = 20 } }
+
+[cost.text.output]
+price = 50

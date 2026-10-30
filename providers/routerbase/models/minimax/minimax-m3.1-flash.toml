@@ -1,0 +1,11 @@
+# Prices: GET https://routerbase.com/api/models/minimax/minimax-m3.1-flash/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

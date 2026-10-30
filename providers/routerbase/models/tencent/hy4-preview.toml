@@ -1,0 +1,14 @@
+# Prices: GET https://routerbase.com/api/models/tencent/hy4-preview/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "tencent/hy4-preview"
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.7506
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.2509

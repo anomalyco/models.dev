@@ -1,0 +1,11 @@
+# Prices: GET https://routerbase.com/api/models/openai/gpt-5.4/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "openai/gpt-5.4"
+
+[cost.text.input]
+price = 2.125
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 12.75

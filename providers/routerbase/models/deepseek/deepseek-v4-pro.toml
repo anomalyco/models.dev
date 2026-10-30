@@ -1,0 +1,12 @@
+# Prices: GET https://routerbase.com/api/models/deepseek/deepseek-v4-pro/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Off-peak hours bill lower; the standard (peak) rate is listed.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 1.98

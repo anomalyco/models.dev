@@ -1,0 +1,14 @@
+# Prices: GET https://routerbase.com/api/models/stepfun/step-5-preview/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "stepfun/step-5-preview"
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.7

@@ -1,0 +1,11 @@
+# Prices: GET https://routerbase.com/api/models/moonshotai/kimi-k3.1-pro/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10
