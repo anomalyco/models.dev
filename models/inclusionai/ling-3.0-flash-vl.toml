@@ -2,8 +2,9 @@
 # https://openrouter.ai/inclusionai/ling-3.0-flash-vl
 # Sampling: open weights; the model card recommends temperature, top_p and top_k (temperature=1.0, top_p=0.95, top_k=20)
 #   (https://huggingface.co/inclusionAI/Ling-3.0-flash-VL).
-# Input: the model card documents image_url and video_url input but no formats, and inclusionAI has no
-#   first-party API docs listing them, so input stays generic `image`/`video`.
+# Formats (Ant Ling API, lists this model as supported):
+#   images JPEG, PNG: https://developer.ant-ling.com/en/docs/tutorials/multimodal-understanding/#image-understanding
+#   video MP4, MOV, WMV: https://developer.ant-ling.com/en/docs/tutorials/multimodal-understanding/#video-understanding
 schema = 2
 name = "Ling 3.0 Flash VL"
 description = "Native multimodal hybrid MoE model for image and video understanding, reasoning, and visual agents"
@@ -13,7 +14,14 @@ release_date = "2026-09-10"
 license = "MIT"
 
 [modalities]
-input = ["text", "image", "video"]
+input = [
+  "text", 
+  "image/jpeg",
+  "image/png", 
+  "video/mp4",
+  "video/quicktime",
+  "video/x-ms-wmv"
+]
 output = ["text"]
 
 [capabilities]

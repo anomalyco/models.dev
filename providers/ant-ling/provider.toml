@@ -1,0 +1,12 @@
+
+name = "Ant Ling"
+# Endpoints: POST https://api.ant-ling.com/v1/chat/completions, /anthropic/v1/messages. 
+# Chat Completions and Messages use thinking.type="enabled"|"disabled"
+# (default enabled on the Ling-3.x series).
+# https://developer.ant-ling.com/en/docs/api-reference/chat/openai (accessed 2026-10-29)
+# https://developer.ant-ling.com/en/docs/api-reference/chat/anthropic (accessed 2026-10-29)
+env = ["ANT_LING_API_TOKEN"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+doc = "https://developer.ant-ling.com/en/docs/"
+api = "https://api.ant-ling.com/v1"
