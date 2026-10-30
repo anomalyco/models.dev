@@ -5,11 +5,6 @@ base_model = "google/gemini-3-pro-image"
 reasoning = { supported = false }
 cache = { implicit = true }
 
-[api.chat-completions]
-
-[api.images]
-sdk = { opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
-
 [cost.text.input]
 price = 2
 cache = { read = 0.2 }

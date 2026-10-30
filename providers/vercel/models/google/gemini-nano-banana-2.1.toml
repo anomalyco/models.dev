@@ -14,11 +14,6 @@ reasoning = { supported = true, toggle = true, effort = ["minimal", "medium", "h
 structured_output = false
 cache = { implicit = true }
 
-[api.chat-completions]
-
-[api.images]
-sdk = { opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
-
 [cost.text.input]
 price = 1.5
 cache = { read = 0.15 }
