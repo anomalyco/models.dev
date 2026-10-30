@@ -1,0 +1,23 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. Qwen3.6 Plus reasons with reasoning_effort omitted (587 reasoning
+#   tokens) and rejects reasoning_effort = off. The lab's switches are not forwarded
+#   (enable_thinking = false 739 tokens, thinking_budget = 32 ignored at 743), and graded
+#   values make no consistent difference across repeats (low 739/728, medium 731/906, high
+#   735/735, xhigh 739/906), so no levels are published.
+schema = 2
+base_model = "alibaba/qwen3.6-plus"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 200_000
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3
