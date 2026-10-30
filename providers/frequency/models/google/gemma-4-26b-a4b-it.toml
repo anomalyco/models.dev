@@ -3,13 +3,24 @@
 # Prices: https://scalefrequency.com/pricing (accessed 2026-10-28). Billed in INR: ₹15 input, ₹9.30 cached
 # input, ₹55 output per 1M tokens. The page lists USD reference prices of $0.15 / $0.093 / $0.55 (₹100 = $1),
 # which are used here.
-# API reference: https://docs.miraiminds.co/v2/llm ("What the API reads", accessed 2026-10-28).
-# Reasoning: not exposed on this host. The docs say the model's thinking is never returned (no reasoning
-# content or reasoning tokens) and that `reasoning` / `reasoning_effort` are ignored.
+# API reference: https://docs.miraiminds.co/v2/llm ("What the API reads" and "Limits", accessed 2026-10-30).
+# Reasoning: none, and no switch under any field name. We run this host; probed 2026-10-30:
+# - The host builds the model request from a fixed field list (messages, tools, tool_choice, sampling
+#   controls, max_tokens, stop, seed, response_format, stream). A request carrying `reasoning`
+#   ({enabled, effort}), `reasoning_effort`, `thinking`, `enable_thinking`,
+#   `chat_template_kwargs.enable_thinking`, `include_reasoning` and `extra_body` together reached the
+#   model as messages, max_tokens, temperature and stream only.
+# - Thinking is off in the chat template and the model server runs without a reasoning parser. A plain
+#   request and one whose system message starts with `<|think|>` both answered directly (6 and 10
+#   completion tokens on a short arithmetic question), with no `reasoning` / `reasoning_content` field
+#   and no reasoning tokens in usage.
+# - Thought-channel text the model writes on its own is removed from `content` before it is returned.
 # Modalities: text in, text out. The docs say any message part other than text (images, audio) is refused.
-# Limits (docs "Limits" section): 32,768-token context; replies up to 1,024 tokens per request by default
-# (400 when max_tokens is unset); 16,000 characters of message text per request by default. Text and reply
-# limits can be raised per account on request.
+# Limits (docs "Limits"): 32,768-token context. Replies are at most 1,024 tokens per request: a larger
+# `max_tokens` (or `max_completion_tokens`) is lowered to 1,024 (probed: 9,000 became 1,024), and 400 is
+# used when neither is set. 1,024 is the servable maximum for every key a user creates; a higher cap exists
+# only under a separate per-account agreement, so it is not listed. 16,000 characters of message text per
+# request.
 # structured_output: response_format {"type": "json_schema", ...} is accepted (same docs page).
 # Cache: implicit prefix caching. Per the docs, cached input is the part of a prompt that repeats the start
 # of a recent request; it is billed at the cached input price with no cache markers.
