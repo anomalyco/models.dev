@@ -1,0 +1,39 @@
+# Sources (accessed 2026-10-25): https://mallardai.co.uk/pricing/, https://mallardai.co.uk/docs/,
+#   https://api.mallardai.co.uk/v1/models
+# Billed in GBP: £0.08 input / £0.06 cached input / £0.75 output per 1M tokens; converted at the ECB rate
+#   1 GBP = 1.3368 USD (2026-10-23).
+# Toggle: reasoning.enabled = true|false. reasoning_effort = "none" and chat_template_kwargs.enable_thinking = false
+#   also turn it off. There is no graded effort: reasoning_effort = "low" is accepted and reasoning stays on.
+# Reasoning is returned in message.reasoning. reasoning_field = "reasoning" is valid in v2 but v1's interleaved.field
+#   only allows reasoning_content|reasoning_details, so no reasoning_field is set.
+# Live checks 2026-10-25 on POST /v1/chat/completions:
+# - Reasoning is on by default; each off switch above returns no reasoning.
+# - Images: a PNG data URL is read correctly; video_url returns 400. Image input is PNG, JPEG and WebP.
+# - Tools: tool_choice auto|required|named function|none behave as expected.
+# - structured_output: response_format json_schema (strict, enum field) and json_object are enforced.
+# - Cache: automatic prefix cache in pages of 2,096 tokens, no markers; a repeated 6,016-token prompt reported
+#   prompt_tokens_details.cached_tokens = 4,192 on the second request.
+# - Limit: max_tokens = 235_929 accepted; 262_144 rejected (prompt plus output past the 262,144-token window).
+# - Streaming: stream_options.include_usage returns usage in a chunk.
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = { min_tokens = 2_096 } }
+stream_usage = true
+
+[limit]
+output = 235_929
+
+[cost.text.input]
+price = 0.106944
+cache = { read = 0.080208 }
+
+[cost.text.output]
+price = 1.0026
