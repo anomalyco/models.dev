@@ -168,3 +168,21 @@ test("a curated deprecated status survives a feed hit", () => {
   );
   expect(built?.model).toMatchObject({ status: "deprecated" });
 });
+
+test("a feed limit above the lab cap is not overridden", () => {
+  const built = buildAbacusModel(abacusModel({
+    id: "Qwen/Qwen3.8-27B",
+    context_length: 262_144,
+    max_completion_tokens: 131_072,
+  }));
+  expect(built?.model).not.toHaveProperty("limit.output");
+});
+
+test("a feed limit below the lab cap still overrides", () => {
+  const built = buildAbacusModel(abacusModel({
+    id: "qwen3.8-max",
+    context_length: 262_144,
+    max_completion_tokens: 131_072,
+  }));
+  expect(built?.model).toMatchObject({ limit: { context: 262_144 } });
+});

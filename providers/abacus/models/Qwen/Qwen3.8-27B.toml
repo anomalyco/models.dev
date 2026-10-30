@@ -1,8 +1,6 @@
 # Source: https://routellm.abacus.ai/v1/models
 # RouteLLM reasoning: /v1/models exposes only `thinking`; the provider API has no
 # toggle, effort or budget request field (provider.toml audit, 2026-06-25).
-# Host limit: the feed publishes max_completion_tokens 131,072; the lab documents
-# an output cap of 32,768. The host value is the override below.
 # RouteLLM input_modalities: ["text","image","video"]
 # RouteLLM output_modalities: ["text"]
 # RouteLLM context_length: 262144
@@ -16,9 +14,6 @@ base_model = "alibaba/qwen3.8-27b"
 
 [capabilities]
 reasoning = { supported = true }
-
-[limit]
-output = 131_072
 
 [cost.text.input]
 price = 0.45

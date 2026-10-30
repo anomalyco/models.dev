@@ -41,22 +41,6 @@ const HEADER_NOTES: Record<string, string[]> = {
     "# rates in exchange for Meta using prompts and completions to train future Meta",
     "# models\" (accessed 2026-10-29).",
   ],
-  "Qwen/Qwen3.8-27B": [
-    "# Host limit: the feed publishes max_completion_tokens 131,072; the lab documents",
-    "# an output cap of 32,768. The host value is the override below.",
-  ],
-  "Qwen/Qwen3.8-Flash-Next": [
-    "# Host context: the feed publishes context_length 1,000,000; the lab documents",
-    "# 262,144 native with extension up to 1M. The host advertises the extended window.",
-  ],
-  "zai-org/GLM-5.3": [
-    "# Host context: the feed publishes context_length 1,048,576; the lab documents",
-    "# 1,000,000. The host value is the override below.",
-  ],
-  "zai-org/GLM-5.3-Flash": [
-    "# Host context: the feed publishes context_length 1,048,576; the lab documents",
-    "# 1,000,000. The host value is the override below.",
-  ],
 };
 
 // RouteLLM files these under `text_generation`, but they are transcription
@@ -178,10 +162,11 @@ export function buildAbacusModel(
     ? authored?.reasoning_options ?? []
     : undefined;
 
+  const labLimit = labLimits(baseModel);
   const limit = {
-    context: model.context_length ?? authored?.limit?.context,
+    context: capped(model.context_length, labLimit?.context) ?? authored?.limit?.context,
     input: authored?.limit?.input,
-    output: model.max_completion_tokens ?? authored?.limit?.output,
+    output: capped(model.max_completion_tokens, labLimit?.output) ?? authored?.limit?.output,
   };
 
   const cost = {
@@ -266,6 +251,24 @@ function toV1Modalities(values: string[]) {
 function perMillion(rate: string | number | undefined) {
   if (rate === undefined) return undefined;
   return Math.round(Number(rate) * 1_000_000 * 1_000_000) / 1_000_000;
+}
+
+// A relay cannot serve a limit above the lab's documented cap; an oversized feed
+// value is the API parameter ceiling, not a host delta, so inherit the lab.
+function capped(feed: number | undefined, lab: number | undefined) {
+  if (feed === undefined) return undefined;
+  if (lab === undefined) return feed;
+  return feed < lab ? feed : undefined;
+}
+
+function labLimits(baseModel: string) {
+  const limit = readLabToml(baseModel)?.limit;
+  if (limit === null || typeof limit !== "object") return undefined;
+  const { context, output } = limit as Record<string, unknown>;
+  return {
+    context: typeof context === "number" ? context : undefined,
+    output: typeof output === "number" ? output : undefined,
+  };
 }
 
 function intentionalSkip(model: AbacusModel, baseModel: string | undefined) {
