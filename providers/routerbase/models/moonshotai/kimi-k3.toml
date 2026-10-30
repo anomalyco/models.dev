@@ -1,7 +1,15 @@
 # Prices: GET https://routerbase.com/api/models/moonshotai/kimi-k3/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 2.85

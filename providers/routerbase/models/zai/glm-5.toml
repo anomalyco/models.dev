@@ -1,10 +1,17 @@
 # Prices: GET https://routerbase.com/api/models/zai/glm-5/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Toggle: thinking.type = enabled|disabled
 schema = 2
 base_model = "zhipuai/glm-5"
 
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
 [limit]
 context = 202_800
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.9

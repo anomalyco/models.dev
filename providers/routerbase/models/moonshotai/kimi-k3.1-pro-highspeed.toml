@@ -1,8 +1,17 @@
 # Prices: GET https://routerbase.com/api/models/moonshotai/kimi-k3.1-pro-highspeed/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Same upstream controls as providers/novita-ai/models/moonshotai/kimi-k3.1-pro-highspeed.toml (RouterBase forwards them unchanged):
+# Toggle: thinking.type = enabled|disabled (live 2026-10-25: disabled returns no reasoning; reasoning_effort = none still reasons)
+# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Highspeed"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 4

@@ -1,8 +1,17 @@
 # Prices: GET https://routerbase.com/api/models/deepseek/deepseek-v4.1-flash-1017/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
 # Off-peak hours bill lower; the standard (peak) rate is listed.
+# Same Ark route and controls as deepseek/deepseek-v4.1-flash:
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.15

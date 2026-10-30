@@ -1,7 +1,18 @@
 # Prices: GET https://routerbase.com/api/models/anthropic/claude-haiku-4.5/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Budget: thinking = { type = "enabled", budget_tokens = N } (tested 2026-09-29
+# on the upstream route RouterBase forwards these fields to unchanged: off by
+# default, `thinking.budget_tokens` turns reasoning on and returns it in
+# reasoning_content; `reasoning_effort` is ignored), same control as the lab
+# entry
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.95

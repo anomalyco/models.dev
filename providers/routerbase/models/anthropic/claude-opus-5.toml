@@ -1,7 +1,14 @@
 # Prices: GET https://routerbase.com/api/models/anthropic/claude-opus-5/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Effort, as in the lab entry (adaptive effort, no budget): reasoning_effort = low|medium|high|xhigh|max
 schema = 2
 base_model = "anthropic/claude-opus-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 5

@@ -1,7 +1,14 @@
 # Prices: GET https://routerbase.com/api/models/anthropic/claude-sonnet-5/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# No reasoning on this route (tested 2026-09-29 on the upstream route RouterBase
+# forwards these fields to unchanged: `reasoning_effort` none/low/high and
+# `thinking` disabled/enabled with budget_tokens all return the plain answer with
+# no reasoning output), so reasoning = false.
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
+
+[capabilities]
+reasoning = { supported = false }
 
 [cost.text.input]
 price = 2

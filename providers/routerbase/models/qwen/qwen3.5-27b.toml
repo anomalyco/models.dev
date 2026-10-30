@@ -1,7 +1,14 @@
 # Prices: GET https://routerbase.com/api/models/qwen/qwen3.5-27b/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Toggle: enable_thinking = true|false
 schema = 2
 base_model = "alibaba/qwen3.5-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.255

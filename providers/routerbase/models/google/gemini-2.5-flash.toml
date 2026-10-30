@@ -1,10 +1,19 @@
 # Prices: GET https://routerbase.com/api/models/google/gemini-2.5-flash/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Effort: reasoning_effort = none|low|high (tested 2026-09-29 on the upstream
+# route RouterBase forwards these fields to unchanged: no field or `none`
+# returns no reasoning, `low` / `high` return reasoning; `thinking` is ignored)
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
 [limit]
 output = 65_535
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.255

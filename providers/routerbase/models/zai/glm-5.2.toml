@@ -1,7 +1,16 @@
 # Prices: GET https://routerbase.com/api/models/zai/glm-5.2/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Toggle: thinking.type = enabled|disabled (tested 2026-09-29 on the upstream
+# route RouterBase forwards these fields to unchanged: reasons by default;
+# `thinking.type = "disabled"` or `reasoning_effort = "none"` turns it off)
 schema = 2
 base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1.33
