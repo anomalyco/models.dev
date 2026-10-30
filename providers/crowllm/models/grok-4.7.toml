@@ -1,0 +1,20 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio,
+# cached input = input x cache_ratio (service/text_quota.go bills a cached prompt token at cache_ratio of a fresh one).
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-23).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-23): "grok-4.7".
+# Effort: reasoning_effort = low|medium|high|xhigh (top-level, forwarded verbatim)
+# The reasoning controls mirror providers/xai for the same model on this surface.
+# Live gateway row: model_ratio=0.845, completion_ratio=2.952662721893, cache_ratio=0.25, enable_groups=['pro'].
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.69
+cache = { read = 0.4225 }
+
+[cost.text.output]
+price = 4.99
