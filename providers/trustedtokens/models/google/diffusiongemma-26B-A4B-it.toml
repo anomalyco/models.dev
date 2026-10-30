@@ -1,6 +1,9 @@
 # Costs and catalog: https://api.trustedtokens.eu/v1/models (accessed 2026-10-30).
-# Cost: 0.30 in / 0.80 out / 0.05 cache read per 1M tokens, published as USD (catalog EUR values at 1:1; no FX conversion).
-# Effort: reasoning_effort = none|medium (/v1/models). `none` is off.
+# Cost: EUR 0.30 in / 0.80 out / 0.05 cache read per 1M tokens, converted at 1.1150 USD/EUR (ECB reference rate, 2026-10-27).
+# Effort: reasoning_effort = none|medium (/v1/models: supported_efforts = ["medium","none"],
+# default_effort = "medium"). Live 2026-10-30: none 0, medium 819-1045 reasoning_content chars;
+# minimal/low/high/xhigh/max are accepted but overlap medium (773-846), so only the advertised
+# pair is published.
 # temperature is rejected with 422 and is disabled.
 # response_format is rejected with 422: "Structured outputs are not yet supported for diffusion language models".
 # Image input accepted; video and PDF are not published.
@@ -19,8 +22,8 @@ temperature = false
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.3
-cache = { read = 0.05 }
+price = 0.3345
+cache = { read = 0.05575 }
 
 [cost.text.output]
-price = 0.8
+price = 0.892

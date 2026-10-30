@@ -1,7 +1,8 @@
 # Costs and catalog: https://api.trustedtokens.eu/v1/models (accessed 2026-10-30).
-# Cost: 0.15 in / 0.60 out / 0.05 cache read per 1M tokens, published as USD (catalog EUR values at 1:1; no FX conversion).
+# Cost: EUR 0.15 in / 0.60 out / 0.05 cache read per 1M tokens, converted at 1.1150 USD/EUR (ECB reference rate, 2026-10-27).
 # Effort: reasoning_effort = low|medium|high (/v1/models). `none` is not an off state,
 # so no off level is published.
+# Measured 2026-10-30: none 215, low 119, medium 195, high 1553 reasoning_content chars.
 # No toggle: reasoning.enabled, thinking.type and chat_template_kwargs.enable_thinking
 # all leave reasoning on.
 # Text-only: image parts are ignored (prompt tokens unchanged), matching the lab.
@@ -19,8 +20,8 @@ structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.05 }
+price = 0.16725
+cache = { read = 0.05575 }
 
 [cost.text.output]
-price = 0.6
+price = 0.669
