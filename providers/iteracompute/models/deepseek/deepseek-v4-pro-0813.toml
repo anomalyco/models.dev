@@ -1,3 +1,8 @@
+# Prices rechecked 2026-10-28 against the exact /v1/models pricing object:
+# $0.60 input, $0.044 cache read, $1.79 output per 1M tokens; cache_write is null.
+# pricing.parameters.off_peak_pricing sets separate rates on weekends and on weekdays
+# 00:00-01:00, 04:00-06:00 and 10:00-24:00 UTC; the differing per-field ratios
+# require price overrides rather than one uniform multiplier.
 # Sources (accessed 2026-10-10):
 # https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
 # https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
@@ -7,7 +12,6 @@
 # Host capability recheck (2026-10-15), exact record id = "deepseek/deepseek-v4-pro-0813":
 # /v1/models data[id].reasoning: mandatory=true, supports_enable_disable=false,
 # supported_efforts=["low","high","max"]. This host exposes effort and rejects reasoning off.
-# Prices updated 2026-10-21 from the public GET https://api.iteracompute.com/v1/models pricing object (USD per 1M tokens).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
@@ -20,8 +24,44 @@ context = 1_048_576
 output = 393_216
 
 [cost.text.input]
-price = 0.79
-cache = { read = 0.026 }
+price = 0.60
+cache = { read = 0.044 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["sat", "sun"] } }
+price = 0.5012658227848101
+cache = { read = 0.037230769230769234 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { lt = "01:00" } }
+price = 0.5012658227848101
+cache = { read = 0.037230769230769234 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "04:00" } }, { utc_hours = { lt = "06:00" } }] }
+price = 0.5012658227848101
+cache = { read = 0.037230769230769234 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { gte = "10:00" } }
+price = 0.5012658227848101
+cache = { read = 0.037230769230769234 }
 
 [cost.text.output]
-price = 2.38
+price = 1.79
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["sat", "sun"] } }
+price = 1.4891596638655462
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { lt = "01:00" } }
+price = 1.4891596638655462
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "04:00" } }, { utc_hours = { lt = "06:00" } }] }
+price = 1.4891596638655462
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { gte = "10:00" } }
+price = 1.4891596638655462

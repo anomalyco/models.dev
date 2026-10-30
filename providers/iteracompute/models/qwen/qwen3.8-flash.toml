@@ -1,0 +1,33 @@
+# Prices rechecked 2026-10-28 against the exact /v1/models pricing object:
+# $0.11 input, $0.016 cache read, $0.38 output per 1M tokens.
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/qwen3-8-flash/ (host capabilities and pricing)
+# Toggle wire path: enable_thinking = true|false, documented on the host model page.
+# Effort wire path: reasoning_effort = low|medium|xhigh.
+# Effort baseline: providers/alibaba/models/qwen3.8-flash.toml and this host's qwen3.8-27b entry.
+# Host recheck (2026-10-23): this exact ID has no reasoning extension in /v1/models.
+# The host model page documents the toggle but publishes no thinking_budget parameter; no budget is authored.
+# Native effort source: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+# providers/alibaba/models/qwen3.8-flash.toml publishes low|medium|xhigh; this is the native baseline, not an invented host enum.
+# The exact host page marks Vision supported and documents enable_thinking; input below includes the lab image MIME types.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.016 }
+
+[cost.text.output]
+price = 0.38
