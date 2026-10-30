@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 (Scaleway)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = false
+
+[cost.text.input]
+price = 0.6678
+cache = { read = 0.13356 }
+
+[cost.text.output]
+price = 2.003399
