@@ -1,0 +1,42 @@
+# Models, inputs and lifecycle (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Reasoning (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Chat `reasoning_effort` = low|high|max; reasoning can't be disabled (`none` is rejected), and an omitted, minimal, medium or xhigh value uses `max`.
+# Limits: supported-models gives a context window of up to 1,048,576 tokens and up to 65,536 output tokens.
+# Pricing (accessed 2026-10-28): DBU rates from https://www.databricks.com/product/pricing/foundation-model-serving x USD 0.070/DBU (`foundation_model_apis` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json, AWS US East (N. Virginia); other regions are USD 0.070-0.112/DBU, not modeled).
+# Standard DBU per 1M input/output/cache-read tokens: 20/62.857/3.714 (the GLM-5.2, 5.3 row).
+# Priority: request `service_tier = "priority"` (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/priority-mode); priority DBU rates are 1.75x standard. (35/110/6.5).
+# Provisioned throughput (per DBU-hour) is not modeled.
+# Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+# max_tokens_field: the Foundation Model API chat request documents max_tokens and not max_completion_tokens (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference, accessed 2026-10-28)
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+service_tier = ["priority"]
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }

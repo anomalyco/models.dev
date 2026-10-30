@@ -1,0 +1,50 @@
+# Models, inputs and lifecycle (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Inputs: supported-models lists text and image; images are JPEG, PNG, WebP, GIF, up to 30 per API request (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-vision-models). Video and other image formats are dropped.
+# Reasoning (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Chat `reasoning_effort` = low|high|max; `max` is the default and other values fall back to `max` (the Kimi K3 line in query-reason-models). The shared "Hybrid reasoning" heading says `none` gives instant replies, but the per-model line contradicts it for Kimi K3, so `none` is left out, matching the lab (always thinks).
+# Pricing (accessed 2026-10-28): DBU rates from https://www.databricks.com/product/pricing/foundation-model-serving x USD 0.070/DBU (`foundation_model_apis` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json, AWS US East (N. Virginia); other regions are USD 0.070-0.112/DBU, not modeled).
+# Standard DBU per 1M input/output/cache-read tokens: 42.857/214.286/4.286.
+# The pricing page marks this model with a 10% DBU uplift when regional processing (data residency) is enabled: the 1.1x multiplier when region is not global.
+# Priority: request `service_tier = "priority"` (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/priority-mode); priority DBU rates are 1.75x standard. (75/375/7.5).
+# Provisioned throughput (per DBU-hour) is not modeled.
+# Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+# max_tokens_field: the Foundation Model API chat request documents max_tokens and not max_completion_tokens (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference, accessed 2026-10-28)
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+service_tier = ["priority"]
+
+[limit]
+image = { max_per_request = 30 }
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }
