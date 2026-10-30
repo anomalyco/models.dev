@@ -132,7 +132,6 @@ export const vercel = {
     const type = existing?.type ?? (baseModel === undefined ? undefined : labDoc(baseModel)?.type);
     const v2Set = {
       ...(model.type === "evaluation" ? { api: structuredClone(DECISION_APIS) } : {}),
-      ...(model.type === "language" && type === "image" ? { api: structuredClone(CHAT_IMAGE_APIS) } : {}),
       ...(model.type === "language" && (type ?? "chat") === "chat"
         ? {
           api: chatApis,
@@ -529,15 +528,6 @@ const DECISION_APIS = {
     base_url: STANDARD_BASE_URL,
     sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/decisions" },
   },
-};
-// Image models the gateway lists as language models (Gemini image / Nano Banana)
-// return images from /v1/chat/completions with `modalities`, not from
-// /v1/images/generations, which rejects them with ModelTypeMismatchError.
-// OpenCode's vercel-ai-gateway/images entry sends them to chat completions.
-// https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/image-generation
-const CHAT_IMAGE_APIS = {
-  "chat-completions": {},
-  images: { sdk: { opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
 };
 // v1 reads the first API as `provider`.
 const DECISION_V1_PROVIDER = {
