@@ -1,17 +1,16 @@
 # Prices: GET https://routerbase.com/api/models/openai/gpt-5/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
 # Effort: reasoning_effort = minimal|low|medium|high
-# Custom tools: RouterBase's Chat Completions rebuilds every tool as a JSON
-# function tool (type, name, description, parameters, strict), so a custom
-# tool's grammar is never forwarded; freeform is left out.
+# Live probe on this route (2026-10-30): a custom tool with a regex grammar
+# (ZZ[0-9]{3}) and tool_choice required came back as a plain function call
+# with arguments "{}"; the grammar is not forwarded, so freeform is left out.
+# reasoning_effort = high spends reasoning tokens (usage.completion_tokens_details)
+# but no reasoning text is returned, so no reasoning_field is set.
 schema = 2
 base_model = "openai/gpt-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1.0625
