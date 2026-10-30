@@ -1,0 +1,33 @@
+# Served by the Gonka network (https://gonka.ai) through the gateway; checkpoint MiniMaxAI/MiniMax-M2.7.
+# Limits: context 180,000 tokens, input plus max_tokens (nodes answer "maximum context length is 180000 tokens");
+#   output capped at 8,192 by the gateway. GET https://gate.joingonka.ai/v1/models (2026-10-28).
+# Always reasons, with no caller control: reasoning_effort (none included), chat_template_kwargs.enable_thinking = false
+#   and chat_template_kwargs.thinking = false are accepted and ignored (live 2026-10-28).
+# Reasoning text: the network returns <think>...</think> inside content, and the gateway moves it to
+#   message.reasoning_content / delta.reasoning_content. Assistant messages that carry reasoning_content are accepted back,
+#   including tool-call turns, and kept for interleaved thinking (live 2026-10-28).
+# Structured output: response_format json_object and json_schema (https://gate.joingonka.ai/docs/api, "Structured
+#   response"; json_schema verified live 2026-10-28).
+# Cost: 33 / 99 nGNK per input / output token, converted at gnk_usd_price = 0.187 USD from
+#   GET https://gate.joingonka.ai/api/pricing (2026-10-28) = 0.006171 / 0.018513 USD per MTok, gateway fee included.
+#   Billing is in GNK, so the USD price follows the GNK rate. No cached-input pricing.
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = false
+
+[limit]
+context = 180_000
+output = 8_192
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.006171
+
+[cost.text.output]
+price = 0.018513
