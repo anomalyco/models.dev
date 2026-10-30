@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "gemini-4-argon" in OpenAI protocol (/v1), $0.1494919/$0.7474593 per MTok input/output.
+# Cache read: $0.0074746 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/google/models/gemini-4-argon.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.1494919
+cache = { read = 0.0074746 }
+
+[cost.text.output]
+price = 0.7474593

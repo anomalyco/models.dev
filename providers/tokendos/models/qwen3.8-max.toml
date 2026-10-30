@@ -1,0 +1,18 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "qwen3.8-max" in OpenAI protocol (/v1), $1.7933697/$5.3801092 per MTok input/output.
+# Cache read: $0.2241712 per MTok, same snapshot row.
+# Reasoning: on/off, graded effort and a reasoning-token budget, all copied from providers/alibaba/models/qwen3.8-max.toml; wire paths below.
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[cost.text.input]
+price = 1.7933697
+cache = { read = 0.2241712 }
+
+[cost.text.output]
+price = 5.3801092

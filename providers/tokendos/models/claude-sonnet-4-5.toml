@@ -1,0 +1,23 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "claude-sonnet-4-5" in Anthropic protocol (/anthropic), $0.0335671/$0.1678357 per MTok input/output.
+# Cache read: $0.0033567 per MTok, same snapshot row.
+# Anthropic Messages only: https://api.tokendos.com/anthropic/v1/messages
+# Budget: thinking.budget_tokens (integer reasoning tokens)
+# Values: copied from the lab entry models/anthropic/claude-sonnet-4-5.toml; this surface is Anthropic Messages, so the native controls apply.
+# Route: the TokenDos catalog lists this id under Anthropic protocol (/anthropic) only — https://www.tokendos.com/tokendos-models ; no /v1 row is published for it.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[cost.text.input]
+price = 0.0335671
+cache = { read = 0.0033567 }
+
+[cost.text.output]
+price = 0.1678357
+
+[api.messages]
+base_url = "https://api.tokendos.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

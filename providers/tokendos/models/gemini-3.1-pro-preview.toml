@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "gemini-3.1-pro-preview" in OpenAI protocol (/v1), $0.1494919/$0.8969512 per MTok input/output.
+# Cache read: $0.0149492 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/google/models/gemini-3.1-pro-preview.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.1494919
+cache = { read = 0.0149492 }
+
+[cost.text.output]
+price = 0.8969512

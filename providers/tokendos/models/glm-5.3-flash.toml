@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "glm-5.3-flash" in OpenAI protocol (/v1), $0.0001487/$0.0004461 per MTok input/output.
+# Cache read: $0.0000297 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/zhipuai/models/glm-5.3-flash.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.0001487
+cache = { read = 0.0000297 }
+
+[cost.text.output]
+price = 0.0004461
