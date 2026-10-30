@@ -1,8 +1,14 @@
-# Toggle: enable_thinking true|false
 # Input: text only on Pendra's chat completions.
-# Budget: Pendra's reasoning.max_tokens is not listed: the worker ends thinking early only on think-block models.
-# Output: up to the 262,144-token window: a reply may run until the window is full, and a larger max_tokens is accepted (32,768 is the default when a request sets none).
-# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Tool choice: auto, none, required or a named tool. Pendra forces required and named calls with a grammar.
+# Toggle: enable_thinking = true|false
+# Default: thinking on when a request does not say (catalogue reasoning_controls).
+# Effort: no levels of its own. reasoning_effort none or minimal turns thinking off; low, medium, high, xhigh or max turns it on and adds nothing to the prompt; the default thinking budget follows the word sent.
+# Budget: reasoning.max_tokens. Pendra closes the thinking itself at the budget and the model moves on to its answer: a host control, not the lab's API. With no reasoning.max_tokens current workers apply a default budget sized by reasoning_effort: https://pendra.ai/docs/capabilities/thinking#default-budget
+# Reasoning field: reasoning_content in replies; send it back on assistant turns in that field.
+# Cache: implicit. Workers reuse a repeated prompt prefix with no markers (cached_tokens in usage).
+# Context: the lab's window is the most Pendra serves; a worker may run a smaller window sized to its memory.
+# Output: 262,144, the context window. The lab states no limit and Pendra sets none below the window: a reply runs until the serving worker's window is full (each worker sizes it to its memory), and 32,768 is the default when a request sets no max_tokens.
+# Generated from Pendra's model catalogue (served at https://api.pendra.ai/api/v1/catalogue)
 # Thinking controls: https://pendra.ai/docs/capabilities/thinking
 # Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
@@ -13,11 +19,16 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true }, budget = {} }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0

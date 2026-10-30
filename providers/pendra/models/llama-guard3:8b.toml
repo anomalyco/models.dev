@@ -1,10 +1,13 @@
-# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Cache: implicit. Workers reuse a repeated prompt prefix with no markers (cached_tokens in usage).
+# Context: the lab's window is the most Pendra serves; a worker may run a smaller window sized to its memory.
+# Generated from Pendra's model catalogue (served at https://api.pendra.ai/api/v1/catalogue)
 # Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 base_model = "meta/llama-guard-3-8b"
 
 [capabilities]
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0

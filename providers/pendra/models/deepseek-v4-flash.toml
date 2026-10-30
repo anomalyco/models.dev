@@ -1,14 +1,25 @@
-# Effort: reasoning_effort = low|high
-# Budget: Pendra's reasoning.max_tokens is not listed: the worker ends thinking early only on think-block models.
-# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Tool choice: auto, none, required or a named tool. Pendra forces required and named calls with a grammar.
+# Toggle: enable_thinking = true|false; reasoning_effort none or minimal also turns thinking off
+# Effort: reasoning_effort = low|high|max. In the prompt Pendra maps the other words: medium → low, xhigh → max. The default thinking budget follows the word sent.
+# Default: thinking on when a request does not say (catalogue reasoning_controls).
+# Budget: none listed, as on the lab's own listing: effort is this model's depth control. Pendra's thinking cap still applies: reasoning.max_tokens or, with none set, a default sized by reasoning_effort on current workers: https://pendra.ai/docs/capabilities/thinking#default-budget
+# Reasoning field: reasoning_content in replies; send it back on assistant turns in that field.
+# Cache: implicit. Workers reuse a repeated prompt prefix with no markers (cached_tokens in usage).
+# Context: the lab's window is the most Pendra serves; a worker may run a smaller window sized to its memory.
+# Generated from Pendra's model catalogue (served at https://api.pendra.ai/api/v1/catalogue)
 # Thinking controls: https://pendra.ai/docs/capabilities/thinking
 # Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "high", "max"], toggle = true, default = { type = "toggle", value = true } }
 structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0

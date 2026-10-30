@@ -1,8 +1,13 @@
-# Generated from Pendra's public catalogue: https://api.pendra.ai/api/v1/catalogue
+# Modalities: text in, PNG out. Pendra serves image generation only (no edits) and returns PNG.
+# Generated from Pendra's model catalogue (served at https://api.pendra.ai/api/v1/catalogue)
 # Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 v2_only = true
 base_model = "krea/krea-2-medium-turbo"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
