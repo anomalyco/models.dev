@@ -1,0 +1,43 @@
+# Augure is the lab for this model (first-party host), so this is a full definition.
+# Sources (accessed 2026-10-27): https://augureai.ca/docs/models (256K context, 32,768
+# output cap, CAD prices), https://augureai.ca/docs/api (reasoning_effort =
+# none|minimal|low|medium|high, "none" turns thinking off; image_url and PDF file parts
+# on every model; temperature and top_p, no top_k), and https://augureai.ca/docs/changelog
+# (output price lowered to CAD 6.00 on 2026-09-07).
+# Release date: Augure does not publish one; the model is first attested on the API in
+# the 2026-08-18 changelog entry, so the month is used.
+# Prices: CAD 2.50 in / 6.00 out per 1M tokens, converted to USD at the Bank of Canada
+# rate of 1.4038 CAD per USD (2026-10-27), rounded to 2 decimals. Cached input is billed
+# at the standard input rate.
+# Knowledge cutoff is not published by Augure.
+schema = 2
+name = "Ossington 4.1"
+description = "Augure's premium reasoning model on Canadian infrastructure for tool use and strong bilingual (English and French) work; kept for existing integrations"
+open_weights = false
+release_date = "2026-08"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+stream_usage = true
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 262_144
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.78
+
+[cost.text.output]
+price = 4.27
