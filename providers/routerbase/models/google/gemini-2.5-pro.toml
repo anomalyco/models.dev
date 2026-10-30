@@ -1,8 +1,7 @@
 # Prices: GET https://routerbase.com/api/models/google/gemini-2.5-pro/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
-# Control shape follows providers/openrouter/models/google/gemini-2.5-pro.toml, an OpenAI-compatible relay of
-# the same model. On this route `reasoning_effort = none` turns reasoning off
-# where a toggle is listed (tested 2026-09-29).
+# Control shape follows providers/openrouter/models/google/gemini-2.5-pro.toml (OpenAI-compatible relay of the same model).
+# Budget: thinking.budget_tokens, forwarded unchanged to the upstream.
 schema = 2
 base_model = "google/gemini-2.5-pro"
 

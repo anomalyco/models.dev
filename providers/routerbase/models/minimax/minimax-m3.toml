@@ -1,8 +1,8 @@
 # Prices: GET https://routerbase.com/api/models/minimax/minimax-m3/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
-# Same upstream controls as providers/minimax/models/MiniMax-M3.toml (RouterBase forwards them unchanged):
-# Toggle: thinking.type = adaptive|disabled. On the Anthropic-compatible API thinking is off when
-#   `thinking` is omitted; output_config.effort is ignored.
+# Controls as in providers/minimax/models/MiniMax-M3.toml, sent on MiniMax Chat Completions
+# (RouterBase forwards the field unchanged; reasoning returns in reasoning_content).
+# Toggle: thinking.type = enabled|disabled
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
