@@ -1,0 +1,13 @@
+# Costs converted from RODI to USD at ~639.2 RODI = 1 USD (2026-10-12).
+# Source: GET https://api.rodiumai.io/v1/models id=openai/gpt-4.1
+# https://www.rodiumai.io/docs/models
+base_model = "openai/gpt-4.1"
+
+[cost]
+input = 2.36
+output = 9.43
+cache_read = 0.59
+
+[limit]
+context = 1000000
+output = 32768
