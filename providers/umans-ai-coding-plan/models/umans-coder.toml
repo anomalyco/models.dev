@@ -1,23 +1,28 @@
-# This alias routes to GLM-5.3-Flash since 2026-09-09 (it rode Kimi K2.7 Code
-# before): reasoning is always on (`can_disable=false`) WITH effort levels
-# low|high|max, default max (accessed 2026-09-08):
-# https://api.code.umans.ai/v1/models/info
+# This alias routes to DeepSeek V4.1 Flash since 2026-10-28 and follows its
+# updates (it rode GLM-5.3-Flash from 2026-09-09 and Kimi K2.7 Code before). It serves the same card as
+# umans-deepseek-v4.1-flash: the 1017 weights, the same price and limits.
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)
+# Effort: reasoning_effort = low|high|max (default high). A number from 1 to 100
+# maps to the nearest mode: 1-62 low, 63-87 high, 88-100 max.
+# Live card, checked 2026-10-28: https://api.code.umans.ai/v1/models/info
+# (levels none/low/high/max, default high, can_disable true, supports_vision
+# true, context_window 1048576, max_completion_tokens 393216).
+# limit.output is cap-1 on purpose: the Umans API 400s max_tokens >=
+# max_completion_tokens (393216), so 393215 is the largest value that serves
+# (its advertised recommended_max_tokens).
+# The coding-plan twin of the umans-ai entry: same model, cost 0 (the plan
+# convention: plan subscribers are not metered per token).
 schema = 2
-base_model = "zhipuai/glm-5.3-flash"
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "Umans Coder"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
-output = ["text"]
-
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-temperature = false
 
 [limit]
 context = 1_048_576
-output = 131_071
+output = 393_215
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

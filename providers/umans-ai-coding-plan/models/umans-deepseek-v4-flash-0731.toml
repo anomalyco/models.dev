@@ -2,7 +2,7 @@
 # Effort: reasoning_effort = low|high|max
 # Live metadata: levels none/low/high/max, default low, and `can_disable=true`
 # (accessed 2026-08-03): https://api.code.umans.ai/v1/models/info
-# limit.output is cap-1 on purpose: the gateway 400s max_tokens >=
+# limit.output is cap-1 on purpose: the Umans API 400s max_tokens >=
 # max_completion_tokens (393216), so 393215 is the largest value that serves
 # (its advertised `recommended_max_tokens`).
 schema = 2
