@@ -2,11 +2,13 @@
 # Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
 # Effort: reasoning_effort = low|medium|high|xhigh|max → output_config.effort (adaptive thinking; none is rejected)
 # No toggle: thinking.type other than adaptive / between_tools is rejected on this host.
+# Cache: automatic on /v1, no cache_control markers needed — live 2026-10-30 (claude-sonnet-5): three identical 18.9K-token requests → cache_creation_tokens 18926, then cached_tokens 18926 twice.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1.30

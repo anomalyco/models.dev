@@ -3,11 +3,13 @@
 # Effort: reasoning_effort = low|medium|high|xhigh|max → output_config.effort; medium and above also send thinking.type = enabled with a budget; low or no reasoning_effort sends no thinking block (the value none is rejected upstream)
 # No toggle: the /v1 chat-completions parser reads only reasoning_effort; the thinking object and reasoning.enabled are dropped before the upstream call.
 # Live-tested 2026-10-07: thinking.type=enabled + budget_tokens=10 → 200 (dropped; the upstream minimum is 1024); reasoning.enabled=true + reasoning.effort=bogus → 200 (dropped); reasoning_effort=bogus → 400 "output_config.effort: Input should be 'low', 'medium', 'high', 'xhigh' or 'max'" (forwarded).
+# Cache: automatic on /v1, no cache_control markers needed — live 2026-10-30 (claude-sonnet-5): three identical 18.9K-token requests → cache_creation_tokens 18926, then cached_tokens 18926 twice.
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1.30
