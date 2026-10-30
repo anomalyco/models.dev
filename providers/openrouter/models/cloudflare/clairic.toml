@@ -1,0 +1,30 @@
+schema = 2
+type = "decision"
+name = "Clairic"
+description = "Decision model for typed evaluation of shared state"
+open_weights = true
+release_date = "2026-10-30"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 65_536
+output = 0
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
+compatibility = { media_input = "state" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0
