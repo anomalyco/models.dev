@@ -1,0 +1,27 @@
+# Adzuki AI (https://adzukiai.com) — OpenAI-compatible gateway, chat completions
+# only. The request body is proxied verbatim to the lab's deployment (via JD
+# Cloud MaaS); nothing below is renamed or remapped by the gateway.
+# Cost: https://adzukiai.com/pricing.json (checked 2026-10-28), USD per 1M tokens.
+# Cache: automatic prefix cache on the upstream; hits are billed at the
+#   `cache_read` rate published in the same file.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max; "none" also disables thinking
+# Kept identical to the deepseek-v4-pro entry above: one gateway, one
+# upstream family, one off mechanism.
+
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5714
+cache = { read = 0.0114 }
+
+[cost.text.output]
+price = 2.2857
