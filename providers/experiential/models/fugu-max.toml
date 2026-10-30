@@ -1,0 +1,21 @@
+# Source: https://api.experientiallabs.ai/api/models/fugu-max
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/openrouter/models/sakana/fugu-max.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = high|xhigh|max.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "sakana/fugu-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+input = 872_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

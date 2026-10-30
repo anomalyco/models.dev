@@ -1,0 +1,19 @@
+# Source: https://api.experientiallabs.ai/api/models/gpt-3.5-turbo
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "openai/gpt-3.5-turbo"
+name = "GPT-3.5 Turbo"
+
+[capabilities]
+structured_output = false
+
+[limit]
+input = 12_289
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 1.5

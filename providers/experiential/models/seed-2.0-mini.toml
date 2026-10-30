@@ -1,0 +1,30 @@
+# Source: https://api.experientiallabs.ai/api/models/seed-2.0-mini
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/openrouter/models/bytedance-seed/seed-2.0-mini.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = none|minimal|low|medium|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "bytedance-seed/seed-2.0-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 262_144
+input = 131_072
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.2
+
+[cost.text.output]
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.8

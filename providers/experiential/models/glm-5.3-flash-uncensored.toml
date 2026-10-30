@@ -1,0 +1,38 @@
+# Source: https://api.experientiallabs.ai/api/models/glm-5.3-flash-uncensored
+# Host-specific variant: the public catalog does not identify its exact modified checkpoint.
+# Keep this definition here until a shared model identity is verified; do not infer dealignai ownership.
+# No exact published weight repository is confirmed, so open_weights is not advertised.
+# release_date is this host entry's catalog creation date, not an inferred upstream release.
+# Effort: top-level reasoning_effort = low|high|max (published default-route capabilities).
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+# List prices in USD per million tokens; temporary promotions are excluded.
+schema = 2
+name = "GLM-5.3 Flash Uncensored"
+description = "Uncensored GLM-5.3 Flash variant served by Experiential. The public catalog does not identify the exact modified weights."
+family = "glm-flash"
+open_weights = false
+release_date = "2026-10-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+temperature = true
+top_p = true
+top_k = true
+structured_output = true
+
+[limit]
+context = 1048576
+input = 917504
+output = 131072
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.5
