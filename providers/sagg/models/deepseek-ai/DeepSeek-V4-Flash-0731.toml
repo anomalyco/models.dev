@@ -1,0 +1,26 @@
+# Source (all accessed 2026-10-27): https://api.privatedeskai.com/pricing (Standard line), https://api.privatedeskai.com/models, https://api.privatedeskai.com/docs
+# Prices: Standard line, USD per 1M tokens: input 0.03971, output 0.07941 (the pricing page also shows a blended 0.075). The same input/output rates are published
+# by GET https://api.privatedeskai.com/models. A cheaper second line ("Super Deal", 0.028 flat) uses a separate API key and is not listed here.
+# Limits: 400,000-token context window and 16,000 max output tokens (pricing page card and /models).
+# Reasoning: the gateway returns `reasoning_content` and forwards request fields to its providers, but it does not document reasoning controls, so none are claimed.
+# Tools: tool_choice that names a function is not honored and "required" depends on the provider (https://api.privatedeskai.com/docs/compatibility); no choice list is claimed.
+# Structured output: response_format json_object and json_schema pass in the vendor's compatibility test (same page).
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 400_000
+output = 16_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.03971
+
+[cost.text.output]
+price = 0.07941
