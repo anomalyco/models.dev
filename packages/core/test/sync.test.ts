@@ -6573,9 +6573,13 @@ test("Vercel sync maps every catalog type and lists the standard endpoint where 
   // v1 reads the first API.
   expect(evaluation.model.provider).toEqual({ npm: "@ai-sdk/openai", api: "https://ai-gateway.vercel.sh/v1" });
   expect(vercel.translateModel(vercelMedia({ id: "example/chat-model", type: "language" }), context)).toHaveProperty("v2Set.api", chatApis);
-  // A language route for a model we type as image keeps only its default API.
+  // A language route for a model we type as image (Gemini image) returns images from chat completions, which
+  // OpenCode's vercel-ai-gateway/images entry calls.
   const imageContext = { ...context, existing: () => ({ type: "image" }) as any };
-  expect(vercel.translateModel(vercelMedia({ id: "example/image-chat", type: "language" }), imageContext)).not.toHaveProperty("v2Set");
+  expect(vercel.translateModel(vercelMedia({ id: "example/image-chat", type: "language" }), imageContext)).toHaveProperty("v2Set.api", {
+    "chat-completions": {},
+    images: { sdk: { opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
+  });
   for (const catalogType of ["language", "evaluation", "something-new"]) {
     const translated = vercel.translateModel(vercelMedia({ id: "example/chat-model", type: catalogType }), context) as any;
     expect(translated.v2).toBeUndefined();
