@@ -1,0 +1,12 @@
+# Entrim Model API: OpenAI-compatible Chat Completions and Embeddings, served from the EU.
+# Model IDs, limits and capabilities: https://docs.entrim.ai/model-api/models (GET /v1/models returns
+#   max_input_tokens and max_output_tokens for each model).
+# Prices (USD per 1M tokens) are on each model's page under https://entrim.ai/ai-models (accessed 2026-10-28).
+# Reasoning is returned in message.reasoning_content (delta.reasoning_content when streaming).
+# Cache: automatic prefix cache with no request changes; cached input bills at the cache-read price.
+name = "Entrim"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.entrim.ai/v1"
+env = ["ENTRIM_API_KEY"]
+doc = "https://docs.entrim.ai/model-api/models"
