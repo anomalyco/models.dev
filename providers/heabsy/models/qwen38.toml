@@ -5,7 +5,9 @@
 # $3.15 output per 1M tokens.
 # Context (accessed 2026-10-29, https://heabsy.com/models/qwen38, "Context window 512K tokens"):
 # 524,288 tokens on this host, so limit.context is overridden; the base model file lists 262,144.
-# Max output 32,768 and modalities are the same as the base model and are inherited.
+# Max output 32,768 is the same as the base model and is inherited.
+# Modalities: text and image input on this host (image input checked live on 2026-10-29).
+# Video is not listed for this endpoint, so the inherited video MIME types are overridden.
 # Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off, so no separate toggle).
 # Probed live against api.heabsy.com/v1/chat/completions on 2026-10-21 (temperature 0, fixed prompt,
 # three runs per level; reasoning tokens from usage.completion_tokens_details.reasoning_tokens):
@@ -13,6 +15,10 @@
 # the omitted default. high is accepted and folded to xhigh, so it is not listed.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
 [limit]
 context = 524_288
