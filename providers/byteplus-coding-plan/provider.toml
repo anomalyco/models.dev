@@ -1,0 +1,18 @@
+name = "BytePlus ModelArk Coding Plan"
+env = ["BYTEPLUS_CODING_PLAN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Coding Plan is a subscription tier of BytePlus ModelArk (international
+# ap-southeast-1) with its own base URL. BytePlus warns that calling the
+# pay-as-you-go https://ark.ap-southeast.bytepluses.com/api/v3 with a Coding
+# Plan key does not draw down the subscription and bills separately, so the two
+# must stay distinct; a dedicated env var avoids lighting up both at once.
+# Anthropic-compatible base on the same key: https://ark.ap-southeast.bytepluses.com/api/coding
+# Reasoning wire format follows the Volcengine Ark Coding Plan sibling on the
+# same platform; see per-model comments for sources.
+# Models per the official activity page and the runtime-verified alias report
+# in anomalyco/models.dev#5857 (accessed 2026-10-10).
+# Sources:
+# https://www.byteplus.com/en/activity/codingplan
+# https://docs.byteplus.com/en/docs/ModelArk/2628972
+doc = "https://www.byteplus.com/en/activity/codingplan"
+api = "https://ark.ap-southeast.bytepluses.com/api/coding/v3"
