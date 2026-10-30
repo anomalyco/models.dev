@@ -295,3 +295,12 @@ test("re-running on an embedding entry keeps the maintainers' gateway line and d
 
   expect(mergeHeader(existing, note)).toEqual(existing);
 });
+
+test("routes a new embedding entry to /v1/embeddings", () => {
+  const model = catalogModel({ id: "openai/text-embedding-9" }, { type: "embedding", provider: "openai", model: "text-embedding-9", models_dev: { provider: "openai", model: "text-embedding-3-small" } });
+
+  const translated = tempr.translateModel(model, { existing: () => undefined, authored: () => undefined }) as { v2Set?: Record<string, unknown>; header?: string } | undefined;
+
+  expect(translated?.v2Set).toEqual({ "api.embeddings": { sdk: { opencodeai: "none" } } });
+  expect(translated?.header).toContain("# API: POST https://api.temprhq.io/v1/embeddings");
+});

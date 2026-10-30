@@ -94,6 +94,8 @@ const EMBEDDINGS_NOTE = [
   "# input only there, so the lab's other input modalities aren't reachable through Tempr.",
 ];
 
+const EMBEDDINGS_API_NOTE = "# API: POST https://api.temprhq.io/v1/embeddings (https://temprhq.io/docs/gateway-reference.html)";
+
 function readToml(relative: string): Toml | undefined {
   const file = path.join(ROOT_DIR, relative);
   if (!existsSync(file)) return undefined;
@@ -457,6 +459,18 @@ export const tempr = {
       return { id: model.id, model: built.model, header: mergeHeader(existingHeader(model.id), lines).join("\n") + "\n" };
     }
     const generated = built.header === "" ? [] : built.header.trimEnd().split("\n");
+    if (model.tempr.type === "embedding") {
+      // Embeddings are served on /v1/embeddings, not chat completions: the route the existing
+      // Tempr embedding entries carry, written for a new one too.
+      const existing = existingHeader(model.id);
+      const lines = existing === undefined ? [...generated, EMBEDDINGS_API_NOTE] : generated;
+      return {
+        id: model.id,
+        model: built.model,
+        header: mergeHeader(existing, lines).join("\n") + "\n",
+        v2Set: { "api.embeddings": { sdk: { opencodeai: "none" } } },
+      };
+    }
     return { id: model.id, model: built.model, header: mergeHeader(existingHeader(model.id), generated).join("\n") + "\n" };
   },
 } satisfies SyncProvider<TemprModel>;
