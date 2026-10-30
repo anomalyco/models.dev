@@ -16,14 +16,14 @@
 # USD/MTok = 2 x model_ratio, output = input x completion_ratio, cached input = input x cache_ratio
 # (service/text_quota.go: cached prompt tokens bill at cache_ratio of a fresh input token, so the
 # cache rate is always below the fresh rate on the same entry).
-# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. 13 served ids
-# carry that suffix but bill real credit (`qwen-3.8-max:free` 1,
-# `glm-5:free` 0.5, `gemini-3.8-flash:free` 0.375,
-# `nemotron-3-ultra-550b-a55b:free` 0.25, `deepseek-v4.1-flash:free` 0.225,
-# `nemotron-3-5-super-vl:free` 0.15, `glm-5.3-flash-thinking:free` 0.15,
-# `glm-5.3-flash:free` 0.15, `beam-1-0:free` 0.125, `minimax-m2.5:free` 0.125,
-# `minimax-m2.7:free` 0.12, `mimo-v2.6-flash:free` 0.075, `deepseek-v4-flash:free` 0.025)
-# and are left out of this catalog, since `:free` means zero-rated here.
+# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. 19 served ids
+# carry that suffix but bill real credit (`qwen-3.8-max:free` 1, `gemini-2.5-pro:free` 0.625,
+# `gemini-3.1-pro:free` 0.5, `glm-5:free` 0.5, `gemini-3-pro:free` 0.5,
+# `gemini-3.8-flash:free` 0.375, `gemini-2.0-flash:free` 0.25, `nemotron-3-ultra-550b-a55b:free` 0.25,
+# `gemini-3-flash:free` 0.2, `nemotron-3-5-super-vl:free` 0.15, `beam-1-0:free` 0.125,
+# `minimax-m2.5:free` 0.125, `minimax-m2.7:free` 0.12, `minimax-m2.7:free-thinking` 0.12,
+# `mimo-v2.6-flash:free` 0.075, `deepseek-v4-flash-0731:free` 0.07, `deepseek-v4-flash-0731-thinking:free` 0.07,
+# `deepseek-v4-flash:free` 0.025, `agnes-2.0-flash:free` 0.005)
 # Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
 # Passes: https://crowllm.com/pricing | Docs: https://crowllm.com/docs
 # Each model's # Toggle/# Effort/# Budget comment names the field as the gateway handles it:
