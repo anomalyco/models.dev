@@ -1,15 +1,12 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/google/models/gemini-3-flash-preview.toml (first-party entry).
+# Effort: thinking_level = minimal|low|medium|high
 schema = 2
-v2_only = true
 base_model = "google/gemini-3-flash-preview"
 
-# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
-# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
-# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
-
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 
 [limit]
 context = 1_048_576

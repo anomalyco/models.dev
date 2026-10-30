@@ -1,15 +1,15 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/openai/models/gpt-6-astra.toml (first-party entry).
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# GPT-5+ freeform (AGENTS.md): GMI documents no custom-tool grammar formats for its
+# chat/responses APIs and a live grammar probe is currently blocked (account 402).
+# `freeform` left unset pending evidence; native set for reference: providers/openai.
 schema = 2
-v2_only = true
 base_model = "openai/gpt-6-astra"
 
-# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
-# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
-# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
-
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 1_050_000
@@ -18,7 +18,14 @@ context = 1_050_000
 price = 10
 cache = { read = 1, write = 12.5 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
 [cost.text.output]
 price = 50
 
-# Long-context tier (GMI pricing): above 272_000 prompt tokens -> $20/M input, $75/M output, $2/M cache read, $25/M cache write.
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

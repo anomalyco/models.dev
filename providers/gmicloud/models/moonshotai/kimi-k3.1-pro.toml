@@ -1,15 +1,12 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/moonshotai/models/kimi-k3.1-pro.toml (first-party entry).
+# Effort: reasoning_effort = low|high|max
 schema = 2
-v2_only = true
 base_model = "moonshotai/kimi-k3.1-pro"
 
-# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
-# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
-# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
-
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_576

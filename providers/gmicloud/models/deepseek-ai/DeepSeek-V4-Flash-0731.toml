@@ -1,15 +1,13 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/deepseek/models/deepseek-v4-flash.toml (first-party entry).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 schema = 2
-v2_only = true
 base_model = "deepseek/deepseek-v4-flash-0731"
 
-# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
-# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
-# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
-
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_575

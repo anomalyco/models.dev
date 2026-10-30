@@ -1,15 +1,12 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: bf16.
+# Controls: tencent-tokenhub (lab-side relay) toggle + effort; kilo exposes ["none","low","high"] as the effort-only form.
+# Toggle: thinking on/off per Tencent token-hub request field
 schema = 2
-v2_only = true
 base_model = "tencent/hy3-preview"
 
-# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
-# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
-# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
-
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 262_144
@@ -18,9 +15,23 @@ context = 262_144
 price = 0.18
 cache = { read = 0.06 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 16_384 } }
+price = 0.24
+cache = { read = 0.09 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_768 } }
+price = 0.3
+cache = { read = 0.12 }
+
 [cost.text.output]
 price = 0.6
 
-# Long-context tier (GMI pricing): above 16_384 prompt tokens -> $0.24/M input, $0.96/M output, $0.09/M cache read.
+[[cost.text.output.overrides]]
+when = { context = { gt = 16_384 } }
+price = 0.96
 
-# Long-context tier (GMI pricing): above 32_768 prompt tokens -> $0.3/M input, $1.2/M output, $0.12/M cache read.
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_768 } }
+price = 1.2

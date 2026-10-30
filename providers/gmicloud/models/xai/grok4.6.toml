@@ -1,15 +1,12 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/xai/models/grok-4.6.toml (first-party entry).
+# Effort: reasoning_effort = low|medium|high|xhigh
 schema = 2
-v2_only = true
 base_model = "xai/grok-4.6"
 
-# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
-# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
-# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
-
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
 [limit]
 context = 2_000_000
@@ -18,7 +15,14 @@ context = 2_000_000
 price = 2
 cache = { read = 0.5 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
 [cost.text.output]
 price = 6
 
-# Long-context tier (GMI pricing): above 200_000 prompt tokens -> $4/M input, $12/M output, $1/M cache read.
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12
