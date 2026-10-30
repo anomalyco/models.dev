@@ -1,12 +1,17 @@
 # Outrun host entry for Kimi K3.1 Pro.
 # Sources (accessed 2026-10-29):
 # - Prices: https://api.outrun.to/pricing and https://outrun.to/model/kimi-k3.1-pro
-# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/kimi-k3.1-pro
+# - Setup values (tools, reasoning effort levels, structured output support): https://outrun.to/model/kimi-k3.1-pro
+# Structured output: not offered on Outrun for this model (the model page lists "Structured output: No"), so it is set to false.
+# Cache: Outrun bills cached input for this model and documents no cache markers, so it is recorded as implicit.
+# Not confirmed live: the model returned 502 during the 2026-10-30 probe.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
+cache = { implicit = true }
 
 [limit]
 output = 32_000

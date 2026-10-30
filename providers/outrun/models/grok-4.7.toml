@@ -2,12 +2,17 @@
 # Sources (accessed 2026-10-29):
 # - Prices: https://api.outrun.to/pricing and https://outrun.to/model/grok-4.7
 # - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/grok-4.7
+# Long-context tier: Outrun's billing rule is `len <= 200000 ? standard : long`, so only prompts over
+# 200,000 tokens use the higher rate. The public price feed shows the same (max_context_tokens = 200000,
+# min_context_tokens = 200001). `gt = 200_000` is intentional and differs from xAI's own >= 200k.
+# Cache: automatic prefix caching (live 2026-10-30: repeated 5,428-token prompt returned 5,376 cached_tokens).
 schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.084
