@@ -1,0 +1,38 @@
+# Prices and context: GET https://api.telnyx.com/v2/ai/models (accessed 2026-10-28):
+# $0.135 input, $0.027 cached input, $0.45 output per 1M; context 1,048,576; max_completion_tokens not
+# published. max_tokens above 1,048,576 is rejected by the gateway for every model tested.
+# Effort: reasoning_effort = low|high|max changes how much it reasons and cannot be turned off.
+# Live 2026-10-28, completion tokens for a bat-and-ball prompt, 3 runs each: low 289/293/346,
+# high 366/402/399, max 922/648/1029, default 1023/897/713, none 780/782/791. "none" is ignored, and
+# reasoning.enabled = false, chat_template_kwargs.enable_thinking = false and thinking.type = disabled
+# still returned reasoning_content, so there is no toggle and no "none" level.
+# Inputs: text plus PNG, JPEG and WebP images, read correctly live 2026-10-28 (solid-color test images).
+# GIF is rejected with HTTP 422 "Invalid request", and a PDF sent as an OpenAI `file` content part is
+# rejected with HTTP 422. A video_url request returned 422 "Service temporarily unavailable", which is
+# inconclusive, so video is not listed.
+# Structured output: strict response_format json_schema returned valid JSON in message.content with
+# reasoning default, high and max (live 2026-10-28). Tool calls returned tool_calls.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.135
+cache = { read = 0.027 }
+
+[cost.text.output]
+price = 0.45
