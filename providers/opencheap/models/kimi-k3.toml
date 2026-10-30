@@ -1,4 +1,4 @@
-# Prices are USD per million tokens: a snapshot of GET https://api.opencheap.si/v1/models taken 2026-10-28.
+# Prices are USD per million tokens: a snapshot of GET https://api.opencheap.si/v1/models taken 2026-10-28, prices refreshed 2026-10-30.
 # They can change at any time (https://docs.opencheap.si/models).
 # Tool calls checked live on 2026-10-28, streaming and non-streaming.
 # Effort: top-level reasoning_effort = none|low|high|max. none turned reasoning off on every live call (0 reasoning tokens).
@@ -9,8 +9,8 @@ base_model = "moonshotai/kimi-k3"
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 
 [cost.text.input]
-price = 0.0026
-cache = { read = 0.0023 }
+price = 0.018
+cache = { read = 0.016 }
 
 [cost.text.output]
-price = 0.19
+price = 1.5
