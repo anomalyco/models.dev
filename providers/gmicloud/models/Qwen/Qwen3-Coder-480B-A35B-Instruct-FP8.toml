@@ -1,0 +1,20 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[limit]
+context = 262_128
+# GMI reports 262_128 for this serving id, not 262_144; copied verbatim.
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 4.5
+
+# Long-context tier (GMI pricing): above 32_000 prompt tokens -> $1.62/M input, $8.1/M output, $0.324/M cache read.
+
+# Long-context tier (GMI pricing): above 128_000 prompt tokens -> $2.7/M input, $13.5/M output, $0.54/M cache read.

@@ -1,0 +1,21 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
+# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
+# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 3.2

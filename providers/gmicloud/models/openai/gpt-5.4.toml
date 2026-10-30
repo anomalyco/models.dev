@@ -1,0 +1,24 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-5.4"
+
+# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
+# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
+# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 409_600
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 15
+
+# Long-context tier (GMI pricing): above 272_000 prompt tokens -> $5/M input, $22.5/M output, $0.5/M cache read.

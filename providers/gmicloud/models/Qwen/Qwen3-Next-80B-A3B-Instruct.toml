@@ -1,0 +1,14 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.5

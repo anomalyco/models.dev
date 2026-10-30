@@ -1,0 +1,26 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: bf16.
+schema = 2
+v2_only = true
+base_model = "tencent/hy3-preview"
+
+# base_model inherits reasoning = true; GMI's chat-completions API reference documents no
+# reasoning control (https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference,
+# accessed 2026-10-30), so reasoning_options = [] (reasons with no caller control).
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.18
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.6
+
+# Long-context tier (GMI pricing): above 16_384 prompt tokens -> $0.24/M input, $0.96/M output, $0.09/M cache read.
+
+# Long-context tier (GMI pricing): above 32_768 prompt tokens -> $0.3/M input, $1.2/M output, $0.12/M cache read.
