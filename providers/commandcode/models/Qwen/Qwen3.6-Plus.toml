@@ -1,0 +1,42 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning_content.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   max -> HTTP 400 ('reasoning_effort.effort' must be one of: none, minimum, low, medium, high, xhigh).
+#   CommandCode accepts low|medium|high|xhigh, but the paired test found no effect. Native
+#   enable_thinking/thinking_budget probes also showed no usable control, so no reasoning control is listed.
+#   Repeated trials (n=3-5, easy and hard prompts): reasoning tokens low {394-986} / high {412-1139} /
+#   xhigh {838-1123} - ranges overlap at every level; no level changes the reasoning output.
+#   Paired test (10 fixed prompts, low vs xhigh on the same prompt): mean Δ -33 reasoning tokens
+#   (5 higher, 5 lower), sign p = 1.0; the paired comparison finds no level effect.
+# Interleaved: reasoning_content, verified with an opencode tool round-trip 2026-10-21
+#   (read main.go, follow-up turn, no schema error).
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# limit.context: host catalog publishes 200000 (base is 1000000); output not published, inherited.
+# Context price bands (host pricing table, accessed 2026-10-21): <= 256K 0.50/3.00/0.10,
+#   > 256K 2.00/6.00/0.20. The model catalog caps context at 200K, so the upper band is unreachable
+#   and omitted (input/output/cache read; the host publishes no cache write band).
+# Separate controls (CommandCode chat API, 2026-10-22): enable_thinking=false returned 157/246/346
+# reasoning tokens across three short prompts; true returned 116/237/307. thinking_budget=64
+# returned 155/309/447 tokens; 1024 returned 118/252/278. The toggle did not disable reasoning,
+# and the lower budget did not cap it on this host.
+schema = 2
+base_model = "alibaba/qwen3.6-plus"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 200_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3
