@@ -1,11 +1,13 @@
 # Prices: GET https://routerbase.com/api/models/qwen/qwen3.5-35b-a3b/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
-# Toggle: enable_thinking = true|false
+# Same upstream controls as providers/novita-ai/models/qwen/qwen3.5-35b-a3b.toml (RouterBase forwards them unchanged):
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking_budget (reasoning tokens)
 schema = 2
 base_model = "alibaba/qwen3.5-35b-a3b"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

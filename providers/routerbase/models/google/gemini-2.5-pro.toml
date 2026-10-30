@@ -1,13 +1,13 @@
 # Prices: GET https://routerbase.com/api/models/google/gemini-2.5-pro/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
-# Effort: reasoning_effort = low|high (tested 2026-09-29 on the upstream route
-# RouterBase forwards these fields to unchanged: always reasons, `none` does not
-# turn it off, `high` spends roughly twice the reasoning of `low`)
+# Control shape follows providers/openrouter/models/google/gemini-2.5-pro.toml, an OpenAI-compatible relay of
+# the same model. On this route `reasoning_effort = none` turns reasoning off
+# where a toggle is listed (tested 2026-09-29).
 schema = 2
 base_model = "google/gemini-2.5-pro"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high"] }
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
 
 [limit]
 output = 65_535

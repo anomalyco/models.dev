@@ -1,9 +1,6 @@
 # Prices: GET https://routerbase.com/api/models/minimaxai/minimax-m1-80k/pricing (2026-10-30), what RouterBase
 # charges: input/output = list x (1 - discount); cache reads and writes bill at list.
-# Always-on reasoning (tested 2026-09-29 on the upstream route RouterBase
-# forwards these fields to unchanged: every request reasons, with or without
-# `reasoning_effort` / `thinking`; the trace arrives inline as <think> in
-# content, not in reasoning_content)
+# Same upstream controls as providers/novita-ai/models/minimaxai/minimax-m1-80k.toml (RouterBase forwards them unchanged):
 schema = 2
 base_model = "minimax/minimax-m1-80k"
 
@@ -12,6 +9,9 @@ reasoning = { supported = true }
 
 [limit]
 output = 40_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.34
