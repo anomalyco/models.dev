@@ -1,12 +1,14 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
-# Controls: first-party exposes toggle but documents no exact wire path;
-# per review guidance left as always-on (no caller control) pending evidence.
+# Controls: none. Affirmative evidence, not uncertainty: same-surface OpenAI-gateway relays do not
+# forward gemma reasoning controls (providers/aimlapi probe: reasoning_effort is ignored, invalid values
+# return 200, and toggle/budget keys are dropped by the gateway; providers/cortecs agrees), and the lab
+# entry is supported-only. Toggle claims require an exact GMI wire path, which does not exist here.
 schema = 2
 base_model = "google/gemma-4-31b-it"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 
 # limit.context omitted: identical to the lab's 262_144 (provider files hold only real overrides).
 
