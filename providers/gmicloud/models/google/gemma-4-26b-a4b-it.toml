@@ -1,12 +1,12 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
-# Controls: copied from providers/google/models/gemma-4-26b-a4b-it.toml (first-party entry).
-# Toggle: thinking on/off via request field
+# Controls: first-party exposes toggle but documents no exact wire path;
+# per review guidance left as always-on (no caller control) pending evidence.
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 
 [limit]
 context = 256_000

@@ -11,8 +11,7 @@ base_model = "openai/gpt-6-astra"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[limit]
-context = 1_050_000
+# limit.context omitted: identical to the lab's 1_050_000 (provider files hold only real overrides).
 
 [cost.text.input]
 price = 10

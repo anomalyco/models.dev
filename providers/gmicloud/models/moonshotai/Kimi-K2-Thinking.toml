@@ -7,8 +7,7 @@ base_model = "moonshotai/kimi-k2-thinking"
 [capabilities]
 reasoning = { supported = true, effort = ["high"] }
 
-[limit]
-context = 262_144
+# limit.context omitted: identical to the lab's 262_144 (provider files hold only real overrides).
 
 [cost.text.input]
 price = 0.8

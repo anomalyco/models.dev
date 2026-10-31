@@ -7,8 +7,7 @@ base_model = "openai/gpt-oss-120b"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[limit]
-context = 131_072
+# limit.context omitted: identical to the lab's 131_072 (provider files hold only real overrides).
 
 [cost.text.input]
 price = 0.05

@@ -5,8 +5,7 @@
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 
-[limit]
-context = 262_144
+# limit.context omitted: identical to the lab's 262_144 (provider files hold only real overrides).
 
 [cost.text.input]
 price = 0.15
