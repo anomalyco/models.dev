@@ -1,0 +1,31 @@
+# Cheapest Token relay of openai/gpt-6-luna (routed via azure: azure/gpt-6-luna).
+# Override-only file: identity/description/dates inherit from the base_model lab entry.
+# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Long tier: the whole call bills at the long prices when input tokens > 272,000.
+schema = 2
+base_model = "openai/gpt-6-luna"
+name = "GPT-6 Luna"
+
+[capabilities]
+tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 1_050_000
+output = 128_000   # lab output limit; our BE tracks context only
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.75

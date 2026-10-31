@@ -1,0 +1,21 @@
+# Cheapest Token relay of nvidia/nemotron-3.5-super-vl-120b-a12b (routed via digitalocean: openai/nemotron-3.5-super-vl).
+# Override-only file: identity/description/dates inherit from the base_model lab entry.
+# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "NVIDIA Nemotron 3.5 Super VL"
+
+[capabilities]
+tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 1_048_576
+output = 8_192   # lab output limit; our BE tracks context only
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.65

@@ -1,0 +1,21 @@
+# Cheapest Token relay of alibaba/qwen3.8-max (routed via digitalocean: openai/qwen3.8-max).
+# Override-only file: identity/description/dates inherit from the base_model lab entry.
+# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen3.8-Max"
+
+[capabilities]
+tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[limit]
+context = 1_000_000
+output = 131_072   # lab output limit; our BE tracks context only
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 4.5

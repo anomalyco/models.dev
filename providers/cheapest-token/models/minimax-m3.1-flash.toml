@@ -1,0 +1,21 @@
+# Cheapest Token relay of minimax/MiniMax-M3.1-Flash (routed via digitalocean: openai/minimax-m3.1-flash).
+# Override-only file: identity/description/dates inherit from the base_model lab entry.
+# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+name = "MiniMax M3.1-Flash"
+
+[capabilities]
+tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 1_000_000
+output = 524_288   # lab output limit; our BE tracks context only
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.6

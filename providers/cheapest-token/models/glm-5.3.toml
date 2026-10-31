@@ -1,0 +1,21 @@
+# Cheapest Token relay of zhipuai/glm-5.3 (routed via digitalocean: openai/glm-5.3).
+# Override-only file: identity/description/dates inherit from the base_model lab entry.
+# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM5.3"
+
+[capabilities]
+tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+output = 131_072   # lab output limit; our BE tracks context only
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 3.96

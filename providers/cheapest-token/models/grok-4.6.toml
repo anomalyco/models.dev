@@ -1,0 +1,31 @@
+# Cheapest Token relay of xai/grok-4.6 (routed via azure: azure/grok-4.6).
+# Override-only file: identity/description/dates inherit from the base_model lab entry.
+# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Long tier: the whole call bills at the long prices when input tokens > 200,000.
+schema = 2
+base_model = "xai/grok-4.6"
+name = "Grok 4.6"
+
+[capabilities]
+tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+
+[limit]
+context = 500_000
+output = 500_000   # lab output limit; our BE tracks context only
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 4.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 9
