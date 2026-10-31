@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/TheDrummer/Fallen-Llama-3.3-R1-70B-v1
+name = "Fallen-Llama-3.3-R1-70B-v1"
+description = "TheDrummer special. RP community royalty."
+family = "llama"
+release_date = "2025-02-27"
+last_updated = "2025-03-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/TheDrummer/Fallen-Llama-3.3-R1-70B-v1"

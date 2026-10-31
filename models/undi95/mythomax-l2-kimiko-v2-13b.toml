@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Undi95/MythoMax-L2-Kimiko-v2-13b
+name = "MythoMax-L2-Kimiko-v2-13b"
+description = "Niche community finetune with a cult following. Hard to find hosted anywhere else."
+family = "kimi"
+release_date = "2023-08-30"
+last_updated = "2023-09-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 4096
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Undi95/MythoMax-L2-Kimiko-v2-13b"

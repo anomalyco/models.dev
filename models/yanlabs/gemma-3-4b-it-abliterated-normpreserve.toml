@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/YanLabs/gemma-3-4b-it-abliterated-normpreserve
+name = "gemma-3-4b-it-abliterated-normpreserve"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "gemma"
+release_date = "2025-12-09"
+last_updated = "2025-12-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/YanLabs/gemma-3-4b-it-abliterated-normpreserve"

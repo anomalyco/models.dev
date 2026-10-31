@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Emilio407/Dolphin3.0-Qwen2.5-0.5B-GRPO-V1
+name = "Dolphin3.0-Qwen2.5-0.5B-GRPO-V1"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "qwen"
+release_date = "2025-02-16"
+last_updated = "2025-02-20"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Emilio407/Dolphin3.0-Qwen2.5-0.5B-GRPO-V1"

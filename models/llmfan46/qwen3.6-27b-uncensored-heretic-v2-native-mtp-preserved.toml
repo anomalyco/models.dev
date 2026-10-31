@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/llmfan46/Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved
+name = "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "qwen"
+release_date = "2026-05-06"
+last_updated = "2026-05-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/llmfan46/Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved"
