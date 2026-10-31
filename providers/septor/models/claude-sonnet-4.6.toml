@@ -1,0 +1,22 @@
+# Price = midpoint of Septor's published range (input 2.9325-3, output 14.6625-15 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/claude-sonnet-4.6
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 128000
+
+[cost.text.input]
+price = 2.96625
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 14.83125
