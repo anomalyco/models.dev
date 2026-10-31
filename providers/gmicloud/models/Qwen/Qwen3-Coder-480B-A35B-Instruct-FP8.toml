@@ -2,6 +2,9 @@
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
 # GMI reports 262_128 for this serving id, not 262_144; copied verbatim.
 # Non-reasoning (lab and first-party both reasoning = false); no controls claimed.
+# Tier thresholds: first-party providers/alibaba/models/qwen3-coder-480b-a35b-instruct.toml:36-51
+# uses gt = 32_000 / gt = 128_000 for these tiers (Alibaba's exclusive threshold language);
+# aligned to that precedent. GMI's listing states min_prompt_tokens = 32000 / 128000.
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 

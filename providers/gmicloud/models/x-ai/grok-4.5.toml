@@ -2,6 +2,9 @@
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
 # Controls: copied from providers/xai/models/grok-4.5.toml (first-party entry).
 # Effort: reasoning_effort = low|medium|high|xhigh
+# Tier thresholds: x.ai's long-context rule is >=200k and first-party
+# providers/xai/models/grok-4.5.toml:47 uses gte = 200_000; GMI's listing states
+# min_prompt_tokens = 200000 (inclusive). Aligned to gte.
 schema = 2
 base_model = "xai/grok-4.5"
 
@@ -16,7 +19,7 @@ price = 2
 cache = { read = 0.5 }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
+when = { context = { gte = 200_000 } }
 price = 4
 cache = { read = 1 }
 
@@ -24,5 +27,5 @@ cache = { read = 1 }
 price = 6
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
+when = { context = { gte = 200_000 } }
 price = 12

@@ -1,13 +1,15 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
-# Effort: reasoning_effort = high (Moonshot chat-completions field via GMI's OpenAI-compatible
-# route). Peer exposing controls: kilo ["high"] (huggingface/meganova list none); copy per
-# audit skill Step 2 point 5 (controls not dropped from uncertainty).
+# Controls: none, by affirmative evidence: GMI's LLM API Reference (docs.gmicloud.ai,
+# verified 2026-10-31) documents no reasoning parameters (only max_tokens/temperature/
+# top_p/stop/stream), and GMI's /v1/models lists no reasoning_options for this id.
+# Same-surface peers disagree (kilo ["high"]; venice low|medium|high / meganova none),
+# so no wire path exists to carry an effort claim.
 schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
 
 [capabilities]
-reasoning = { supported = true, effort = ["high"] }
+reasoning = { supported = true }
 
 # limit.context omitted: identical to the lab's 262_144 (provider files hold only real overrides).
 

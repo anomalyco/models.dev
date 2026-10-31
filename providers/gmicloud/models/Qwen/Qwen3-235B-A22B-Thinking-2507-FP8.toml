@@ -1,15 +1,16 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
 # GMI reports 262_141 for this serving id, not 262_144; copied verbatim.
-# Effort: reasoning_effort = high (Qwen chat-completions field via GMI's OpenAI-compatible
-# route). Intersection of same-surface peers per audit skill Step 2: kilo ["high"],
-# venice low|medium|high -> ["high"].
-# Effort: reasoning_effort = high
+# Controls: none, by affirmative evidence: GMI's LLM API Reference (docs.gmicloud.ai,
+# verified 2026-10-31) documents no reasoning parameters (only max_tokens/temperature/
+# top_p/stop/stream), and GMI's /v1/models lists no reasoning_options for this id.
+# Same-surface peers disagree (kilo ["high"]; venice low|medium|high / meganova none),
+# so no wire path exists to carry an effort claim.
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
 
 [capabilities]
-reasoning = { supported = true, effort = ["high"] }
+reasoning = { supported = true }
 
 [limit]
 context = 262_141
