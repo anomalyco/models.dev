@@ -5,8 +5,11 @@
 # Images: base64 data URLs only (image URLs return HTTP 400, per the same source); a red PNG data
 # URL returned "Red". Video input is not offered, so input is limited to text and images here.
 # Reasoning: always on (reasoning tokens reported on every request, including with no reasoning
-# parameters). reasoning_effort has no effect: low, max and an unknown value were all accepted with
-# the same behaviour, and thinking cannot be turned off, so no controls are declared.
+# parameters). HopBase does not apply reasoning_effort on this model: low, high, max, none and an
+# invalid value ("banana") all return HTTP 200 (a native endpoint would reject the invalid value), and
+# reasoning tokens do not move with the level (two runs each on the same prompt, 2026-10-31:
+# low 380/625, high 449/459, max 210/423, omitted 495/506; none still reasons). Thinking cannot be
+# turned off and effort is not honoured, so no controls are declared.
 # The trace is returned in message.reasoning_content only when the request sets
 # include_reasoning = true; without it, only usage.completion_tokens_details.reasoning_tokens.
 # Structured output: json_schema with strict = true returned an enum-valid object.

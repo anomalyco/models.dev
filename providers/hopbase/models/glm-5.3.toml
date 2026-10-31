@@ -3,7 +3,8 @@
 # tool call (tool_choice auto) that returned a well-formed function call.
 # Limits: max_tokens=131072 -> 200, 131073 -> HTTP 400 "限制数值范围[1,131072]" (matches the lab file).
 # Text only: an image returns HTTP 400 image_input_not_supported.
-# Toggle: thinking.type = enabled|disabled (disabled -> 0 reasoning tokens).
+# No toggle: thinking.type = disabled is accepted but does not turn thinking off on this host
+# (2026-10-31 retest: 182 reasoning tokens and a non-empty reasoning_content), matching the lab file.
 # Effort: reasoning_effort = low|high|max, Zhipu's native levels; the host also accepts
 # none|minimal|medium|xhigh (error text for an unknown value lists
 # "none、minimal、low、medium、high、xhigh、max"). Relative effort was not benchmarked.
@@ -18,7 +19,7 @@ base_model = "zhipuai/glm-5.3"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none"] }
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 stream_usage = true
 cache = { implicit = true }

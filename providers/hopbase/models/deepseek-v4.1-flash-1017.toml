@@ -12,6 +12,10 @@
 # tool_choice none|required|named all honoured.
 # Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt).
 # Peak: weekdays 09:00-12:00 and 14:00-18:00 Asia/Shanghai (UTC 01-04, 06-10); off-peak and weekends bill at half.
+# Cache reads: this ID's group bills cached input at the official cache price, so the off-peak
+# cache read is 0.00295 (half of 0.0059); the -sg ID's group discounts cache reads too (0.0018).
+# Peak also applies on Chinese public holidays that fall on weekdays: HopBase billing uses the
+# weekday windows only, with no holiday exception.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 

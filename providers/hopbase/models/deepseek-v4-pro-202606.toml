@@ -11,7 +11,9 @@
 # Reasoning text is returned in message.reasoning_content and delta.reasoning_content.
 # Structured output: json_schema with strict = true returned an enum-valid object.
 # Cache: repeating a ~2.5K-token prefix returned cached_tokens = 2048.
-# Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt). Single all-day rate.
+# Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt). Single all-day rate:
+# HopBase does not apply DeepSeek's peak multiplier to this ID (billing logs: 3,037 requests over
+# the 14 days to 2026-10-31, every one at the same per-token price across peak and off-peak hours).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 

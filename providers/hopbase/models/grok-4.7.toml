@@ -11,6 +11,8 @@
 # tool_choice none|required|named all honoured.
 # Also checked through @ai-sdk/openai-compatible 1.0.60 (generateText, streamText, tool round trip).
 # Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt).
+# Long-context tier: HopBase applies it when input (including cached) is strictly greater than
+# 200,000 tokens, so `gt` rather than xAI's `gte`.
 schema = 2
 base_model = "xai/grok-4.7"
 

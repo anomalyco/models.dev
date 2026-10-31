@@ -8,15 +8,17 @@
 # Images: a red PNG data URL returned "Red". Structured output: json_schema with strict = true
 # returned an enum-valid object. Cache: repeating a ~2.4K-token prefix returned cached_tokens = 2417.
 # tool_choice none|required|named all honoured.
-# Freeform: a custom tool with regex grammar ZZ[0-9]{3} and tool_choice=required returned input
-# "ZZ000"; lark and text grammars were not tested.
+# Freeform: with tool_choice=required and the prompt asking for the input 'hello world', a custom
+# tool with regex grammar ZZ[0-9]{3} returned "ZZ000" and a lark grammar
+# start: "ZZ" DIGIT DIGIT DIGIT returned "ZZ000" (twice each, so the grammar is enforced); a
+# custom tool with format type text returned free text.
 # Also checked through @ai-sdk/openai-compatible 1.0.60 (generateText, streamText, tool round trip).
 # Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt).
 schema = 2
 base_model = "openai/gpt-5.6-sol"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["regex"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 stream_usage = true

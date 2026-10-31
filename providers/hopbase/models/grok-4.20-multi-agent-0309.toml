@@ -8,6 +8,8 @@
 # none and unknown values are accepted and run at the default. No plaintext reasoning is returned.
 # Cache: cached_tokens = 2560 on repeated requests.
 # Pricing: HopBase price in the same public group as grok-4.7, USD (rate per https://hop-base.com/pricing).
+# Long-context tier: HopBase applies it when input (including cached) is strictly greater than
+# 200,000 tokens, so `gt` rather than xAI's `gte`.
 schema = 2
 base_model = "xai/grok-4.20-multi-agent-0309"
 
