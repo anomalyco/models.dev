@@ -1,0 +1,9 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openrouter/models/deepseek/deepseek-v4-flash-0731.toml
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[api.chat-completions]

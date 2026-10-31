@@ -1,0 +1,10 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/zhipuai/models/glm-5-turbo.toml
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "zhipuai/glm-5-turbo"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]

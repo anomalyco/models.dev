@@ -1,0 +1,11 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openrouter/models/google/gemini-3.1-flash-image-preview.toml
+schema = 2
+base_model = "google/gemini-3.1-flash-image-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
+
+[api.generate-content]
+base_url = "https://api.mixroute.ai/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
