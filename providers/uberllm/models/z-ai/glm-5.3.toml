@@ -1,0 +1,19 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# Effort: reasoning_effort = low|high|max (validated: 400 "must be one of: 'low', 'high', 'max'"; low -> 0, high -> 11,
+#   no field -> 100 reasoning tokens).
+#   Probed 2026-10-30 on /v1/chat/completions.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.004893
+
+[cost.text.output]
+price = 0.098

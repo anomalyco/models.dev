@@ -1,0 +1,25 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# limit: the host's cap from the same catalog, where it is below the lab's.
+# Effort: reasoning_effort = low|high|max (Moonshot's list; 136 / 86 / 166 reasoning tokens, always thinks).
+#   Probed 2026-10-30 on /v1/chat/completions.
+# cache: implicit; requests to this model report cached prompt tokens in UberLLM's request log (7 days to 2026-10-30).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.00576
+cache = { read = 0.00546 }
+
+[cost.text.output]
+price = 0.45

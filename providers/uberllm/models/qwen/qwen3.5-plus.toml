@@ -1,0 +1,19 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# Toggle: enable_thinking true|false (false: 3 output tokens, no reasoning; on by default, 1,329 reasoning tokens)
+# Budget: thinking_budget (integer reasoning tokens; thinking_budget=100 gave exactly 100).
+#   Probed 2026-10-30 on /v1/chat/completions.
+schema = 2
+base_model = "alibaba/qwen3.5-plus"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.234
+
+[cost.text.output]
+price = 1.404

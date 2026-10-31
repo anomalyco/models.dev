@@ -1,0 +1,18 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# Effort: reasoning_effort = none|low|medium|high|xhigh (xAI's list; reasoning tokens 0 / 570 / 1,878 / 1,022 / 1,904).
+#   Probed 2026-10-30 on /v1/chat/completions.
+# cache: implicit; requests to this model report cached prompt tokens in UberLLM's request log (7 days to 2026-10-30).
+schema = 2
+base_model = "xai/grok-4.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.525
+cache = { read = 0.084 }
+
+[cost.text.output]
+price = 1.05

@@ -1,0 +1,19 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# Effort: reasoning_effort = minimal|low|medium|high (Google's list). minimal and low returned no reasoning_content; medium and
+#   high did.
+#   Probed 2026-10-30 on /v1/chat/completions.
+schema = 2
+base_model = "google/gemini-3.5-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.285
+
+[cost.text.output]
+price = 1.71
