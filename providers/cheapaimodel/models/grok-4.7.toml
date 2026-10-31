@@ -1,0 +1,20 @@
+# Price: https://cheapaimodel.ai/api/models (fetched 2026-10-27). One flat rate at every
+# context length (no long-context tier) and no priority tier on this host.
+# Effort: reasoning_effort = low|medium|high|xhigh (mapped from providers/xai)
+# Live 2026-10-27 on /v1/chat/completions: reasoning text is not returned (reasoning_content is
+# null), only usage.completion_tokens_details.reasoning_tokens, which rises with effort (low 546, high 680).
+# APIs: Chat Completions only on this host.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.198958
+cache = { read = 0.0497395 }
+
+[cost.text.output]
+price = 0.596874
