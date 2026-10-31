@@ -1,0 +1,14 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+base_model = "xai/grok-4.20-0309-reasoning"
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 2.5
+output = 5
+cache_read = 0.4

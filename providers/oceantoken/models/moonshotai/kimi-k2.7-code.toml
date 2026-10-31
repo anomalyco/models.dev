@@ -1,0 +1,18 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[limit]
+output = 235_929
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
