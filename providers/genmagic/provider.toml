@@ -1,0 +1,16 @@
+name = "GenMagic"
+env = ["GENMAGIC_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Chat Completions (POST /chat/completions) forwards the request body to the model
+# unchanged, so top-level `reasoning_effort` and `reasoning.effort`,
+# `reasoning.enabled` and `reasoning.max_tokens` reach the model as sent. Per model,
+# GET /models publishes `capabilities.reasoning_efforts` and
+# `capabilities.reasoning_mandatory` (a mandatory model refuses
+# `reasoning.enabled = false` with a 400) and `supported_parameters`.
+# Calls bill the model provider's own usage cost; cache read, cache write and
+# long-context `pricing.tiers` prices are published per model in the same catalog,
+# which needs no API key.
+# https://genmagic.co/developers#reasoning (accessed 2026-10-04)
+# https://genmagic.co/api/v1/models (accessed 2026-10-04)
+api = "https://genmagic.co/api/v1"
+doc = "https://genmagic.co/developers"
