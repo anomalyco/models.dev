@@ -1,0 +1,17 @@
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 (Runpod)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.77
+cache = { read = 0.143 }
+
+[cost.text.output]
+price = 2.42
