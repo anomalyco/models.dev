@@ -8,8 +8,11 @@
 # limit.output is cap-1 on purpose: the Umans API 400s max_tokens >=
 # max_completion_tokens (131072), so 131071 is the largest value that serves
 # (its advertised `recommended_max_tokens`).
+# Deprecated 2026-11-01: unlisted from GET /v1/models; requests keep serving for a
+# grace period, then the Umans API answers 400. Successor: umans-deepseek-v4.1-flash.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+status = "deprecated"
 name = "GLM 5.3 Flash"
 
 [modalities]
