@@ -1,0 +1,28 @@
+# Verified live 2026-10-31 against POST https://api.hop-base.com/v1/chat/completions with this exact
+# model ID: non-streaming, streaming (stream_options.include_usage returns usage), and a
+# tool call (tool_choice auto) that returned a well-formed function call.
+# Effort: reasoning_effort maps to Gemini thinking on this host: low keeps the model default,
+# medium -> thinkingBudget 8192, high -> thinkingBudget 24576. none/minimal are accepted but the
+# model still thinks (Gemini 3 cannot switch thinking off), and unknown values fall back to the
+# default, so only low|medium|high are declared. Relative effort was not benchmarked.
+# Reasoning tokens are reported in usage.completion_tokens_details.reasoning_tokens; no plaintext
+# reasoning is returned, so no reasoning_field.
+# Images: a red PNG data URL returned "Red". Structured output: json_schema with strict = true
+# returned an enum-valid object.
+# tool_choice none|required|named all honoured.
+# Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt). Single tier at every context length.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+stream_usage = true
+
+[cost.text.input]
+price = 0.9118
+cache = { read = 0.0912 }
+
+[cost.text.output]
+price = 5.4706
