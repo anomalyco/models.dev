@@ -1,0 +1,13 @@
+# Embeddings: POST https://api.flex.ai/v1/embeddings (https://docs.flex.ai/inference-api/guides/embeddings).
+# Price from GET /v1/models (USD per 1M input tokens), 2026-10-22.
+schema = 2
+base_model = "baai/bge-m3"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

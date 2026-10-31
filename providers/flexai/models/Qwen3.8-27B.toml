@@ -1,0 +1,30 @@
+# Toggle: chat_template_kwargs.enable_thinking = true | false (default: false; FlexAI's
+# gateway turns thinking off when the switch is unset).
+# thinking.type is accepted but does NOT disable reasoning on this model (measured
+# 2026-10-05); the chat-template switch is the control that works.
+# Measured on FlexAI 2026-10-29 (length of reasoning_content, 3 prompts, no max_tokens,
+# every reply finish_reason stop):
+#   default 0/0/0 · enable_thinking=false 0/0/0 · enable_thinking=true 149/940/1707
+# No effort levels are declared. chat_template_kwargs.reasoning_effort reaches the
+# template (an invalid value returns 400 "Supported types are xhigh (default), medium,
+# and low"), but it has no measurable effect: on the hardest prompt, 3 runs per level
+# with thinking on, median reasoning_content is thinking-on 2067 · low 1827 ·
+# medium 1830 · xhigh 2183, with overlapping ranges. Top-level reasoning_effort
+# medium/high/max return 400 and low has no effect. Accepted values that do not
+# change reasoning give the caller no control.
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.5
