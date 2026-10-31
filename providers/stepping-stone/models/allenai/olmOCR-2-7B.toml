@@ -1,0 +1,21 @@
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-ai2
+# 0.0600 / 0.0090 / 0.2900 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Host delta vs the lab entry: serves a reduced 8k window per the product page price table
+# (https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-ai2; native 16,384 per
+# the model card https://huggingface.co/allenai/olmOCR-2-7B-1025). The host publishes no separate output cap;
+# limit.output is required on the merged provider model (the lab omits it), so it is set to the served
+# 8,192-token window — an architectural max for this autoregressive VLM.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_allenai/olmOCR-2-7B (gateway max_model_len 8192; image input via chat completions)
+schema = 2
+base_model = "allenai/olmocr-2-7b"
+
+[limit]
+context = 8_192
+output = 8_192
+
+[cost.text.input]
+price = 0.0714
+cache = { read = 0.0107 }
+
+[cost.text.output]
+price = 0.3451
