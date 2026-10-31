@@ -11,6 +11,9 @@ name = "GLM 5.3 Flash"
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
+[limit]
+context = 1_048_576
+
 [cost.text.input]
 price = 0.075
 cache = { read = 0.075 }
