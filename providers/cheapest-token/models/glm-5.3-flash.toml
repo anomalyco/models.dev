@@ -6,6 +6,9 @@
 # (input 0.15 / our output 0.5 / cached 0.03).
 # Limit: context 1_048_576 is our catalog's context_window (a real delta vs the lab 1_000_000;
 # the digitalocean peer serves the same 1_048_576).
+# Modalities: input = text only — matches the DO same-surface peer (providers/digitalocean/
+# models/glm-5.3-flash.toml:17-19), which serves GLM-5.3-Flash text-only (the DO endpoint rejects
+# image_url/video_url with 400); the lab image/video/pdf input is not served on this route.
 # Effort: reasoning_effort = low|medium|high|xhigh|max (peer set from providers/digitalocean/
 # models/glm-5.3-flash.toml, live on our /v1 2026-10-31: all five → 200; none → 200 but does not
 # reliably turn reasoning off (on 1 of 2 runs), so it is not authored).
@@ -13,6 +16,10 @@
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM5.3 Flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
 
 [capabilities]
 tools = { supported = true }
