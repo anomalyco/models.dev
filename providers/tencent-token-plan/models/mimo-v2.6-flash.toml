@@ -1,0 +1,31 @@
+# Tencent China personal Token Plan (accessed 2026-10-26).
+# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# A paid subscription and plan points are required; zero token prices follow
+# the catalog's subscription-plan convention, not free inference.
+# API: https://cloud.tencent.com/document/product/1823/138677
+# Toggle: thinking.type = enabled|disabled
+# JSON output: response_format.type = json_object; json_schema is unsupported.
+# The host model table lists text/image/video input, not audio.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "video/mp4", "video/quicktime", "video/x-msvideo", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

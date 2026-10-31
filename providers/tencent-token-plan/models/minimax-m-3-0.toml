@@ -1,0 +1,23 @@
+# Tencent China personal Token Plan (accessed 2026-10-26).
+# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# A paid subscription and plan points are required; zero token prices follow
+# the catalog's subscription-plan convention, not free inference.
+# API: https://cloud.tencent.com/document/product/1823/132246
+# Toggle: thinking.type = adaptive|disabled
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
