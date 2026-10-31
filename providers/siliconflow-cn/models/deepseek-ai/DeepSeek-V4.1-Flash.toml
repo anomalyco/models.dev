@@ -1,0 +1,33 @@
+# Prices: China pricing page https://www.siliconflow.cn/pricing (SKU billing rows, CNY per 1M tokens, accessed 2026-10-31),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.669566, 2026-10-31,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 2, output 8, cache read 0.04; off-peak 02:00-08:00 Beijing (18:00-24:00 UTC) input 1, output 4, cache read 0.02 (half price)
+# Catalog (same page, model row, 2026-10-31): contextLen 1048576, vlm, functionCallSupport, jsonModeSupport.
+# base_model: the catalog description says this ID serves "DeepSeek-V4.1-Flash-1017", the October 17 update of V4.1 Flash.
+# Effort: reasoning_effort = "high"|"max", copied from the siliconflow-cn DeepSeek-V4-Flash peer. The China API schema listed
+# reasoning_effort only for the V4 models and GLM-5.2 when last read (2026-10-21); docs.siliconflow.cn returned 502 on 2026-10-31,
+# so this model's listing could not be rechecked.
+# https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.29986959
+cache = { read = 0.00599739 }
+
+[cost.text.output]
+price = 1.19947835
+
+[[cost.multipliers]]
+when = { utc_hours = { gte = "18:00" } }
+factor = 0.5

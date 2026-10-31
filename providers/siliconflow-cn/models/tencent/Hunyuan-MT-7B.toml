@@ -1,0 +1,14 @@
+# Prices: China pricing page https://www.siliconflow.cn/pricing (SKU billing rows, CNY per 1M tokens, accessed 2026-10-31):
+# free (input 0, output 0), labelled "限免" (free for a limited time).
+# Catalog (same page, model row, 2026-10-31): contextLen 32768, jsonModeSupport; functionCallSupport false.
+schema = 2
+base_model = "tencent/hunyuan-mt-7b"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

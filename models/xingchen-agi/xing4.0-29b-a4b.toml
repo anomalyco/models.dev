@@ -1,0 +1,75 @@
+# Sources (accessed 2026-10-31):
+# - Model card: https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B (China Telecom AI; successor to TeleChat; 29B total / 4B active MoE,
+#   Apache-2.0, 256K native context extensible to 512K, tool calling, thinking on by default with
+#   chat_template_kwargs.enable_thinking to turn it off)
+# - Release: Hugging Face repo created 2026-09-16 (https://huggingface.co/api/models/XingChen-AGI/Xing4.0-29B-A4B)
+# - Context: config.json max_position_embeddings = 262144.
+# - Output: the card documents no output cap; 131_072 is the largest max_tokens its own evaluations use (AIME2026 footnote).
+# Sampling: open weights; the card recommends temperature 1.0 (0.8 for coding/agents), top_p 0.95, repetition_penalty 1.05.
+#   top_k is a standard sampler for the weights.
+# Benchmarks: card table and footnotes (harness and settings per benchmark).
+schema = 2
+name = "Xing4.0 29B A4B"
+description = "China Telecom open-weight MoE model with 29B total and 4B active parameters for agents, coding, and long-context reasoning"
+open_weights = true
+release_date = "2026-09-16"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+
+[[benchmarks]]
+name = "SWE-bench Verified"
+score = 75.0
+harness = "SWE-agent"
+source = "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+
+[[benchmarks]]
+name = "SWE-bench Multilingual"
+score = 66.0
+harness = "SWE-agent"
+source = "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 57.5
+version = "2.1"
+harness = "terminus-2"
+source = "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+
+[[benchmarks]]
+name = "IFBench"
+score = 69.67
+source = "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+
+[[benchmarks]]
+name = "AIME 2026"
+score = 90.0
+source = "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+
+[[benchmarks]]
+name = "Tau3-Bench"
+score = 64.63
+metric = "pass^1"
+source = "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+
+[[benchmarks]]
+name = "Claw-Eval"
+score = 76.55
+source = "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"

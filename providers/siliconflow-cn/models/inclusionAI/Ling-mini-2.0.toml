@@ -1,0 +1,16 @@
+# Prices: China pricing page https://www.siliconflow.cn/pricing (SKU billing rows, CNY per 1M tokens, accessed 2026-10-31),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.669566, 2026-10-31,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 0.5, output 2 (no cache price listed)
+# Catalog (same page, model row, 2026-10-31): contextLen 131072, functionCallSupport, jsonModeSupport.
+schema = 2
+base_model = "inclusionai/ling-mini-2.0"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.0749674
+
+[cost.text.output]
+price = 0.29986959

@@ -1,0 +1,33 @@
+# Sources (accessed 2026-10-31):
+# - Model card: https://huggingface.co/tencent/Hunyuan-MT-7B (translation model for 33 languages, open-sourced 2025-09-01)
+# - License: https://huggingface.co/tencent/Hunyuan-MT-7B/blob/main/License.txt (Tencent Hunyuan Community License, release date September 1, 2025)
+# - Limits: config.json max_position_embeddings = 32768 (rope factor 1.0). The card documents no separate output cap, so output is the full window.
+# - Tools: the card and chat template document translation prompts only, no function calling.
+# Sampling: open weights; the card recommends temperature 0.7, top_p 0.6, top_k 20
+#   (https://huggingface.co/tencent/Hunyuan-MT-7B/blob/main/generation_config.json).
+schema = 2
+name = "Hunyuan-MT-7B"
+description = "Tencent Hunyuan 7B translation model for mutual translation across 33 languages"
+family = "hunyuan"
+open_weights = true
+release_date = "2025-09-01"
+license = "Tencent Hunyuan Community License"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/tencent/Hunyuan-MT-7B"

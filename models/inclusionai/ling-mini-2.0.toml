@@ -1,0 +1,34 @@
+# Sources (accessed 2026-10-31):
+# - Model card: https://huggingface.co/inclusionAI/Ling-mini-2.0 (16B total / 1.4B active MoE, MIT, context 32K -> 128K with YaRN)
+# - Release: Hugging Face repo created 2025-09-08 (https://huggingface.co/api/models/inclusionAI/Ling-mini-2.0)
+# - Tools: the chat template renders a tools block and <tool_call> output
+#   (https://huggingface.co/inclusionAI/Ling-mini-2.0/blob/main/tokenizer_config.json).
+# - Reasoning: non-thinking model; the chat template hard-codes "detailed thinking off".
+# - Output: the card documents no output cap; 32_768 is the native (pre-YaRN) window from config.json.
+# Sampling: open weights; the card's vLLM example uses temperature 0.7, top_p 0.8. top_k is a standard sampler for the weights.
+schema = 2
+name = "Ling-mini-2.0"
+description = "Compact MoE model with 16B total and 1.4B active parameters for fast, low-cost assistance"
+family = "ling"
+open_weights = true
+release_date = "2025-09-08"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/Ling-mini-2.0"

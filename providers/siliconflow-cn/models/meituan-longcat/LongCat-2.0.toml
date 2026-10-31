@@ -1,0 +1,28 @@
+# Prices: China pricing page https://www.siliconflow.cn/pricing (SKU billing rows, CNY per 1M tokens, accessed 2026-10-31),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.669566, 2026-10-31,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 5, output 20, cache read 0.1
+# Catalog (same page, model row, 2026-10-31): contextLen 1048576, functionCallSupport, jsonModeSupport.
+# Reasoning: no caller control documented for this model on SiliconFlow China (not listed for enable_thinking or
+# reasoning_effort; the reasoning guide says only the Qwen3 series enforces thinking_budget), matching the siliconflow-cn
+# peers for non-Qwen reasoning models. The global siliconflow file lists thinking_budget; it is left out here for that reason.
+# https://docs.siliconflow.cn/docs/userguide/capabilities/reasoning
+schema = 2
+base_model = "meituan/longcat-2.0"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.74967397
+cache = { read = 0.01499348 }
+
+[cost.text.output]
+price = 2.99869587
