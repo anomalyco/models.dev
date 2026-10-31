@@ -1,0 +1,51 @@
+# Verified live 2026-10-31 against POST https://api.hop-base.com/v1/chat/completions with this exact
+# model ID: non-streaming, streaming (stream_options.include_usage returns usage), and a
+# tool call (tool_choice auto) that returned a well-formed function call.
+# Limits: 128K context, up to 32K output (https://hop-base.com/llms.txt); max_tokens=32768 -> 200,
+# 32769 -> HTTP 400 "expected a value <= 32768".
+# tool_choice none|required|named all honoured.
+# Toggle: thinking.type = enabled|disabled; thinking is OFF by default (a bare request returned
+# 0 reasoning tokens).
+# Effort: reasoning_effort = minimal|low|high, paired with thinking.type = enabled. A graded effort
+# sent alone returns HTTP 400 "Invalid combination of reasoning_effort and thinking type: low +
+# disabled". With thinking enabled: minimal 0, low 1, high 135 reasoning tokens on a short prompt.
+# Reasoning text is returned in message.reasoning_content.
+# Images: a red PNG data URL returned "Red"; HopBase documents image input (public URL or base64)
+# but not video, so input is limited to text and common image types here.
+# Structured output: json_schema with strict = true returned an enum-valid object.
+# Pricing: HopBase list price, USD; equals the official Volcano Engine CNY list price converted at 6.8 CNY/USD (2026-10-31).
+schema = 2
+base_model = "bytedance-seed/seed-character"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "high"] }
+structured_output = true
+stream_usage = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1177
+cache = { read = 0.0236 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_768 } }
+price = 0.1765
+cache = { read = 0.0236 }
+
+[cost.text.output]
+price = 0.2942
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_768 } }
+price = 0.8824

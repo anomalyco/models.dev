@@ -1,0 +1,36 @@
+# Verified live 2026-10-31 against POST https://api.hop-base.com/v1/chat/completions with this exact
+# model ID: non-streaming, streaming (stream_options.include_usage returns usage), and a
+# tool call (tool_choice auto) that returned a well-formed function call.
+# HopBase serves DeepSeek V4 Pro 0813 under the ID deepseek-v4-pro-202606 (https://hop-base.com/llms.txt).
+# Limits: 1,048,576-token context, up to 393,216 output tokens (same source). Text only: an image
+# returns HTTP 400 image_input_not_supported before reaching the model.
+# Toggle: thinking.type = enabled|disabled (disabled -> 0 reasoning tokens).
+# Effort: reasoning_effort = low|high|max, the native DeepSeek levels; medium is accepted and
+# mapped by DeepSeek, none also turns thinking off, an unknown value returns HTTP 400.
+# Relative effort was not benchmarked.
+# Reasoning text is returned in message.reasoning_content and delta.reasoning_content.
+# Structured output: json_schema with strict = true returned an enum-valid object.
+# Cache: repeating a ~2.5K-token prefix returned cached_tokens = 2048.
+# Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt). Single all-day rate.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.726
+cache = { read = 0.0242 }
+
+[cost.text.output]
+price = 2.178

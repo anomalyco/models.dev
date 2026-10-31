@@ -1,0 +1,28 @@
+# Released 2026-10-15: https://bernama.com/en/press/news.php?id=2622471
+#   ("Kling AI Officially Launches Next-Generation Kling 4.0").
+# Inputs: text prompt plus first/last-frame images (JPG/JPEG or PNG, as for Kling 3.0):
+#   https://app.klingai.com/global/dev/document-api/apiReference/model/imageToVideo
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+# Sampling: the task API has no temperature, top_p or top_k.
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling VIDEO 4.0"
+description = "Kling 4.0 video model with clips up to 30 seconds, keyframe control and native audio"
+open_weights = false
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

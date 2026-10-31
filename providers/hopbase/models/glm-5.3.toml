@@ -1,0 +1,34 @@
+# Verified live 2026-10-31 against POST https://api.hop-base.com/v1/chat/completions with this exact
+# model ID: non-streaming, streaming (stream_options.include_usage returns usage), and a
+# tool call (tool_choice auto) that returned a well-formed function call.
+# Limits: max_tokens=131072 -> 200, 131073 -> HTTP 400 "限制数值范围[1,131072]" (matches the lab file).
+# Text only: an image returns HTTP 400 image_input_not_supported.
+# Toggle: thinking.type = enabled|disabled (disabled -> 0 reasoning tokens).
+# Effort: reasoning_effort = low|high|max, Zhipu's native levels; the host also accepts
+# none|minimal|medium|xhigh (error text for an unknown value lists
+# "none、minimal、low、medium、high、xhigh、max"). Relative effort was not benchmarked.
+# Reasoning text is returned in message.reasoning_content and delta.reasoning_content.
+# Structured output: json_schema with strict = true returned an enum-valid object.
+# Cache: repeating a ~2.6K-token prefix returned cached_tokens = 2560.
+# tool_choice: none honoured; required/named did not force a call, so only auto and none.
+# Also checked through @ai-sdk/openai-compatible 1.0.60 (generateText, streamText, tool round trip).
+# Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.19
+cache = { read = 0.221 }
+
+[cost.text.output]
+price = 3.74
