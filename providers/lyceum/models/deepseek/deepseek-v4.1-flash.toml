@@ -1,0 +1,21 @@
+# Effort: reasoning_effort none|low|high|max (none = off). Images per the models page and dashboard; the docs' 2026-09-17 check saw 502s.
+# Off: reasoning_effort "none", the only switch the docs list for this model. https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 1.5

@@ -1,0 +1,15 @@
+# Sources (2026-10-21), https://docs.lyceum.technology/docs/inference/serverless:
+# - Prices and cached-input prices: https://lyceum.technology/models/ ("Prices in US dollars per million tokens", dated 2026-10-05)
+# - cache.implicit: #prompt-caching (automatic prefix caching, billed at the cached-input rate)
+# - limit.output = 131_072: #request-limits (larger max_tokens is rejected with 400)
+# - Image/PDF input: #which-models-accept-images and #pdf-input; video isn't offered
+# - Reasoning controls: #controlling-reasoning. reasoning_field = reasoning_content per #reasoning-models,
+#   except glm-5.3, deepseek-v4-flash-0731, deepseek-v4-pro-0813 and kimi-k3, which can return message.reasoning
+# - reasoning_effort and tools are per-request fields, so effort_updates and tools.updates are left out (default false)
+# - response_format is undocumented, so structured_output is unset
+name = "Lyceum"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["LYCEUM_API_KEY"]
+api = "https://api.lyceum.technology/openai/v1"
+doc = "https://docs.lyceum.technology/docs/inference/serverless"

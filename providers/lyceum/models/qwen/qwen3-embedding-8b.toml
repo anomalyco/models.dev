@@ -1,0 +1,13 @@
+# API: POST https://api.lyceum.technology/openai/v1/embeddings, embeddings endpoint only (https://docs.lyceum.technology/docs/inference/serverless#embeddings)
+# Context inherits the lab's 32,768: Lyceum doesn't document an input limit for this model.
+schema = 2
+base_model = "alibaba/qwen3-embedding-8b"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0
