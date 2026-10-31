@@ -1,0 +1,34 @@
+# Prices: GET https://vibetoken.cn/api/models/minimax/minimax-m3/pricing (2026-10-30), what the host charges:
+# input/output = list x (1 - discount); cache reads and writes bill at list.
+# CNY converted to USD at 1 CNY = 0.15011 USD (ECB reference rate, 2026-10-29).
+# Controls as in providers/minimax/models/MiniMax-M3.toml, sent on MiniMax Chat Completions
+# (VibeToken forwards the field unchanged; reasoning returns in reasoning_content).
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.283708
+cache = { read = 0.063046 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 0.567416
+cache = { read = 0.126092 }
+
+[cost.text.output]
+price = 1.134832
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 2.269663

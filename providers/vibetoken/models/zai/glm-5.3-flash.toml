@@ -1,0 +1,20 @@
+# Prices: GET https://vibetoken.cn/api/models/zai/glm-5.3-flash/pricing (2026-10-30), what the host charges:
+# input/output = list x (1 - discount); cache reads and writes bill at list.
+# CNY converted to USD at 1 CNY = 0.15011 USD (ECB reference rate, 2026-10-29).
+# Same upstream controls as providers/novita-ai/models/zai-org/glm-5.3-flash.toml (VibeToken forwards them unchanged):
+# Effort: reasoning_effort = low|high|max; thinking.type=disabled does not suppress reasoning on this route.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.102075
+cache = { read = 0.034525 }
+
+[cost.text.output]
+price = 0.357262
