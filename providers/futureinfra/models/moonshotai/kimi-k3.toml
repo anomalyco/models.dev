@@ -1,0 +1,20 @@
+# FutureInfra bills in KRW. USD = KRW / 1355.84 (open.er-api.com, 2026-10-01).
+# KRW per 1M tokens: input 1177, output 17837
+base_model = "moonshotai/kimi-k3"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.8683
+output = 13.1553
+cache_read = 0.866
+
+[limit]
+output = 943_718

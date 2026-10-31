@@ -1,0 +1,14 @@
+# FutureInfra bills in KRW. USD = KRW / 1355.84 (open.er-api.com, 2026-10-01).
+# KRW per 1M tokens: input 2675, output 16053
+base_model = "google/gemini-3.5-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 1.9733
+output = 11.8398
+reasoning = 11.84
+cache_read = 0.1973
+cache_write = 0.1096
