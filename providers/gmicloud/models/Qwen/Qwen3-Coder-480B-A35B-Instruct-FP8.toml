@@ -1,8 +1,7 @@
 # Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
 # Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
 # GMI reports 262_128 for this serving id, not 262_144; copied verbatim.
-# Controls: copied from providers/alibaba/models/qwen3-coder-480b-a35b-instruct.toml (first-party entry).
-# Budget: thinking_budget
+# Non-reasoning (lab and first-party both reasoning = false); no controls claimed.
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 
@@ -14,12 +13,12 @@ price = 0.9
 cache = { read = 0.18 }
 
 [[cost.text.input.overrides]]
-when = { context = { gte = 32_000 } }
+when = { context = { gt = 32_000 } }
 price = 1.62
 cache = { read = 0.324 }
 
 [[cost.text.input.overrides]]
-when = { context = { gte = 128_000 } }
+when = { context = { gt = 128_000 } }
 price = 2.7
 cache = { read = 0.54 }
 
@@ -27,9 +26,9 @@ cache = { read = 0.54 }
 price = 4.5
 
 [[cost.text.output.overrides]]
-when = { context = { gte = 32_000 } }
+when = { context = { gt = 32_000 } }
 price = 8.1
 
 [[cost.text.output.overrides]]
-when = { context = { gte = 128_000 } }
+when = { context = { gt = 128_000 } }
 price = 13.5
