@@ -1,0 +1,20 @@
+# Prices: GET https://routerbase.com/api/models/minimax/minimax-m3.1-flash/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Controls as in providers/minimax/models/MiniMax-M3.1-Flash.toml, sent on MiniMax Chat Completions
+# (RouterBase forwards the field unchanged; reasoning returns in reasoning_content).
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

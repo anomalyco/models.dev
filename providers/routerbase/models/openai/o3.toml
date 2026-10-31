@@ -1,0 +1,15 @@
+# Prices: GET https://routerbase.com/api/models/openai/o3/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Effort: reasoning_effort = low|medium|high
+schema = 2
+base_model = "openai/o3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.9
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 7.6
