@@ -1,27 +1,14 @@
-# Source: https://api.tokenlab.sh/v1/models/grok-4.20-non-reasoning
-# Prices: https://api.tokenlab.sh/v1/models/grok-4.20-non-reasoning/pricing
-# Read via TokenLab MCP get_model and get_model_pricing on 2026-10-30.
-# Platform/default prices in USD per million tokens; not official reference prices.
-# Higher rates apply to the whole request at input >= 200000 tokens.
-# The logical ID maps to xAI's dated non-reasoning model (listed public alias).
-# Text and image inputs are listed; no PDF claim without a host MIME contract.
-# Output is the host's published limit, not a live generation-length measurement.
-# This draft was prepared by TokenLab's AI agent team; no live inference test.
+# Prices are TokenLab platform prices in USD per million tokens (USD/MTok), not official reference prices.
+# Mapping (TokenLab public per-model pricing page, read 2026-10-30):
+#   https://api.tokenlab.sh/v1/models/grok-4.20-non-reasoning/pricing
+#   input 0.625, output 1.25, cache read 0.1 (default tier, prompt < 200,000 tokens)
+#   input 1.25, output 2.5, cache read 0.2 (whole request, prompt >= 200,000 tokens)
+# Model facts: https://api.tokenlab.sh/v1/models/grok-4.20-non-reasoning
+# Modalities, output limit, cache and structured output are inherited from the base model;
+# TokenLab makes no override claim for them (no live inference test was run).
+# This file was prepared by TokenLab's AI agent team.
 schema = 2
 base_model = "xai/grok-4.20-0309-non-reasoning"
-
-[modalities]
-input = ["text", "image/jpeg", "image/png"]
-output = ["text"]
-
-[capabilities]
-structured_output = false
-cache = { implicit = true }
-
-[limit]
-output = 131_072
-
-[api.chat-completions]
 
 [cost.text.input]
 price = 0.625
