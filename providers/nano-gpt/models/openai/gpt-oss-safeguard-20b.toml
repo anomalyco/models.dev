@@ -3,7 +3,6 @@ schema = 2
 base_model = "openai/gpt-oss-safeguard-20b"
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
 
