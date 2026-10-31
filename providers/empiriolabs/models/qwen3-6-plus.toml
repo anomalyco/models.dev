@@ -10,6 +10,9 @@ base_model = "alibaba/qwen3.6-plus"
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 131_072 } }
 structured_output = true
 
+[limit]
+context = 983_616
+
 [cost.text.input]
 price = 0.5
 cache = { read = 0.5 }
