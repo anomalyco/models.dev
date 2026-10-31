@@ -1,16 +1,17 @@
-# Price: https://cloudcode.one/models.json (accessed 2026-10-23).
-# Effort: reasoning_effort = none|high (default none; low and medium act as none, xhigh and max as high)
-# Checked live through the Chat Completions endpoint on 2026-10-23:
-# - Images: PNG, JPEG, WebP and GIF were read.
-# - With reasoning_effort unset, none or low there was no reasoning; high and max reasoned.
+# Price: https://cloudcode.one/models.json (accessed 2026-10-31).
+# Effort: reasoning_effort = low|medium|high (default low; none and minimal are read as low, xhigh and max as high)
+# Checked live through the Chat Completions endpoint on 2026-10-31:
+# - Images: PNG, JPEG, WebP and GIF were read (each image's single colour named correctly).
+# - Unset, none, minimal and low all gave the lightest reasoning (1.2k-2.1k chars on the same prompt);
+#   medium, high, xhigh and max reasoned more (2.1k-3.5k chars).
 # - Caching is automatic and keyed per API key by the gateway: a repeated 16k-token prefix came back
-#   with 15,852 cached tokens.
+#   with 15,872 cached tokens.
 # - A strict json_schema response_format returned schema-valid JSON.
 schema = 2
 base_model = "mistral/mistral-large-4"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
 
@@ -18,8 +19,8 @@ cache = { implicit = true }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 2.72
-cache = { read = 0.28 }
+price = 1.54
+cache = { read = 0.154 }
 
 [cost.text.output]
-price = 8.36
+price = 4.62
