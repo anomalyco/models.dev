@@ -1,0 +1,13 @@
+# Catalog: GET https://api.1min.ai/openai/v1/models (2026-10-31). Credit-based pricing;
+# USD token prices are unpublished and omitted except deepseek-flash, whose cost is an
+# estimate derived from the credit price.
+# Live checks 2026-10-31: tools and streaming work; temperature is rejected for
+# deepseek-flash, deepseek-v4-pro and gpt-5.4; reasoning_effort is accepted for gpt-5.4
+# (enum none|minimal|low|medium|high|xhigh) but rejected for DeepSeek. reasoning_content
+# is never returned, even though reasoning tokens are billed, so no reasoning_field is set.
+name = "1min.ai"
+env = ["1MIN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+doc = "https://1min.ai"
+api = "https://api.1min.ai/openai/v1"

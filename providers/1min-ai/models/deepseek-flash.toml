@@ -1,0 +1,16 @@
+# 1min.ai catalog id `deepseek-flash` (GET /models, 2026-10-31); metadata inherited from deepseek/deepseek-v4.1-flash-1017.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true }
+temperature = false
+
+# Effective cost derived from 1min.ai credit pricing (~4M credits ~= $1.26 at
+# the midpoint of DeepSeek's off-peak/peak rates); 1min.ai publishes no USD prices.
+[cost.text.input]
+price = 0.225
+
+[cost.text.output]
+price = 0.9
+reasoning = 0.9
