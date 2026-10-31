@@ -30,7 +30,7 @@ context = 1_000_000
 
 [api.responses]
 base_url = "https://api.venice.ai/api/v1"
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/venice/responses" }
 capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [cost.text.input]

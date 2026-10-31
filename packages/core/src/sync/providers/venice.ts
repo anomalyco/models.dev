@@ -127,7 +127,7 @@ export const venice = {
 // https://docs.venice.ai/guides/features/responses-api
 const RESPONSES_API = {
   base_url: "https://api.venice.ai/api/v1",
-  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/venice/responses" },
 };
 // Web search is $10.00 per 1K requests on models that support it.
 // https://docs.venice.ai/overview/pricing#web-search-and-scraping
