@@ -1,0 +1,15 @@
+schema = 2
+base_model = "mistral/codestral-2508"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 0.3165
+cache = { read = 0.03165 }
+
+[cost.text.output]
+price = 0.9495
