@@ -1,14 +1,7 @@
-# CoralBricks renamed its public model IDs on 2026-10-04: deepseek-v4.1-flash-fast is the advertised ID for the model
-# that deepseek-v4.1-flash-fast-fp4 names. Both resolve to the same model at the same rates; the older ID keeps working.
-# Pricing per https://www.coralbricks.ai/pricing and https://www.coralbricks.ai/api/public/models (accessed 2026-10-10):
-# input $0.01, output $1.20 per 1M tokens. A retained (cache-written) prompt token bills the input rate plus a $0.08
-# cache-write add-on once, so cache_write below is the full $0.09; cached input is free.
-# Effort: reasoning_effort = none|low|high|max. Reasoning is opt-in: with no reasoning_effort, or none, the model
-# answers without reasoning. thinking.type is ignored by this endpoint.
-# Verified live against POST https://inference.coralbricks.ai/v1/chat/completions (2026-10-04) on this ID: low, high and
-# max return HTTP 200 with reasoning_content; none and no field return 0 reasoning tokens. An image_url part in a user
-# message is answered from the image, so attachment and the image modality come from the base model.
-# Pricing and output update: GET https://inference.coralbricks.ai/v1/models (checked 2026-10-21) lists input 0.25, cached_input 0.005, cache_write 0.00, output 1.20 USD per 1M tokens and max_output_tokens 393,216 (the 2026-10-10 notes above are superseded).
+# Public standard-plan rates verified 2026-10-26: https://www.coralbricks.ai/pricing
+# and https://inference.coralbricks.ai/v1/models. Cache write is the total written-token
+# price (input rate, no surcharge). Existing Fast legacy account prices can differ.
+# reasoning_effort accepts none|low|high|max; both tiers share model capabilities.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
@@ -24,8 +17,8 @@ output = 393_216
 legacy_interleaved = true
 
 [cost.text.input]
-price = 0.25
-cache = { read = 0.005, write = 0 }
+price = 0.45
+cache = { read = 0.009, write = 0.45 }
 
 [cost.text.output]
-price = 1.2
+price = 1.8
