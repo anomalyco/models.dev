@@ -1,0 +1,16 @@
+# GPT Hub channel: the adapter only strips the gateway-canonical `reasoning`
+# object and forwards native `reasoning_effort`, so the full upstream effort
+# ladder is available. Modalities follow Token Market's own catalog, which lists
+# text and image input only.
+base_model = "openai/gpt-5.6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.03
+output = 0.18
+cache_read = 0.003
+cache_write = 0.0375
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

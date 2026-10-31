@@ -1,0 +1,10 @@
+# GPT Hub channel: the adapter only strips the gateway-canonical `reasoning`
+# object and forwards native `reasoning_effort`. Upstream GPT-5.4 tops out at
+# xhigh.
+base_model = "openai/gpt-5.4-mini"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.1125
+output = 0.675
+cache_read = 0.01125
