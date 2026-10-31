@@ -1,0 +1,27 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM reasoning: /v1/models exposes only `thinking`; the provider API has no
+# toggle, effort or budget request field (provider.toml audit, 2026-06-25).
+# RouteLLM input_modalities: ["text","image","audio"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 65536
+# RouteLLM input_token_rate: 0.000002
+# RouteLLM output_token_rate: 0.00001
+# RouteLLM cached_input_token_rate: 0.0000001
+# RouteLLM thinking: None
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
