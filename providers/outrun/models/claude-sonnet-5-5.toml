@@ -1,0 +1,17 @@
+# Outrun host entry for Claude Sonnet 5.5.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/claude-sonnet-5-5
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/claude-sonnet-5-5
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.49
+cache = { read = 0.0245, write = { "5m" = 0.6125, "1h" = 0.98 } }
+
+[cost.text.output]
+price = 2.45

@@ -1,0 +1,17 @@
+# Outrun host entry for Claude Opus 5.5.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/claude-opus-5-5
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/claude-opus-5-5
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2.24
+cache = { read = 0.112, write = { "5m" = 2.8, "1h" = 4.48 } }
+
+[cost.text.output]
+price = 11.2

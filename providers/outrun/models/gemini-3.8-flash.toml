@@ -1,0 +1,20 @@
+# Outrun host entry for Gemini 3.8 Flash.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/gemini-3.8-flash
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/gemini-3.8-flash
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 0.315
+cache = { read = 0.0315 }
+
+[cost.text.output]
+price = 1.575

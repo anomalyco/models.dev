@@ -1,0 +1,19 @@
+# Outrun host entry for Kimi K3.1 Pro.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/kimi-k3.1-pro
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/kimi-k3.1-pro
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+output = 32_000
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.06, write = 0.2 }
+
+[cost.text.output]
+price = 0.2
