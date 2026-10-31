@@ -1,13 +1,24 @@
-# gpt-oss honours OpenAI-style `reasoning_effort` (low|medium|high), which
-# Pendra forwards on POST /api/v1/chat/completions.
-# Pendra serves models on your own workers — there is no per-token charge at
-# the API. Billing is by GPU/plan, so token costs are zero here.
+# Tool choice: auto or none. Pendra asks for a required or named call in the prompt but does not force it on this model.
+# Effort: reasoning_effort = low|medium|high. In the prompt Pendra maps the other words: xhigh → high, max → high. none, minimal: accepted, adds nothing to the prompt.
+# Default: a request that sends no reasoning_effort gets the medium level (catalogue reasoning_controls).
+# Budget: none. Pendra cannot move this model on to its answer part-way through thinking (catalogue reasoning_controls).
+# Reasoning field: reasoning_content in replies; send it back on assistant turns in that field.
+# Cache: implicit. Workers reuse a repeated prompt prefix with no markers (cached_tokens in usage).
+# Context: the lab's window is the most Pendra serves; a worker may run a smaller window sized to its memory.
+# Generated from Pendra's model catalogue (served at https://api.pendra.ai/api/v1/catalogue)
+# Thinking controls: https://pendra.ai/docs/capabilities/thinking
+# Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"], default = { type = "effort", value = "medium" } }
 structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0
