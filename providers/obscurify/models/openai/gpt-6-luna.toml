@@ -1,0 +1,15 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (none turns reasoning off)
+# Controls follow providers/openai/models/gpt-6-luna.toml.
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: none and max accepted (no reasoning at none, reasoning returned at max); an unknown level is rejected.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.1105
+
+[cost.text.output]
+price = 0.5525
