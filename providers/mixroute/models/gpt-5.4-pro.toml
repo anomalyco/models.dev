@@ -1,0 +1,12 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openai/models/gpt-5.4-pro.toml
+schema = 2
+base_model = "openai/gpt-5.4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]

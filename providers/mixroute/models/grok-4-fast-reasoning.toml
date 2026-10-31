@@ -1,0 +1,9 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/qiniu-ai/models/x-ai/grok-4-fast-reasoning.toml
+schema = 2
+base_model = "xai/grok-4-fast-reasoning"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.chat-completions]

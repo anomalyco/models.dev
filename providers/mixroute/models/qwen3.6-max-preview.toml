@@ -1,0 +1,10 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/alibaba/models/qwen3.6-max-preview.toml
+# Toggle: enable_thinking = true|false
+schema = 2
+base_model = "alibaba/qwen3.6-max-preview"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {  } }
+
+[api.chat-completions]
