@@ -1,0 +1,15 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-23); Standard group, the default for new accounts.
+# Toggle: thinking.type = enabled|disabled (Tested on XHuoAPI Chat Completions 2026-10-23: disabled → 0 reasoning tokens)
+# Effort: reasoning_effort = low|high|max (same wire as deepseek-v4-flash / v4-pro on this host)
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.016 }
+
+[cost.text.output]
+price = 3.2
