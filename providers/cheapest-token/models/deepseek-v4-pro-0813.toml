@@ -1,0 +1,31 @@
+# CheapestToken relay of deepseek/deepseek-v4-pro-0813 (routed via digitalocean:
+# openai/deepseek-v4-pro-0813). Override-only file: identity/description/dates inherit from the
+# base_model lab entry.
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 1.32 / our output 3.56 / cached 0.04; upstream DO output is 3.96 — our reseller price
+# is intentionally lower).
+# Limit: served caps follow the digitalocean same-surface peer (providers/digitalocean/models/
+# deepseek-v4-pro-0813.toml: 1_048_576 / 1_048_576); our LiteLLM route sets no caps of its own.
+# Effort: reasoning_effort = none|low|high|max (live on our /v1 2026-10-31: none → 200 without
+# reasoning — reasoning is off by default and none keeps it off — and low/high/max → 200 with
+# reasoning; medium/xhigh → 200 too but are lab-mapped aliases (DeepSeek V4 maps medium/xhigh →
+# high), so they are not authored). No toggle (off is effort=none) and no budget: thinking → 400
+# UnsupportedParamsError, and enable_thinking / thinking_budget are silently ignored (2026-10-31).
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 1.32
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 3.56
