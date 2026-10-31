@@ -1,17 +1,30 @@
-# Cheapest Token relay of nvidia/nemotron-3.5-super-vl-120b-a12b (routed via digitalocean: openai/nemotron-3.5-super-vl).
-# Override-only file: identity/description/dates inherit from the base_model lab entry.
-# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Cheapest Token relay of nvidia/nemotron-3.5-super-vl-120b-a12b (routed via digitalocean:
+# openai/nemotron-3.5-super-vl). Override-only file: identity/description/dates inherit from the
+# base_model lab entry (context identical to the lab 1_048_576, so only the output delta is
+# kept); display name is our catalog's ("NVIDIA Nemotron 3.5 Super VL",
+# GET https://api.cheapest-token.com/api/v1/models display_name).
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 0.3 / our output 0.65 / cached 0.06).
+# Limit: output 1_048_576 follows the digitalocean same-surface peer (providers/digitalocean/
+# models/nemotron-3.5-super-vl.toml); context inherits the lab 1_048_576.
+# Toggle evidence (live on our /v1 2026-10-31): chat_template_kwargs.enable_thinking=false →
+# 200 without reasoning (2/2 runs), =true → 200 with reasoning; the same field the nvidia
+# first-party entry documents (providers/nvidia/models/nvidia/nemotron-3.5-super-vl-120b-a12b.toml).
+# reasoning_effort is not authored: the field is unvalidated on this route (an arbitrary value →
+# 200); reasoning_effort=none also disables reasoning (4/4 runs) but no graded levels are
+# provable, so only the native toggle is documented. thinking → 400 UnsupportedParamsError.
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
 schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "NVIDIA Nemotron 3.5 Super VL"
 
 [capabilities]
-tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 
 [limit]
-context = 1_048_576
-output = 8_192   # lab output limit; our BE tracks context only
+output = 1_048_576
 
 [cost.text.input]
 price = 0.3

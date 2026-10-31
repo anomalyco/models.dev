@@ -1,17 +1,27 @@
-# Cheapest Token relay of deepseek/deepseek-v4-pro-0813 (routed via digitalocean: openai/deepseek-v4-pro-0813).
-# Override-only file: identity/description/dates inherit from the base_model lab entry.
-# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Cheapest Token relay of deepseek/deepseek-v4-pro-0813 (routed via digitalocean:
+# openai/deepseek-v4-pro-0813). Override-only file: identity/description/dates inherit from the
+# base_model lab entry.
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 1.32 / our output 3.56 / cached 0.04; upstream DO output is 3.96 — our reseller price
+# is intentionally lower).
+# Limit: served caps follow the digitalocean same-surface peer (providers/digitalocean/models/
+# deepseek-v4-pro-0813.toml: 1_048_576 / 1_048_576); our LiteLLM route sets no caps of its own.
+# Effort: reasoning_effort = none|low|high|max (live on our /v1 2026-10-31: none → 200 without
+# reasoning — reasoning is off by default and none keeps it off — and low/high/max → 200 with
+# reasoning; medium/xhigh → 200 too but are lab-mapped aliases (DeepSeek V4 maps medium/xhigh →
+# high), so they are not authored). No toggle (off is effort=none) and no budget: thinking → 400
+# UnsupportedParamsError, and enable_thinking / thinking_budget are silently ignored (2026-10-31).
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
-name = "DeepSeek V4 Pro 0813"
 
 [capabilities]
-tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
-reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 
 [limit]
 context = 1_048_576
-output = 393_216   # lab output limit; our BE tracks context only
+output = 1_048_576
 
 [cost.text.input]
 price = 1.32

@@ -1,17 +1,30 @@
 # Cheapest Token relay of alibaba/qwen3.8-max (routed via digitalocean: openai/qwen3.8-max).
-# Override-only file: identity/description/dates inherit from the base_model lab entry.
-# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Override-only file: identity/description/dates inherit from the base_model lab entry (context
+# identical to the lab 1_000_000, so only the output delta is kept); display name is our
+# catalog's ("Qwen3.8-Max", GET https://api.cheapest-token.com/api/v1/models display_name).
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 2 / our output 4.5 / cached 0.2).
+# Limit: output 262_144 follows the digitalocean same-surface peer (providers/digitalocean/
+# models/qwen3.8-max.toml); context inherits the lab 1_000_000.
+# Effort: reasoning_effort = none|low|medium|high|max (peer set, live on our /v1 2026-10-31:
+# none → 200 without reasoning — reasoning is off by default and none keeps it off — and
+# low/medium/high/max → 200 with reasoning; xhigh → 200 too but is not a served level on this
+# route (the DO peer and alibaba native for qwen3.8-max exclude it), so it is not authored).
+# No toggle (off is effort=none) and no budget: enable_thinking and thinking_budget are silently
+# ignored (enable_thinking=true does not turn reasoning on; thinking_budget=512 does not either),
+# and thinking → 400 UnsupportedParamsError (2026-10-31). The alibaba-native controls
+# (providers/alibaba/models/qwen3.8-max.toml) do not pass through this digitalocean route.
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen3.8-Max"
 
 [capabilities]
-tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
-reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 
 [limit]
-context = 1_000_000
-output = 131_072   # lab output limit; our BE tracks context only
+output = 262_144
 
 [cost.text.input]
 price = 2

@@ -1,17 +1,27 @@
-# Cheapest Token relay of minimax/MiniMax-M3.1-Flash (routed via digitalocean: openai/minimax-m3.1-flash).
-# Override-only file: identity/description/dates inherit from the base_model lab entry.
-# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Cheapest Token relay of minimax/MiniMax-M3.1-Flash (routed via digitalocean:
+# openai/minimax-m3.1-flash). Override-only file: identity/description/dates inherit from the
+# base_model lab entry; display name is our catalog's ("MiniMax M3.1-Flash",
+# GET https://api.cheapest-token.com/api/v1/models display_name).
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 0.15 / our output 0.6 / cached 0.01).
+# Limit: served caps follow the digitalocean same-surface peer (providers/digitalocean/models/
+# minimax-m3.1-flash.toml: 1_048_576 / 1_048_576); our LiteLLM route sets no caps of its own.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (peer set, live on our /v1 2026-10-31:
+# all five → 200 with reasoning; none → 400 "none reasoning effort is not supported", so there
+# is no off switch; the field is unvalidated beyond none (an arbitrary value → 200), so nothing
+# beyond the peer set is authored).
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 name = "MiniMax M3.1-Flash"
 
 [capabilities]
-tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "medium", "high", "xhigh", "max"] }
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
-context = 1_000_000
-output = 524_288   # lab output limit; our BE tracks context only
+context = 1_048_576
+output = 1_048_576
 
 [cost.text.input]
 price = 0.15

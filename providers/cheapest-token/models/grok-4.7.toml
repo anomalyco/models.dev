@@ -1,18 +1,22 @@
-# Cheapest Token relay of xai/grok-4.7 (routed via azure: azure/grok-4.7).
-# Override-only file: identity/description/dates inherit from the base_model lab entry.
-# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
-# Long tier: the whole call bills at the long prices when input tokens > 200,000.
+# Cheapest Token relay of xai/grok-4.7 (routed via azure: azure/grok-4.7). Override-only file:
+# identity/description/dates/limits inherit from the base_model lab entry (500K/500K, identical
+# to the base model on the azure route too — providers/azure/models/grok-4.7.toml sets no limit).
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 2 / our output 4.5 / cached 0.5; long 4 / 9 / 1) — our reseller prices, intentionally
+# different from xAI list prices.
+# Long tier: the whole call bills at the long prices when input tokens STRICTLY exceed 200,000
+# (short_context_limit 200000 in our billing catalog; gt semantics — strictly-greater boundary,
+# Azure-style, vs xAI's gte). Binding billing rule: the switch happens only when input tokens
+# strictly exceed the limit.
+# Reasoning: reasoning_effort is not forwarded on this route (400 "azure does not support
+# parameters: ['reasoning_effort']", live 2026-10-31), so there is no caller effort control here.
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
 schema = 2
 base_model = "xai/grok-4.7"
-name = "Grok 4.7"
 
 [capabilities]
-tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
-reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
-
-[limit]
-context = 500_000
-output = 500_000   # lab output limit; our BE tracks context only
+tools = { supported = true }
+reasoning = { supported = true }
 
 [cost.text.input]
 price = 2

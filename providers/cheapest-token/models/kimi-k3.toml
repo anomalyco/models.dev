@@ -1,17 +1,19 @@
 # Cheapest Token relay of moonshotai/kimi-k3 (routed via digitalocean: openai/kimi-k3).
-# Override-only file: identity/description/dates inherit from the base_model lab entry.
-# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Override-only file: identity/description/dates/limits inherit from the base_model lab entry
+# (the digitalocean peer also sets no limits, so the lab 1_048_576 / 131_072 inherit).
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 4 / our output 12 / cached 1) — our reseller prices, intentionally different from
+# moonshot list prices (3 / 15) and the DO peer's (3 / 15).
+# Effort: reasoning_effort = low|high|max (peer + moonshot-native set, live on our /v1
+# 2026-10-31: all → 200 with reasoning; none → 200 and disables reasoning (3/3 runs) but is not
+# a documented Kimi level (moonshot native and the DO peer both exclude it), so it is not authored).
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
 schema = 2
 base_model = "moonshotai/kimi-k3"
-name = "Kimi K3"
 
 [capabilities]
-tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
-
-[limit]
-context = 1_048_576
-output = 1_048_576   # lab output limit; our BE tracks context only
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
 price = 4

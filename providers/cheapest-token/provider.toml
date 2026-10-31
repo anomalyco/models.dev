@@ -1,7 +1,9 @@
-# Cheapest Token — OpenAI-compatible gateway (LiteLLM) over DigitalOcean GenAI + Azure Foundry.
-# Catalog source of truth: https://api.cheapest-token.com/api/v1/models
+# Cheapest Token — OpenAI-compatible gateway (LiteLLM) relaying DigitalOcean GenAI + Azure Foundry.
+# Catalog + billed prices: GET https://api.cheapest-token.com/api/v1/models
+# Prices are our billed reseller USD per 1M tokens, intentionally different from upstream list prices.
 name = "Cheapest Token"
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 api = "https://api.cheapest-token.com/v1"
 env = ["CHEAPEST_TOKEN_API_KEY"]
 doc = "https://cheapest-token.com/docs/opencode"

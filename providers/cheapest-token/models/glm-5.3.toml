@@ -1,17 +1,25 @@
-# Cheapest Token relay of zhipuai/glm-5.3 (routed via digitalocean: openai/glm-5.3).
-# Override-only file: identity/description/dates inherit from the base_model lab entry.
-# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Cheapest Token relay of zhipuai/glm-5.3 (routed via digitalocean: openai/glm-5.3). Override-only
+# file: identity/description/dates inherit from the base_model lab entry; display name is our
+# catalog's ("GLM5.3", GET https://api.cheapest-token.com/api/v1/models display_name; the
+# digitalocean peer shows the same).
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 1.4 / our output 3.96 / cached 0.26).
+# Limit: context 1_048_576 is our catalog's context_window (a real delta vs the lab 1_000_000);
+# output 128_000 follows the digitalocean same-surface peer (providers/digitalocean/models/glm-5.3.toml).
+# Effort: reasoning_effort = low|high|max (peer set, live on our /v1 2026-10-31: all → 200 with
+# reasoning; none/medium → 200 but do not turn reasoning off, so they are not authored).
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM5.3"
 
 [capabilities]
-tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_576
-output = 131_072   # lab output limit; our BE tracks context only
+output = 128_000
 
 [cost.text.input]
 price = 1.4

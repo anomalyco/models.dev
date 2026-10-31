@@ -1,17 +1,25 @@
-# Cheapest Token relay of deepseek/deepseek-v4.1-flash-1017 (routed via digitalocean: openai/deepseek-v4.1-flash-1017).
-# Override-only file: identity/description/dates inherit from the base_model lab entry.
-# Prices are our billed USD per 1M tokens; output price is what we charge for completions (not the list price).
+# Cheapest Token relay of deepseek/deepseek-v4.1-flash-1017 (routed via digitalocean:
+# openai/deepseek-v4.1-flash-1017). Override-only file: identity/description/dates inherit from
+# the base_model lab entry.
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 0.3 / our output 1.2 / cached 0.006).
+# Limit: served caps follow the digitalocean same-surface peer (providers/digitalocean/models/
+# deepseek-v4.1-flash-1017.toml: 1_048_576 / 1_048_576); our LiteLLM route sets no caps of its own.
+# Effort: reasoning_effort = low|high|xhigh|max (live on our /v1 2026-10-31: all four → 200 with
+# reasoning — reasoning is always on here; none → 400 "none reasoning effort is not supported"
+# and medium → 400, so there is no off switch). No toggle and no budget: thinking → 400
+# UnsupportedParamsError, and enable_thinking / thinking_budget are silently ignored (2026-10-31).
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
-name = "DeepSeek V4.1 Flash 1017"
 
 [capabilities]
-tools = { supported = true }   # verified live on /v1 (tool-call round trip, 2026-10-31)
-reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "xhigh", "max"] }
 
 [limit]
 context = 1_048_576
-output = 393_216   # lab output limit; our BE tracks context only
+output = 1_048_576
 
 [cost.text.input]
 price = 0.3
