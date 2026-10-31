@@ -72,7 +72,7 @@ try {
     console.error("Missing [provider] api:", missing.join(", "));
     process.exit(1);
   }
-  console.log(JSON.stringify(result, null, 2));
+  console.log(`Validated ${Object.keys(result).length} providers.`);
 } catch (e: any) {
   if (e instanceof ZodError) {
     console.error("Validation error:", e.errors);

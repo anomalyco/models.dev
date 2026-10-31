@@ -308,6 +308,34 @@ interface SyncOptions {
   newOnly?: boolean;
 }
 
+const FETCH_ATTEMPTS = 3;
+const FETCH_RETRY_DELAY_MS = 10_000;
+
+/**
+ * Upstream catalog endpoints occasionally drop the connection (e.g.
+ * ECONNRESET) or return a transient error. Retry the whole fetch a few times
+ * so one flaky request does not fail the scheduled sync.
+ */
+export async function fetchModelsWithRetry(
+  provider: Pick<SyncProvider<unknown>, "name" | "fetchModels">,
+  options: { attempts?: number; delayMs?: number } = {},
+): Promise<unknown> {
+  const attempts = options.attempts ?? FETCH_ATTEMPTS;
+  const delayMs = options.delayMs ?? FETCH_RETRY_DELAY_MS;
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await provider.fetchModels();
+    } catch (error) {
+      if (attempt >= attempts) throw error;
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(
+        `${provider.name} fetch failed (attempt ${attempt}/${attempts}): ${message}. Retrying in ${delayMs * attempt}ms...`,
+      );
+      await Bun.sleep(delayMs * attempt);
+    }
+  }
+}
+
 export async function syncProviderByID(id: ProviderID, options: SyncOptions = {}) {
   return syncProvider(providers[id], options);
 }
@@ -322,7 +350,7 @@ export async function syncProvider<SourceModel>(
   const existingState = await readExisting(provider.modelsDir, npm);
   const { models: existing, brokenSymlinks } = existingState;
   let { modelMetadata } = existingState;
-  const sourceModels = provider.parseModels(await provider.fetchModels());
+  const sourceModels = provider.parseModels(await fetchModelsWithRetry(provider));
   const desired = new Map<string, {
     model: z.infer<typeof SyncedAuthoredModel>;
     header: string;
