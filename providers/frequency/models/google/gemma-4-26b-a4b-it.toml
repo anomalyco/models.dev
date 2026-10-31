@@ -16,8 +16,8 @@
 #   and no reasoning tokens in usage.
 # - Thought-channel text the model writes on its own is removed from `content` before it is returned.
 # - Public endpoint, 2026-10-31, production key: the same reasoning fields on POST
-#   https://llm.scalefrequency.com/v2/chat/completions answered in 10 completion tokens; the message
-#   carried only role and content.
+#   https://llm.scalefrequency.com/v2/chat/completions answered in 10 completion tokens, with
+#   `reasoning: null` and no reasoning tokens in usage.
 # Modalities: text in, text out. The docs say any message part other than text (images, audio) is refused.
 # Limits (docs "Limits"): 32,768-token context, the request and the reply together. Replies are at most
 # 8,192 tokens per request, for every key: a larger `max_tokens` (or `max_completion_tokens`) is lowered to
