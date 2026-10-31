@@ -1,0 +1,23 @@
+# Price = midpoint of Septor's published range (input 0.69-0.69, output 2.76-2.76 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/nemotron-3-ultra-550b-a55b
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 262144
+output = 182520
+
+[cost.text.input]
+price = 0.69
+cache = { read = 0.156 }
+
+[cost.text.output]
+price = 2.76
