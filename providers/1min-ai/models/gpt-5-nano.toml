@@ -1,7 +1,7 @@
 # 1min.ai catalog id `gpt-5-nano` (GET /models, 2026-10-31); metadata inherited from openai/gpt-5-nano.
+# Custom/grammar tools are rejected (400 "expected \"function\"", live 2026-10-31), so no freeform formats.
 schema = 2
 base_model = "openai/gpt-5-nano"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
-temperature = false
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
