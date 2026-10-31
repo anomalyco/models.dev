@@ -1,0 +1,16 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: unanimous relay baseline (llmgateway, evroc, kilo).
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+# limit.context omitted: identical to the lab's 131_072 (provider files hold only real overrides).
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.25

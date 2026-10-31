@@ -1,0 +1,19 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: bf16.
+# Controls: copied from first-party tencent-tokenhub/models/hy3.toml: toggle via thinking.type
+# (enabled/disabled), effort via reasoning_effort (none/high) per Tencent docs 1823/131208.
+schema = 2
+base_model = "tencent/hy3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["none", "high"] }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.035 }
+
+[cost.text.output]
+price = 0.58
