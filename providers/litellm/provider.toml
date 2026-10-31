@@ -1,0 +1,12 @@
+# LiteLLM Proxy is a self-hosted gateway that exposes an OpenAI-compatible API.
+# Model IDs are aliases that the operator sets in the proxy config (model_list[].model_name).
+# GET /v1/models returns the aliases that a given proxy serves.
+# The API key is a LiteLLM virtual key or the master key; a proxy can also run without auth.
+# https://docs.litellm.ai/docs/proxy/quick_start
+# https://docs.litellm.ai/docs/proxy/virtual_keys
+# https://docs.litellm.ai/docs/providers/litellm_proxy
+name = "LiteLLM"
+npm = "@ai-sdk/openai-compatible"
+env = ["LITELLM_API_KEY"]
+api = "http://localhost:4000/v1"
+doc = "https://docs.litellm.ai/docs/proxy/quick_start"
