@@ -1,0 +1,27 @@
+# Source: https://infer.flow7.org/api/public/catalog (2026-10-29 UTC)
+# Exact selector: infer/grok-4.7:low-cost
+# Low cost route: text and tool calls. Image and file input need the model's :official route.
+# Limits: Infer's published figures for the model; the route publishes none of its own.
+# Reasoning controls copied from the lab's own entry, as AGENTS.md asks of relays.
+schema = 2
+base_model = "xai/grok-4.7"
+name = "Grok 4.7 (Low cost)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 199_999
+output = 450_000
+
+[cost.text.input]
+price = 0.44
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 1.3
