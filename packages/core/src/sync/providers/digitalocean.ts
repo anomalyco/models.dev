@@ -208,7 +208,7 @@ export const digitalocean = {
 // answered /v1/responses and /v1/messages live 2026-10-22).
 const RESPONSES_CREATORS = new Set(["OpenAI"]);
 const RESPONSES_API = {
-  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/digitalocean/responses" },
 };
 const MESSAGES_API = {
   sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" },
