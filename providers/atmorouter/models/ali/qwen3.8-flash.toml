@@ -1,0 +1,16 @@
+# AtmoRouter model catalog: GET https://atmorouter.dev/v1/models (accessed 2026-10-25).
+# Toggle: enable_thinking true|false (false returned no reasoning tokens live 2026-10-25).
+# Effort: top-level reasoning_effort = low|medium|xhigh (the lab's levels for this model; accepted live 2026-10-25).
+# Budget: thinking_budget (thinking_budget = 200 capped reasoning at exactly 200 tokens live 2026-10-25).
+# Mid-conversation: system_updates, effort_updates and tools.updates are unset; AtmoRouter documents none of them.
+# Input MIME types: the lab's entries for each kind AtmoRouter lists (text, image); AtmoRouter documents no formats.
+# Cost omitted: the price depends on the offer tier that serves each request (see provider.toml).
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }

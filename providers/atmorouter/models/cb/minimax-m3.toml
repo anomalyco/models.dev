@@ -1,0 +1,14 @@
+# AtmoRouter model catalog: GET https://atmorouter.dev/v1/models (accessed 2026-10-25).
+# Toggle: thinking omitted = on (AtmoRouter default); thinking.type = disabled = off. Live 2026-10-25: omitted returned ~860 reasoning
+#   tokens, disabled returned 0; adaptive and enabled also returned 0, so only omission turns thinking on.
+# Mid-conversation: system_updates, effort_updates and tools.updates are unset; AtmoRouter documents none of them.
+# Cost omitted: the price depends on the offer tier that serves each request (see provider.toml).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[limit]
+context = 1_000_000
+output = 48_000

@@ -1,0 +1,15 @@
+# AtmoRouter is a multi-model relay. This entry models only its OpenAI-compatible
+# Chat Completions API (POST https://atmorouter.dev/v1/chat/completions); no
+# [api.messages] tables are added, and there is no public /v1/responses endpoint.
+# Model IDs, context and output limits come from the public catalog at
+# GET https://atmorouter.dev/v1/models (accessed 2026-10-25).
+# Pricing is intentionally omitted: AtmoRouter bills each request at the rate
+# of whichever offer tier serves it, tier prices move continuously, and by
+# default a request may route to a tier priced above the published "From"
+# rate unless the account sets a budget (https://atmorouter.dev/models).
+name = "AtmoRouter"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["ATMOROUTER_API_KEY"]
+api = "https://atmorouter.dev/v1"
+doc = "https://atmorouter.dev/docs"
