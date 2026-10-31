@@ -1,0 +1,41 @@
+# Sources (accessed 2026-10-31):
+# - https://www.flonno.com/models/qwen3-8-flash-27b.json
+# - https://www.flonno.com/docs (reasoning_effort, modalities, limits, cache billing)
+# - https://www.flonno.com/privacy (no durable prompt/completion retention)
+# - jonasboos/Flonno src/lib/agent-discovery.ts, src/lib/model-pricing.ts, src/lib/model-provenance.ts
+# Flonno deployment name "Qwen3.8 Flash 27B"; API id qwen3.8-27b. Optimized/quantized
+# derivative of Qwen/Qwen3.8-27B (Apache-2.0), not Alibaba's Qwen3.8-Flash service.
+# Effort: reasoning_effort = none|low|medium|xhigh (default medium). Docs: high/max map
+# to xhigh; minimal maps to low. Off is effort=none, so no separate toggle.
+# Reasoning returned as message.reasoning_content (see Flonno evaluate-agent-api.py).
+# Cache: RAM prefix caching may hit; cached and uncached input both bill $0.03/1M
+# (0% cache-read discount). No separate discounted cache SKU.
+# tool_choice: auto|none (required unsupported). Images: base64 PNG/JPEG/WebP only.
+# knowledge cutoff: not stated in Flonno docs or lab qwen3.8-27b.toml — left unset.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 Flash 27B"
+description = "Flonno-hosted optimized quantized Qwen3.8 27B derivative for text, image understanding, coding and tool workflows. Runs on Flonno GPUs in Switzerland."
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], default = { type = "effort", value = "medium" } }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.25
