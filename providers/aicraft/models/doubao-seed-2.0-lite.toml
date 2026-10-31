@@ -1,0 +1,29 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "bytedance-seed/seed-2.0-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.0961
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1441
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.2883
+
+[cost.text.output]
+price = 0.5765
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.8648
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.7296

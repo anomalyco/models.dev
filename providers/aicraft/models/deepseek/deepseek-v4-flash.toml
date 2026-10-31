@@ -1,0 +1,15 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Toggle: thinking.type = enabled|disabled.
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.1601
+
+[cost.text.output]
+price = 0.3203
