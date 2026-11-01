@@ -1,0 +1,23 @@
+# https://entrim.ai/ai-models/qwen/qwen3-8-27b-api (pricing and reasoning controls, accessed 2026-10-28)
+# Limits from GET https://api.entrim.ai/v1/models: max_input_tokens 262144, max_output_tokens 65536.
+# Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off; thinking is on by default).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.4
