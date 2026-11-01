@@ -1,0 +1,11 @@
+name = "TrustedTokens"
+env = ["TRUSTEDTOKENS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# OpenAI-compatible Chat Completions on sovereign German infrastructure.
+# The same host also serves /v1/responses, /anthropic/v1/messages and
+# /v1/embeddings, but only the Chat Completions surface is cataloged here.
+# Catalog: https://api.trustedtokens.eu/v1/models (Bearer auth)
+# https://trustedtokens.eu/docs (accessed 2026-10-28)
+api = "https://api.trustedtokens.eu/v1"
+doc = "https://trustedtokens.eu/docs"
