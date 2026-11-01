@@ -1,0 +1,28 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# limit: the host's cap from the same catalog, where it is below the lab's.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max (DeepSeek's controls, passed through). low, high and max all returned reasoning
+#   (177-275 reasoning tokens). thinking.type=disabled still reasoned in 1 probe: this model is served by several providers and
+#   not every one honours it.
+#   Probed 2026-10-30 on /v1/chat/completions.
+# cache: implicit; requests to this model report cached prompt tokens in UberLLM's request log (7 days to 2026-10-30).
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.07735
+cache = { read = 0.01547 }
+
+[cost.text.output]
+price = 0.1547

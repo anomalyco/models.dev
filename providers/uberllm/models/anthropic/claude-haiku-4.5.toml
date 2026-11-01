@@ -1,0 +1,23 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# limit: the host's cap from the same catalog, where it is below the lab's.
+# Budget: thinking = { type = "enabled", budget_tokens = N } (N >= 1,024), as on Anthropic's API. With budget_tokens 1,024 the reply
+#   carried reasoning_content in 4 of 5 probes; thinking.type alone, reasoning_effort and reasoning.* gave no reasoning.
+#   Probed 2026-10-30 on /v1/chat/completions.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[limit]
+output = 32_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.71
+
+[cost.text.output]
+price = 3.55

@@ -1,0 +1,22 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# limit: the host's cap from the same catalog, where it is below the lab's.
+# Toggle: thinking.type = enabled|disabled (disabled: 2 output tokens, no reasoning; enabled: 589 reasoning tokens; on by default).
+#   Probed 2026-10-30 on /v1/chat/completions.
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+output = 24_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.336
+
+[cost.text.output]
+price = 1.056

@@ -1,0 +1,26 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# limit: the host's cap from the same catalog, where it is below the lab's.
+# Toggle: reasoning_effort = none (off: no reasoning_content) | minimal, low, medium or high (on: reasoning_content in every probe).
+#   Levels were not separable on this host (usage reports no reasoning token count), so no effort list.
+#   Probed 2026-10-30 on /v1/chat/completions.
+# cache: implicit; requests to this model report cached prompt tokens in UberLLM's request log (7 days to 2026-10-30).
+schema = 2
+base_model = "google/gemini-2.5-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+output = 65_535
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.051
+cache = { read = 0.0051 }
+
+[cost.text.output]
+price = 0.425
