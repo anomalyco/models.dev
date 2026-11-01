@@ -1,0 +1,26 @@
+# Outrun host entry for Grok 4.7.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/grok-4.7
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/grok-4.7
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.084
+cache = { read = 0.021 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 0.168
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 0.252
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 0.504

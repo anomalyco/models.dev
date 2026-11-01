@@ -1,0 +1,26 @@
+# Outrun host entry for Claude Haiku 5.5.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/claude-haiku-5-5
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/claude-haiku-5-5
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.084
+cache = { read = 0.0084, write = { "5m" = 0.105, "1h" = 0.168 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.42
+cache = { read = 0.042, write = { "5m" = 0.525, "1h" = 0.84 } }
+
+[cost.text.output]
+price = 0.42
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.1

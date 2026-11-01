@@ -1,0 +1,26 @@
+# Outrun host entry for GPT-6 Astra.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/gpt-6-astra
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/gpt-6-astra
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.588
+cache = { read = 0.0588, write = 0.735 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.176
+cache = { read = 0.1176, write = 1.47 }
+
+[cost.text.output]
+price = 2.94
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.41
