@@ -1,9 +1,10 @@
 # Catalog: https://api.mixroute.ai/v1/models
-# Reasoning reference: providers/commandcode/models/deepseek/deepseek-v4-flash-fast.toml
+# Toggle: thinking.type = enabled|disabled
+# Live 2026-11-01: both toggle values returned HTTP 200 at low effort; disabled produced 0 reasoning tokens, enabled produced 18.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [api.chat-completions]

@@ -1,3 +1,5 @@
+# Pricing section, USD per million tokens: https://mixroute.ai/models/claude-opus-5-5/
+# Explicit caching via cache_control.type=ephemeral: https://mixroute.ai/docs/api-reference/endpoint/messages#prompt-caching
 # Sources: https://mixroute.ai/models/claude-opus-5-5/ and https://mixroute.ai/docs/api-reference/endpoint/messages
 # Effort: output_config.effort on Messages; native Claude levels, matching providers/anthropic.
 # Live 2026-10-31: /v1/models lists anthropic and openai endpoints; Messages accepts x-api-key and low effort (HTTP 200).
@@ -7,6 +9,7 @@ base_model = "anthropic/claude-opus-5-5"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { explicit = true }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
