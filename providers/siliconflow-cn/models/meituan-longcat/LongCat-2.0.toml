@@ -3,15 +3,15 @@
 # source: https://open.er-api.com/v6/latest/USD
 # CNY: input 5, output 20, cache read 0.1
 # Catalog (same page, model row, 2026-10-31): contextLen 1048576, functionCallSupport, jsonModeSupport.
-# Reasoning: no caller control documented for this model on SiliconFlow China (not listed for enable_thinking or
-# reasoning_effort; the reasoning guide says only the Qwen3 series enforces thinking_budget), matching the siliconflow-cn
-# peers for non-Qwen reasoning models. The global siliconflow file lists thinking_budget; it is left out here for that reason.
-# https://docs.siliconflow.cn/docs/userguide/capabilities/reasoning
+# Budget: thinking_budget (integer reasoning tokens, 128..32768). SiliconFlow documents thinking_budget for all
+#   reasoning models and lists enable_thinking only for specific models (LongCat-2.0 not among them), so no toggle;
+#   reasoning_effort is not listed for it. Same controls as the global siliconflow file for this model.
+#   https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions (2026-10-31)
 schema = 2
 base_model = "meituan/longcat-2.0"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
 structured_output = true
 
 [limit]
