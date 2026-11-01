@@ -1,0 +1,35 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Toggle: enable_thinking = true|false; budget: thinking_budget = 0..262144.
+# These controls follow Alibaba's Qwen3.8 Max API and the Vercel entry for this model. CommandCode
+# forwarding remains unverified: the 2026-10-21 probe returned HTTP 429 and 2026-10-22 retries timed out.
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning and reasoning_details
+#   (array). reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   max is accepted here (unlike Qwen3.6-Plus/3.7-Max/3.7-Plus, whose upstreams reject it).
+#   Repeated trials (n=3-5, easy and hard prompts): reasoning tokens low {88-146} / high {46-164} /
+#   xhigh {49-232} / max {80-119} - ranges overlap at every level; no level changes the reasoning
+#   output.
+#   Paired test (10 fixed prompts, low vs xhigh on the same prompt, 9 valid pairs): mean Δ -40
+#   reasoning tokens (2 prompts higher, 7 lower), sign p = 0.18; no measurable level effect.
+#   CommandCode accepted reasoning_effort=medium and max, but paired tests found no measurable
+#   effect, so no effort controls are listed.
+# Response field: reasoning_details (array). OpenCode replay has not been verified for
+#   this field; replay_reasoning=false keeps it out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+schema = 2
+base_model = "alibaba/qwen3.8-max-prime"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 0, max = 262_144 } }
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.5, write = 5 }
+
+[cost.text.output]
+price = 12

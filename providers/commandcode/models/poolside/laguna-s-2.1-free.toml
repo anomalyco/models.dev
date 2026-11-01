@@ -1,0 +1,44 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Toggle: chat_template_kwargs.enable_thinking = true|false (Poolside API field).
+# The native and Vercel entries for this model expose the toggle. CommandCode probes returned
+# HTTP 429, so forwarding and effect on this host remain unverified.
+# Free tier: https://commandcode.ai/docs/resources/pricing-limits#laguna-s-2.1-free ("free while
+#   capacity lasts"), accessed 2026-10-21.
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning and reasoning_details (array).
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   The upstream is capacity-limited: many calls returned HTTP 429 "Upstream model provider is
+#   temporarily unavailable" while others returned HTTP 200 (plain chat passed 3/3 on retry).
+#   Repeated trials across two rounds: reasoning tokens low {191-2048} / medium {312-664} /
+#   high {335-2048} / xhigh {1048} / max {208-1587}. The level ordering does not reproduce
+#   (round 1 max > low, round 2 low > max) and identical settings vary 191-2048, so no level
+#   demonstrably changes the reasoning output.
+#   Paired test attempted the same design (10 fixed prompts, low vs xhigh): upstream capacity
+#   errors left 1 valid pair (mean Δ +249, sign p = 1.0), so the paired design is inconclusive
+#   here. The endpoint control probe also hit HTTP 429, so CommandCode toggle forwarding remains
+#   unverified.
+# Response field: reasoning_details (array). OpenCode replay has not been verified for
+#   this field; replay_reasoning=false keeps it out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# limit.context: host catalog publishes 256000 (base is 1048576); output not published, inherited.
+# Separate control probe (CommandCode chat API, 2026-10-22): chat_template_kwargs.enable_thinking
+# false/true returned HTTP 429 rate_limit_error on two paired attempts; control remains unverified.
+schema = 2
+base_model = "poolside/laguna-s-2.1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 256_000
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
