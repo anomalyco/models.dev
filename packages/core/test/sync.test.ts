@@ -4328,6 +4328,15 @@ test("syncs OpenRouter reasoning efforts from model metadata", () => {
   });
 });
 
+test("overrides OpenRouter reasoning metadata that the upstream API rejects", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "mistralai/mistral-large-4-0",
+    reasoning: { mandatory: false, supported_efforts: ["high", "none"] },
+  }), undefined);
+
+  expect(model.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
+});
+
 test("syncs OpenRouter toggles without an effort selector", () => {
   for (const supports_max_tokens of [undefined, true]) {
     const source = openRouterModel({
