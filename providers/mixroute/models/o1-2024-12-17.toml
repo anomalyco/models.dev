@@ -1,0 +1,9 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Snapshot: https://developers.openai.com/api/docs/models/o1
+schema = 2
+base_model = "openai/o1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]

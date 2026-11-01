@@ -1,0 +1,13 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Model modes: https://mixroute.ai/docs/api-reference/endpoint/wan
+schema = 2
+v2_only = true
+base_model = "alibaba/wan2.7"
+
+[api.videos]
+path = "/video/generations"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[modalities]
+input = ["text", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
