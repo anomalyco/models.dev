@@ -2,21 +2,17 @@
 # converted at 1.1172 USD/EUR (ECB, 2026-10-30).
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
-# Effort: reasoning_effort is the host's only control; no toggle and no budget field.
-# GreenPT accepts none|minimal|low|medium|high (https://docs.greenpt.ai/reasoning) and
-# forwards the value unchanged. The published levels are the distinct ones: the lab's
-# low/high plus none, which turns thinking off (usage.reasoning_tokens = 0, no
-# reasoning_content). minimal and medium are accepted but are the lab's aliases for low
-# and high, and do not separate here. max is refused before it reaches the model:
-# 400 `deepseek-v4.1-flash-1017 does not accept reasoning_effort "max"`.
-# Measured on api.greenpt.ai 2026-11-01, 3 samples per level, reasoning tokens on one
-# prompt: minimal 580-954, low 742-912, medium 1067-1300, high 752-997.
+# Effort: reasoning_effort = none|minimal|low|medium|high, the set GreenPT documents and
+# validates for this model (https://docs.greenpt.ai/reasoning); no toggle, no budget field.
+# none turns thinking off (usage.reasoning_tokens = 0, no reasoning_content). max is
+# refused with a 400: `deepseek-v4.1-flash-1017 does not accept reasoning_effort "max"`.
+# Checked on api.greenpt.ai 2026-11-01; same set as GreenPT deepseek-v4.1-flash.
 # Cache writes are not charged: https://docs.greenpt.ai/prompt-caching
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
 
 [cost.text.input]
