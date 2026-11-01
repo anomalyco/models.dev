@@ -1,0 +1,22 @@
+# Sources (accessed 2026-10-26):
+# https://cloudgpu.app/v1/models (available ID and USD per 1M token prices)
+# https://cloudgpu.app/api (public USD per 1M token prices: input 1.26, cached input 0.24, output 3.96)
+# https://cloudgpu.app/api/docs (OpenAI-compatible /v1/chat/completions, Bearer auth)
+# Live check on /v1/chat/completions (2026-10-26): thinking = {type = "disabled"} turns reasoning off.
+# Live check: reasoning text is returned in message.reasoning_content.
+# Context and output limits are inherited from the base model (vendor model card).
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 1.26
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 3.96
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
