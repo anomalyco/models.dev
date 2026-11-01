@@ -1,0 +1,24 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-25); prices are USD per token there, per MTok here.
+# Not represented: web search $0.01 per request (no v2 per-request field).
+# Effort: reasoning.effort = low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_params_details.reasoning enum is exactly
+#   between_tools|low|medium|high (default high). xhigh and max are not in this route's enum, so they are
+#   not forwarded here; FastRouter maps an unsupported level to the nearest accepted one. between_tools only
+#   turns off up-front thinking between tool calls and is not an effort level, so it is not listed.
+#   Lab/peer set is low|medium|high|xhigh|max (providers/anthropic claude-sonnet-5-5, providers/openrouter
+#   claude-sonnet-5.5); this route exposes the truncated enum above.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
+# Cache: the catalog lists input_cache_read = $0.0000002 per token ($0.2 per MTok, 10% of input) for this route, double Anthropic's own 5% rate ($0.1 in providers/anthropic claude-sonnet-5-5); the FastRouter list price is published as served.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10
