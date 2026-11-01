@@ -1,0 +1,27 @@
+# Prices read from https://korouter.ai/models/gpt-6-astra on 2026-10-30 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Cache: automatic (OpenAI prompt caching) — live 2026-10-30 (gpt-5.6-terra): a second turn extending a 12.6K-token prompt read 12416 cached_tokens.
+# No freeform: custom tools are dropped before the upstream call on /v1 chat completions — live 2026-10-30 (gpt-5.6-terra; the other GPT ids returned 502 at probe time and share the same /v1 parser): a regex-grammar custom tool with tool_choice=required → 400 "Tool choice 'required' must be specified with 'tools' parameter", with tool_choice=auto the model replied that it has no such tool; a function tool with tool_choice=required → 200 with the call.
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 3.70
+cache = { read = 0.37, write = 4.63 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.40
+cache = { read = 0.74, write = 9.25 }
+
+[cost.text.output]
+price = 18.50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 27.75
