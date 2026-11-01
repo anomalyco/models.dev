@@ -1,0 +1,18 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. MiMo maps every effort level except none to "on" and this host rejects
+#   reasoning_effort = off. Live 2026-10-29: thinking.type = disabled still reasons (54 tokens,
+#   same as omitted), so no caller control is published.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 4.35
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 8.7
