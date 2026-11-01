@@ -1,0 +1,9 @@
+# Sideren: one OpenAI-compatible API for coding agents, billed by plan and credits.
+# An sdn_ key's plan decides which of these models it can call (https://sideren.io/pricing).
+# Ids are Sideren catalog ids; open-weight models carry the @sdn/ prefix.
+name = "Sideren"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["SIDEREN_API_KEY"]
+api = "https://api.sideren.io/v1"
+doc = "https://docs.sideren.io/quickstart"
