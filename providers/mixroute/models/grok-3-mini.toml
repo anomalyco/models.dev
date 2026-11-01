@@ -1,15 +1,17 @@
-# Output limit is unconfirmed: the host accepts max_tokens above the context size.
-# Keep this entry v2-only because v1 requires a numeric output cap.
+# Published service limit: https://mixroute.ai/models/grok-3-mini/ lists data-output-max=131072 (2026-11-01).
+# Short requests accept max_tokens=131072 and 131073; this is a documented limit, not a measured hard generation bound.
 # Effort: reasoning_effort=low|high, both accepted by MixRoute on 2026-11-01.
 # Catalog: https://api.mixroute.ai/v1/models
 # Service: https://mixroute.ai/models/grok-3-mini/
 schema = 2
-v2_only = true
 base_model = "xai/grok-3-mini"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high"] }
 
+
+[limit]
+output = 131072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
