@@ -1,0 +1,10 @@
+# RouterBase: multi-model relay with an OpenAI-compatible Chat Completions API
+# (POST /v1/chat/completions). https://docs.routerbase.com/api-reference/chat-completions
+# Model list, limits and prices come from the public, keyless endpoints
+# GET https://routerbase.com/v1/models and /api/models/{id}/pricing.
+name = "RouterBase"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["ROUTERBASE_API_KEY"]
+api = "https://routerbase.com/v1"
+doc = "https://docs.routerbase.com"
