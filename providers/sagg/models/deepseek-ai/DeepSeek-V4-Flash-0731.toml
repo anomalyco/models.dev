@@ -1,0 +1,33 @@
+# Effort: reasoning_effort = none|low|high|max (the DeepSeek V4 levels). Live probe of the gateway, 2026-10-30, 160 requests (80 per line, Standard and Super Deal; stream and
+#   non-stream; one logic task, 5 repeats per variant), answered by Gonka-network providers and, on Standard, sometimes by the fallback provider:
+#   "none" returned no reasoning_content in 17 of 17 Gonka-served answers (without any control field 8 of 16 answers had reasoning_content);
+#   "low", "high" and "max" returned reasoning_content in 12 of 12, 12 of 12 and 14 of 14 Gonka-served answers. The levels did not give a clear gradation of reasoning tokens
+#   (medians about 600, 360 and 600), so only on/off is claimed, not a size per level. No request was rejected for these fields (no HTTP 400).
+# Not claimed as controls: thinking.type = enabled|disabled is accepted but did not change the behaviour on Gonka providers (reasoning_content in 9 of 15 answers with "disabled",
+#   11 of 16 with "enabled", 8 of 16 without a field). chat_template_kwargs.enable_thinking = false also suppressed reasoning_content (0 of 18) but is not a documented field of this API.
+# Non-stream requests with "low", "high" or "max" on Standard often ran past the gateway's total time budget and ended with 503 (8 of 15); use stream for them.
+# Source (all accessed 2026-10-27): https://api.privatedeskai.com/pricing (Standard line), https://api.privatedeskai.com/models, https://api.privatedeskai.com/docs
+# Prices: Standard line, USD per 1M tokens: input 0.03971, output 0.07941 (the pricing page also shows a blended 0.075). The same input/output rates are published
+# by GET https://api.privatedeskai.com/models. A cheaper second line ("Super Deal", 0.028 flat) uses a separate API key and is not listed here.
+# Limits: 400,000-token context window and 16,000 max output tokens (pricing page card and /models).
+# Tools: tool_choice that names a function is not honored and "required" depends on the provider (https://api.privatedeskai.com/docs/compatibility); no choice list is claimed.
+# Structured output: response_format json_object and json_schema pass in the vendor's compatibility test (same page).
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 400_000
+output = 16_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.03971
+
+[cost.text.output]
+price = 0.07941
