@@ -1,0 +1,10 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Limits: GET https://obscurify.ai/v1/models reports context_length 131072 (lab file: 128000) and no max output. A prompt longer than the lab's window could not be verified here, so context and output are inherited from the lab.
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[cost.text.input]
+price = 0.05525
+
+[cost.text.output]
+price = 0.25415

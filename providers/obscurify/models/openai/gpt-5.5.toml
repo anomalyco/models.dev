@@ -1,0 +1,15 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Effort: reasoning_effort = none|low|medium|high|xhigh (none turns reasoning off)
+# Controls follow providers/openai/models/gpt-5.5.toml.
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: none and xhigh accepted (on a multi-step arithmetic prompt, none returned no reasoning and xhigh did); an unknown level is rejected.
+schema = 2
+base_model = "openai/gpt-5.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 5.525
+
+[cost.text.output]
+price = 33.15

@@ -1,0 +1,16 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Toggle: thinking.type = disabled, or reasoning.enabled = true|false
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Controls follow providers/anthropic/models/claude-haiku-5-5.toml.
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and max accepted (no reasoning at low, reasoning returned at max); with reasoning_effort = high, thinking.type = disabled and reasoning.enabled = false each removed the reasoning.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.1105
+
+[cost.text.output]
+price = 0.5525
