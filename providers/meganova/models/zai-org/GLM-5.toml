@@ -1,29 +1,23 @@
 # MegaNova identifies GLM-5 as a reasoning model, but its raw Chat request
 # schema documents no field or values that enable and disable reasoning.
 # https://docs.meganova.ai/inference-models/text-generation.md (accessed 2026-06-25)
-name = "GLM-5"
+# Price: GET https://api.meganova.ai/api/v1/serverless/models (public catalog behind console.meganova.ai/serverless, accessed 2026-10-21)
+schema = 2
+base_model = "zhipuai/glm-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.80
-output = 2.56
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 202_752
-output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.56

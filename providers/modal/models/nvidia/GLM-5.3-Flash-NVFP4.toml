@@ -1,0 +1,32 @@
+# Library page https://modal.com/library/zai/glm-5-3-flash-nvfp4 (accessed 2026-10-21): Shared Endpoint model ID nvidia/GLM-5.3-Flash-NVFP4;
+#   NVIDIA's NVFP4 quantization; prompt $0.15, cached prompt $0.03, completion $0.50 per MTok; modalities "Text, image &
+#   video" (the lab's image and video types, no PDF); effort as on the BF16 GLM-5.3-Flash endpoint.
+# Modal Shared Endpoints (https://modal.com/docs/guide/endpoints): Chat Completions, Responses and Anthropic Messages APIs,
+#   automatic prefix KV cache with Modal-Routing-Affinity-Key routing.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

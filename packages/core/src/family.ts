@@ -19,6 +19,7 @@ export const ModelFamilyValues = [
   "gpt-astra",
   "gpt-oss",
   "gpt-image",
+  "gpt-live",
 
   // OpenAI o-series (reasoning models)
   "o",
@@ -93,6 +94,9 @@ export const ModelFamilyValues = [
 
   // Reflection Beam
   "beam",
+
+  // Recursive Flint
+  "flint",
 
   // Mistral family
   "mistral",

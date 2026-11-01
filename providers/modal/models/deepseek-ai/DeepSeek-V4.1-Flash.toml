@@ -1,0 +1,28 @@
+# Library page https://modal.com/library/deepseek/deepseek-v4-1-flash (accessed 2026-10-21): Shared Endpoint model ID deepseek-ai/DeepSeek-V4.1-Flash;
+#   prompt $0.30, cached prompt $0.03, completion $1.20 per MTok; modalities "Text, Image"; "controllable reasoning effort"
+#   (values not listed; DeepSeek's own low|high|max assumed).
+# Modal Shared Endpoints (https://modal.com/docs/guide/endpoints): Chat Completions, Responses and Anthropic Messages APIs,
+#   automatic prefix KV cache with Modal-Routing-Affinity-Key routing.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

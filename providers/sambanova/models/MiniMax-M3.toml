@@ -4,20 +4,22 @@
 # Docs: https://docs.vllm.ai/projects/ascend/en/latest/tutorials/models/MiniMax-M3.html
 # Text-only, limits, pricing: supported-models + GET /v1/models (1048576/1048576; 0.60/2.40+0.06).
 # Live: prompt + max_tokens enforced <= 1048576 (context_length_exceeded beyond), so 1048576 is the served cap.
+schema = 2
 base_model = "minimax/MiniMax-M3"
-
-attachment = false
-
-[[reasoning_options]]
-type = "toggle"
 
 [modalities]
 input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.60
-output = 2.40
-cache_read = 0.06
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 output = 1_048_576
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 2.4

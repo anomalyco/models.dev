@@ -1,7 +1,8 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { readProviderModel } from "../../translate.js";
 import type { SyncProvider } from "../index.js";
 import {
   factorBaseModel,
@@ -846,7 +847,7 @@ function readLadder(providerDir: string, modelPaths: readonly string[], source: 
   for (const candidate of modelPaths) {
     const file = path.join(PROVIDERS_DIR, providerDir, "models", `${candidate}.toml`);
     try {
-      parsed = Bun.TOML.parse(readFileSync(file, "utf8")) as Record<string, unknown>;
+      parsed = readProviderModel(file);
       break;
     } catch {
       /* try the next candidate */
@@ -955,6 +956,45 @@ function perMillion(units: readonly z.infer<typeof PricingUnit>[], origin: strin
   // that changes shape whenever the upstream `per` does. Six decimals is finer
   // than any published USD/MTok figure here.
   return Math.round(((unit.price / unit.per) * 1_000_000) * 1e6) / 1e6;
+}
+
+/**
+ * Cache write prices. The catalog names the default write `cache_write` and
+ * every other TTL `cache_write_<ttl>` (Claude rows: `cache_write` is the 5m
+ * write, `cache_write_1h` the 1h one). With TTL prices, the TTL keys come
+ * from the file's explicit cache capability: the unsuffixed price is its
+ * first TTL and the rest must match by name, so the v2 `cache.write` map
+ * carries the catalog's own price for every TTL. v1 only carries the first.
+ */
+function cacheWritePrices(
+  id: string,
+  units: readonly z.infer<typeof PricingUnit>[],
+  capabilities: Record<string, unknown> | undefined,
+): { v1: number; v2: number | Record<string, number> } | undefined {
+  const base = perMillion(units, "cache_write");
+  const byTtl = new Map<string, number>();
+  for (const unit of units) {
+    const ttl = /^cache_write_(\d+(?:ms|s|m|h|d))$/.exec(unit.origin ?? "")?.[1];
+    const price = ttl === undefined ? undefined : perMillion(units, unit.origin!);
+    if (ttl !== undefined && price !== undefined) byTtl.set(ttl, price);
+  }
+  if (base === undefined) {
+    if (byTtl.size > 0) console.warn(`${id}: TTL cache write prices without a default cache_write; not written`);
+    return undefined;
+  }
+  if (byTtl.size === 0) return { v1: base, v2: base };
+
+  const cache = capabilities?.["cache"] as { explicit?: { ttl?: unknown } } | undefined;
+  const ttls = Array.isArray(cache?.explicit?.ttl) ? (cache.explicit.ttl as string[]) : [];
+  const [first, ...rest] = ttls;
+  const matches = first !== undefined && !byTtl.has(first) && rest.length === byTtl.size && rest.every((ttl) => byTtl.has(ttl));
+  if (!matches) {
+    console.warn(
+      `${id}: cache write TTLs ${[...byTtl.keys()].join(", ")} don't match the file's explicit cache TTLs (${ttls.join(", ") || "none"}); only the default write is written`,
+    );
+    return { v1: base, v2: base };
+  }
+  return { v1: base, v2: Object.fromEntries([[first, base], ...rest.map((ttl) => [ttl, byTtl.get(ttl)!])]) };
 }
 
 function positive(value: number | null | undefined): number | undefined {
@@ -1111,7 +1151,11 @@ async function attachReasoningEffort(models: AimlapiModel[]): Promise<void> {
  * without opening this file. Only cards whose control story is not plain
  * "lab ladder ∩ host enum" get one — the ones a review has to ask about.
  */
-function wireHeader(id: string, reasoningOptions: Array<{ type: "effort"; values: EffortValue[] }> | undefined): string | undefined {
+function wireHeader(
+  id: string,
+  reasoningOptions: Array<{ type: "effort"; values: EffortValue[] }> | undefined,
+  capabilities: Record<string, unknown> | undefined,
+): string | undefined {
   const measuredId = measuredAs(id);
   const lines: string[] = [];
   if (measuredId !== id) {
@@ -1130,8 +1174,22 @@ function wireHeader(id: string, reasoningOptions: Array<{ type: "effort"; values
   if (NONE_IS_REAL_OFF.has(measuredId)) {
     lines.push("# Off: reasoning_effort = none (0 reasoning tokens); no toggle field on this surface.");
   }
+  const cache = capabilities?.["cache"] as { explicit?: { ttl?: unknown } } | undefined;
+  if (JSON.stringify(cache?.explicit?.ttl) === JSON.stringify(["5m", "1h"])) {
+    lines.push(CACHE_LINE);
+  }
   return lines.length > 0 ? lines.join("\n") + "\n" : undefined;
 }
+
+function v2Capabilities(doc: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
+  const capabilities = doc?.["capabilities"];
+  return capabilities !== null && typeof capabilities === "object"
+    ? capabilities as Record<string, unknown>
+    : undefined;
+}
+
+const CACHE_LINE =
+  `# Cache: the chat-completions catalog row prices cache writes at 5m (cache_write) and 1h (cache_write_1h), and the request schema takes cache_control { type: ephemeral, ttl: 5m | 1h }. ${API_ENDPOINT}`;
 
 /**
  * The remote id to report for a chat candidate, or `undefined` for records
@@ -1291,9 +1349,13 @@ export const aimlapi = {
     const outputCost = perMillion(units, "generated") ?? existing?.cost?.output;
     if (inputCost === undefined || outputCost === undefined) return undefined;
 
+    const capabilities = v2Capabilities(context.v2?.(model.id));
+    const cacheWrite = cacheWritePrices(model.id, units, capabilities);
+
     return {
       id: model.id,
-      header: wireHeader(model.id, reasoningOptions),
+      header: wireHeader(model.id, reasoningOptions, capabilities),
+      v2Set: cacheWrite === undefined ? undefined : { "cost.text.input.cache.write": cacheWrite.v2 },
       model: factorBaseModel(
         base,
         {
@@ -1301,6 +1363,7 @@ export const aimlapi = {
             input: inputCost,
             output: outputCost,
             cache_read: perMillion(units, "cached") ?? existing?.cost?.cache_read,
+            cache_write: cacheWrite?.v1,
           },
           // Aliases such as `-pro` and `-fast` factor onto the base model and
           // would inherit its display name, so the catalogue would list two rows

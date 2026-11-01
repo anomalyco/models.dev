@@ -1,18 +1,23 @@
+# Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
+# Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
+schema = 2
 name = "Pixtral Large (25.02)"
 description = "Mistral vision-language model for image understanding and multimodal chat"
 family = "pixtral"
-release_date = "2025-04-08"
-last_updated = "2025-04-08"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2025-04-08"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 128_000
 output = 8_192
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

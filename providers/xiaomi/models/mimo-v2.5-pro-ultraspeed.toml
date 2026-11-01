@@ -1,31 +1,20 @@
-name = "MiMo-V2.5-Pro-UltraSpeed"
-description = "MiMo pro model for strong multimodal reasoning and agent execution"
-family = "mimo"
-release_date = "2026-06-08"
-last_updated = "2026-06-09"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
+# Toggle: thinking.type = enabled|disabled
+# Limited-time trial priced at 3x MiMo-V2.5-Pro; the trial "has been successfully concluded"
+#   (https://mimo.mi.com/static/docs/news/latest/beta-extended.md). Not in the current model list (https://mimo.mi.com/static/docs/quick-start/summary/model.md).
+# Live 2026-10-21: api.xiaomimimo.com answers "Unsupported model mimo-v2.5-pro-ultraspeed" (400) on Chat Completions.
+schema = 2
+base_model = "xiaomi/mimo-v2.5-pro-ultraspeed"
 status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 1.305
-output = 2.61
-cache_read = 0.0108
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 1_048_576
-output = 131_072
+[cost.text.input]
+price = 1.305
+cache = { read = 0.0108 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 2.61

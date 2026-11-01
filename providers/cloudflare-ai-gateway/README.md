@@ -31,14 +31,50 @@ It reads two live Cloudflare sources plus one local curation file:
   not establish that this route can turn reasoning off; toggles and controls missing from
   the schema are curated (see below).
 
-Everything the generator can read is derived: `cost`, `limit.context`, and `reasoning_options`.
+Everything the generator can read is derived: `[cost.*]`, `limit.context`, and the reasoning controls
+(`capabilities.reasoning`).
 `name` and `description` are intentionally **not** written — they inherit from `base_model`
 (models.dev's canonical copy), since the catalog only carries Cloudflare's own casing and
-marketing copy. Anthropic/OpenAI also get a `[provider] npm` pointing at their native SDK so
+marketing copy. Anthropic/OpenAI also get an `[api.messages]` / `[api.responses]` table pointing at their native SDK so
 consumers route to the Messages/Responses endpoint rather than the generic compat transform.
 
 The generator emits override-only `base_model` stubs (see the repo `AGENTS.md`): the lab
 metadata lives under `models/<lab>/`, and each provider file only records real deltas.
+
+### Speech, transcription, image and video models
+
+`Text-to-Speech`, `Automatic Speech Recognition`, `Text-to-Image`, `Image-to-Image`,
+`Text-to-Video`, `Image-to-Video` and `video-to-video` catalog rows are written as complete
+v2-only files (`schema = 2`, `v2_only = true`), so they stay out of the v1 API:
+
+- `base_model` points at a lab file of the same type (`speech`, `transcription`, `image`,
+  `video`). Ids that
+  match a lab file without punctuation (`eleven-v3` → `eleven_v3`) resolve on their own; other
+  aliases are mapped in `curation.toml`. A lab of another type fails the sync.
+- `[api.workers-ai-run]` is the REST API's universal endpoint: `POST {base_url}/run` with
+  `{ model, input }`, where `input` follows the model's catalog schema.
+- `[modalities]` comes from the schema: a TTS model's output format enum, the formats an STT
+  model's file field documents, or an image/video model's prompt, image, video and audio
+  fields (with the lab's MIME types) and `output_format` enum. It is written only when it
+  differs from the lab.
+- `[capabilities]` turns tools off and keeps reasoning without controls when the lab has
+  them, since the `/ai/run` schemas take neither.
+- `[cost.*]` maps `provider_details` pricing to v2 units: `input_characters` → per 1M
+  characters, `input_audio_minutes` → per minute (feature surcharges and streaming become
+  conditional overrides), `*_tokens` → per 1M tokens by modality, `output_image_count` /
+  `input_image_count` → per image (`output_size_*` and `mp_*` bands become resolution and
+  megapixel overrides), equal first/extra megapixel prices → per megapixel, and video
+  `default` → per second of output, with resolution, audio, clip-length, input-video and
+  draft keys as overrides. If any pricing key has no mapping, the file gets no cost and
+  its header lists the keys.
+- `name` is written only for aliases whose catalog name is more than the lab name with a vendor prefix.
+
+Decision models (a `Text Generation` row whose lab file has `type = "decision"`, such as TypeSafe
+Jev) get the same `[api.workers-ai-run]` table: they answer only on `POST /ai/run`, with a System
+One body as `input`.
+
+Music, document and realtime (`websocket`) tasks aren't synced, and image/video ids without
+a lab file are in `skip` until one is added.
 
 ### `--check`
 
@@ -67,7 +103,8 @@ quality judgement overrides what a schema merely advertises:
 # not reachable via unified billing (BYOK-only).
 skip = ["google/gemini-3.1-pro", "thinkingmachines/inkling", ...]
 
-# reasoning_options for native-format providers whose shape the catalog schema doesn't expose.
+# Reasoning controls for native-format providers whose shape the catalog schema doesn't expose.
+# Curation uses reasoning_options entries; the generator writes them as capabilities.reasoning.
 [models."alibaba/qwen3.7-plus"]
 note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer)."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
@@ -83,15 +120,16 @@ reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 
 | Field | Source |
 | --- | --- |
-| `cost`, `limit.context` | derived (catalog) |
-| `name`, `description`, `tool_call`, `attachment` | inherited from `base_model` (never written) |
+| `[cost.*]`, `limit.context` | derived (catalog) |
+| `name`, `description`, `modalities` | inherited from `base_model` (never written) |
 | `base_model` | auto-resolved from `model_id`; curated only when the file name differs |
-| `reasoning_options` | derived from the per-model `schema.input`; curated for native-format providers and always-on reasoners |
+| `capabilities.reasoning` controls | derived from the per-model `schema.input`; curated (`reasoning_options`) for native-format providers and always-on reasoners |
 | `structured_output` | curated — a live-tested judgement (schema acceptance ≠ conformance) |
-| `[provider] npm` | derived — `@ai-sdk/anthropic` / `@ai-sdk/openai` for the native-passthrough families |
+| `[api.<protocol>] sdk` | derived — `@ai-sdk/anthropic` / `@ai-sdk/openai` for the native-passthrough families |
+| leading comments | curated — `prefix_notes` (per family, by model id prefix) followed by the model's `note` |
+| `cache`, `system_updates`, `effort_updates`, `tools.updates`, cache-write TTL prices | hand-authored in the model files; sync keeps them and cites their sources through `prefix_notes` |
 
-`reasoning_options` is only written when the `base_model` declares `reasoning = true`; the
-schema forbids it otherwise. When a reasoning model has no derivable and no curated shape,
+Reasoning controls are only written when the `base_model` has `reasoning = { supported = true }`. When a reasoning model has no derivable and no curated shape,
 the generator hard-fails rather than ship an invalid file.
 
 ### Adding a model
@@ -101,7 +139,8 @@ the generator hard-fails rather than ship an invalid file.
 3. For a model with a matching lab file, nothing more is needed — the generator auto-resolves
    `base_model`. Add a `skip` entry instead if there's no lab file to map to, or if the model
    isn't reachable via unified billing.
-4. If it's a reasoning model whose knob the schema doesn't expose, add `reasoning_options`.
+4. If it's a reasoning model whose knob the schema doesn't expose, add `reasoning_options` to its
+   `curation.toml` entry.
 5. Run the generator; `bun validate` must pass.
 
 ## Provider configuration

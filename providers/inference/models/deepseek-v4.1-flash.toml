@@ -1,13 +1,15 @@
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 0.3
-output = 1
-cache_read = 0.007
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 
 [limit]
 context = 1_040_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1

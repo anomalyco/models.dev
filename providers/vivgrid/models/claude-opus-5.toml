@@ -1,14 +1,22 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/claude-opus-5 (accessed 2026-09-07)
+# APIs: Messages and Chat Completions. https://docs.vivgrid.com/models/claude-opus-5 (accessed 2026-10-23)
+schema = 2
 base_model = "anthropic/claude-opus-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 5.0
-output = 25.0
-cache_read = 0.50
-cache_write = 6.25
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25

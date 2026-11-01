@@ -1,28 +1,37 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates = false: live 2026-10-20, a system message after an assistant turn returns 400 ("System message must be at the beginning.").
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen 3.5 397B A17B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen3.5"
-release_date = "2026-02-15"
-last_updated = "2026-04-30"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = true }
 structured_output = true
-open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 0.55
-output = 3.5
-cache_read = 0.111
+prompt_cache_key = true
 
 [limit]
 context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.55
+cache = { read = 0.111 }
+
+[cost.text.output]
+price = 3.5
+
+[cost.web_search]
+price = 10

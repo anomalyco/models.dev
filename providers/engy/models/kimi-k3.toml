@@ -5,24 +5,32 @@
 # Live probe 2026-08-30, n=40/level at 16k: reasoning_effort inert, every pair p>=0.61 (MWU);
 # thinking=false suppresses reasoning 40/40. temperature honoured (0 vs 1.5, 12 prompts x 3
 # replicates, 12/12, paired p=0.0005, 2026-08-31); the lab's false is Moonshot's own API.
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
+# Input MIME types: the lab's image list; engy's catalog reports image input without formats (https://api.engy.ai/v1/models).
+schema = 2
 base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
 temperature = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1.95
-output = 9.75
-cache_read = 0.195
 
 [limit]
 context = 1_113_088
 input = 1_047_552
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.95
+cache = { read = 0.195 }
+
+[cost.text.output]
+price = 9.75

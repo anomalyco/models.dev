@@ -1,34 +1,26 @@
+schema = 2
+base_model = "xai/grok-4.3"
 name = "Grok 4.3 (AWS Bedrock)"
-description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-release_date = "2026-04-30"
-last_updated = "2026-04-30"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2.5
-output = 5
-cache_read = 0.4
 
 [limit]
-context = 1_000_000
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5

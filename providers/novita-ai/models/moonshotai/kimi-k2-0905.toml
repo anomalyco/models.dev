@@ -1,7 +1,21 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k2-0905
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20: mid turn 7,936 of 7,981 prompt tokens cached; usage.prompt_tokens_details.cached_tokens, reported here although no cache-read price is listed).
+schema = 2
 base_model = "moonshotai/kimi-k2-0905"
-structured_output = true
 
-[cost]
-input = 0.6
-output = 2.5
+[capabilities]
+tools = { supported = true }
+structured_output = true
+system_updates = true
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.5

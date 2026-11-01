@@ -1,20 +1,27 @@
 # Lab metadata carried over from providers/qiniu-ai/models/x-ai/grok-4-fast-non-reasoning.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# `audio` and `video` stay generic: xAI documents only jpg/jpeg or png image input for its language models
+# (https://docs.x.ai/developers/models, "Image input models") and no audio or video input for Grok 4 Fast, so no
+# format exists for them. They come from the Qiniu catalogue entry above.
+# family: "grok", as on the other xAI Grok labs; xAI lists this model in its Grok lineup (https://docs.x.ai/developers/models).
+schema = 2
 name = "X-Ai/Grok-4-Fast-Non-Reasoning"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-release_date = "2025-12-18"
-last_updated = "2025-12-18"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
+family = "grok"
 open_weights = false
-
-[limit]
-context = 2000000
-output = 2000000
+release_date = "2025-12-18"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/jpeg", "image/png", "audio", "video"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 2_000_000
+output = 2_000_000

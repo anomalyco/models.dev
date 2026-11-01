@@ -1,34 +1,23 @@
+schema = 2
+base_model = "xai/grok-build-0.1"
 name = "Grok Build 0.1 (xAI)"
-description = "Grok coding model for agentic engineering, edits, and codebase workflows"
-family = "grok-build"
-release_date = "2026-05-20"
-last_updated = "2026-05-20"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-open_weights = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
 
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2
+cache = { read = 0.4 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2
-output = 4
-cache_read = 0.4
+[cost.text.output]
+price = 2
 
-[limit]
-context = 256_000
-output = 256_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4

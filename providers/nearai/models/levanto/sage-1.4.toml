@@ -1,0 +1,31 @@
+# Catalog and price: https://cloud-api.near.ai/v1/models (levanto/sage-1.4, input text, output decisions,
+#   "Call it through /v1/systemone"; accessed 2026-10-26)
+# Runs in NEAR AI's TEEs: https://levanto.ai/blog/sage-near-ai-confidential-enterprise-decisions
+# API: POST https://cloud-api.near.ai/v1/systemone with the TypeSafe {model, state, questions} body
+#   (https://github.com/nearai/cloud-api/blob/main/docs/jev-systemone.md). Chat Completions, Completions and Responses
+#   reject decision models.
+# Reasoning: no caller control, so off. The gateway's System One request takes only model, state and questions and
+#   rejects unknown fields (deny_unknown_fields in
+#   https://github.com/nearai/cloud-api/blob/main/crates/inference_providers/src/systemone.rs), so Sage's
+#   `reasoning: auto|on` field can't be sent and Sage's default (off) applies.
+# Text only: the same request has no `assets` field, and Levanto takes images on /decide only, not System One
+#   (https://docs.levanto.ai/systemone.md).
+schema = 2
+base_model = "levanto/levanto-sage-v1.4"
+name = "Levanto Sage 1.4"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+reasoning = { supported = false }
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 2

@@ -42,6 +42,10 @@ const ReasoningEffort = z.enum(["none", "minimal", "low", "medium", "high", "xhi
 // Modalities the catalog schema can describe; others are dropped.
 const Modality = z.enum(["text", "audio", "image", "video", "pdf"]);
 
+// Image formats the vision API accepts ("webp, png, gif and jpg/jpeg").
+// https://docs.inference.net/api/vision
+const IMAGE_MIME_TYPES = ["image/webp", "image/png", "image/gif", "image/jpeg"];
+
 const InferencePricing = z.object({
   prompt: z.string(),
   completion: z.string(),
@@ -95,10 +99,11 @@ export const inference = {
       const authored = context.authored(model.id);
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
-    if (existing !== undefined) return { id: model.id, model: buildInferenceModel(model, existing) };
+    const v2Set = mimeInput(model);
+    if (existing !== undefined) return { id: model.id, model: buildInferenceModel(model, existing), v2Set };
     const baseModel = labModelID(model.id);
     if (!existsSync(path.join(MODELS_DIR, `${baseModel}.toml`))) return undefined;
-    return { id: model.id, model: buildInferenceModel(model, { base_model: baseModel } as ExistingModel) };
+    return { id: model.id, model: buildInferenceModel(model, { base_model: baseModel } as ExistingModel), v2Set };
   },
 } satisfies SyncProvider<InferenceModel>;
 
@@ -110,6 +115,13 @@ function isComplete(model: InferenceModel): model is CompleteInferenceModel {
   return model.context_length !== undefined
     && model.max_completion_tokens !== undefined
     && model.pricing !== undefined;
+}
+
+// v2 input modalities with image expanded to the MIME types the host documents.
+export function mimeInput(model: InferenceModel): Record<string, unknown> | undefined {
+  const input = (model.input_modalities ?? []).filter((modality) => Modality.safeParse(modality).success);
+  if (!input.includes("image")) return undefined;
+  return { "modalities.input": input.flatMap((modality) => modality === "image" ? IMAGE_MIME_TYPES : [modality]) };
 }
 
 export async function fetchInferenceModels(fetcher: typeof fetch = fetch) {

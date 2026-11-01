@@ -2,11 +2,15 @@
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
 # Live /chat/completions (2026-10-14): reasoning_effort = none -> HTTP 400 invalid option.
+schema = 2
 base_model = "tencent/hy4-preview"
 
-reasoning_options = [{ type = "effort", values = ["high"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
 
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

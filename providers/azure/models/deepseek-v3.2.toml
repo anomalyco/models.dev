@@ -1,24 +1,31 @@
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 name = "DeepSeek-V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-knowledge = "2024-07"
-tool_call = true
 open_weights = true
+knowledge = "2024-07"
+release_date = "2025-12-01"
 
-[cost]
-input = 0.58
-output = 1.68
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 0.58
+
+[cost.text.output]
+price = 1.68

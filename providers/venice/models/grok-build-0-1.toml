@@ -1,24 +1,50 @@
 # Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
 # https://api.venice.ai/api/v1/models?type=text
-
+# Modalities: image from xai/grok-build-0.1. Venice documents audio (input_audio.format) and video (video_url) formats and file parts (PDF) in https://docs.venice.ai/swagger.yaml, but no image formats.
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+# Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+schema = 2
 base_model = "xai/grok-build-0.1"
-release_date = "2026-05-21"
-last_updated = "2026-06-11"
-reasoning_options = []
 
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2
-output = 4
-cache_read = 0.4
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
 
 [limit]
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+
+[cost.web_search]
+price = 10

@@ -12,19 +12,24 @@
 # (and -flex), so it is not declared.
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash Flex"
-interleaved = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[cost]
-input = 0.091
-output = 0.182
-cache_read = 0.0182
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_560
 output = 393_216
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.091
+cache = { read = 0.0182 }
+
+[cost.text.output]
+price = 0.182

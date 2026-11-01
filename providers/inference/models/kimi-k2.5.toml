@@ -1,13 +1,20 @@
+# Reasoning (accessed 2026-10-31): https://api.inference.net/v1/models lists no
+# reasoning_efforts for this ID, and the API rejects reasoning_effort levels a
+# model does not list, so callers have no reasoning control on this host.
+# https://docs.inference.net/api/reasoning
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.8
-output = 3.95
-cache_read = 0.13
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/webp", "image/png", "image/gif", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 3.95

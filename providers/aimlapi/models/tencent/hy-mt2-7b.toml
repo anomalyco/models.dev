@@ -1,5 +1,11 @@
+schema = 2
 base_model = "tencent/hy-mt2-7b"
 
-[cost]
-input = 0.10178
-output = 0.405743
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.078292
+
+[cost.text.output]
+price = 0.31211

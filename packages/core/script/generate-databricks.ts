@@ -21,6 +21,8 @@ import path from "node:path";
 import { mkdir, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 
+import { formatModelV2, providerModelToV2 } from "../src/model-file-v2.js";
+
 const args = process.argv.slice(2);
 const flag = (name: string) => {
   const i = args.indexOf(`--${name}`);
@@ -157,12 +159,12 @@ async function resolveCanonical(endpointName: string): Promise<Resolution> {
 
 function formatToml(resolution: Resolution, endpointName: string): string {
   if (resolution?.type === "base_model") {
-    return `base_model = "${resolution.from}"\n`;
+    return formatModelV2(providerModelToV2({ base_model: resolution.from }));
   }
   if (resolution?.type === "inline") {
     return resolution.content;
   }
-  return `# TODO: fill in details for ${endpointName}\nname = "${endpointName}"\n`;
+  return `# TODO: fill in details for ${endpointName}\n${formatModelV2(providerModelToV2({ name: endpointName }))}`;
 }
 
 // ---------------------------------------------------------------------------

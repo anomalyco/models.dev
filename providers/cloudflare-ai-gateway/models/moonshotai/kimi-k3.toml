@@ -1,16 +1,23 @@
-# Kimi K3 always thinks; thinking.type is not supported. Effort: reasoning_effort = low|high|max.
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort mechanism (changing reasoning_effort rewrites the prefix cache: https://platform.kimi.ai/docs/api/models-overview).
+# Live 2026-10-19: a mid-conversation system message keeps the cached prefix, and a system message carrying `tools` (https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading) is forwarded, keeps the cache, and the added tool is called.
+# Effort: reasoning_effort = none|low|high|max (POST /ai/v1/chat/completions; default max; live 2026-10-19: none -> no reasoning, low 85 / high 166 / max 738 reasoning tokens).
 # Sources: https://platform.kimi.ai/docs/api/models-overview ; https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3/
-
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

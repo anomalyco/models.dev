@@ -1,9 +1,12 @@
 # https://novita.ai/models/model-detail/paddlepaddle-paddleocr-vl
+schema = 2
 base_model = "paddlepaddle/paddleocr-vl"
-
-[cost]
-input = 0.02
-output = 0.02
 
 [limit]
 context = 16_384
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0.02

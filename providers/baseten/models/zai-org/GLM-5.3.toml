@@ -1,26 +1,41 @@
-# Effort: reasoning_effort = low|high|max; reasoning cannot be disabled.
+# Effort: reasoning_effort = low|high|max (default high). Baseten also accepts
+# none but runs it at low, so reasoning cannot be disabled.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # Pricing: https://www.baseten.co/pricing
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 12288/12305 -> 12288/12319; 12608/12625 -> 12608/12639]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12544/12610 -> 0/12610 (reasoning tokens 7 -> 30); 12224/12290 -> 0/12290 (reasoning tokens 7 -> 72)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12736/12755 -> 64/12805; 12416/12435 -> 64/12485]
+# Image formats (live, 2026-10-21, notes/deepinfra-baseten-v2-2026-10-21/imgprobe.ts): PNG, JPEG, GIF, WebP and BMP are read; TIFF is misread and HEIC rejected (400). Vision support: https://docs.baseten.co/inference/model-apis/vision
+schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-attachment = true
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.14
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+system_updates = true
 
 [limit]
 context = 1_048_576
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

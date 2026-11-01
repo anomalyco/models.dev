@@ -99,24 +99,33 @@ describe("v2 catalog generation", () => {
       },
       structured_output: true,
       temperature: true,
+      system_updates: false,
+      effort_updates: false,
+    });
+    expect(translated.api).toEqual({
+      responses: {
+        base_url: "https://api.openai.com/v1",
+        sdk: { aisdk: "@ai-sdk/openai" },
+        capabilities: { tools: { updates: false } },
+      },
     });
     expect(translated.cost).toEqual({
-      input: 4,
-      output: 20,
-      cache_read: 0.4,
-      cache_write: 5,
-      tiers: [
-        {
-          tier: { type: "context", size: 272000 },
-          input: 8,
-          output: 30,
+      text: {
+        input: {
+          price: 4,
+          cache: { read: 0.4, write: 5 },
+          overrides: [{ when: { context: { gt: 272000 } }, price: 8 }],
         },
-      ],
+        output: {
+          price: 20,
+          overrides: [{ when: { context: { gt: 272000 } }, price: 30 }],
+        },
+      },
     });
     expect(translated.experimental).toEqual({
       modes: {
         fast: {
-          cost: { input: 8, output: 40 },
+          cost: { text: { input: { price: 8 }, output: { price: 40 } } },
           body: { service_tier: "priority" },
           headers: { "x-tier": "fast" },
         },
@@ -135,7 +144,8 @@ describe("v2 catalog generation", () => {
       systemone: {
         base_url: "https://opencode.ai/inference/systemone/v1",
         sdk: {
-          opencodeai: "@opencode/ai/providers/typesafe-ai",
+          aisdk: "@ai-sdk/typesafe-ai",
+          opencodeai: "@opencode/ai/providers/opencode/decisions",
         },
       },
     });
@@ -144,10 +154,11 @@ describe("v2 catalog generation", () => {
       api: {
         systemone: {
           base_url: "https://openrouter.ai/api/v1",
-          sdk: { opencodeai: "@opencode/ai/providers/openrouter" },
+          sdk: { opencodeai: "@opencode/ai/providers/openrouter/decisions" },
         },
       },
     });
+    expect(providersV2["cloudflare-workers-ai"]?.models["@cf/cloudflare/clairic"]?.type).toBe("extraction");
     expect(
       providersV2["google-vertex"]?.models["gemini-2.5-pro"]?.api[
         "generate-content"
@@ -173,7 +184,6 @@ describe("v2 catalog generation", () => {
 
     expect(
       CacheSupportV2.safeParse({
-        supported: true,
         implicit: { ttl: ["30m"], min_tokens: 1024 },
         explicit: {
           ttl: ["5m", "1h"],
@@ -184,12 +194,11 @@ describe("v2 catalog generation", () => {
       }).success,
     ).toBe(true);
 
-    expect(
-      CacheSupportV2.safeParse({
-        supported: true,
-        implicit: true,
-        explicit: false,
-      }).success,
-    ).toBe(true);
+    expect(CacheSupportV2.safeParse({ implicit: true }).success).toBe(true);
+    expect(CacheSupportV2.safeParse(false).success).toBe(true);
+    expect(CacheSupportV2.safeParse(true).success).toBe(false);
+    expect(CacheSupportV2.safeParse({}).success).toBe(false);
+    expect(CacheSupportV2.safeParse({ implicit: true, explicit: false }).success).toBe(false);
+    expect(CacheSupportV2.safeParse({ supported: true, implicit: true }).success).toBe(false);
   });
 });

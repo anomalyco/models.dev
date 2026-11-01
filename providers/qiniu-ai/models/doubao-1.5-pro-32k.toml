@@ -1,18 +1,29 @@
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-08-14 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
 name = "Doubao 1.5 Pro 32k"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
 open_weights = false
+release_date = "2025-08-05"
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 12_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.11594203
+
+[cost.text.output]
+price = 0.28985507

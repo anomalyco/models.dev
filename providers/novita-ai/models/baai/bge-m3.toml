@@ -2,8 +2,14 @@
 # POST /openai/v1/embeddings returns a 1024-dimensional vector; output is not a generative token limit.
 # https://novita.ai/docs/api-reference/model-apis-llm-create-embeddings
 # Input-only embedding workload: live usage reports completion_tokens=0. The generic catalog output-price field does not represent generated embedding tokens.
+schema = 2
 base_model = "baai/bge-m3"
 
-[cost]
-input = 0.01
-output = 0
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

@@ -1,14 +1,15 @@
-# Inference-only snapshot of DeepSeek V4.1 Flash; no matching DeepSeek lab ID.
-# Source: https://api.inference.net/v1/models (accessed 2026-10-17)
-base_model = "deepseek/deepseek-v4.1-flash"
-name = "DeepSeek V4.1 Flash 1017"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 
-[cost]
-input = 0.3
-output = 1
-cache_read = 0.007
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 
 [limit]
-context = 262_144
-output = 131_072
+context = 1_040_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1

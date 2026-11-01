@@ -1,18 +1,29 @@
 # https://novita.ai/models/model-detail/zai-org-glm-5.2
 # Effort: reasoning_effort = none|high|max; none suppresses reasoning. Native graded baseline retained.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "zhipuai/glm-5.2"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
 
 [limit]
 context = 1_048_576
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

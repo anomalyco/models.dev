@@ -3,19 +3,31 @@
 # but its documented model list excludes this ID, so no control is verified.
 # https://docs.vivgrid.com/models/gpt-5.5 (accessed 2026-06-25)
 # https://docs.vivgrid.com/api/model-api (accessed 2026-06-25)
+# Sunset: Vivgrid legacy model, superseded by gpt-6.1-sol.
+# https://docs.vivgrid.com/models#legacy-models (accessed 2026-10-23)
+schema = 2
 base_model = "openai/gpt-5.5"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+status = "deprecated"
 
-[cost]
-input = 5
-output = 30
-cache_read = 0.5
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 10
-output = 45
-cache_read = 1
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 10
+cache = { read = 1 }
+
+[cost.text.output]
+price = 30
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 45

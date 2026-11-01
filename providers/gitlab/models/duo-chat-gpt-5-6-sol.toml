@@ -1,9 +1,31 @@
+# Sources (accessed 2026-10-20):
+# - Upstream model: gitlab-ai-provider maps duo-chat-gpt-5-6-sol to OpenAI `gpt-5.6-sol` (https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/model-mappings.ts).
+# - AI Gateway proxy allowlist: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/model_selection/models.yml (`gpt_5_6_sol`, proxy_provider openai,
+#   max_context_tokens 1050000, max_tokens 128_000).
+# - Supported models: https://docs.gitlab.com/user/duo_agent_platform/model_selection/
+# Responses: POST /ai/v1/proxy/openai/v1/responses, forwarded unchanged to api.openai.com
+#   (gitlab-ai-provider routes this model to Responses). Effort: reasoning.effort.
+#   https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/proxy/clients/openai.py
+# Effort values: GPT-5.6 Sol's native none|low|medium|high|xhigh|max (as on the OpenAI provider entry).
+# Cost: billed per model call in GitLab Credits ($1 each on demand; gpt-5.6-sol: 1.33 calls per credit up to 272,000 tokens of context and 0.76 above, promotional through 2026-11-21, then 1.0 / 0.57, https://docs.gitlab.com/subscriptions/gitlab_credits/).
+#   v2 has no per-request unit, so token prices stay 0 (calls draw on the subscription's credits).
+# Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
+# APIs: gitlab-ai-provider sends Claude to the AI gateway's /ai/v1/proxy/anthropic/v1/messages and OpenAI models to /ai/v1/proxy/openai/v1/chat/completions or /responses (sources in provider.toml).
+schema = 2
 base_model = "openai/gpt-5.6-sol"
 name = "Agentic Chat (GPT-5.6 Sol)"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

@@ -1,6 +1,13 @@
+schema = 2
 base_model = "mistral/mistral-large-2407"
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.2
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 6

@@ -1,25 +1,19 @@
+# Toggle: extra_body.enable_thinking true|false (Poe's parameter for Novita-hosted bots in https://api.poe.com/v1/models, e.g. deepseek-v3.2, glm-4.6; this bot lists no reasoning parameter there on 2026-10-21, toggle kept from the 2026-10-12 audit)
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
 name = "Kimi-K2.6"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-temperature = true
 knowledge = "2025-04"
-release_date = "2026-04-20"
-last_updated = "2026-05-02"
-open_weights = true
 
-[cost]
-input = 0.96
-output = 4.04
-cache_read = 0.16
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
-context = 262_144
 input = 262_144
-output = 262_144
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.9596
+cache = { read = 0.1616 }
+
+[cost.text.output]
+price = 4.0404

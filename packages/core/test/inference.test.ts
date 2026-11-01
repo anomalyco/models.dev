@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 
 import type { ExistingModel, SyncedModel } from "../src/sync/index.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
-import { buildInferenceModel, inference, labModelID, type InferenceModel } from "../src/sync/providers/inference.js";
+import { buildInferenceModel, inference, labModelID, mimeInput, type InferenceModel } from "../src/sync/providers/inference.js";
 
 type CompleteModel = Parameters<typeof buildInferenceModel>[0];
 
@@ -117,4 +117,11 @@ test("drops cost fields the endpoint no longer publishes", () => {
   expect(built).toMatchObject({ cost: { input: 0.9, output: 3 } });
   expect(built).not.toHaveProperty("cost.cache_read");
   expect(built).not.toHaveProperty("cost.cache_write");
+});
+
+test("expands image input to the MIME types the host documents", () => {
+  expect(mimeInput(inferenceModel({ input_modalities: ["text", "image", "video"] }))).toEqual({
+    "modalities.input": ["text", "image/webp", "image/png", "image/gif", "image/jpeg", "video"],
+  });
+  expect(mimeInput(inferenceModel({ input_modalities: ["text"] }))).toBeUndefined();
 });

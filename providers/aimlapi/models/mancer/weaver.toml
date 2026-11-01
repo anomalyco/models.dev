@@ -1,8 +1,14 @@
+schema = 2
 base_model = "mancer/weaver"
 
-[cost]
-input = 1.03155
-output = 1.3754
+[capabilities]
+structured_output = false
 
 [limit]
 output = 2_000
+
+[cost.text.input]
+price = 0.7935
+
+[cost.text.output]
+price = 1.058

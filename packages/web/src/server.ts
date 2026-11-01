@@ -133,7 +133,7 @@ Bun.serve({
 function catalogResponse(req: Request, endpoint: "api" | "models" | "catalog") {
   let filter;
   try {
-    filter = parseModelTypes(new URL(req.url).searchParams.get("type"));
+    filter = parseModelTypes(new URL(req.url).searchParams.getAll("type").join(","));
   } catch (error) {
     if (!(error instanceof InvalidModelTypeError)) throw error;
     return Response.json({ error: error.message }, { status: 400 });

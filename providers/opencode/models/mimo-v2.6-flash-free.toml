@@ -1,18 +1,27 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xiaomi/models/mimo-v2.6-flash.toml (Zen passes requests through).
+# effort_updates: left out. Changing thinking.type on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
+# Tools follow Xiaomi's API: https://mimo.mi.com/static/docs/api/chat/openai-api.md (tool_choice only auto, function strict); Zen passes requests through.
+schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 name = "MiMo-V2.6-Flash Free"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto"] }
+reasoning = { supported = true }
+system_updates = true
 
 [limit]
 context = 200_000
 output = 32_000
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

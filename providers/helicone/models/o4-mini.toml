@@ -1,24 +1,18 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-05).
+# Effort: reasoning_effort = low|medium|high. Helicone's gateway schema accepts minimal|low|medium|high
+# and OpenAI routes pass it through, so these are the model's native values within that set.
+# https://docs.helicone.ai/gateway/concepts/reasoning
+schema = 2
+base_model = "openai/o4-mini"
 name = "OpenAI o4 Mini"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-mini"
-release_date = "2024-06-01"
-last_updated = "2024-06-01"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = true
 knowledge = "2024-06"
-open_weights = false
 
-[cost]
-input = 1.1
-output = 4.4
-cache_read = 0.275
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[limit]
-context = 200000
-output = 100000
+[cost.text.input]
+price = 1.1
+cache = { read = 0.275 }
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 4.4

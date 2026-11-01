@@ -1,32 +1,21 @@
-name = "MiniMax-M2.1"
-description = "Legacy model retained for compatibility with older integrations"
-family = "minimax"
-release_date = "2025-12-23"
-last_updated = "2025-12-23"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+# knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M2.1.toml (Zen passes requests through).
+schema = 2
+base_model = "minimax/MiniMax-M2.1"
 knowledge = "2025-01"
-open_weights = true
+description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.1
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 204800
-output = 131072
+[cost.text.input]
+price = 0.3
+cache = { read = 0.1 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 1.2

@@ -1,13 +1,20 @@
-base_model = "deepseek/deepseek-v4-pro"
-
 # Auriko derives a provider thinking budget from effort; "off" disables it.
 # https://docs.auriko.ai/guides/extensions-and-thinking
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+# Price: first-party route in https://api.auriko.ai/v1/directory/models (accessed
+# 2026-10-21). Auriko routes per request; other routes list 1.30-1.32 input.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[cost]
-input = 0.435
-output = 0.87
-cache_read = 0.003625
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96

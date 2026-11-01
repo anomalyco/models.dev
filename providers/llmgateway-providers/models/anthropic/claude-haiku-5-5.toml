@@ -1,12 +1,14 @@
+schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 name = "Claude Haiku 5.5 (Anthropic)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
+
+[cost.text.output]
+price = 0.5

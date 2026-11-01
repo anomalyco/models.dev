@@ -1,24 +1,28 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 name = "Amoral Gemma3 27B v2"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 family = "gemma"
-release_date = "2025-05-23"
-last_updated = "2025-05-23"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
 open_weights = true
+release_date = "2025-05-23"
 
-[cost]
-input = 0.3
-output = 0.3
-cache_read = 0.15
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 32_768
 input = 32_768
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 0.3

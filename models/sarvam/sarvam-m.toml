@@ -1,0 +1,31 @@
+# Model card: https://huggingface.co/sarvamai/sarvam-m ("multilingual, hybrid-reasoning, text-only language model built on
+# Mistral-Small"; `enable_thinking` switches modes; Apache 2.0). Published 2025-05-20 (Hugging Face createdAt).
+# Context 32,768: config.json max_position_embeddings. No function calling is documented. No separate output cap is
+# published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Sarvam-M"
+description = "Hybrid-reasoning multilingual model for Indian languages built on Mistral Small"
+family = "sarvam"
+open_weights = true
+release_date = "2025-05-20"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sarvamai/sarvam-m"

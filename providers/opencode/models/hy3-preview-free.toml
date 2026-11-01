@@ -1,29 +1,21 @@
+# knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
+# Mid-conversation flags left out: tencent has no provider file for tencent/hy3-preview to follow (Zen passes requests through).
+schema = 2
+base_model = "tencent/hy3-preview"
+knowledge = "2025-06"
 name = "Hy3 preview Free"
 description = "Legacy model retained for compatibility with older integrations"
-family = "hy3-free"
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-knowledge = "2025-06"
-tool_call = true
-open_weights = true
 status = "deprecated"
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+reasoning = { supported = true }
 
-[limit]
-context = 256_000
-output = 64_000
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 0

@@ -1,6 +1,13 @@
+schema = 2
 base_model = "unbiased/pareto"
 
-[cost]
-input = 3.4385
-output = 10.3155
-cache_read = 0.34385
+[capabilities]
+structured_output = false
+tools = { supported = true }
+
+[cost.text.input]
+price = 2.645
+cache = { read = 0.2645 }
+
+[cost.text.output]
+price = 7.935

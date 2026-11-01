@@ -1,20 +1,52 @@
+schema = 2
 name = "Gemini 2.0 Flash"
 description = "Earlier Gemini Flash workhorse for responsive multimodal apps and tool use"
 family = "gemini-flash"
-release_date = "2024-12-11"
-last_updated = "2024-12-11"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2024-06"
 open_weights = false
+knowledge = "2024-06"
+release_date = "2024-12-11"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "audio/wav",
+  "audio/mp3",
+  "audio/aiff",
+  "audio/aac",
+  "audio/ogg",
+  "audio/flac",
+  "audio/mpeg",
+  "audio/m4a",
+  "audio/l16",
+  "audio/opus",
+  "audio/alaw",
+  "audio/mulaw",
+  "audio/webm",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+  "application/pdf",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_048_576
 output = 8_192
-
-[modalities]
-input = ["text", "image", "audio", "video", "pdf"]
-output = ["text"]

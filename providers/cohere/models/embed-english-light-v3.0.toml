@@ -1,0 +1,11 @@
+# Embed API (POST https://api.cohere.com/v2/embed): https://docs.cohere.com/reference/embed
+# Served: GET /v1/models lists it with the `embed` endpoint; live text and image embeddings returned 200
+#   (2026-10-19; v3 image requests need images of at least 2x2 px).
+# Pricing: not on https://cohere.com/pricing (2026-10-19), so no cost is set.
+# API: POST https://api.cohere.com/v2/embed (https://docs.cohere.com/reference/embed).
+schema = 2
+v2_only = true
+base_model = "cohere/embed-english-light-v3.0"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }

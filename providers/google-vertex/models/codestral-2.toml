@@ -3,13 +3,22 @@
 # - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 # Codestral 2 on Vertex is Codestral 25.08: same 128K context and $0.30 / $0.90 price as Mistral's API.
 # POST .../publishers/mistralai/models/codestral-2:streamRawPredict with the Mistral chat body. Regional endpoints only.
+# Mid-conversation updates: false. Mistral on Vertex (rawPredict with the Mistral chat body) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/mistral
+schema = 2
 base_model = "mistral/codestral-2508"
 name = "Codestral 2"
 
-[cost]
-input = 0.30
-output = 0.90
+[capabilities]
+tools = { supported = true }
+structured_output = true
 
-[provider]
-npm = "@ai-sdk/mistral"
-api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/mistralai/models"
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/mistralai/models"
+sdk = { aisdk = "@ai-sdk/mistral", opencodeai = "@opencode/ai/providers/google-vertex/mistral" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.9

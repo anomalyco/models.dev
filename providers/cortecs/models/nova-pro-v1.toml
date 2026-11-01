@@ -1,15 +1,24 @@
+# Reasoning: inherits the lab's supported = false. The /v1/models "reasoning" feature tag is not model evidence (it is also set on gpt-4o and gpt-4.1).
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (amazon_ireland, amazon_paris). https://docs.cortecs.ai/routing/prompt-caching
+# Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
+schema = 2
 base_model = "amazon/nova-pro-v1"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-reasoning = true
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.918
-output = 3.671
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+cache = false
+structured_output = true
 
 [limit]
 output = 10_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[cost.text.input]
+price = 0.918
+
+[cost.text.output]
+price = 3.671

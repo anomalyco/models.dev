@@ -1,11 +1,15 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
+schema = 2
 base_model = "stepfun/step-3.5-flash"
 
-reasoning_options = [{ type = "effort", values = ["low", "high"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
 
-[cost]
-input = 0.09
-output = 0.3
-cache_read = 0.02
+[cost.text.input]
+price = 0.09
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.3

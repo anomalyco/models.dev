@@ -1,28 +1,31 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay Z.ai's latest GLM Flash model (zhipuai/glm-5.3-flash). Z.ai chat API vision items image_url jpg/jpeg/png, video_url mp4/mkv/mov: https://docs.z.ai/api-reference/llm/chat-completion
+schema = 2
 name = "Z.ai: GLM Flash Latest"
 description = "This model always redirects to the latest model in the GLM Flash family."
 family = "glm-flash"
-release_date = "2026-08-27"
-last_updated = "2026-08-27"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-08-27"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
 
-[cost]
-input = 0.06
-output = 1.6
-cache_read = 0.04
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_048_576
-output = 943_718
+output = 131_072
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.0149
+cache = { read = 0.0149 }
+
+[cost.text.output]
+price = 0.1543

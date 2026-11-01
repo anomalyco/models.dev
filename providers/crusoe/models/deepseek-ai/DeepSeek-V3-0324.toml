@@ -1,7 +1,13 @@
-base_model = "deepseek/deepseek-v3-0324"
-
 # Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
-[cost]
-input = 0.50
-output = 1.50
-cache_read = 0.25
+# Deprecated on 2026-09-12: https://docs.crusoecloud.com/serverless-inference/available-models
+# (accessed 2026-10-21).
+schema = 2
+base_model = "deepseek/deepseek-v3-0324"
+status = "deprecated"
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 1.5

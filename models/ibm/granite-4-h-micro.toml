@@ -1,22 +1,26 @@
+# Weights: https://huggingface.co/ibm-granite/granite-4.0-h-micro (Apache-2.0)
+# Sampling: open weights, so temperature, top_p and top_k all apply when self-hosted.
+schema = 2
 name = "Granite-4.0-H-Micro"
 description = "Compact open-weight hybrid Granite model for lightweight enterprise chat and tool calling"
 family = "granite"
-release_date = "2025-10-02"
-last_updated = "2025-10-02"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
-
-[limit]
-context = 131_072
-output = 131_072
+release_date = "2025-10-02"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

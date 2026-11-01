@@ -1,22 +1,23 @@
+# Status: https://poe.com/GPT-3.5-Turbo-Raw is titled "GPT-3.5-Turbo-Raw_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "openai/gpt-3.5-turbo"
 name = "GPT-3.5-Turbo-Raw"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt"
-release_date = "2023-09-27"
-last_updated = "2023-09-27"
-attachment = true
-reasoning = false
-temperature = false
-open_weights = false
-tool_call = true
+status = "deprecated"
 
-[cost]
-input = 0.45
-output = 1.4
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+temperature = false
 
 [limit]
 context = 4_524
 output = 2_048
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.45
+
+[cost.text.output]
+price = 1.4

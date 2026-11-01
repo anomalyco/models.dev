@@ -1,0 +1,16 @@
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/webp", "image/png", "image/gif", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 9

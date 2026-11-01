@@ -1,0 +1,26 @@
+schema = 2
+name = "Gemma 4 31B Agares v1"
+description = "Gemma 4 31B Agares v1 is a community creative finetune for reasoning, multimodal chat, expressive writing, and roleplay."
+family = "gemma"
+open_weights = true
+release_date = "2026-05-15"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.306
+
+[cost.text.output]
+price = 0.306

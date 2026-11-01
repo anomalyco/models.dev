@@ -1,0 +1,30 @@
+# Serverless: $0.40 input, $0.04 cached input, $1.20 output per 1M; context 1,048,576 (accessed 2026-10-21):
+# https://docs.together.ai/docs/serverless-models
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (live 2026-10-21). The chat template
+# rejects anything else: "reasoning_effort must be an int or one of: minimal, low, medium, high,
+# xhigh, max". Reasoning can't be turned off: `none` is rejected and reasoning.enabled = false,
+# thinking.type = disabled and chat_template_kwargs all still reason.
+# Inputs: text only ("multimodal not supported for model", live 2026-10-21).
+# Mid-conversation (live 2026-10-21, with chat_template_kwargs.allow_missing_thinking because the
+# template otherwise requires earlier reasoning to be sent back): a late system message was
+# followed and kept the cache in 2 of 2 trials; adding a tool dropped the cache (9,632 → 32).
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2

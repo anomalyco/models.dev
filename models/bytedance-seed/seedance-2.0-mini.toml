@@ -1,0 +1,27 @@
+# Released 2026-06-15: https://ai.byteplus.com/en/model (Dreamina Seedance 2.0 mini)
+# Formats (Seedance 2.0 series): images jpeg, png, webp, bmp, tiff, gif, heic, heif; videos mp4 and mov; audio wav and mp3:
+#   https://www.volcengine.com/docs/82379/1520757, https://www.volcengine.com/docs/82379/2298881
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "Seedance 2.0 Mini"
+description = "Lower-cost, faster Seedance 2.0 audio-video model at 480p and 720p"
+family = "seed"
+open_weights = false
+release_date = "2026-06-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

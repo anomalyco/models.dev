@@ -7,23 +7,44 @@
 # Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-09-10)
 # Pricing: https://fireworks.ai/models/deepseek-ai/deepseek-v4p1-flash (accessed 2026-09-10)
 # Released on Fireworks Serverless API 2026-09-10.
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = true: after a system message sent after the first turn, 7498 of 7653 prompt tokens still came from the cache, so it stays in place.
+#   effort_updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
+#   tools.updates = false: adding a second tool on the last turn left 0/152 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
 
-[[reasoning_options]]
-type = "toggle"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.006
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
 
 [experimental.modes.priority]
-cost = { input = 0.375, output = 1.5, cache_read = 0.0075 }
-provider = { body = { service_tier = "priority" } }
+body = { service_tier = "priority" }

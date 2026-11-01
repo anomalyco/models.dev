@@ -1,24 +1,19 @@
-name = "Solar Mini 4"
-description = "Upstage's compact 35B-parameter mixture-of-experts model with 3B active parameters and a 524K context window. Built for fast, cost-efficient agentic tasks, with strong Korean and English support."
-family = "solar"
-release_date = "2026-09-23"
-last_updated = "2026-09-23"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-open_weights = false
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
+base_model = "upstage/solar-mini4"
 
-[cost]
-input = 0.05
-output = 0.2
-cache_read = 0.005
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+tools = { supported = true }
 
 [limit]
-context = 524_288
 input = 524_288
-output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.2

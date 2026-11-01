@@ -2,14 +2,28 @@
 # Merge Gateway GET /v1/models?model=openai/gpt-5.6-terra (accessed 2026-07-14):
 # the OpenAI vendor route advertises configurable `reasoning.effort` and disable support.
 # Effort values: https://openai.com/index/gpt-5-6/
+# Cache: default route openai is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "openai/gpt-5.6-terra"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+tools = { supported = true }
+cache = { implicit = true }
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
-cache_write = 2.5
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.4, write = 5 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 18

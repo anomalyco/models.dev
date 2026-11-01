@@ -1,16 +1,24 @@
 # Toggle: chat_template_kwargs.enable_thinking = true|false
 # Source: https://huggingface.co/Qwen/Qwen3.6-27B (chat template exposes enable_thinking)
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
+# Input MIME types: the lab's image list; Chutes' catalog reports image input without formats (https://llm.chutes.ai/v1/models).
+schema = 2
 base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6 27B TEE"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.25
-output = 2
-cache_read = 0.024999999999999994
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.024999999999999994 }
+
+[cost.text.output]
+price = 2

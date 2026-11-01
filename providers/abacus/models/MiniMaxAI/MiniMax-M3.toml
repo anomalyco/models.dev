@@ -6,18 +6,18 @@
 # RouteLLM max_completion_tokens: 131072
 # RouteLLM input_token_rate: 0.0000003
 # RouteLLM output_token_rate: 0.0000012
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 1.2
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 1_000_000
 output = 131_072
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2
