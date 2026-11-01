@@ -1,0 +1,24 @@
+# Effort (chat-template kwargs per the NVIDIA model card, https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16):
+# none = enable_thinking false, low = low_effort true, medium = full thinking.
+# Budget: reasoning_budget (integer reasoning tokens) — host budget field confirmed live on 2026-10-30.
+# Context: 131,072 — the product page price table lists a 128k window
+# (https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-nvidia); lab native 262,144.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_NVIDIA/NVIDIA-Nemotron-3-Super-120B-A12B (gateway max_model_len 131072)
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-nvidia
+# 2.0000 / 0.3000 / 5.0000 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium"], budget = {} }
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 2.38
+cache = { read = 0.357 }
+
+[cost.text.output]
+price = 5.95
