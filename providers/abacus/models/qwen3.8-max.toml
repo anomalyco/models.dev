@@ -1,13 +1,14 @@
 # Source: https://routellm.abacus.ai/v1/models
 # RouteLLM input_modalities: ['text', 'image', 'video']
 # RouteLLM output_modalities: ['text']
-# RouteLLM context_length: 1000000
+# RouteLLM context_length: 262144
 # RouteLLM max_completion_tokens: 131072
 # RouteLLM input_token_rate: 0.000002
 # RouteLLM output_token_rate: 0.000006
 # RouteLLM thinking: True
 # RouteLLM cached_input_token_rate: 0.00000025
-# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+# Prices and limits refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-29).
+# The feed reports 262,144 context for this id while the lab model is 1M; the host limit is the override below.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
@@ -17,6 +18,9 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true }
+
+[limit]
+context = 262_144
 
 [cost.text.input]
 price = 2
