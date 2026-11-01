@@ -1,0 +1,28 @@
+schema = 2
+name = "SolCard Inference Fast"
+description = "Abliterated DeepSeek V4.1 Flash with zero data retention"
+open_weights = false
+release_date = "2026-10-26"
+last_updated = "2026-11-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 256_000
+input = 256_000
+output = 32_768
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 2.5

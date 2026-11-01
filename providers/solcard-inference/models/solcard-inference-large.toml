@@ -1,0 +1,28 @@
+schema = 2
+name = "SolCard Inference Large"
+description = "Abliterated GLM-5.3 with zero data retention; always reasons"
+open_weights = false
+release_date = "2026-10-26"
+last_updated = "2026-11-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 256_000
+input = 256_000
+output = 32_768
+
+[cost.text.input]
+price = 3.75
+cache = { read = 0.375 }
+
+[cost.text.output]
+price = 6.25
