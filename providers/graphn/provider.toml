@@ -1,0 +1,16 @@
+name = "GraphN"
+env = ["GRAPHN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# Verified live against https://model.graphn.ai/v1 (accessed 2026-10-21):
+# - OpenAI-compatible Chat Completions (POST /v1/chat/completions) and GET /v1/models.
+# - Reasoning is returned in choices[].message.reasoning_content.
+# - Toggle: chat_template_kwargs.enable_thinking = true|false (Qwen3.x, DeepSeek V4.1, Gemma 4).
+# - Effort: reasoning_effort, model-specific; a level this host does not accept is rejected
+#   with 400 "the model rejected the request" rather than silently ignored.
+# - Prefix caching is automatic. Responses report usage.prompt_tokens_details.cached_tokens
+#   and cached input bills at 10% of the input rate; there is no cache-write charge.
+# Models: https://graphn.ai/inference. Prices: https://graphn.ai/pricing (USD per 1M tokens,
+# cached-input column), checked 2026-10-21.
+api = "https://model.graphn.ai/v1"
+doc = "https://graphn.ai/docs/getting-started"

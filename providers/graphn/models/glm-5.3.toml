@@ -1,0 +1,26 @@
+# Alias and limits: GET https://model.graphn.ai/v1/models (checked 2026-10-21); 250K context.
+# No separate output cap on the host (live 2026-10-27: max_tokens accepted well above 32K),
+# so output inherits the lab's 131_072.
+# Pricing: https://graphn.ai/pricing — $1.40 input, $0.14 cached input, $4.40 output per 1M
+# tokens (checked 2026-10-21).
+# Effort: reasoning_effort = low|high|max (default max; verified live). Thinking is always on
+# here: chat_template_kwargs.enable_thinking does not suppress reasoning_content.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 250_000
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4
