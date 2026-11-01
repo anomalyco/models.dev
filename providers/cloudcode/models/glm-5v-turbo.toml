@@ -1,0 +1,30 @@
+# Price: https://cloudcode.one/models.json (accessed 2026-10-23).
+# Checked live through the Chat Completions endpoint on 2026-10-23:
+# - Input: PNG, JPEG and WebP images, MP4, MKV and MOV video, and PDF were read (each video's single colour
+#   named correctly, red and blue; a one-line PDF's secret word read back, less its last letter); GIF was
+#   rejected (400).
+# - Reasoning is always on: reasoning_effort none|low|medium|high|max left the reasoning length unchanged,
+#   and thinking.type is not forwarded (thinking disabled still reasoned 5.7k-6.5k chars, the same as
+#   with no thinking param), so there is no toggle.
+# - Caching is automatic: a repeated 16k-token prefix came back with 16,256 cached tokens.
+# - A strict json_schema response_format was not followed (fenced JSON under another key), so no structured output.
+schema = 2
+base_model = "zhipuai/glm-5v-turbo"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "video/mp4", "video/x-matroska", "video/quicktime", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.4
+cache = { read = 0.48 }
+
+[cost.text.output]
+price = 8
