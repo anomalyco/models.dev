@@ -27,7 +27,7 @@ output = 200_000
 
 [api.responses]
 base_url = "https://api.venice.ai/api/v1"
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/venice/responses" }
 
 [cost.text.input]
 price = 2.27

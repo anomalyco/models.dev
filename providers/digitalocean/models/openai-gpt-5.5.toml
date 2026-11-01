@@ -31,7 +31,7 @@ context = 1_000_000
 [api.chat-completions]
 
 [api.responses]
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/digitalocean/responses" }
 capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [api.messages]

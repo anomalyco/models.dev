@@ -1917,7 +1917,7 @@ function applyV2Set(set: Record<string, unknown>, doc: Record<string, unknown> =
 }
 
 test("lists DigitalOcean Responses and Messages APIs from catalog capabilities", () => {
-  const responses = { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } };
+  const responses = { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/digitalocean/responses" } };
   const messages = { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } };
   const flagged = applyV2Set(digitalOceanV2Set(digitalOceanModel({ capabilities: ["responses"] })), {
     api: { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } },
@@ -4540,7 +4540,7 @@ test("Venice sync sorts reasoning efforts low to high", () => {
 test("Venice sync lists Responses after the first API and prices web search", () => {
   const responses = {
     base_url: "https://api.venice.ai/api/v1",
-    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/venice/responses" },
   };
   // A file with no table gets the provider's default Chat Completions API first.
   expect(withResponsesApi(undefined)).toEqual({ "chat-completions": {}, responses });
@@ -7789,7 +7789,7 @@ test("syncs OpenRouter decision models with no supported parameters as decision 
 
 test("lists Responses and Messages after the first API for OpenRouter text-only models", () => {
   const extra = {
-    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } },
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openrouter/responses" } },
     messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } },
   };
   // A file with no table gets the provider's default Chat Completions API first.

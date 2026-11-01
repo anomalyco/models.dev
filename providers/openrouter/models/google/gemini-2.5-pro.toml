@@ -16,7 +16,7 @@ cache = { implicit = { min_tokens = 4_096 }, explicit = { ttl = ["5m"], max_brea
 [api.chat-completions]
 
 [api.responses]
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openrouter/responses" }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
