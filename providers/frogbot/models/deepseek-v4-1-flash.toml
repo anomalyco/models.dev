@@ -1,0 +1,26 @@
+# Routed by FrogBot's LiteLLM proxy (litellm 1.104.0) to Fireworks
+# (fireworks_ai/accounts/fireworks/models/deepseek-v4p1-flash-1017).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Both are forwarded unchanged (mocked-network dry run, 2026-10-26); controls match
+# providers/fireworks-ai/.../deepseek-v4p1-flash-1017.toml.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
+# https://docs.frogbot.ai/api-reference/chat-completions
+# Pricing: FrogBot bills the Fireworks Standard rate. https://docs.frogbot.ai/api-reference/models
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2
