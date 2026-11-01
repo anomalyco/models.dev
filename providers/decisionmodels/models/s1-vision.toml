@@ -1,0 +1,30 @@
+# Sources (accessed 2026-10-25): https://api.decisionmodels.io/v1/models (live registry, "attribution" field), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
+# Prices are USD per 1M input tokens on the Peer-to-Peer (S1-Region: global) tier; output tokens are free. The EU tier (S1-Region: eu) costs slightly more; not modelled.
+# s1-vision is a rotating alias of Decision Models. It moves to a new version with 7 days notice on https://decisionmodels.io/changelog; base_model is updated with each move.
+#   Today it answers with s1-vision-2 = Blink v0.3 26B-A4B (NVFP4), one image per request (4 MiB, 2,000,000 pixels at most), 8,000 input tokens.
+# Requests that contain an image bill ALL input tokens at $0.217 per 1M (override below).
+schema = 2
+base_model = "pixilabai/blink-v0.3-26b-a4b"
+name = "s1-vision"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["decision"]
+
+[limit]
+context = 8_000
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+compatibility = { media_input = "root" }
+
+[cost.text.input]
+price = 0.031
+
+[[cost.text.input.overrides]]
+when = { input_images = { gt = 0 } }
+price = 0.217
+
+[cost.text.output]
+price = 0
