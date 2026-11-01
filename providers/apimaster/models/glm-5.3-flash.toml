@@ -1,0 +1,11 @@
+# Metadata is inherited from the upstream Zhipu entry.
+# Price: the default route. APIMaster routes to the lowest-cost stable channel first
+# (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/glm-api?model=glm-5.3-flash
+# (read 2026-09-28). The other 5 channel(s), up to 0.15 / 0.5, serve only when it is unavailable and bill at their own price.
+# Effort: reasoning_effort = low|high|max
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.0741
+output = 0.247
