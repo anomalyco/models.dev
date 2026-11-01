@@ -1,0 +1,9 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+base_model = "meta/llama-4-scout-17b-instruct"
+
+[cost]
+input = 0.15
+output = 0.45
+
+[limit]
+context = 1_310_720
