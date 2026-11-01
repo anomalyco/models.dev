@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/DevsDoCode/LLama-3-8b-Uncensored
+name = "LLama-3-8b-Uncensored"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "llama"
+release_date = "2024-04-25"
+last_updated = "2024-05-05"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 8192
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/DevsDoCode/LLama-3-8b-Uncensored"

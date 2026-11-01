@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/DavidAU/L3.1-Dark-Planet-SpinFire-Uncensored-8B
+name = "L3.1-Dark-Planet-SpinFire-Uncensored-8B"
+description = "No lecture layer. Answers the prompt you actually wrote."
+release_date = "2024-11-10"
+last_updated = "2025-05-28"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/DavidAU/L3.1-Dark-Planet-SpinFire-Uncensored-8B"

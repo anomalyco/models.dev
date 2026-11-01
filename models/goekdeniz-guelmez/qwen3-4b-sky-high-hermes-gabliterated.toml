@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Goekdeniz-Guelmez/Qwen3-4B-Sky-High-Hermes-gabliterated
+name = "Qwen3-4B-Sky-High-Hermes-gabliterated"
+description = "Nous Research finetune — steerable, honest, built for long conversations."
+family = "qwen"
+release_date = "2026-01-22"
+last_updated = "2026-01-28"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Goekdeniz-Guelmez/Qwen3-4B-Sky-High-Hermes-gabliterated"

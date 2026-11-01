@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/mitkox/phi-2-super-OpenHermes-2.5-moe-mlx
+name = "phi-2-super-OpenHermes-2.5-moe-mlx"
+description = "Niche community finetune with a cult following. Hard to find hosted anywhere else."
+family = "phi"
+release_date = "2024-03-02"
+last_updated = "2024-03-02"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 2048
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/mitkox/phi-2-super-OpenHermes-2.5-moe-mlx"

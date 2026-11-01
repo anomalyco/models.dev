@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/dphn/Dolphin-Mistral-24B-Venice-Edition
+name = "Dolphin-Mistral-24B-Venice-Edition"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "mistral"
+release_date = "2025-06-12"
+last_updated = "2026-06-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/dphn/Dolphin-Mistral-24B-Venice-Edition"

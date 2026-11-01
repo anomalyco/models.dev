@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/nbeerbower/EVA-Gutenberg3-Qwen2.5-32B
+name = "EVA-Gutenberg3-Qwen2.5-32B"
+description = "Small, weird, beloved. The EVA series punches way above its size."
+family = "qwen"
+release_date = "2025-01-19"
+last_updated = "2025-01-19"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/nbeerbower/EVA-Gutenberg3-Qwen2.5-32B"

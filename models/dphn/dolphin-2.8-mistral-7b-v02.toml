@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/dphn/dolphin-2.8-mistral-7b-v02
+name = "dolphin-2.8-mistral-7b-v02"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "mistral"
+release_date = "2024-03-28"
+last_updated = "2024-05-20"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/dphn/dolphin-2.8-mistral-7b-v02"

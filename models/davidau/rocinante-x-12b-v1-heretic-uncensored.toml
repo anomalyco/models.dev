@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/DavidAU/Rocinante-X-12B-v1-Heretic-Uncensored
+name = "Rocinante-X-12B-v1-Heretic-Uncensored"
+description = "Character engine. Built for RP, stays in character."
+release_date = "2026-01-27"
+last_updated = "2026-01-27"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/DavidAU/Rocinante-X-12B-v1-Heretic-Uncensored"
