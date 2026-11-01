@@ -1,0 +1,31 @@
+# Prices: GET https://www.runcrate.ai/api/models/catalog (accessed 2026-10-29), USD per 1M tokens as billed
+# (deepseek-ai/DeepSeek-V4.1-Flash-1017): input 0.1029, cached input 0.003087, output 0.3087. context_length 1,048,576 there and in
+# GET https://api.runcrate.ai/v1/models.
+# Effort: reasoning_effort = none|low|high|max on POST https://api.runcrate.ai/v1/chat/completions
+# (live 2026-10-24). `none` turns thinking off (0 reasoning tokens, no reasoning_content); low, high
+# and max are accepted and passed through (DeepSeek V4 effort levels, same as the lab and peers).
+# Reasoning text is returned in reasoning_content (live).
+# Live 2026-10-24: PNG image input answered correctly; a tool call round-tripped; a strict
+# json_schema response validated; a repeated 7,034-token prompt reported 6,656 cached_tokens.
+# Live 2026-10-29: a repeated 11,266-token prompt reported 11,264 cached_tokens and was billed at
+# 0.003087 per 1M for them (usage.cost).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1029
+cache = { read = 0.003087 }
+
+[cost.text.output]
+price = 0.3087

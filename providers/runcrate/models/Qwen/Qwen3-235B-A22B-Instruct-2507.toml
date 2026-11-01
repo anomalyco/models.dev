@@ -1,0 +1,17 @@
+# Prices: GET https://www.runcrate.ai/api/models/catalog (accessed 2026-10-29), USD per 1M tokens as billed
+# (Qwen/Qwen3-235B-A22B-Instruct-2507): input 0.0945, output 0.5775, no cached-input price.
+# context_length 262,144 and max_output_length 16,384 in GET https://api.runcrate.ai/v1/models, the
+# same as the lab entry.
+# Live 2026-10-24: a tool call round-tripped; a strict json_schema response validated; image input is
+# refused with HTTP 400.
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.0945
+
+[cost.text.output]
+price = 0.5775
