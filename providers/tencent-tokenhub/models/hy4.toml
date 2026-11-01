@@ -2,7 +2,7 @@
 #   price table lists only "Hy4 preview", accessed 2026-10-21), so it carries the Hy4 preview
 #   listing: CNY 6 / 18 / 0.3 per MTok (input / output / cache hit) → USD 0.834 / 2.501 / 0.042
 #   per MTok via list_price / tax_rate * FX. Revisit when a stable-id row appears.
-# Effort: reasoning_effort = none|high|max (default high). "none" is how thinking is turned off on
+# Effort: reasoning_effort = none|high (default high). "none" is how thinking is turned off on
 #   this id, so per AGENTS.md there is no separate toggle entry.
 # https://cloud.tencent.com/document/product/1823/130055
 # https://cloud.tencent.com/document/product/1823/131208
@@ -10,7 +10,7 @@ base_model = "tencent/hy4"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high", "max"]
+values = ["none", "high"]
 
 [cost]
 input = 0.834
