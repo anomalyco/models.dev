@@ -1,0 +1,42 @@
+# HUMAIN M3 is HUMAIN's deployment of MiniMax-M3 (the model identifies as "HUMAIN-M3, built on the
+# MiniMax-M3 lineage"; pricing matches MiniMax-M3 at 0.3 / 1.2 USD per 1M tokens).
+# Catalog (GET https://api.node.humainaic.com/v1/models, 2026-11-01): context 204_800,
+# max_output_tokens 16_384, pricing input 0.3 / output 1.2. No cache price is published.
+# Live checks on api.node.humainaic.com, 2026-11-01:
+# Toggle: thinking.type = disabled turns reasoning off (reasoning_content null); thinking is on
+#   when omitted.
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh (the levels the HUMAIN playground offers
+#   besides its default, which omits the field). The API's enum also accepts "none", but it
+#   does not disable thinking, so it is not listed. Reasoning token counts did not differ
+#   measurably between minimal and xhigh in live samples.
+# Reasoning is returned in message.reasoning_content.
+# Structured output: response_format json_schema is enforced (regex pattern honoured).
+# Cache: usage.prompt_tokens_details.cached_tokens is reported (automatic prefix cache).
+# Input: text only. Image parts are accepted but not seen by the model (a solid red PNG was
+#   described as cyan/teal and prompt_tokens did not grow).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+name = "HUMAIN M3 Preview"
+status = "beta"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high", "xhigh"], default = { type = "toggle", value = true } }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 204_800
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2
