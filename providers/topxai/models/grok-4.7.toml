@@ -1,0 +1,29 @@
+# Effort: $.reasoning.effort on /v1/responses, $.reasoning_effort on /v1/chat/completions,
+# forwarded unchanged (default high). Shared-pool price, 50% of xAI's list; no
+# cache-write lane is sold. Requests whose input reaches 200,000 tokens bill the whole
+# request at the override below.
+# https://ai.topxea.com/pricing/grok-4.7 and https://ai.topxea.com/api/pricing (accessed 2026-10-23)
+# Structured output: response_format json_schema (strict) and json_object return valid JSON on
+# /v1/chat/completions, checked live 2026-10-16.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1
+cache = { read = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 3
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 6
