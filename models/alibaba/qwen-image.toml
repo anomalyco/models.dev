@@ -1,3 +1,5 @@
+# Encodings: official model-card examples save PNG; NVIDIA Qwen-Image endpoints document JPEG output and JPEG/PNG edit inputs.
+# https://docs.nvidia.com/nim/visual-genai/latest/api/qwen-image.html
 # Source: https://huggingface.co/Qwen/Qwen-Image
 # Source: https://qwenlm.github.io/blog/qwen-image/
 schema = 2
@@ -9,7 +11,7 @@ release_date = "2025-08-04"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png", "image/jpeg"]
 
 [capabilities]
 tools = { supported = false }

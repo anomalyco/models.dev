@@ -1,9 +1,10 @@
+# Toggle: thinking.type = enabled|disabled; effort: reasoning_effort = low|high|max.
+# Live 2026-11-01: both modes returned 200 at low effort; enabled emitted reasoning, disabled emitted none.
 # Catalog: https://api.mixroute.ai/v1/models
-# Reasoning reference: providers/openrouter/models/deepseek/deepseek-v4.1-flash.toml
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [api.chat-completions]
