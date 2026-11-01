@@ -1,0 +1,16 @@
+# Lyceum -instant alias: same model and price as z-ai/glm-5.2, answers without a reasoning phase. https://docs.lyceum.technology/docs/inference/serverless#instant-variants
+# Price: GLM-5.2 Instant row on https://lyceum.technology/models/
+schema = 2
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 Instant"
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 4.5
