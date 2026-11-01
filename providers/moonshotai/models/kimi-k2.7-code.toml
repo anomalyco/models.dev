@@ -10,7 +10,13 @@
 # Live 2026-10-19: tool_choice "required" or a named function returns 400 ("incompatible with thinking enabled");
 # a system message after the first turn is accepted and keeps the prefix cache; dynamic tool messages fail
 # ("tokenization failed").
-# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked in place on Chat Completions (live 2026-10-23); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# Mid-conversation flags (live 2026-10-27):
+#   system_updates holds on every API: a late system message (Chat Completions, Messages) or developer message
+#   (Responses) is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens,
+#   control -> test: Chat Completions 7936/8118 -> 7936/8130; Responses 7936/8118 -> 7936/8130; Messages 7936/8118 -> 7936/8130].
+#   Messages documents only user/assistant roles (https://platform.kimi.ai/docs/api/messages) but accepts role "system" inside messages.
+#   No tools.updates: the dynamic tool system message (Chat Completions) and the `additional_tools` item (Responses)
+#   both return 400 "tokenization failed" (K3 family only per https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading).
 # Tools (live 2026-10-26; https://platform.kimi.ai/docs/guide/use-tool-choice): Chat Completions and Messages take auto and
 #   none. required (Messages `any`) and a named tool return 400 "incompatible with thinking enabled", and thinking can't
 #   be turned off (https://platform.kimi.ai/docs/api/models-overview).
@@ -25,13 +31,13 @@ base_model = "moonshotai/kimi-k2.7-code"
 tools = { supported = true, strict = true, choice = ["auto", "none"] }
 reasoning = { supported = true }
 structured_output = true
+system_updates = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }

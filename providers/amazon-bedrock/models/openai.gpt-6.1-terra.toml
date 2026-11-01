@@ -1,0 +1,45 @@
+# Mantle in-region route (Responses API); the us. and global. Converse profiles are separate files.
+# Model IDs, routes and Standard pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-terra.html (GA 2026-10-26: https://aws.amazon.com/about-aws/whats-new/2026/10/openai-gpt-6-1-terra-on-amazon-bedrock/)
+# Mantle in-region is us-east-1 only per the model card's Regional Availability table.
+# OpenAI-native limits, pricing and effort (none|low|medium|high|xhigh|max): https://developers.openai.com/api/docs/models/gpt-6.1-terra
+# Effort matches OpenAI-native 6.1 Terra and the Bedrock GPT-5.6 Terra peers (none..max verified there); not yet re-tested live on this model.
+# In-region Standard pricing; 10% premium over OpenAI list rates per AWS card. Priority and Flex are not supported for this model (model card), so no service tiers.
+# Columns: input / 30m cache write / cache read / output (USD per 1M tokens); above 272K input tokens the long-context rows apply.
+# v2 cache: implicit + explicit prompt caching (Responses API only) per the model card; 30m TTL, 4 writes, 1,024 min per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html, matching the Mantle GPT-6.1 Sol and 5.6 Terra peers.
+# Mid-conversation: same Mantle Responses behavior as the GPT-6.1 Sol and 5.6 Terra peers (live 2026-10-19/23): system/developer messages accepted; configuration_update rejected; additional_tools (add only) keeps the prompt cache.
+# APIs: Responses and Chat Completions on bedrock-mantle under /openai/v1 (model card "Endpoints and APIs supported").
+# Per-API flags: system_updates and tools.updates sit on [api.responses]. additional_tools is a Responses item, and Mantle Chat Completions wasn't checked for in-place developer messages.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }
+capabilities = { system_updates = true, tools = { updates = true } }
+
+[api.chat-completions]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/chat" }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.055, write = { "30m" = 1.375 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2.2
+cache = { read = 0.11, write = { "30m" = 2.75 } }
+
+[cost.text.output]
+price = 5.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 8.25

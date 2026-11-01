@@ -1,3 +1,7 @@
+# Mid-conversation (/v1/chat/completions, live 2026-10-27):
+#   system_updates = true: a system message after the assistant turn was obeyed and kept the cache [cached/prompt tokens, control -> test: 8192/8228 -> 8192/8247].
+#   tools.updates = false: Kimi's tool-carrying system message (no content) is rejected (400 "system message must have content").
+# Per API: system_updates on [api.chat-completions] only, where it was tested. /v1/responses and /v1/messages are untested for this model.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -15,6 +19,7 @@ cache = { implicit = true }
 output = 1_048_576
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

@@ -23,8 +23,26 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
+price = 0.075
+cache = { read = 0.0075 }
+
+[[cost.text.input.overrides]]
+when = { any = [{ utc_hours = { gte = "15:00" } }, { utc_hours = { lt = "01:00" } }] }
+price = 0.075
+cache = { read = 0.0075 }
+
+[[cost.text.input.overrides]]
+when = { all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "15:00" } }] }
 price = 0.15
 cache = { read = 0.015 }
 
 [cost.text.output]
+price = 0.3
+
+[[cost.text.output.overrides]]
+when = { any = [{ utc_hours = { gte = "15:00" } }, { utc_hours = { lt = "01:00" } }] }
+price = 0.3
+
+[[cost.text.output.overrides]]
+when = { all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "15:00" } }] }
 price = 0.6

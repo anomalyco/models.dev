@@ -143,13 +143,19 @@ export function veniceV2Set(model: VeniceModel): Record<string, unknown> {
 }
 
 // The file's API tables with Responses after them. The first table stays as it is (v1 reads it),
-// or is the provider's default Chat Completions API when the file has none.
+// or is the provider's default Chat Completions API when the file has none. Hand-authored
+// per-API capabilities on Responses are kept.
 export function withResponsesApi(current: unknown) {
   const tables = current !== null && typeof current === "object" && !Array.isArray(current)
     ? current as Record<string, unknown>
     : {};
   const first = Object.keys(tables)[0] ?? "chat-completions";
-  return { [first]: tables[first] ?? {}, ...tables, responses: structuredClone(RESPONSES_API) };
+  const own = tables.responses;
+  const capabilities = own !== null && typeof own === "object" && !Array.isArray(own)
+    ? (own as Record<string, unknown>).capabilities
+    : undefined;
+  const responses = structuredClone(RESPONSES_API);
+  return { [first]: tables[first] ?? {}, ...tables, responses: capabilities === undefined ? responses : { ...responses, capabilities } };
 }
 
 export function buildVeniceModel(

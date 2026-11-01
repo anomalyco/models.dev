@@ -7,7 +7,7 @@ schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
-tools = { supported = true, updates = true, strict = true, choice = ["auto", "none"], search = true }
+tools = { supported = true, strict = true, choice = ["auto", "none"], search = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 structured_output = true
@@ -23,7 +23,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/cloudf
 
 [cost.text.input]
 price = 2
-cache = { read = 0.2, write = { "5m" = 2.5, "1h" = 4 } }
+cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
 
 [cost.text.output]
 price = 10

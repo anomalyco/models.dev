@@ -2,8 +2,15 @@
 # Qwen3.8-2.4T-A95B with API path accounts/fireworks/models/qwen3p8-2p4t-a95b;
 # it also documents serverless pricing, 262K context, and text-only input:
 # https://fireworks.ai/models/fireworks/qwen3p8-max (accessed 2026-09-04)
-# The model requires thinking and accepts reasoning_effort low|medium|xhigh:
-# https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/raw/main/README.md (accessed 2026-09-04)
+# Effort: reasoning_effort = none|low|medium|xhigh (off is effort=none; no separate toggle).
+# thinking.type = "disabled" and reasoning_effort = false also turn thinking off.
+# Lab prompt tiers low|medium|xhigh: https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/raw/main/README.md (accessed 2026-09-04)
+# Fireworks documents Qwen3.8 Max as hybrid thinking: "none" or false disables it, omitted uses xhigh:
+# https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-10-27)
+# Live Chat Completions test (2026-10-27): thinking.type = "disabled", reasoning_effort = "none" and false all
+#   returned 0 reasoning tokens, no reasoning_content and no <think> in content (8/8 runs, incl. a multi-step
+#   math prompt); thinking.type = "enabled" and low|medium|xhigh returned 53-520 reasoning tokens.
+#   thinking.type = "disabled" with a non-"none" reasoning_effort returns 400.
 # Fireworks returns reasoning in reasoning_content:
 # https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-09-04)
 # Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
@@ -20,7 +27,7 @@ base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
 

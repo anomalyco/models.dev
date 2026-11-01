@@ -28,6 +28,12 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
 // https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-decisions#input
 const VISION_MODELS = new Set(["openai/gpt-6-luna-decisions"]);
 
+// Still listed in /v1/models, but every call fails upstream; do not rediscover them.
+const RETIRED_MODELS = new Set([
+  // Prodia: "Job type is no longer available" (checked 2026-10-28).
+  "prodia/flux-fast-schnell",
+]);
+
 const KnownModelType = z.enum([
   "language",
   "embedding",
@@ -98,7 +104,7 @@ export const vercel = {
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*-batch`) — they are not catalog targets.
-    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch"));
+    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch") && !RETIRED_MODELS.has(model.id));
   },
   translateModel(model, context) {
     const mediaType = MEDIA_TYPES[model.type];

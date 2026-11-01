@@ -276,12 +276,17 @@ export function digitalOceanV2Set(model: DigitalOceanSourceModel): Record<string
       ...(responses ? { responses: RESPONSES_API } : {}),
       ...(responses || hosted ? { messages: MESSAGES_API } : {}),
     };
-    // The first table stays as it is (v1 reads it).
+    // The first table stays as it is (v1 reads it). Hand-authored per-API capabilities are kept.
     set.api = (current: unknown) => {
       const tables = isRecord(current) ? current : {};
       if (current === undefined && Object.keys(extra).length === 0) return undefined;
       const first = Object.keys(tables)[0] ?? "chat-completions";
-      return { [first]: tables[first] ?? {}, ...structuredClone(extra) };
+      const apis = Object.fromEntries(Object.entries(structuredClone(extra)).map(([key, table]) => {
+        const own = tables[key];
+        const capabilities = isRecord(own) ? own.capabilities : undefined;
+        return [key, capabilities === undefined ? table : { ...table, capabilities }];
+      }));
+      return { [first]: tables[first] ?? {}, ...apis };
     };
     set["cost.web_search"] = { price: model.creator === "Anthropic" ? 0 : WEB_SEARCH_PRICE };
   }

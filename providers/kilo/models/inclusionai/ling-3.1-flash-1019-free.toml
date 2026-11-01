@@ -1,0 +1,28 @@
+schema = 2
+name = "inclusionAI: Ling 3.1 Flash 1019 (free)"
+description = "An updated checkpoint of inclusionAI's Ling 3.1 Flash, provided free of charge by Novita AI until November 3, 2026. Ling 3.1 Flash is a hybrid reasoning mixture-of-experts model with 25B active parameters out of 560B total and a 1M-token context window."
+family = "ling"
+open_weights = false
+release_date = "2025-08-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 262_144
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
+reasoning = 0

@@ -1,3 +1,11 @@
+# Off is effort=none; graded levels, no toggle
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (https://docs.fireworks.ai/api-reference/post-chatcompletions, accessed 2026-10-27)
+#   high and max select the same prompt tier as xhigh (also the default when omitted); false and thinking.type = disabled match none.
+#   Live Chat Completions, temperature 0, "Is 391 prime? Answer yes or no." (2026-10-27), value -> prompt / reasoning tokens over 2 trials:
+#   none 24 / 0, 0; low 52 / 239, 238; medium 22 / 228, 228; xhigh 64 / 173, 132; high 64 / 133, 129; max 64 / 132, 129; omitted 64 / 173, 136.
+#   A harder prompt gave low 4109, medium 16397, xhigh 33114 (max identical) reasoning tokens; adaptive returns 400.
+#   Limitation: on that harder prompt every off path still returned reasoning_content despite the no-thinking prompt
+#   (none 29406, false 19836, thinking.type = disabled 23174 tokens), so off is not guaranteed on hard prompts.
 # Image types: the lab's image types that Fireworks accepts. Fireworks documents .png, .jpg/.jpeg, .gif, .bmp, .tiff and .ppm
 #   (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations); webp and avif also decoded in live tests (2026-10-21), heic failed.
 # Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
@@ -17,7 +25,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
 

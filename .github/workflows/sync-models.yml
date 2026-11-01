@@ -5,10 +5,12 @@ on:
     - cron: "17 * * * *"
   workflow_dispatch:
 
+# sync runs repository code and provider API keys with the built-in token only. It uploads each provider's catalog
+# patch as data. publish runs only .github/sync-models/ from this commit with a models.dev automation app token from
+# the automation environment: it applies each patch, allowing only catalog TOML, opens or updates the provider's pull
+# request and auto-merges safe syncs. The app's pull requests run their checks and its merges deploy as usual.
 permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+  contents: read
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -27,10 +29,10 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
-          bun-version: latest
+          bun-version: 1.4.4
 
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: List sync providers
         id: providers
@@ -45,6 +47,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.providers.outputs.matrix) }}
+    # bun models:sync opens an issue for each missing model and dispatches the issue fixer (repository_dispatch needs
+    # contents: write). The built-in token can't change dev or workflows; catalog changes still go through publish.
+    permissions:
+      contents: write
+      issues: write
 
     steps:
       - name: Checkout code
@@ -53,20 +60,13 @@ jobs:
           ref: dev
           persist-credentials: false
 
-      - name: Setup git committer
-        id: committer
-        uses: ./.github/actions/setup-git-committer
-        with:
-          opencode-app-id: ${{ vars.OPENCODE_APP_ID }}
-          opencode-app-secret: ${{ secrets.OPENCODE_APP_SECRET }}
-
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
-          bun-version: latest
+          bun-version: 1.4.4
 
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Sync model catalogs
         run: bun models:sync ${{ matrix.provider }}
@@ -99,59 +99,97 @@ jobs:
       - name: Validate models
         run: bun validate
 
-      - name: Report changes
-        id: report
+      - name: Prepare changes
+        id: changes
         env:
-          GH_TOKEN: ${{ steps.committer.outputs.token }}
-          BRANCH: automation/sync-models-${{ matrix.provider }}
-          LABELS: automation,model-sync,provider:${{ matrix.provider }}
-          TITLE: "chore(sync): update ${{ matrix.name }} model catalog"
+          OUT: ${{ runner.temp }}/sync
+          PROVIDER: ${{ matrix.provider }}
+          NAME: ${{ matrix.name }}
         run: |
+          set -euo pipefail
           tee -a "$GITHUB_STEP_SUMMARY" < .sync/model-sync-report.md >/dev/null
-
-          label_args=()
-          IFS=',' read -ra labels <<< "$LABELS"
-          for label in "${labels[@]}"; do
-            gh label create "$label" --color "0E8A16" --description "Automated model catalog sync" >/dev/null 2>&1 || true
-            label_args+=(--label "$label")
-          done
 
           if [ -z "$(git status --porcelain -- models providers)" ]; then
             echo "No model catalog changes found."
             exit 0
           fi
 
-          git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
-          git checkout -B "$BRANCH"
+          mkdir -p "$OUT"
           git add models providers
-          git commit -m "$TITLE"
-          bun sync:auto-merge HEAD^ HEAD
-          safe="$(sed -n 's/^safe=//p' "$GITHUB_OUTPUT" | tail -1)"
+          git -c user.name=sync -c user.email=sync@localhost commit -q --no-verify -m sync
+          git diff --binary HEAD^ HEAD > "$OUT/changes.patch"
+          GITHUB_OUTPUT="$RUNNER_TEMP/auto-merge" bun sync:auto-merge HEAD^ HEAD
+          sed -n 's/^safe=//p' "$RUNNER_TEMP/auto-merge" | tr -d '\n' > "$OUT/safe"
+          printf '%s' "$PROVIDER" > "$OUT/provider"
+          printf '%s' "$NAME" > "$OUT/name"
+          cp .sync/model-sync-report.md "$OUT/report.md"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
 
-          pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
-          if [ "$safe" != "true" ] && [ -n "$pr_number" ]; then
-            gh pr merge "$pr_number" --disable-auto || true
-            if [ "$(gh pr view "$pr_number" --json autoMergeRequest --jq '.autoMergeRequest == null')" != "true" ]; then
-              echo "Failed to disable auto-merge for unsafe sync PR #$pr_number."
-              exit 1
-            fi
-          fi
+      - name: Upload changes
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sync-${{ matrix.provider }}
+          path: ${{ runner.temp }}/sync
+          if-no-files-found: error
+          retention-days: 1
 
-          git push --force-with-lease origin "$BRANCH"
+  publish:
+    needs: [providers, sync]
+    # Runs when some provider syncs failed, so the others still publish.
+    if: always() && github.repository == 'anomalyco/models.dev' && needs.providers.result == 'success'
+    runs-on: ubuntu-latest
+    environment: automation
 
-          if [ -n "$pr_number" ]; then
-            gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
-            for label in "${labels[@]}"; do
-              gh pr edit "$pr_number" --add-label "$label"
-            done
-          else
-            gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
-            pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
-          fi
+    steps:
+      - name: Create app token
+        id: app
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
+        with:
+          app-id: ${{ vars.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          repositories: models.dev
+          permission-contents: write
+          permission-issues: write
+          permission-pull-requests: write
 
-          if [ "$safe" = "true" ]; then
-            gh pr merge "$pr_number" --auto --squash
-          elif [ "$(gh pr view "$pr_number" --json autoMergeRequest --jq '.autoMergeRequest == null')" != "true" ]; then
-            echo "Unsafe sync PR #$pr_number still has auto-merge enabled."
-            exit 1
-          fi
+      - name: Check out publish scripts
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          path: trusted
+          sparse-checkout: /.github/sync-models/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      # Holds the push credential; nothing from this checkout runs.
+      - name: Check out dev
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: dev
+          path: repo
+          token: ${{ steps.app.outputs.token }}
+
+      - name: Download changes
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: ${{ runner.temp }}/sync
+          pattern: sync-*
+
+      - name: Publish
+        working-directory: repo
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          SLUG: ${{ steps.app.outputs.app-slug }}
+        run: |
+          set -uo pipefail
+          BOT_NAME="${SLUG}[bot]"
+          BOT_EMAIL="$(gh api "/users/${SLUG}%5Bbot%5D" --jq .id)+${SLUG}[bot]@users.noreply.github.com" || exit 1
+          export BOT_NAME BOT_EMAIL
+          failed=0
+          for dir in "$RUNNER_TEMP"/sync/sync-*/; do
+            [ -d "$dir" ] || continue
+            bash ../trusted/.github/sync-models/publish.sh "$dir" || failed=1
+          done
+          exit "$failed"

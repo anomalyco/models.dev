@@ -2,6 +2,7 @@
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = true on [api.responses] only (/api/v1/responses, add only): an `additional_tools` input item keeps the cache (live 2026-10-23, pinned to OpenAI). OpenRouter's Responses docs don't mention it (https://openrouter.ai/docs/api/reference/responses/overview); lab mechanism: https://developers.openai.com/api/docs/guides/prompt-caching. Chat Completions has no mechanism.
 # Cache: automatic from 1,024 tokens (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
+# tools.freeform on [api.responses] only: /api/v1/responses accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ plus three digits, live 2026-10-28 on this model). /api/v1/chat/completions rejects custom tools (400 "Missing required parameter: 'tools[0].name'", live 2026-10-28).
 schema = 2
 base_model = "openai/gpt-5.3-codex"
 
@@ -17,7 +18,7 @@ cache = { implicit = { min_tokens = 1_024 } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
-capabilities = { tools = { updates = true } }
+capabilities = { tools = { freeform = ["text", "lark", "regex"], updates = true } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

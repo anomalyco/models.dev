@@ -7,7 +7,7 @@ base_model = "minimax/MiniMax-M2"
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
-structured_output = true
+structured_output = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_details" }

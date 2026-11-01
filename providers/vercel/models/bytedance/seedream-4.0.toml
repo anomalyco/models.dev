@@ -1,3 +1,4 @@
+# Image input: POST https://ai-gateway.vercel.sh/v1/images/edits uses the input image (verified live 2026-10-28)
 # Modalities: Seedream 4.0/4.5 output jpeg only, https://ai.byteplus.com/ark/region:ap-southeast-1/docs/image-generation-api
 schema = 2
 type = "image"
@@ -9,7 +10,7 @@ release_date = "2025-09-09"
 last_updated = "2025-08-28"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["image/jpeg"]
 
 [capabilities]

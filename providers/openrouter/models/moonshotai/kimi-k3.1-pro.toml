@@ -1,3 +1,7 @@
+# Mid-conversation (Chat Completions, live 2026-10-27; Moonshot AI is the only provider serving this model):
+#   system_updates = true: a system message after the assistant turn was obeyed and kept the cache [cached/prompt tokens, control -> test: 8192/8228 -> 8192/8247].
+#   tools.updates = false: Kimi's tool-carrying system message (no content) is rewritten to text parts and rejected (400 "text content parts must carry a string \"text\"").
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -11,6 +15,7 @@ structured_output = true
 output = 943_718
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

@@ -13,6 +13,9 @@ status = "deprecated"
 reasoning = { supported = true, toggle = true, budget = { min = 1, max = 81_920 } }
 structured_output = true
 
+[limit]
+context = 983_616
+
 [cost.text.input]
 price = 0.36
 cache = { read = 0.36 }

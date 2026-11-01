@@ -1,0 +1,37 @@
+# Sources:
+# - https://platform.minimax.io/docs/faq/models ("Generates images from a text prompt and a reference image")
+# - https://platform.minimaxi.com/docs/api-reference/image-generation-t2i and
+#   https://platform.minimaxi.com/docs/api-reference/image-generation-i2i (model enum includes image-01-live;
+#   width/height and the 21:9 preset are image-01 only; `style` is image-01-live only)
+# - https://platform.minimax.io/docs/api-reference/image-generation-i2i (reference image: JPG, JPEG, PNG)
+# Release date: MiniMax publishes no separate date for image-01-live; image-01's (2025-02-15) is used.
+# Live checks on api.minimax.io, 2026-10-28: text-only and subject-reference requests both succeed and
+# return JPEG; width/height and aspect_ratio 21:9 are rejected with status 2013.
+# Input is text only on purpose. The only image input MiniMax documents is one `subject_reference`
+# with type "character" (a portrait to keep the same person); there is no edit endpoint. Live checks on
+# api.minimax.io, 2026-10-28: an edit prompt with a photo returns a lookalike person in a new scene, not
+# an edit; other subject types, a second reference and edit-style fields are rejected or ignored.
+# Clients read image input as "can edit", so it stays out until models.dev can express reference-only input.
+schema = 2
+v2_only = true
+type = "image"
+name = "MiniMax image-01-live"
+description = "MiniMax image generation model with style presets. The API also takes one character (portrait) reference to keep a person consistent, but it cannot edit an input image"
+family = "minimax"
+open_weights = false
+release_date = "2025-02-15"
+
+[modalities]
+input = ["text"]
+output = ["image/jpeg"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
