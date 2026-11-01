@@ -1,0 +1,8 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Service: https://mixroute.ai/models/qwen-image/
+schema = 2
+base_model = "alibaba/qwen-image"
+
+[api.images]
+path = "/images/generations"
+sdk = { aisdk = "none", opencodeai = "none" }
