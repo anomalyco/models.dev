@@ -367,7 +367,7 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A live model with no price or limits keeps its existing file unchanged.
 - New models are created as `base_model` overlays. Most IDs carry no namespace, so the lab is read from the family prefix (`claude-` → `anthropic`, `glm-` → `zhipuai`, …). A model with no lab entry opens a missing-model issue.
 - A reasoning model without `reasoning_efforts` keeps its hand-authored `capabilities.reasoning` (`{ supported = true }` when callers have no control), or fails for manual review.
-- The fetch refuses a response with fewer than twenty models, so a truncated list is not read as a mass retirement.
+- A local model missing from the endpoint is retained (`deleteMissing: false`); retired routes are kept as `status = "deprecated"` files. The fetch also refuses a response with fewer than twenty models, so a truncated list cannot rewrite the catalog.
 
 ## OpenAI Notes
 

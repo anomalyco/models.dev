@@ -125,3 +125,14 @@ test("expands image input to the MIME types the host documents", () => {
   });
   expect(mimeInput(inferenceModel({ input_modalities: ["text"] }))).toBeUndefined();
 });
+
+test("sorts efforts low to high and reports levels the schema cannot describe", () => {
+  const model = inferenceModel({ reasoning_efforts: ["high", "turbo", "low"] });
+  expect(buildInferenceModel(model, base("zhipuai/glm-5.3"))).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  });
+  const translated = inference.translateModel(model, context({ "glm-5.3": base("zhipuai/glm-5.3") }));
+  expect(translated && "notices" in translated ? translated.notices : undefined).toEqual([
+    "Inference glm-5.3: dropped reasoning_efforts the schema cannot describe: turbo",
+  ]);
+});

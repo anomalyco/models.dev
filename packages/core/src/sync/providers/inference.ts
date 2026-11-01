@@ -35,8 +35,8 @@ const LAB_BY_PREFIX: [prefix: string, lab: string][] = [
   ["nemotron-", "nvidia"],
 ];
 
-// Levels the catalog schema can describe; others are dropped so one new level
-// cannot fail the whole sync.
+// Levels the catalog schema can describe, low to high; others are dropped with
+// a notice so one new level cannot fail the whole sync.
 const ReasoningEffort = z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]);
 
 // Modalities the catalog schema can describe; others are dropped.
@@ -74,6 +74,8 @@ export const inference = {
   id: "inference",
   name: "Inference",
   modelsDir: "providers/inference/models",
+  // Retired routes stay as `status = "deprecated"` files so v1 consumers keep them.
+  deleteMissing: false,
   // A create is only skipped when no lab entry exists to base it on.
   missingModelID(model) {
     return model.id;
@@ -100,10 +102,19 @@ export const inference = {
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
     const v2Set = mimeInput(model);
-    if (existing !== undefined) return { id: model.id, model: buildInferenceModel(model, existing), v2Set };
+    const unknown = (model.reasoning_efforts ?? []).filter((effort) => !ReasoningEffort.safeParse(effort).success);
+    const notices = unknown.length === 0
+      ? undefined
+      : [`Inference ${model.id}: dropped reasoning_efforts the schema cannot describe: ${unknown.join(", ")}`];
+    if (existing !== undefined) return { id: model.id, model: buildInferenceModel(model, existing), v2Set, notices };
     const baseModel = labModelID(model.id);
     if (!existsSync(path.join(MODELS_DIR, `${baseModel}.toml`))) return undefined;
-    return { id: model.id, model: buildInferenceModel(model, { base_model: baseModel } as ExistingModel), v2Set };
+    return {
+      id: model.id,
+      model: buildInferenceModel(model, { base_model: baseModel } as ExistingModel),
+      v2Set,
+      notices,
+    };
   },
 } satisfies SyncProvider<InferenceModel>;
 
@@ -193,9 +204,7 @@ export function buildInferenceModel(model: CompleteInferenceModel, existing: Exi
     : { ...current.modalities, input: inputModalities } as SyncedFullModel["modalities"];
 
   const reasons = (current.reasoning ?? inherited.reasoning) === true;
-  const efforts = (model.reasoning_efforts ?? []).filter(
-    (effort): effort is z.infer<typeof ReasoningEffort> => ReasoningEffort.safeParse(effort).success,
-  );
+  const efforts = ReasoningEffort.options.filter((effort) => model.reasoning_efforts?.includes(effort));
   let reasoning: Pick<SyncedFullModel, "reasoning" | "reasoning_options">;
   if (efforts.some((effort) => effort !== "none")) {
     reasoning = { reasoning: true, reasoning_options: [{ type: "effort", values: efforts }] };
