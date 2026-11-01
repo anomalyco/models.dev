@@ -1,0 +1,26 @@
+# Toggle: reasoning_effort = off|medium|high ("off" disables thinking; the listed levels set its depth)
+# Effort: reasoning_effort = medium|high (default high)
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+# Modalities: text and image. This deployment refuses `video_url`, and `file` is not a supported part type on this API.
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "Nemotron 3.5 Super VL 120B-12B"
+description = "Fast 120B vision and agent model from NVIDIA"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "high"]
+
+[cost]
+input = 0.17
+output = 0.67
+cache_read = 0.07
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]
