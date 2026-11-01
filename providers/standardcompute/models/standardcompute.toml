@@ -7,7 +7,8 @@
 # (https://docs.standardcompute.com/reasoning, accessed 2026-10-13).
 # Verified against the live endpoint (https://api.stdcmpt.com/v1/chat/completions):
 # tool_call + structured_output 2026-07-17; reasoning pass-through, image
-# attachment and streaming reasoning_details 2026-08-23/24.
+# attachment and streaming reasoning_details 2026-08-23/24; PDF attachment
+# (chat-completions file part) 2026-10-31.
 # Limits (https://docs.standardcompute.com/budgets-and-limits, accessed
 # 2026-10-13, and the gateway's catalog invariant): every model the router may
 # select declares a >= 1,000,000-token context window; input is capped at
@@ -37,10 +38,10 @@ description = "Flat-rate smart-routing gateway: one model id, each request route
 family = "auto"
 open_weights = false
 release_date = "2026-03-01"
-last_updated = "2026-10-13"
+last_updated = "2026-10-31"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "application/pdf"]
 output = ["text"]
 
 [capabilities]

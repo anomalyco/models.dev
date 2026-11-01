@@ -6,6 +6,9 @@ name = "Grok 4.1 Fast Reasoning (Azure AI Foundry)"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
 
+[limit]
+context = 128_000
+
 [cost.text.input]
 price = 0.2
 

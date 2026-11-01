@@ -1467,6 +1467,7 @@ function tinfoilModel(overrides: Partial<TinfoilModel> = {}): TinfoilModel {
     tool_calling: true,
     multimodal: false,
     type: "chat",
+    endpoints: ["/v1/chat/completions", "/v1/responses"],
     ...overrides,
   };
 }
@@ -1560,6 +1561,20 @@ test("tracks new token-priced Tinfoil models but ignores per-request services", 
       inputTokenPricePer1M: 0,
       outputTokenPricePer1M: 0,
       requestPrice: 0.05,
+    },
+  }))).toBeUndefined();
+});
+
+test("ignores Tinfoil models served only outside the chat and embedding APIs", () => {
+  expect(tinfoil.sourceID(tinfoilModel({
+    id: "pii-filter",
+    context_window: 80_000,
+    type: "safety",
+    endpoints: ["/redact"],
+    pricing: {
+      inputTokenPricePer1M: 0.8,
+      outputTokenPricePer1M: 0,
+      requestPrice: 0.0002,
     },
   }))).toBeUndefined();
 });
@@ -4311,6 +4326,15 @@ test("syncs OpenRouter reasoning efforts from model metadata", () => {
       { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
     ],
   });
+});
+
+test("overrides OpenRouter reasoning metadata that the upstream API rejects", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "mistralai/mistral-large-4-0",
+    reasoning: { mandatory: false, supported_efforts: ["high", "none"] },
+  }), undefined);
+
+  expect(model.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
 });
 
 test("syncs OpenRouter toggles without an effort selector", () => {

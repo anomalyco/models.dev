@@ -11,7 +11,7 @@ input = ["text", "image", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
 structured_output = true
 
 [limit]
