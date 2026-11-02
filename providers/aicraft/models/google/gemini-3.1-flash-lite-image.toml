@@ -1,0 +1,16 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "google/gemini-3.1-flash-lite-image"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
+
+[cost.text.input]
+price = 0.2762
+
+[cost.text.output]
+price = 33.15
+
+[cost.image.output]
+price = 33.15

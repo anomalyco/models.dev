@@ -1,0 +1,13 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "deepseek/deepseek-v3"
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.3203
+
+[cost.text.output]
+price = 1.2812
