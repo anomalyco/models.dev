@@ -1,0 +1,26 @@
+# Sources (docs.x.ai), mirrored from providers/xai/models/grok-4.20-multi-agent-0309.toml:
+# - Model page: https://docs.x.ai/developers/models/grok-4.20-multi-agent-0309
+# - Client-side function tools need beta access on xAI ("Client-side tools for multi-agent models
+#   require beta access"), so tools stay off for general access.
+# Lab file added so relays can point base_model at it; the xAI provider file stays a full definition.
+schema = 2
+name = "Grok 4.20 Multi-Agent"
+description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
+family = "grok"
+open_weights = false
+release_date = "2026-03-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 30_000
