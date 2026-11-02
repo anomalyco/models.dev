@@ -27,6 +27,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync vultr` syncs only Vultr.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -468,6 +469,22 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
   - Point `base_model` at the lab entry for the exact id, adding it under `models/` if it is missing. Pointing at a sibling is not a substitute: because an authored `base_model` wins, the sync never corrects it later.
 - Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
 - Modalities are sorted into catalogue order; wire order is arbitrary.
+
+## Vultr Notes
+
+Vultr is implemented in `packages/core/src/sync/providers/vultr.ts`.
+
+- Run it with `bun models:sync vultr` or `bun vultr:sync`.
+- Source endpoint: `https://api.vultrinference.com/v1/models`; no auth required. Empty or duplicate-ID catalogs fail before any write.
+- Only rows with text input and text output are synced. Image, audio, speech, transcription, embedding, rerank and decision rows share the endpoint and are ignored.
+- The endpoint owns `cost.input` and `cost.output` (the text `prompt` / `completion` per-token prices, converted to per-1M), `limit.context` (`max_context_length`), tool calling (a `tools` parameter) and `structured_output` (a `structured_outputs` parameter or `json_schema` in `response_format`). A price that isn't a single per-token rate leaves the file unchanged and opens a `[missing-model]` issue.
+- Reasoning levels and modalities don't come from the endpoint: every chat row lists the same `reasoning_effort` alias set (`ultra` … `minimal`), which Vultr maps onto each model's native levels, and image and file input are listed even for text-only labs. Existing files keep their authored values; `limit.output`, `status` and the `base_model` pointer are kept too.
+- New chat models are created as `base_model` overrides:
+  - The lab model comes from `resolveModelMetadataBaseModel` on the Vultr ID. Lab facts, modalities and `limit.output` are inherited.
+  - Reasoning controls come from the lab's own provider entry (e.g. `providers/xiaomi/models/…`), else the OpenRouter entry with the same `base_model`. An off switch there (a toggle, or `none` in the effort list) becomes `toggle` (Vultr's `reasoning.enabled`), unless Vultr marks reasoning `mandatory`. Budgets and defaults are not carried over. The file's header names the source and the wire fields.
+  - When no lab model matches, neither entry lists controls, Vultr reports no reasoning metadata for a reasoning lab, or Vultr's `supported_efforts` lacks one of the lab's levels, no file is written and a `[missing-model]` issue explains why.
+- Existing files are checked against the endpoint too: when Vultr stops reporting reasoning, marks it `mandatory` while the file has a toggle, or drops an authored effort level from `supported_efforts` (`none` excepted), the file is left unchanged and a `[missing-model]` issue explains why.
+- Models missing from the API are removed, not deprecated: Vultr retires an ID by dropping it from the list and rerouting requests for it to another model.
 
 ## Standalone Generators
 

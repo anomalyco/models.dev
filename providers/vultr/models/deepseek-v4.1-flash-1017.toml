@@ -1,7 +1,9 @@
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning_effort = low|high|max
+# Reasoning levels: providers/openrouter/models/deepseek/deepseek-v4.1-flash-1017.toml (Vultr maps reasoning_effort onto the model's native levels)
+# Prices, context, tools and structured output: GET https://api.vultrinference.com/v1/models
 schema = 2
-base_model = "deepseek/deepseek-v4.1-flash"
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
