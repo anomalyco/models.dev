@@ -1,25 +1,32 @@
-# Lab facts split out of the inline Regolo entry (providers/regolo-ai/models/qwen-image.toml),
-# which carried them before this lab file existed; originally sourced from
-# https://docs.regolo.ai/models/families/images/ (accessed 2026-10-21).
+# Source: https://huggingface.co/Qwen/Qwen-Image (accessed 2026-11-02): 20B MMDiT
+# text-to-image model, open-sourced under Apache-2.0; announced 2025-08-19.
+# Diffusion image model: no temperature/top_p/top_k sampling and no token output
+# budget, following the qwen-image family convention (models/alibaba/qwen-image-2.1.toml);
+# output PNG; 8,192-token prompt budget.
 schema = 2
 type = "image"
 name = "Qwen-Image"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
+description = "Open-weight Qwen image model for prompt-driven generation and visual design workflows"
 family = "qwen"
-open_weights = false
-release_date = "2026-03-01"
+open_weights = true
+release_date = "2025-08-19"
+license = "Apache-2.0"
 
 [modalities]
 input = ["text"]
-output = ["image"]
+output = ["image/png"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
-temperature = true
+temperature = false
 top_p = false
 top_k = false
 
 [limit]
 context = 8_192
-output = 4_096
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen-Image"

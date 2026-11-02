@@ -2,8 +2,11 @@
 # served on the Regolo tier (EU hosting, zero data retention), $0.70/$3.94 per 1M tokens, 262K
 # context, image input verified working through the gateway.
 # Modality set and output limit copied from the underlying host entry
-# (providers/regolo-ai/models/qwen3.5-122b.toml). Reasoning restated as always-on,
-# mirroring that host entry.
+# (providers/regolo-ai/models/qwen3.5-122b.toml). The co-op gateway disables thinking for
+# this model at the host level (chat_template_kwargs: {enable_thinking: false} in the
+# gateway's LiteLLM config, https://git.inference.coop/code/litellm/src/branch/main/config.yaml),
+# so it is non-reasoning here despite the lab metadata; verified live 2026-11-02
+# (responses carry no reasoning_content and answer directly).
 schema = 2
 base_model = "alibaba/qwen3.5-122b-a10b"
 name = "Qwen3.5-122B"
@@ -13,7 +16,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = false }
 
 [limit]
 output = 16_384

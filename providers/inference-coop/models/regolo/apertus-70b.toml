@@ -1,8 +1,11 @@
 # Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
 # served on the Regolo tier (EU hosting, zero data retention), $1.16/$3.94 per 1M tokens, no cache price.
-# Context measured through the co-op gateway at 262K (the lab file lists 65K). Image input is
-# verified working through the gateway; the exact accepted MIME set is not documented, so only
-# jpeg/png are listed.
+# Live probes through the gateway (2026-11-02) verify the overrides against the lab facts
+# (text-only, 65,536 context) and the same-tier host entry (30,000, text-only):
+# - vision: base64 PNG input accepted and answered correctly.
+# - context: a 240,918-token prompt was accepted; the co-op model list publishes 262K
+#   measured through the gateway. The exact accepted image MIME set is not documented,
+#   so only jpeg/png are listed.
 schema = 2
 base_model = "swiss-ai/apertus-70b"
 
