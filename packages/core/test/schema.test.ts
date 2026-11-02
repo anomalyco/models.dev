@@ -143,10 +143,11 @@ describe("v2 API tables", () => {
     return result.success ? [] : result.error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`);
   };
 
-  test("image_input is only allowed on systemone tables", () => {
-    expect(issues({ systemone: { compatibility: { image_input: "state" } } })).toEqual([]);
-    expect(issues({ "chat-completions": { compatibility: { image_input: "state" } } })).toEqual([
-      "api.chat-completions.compatibility.image_input: compatibility.image_input is only allowed on [api.systemone], not [api.chat-completions]",
+  test("media_input is only allowed on systemone tables", () => {
+    expect(issues({ systemone: { compatibility: { media_input: "state" } } })).toEqual([]);
+    expect(issues({ systemone: { compatibility: { media_input: "root" } } })).toEqual([]);
+    expect(issues({ "chat-completions": { compatibility: { media_input: "state" } } })).toEqual([
+      "api.chat-completions.compatibility.media_input: compatibility.media_input is only allowed on [api.systemone], not [api.chat-completions]",
     ]);
   });
 

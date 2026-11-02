@@ -13,7 +13,7 @@ base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super 120B"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "high"] }
 cache = false
 structured_output = true

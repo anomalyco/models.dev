@@ -8,7 +8,7 @@ name = "Llama 4 Maverick"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 structured_output = true
 

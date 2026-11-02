@@ -4,12 +4,13 @@
 # Cache: implicit (context-cache model lists); the hit price is not set.
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: enable_thinking=false rejected; reasoning_effort outside low|high|max rejected; late system message accepted, obeyed and kept the implicit cache; reasoning_effort changes missed it; adding tools missed it.
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }

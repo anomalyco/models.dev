@@ -3,6 +3,7 @@
 # Not in the open-model implicit caching list: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models#context-caching
 # Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
 # system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+# tools.choice: auto and none (Vertex recommends setting one of them explicitly for Qwen): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/capabilities/function-calling#model-specific-guidance
 schema = 2
 name = "Qwen3 235B A22B Instruct"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -16,7 +17,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = false }
 structured_output = true
 temperature = true

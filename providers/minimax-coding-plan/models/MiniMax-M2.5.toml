@@ -2,6 +2,8 @@
 #   (https://platform.minimax.io/docs/faq/models, https://platform.minimax.io/docs/m-plan/intro).
 # Caching: requests are served by MiniMax-M3.1-Flash, so they get its automatic prefix cache
 #   (≥512 tokens, no cache_control; https://platform.minimax.io/docs/api-reference/text-prompt-caching).
+# Tools: tool_choice supports only auto (ToolChoice schema); no strict tool mode documented
+#   (https://platform.minimax.io/docs/api-reference/text-chat-anthropic).
 schema = 2
 name = "MiniMax-M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
@@ -15,7 +17,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true }
 temperature = true
 top_p = true

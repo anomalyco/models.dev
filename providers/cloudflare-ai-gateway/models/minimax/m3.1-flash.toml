@@ -3,6 +3,7 @@ base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+tools = { supported = true, choice = ["auto", "none"] }
 
 [limit]
 context = 1_000_000

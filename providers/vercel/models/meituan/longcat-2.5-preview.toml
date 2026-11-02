@@ -8,7 +8,7 @@ name = "LongCat 2.5 Preview"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 

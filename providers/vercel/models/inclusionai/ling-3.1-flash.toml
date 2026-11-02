@@ -4,7 +4,7 @@ schema = 2
 base_model = "inclusionai/ling-3.1-flash"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 cache = { implicit = true }
 

@@ -24,6 +24,16 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "zai/glm-5-turbo": 131_072,
 };
 
+// The catalog has no `vision` tag for these, but Vercel's docs say they take images:
+// https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-decisions#input
+const VISION_MODELS = new Set(["openai/gpt-6-luna-decisions"]);
+
+// Still listed in /v1/models, but every call fails upstream; do not rediscover them.
+const RETIRED_MODELS = new Set([
+  // Prodia: "Job type is no longer available" (checked 2026-10-28).
+  "prodia/flux-fast-schnell",
+]);
+
 const KnownModelType = z.enum([
   "language",
   "embedding",
@@ -67,6 +77,7 @@ export const VercelModel = z.object({
   // text/text handling in buildVercelModel instead of failing the whole sync.
   type: KnownModelType.or(z.string()),
   tags: z.array(z.string()).optional().default([]),
+  supported_parameters: z.array(z.string()).optional().default([]),
   // Keep the catalog parse forward-compatible with new control shapes or
   // effort values; unresolved options retain the authored menu below.
   reasoning_options: z.array(z.unknown()).optional(),
@@ -93,7 +104,7 @@ export const vercel = {
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*-batch`) — they are not catalog targets.
-    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch"));
+    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch") && !RETIRED_MODELS.has(model.id));
   },
   translateModel(model, context) {
     const mediaType = MEDIA_TYPES[model.type];
@@ -121,7 +132,13 @@ export const vercel = {
     const type = existing?.type ?? (baseModel === undefined ? undefined : labDoc(baseModel)?.type);
     const v2Set = {
       ...(model.type === "evaluation" ? { api: structuredClone(DECISION_APIS) } : {}),
-      ...(model.type === "language" && (type ?? "chat") === "chat" ? { api: chatApis } : {}),
+      ...(model.type === "language" && (type ?? "chat") === "chat"
+        ? {
+          api: chatApis,
+          "capabilities.tools": (current: unknown) =>
+            toolChoice(model, existing, baseModel === undefined ? undefined : labToolChoice(baseModel), current),
+        }
+        : {}),
       ...(cache === undefined ? {} : { "capabilities.cache": cache }),
     };
     return {
@@ -134,6 +151,31 @@ export const vercel = {
     };
   },
 } satisfies SyncProvider<VercelModel>;
+
+// A tool-calling model that lists `tool_choice` takes "auto", "none", "required"
+// and a named function, narrowed to the base model's own `choice` when its lab
+// file sets one. A choice equal to the lab's is inherited, not restated.
+// https://vercel.com/docs/ai-gateway/inputs-and-tools/tool-use
+// https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/tool-calling
+function toolChoice(model: VercelModel, existing: ExistingModel | undefined, labChoice: unknown[] | undefined, current: unknown) {
+  const { choice: _choice, ...rest } = (current ?? {}) as Doc;
+  const tools = existing?.tool_call ?? model.tags.includes("tool-use");
+  const choice = ["auto", "none", "required", "tool"].filter((value) => labChoice?.includes(value) ?? true);
+  if (!tools || !model.supported_parameters.includes("tool_choice") || sameChoice(choice, labChoice)) {
+    return Object.keys(rest).length > 0 ? rest : undefined;
+  }
+  return { ...rest, supported: true, choice };
+}
+
+function sameChoice(choice: string[], labChoice: unknown[] | undefined) {
+  return labChoice !== undefined && choice.length === labChoice.length && choice.every((value) => labChoice.includes(value));
+}
+
+// The `tools.choice` a lab file sets for the model on every host.
+function labToolChoice(modelID: string) {
+  const tools = labDoc(modelID)?.capabilities?.tools;
+  return Array.isArray(tools?.choice) ? tools.choice as unknown[] : undefined;
+}
 
 // The catalog tags each model `implicit-caching` and/or `explicit-caching`. An
 // untagged model with a cache read price caches implicitly, except Anthropic's,
@@ -158,7 +200,7 @@ export function buildVercelModel(
   existing: ExistingModel | undefined,
   base: ExistingModel | undefined = undefined,
 ): SyncedModel {
-  const tags = new Set(model.tags);
+  const tags = new Set(VISION_MODELS.has(model.id) ? [...model.tags, "vision"] : model.tags);
   const releaseDate = model.released
     ? dateFromTimestamp(model.released)
     : existing?.release_date ?? new Date().toISOString().slice(0, 10);
@@ -212,6 +254,8 @@ export function buildVercelModel(
           ? ["image"]
           : model.type === "video"
           ? ["video"]
+          : tags.has("video-generation")
+          ? ["video"]
           : tags.has("image-generation")
           ? ["text", "image"]
           : ["text"],
@@ -250,6 +294,8 @@ export function buildVercelModel(
         : model.type === "image"
         ? ["image"]
         : model.type === "video"
+        ? ["video"]
+        : tags.has("video-generation")
         ? ["video"]
         : tags.has("image-generation")
         ? ["text", "image"]
@@ -459,23 +505,28 @@ const MEDIA_PROTOCOLS: Record<MediaType, string> = {
 // realtime one, and @ai-sdk/gateway has no Live model:
 // https://vercel.com/docs/ai-gateway/modalities/realtime/gpt-live
 const LIVE_MODELS = new Set(["openai/gpt-live-1"]);
-// OpenCode's vercel-ai-gateway entry point only speaks the chat APIs, not
-// these endpoints.
+// The gateway's other endpoints have no standard equivalent:
+// POST /v1/audio/speech, /v1/audio/transcriptions and /v1/videos return 404.
 const MEDIA_SDK = { opencodeai: "none" };
-// Decision models: first POST /v1/decisions, OpenAI's Decisions format, which
-// @ai-sdk/openai's decisionModel speaks with this baseURL; then POST
-// /v1/evaluate, which OpenCode's vercel-ai-gateway entry calls
-// (experimental.evaluation). @ai-sdk/gateway's decisionModel uses its own
+// Image, embedding and rerank models are also served on the gateway's standard
+// endpoints, under the same model IDs: OpenAI's /v1/images/generations (and
+// /v1/images/edits), OpenAI's /v1/embeddings and Cohere's /v1/rerank.
+// https://vercel.com/docs/ai-gateway/sdks-and-apis
+const STANDARD_BASE_URL = "https://ai-gateway.vercel.sh/v1";
+const STANDARD_MEDIA_APIS: Partial<Record<MediaType, Doc>> = {
+  image: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
+  embedding: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
+  reranking: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
+};
+// Decision models: POST /v1/decisions, OpenAI's Decisions format, which
+// @ai-sdk/openai's decisionModel and OpenCode's vercel-ai-gateway/decisions entry
+// speak with this baseURL. @ai-sdk/gateway's decisionModel uses its own
 // /v4/ai/decision-model endpoint instead.
 // https://vercel.com/docs/ai-gateway/modalities/decision
 const DECISION_APIS = {
   decisions: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
-    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" },
-  },
-  evaluate: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
-    sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/vercel-ai-gateway" },
+    base_url: STANDARD_BASE_URL,
+    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/decisions" },
   },
 };
 // v1 reads the first API as `provider`.
@@ -490,11 +541,11 @@ const LIVE_SDK = { aisdk: "none", opencodeai: "none" };
 // https://ai-sdk.dev/providers/ai-sdk-providers/open-responses
 const CHAT_EXTRA_APIS = {
   responses: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
+    base_url: STANDARD_BASE_URL,
     sdk: { aisdk: "@ai-sdk/open-responses", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/responses" },
   },
   messages: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
+    base_url: STANDARD_BASE_URL,
     sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/messages" },
   },
 };
@@ -644,7 +695,7 @@ export function buildVercelMediaModel(
 
   doc.api = LIVE_MODELS.has(model.id)
     ? { live: { base_url: MEDIA_BASE_URL, sdk: { ...LIVE_SDK } } }
-    : { [MEDIA_PROTOCOLS[type]]: { base_url: MEDIA_BASE_URL, sdk: { ...MEDIA_SDK } } };
+    : { [MEDIA_PROTOCOLS[type]]: structuredClone(STANDARD_MEDIA_APIS[type] ?? { base_url: MEDIA_BASE_URL, sdk: MEDIA_SDK }) };
   const { cost, issue } = vercelMediaCost(model, type);
   if (issue !== undefined) console.warn(`Vercel ${model.id}: no cost written, ${issue}`);
   if (cost !== undefined) doc.cost = cost;

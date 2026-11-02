@@ -5,7 +5,7 @@ name = "Beam 1.0 (Free)"
 description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }

@@ -32,7 +32,7 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
   "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
   "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
-  "typesafe/jev-1.13": "typesafe/jev-latest",
+  "typesafe/jev-1.13": "typesafe/jev-1.13.0",
   "~typesafe/jev-latest": "typesafe/jev-latest",
 } as const;
 
@@ -40,6 +40,13 @@ const DECISION_DESCRIPTION = "Decision model for typed evaluation of shared stat
 
 const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "minimax/minimax-01": 40_000,
+};
+
+// OpenRouter's metadata still lists the preview's efforts for these models, but requests
+// are rejected upstream. Mistral Large 4: `none` returns 400 "supported values: high, low,
+// medium" and `reasoning.enabled = false` is rejected the same way (live 2026-10-31).
+const REASONING_OVERRIDES: Record<string, NonNullable<OpenRouterModel["reasoning"]>> = {
+  "mistralai/mistral-large-4-0": { mandatory: true, supported_efforts: ["high", "medium", "low"] },
 };
 
 const CANONICAL_PROVIDER_PREFIXES = {
@@ -264,13 +271,18 @@ export const openrouter = {
       ? undefined
       : catalogV2Set(model, context.v2?.(model.id));
     const api = isDecisionModel(model)
-      ? withSystemOneImageInput(structuredClone(DECISION_APIS), model.architecture.input_modalities.includes("image"))
+      ? withSystemOneMediaInput(structuredClone(DECISION_APIS), model.architecture.input_modalities.includes("image"))
       : "base_model" in built && typeof built.base_model === "string" && rawLabModel(built.base_model)?.type === "image"
         ? structuredClone(IMAGE_CHAT_APIS)
         : isTextOnly(model)
           ? withTextApis
           : undefined;
-    const v2Set = api === undefined ? catalog?.v2Set : { ...catalog?.v2Set, api };
+    const v2Set = {
+      ...catalog?.v2Set,
+      ...(api === undefined ? {} : { api }),
+      "capabilities.tools": (current: unknown) =>
+        toolChoice(model.supported_parameters.includes("tool_choice"), "base_model" in built ? labToolChoice(built.base_model) : undefined, current),
+    };
     return {
       id: model.id,
       model: translated,
@@ -282,6 +294,28 @@ export const openrouter = {
     };
   },
 } satisfies SyncProvider<OpenRouterModel>;
+
+// A model that lists `tool_choice` takes every documented value ("auto", "none",
+// "required" and a named function), narrowed to the base model's own `choice`
+// when its lab file sets one. A choice equal to the lab's is inherited, not restated.
+// https://openrouter.ai/docs/api-reference/parameters#tool-choice
+function toolChoice(listed: boolean, labChoice: unknown[] | undefined, current: unknown) {
+  const { choice: _choice, ...rest } = isPlainObject(current) ? current : {};
+  const choice = ["auto", "none", "required", "tool"].filter((value) => labChoice?.includes(value) ?? true);
+  if (!listed || rest.supported === false || sameChoice(choice, labChoice)) return Object.keys(rest).length > 0 ? rest : undefined;
+  return { ...rest, supported: true, choice };
+}
+
+function sameChoice(choice: string[], labChoice: unknown[] | undefined) {
+  return labChoice !== undefined && choice.length === labChoice.length && choice.every((value) => labChoice.includes(value));
+}
+
+// The `tools.choice` a lab file sets for the model on every host.
+function labToolChoice(modelID: string) {
+  const capabilities = rawLabModel(modelID)?.capabilities;
+  const tools = isPlainObject(capabilities) ? capabilities.tools : undefined;
+  return isPlainObject(tools) && Array.isArray(tools.choice) ? tools.choice : undefined;
+}
 
 function isUnavailable(model: OpenRouterModel) {
   return (
@@ -296,29 +330,29 @@ function isDecisionModel(model: OpenRouterModel) {
   return model.architecture.output_modalities.includes("decisions");
 }
 
-// Decision models answer POST /api/v1/systemone, which OpenCode's openrouter
-// entry (experimental.evaluation) and @ai-sdk/typesafe-ai's decisionModel (with
+// Decision models answer POST /api/v1/systemone, which OpenCode's openrouter/decisions
+// entry and @ai-sdk/typesafe-ai's decisionModel (with
 // this baseURL) call. POST /api/alpha/decisions takes the same System One body,
 // so it isn't listed separately.
 // https://openrouter.ai/docs/api/api-reference/systemone/submit-a-system-one-request
 // https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request
 const DECISION_APIS = {
-  systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" } },
+  systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter/decisions" } },
 };
 // OpenRouter and NanoGPT read System One images as chat-style `image_url` items in a
-// `state` list (OpenRouter ignores TypeSafe's `assets`). Sets that on every
+// `state` list (OpenRouter ignores TypeSafe's `assets`). Sets `media_input = "state"` on every
 // `systemone` table of a model that takes images, and removes it otherwise.
 // https://openrouter.ai/docs/guides/community/multimodal-decisions
 // https://docs.nano-gpt.com/api-reference/endpoint/decisions
-export function withSystemOneImageInput(api: unknown, images: boolean) {
+export function withSystemOneMediaInput(api: unknown, images: boolean) {
   if (!isPlainObject(api)) return api;
   return Object.fromEntries(
     Object.entries(api).map(([protocol, table]) => {
       if (protocol !== "systemone" || !isPlainObject(table)) return [protocol, table];
       const { compatibility: current, ...rest } = table;
       const compatibility = { ...(isPlainObject(current) ? current : {}) };
-      if (images) compatibility.image_input = "state";
-      else delete compatibility.image_input;
+      if (images) compatibility.media_input = "state";
+      else delete compatibility.media_input;
       return [protocol, Object.keys(compatibility).length > 0 ? { ...rest, compatibility } : rest];
     }),
   );
@@ -328,7 +362,7 @@ export function withSystemOneImageInput(api: unknown, images: boolean) {
 // (https://openrouter.ai/api/v1/images/models), which answers OpenAI's format.
 const IMAGE_CHAT_APIS = {
   "chat-completions": {},
-  images: { sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
+  images: { sdk: { opencodeai: "@opencode/ai/providers/openrouter/images" } },
 };
 // Text models are also served on POST /api/v1/responses (OpenAI Responses format, stateless) and
 // POST /api/v1/messages (Anthropic Messages format), which take any OpenRouter model ID. The catalog
@@ -403,7 +437,7 @@ const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodea
   },
   embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
   reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
-  image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/protocols/openai-images" },
+  image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
   video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
 };
 
@@ -1380,7 +1414,7 @@ export function buildOpenRouterModel(
   // and rotated models pick up new efforts/budget support. Fall back to authored
   // only when the API omits a reasoning object.
   const reasoning_options = reasoning
-    ? openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options
+    ? openRouterReasoningOptions(REASONING_OVERRIDES[model.id] ?? model.reasoning) ?? existing?.reasoning_options
     : undefined;
   const context = model.context_length;
   const family = inferFamily(model, name);

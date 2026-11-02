@@ -4,7 +4,7 @@ base_model = "meta/llama-3.1-70b-instruct"
 name = "Llama 3.1 70B Instruct"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [limit]
 output = 8_192

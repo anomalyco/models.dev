@@ -6,7 +6,7 @@ base_model = "mistral/mistral-large-2407"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 
 [api.chat-completions]

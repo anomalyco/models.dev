@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ModelFamily, ModelFamilyValues } from "./family.js";
+import { ModelFamily } from "./family.js";
 import {
   BenchmarkResult,
   DateString,
@@ -8,23 +8,6 @@ import {
   ModelLink,
   ModelWeights,
 } from "./schema.js";
-
-/**
- * Creates an open-ended string union for public API / OpenAPI schemas.
- *
- * Why: Fields like `type`, `family`, and `modalities` will gain new values over
- * time (new MIME types, new model families, new model categories). Exposing
- * them as `z.enum(...) | (string & {})` gives TypeScript and OpenAPI consumers
- * autocomplete and documentation for all known values without making future
- * additions a breaking schema change.
- *
- * Strict allowlist checks and cross-field lint rules (e.g. forbidding `"image"`
- * alongside `"image/png"`) belong in catalog validation (`bun validate`), not
- * in the public API schema.
- */
-function openEnum<const T extends readonly [string, ...string[]]>(values: T) {
-  return z.union([z.enum(values), z.string() as z.ZodType<string & {}>]);
-}
 
 export const ModelTypeV2Values = [
   "chat",
@@ -36,10 +19,12 @@ export const ModelTypeV2Values = [
   "transcription",
   "speech",
   "realtime",
+  "extraction",
+  // Non-speech audio generation (music, sound effects); text-to-speech is `speech`.
+  "audio",
 ] as const;
 
-export const KnownModelTypeV2 = z.enum(ModelTypeV2Values);
-export const ModelTypeV2 = openEnum(ModelTypeV2Values);
+export const ModelTypeV2 = z.enum(ModelTypeV2Values);
 export type ModelTypeV2 = z.infer<typeof ModelTypeV2>;
 
 export const MediaModalityV2Values = [
@@ -73,9 +58,14 @@ export const MediaModalityV2Values = [
   "application/pdf",
 ] as const;
 
+// MIME types are a standard, open set, so any well-formed one is accepted
+// alongside the listed values.
+const MimeTypeV2 = z
+  .string()
+  .regex(/^(text|image|audio|video|application)\/[A-Za-z0-9.+-]+$/, "Must be a MIME type");
+
 export const InputModalityV2Values = MediaModalityV2Values;
-export const KnownInputModalityV2 = z.enum(InputModalityV2Values);
-export const InputModalityV2 = openEnum(InputModalityV2Values);
+export const InputModalityV2 = z.union([z.enum(InputModalityV2Values), MimeTypeV2]);
 export type InputModalityV2 = z.infer<typeof InputModalityV2>;
 
 export const OutputModalityV2Values = [
@@ -84,8 +74,7 @@ export const OutputModalityV2Values = [
   "embedding",
   "reranking",
 ] as const;
-export const KnownOutputModalityV2 = z.enum(OutputModalityV2Values);
-export const OutputModalityV2 = openEnum(OutputModalityV2Values);
+export const OutputModalityV2 = z.union([z.enum(OutputModalityV2Values), MimeTypeV2]);
 export type OutputModalityV2 = z.infer<typeof OutputModalityV2>;
 
 export const ModalitiesV2 = z
@@ -97,41 +86,50 @@ export const ModalitiesV2 = z
 
 export type ModalitiesV2 = z.infer<typeof ModalitiesV2>;
 
-export const KnownModelFamilyV2 = ModelFamily;
-export const ModelFamilyV2 = openEnum(ModelFamilyValues);
+export const ModelFamilyV2 = ModelFamily;
 export type ModelFamilyV2 = z.infer<typeof ModelFamilyV2>;
 
 export const ToolChoiceV2 = z.enum(["auto", "none", "required", "tool"]);
 export type ToolChoiceV2 = z.infer<typeof ToolChoiceV2>;
 
-export const ToolGrammarV2Values = [
+// Input formats for custom (free-form) tools, whose input is plain text instead
+// of JSON: `text` is unconstrained, `lark` and `regex` constrain it with a grammar.
+export const ToolFreeformV2Values = [
+  "text",
   "lark",
   "regex",
 ] as const;
 
-export const KnownToolGrammarV2 = z.enum(ToolGrammarV2Values);
-export const ToolGrammarV2 = openEnum(ToolGrammarV2Values);
-export type ToolGrammarV2 = z.infer<typeof ToolGrammarV2>;
+export const ToolFreeformV2 = z.enum(ToolFreeformV2Values);
+export type ToolFreeformV2 = z.infer<typeof ToolFreeformV2>;
 
-const toolsSupportedV2 = {
-  supported: z.literal(true),
-  strict: z.boolean().optional(),
-  choice: z.array(ToolChoiceV2).optional(),
-  search: z.boolean().optional(),
-  grammar: z.array(ToolGrammarV2).optional(),
-  updates: z.boolean().optional(),
-};
+// How a model takes tools. These depend on the API, so the v2 API publishes them
+// on each API (`api[<protocol>].capabilities.tools`), not on the model.
+// `freeform` lists the formats an API accepts for custom tools; leaving it out
+// means the API has no free-form tools.
+export const ToolDetailsV2 = z
+  .object({
+    strict: z.boolean().optional(),
+    choice: z.array(ToolChoiceV2).optional(),
+    search: z.boolean().optional(),
+    freeform: z.array(ToolFreeformV2).optional(),
+    updates: z.boolean().optional(),
+  })
+  .strict();
 
-// Files may leave `updates` out, which means false. The API always states it.
+export type ToolDetailsV2 = z.infer<typeof ToolDetailsV2>;
+
+// A file's top-level tool details hold on every API the model lists; an
+// `[api.<protocol>]` table can replace any of them for that API. Files may leave
+// `updates` out, which means false.
 export const AuthoredToolsSupportV2 = z.discriminatedUnion("supported", [
   z.object({ supported: z.literal(false) }).strict(),
-  z.object(toolsSupportedV2).strict(),
+  z.object({ supported: z.literal(true), ...ToolDetailsV2.shape }).strict(),
 ]);
 
-export const ToolsSupportV2 = z.discriminatedUnion("supported", [
-  z.object({ supported: z.literal(false) }).strict(),
-  z.object({ ...toolsSupportedV2, updates: z.boolean() }).strict(),
-]);
+export type AuthoredToolsSupportV2 = z.infer<typeof AuthoredToolsSupportV2>;
+
+export const ToolsSupportV2 = z.object({ supported: z.boolean() }).strict();
 
 export type ToolsSupportV2 = z.infer<typeof ToolsSupportV2>;
 
@@ -146,8 +144,7 @@ export const ReasoningEffortV2Values = [
   "default",
 ] as const;
 
-export const KnownReasoningEffortV2 = z.enum(ReasoningEffortV2Values);
-export const ReasoningEffortV2 = openEnum(ReasoningEffortV2Values);
+export const ReasoningEffortV2 = z.enum(ReasoningEffortV2Values);
 export type ReasoningEffortV2 = z.infer<typeof ReasoningEffortV2>;
 
 export const ReasoningDefaultV2 = z.discriminatedUnion("type", [
@@ -214,8 +211,7 @@ export const CacheTargetV2Values = [
   "messages",
 ] as const;
 
-export const KnownCacheTargetV2 = z.enum(CacheTargetV2Values);
-export const CacheTargetV2 = openEnum(CacheTargetV2Values);
+export const CacheTargetV2 = z.enum(CacheTargetV2Values);
 export type CacheTargetV2 = z.infer<typeof CacheTargetV2>;
 
 export const ImplicitCacheV2 = z.union([
@@ -264,10 +260,10 @@ export const ServiceTierV2Values = [
   "priority",
   "fast",
   "ultrafast",
+  "standby",
 ] as const;
 
-export const KnownServiceTierV2 = z.enum(ServiceTierV2Values);
-export const ServiceTierV2 = openEnum(ServiceTierV2Values);
+export const ServiceTierV2 = z.enum(ServiceTierV2Values);
 export type ServiceTierV2 = z.infer<typeof ServiceTierV2>;
 
 // Files may leave `system_updates` / `effort_updates` out, which means false.
@@ -348,10 +344,10 @@ export const ReasoningFieldV2Values = [
   "reasoning",
   "reasoning_content",
   "reasoning_text",
+  "reasoning_details",
 ] as const;
 
-export const KnownReasoningFieldV2 = z.enum(ReasoningFieldV2Values);
-export const ReasoningFieldV2 = openEnum(ReasoningFieldV2Values);
+export const ReasoningFieldV2 = z.enum(ReasoningFieldV2Values);
 export type ReasoningFieldV2 = z.infer<typeof ReasoningFieldV2>;
 
 export const MaxTokensFieldV2Values = [
@@ -359,8 +355,7 @@ export const MaxTokensFieldV2Values = [
   "max_tokens",
 ] as const;
 
-export const KnownMaxTokensFieldV2 = z.enum(MaxTokensFieldV2Values);
-export const MaxTokensFieldV2 = openEnum(MaxTokensFieldV2Values);
+export const MaxTokensFieldV2 = z.enum(MaxTokensFieldV2Values);
 export type MaxTokensFieldV2 = z.infer<typeof MaxTokensFieldV2>;
 
 export const CompatibilityV2 = z
@@ -369,11 +364,13 @@ export const CompatibilityV2 = z
     // `chat-completions` only: the field that caps output tokens. Unset means OpenAI's current
     // `max_completion_tokens`; "max_tokens" marks hosts that only take the older field.
     max_tokens_field: MaxTokensFieldV2.optional(),
-    // `systemone` only: where the host wants images. "assets" (the default):
-    // TypeSafe's `assets` map, referenced from strings, with the
-    // `TypeSafe-Danger-Zone-Images: true` header. "images": a top-level `images`
-    // list next to `state`. "state": chat-style `image_url` items in a `state` list.
-    image_input: z.enum(["assets", "images", "state"]).optional(),
+    // `systemone` only: where the host wants media (images, audio, video), named
+    // after where it goes in the request body. "assets" (the default): TypeSafe's
+    // `assets` map, referenced by name from `state`, with the
+    // `TypeSafe-Danger-Zone-Images: true` header. "state": media items
+    // (`image_url`, `input_audio`, `video_url`) inside a `state` list. "root": one
+    // top-level list per media kind (`images`, `audio`, `videos`) next to `state`.
+    media_input: z.enum(["assets", "state", "root"]).optional(),
   })
   .strict();
 
@@ -382,15 +379,24 @@ export type CompatibilityV2 = z.infer<typeof CompatibilityV2>;
 export const CapabilitiesOverrideV2 = AuthoredCapabilitiesV2.partial();
 export type CapabilitiesOverrideV2 = z.infer<typeof CapabilitiesOverrideV2>;
 
-// Mid-conversation flags that hold on one API but not on others the model lists.
-// The model's top-level capabilities apply to every API.
-export const ApiCapabilitiesV2 = z
+// Capabilities that hold on one API but not on others the model lists. The
+// model's top-level capabilities apply to every API; a value here replaces the
+// top-level one for that field on this API.
+export const AuthoredApiCapabilitiesV2 = z
   .object({
     system_updates: z.boolean().optional(),
     effort_updates: z.boolean().optional(),
-    tools: z.object({ updates: z.boolean() }).strict().optional(),
+    tools: ToolDetailsV2.optional(),
   })
   .strict();
+
+export type AuthoredApiCapabilitiesV2 = z.infer<typeof AuthoredApiCapabilitiesV2>;
+
+// `tools` is set on every API of a model that supports tools: the model's
+// top-level tool details merged with the API table's, with `updates` always stated.
+export const ApiCapabilitiesV2 = AuthoredApiCapabilitiesV2.extend({
+  tools: ToolDetailsV2.extend({ updates: z.boolean() }).strict().optional(),
+}).strict();
 
 export type ApiCapabilitiesV2 = z.infer<typeof ApiCapabilitiesV2>;
 
@@ -441,10 +447,13 @@ export const ApiProtocolV2Values = [
   "transcriptions",
   "embeddings",
   "embed-content",
+  "contextualized-embeddings",
+  "fim",
+  "moderations",
+  "ocr",
 ] as const;
 
-export const KnownApiProtocolV2 = z.enum(ApiProtocolV2Values);
-export const ApiProtocolV2 = openEnum(ApiProtocolV2Values);
+export const ApiProtocolV2 = z.enum(ApiProtocolV2Values);
 export type ApiProtocolV2 = z.infer<typeof ApiProtocolV2>;
 
 export const ApiV2 = z.record(ApiProtocolV2, ApiEntryV2);
@@ -460,14 +469,12 @@ export const CostUnitV2Values = [
   "minute",
 ] as const;
 
-export const KnownCostUnitV2 = z.enum(CostUnitV2Values);
-export const CostUnitV2 = openEnum(CostUnitV2Values);
+export const CostUnitV2 = z.enum(CostUnitV2Values);
 export type CostUnitV2 = z.infer<typeof CostUnitV2>;
 
 export const HolidayV2Values = ["CN", "US", "CA"] as const;
 
-export const KnownHolidayV2 = z.enum(HolidayV2Values);
-export const HolidayV2 = openEnum(HolidayV2Values);
+export const HolidayV2 = z.enum(HolidayV2Values);
 export type HolidayV2 = z.infer<typeof HolidayV2>;
 
 export const UtcDayV2Values = [
@@ -480,14 +487,12 @@ export const UtcDayV2Values = [
   "sun",
 ] as const;
 
-export const KnownUtcDayV2 = z.enum(UtcDayV2Values);
-export const UtcDayV2 = openEnum(UtcDayV2Values);
+export const UtcDayV2 = z.enum(UtcDayV2Values);
 export type UtcDayV2 = z.infer<typeof UtcDayV2>;
 
 export const SearchContextSizeV2Values = ["low", "medium", "high"] as const;
 
-export const KnownSearchContextSizeV2 = z.enum(SearchContextSizeV2Values);
-export const SearchContextSizeV2 = openEnum(SearchContextSizeV2Values);
+export const SearchContextSizeV2 = z.enum(SearchContextSizeV2Values);
 export type SearchContextSizeV2 = z.infer<typeof SearchContextSizeV2>;
 
 const PriceV2 = z.number().min(0, "Price cannot be negative");
@@ -538,14 +543,18 @@ export const CostConditionKeyV2Values = [
   "fps",
   "steps",
   "search_context_size",
+  "speaker_labels",
+  "keyterms_prompt",
+  "domain",
+  "websocket",
+  "style",
+  "voice_control",
 ] as const;
 
-export const KnownCostConditionKeyV2 = z.enum(CostConditionKeyV2Values);
-export const CostConditionKeyV2 = openEnum(CostConditionKeyV2Values);
+export const CostConditionKeyV2 = z.enum(CostConditionKeyV2Values);
 export type CostConditionKeyV2 = z.infer<typeof CostConditionKeyV2>;
 
-// Known condition keys, typed for autocomplete. `when` also accepts any other key.
-const KnownCostConditionsV2 = z
+const CostConditionsV2 = z
   .object({
     context: CostConditionV2,
     duration: CostConditionV2,
@@ -567,22 +576,27 @@ const KnownCostConditionsV2 = z
     fps: CostConditionV2,
     steps: CostConditionV2,
     search_context_size: choiceCondition(SearchContextSizeV2),
+    speaker_labels: CostConditionV2,
+    keyterms_prompt: CostConditionV2,
+    domain: CostConditionV2,
+    websocket: CostConditionV2,
+    style: CostConditionV2,
+    voice_control: CostConditionV2,
   } satisfies Record<(typeof CostConditionKeyV2Values)[number], z.ZodTypeAny>)
   .partial();
 
-export type CostWhenV2 = z.infer<typeof KnownCostConditionsV2> & {
+export type CostWhenV2 = z.infer<typeof CostConditionsV2> & {
   all?: CostWhenV2[];
   any?: CostWhenV2[];
   not?: CostWhenV2;
-  [key: string]: CostConditionV2 | CostWhenV2[] | CostWhenV2 | undefined;
 };
 
 export const CostWhenV2: z.ZodType<CostWhenV2> = z.lazy(() =>
-  KnownCostConditionsV2.extend({
+  CostConditionsV2.extend({
     all: z.array(CostWhenV2).optional(),
     any: z.array(CostWhenV2).optional(),
     not: CostWhenV2.optional(),
-  }).catchall(CostConditionV2),
+  }).strict(),
 );
 
 export const CachePricesV2 = z
@@ -813,10 +827,12 @@ export const LabMetadataV2 = z
 export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
 
 // `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
-// point: `@opencode/ai/providers/<path>` for a provider's chat, responses or
-// messages model (`@opencode/ai/providers/openai/chat`), or
+// point: `@opencode/ai/providers/<path>` for a provider's chat, responses,
+// messages, images or decisions model (`@opencode/ai/providers/openai/chat`,
+// `@opencode/ai/providers/openrouter/images`; System One decision hosts
+// without their own package use `@opencode/ai/providers/typesafe-ai/decisions`), or
 // `@opencode/ai/protocols/<name>` for an API with no provider entry point, such
-// as media (`@opencode/ai/protocols/openai-images`, `openai-speech`,
+// as speech and transcription (`@opencode/ai/protocols/openai-speech`,
 // `openai-transcription`). `"none"` (here or in `sdk.aisdk`) says no package
 // supports the API: nothing is filled in and the v2 output has no such key.
 export const OpencodePackageV2 = z.union([
@@ -848,9 +864,9 @@ export const AuthoredApiEntryV2 = z
       .optional(),
     compatibility: CompatibilityV2.pick({ reasoning_field: true, max_tokens_field: true })
       .strict()
-      .extend({ image_input: CompatibilityV2.shape.image_input })
+      .extend({ media_input: CompatibilityV2.shape.media_input })
       .optional(),
-    capabilities: ApiCapabilitiesV2.optional(),
+    capabilities: AuthoredApiCapabilitiesV2.optional(),
     // Legacy, v1-only: the v1 `provider.shape` of a file that states its SDK's
     // default protocol (Responses on `@ai-sdk/openai`). It only keeps that
     // published v1 field unchanged; the v2 API never emits it.
@@ -867,7 +883,7 @@ export type AuthoredApiEntryV2 = z.infer<typeof AuthoredApiEntryV2>;
 const COMPATIBILITY_PROTOCOLS = {
   reasoning_field: "chat-completions",
   max_tokens_field: "chat-completions",
-  image_input: "systemone",
+  media_input: "systemone",
 } as const;
 
 export const AuthoredApisV2 = z
@@ -933,3 +949,20 @@ export const ProviderV2 = z
   .strict();
 
 export type ProviderV2 = z.infer<typeof ProviderV2>;
+
+// The schemas above are closed so `bun validate` catches typos. The API itself
+// keeps growing (new keys, new values in these lists), so clients should read it
+// as `PublishedProviderV2`: every list is open and every object may have more keys.
+type IsUnion<T, U = T> = T extends unknown ? ([U] extends [T] ? false : true) : never;
+
+export type Open<T> = [T] extends [string]
+  ? true extends IsUnion<T>
+    ? T | (string & {})
+    : T
+  : T extends readonly (infer U)[]
+    ? Open<U>[]
+    : T extends object
+      ? { [K in keyof T]: Open<Exclude<T[K], undefined>> } & { [key: string]: unknown }
+      : T;
+
+export type PublishedProviderV2 = Open<ProviderV2>;

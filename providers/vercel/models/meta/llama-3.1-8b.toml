@@ -5,7 +5,7 @@ name = "Llama 3.1 8B Instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [limit]
 output = 8_192

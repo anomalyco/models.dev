@@ -14,8 +14,8 @@ base_model = "cloudflare/clef"
 structured_output = true
 
 [api.systemone]
-sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
-compatibility = { image_input = "images" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+compatibility = { media_input = "root" }
 
 [cost.text.input]
 price = 0.24

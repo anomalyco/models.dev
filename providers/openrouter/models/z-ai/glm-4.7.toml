@@ -7,7 +7,7 @@ schema = 2
 base_model = "zhipuai/glm-4.7"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 
@@ -21,8 +21,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.54
-cache = { read = 0.099 }
+price = 0.6
+cache = { read = 0.11 }
 
 [cost.text.output]
-price = 1.98
+price = 2.2

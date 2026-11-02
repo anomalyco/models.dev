@@ -1,0 +1,30 @@
+# Reasoning: always on. reasoning_effort none and thinking.type disabled are both rejected with a 400,
+# and every reasoning_effort level renders the same prompt (same usage.prompt_tokens).
+# Cache: automatic; a repeated prompt returns usage.prompt_tokens_details.cached_tokens.
+# Pricing: https://www.runwally.com/pricing
+# Limits and modalities: GET https://inference.runanywhere.ai/v1/models
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 524_287
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.066 }
+
+[cost.text.output]
+price = 1.32

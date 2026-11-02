@@ -1,9 +1,11 @@
 # Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xai/models/grok-build-0.1.toml (Zen passes requests through).
+# Tools follow xAI's API: https://docs.x.ai/developers/tools/function-calling#tool-choice; Zen passes requests through.
 schema = 2
 base_model = "xai/grok-build-0.1"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
 system_updates = true

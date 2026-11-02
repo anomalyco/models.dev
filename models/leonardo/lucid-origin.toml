@@ -1,0 +1,26 @@
+# Released 2025-08-05 (datePublished): https://leonardo.ai/news/lucid-origin-ai-image-model
+# Leonardo.Ai's prompt-adherent text-to-image model with Full HD output and text rendering. Leonardo doesn't document
+# an output format, so output stays generic `image`. Prompts are not chat tokens, so context and output are 0.
+schema = 2
+v2_only = true
+type = "image"
+name = "Lucid Origin"
+description = "Prompt-adherent Full HD text-to-image model with text rendering and a wide range of styles"
+family = "lucid"
+open_weights = false
+release_date = "2025-08-05"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

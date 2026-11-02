@@ -67,7 +67,7 @@ import {
   resolveCanonicalBaseModel,
   catalogCost,
   overrideWhen,
-  withSystemOneImageInput,
+  withSystemOneMediaInput,
   withTextApis,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
@@ -1467,6 +1467,7 @@ function tinfoilModel(overrides: Partial<TinfoilModel> = {}): TinfoilModel {
     tool_calling: true,
     multimodal: false,
     type: "chat",
+    endpoints: ["/v1/chat/completions", "/v1/responses"],
     ...overrides,
   };
 }
@@ -1560,6 +1561,20 @@ test("tracks new token-priced Tinfoil models but ignores per-request services", 
       inputTokenPricePer1M: 0,
       outputTokenPricePer1M: 0,
       requestPrice: 0.05,
+    },
+  }))).toBeUndefined();
+});
+
+test("ignores Tinfoil models served only outside the chat and embedding APIs", () => {
+  expect(tinfoil.sourceID(tinfoilModel({
+    id: "pii-filter",
+    context_window: 80_000,
+    type: "safety",
+    endpoints: ["/redact"],
+    pricing: {
+      inputTokenPricePer1M: 0.8,
+      outputTokenPricePer1M: 0,
+      requestPrice: 0.0002,
     },
   }))).toBeUndefined();
 });
@@ -1922,6 +1937,11 @@ test("lists DigitalOcean Responses and Messages APIs from catalog capabilities",
     responses,
     messages,
   });
+  // Hand-authored per-API capabilities survive the rewrite.
+  const freeform = { tools: { freeform: ["text", "lark", "regex"] } };
+  expect(applyV2Set(digitalOceanV2Set(digitalOceanModel({ creator: "OpenAI" })), {
+    api: { "chat-completions": {}, responses: { ...responses, capabilities: freeform }, messages },
+  }).api).toEqual({ "chat-completions": {}, responses: { ...responses, capabilities: freeform }, messages });
   // Neither flagged nor hosted: Chat Completions only, so no table is written.
   expect(applyV2Set(digitalOceanV2Set(digitalOceanModel())).api).toBeUndefined();
   // Image models get no chat APIs.
@@ -3039,6 +3059,28 @@ test("OpenRouter overrides replace only the file's overrides the catalog owns", 
   expect(flat.v2Set["cost.text.output.overrides"]!([stale])).toBeUndefined();
 });
 
+test("OpenRouter tool_choice sets every documented tool choice and keeps other tool fields", () => {
+  const toolsSet = (supported_parameters: string[]) =>
+    (openrouter.translateModel(openRouterModel({ supported_parameters }), translateContext) as unknown as {
+      v2Set: Record<string, OverridesSet>;
+    }).v2Set["capabilities.tools"]!;
+  const choice = ["auto", "none", "required", "tool"];
+
+  expect(toolsSet(["tools", "tool_choice"])(undefined)).toEqual({ supported: true, choice });
+  expect(toolsSet(["tools", "tool_choice"])({ supported: true, updates: true })).toEqual({ supported: true, updates: true, choice });
+  expect(toolsSet(["tools"])({ supported: true, choice })).toEqual({ supported: true });
+  expect(toolsSet(["tools"])(undefined)).toBeUndefined();
+  expect(toolsSet(["tool_choice"])({ supported: false })).toEqual({ supported: false });
+
+  const opus = openrouter.translateModel(
+    openRouterModel({ id: "anthropic/claude-opus-5.5", supported_parameters: ["tools", "tool_choice"] }),
+    translateContext,
+  ) as unknown as { v2Set: Record<string, OverridesSet> };
+  // Its lab limits choice to auto and none, so the file inherits it instead of restating it.
+  expect(opus.v2Set["capabilities.tools"]!(undefined)).toBeUndefined();
+  expect(opus.v2Set["capabilities.tools"]!({ supported: true, choice })).toEqual({ supported: true });
+});
+
 test("syncs every OpenRouter price into v2 files without changing v1", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-openrouter-prices-"));
   const modelsDir = path.join(root, "providers", "example", "models");
@@ -3602,6 +3644,22 @@ test("omits Eden AI reasoning options for non-reasoning models", () => {
   const built = buildEdenAIModel(model);
   expect(built).toMatchObject({ base_model: "openai/gpt-4o-mini" });
   expect(built).not.toHaveProperty("reasoning_options");
+});
+
+test("keeps image input and output on Eden AI image models listed as text only", () => {
+  const model = edenAIModel({
+    id: "vertex/gemini-nano-banana-2.1",
+    model_name: "gemini-nano-banana-2.1",
+    owned_by: "vertex",
+    context_length: null,
+    capabilities: { input_modalities: ["text"], output_modalities: ["text"] },
+  });
+
+  // The output matches the lab's, so it is factored out.
+  expect(buildEdenAIModel(model, undefined, new Set())).toMatchObject({
+    base_model: "google/gemini-nano-banana-2.1",
+    modalities: { input: ["text", "image"] },
+  });
 });
 
 test("skips Eden AI models without lab metadata", () => {
@@ -4270,6 +4328,15 @@ test("syncs OpenRouter reasoning efforts from model metadata", () => {
   });
 });
 
+test("overrides OpenRouter reasoning metadata that the upstream API rejects", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "mistralai/mistral-large-4-0",
+    reasoning: { mandatory: false, supported_efforts: ["high", "none"] },
+  }), undefined);
+
+  expect(model.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
+});
+
 test("syncs OpenRouter toggles without an effort selector", () => {
   for (const supports_max_tokens of [undefined, true]) {
     const source = openRouterModel({
@@ -4481,6 +4548,10 @@ test("Venice sync lists Responses after the first API and prices web search", ()
   const once = withResponsesApi(first);
   expect(Object.keys(once)).toEqual(["chat-completions", "responses"]);
   expect(withResponsesApi(once)).toEqual(once);
+  // Hand-authored per-API capabilities on Responses survive the rewrite.
+  const freeform = { tools: { freeform: ["text", "lark", "regex"] } };
+  expect(withResponsesApi({ ...first, responses: { ...responses, capabilities: freeform } }))
+    .toEqual({ ...first, responses: { ...responses, capabilities: freeform } });
 
   const capabilities = veniceModel().model_spec.capabilities;
   expect(veniceV2Set(veniceModel({ capabilities: { ...capabilities, supportsWebSearch: true } }))["cost.web_search"])
@@ -4524,7 +4595,7 @@ test("OpenRouter base_model files leave model facts to the lab", async () => {
   const doc = {
     schema: 2,
     base_model: "aion-labs/aion-2.0",
-    family: "aion",
+    family: "llama",
     open_weights: true,
     knowledge: "2024-01",
     release_date: "2020-01-01",
@@ -4620,6 +4691,21 @@ test("factors new LLM Gateway models against the canonical base metadata", () =>
   });
   expect("name" in model).toBe(false);
   expect("modalities" in model).toBe(false);
+});
+
+test("authors the served context as output on new LLM Gateway models whose base declares no output", () => {
+  // models/moonshotai/kimi-k2.8-preview.toml declares only limit.context.
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "kimi-k2.8-preview",
+    name: "Kimi K2.8 Preview",
+    family: "moonshot",
+    context_length: 1_000_000,
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "moonshotai/kimi-k2.8-preview",
+    limit: { context: 1_000_000, output: 1_000_000 },
+  });
 });
 
 test("syncs explicitly advertised LLM Gateway reasoning efforts", () => {
@@ -5964,6 +6050,29 @@ test("translates Vercel pricing tiers with an implicit zero minimum", () => {
   });
 });
 
+test("skips Vercel models that are listed but retired upstream", () => {
+  const row = (id: string) => ({ id, name: id, created: 1_755_815_280, context_window: 512, max_tokens: 0, type: "image" });
+  expect(vercel.parseModels({ data: [row("prodia/flux-fast-schnell"), row("bfl/flux-2-pro")] }).map((model) => model.id))
+    .toEqual(["bfl/flux-2-pro"]);
+});
+
+test("maps Vercel language models tagged video-generation to video output", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "example/video-language",
+      name: "Video Language",
+      created: 1_780_963_200,
+      context_window: 1_000_000,
+      max_tokens: 57_920,
+      type: "language",
+      tags: ["vision", "video-generation"],
+      pricing: { input: "0.0000015", output: "0.000009" },
+    }],
+  });
+
+  expect(buildVercelModel(model!, undefined).modalities?.output).toEqual(["video"]);
+});
+
 test("uses verified Vercel output limits over catalog metadata", () => {
   const limits = {
     "alibaba/qwen3.6-27b": 65_536,
@@ -6233,6 +6342,20 @@ test("Vercel family inference requires word boundaries", () => {
   expect(buildVercelModel(rerank!, { family: "o" }).family).toBeUndefined();
 });
 
+test("Vercel GPT-6 Luna Decisions takes images though the catalog has no vision tag", () => {
+  const [luna] = vercel.parseModels({
+    data: [{
+      id: "openai/gpt-6-luna-decisions",
+      name: "GPT-6 Luna Decisions",
+      created: 1_791_244_800,
+      context_window: 1_050_000,
+      max_tokens: 0,
+      type: "evaluation",
+    }],
+  });
+  expect(buildVercelModel(luna!, undefined).modalities?.input).toEqual(["text", "image"]);
+});
+
 test("Vercel empty existing reasoning_options falls back to the route base menu", () => {
   const [model] = vercel.parseModels({
     data: [{
@@ -6297,6 +6420,32 @@ test("Vercel preserves a non-empty existing reasoning_options over the base menu
   expect(translated?.model).toMatchObject({
     reasoning_options: [{ type: "toggle" }],
   });
+});
+
+test("Vercel tool_choice sets every documented tool choice for tool-calling models", () => {
+  const toolsSet = (tags: string[], supported_parameters: string[], existing?: ExistingModel) => {
+    const [model] = vercel.parseModels({
+      data: [{ id: "lab/model", name: "Model", created: 1_780_963_200, type: "language", tags, supported_parameters }],
+    });
+    const translated = vercel.translateModel(model!, { existing: () => existing, authored: () => undefined }) as {
+      v2Set: Record<string, (current: unknown) => unknown>;
+    };
+    return translated.v2Set["capabilities.tools"]!;
+  };
+  const choice = ["auto", "none", "required", "tool"];
+
+  expect(toolsSet(["tool-use"], ["tools", "tool_choice"])(undefined)).toEqual({ supported: true, choice });
+  expect(toolsSet(["tool-use"], ["tools", "tool_choice"])({ supported: true, updates: true })).toEqual({ supported: true, updates: true, choice });
+  expect(toolsSet(["tool-use"], ["tools"])({ supported: true, choice })).toEqual({ supported: true });
+  // The file's tool_call wins over the catalog tag, as in the v1 fields.
+  expect(toolsSet(["tool-use"], ["tools", "tool_choice"], { tool_call: false })({ supported: false })).toEqual({ supported: false });
+  expect(toolsSet([], [])(undefined)).toBeUndefined();
+  // A stale `supported = false` in the file doesn't survive tool support.
+  expect(toolsSet(["tool-use"], ["tools", "tool_choice"])({ supported: false })).toEqual({ supported: true, choice });
+  // A lab that limits choice (Claude Opus 5.5: auto, none) is inherited, not restated.
+  const opus = { base_model: "anthropic/claude-opus-5-5" };
+  expect(toolsSet(["tool-use"], ["tools", "tool_choice"], opus)(undefined)).toBeUndefined();
+  expect(toolsSet(["tool-use"], ["tools", "tool_choice"], opus)({ supported: true, choice })).toEqual({ supported: true });
 });
 
 test("Vercel sync takes catalog reasoning controls over stale authored controls", () => {
@@ -6408,8 +6557,15 @@ function vercelMedia(fields: Record<string, unknown>) {
   })[0]!;
 }
 
-test("Vercel sync maps every catalog type and serves media models on their own endpoint", () => {
+test("Vercel sync maps every catalog type and lists the standard endpoint where there is one", () => {
   const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  const base_url = "https://ai-gateway.vercel.sh/v1";
+  const standard: Record<string, unknown> = {
+    image: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
+    embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
+    reranking: { base_url, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
+  };
+  const vercelOnly = { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { opencodeai: "none" } };
   const cases: Array<[string, string, string]> = [
     ["image", "image", "images"],
     ["video", "video", "videos"],
@@ -6422,9 +6578,7 @@ test("Vercel sync maps every catalog type and serves media models on their own e
   for (const [catalogType, type, protocol] of cases) {
     const translated = vercel.translateModel(vercelMedia({ id: `example/${catalogType}-model`, type: catalogType }), context) as any;
     expect(translated.v2.type).toBe(type);
-    expect(translated.v2.api).toEqual({
-      [protocol]: { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { opencodeai: "none" } },
-    });
+    expect(translated.v2.api).toEqual({ [protocol]: standard[catalogType] ?? vercelOnly });
     expect(translated.model).toBeUndefined();
     // The written file reads back as a typed v1 model.
     expect(modelV2ToV1({ ...translated.v2, id: "x" }).type).toBe(type);
@@ -6437,17 +6591,9 @@ test("Vercel sync maps every catalog type and serves media models on their own e
   const evaluation = vercel.translateModel(vercelMedia({ id: "example/decision-model", type: "evaluation" }), context) as any;
   expect(evaluation.v2Set).toEqual({
     api: {
-      decisions: {
-        base_url: "https://ai-gateway.vercel.sh/v1",
-        sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" },
-      },
-      evaluate: {
-        base_url: "https://ai-gateway.vercel.sh/v1",
-        sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/vercel-ai-gateway" },
-      },
+      decisions: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/decisions" } },
     },
   });
-  expect(Object.keys(evaluation.v2Set.api)).toEqual(["decisions", "evaluate"]);
   // v1 reads the first API.
   expect(evaluation.model.provider).toEqual({ npm: "@ai-sdk/openai", api: "https://ai-gateway.vercel.sh/v1" });
   expect(vercel.translateModel(vercelMedia({ id: "example/chat-model", type: "language" }), context)).toHaveProperty("v2Set.api", chatApis);
@@ -6482,6 +6628,20 @@ test("Vercel text models keep their default API first and add Responses and Mess
   // Per-API capabilities on the extra tables survive a sync.
   const flagged = { ...chatApis(own), responses: { ...extra.responses, capabilities: { effort_updates: true } } };
   expect(chatApis(flagged)).toEqual(flagged);
+});
+
+test("Vercel media files already in v1 publish the standard endpoint there too", () => {
+  const image = vercelMedia({ id: "bfl/flux-2-pro", name: "FLUX.2 [pro]", type: "image" });
+  const doc = buildVercelMediaModel(image, "image", { schema: 2, base_model: "bfl/flux-2-pro" });
+  expect(doc.v2_only).toBeUndefined();
+  expect(doc.api).toEqual({
+    images: {
+      base_url: "https://ai-gateway.vercel.sh/v1",
+      sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" },
+    },
+  });
+  expect(modelV2ToV1({ ...doc, id: "bfl/flux-2-pro" }, undefined, "@ai-sdk/gateway").provider)
+    .toEqual({ npm: "@ai-sdk/openai", api: "https://ai-gateway.vercel.sh/v1" });
 });
 
 test("Vercel media models drop chat capabilities and take exact MIME types", () => {
@@ -7173,7 +7333,7 @@ test("factors OpenRouter image models onto lab files with the Images API protoco
     api: {
       images: {
         base_url: "https://openrouter.ai/api/v1",
-        sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/protocols/openai-images" },
+        sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
       },
     },
     cost: { image: { output: { unit: "megapixel", price: 0.03 } } },
@@ -7615,8 +7775,8 @@ test("syncs OpenRouter decision models with no supported parameters as decision 
   // OpenRouter reads images as `image_url` items in a `state` list.
   expect(translated?.v2Set?.api).toEqual({
     systemone: {
-      sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" },
-      compatibility: { image_input: "state" },
+      sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter/decisions" },
+      compatibility: { media_input: "state" },
     },
   });
   const chat = openrouter.translateModel(openRouterModel(), {
@@ -7653,15 +7813,15 @@ test("lists Responses and Messages after the first API for OpenRouter text-only 
   expect(audio?.v2Set).not.toHaveProperty("api");
 });
 
-test("OpenRouter and NanoGPT mark System One tables of image models with image_input = state", () => {
+test("OpenRouter and NanoGPT mark System One tables of image models with media_input = state", () => {
   const sdk = { aisdk: "@ai-sdk/typesafe-ai" };
-  const once = withSystemOneImageInput({ systemone: { sdk } }, true);
-  expect(once).toEqual({ systemone: { sdk, compatibility: { image_input: "state" } } });
-  expect(withSystemOneImageInput(once, true)).toEqual(once);
+  const once = withSystemOneMediaInput({ systemone: { sdk } }, true);
+  expect(once).toEqual({ systemone: { sdk, compatibility: { media_input: "state" } } });
+  expect(withSystemOneMediaInput(once, true)).toEqual(once);
   // A text-only model loses the field, and other tables are left alone.
-  expect(withSystemOneImageInput({ ...(once as object), "chat-completions": {} }, false))
+  expect(withSystemOneMediaInput({ ...(once as object), "chat-completions": {} }, false))
     .toEqual({ systemone: { sdk }, "chat-completions": {} });
-  expect(withSystemOneImageInput(undefined, true)).toBeUndefined();
+  expect(withSystemOneMediaInput(undefined, true)).toBeUndefined();
 });
 
 test("lists the Images API next to chat for OpenRouter chat models with an image lab", () => {
@@ -7674,7 +7834,7 @@ test("lists the Images API next to chat for OpenRouter chat models with an image
   expect(translated?.model.base_model).toBe("google/gemini-2.5-flash-image");
   expect(translated?.v2Set?.api).toEqual({
     "chat-completions": {},
-    images: { sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
+    images: { sdk: { opencodeai: "@opencode/ai/providers/openrouter/images" } },
   });
 });
 

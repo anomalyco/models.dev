@@ -6,7 +6,7 @@ base_model = "openai/o3"
 name = "o3 (Fast)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 system_updates = true

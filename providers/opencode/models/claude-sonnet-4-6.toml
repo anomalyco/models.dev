@@ -3,11 +3,13 @@
 # Budget: thinking.budget_tokens (min 1024) with thinking.type = enabled (not re-verified on Zen: model access is disabled for the probe key)
 # Cache: explicit cache_control only, as on Anthropic (https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Zen forwards it: block and top-level cache_control and ttl 1h were honored, and no read happened without it (live on claude-haiku-5-5, claude-opus-5-5, claude-sonnet-5 and claude-sonnet-5-5). Zen lists only the 5m write price.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/anthropic/models/claude-sonnet-4-6.toml (Zen passes requests through).
+# Tools follow Anthropic's Messages API: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (strict), https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility (search), https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use (choice); Zen passes requests through.
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 
 [capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 

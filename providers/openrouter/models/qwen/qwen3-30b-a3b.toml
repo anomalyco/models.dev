@@ -8,7 +8,7 @@ base_model = "alibaba/qwen3-30b-a3b"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 

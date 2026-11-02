@@ -1,22 +1,7 @@
+# Source: https://www.morphllm.com/api/models/json?prices=list (accessed 2026-10-25). Lab metadata, including the
+# 262,144 context and 131,072 output limits, is models/morph/morph-v3-large.toml.
 schema = 2
-name = "Morph v3 Large"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "morph"
-open_weights = false
-release_date = "2024-08-15"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-
-[limit]
-context = 32_000
-output = 32_000
+base_model = "morph/morph-v3-large"
 
 [cost.text.input]
 price = 0.9

@@ -6,7 +6,7 @@ name = "GLM 5.2 Fast"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }

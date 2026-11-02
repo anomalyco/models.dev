@@ -4,6 +4,7 @@
 # Re-checked live 2026-10-23 (~8k-token first user message): a late system message is accepted and followed; the control gets no cache hits (implicit or explicit), so there is no cached prefix to lose and system_updates stays.
 # MIME types: image/video per https://www.alibabacloud.com/help/en/model-studio/vision, audio input AMR/WAV/3GP/3GPP/AAC/MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni; output audio "Only wav is supported" per https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 name = "Qwen3-Omni Flash"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
@@ -17,7 +18,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text", "audio/wav"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, toggle = true }
 temperature = true
 top_p = true

@@ -9,7 +9,7 @@ base_model = "xiaomi/mimo-v2.6-flash"
 description = "MiMo flash model for fast multimodal assistance and agent workflows"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 

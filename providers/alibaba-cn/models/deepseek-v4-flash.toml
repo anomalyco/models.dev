@@ -1,10 +1,11 @@
 # Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
 

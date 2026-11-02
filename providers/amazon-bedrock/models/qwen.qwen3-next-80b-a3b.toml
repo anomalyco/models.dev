@@ -3,13 +3,14 @@
 # https://aws.amazon.com/bedrock/pricing/ (US Standard: 0.15/1.20; Mantle has separate SKUs)
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-next-80b-a3b.html
 schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 release_date = "2025-09-11"
 last_updated = "2025-11-25"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true }
 structured_output = true
 service_tier = ["flex", "priority"]
 

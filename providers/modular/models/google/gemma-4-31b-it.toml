@@ -1,0 +1,19 @@
+# Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
+# Reasoning controls: providers/google/models/gemma-4-31b-it.toml, kept where this host honours them (probe, /v1/chat/completions).
+# Toggle: reasoning.enabled = true|false (true -> 1256 reasoning tokens, false -> 0; off by default here, 0 with no control)
+# Effort: not listed; this host does not validate reasoning.effort (an unknown value is accepted).
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 0.65
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,11 @@
+# Sources (accessed 2026-10-28):
+# - API: POST https://api.minimax.io/v1/image_generation (https://platform.minimax.io/docs/api-reference/image-generation-i2i)
+# - Listed at https://platform.minimax.io/docs/faq/models; served on api.minimax.io (live check 2026-10-28).
+# - No price: https://platform.minimax.io/docs/pricing/overview#models/image lists only image-01.
+schema = 2
+v2_only = true
+base_model = "minimax/image-01-live"
+
+[api.images]
+base_url = "https://api.minimax.io/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/minimax/images" }

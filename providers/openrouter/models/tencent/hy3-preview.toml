@@ -5,7 +5,7 @@ schema = 2
 base_model = "tencent/hy3-preview"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = false
 

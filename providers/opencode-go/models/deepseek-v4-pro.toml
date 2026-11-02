@@ -3,12 +3,14 @@
 # Base prices are Off-Peak; the multiplier doubles them at Peak. Go doesn't mention DeepSeek's Chinese-holiday exception, so none is applied.
 # Effort: reasoning_effort = high|max (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/deepseek/models/deepseek-v4-pro.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow DeepSeek's API: https://api-docs.deepseek.com/api/create-chat-completion (tool_choice; strict needs DeepSeek's beta base URL, so it is left out); Go passes requests through.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro (New)"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["high", "max"] }
 structured_output = true
 

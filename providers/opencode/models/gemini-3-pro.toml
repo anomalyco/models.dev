@@ -1,5 +1,6 @@
 # Effort: generationConfig.thinkingConfig.thinkingLevel = low|high (deprecated; not re-verified on Zen)
 # Mid-conversation flags left out: google has no provider file for google/gemini-3-pro-preview to follow (Zen passes requests through).
+# Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes (auto/any/none, allowed function names); Zen passes requests through.
 schema = 2
 base_model = "google/gemini-3-pro-preview"
 name = "Gemini 3 Pro"
@@ -7,6 +8,7 @@ description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
 

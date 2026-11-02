@@ -25,6 +25,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
+- `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -144,10 +145,12 @@ The workflow:
 - Discovers sync providers with `bun models:sync --list-providers`.
 - Runs one provider per matrix job with `bun models:sync ${{ matrix.provider }}`.
 - Runs `bun validate`.
-- Creates or updates a provider-specific sync PR only when `providers` changed.
+- Uploads the provider's catalog changes, if any, as a patch. These jobs never see the app's key. Their built-in token can open missing-model issues and dispatch the issue fixer, but can't change `dev` or workflows.
+- Runs one `publish` job with a token from the `models.dev automation` GitHub App, whose key is in the `automation` environment. It runs only the scripts in `.github/sync-models/`, not repository code, and creates or updates a provider-specific sync PR for each patch that changes only catalog TOML files. It enables auto-merge only when the sync job marked the change safe and the patch itself passes the same limits: every file is in that provider's `models/` folder, at most 10 models created, at most 10 deleted, at most 15 of both, no more than half of the provider's models deleted, and at least one model left.
 - Uses `.sync/model-sync-report.md` as the PR body.
+- Auto-merges syncs that `bun sync:auto-merge` marks safe. The app's PRs run `Validate Models` and its merges run `Deploy` as usual.
 
-Each provider job checks out `dev` and writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Provider jobs do not share unmerged changes with each other; OpenRouter only uses `base_model` for model metadata entries already present on `dev`.
+Each provider writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Provider jobs do not share unmerged changes with each other; OpenRouter only uses `base_model` for model metadata entries already present on `dev`.
 
 CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
@@ -325,6 +328,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Reasoning controls are preserved for reasoners and removed when the API reports `reasoning: false`. A reasoner without authored controls fails sync for manual review rather than inventing an empty control set.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
+
+## Morph Notes
+
+- Morph is implemented in `packages/core/src/sync/providers/morph.ts`.
+- Source endpoint: `https://www.morphllm.com/api/models/json?prices=list`, the direct API list rates. The bare URL is Morph's OpenRouter provider feed and carries OpenRouter channel prices, so the sync never reads it.
+- No authentication is required; the catalog is public.
+- Existing Morph models are updated from the feed's input, cached-input and output prices and its context and output limits.
+- Reasoning controls, input MIME types, standby tiers, Messages API support and mid-conversation flags stay hand-authored from live probes.
+- New models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. OpenRouter alias IDs (`morph-dsv4flash-0731`) and entries with `is_ready: false` are skipped silently. Files absent from the feed, such as `auto`, are kept.
 
 ## NEAR AI Cloud Notes
 

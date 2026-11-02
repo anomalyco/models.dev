@@ -5,6 +5,7 @@
 # https://help.aliyun.com/zh/model-studio/coding-plan
 # https://help.aliyun.com/zh/model-studio/deep-thinking
 # Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates is left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 name = "GLM-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
@@ -17,7 +18,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, toggle = true }
 temperature = true
 

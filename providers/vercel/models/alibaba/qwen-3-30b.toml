@@ -5,7 +5,7 @@ name = "Qwen3-30B-A3B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 
 [limit]

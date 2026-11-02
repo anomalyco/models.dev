@@ -5,7 +5,7 @@ base_model = "cohere/command-a"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 
 [limit]

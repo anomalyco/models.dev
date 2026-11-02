@@ -5,6 +5,7 @@
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: text input $0.258, audio input $2.265, image/video input $0.473; text output $0.989 (text-only input) / $1.821 (multimodal input), text+audio output $8.974 (audio billed). Previously Qwen-Omni-Turbo prices.
 # MIME types: image/video per https://www.alibabacloud.com/help/en/model-studio/vision, audio input AMR/WAV/3GP/3GPP/AAC/MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni; output audio "Only wav is supported" per https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 name = "Qwen3-Omni Flash"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
@@ -18,7 +19,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text", "audio/wav"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, toggle = true }
 temperature = true
 top_p = true

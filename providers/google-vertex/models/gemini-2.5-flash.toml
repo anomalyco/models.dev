@@ -11,6 +11,7 @@
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash
 # The documented text/plain document type is covered by `text`.
 # Grounding with Google Search: $35 per 1,000 grounded prompts (one charge per prompt, however many queries it runs). Price: https://cloud.google.com/vertex-ai/generative-ai/pricing; support (supported models list): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/grounding-with-google-search
+# tools.strict/choice: function_calling_config modes AUTO, ANY, NONE and VALIDATED ("ensures function schema adherence", which strict tools map to); ANY with allowed_function_names forces a tool: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/tools/function-calling#function-calling-modes
 schema = 2
 name = "Gemini 2.5 Flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
@@ -25,7 +26,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 0, max = 24_576 } }
 structured_output = true
 temperature = true

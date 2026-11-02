@@ -1,10 +1,12 @@
 # Pricing and endpoint (Gemini generateContent): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (not re-verified on Zen: model access is disabled for the probe key)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-3.7-flash.toml (Zen passes requests through).
+# Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes (auto/any/none, allowed function names); Zen passes requests through.
 schema = 2
 base_model = "google/gemini-3.7-flash"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 

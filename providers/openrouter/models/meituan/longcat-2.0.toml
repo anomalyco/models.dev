@@ -9,7 +9,7 @@ base_model = "meituan/longcat-2.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = false
 

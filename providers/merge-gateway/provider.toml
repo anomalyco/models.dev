@@ -26,9 +26,12 @@
 # `automatic` routes (OpenAI, Azure, Google Gemini, DeepSeek, Qwen, Mistral, xAI, Fireworks,
 # Baseten) cache on their own. Model files set `capabilities.cache` from their default route.
 #   https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+# opencodeai = "none": /v1/ai-sdk/chat/completions streams reasoning as `delta.thinking`
+# and takes `thinking = { type, budget_tokens }`; the AI SDK package above maps both, the
+# generic OpenAI-compatible entry point maps neither.
 name = "Merge Gateway"
 env = ["MERGE_GATEWAY_API_KEY"]
 npm = "merge-gateway-ai-sdk-provider"
-opencodeai = "@opencode/ai/providers/openai-compatible"
+opencodeai = "none"
 api = "https://api-gateway.merge.dev/v1/ai-sdk"
 doc = "https://docs.merge.dev/merge-gateway"

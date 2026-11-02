@@ -3,6 +3,8 @@
 # Thinking is always on; thinking.type = disabled is accepted and ignored.
 # Caching: same endpoint as pay-as-you-go, where M2.1 caches implicitly (≥512 tokens) and
 #   with cache_control (checked live 2026-10-19 with a pay-as-you-go key).
+# Tools: tool_choice supports only auto (ToolChoice schema); no strict tool mode documented
+#   (https://platform.minimaxi.com/docs/api-reference/text-chat-anthropic).
 schema = 2
 name = "MiniMax-M2.1"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
@@ -16,7 +18,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true }
 temperature = true
 top_p = true

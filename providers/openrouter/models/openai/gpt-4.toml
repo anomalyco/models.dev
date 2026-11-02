@@ -5,8 +5,8 @@ schema = 2
 base_model = "openai/gpt-4"
 
 [capabilities]
-tools = { supported = true }
-structured_output = true
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+structured_output = false
 system_updates = true
 
 [limit]

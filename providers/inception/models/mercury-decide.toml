@@ -11,7 +11,7 @@ base_model = "inception/mercury-decide"
 base_url = "https://api.inceptionlabs.ai/v1"
 path = "/decisions"
 sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
-compatibility = { image_input = "state" }
+compatibility = { media_input = "state" }
 
 [cost.text.input]
 price = 0.02
