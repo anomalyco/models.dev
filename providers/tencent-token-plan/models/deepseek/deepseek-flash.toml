@@ -3,31 +3,23 @@
 # Input/output/cache-read: 20/80/0.4 points per million tokens.
 # 20 points = CNY 1; USD/MTok = points / 20 / 6.660856.
 # FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
-# These are prepaid-credit value equivalents, not additional pay-as-you-go fees.
-# Temporary promotions are excluded; actual deductions may be discounted.
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
 # Off-peak base; 2x Mon-Fri 09:00-12:00 and 14:00-18:00 Asia/Shanghai.
-# Source: introductory peak/off-peak notice and the deepseek/deepseek-flash
-# pricing row in the personal-plan rules above. Billing uses request receipt time.
+# Source: introductory notice and deepseek/deepseek-flash pricing row above; request receipt time.
 # Encode Tencent's explicit weekday windows, not native DeepSeek holiday rules.
-# v1 cannot represent time multipliers and publishes only the off-peak base;
-# v2 includes the peak multiplier for input, output and cached input.
-# Tencent China personal Token Plan (accessed 2026-10-26).
+# v1 exposes only the off-peak base; v2 multiplies input/output/cached input at peak.
 # Availability: https://cloud.tencent.com/document/product/1823/130060
 # Specifications: https://cloud.tencent.com/document/product/1823/130051
-# Cache: TokenHub prefix-cache guide and personal-plan cached-input deductions:
-# https://cloud.tencent.com/document/product/1823/131410
-# https://cloud.tencent.com/document/product/1823/133811 (checked 2026-11-02)
-# Cache-write price is omitted: the plan docs do not publish a separate write rate.
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
 # API: https://cloud.tencent.com/document/product/1823/132248
-# ID policy: use Tencent's recommended deepseek/deepseek-flash and
-# deepseek/deepseek-v4-pro IDs for the original-provider direct services.
-# Omit dated and alternate aliases to avoid duplicate catalog choices; this
-# does not imply those aliases are retired. Tencent manages the routed version.
+# Direct-service IDs: deepseek/deepseek-flash and deepseek/deepseek-v4-pro.
+# Use Tencent's recommended IDs; omit aliases to avoid duplicates, not as retired.
+# Tencent manages the routed version; mapping is documented in Availability above.
 # Current documented upstream version: DeepSeek-V4.1-Flash-1017 (checked 2026-11-02).
 # All direct Flash aliases were upgraded to V4.1 Flash 1017 on 2026-10-17.
 # https://cloud.tencent.com/announce/detail/2516
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
+# Controls: thinking.type = enabled|disabled; reasoning_effort = low|high|max
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 

@@ -3,15 +3,11 @@
 # Input/output/cache-read: 130/540/26 points per million tokens.
 # 20 points = CNY 1; USD/MTok = points / 20 / 6.660856.
 # FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
-# These are prepaid-credit value equivalents, not additional pay-as-you-go fees.
-# Temporary promotions are excluded; actual deductions may be discounted.
-# Tencent China personal Token Plan (accessed 2026-10-26).
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
 # Availability: https://cloud.tencent.com/document/product/1823/130060
 # Specifications: https://cloud.tencent.com/document/product/1823/130051
-# Cache: TokenHub prefix-cache guide and personal-plan cached-input deductions:
-# https://cloud.tencent.com/document/product/1823/131410
-# https://cloud.tencent.com/document/product/1823/133811 (checked 2026-11-02)
-# Cache-write price is omitted: the plan docs do not publish a separate write rate.
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
 # API: https://cloud.tencent.com/document/product/1823/132232
 # Thinking is always enabled; no graded effort control for K2.7 Code.
 schema = 2

@@ -3,23 +3,17 @@
 # Section III, General plan, uniform subscription-tier pricing table:
 # Lite / Standard / Pro / Max = 22.285 / 19.8 / 18.687 / 18.43 points/MTok,
 # with the same rate for input, output and cached input (20 points = CNY 1).
-# No single tier-independent price exists. Cost is omitted pending maintainer
-# guidance on representing subscription tiers; unknown must not imply free usage.
-# Tencent China personal Token Plan (accessed 2026-10-26).
+# Cost omitted pending subscription-tier representation; unknown does not mean free.
 # Availability: https://cloud.tencent.com/document/product/1823/130060
 # Specifications: https://cloud.tencent.com/document/product/1823/130051
-# Cache: TokenHub prefix-cache guide and personal-plan cached-input deductions:
-# https://cloud.tencent.com/document/product/1823/131410
-# https://cloud.tencent.com/document/product/1823/133811 (checked 2026-11-02)
-# Cache-write price is omitted: the plan docs do not publish a separate write rate.
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
 # API: https://cloud.tencent.com/document/product/1823/132248
-# ID policy: use Tencent's recommended deepseek/deepseek-flash and
-# deepseek/deepseek-v4-pro IDs for the original-provider direct services.
-# Omit dated and alternate aliases to avoid duplicate catalog choices; this
-# does not imply those aliases are retired. Tencent manages the routed version.
+# Direct-service IDs: deepseek/deepseek-flash and deepseek/deepseek-v4-pro.
+# Use Tencent's recommended IDs; omit aliases to avoid duplicates, not as retired.
+# Tencent manages the routed version; mapping is documented in Availability above.
 # Current documented upstream version: DeepSeek-V4-Pro-0813 (checked 2026-11-02).
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
+# Controls: thinking.type = enabled|disabled; reasoning_effort = low|high|max
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 

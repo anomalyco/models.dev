@@ -1,20 +1,15 @@
 # Exact documented IDs: glm-5.2 and glm-5-2.
-# Both appear in the same Model ID cell under General Token Plan > Available models:
+# Both share a Model ID cell in General Token Plan > Available models:
 # https://cloud.tencent.com/document/product/1823/130060 (checked 2026-11-02)
 # Tier-dependent pricing for the documented ID glm-5-2 (checked 2026-11-02).
 # https://cloud.tencent.com/document/product/1823/133811
 # Section III, General plan, uniform subscription-tier pricing table:
 # Lite / Standard / Pro / Max = 22.285 / 19.8 / 18.687 / 18.43 points/MTok,
 # with the same rate for input, output and cached input (20 points = CNY 1).
-# No single tier-independent price exists. Cost is omitted pending maintainer
-# guidance on representing subscription tiers; unknown must not imply free usage.
-# Tencent China personal Token Plan (accessed 2026-10-26).
-# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Cost omitted pending subscription-tier representation; unknown does not mean free.
 # Specifications: https://cloud.tencent.com/document/product/1823/130051
-# Cache: TokenHub prefix-cache guide and personal-plan cached-input deductions:
-# https://cloud.tencent.com/document/product/1823/131410
-# https://cloud.tencent.com/document/product/1823/133811 (checked 2026-11-02)
-# Cache-write price is omitted: the plan docs do not publish a separate write rate.
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
 # API: https://cloud.tencent.com/document/product/1823/132061
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = high|max (native lab baseline).
