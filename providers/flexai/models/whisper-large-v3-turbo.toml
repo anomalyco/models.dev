@@ -1,0 +1,11 @@
+# Transcription: POST https://api.flex.ai/v1/audio/transcriptions (https://docs.flex.ai/inference-api/guides/audio).
+# Price: GET /v1/models media_pricing, $0.0002 per minute of input audio (billing_unit minute_audio), 2026-10-22.
+schema = 2
+base_model = "openai/whisper-large-v3-turbo"
+
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.0002
