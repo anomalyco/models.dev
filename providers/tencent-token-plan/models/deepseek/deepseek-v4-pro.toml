@@ -1,0 +1,36 @@
+# Tencent China personal Token Plan (accessed 2026-10-26).
+# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# A paid subscription and plan points are required; zero token prices follow
+# the catalog's subscription-plan convention, not free inference.
+# Cache: TokenHub prefix-cache guide and personal-plan cached-input deductions:
+# https://cloud.tencent.com/document/product/1823/131410
+# https://cloud.tencent.com/document/product/1823/133811 (checked 2026-11-02)
+# Zero cache-read cost follows the subscription convention, not zero plan points.
+# Cache-write price is omitted: the plan docs do not publish a separate write rate.
+# API: https://cloud.tencent.com/document/product/1823/132248
+# ID policy: use Tencent's recommended deepseek/deepseek-flash and
+# deepseek/deepseek-v4-pro IDs for the original-provider direct services.
+# Omit dated and alternate aliases to avoid duplicate catalog choices; this
+# does not imply those aliases are retired. Tencent manages the routed version.
+# Current documented upstream version: DeepSeek-V4-Pro-0813 (checked 2026-11-02).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
