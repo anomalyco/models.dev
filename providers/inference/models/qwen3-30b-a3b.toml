@@ -1,0 +1,18 @@
+# Reasoning (accessed 2026-10-31): https://api.inference.net/v1/models lists no
+# reasoning_efforts for this ID, and the API rejects reasoning_effort levels a
+# model does not list, so callers have no reasoning control on this host.
+# https://docs.inference.net/api/reasoning
+schema = 2
+base_model = "alibaba/qwen3-30b-a3b"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 40_960
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0.5

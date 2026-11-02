@@ -1,0 +1,19 @@
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/webp", "image/png", "image/gif", "image/jpeg", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.45
