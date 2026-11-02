@@ -1,14 +1,14 @@
-# Bumo Router relay: official upstream API price + 6% service fee, billed in USD.
-# Prices and model list from https://router.bumo.ai/v1/models (accessed 2026-10-26);
-# see https://bumo.ai/docs/api for the gateway docs.
-# Reasoning and cache metadata mirror the underlying lab provider entries.
+# Bumo Router (multi-model relay, OpenAI-compatible Chat Completions), billed in USD.
+# Prices: https://router.bumo.ai/api/v1/models (accessed 2026-11-02); flat rate, the catalog row has no tiers.
+# Docs: https://bumo.ai/docs/api
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (request body is forwarded unchanged)
+# Freeform custom tools: not probed on this host, not declared.
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-tools = { supported = true }
 cache = { implicit = true, explicit = { ttl = ["30m"] } }
 
 [cost.text.input]
