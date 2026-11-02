@@ -1,0 +1,19 @@
+# Bumo Router relay: official upstream API price + 6% service fee, billed in USD.
+# Prices and model list from https://router.bumo.ai/v1/models (accessed 2026-10-26);
+# see https://bumo.ai/docs/api for the gateway docs.
+# Reasoning and cache metadata mirror the underlying lab provider entries.
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+tools = { supported = true }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
+
+[cost.text.input]
+price = 10.6
+cache = { read = 0.265, write = { "5m" = 13.25, "1h" = 21.2 } }
+
+[cost.text.output]
+price = 53
