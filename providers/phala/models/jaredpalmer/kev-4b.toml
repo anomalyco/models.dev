@@ -1,0 +1,19 @@
+# Source (accessed 2026-10-25): https://inference.phala.com/v1/models
+# System One: POST /v1/systemone (catalog description); SDKs follow providers/baseten/models/decision-models/baseten-mammoth-27b-latest.toml.
+# Limits: catalog context_length 8192; max_output_length 8192 echoes context; no generated text.
+# Pricing: pricing.prompt 0.000000042 USD/token (0.042 USD/MTok), pricing.completion 0.
+schema = 2
+v2_only = true
+base_model = "jaredpalmer/kev-4b"
+
+[limit]
+context = 8_192
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0
