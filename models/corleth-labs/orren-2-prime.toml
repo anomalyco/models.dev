@@ -1,0 +1,18 @@
+name = "Orren 2 Prime"
+description = "Corleth Labs' frontier reasoning model. MoE model with 1.1T parameters."
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+release_date = "2026-10"
+last_updated = "2026-10-07"
+
+[limit]
+context = 1048576
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
