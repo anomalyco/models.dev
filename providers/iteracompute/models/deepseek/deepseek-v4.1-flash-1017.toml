@@ -1,0 +1,30 @@
+# Prices rechecked 2026-10-28 against the exact /v1/models pricing object:
+# $0.14 input, $0.006 cache read, $0.55 output per 1M tokens.
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/deepseek-v4-1-flash-1017/ (host capabilities and pricing)
+# Effort wire path: reasoning_effort = low|high|max.
+# Host recheck (2026-10-23): this exact ID has no reasoning capability extension in /v1/models.
+# Control baseline: the same-host deepseek/deepseek-v4.1-flash entry exposes low|high|max without a toggle.
+# Do not infer a host toggle from the native DeepSeek API.
+# Effort baseline also matches providers/deepseek/models/deepseek-v4-flash.toml for this same 1017 model:
+# https://api-docs.deepseek.com/guides/thinking_mode (low|high|max).
+# Host model page rechecked 2026-10-28: image input is supported on this exact route,
+# with JPEG, PNG, GIF and WebP; these match the inherited lab modalities.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.55

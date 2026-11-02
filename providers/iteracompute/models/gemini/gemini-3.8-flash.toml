@@ -1,0 +1,22 @@
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/gemini-3-8-flash/ (host capabilities and pricing)
+# Effort wire path: reasoning_effort = low|medium|high; reasoning.effort is also accepted.
+# The host advertises mandatory reasoning and no enable/disable control.
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 3
