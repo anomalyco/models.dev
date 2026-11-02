@@ -1,6 +1,5 @@
 # Bumo Router (multi-model relay, OpenAI-compatible Chat Completions), billed in USD.
 # Prices: https://router.bumo.ai/api/v1/models (accessed 2026-11-02); flat rate, the catalog row has no tiers.
-# Price basis: Bumo bills its own catalog rate for this ID; it is not a markup of the native lab entry.
 # Docs: https://bumo.ai/docs/api
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max (none = thinking off)
 # Wire: the Chat Completions body is forwarded unchanged to a LiteLLM Anthropic adapter (lab-mapped, not probed on this host).
@@ -13,8 +12,8 @@ structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
 
 [cost.text.input]
-price = 3.18
-cache = { read = 0.318, write = { "5m" = 3.975, "1h" = 6.36 } }
+price = 2.12
+cache = { read = 0.212, write = { "5m" = 2.65, "1h" = 4.24 } }
 
 [cost.text.output]
-price = 15.9
+price = 10.6
