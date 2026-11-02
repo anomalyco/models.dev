@@ -1,0 +1,16 @@
+# Pricing: https://jzstoken.com/model-pricing/claude-opus-4-7 (2026-10-30).
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-opus-4-7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.17
+cache = { read = 0.1168, write = 1.46 }
+
+[cost.text.output]
+price = 5.84

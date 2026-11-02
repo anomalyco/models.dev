@@ -1,0 +1,16 @@
+# Pricing: https://jzstoken.com/model-pricing/grok-4.7 (2026-10-30).
+# Effort: reasoning_effort = low|medium|high|xhigh (default high).
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3892
+cache = { read = 0.0389, write = 0.4865 }
+
+[cost.text.output]
+price = 1.95

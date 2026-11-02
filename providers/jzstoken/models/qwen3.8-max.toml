@@ -1,0 +1,18 @@
+# Pricing: https://jzstoken.com/model-pricing/qwen3.8-max (2026-10-30).
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh (default xhigh)
+# Budget: thinking_budget = 0..262144
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.56
+cache = { read = 0.1946, write = 1.95 }
+
+[cost.text.output]
+price = 4.67
