@@ -6,7 +6,10 @@
 # These are prepaid-credit value equivalents, not additional pay-as-you-go fees.
 # Temporary promotions are excluded; actual deductions may be discounted.
 # Off-peak base; 2x Mon-Fri 09:00-12:00 and 14:00-18:00 Asia/Shanghai.
-# Tencent specifies weekdays/weekends, with no public-holiday exception.
+# Schedule source: the introductory notice in the personal-plan rules above
+# defines weekdays as Monday-Friday and weekends as Saturday-Sunday.
+# It does not discuss public holidays; use that explicit day-of-week rule,
+# without importing the native DeepSeek API's separate holiday condition.
 # v1 publishes the off-peak base; the peak multiplier is v2-only.
 # Tencent China personal Token Plan (accessed 2026-10-26).
 # Availability: https://cloud.tencent.com/document/product/1823/130060
@@ -35,6 +38,7 @@ top_k = false
 cache = { implicit = true }
 
 [api.chat-completions]
+base_url = "https://tokenhub.tencentmaas.com/plan/v3"
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]

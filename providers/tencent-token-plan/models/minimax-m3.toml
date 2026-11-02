@@ -1,3 +1,6 @@
+# Exact documented IDs: minimax-m3 and minimax-m-3-0.
+# Both appear in the same Model ID cell under General Token Plan > Available models:
+# https://cloud.tencent.com/document/product/1823/130060 (checked 2026-11-02)
 # Pricing: personal Token Plan non-promotional list rates, checked 2026-11-02.
 # https://cloud.tencent.com/document/product/1823/133811
 # Input/output/cache-read: 42/168/8.4 points per million tokens.
@@ -23,6 +26,7 @@ reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 
 [api.chat-completions]
+base_url = "https://tokenhub.tencentmaas.com/plan/v3"
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]

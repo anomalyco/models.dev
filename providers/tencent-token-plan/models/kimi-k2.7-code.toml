@@ -23,6 +23,7 @@ structured_output = true
 cache = { implicit = true }
 
 [api.chat-completions]
+base_url = "https://tokenhub.tencentmaas.com/plan/v3"
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
