@@ -1,14 +1,17 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
-# Pay-per-token (llm-gateway 00315): Umans AI's public rate, which is what
+# Pay-per-token: Umans AI's public rate, which is what
 # GET /v1/models renders. Live metadata: levels none/low/high/max, default
 # low, and `can_disable=true` (accessed 2026-08-03):
 # https://api.code.umans.ai/v1/models/info
-# limit.output is cap-1 on purpose: the gateway 400s max_tokens >=
+# limit.output is cap-1 on purpose: the Umans API 400s max_tokens >=
 # max_completion_tokens (393216), so 393215 is the largest value that serves
 # (its advertised `recommended_max_tokens`).
+# Deprecated 2026-11-01: unlisted from GET /v1/models; requests keep serving for a
+# grace period, then the Umans API answers 400. Successor: umans-deepseek-v4.1-flash.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
+status = "deprecated"
 name = "DeepSeek V4 Flash"
 
 [capabilities]

@@ -1,8 +1,11 @@
 # Live metadata: levels none/low/medium/high, default medium, and
 # `can_disable=true` (accessed 2026-06-25).
 # https://api.code.umans.ai/v1/models/info
+# Deprecated 2026-11-01: unlisted from GET /v1/models; requests keep serving for a
+# grace period, then the Umans API answers 400. Successor: umans-deepseek-v4.1-flash.
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
+status = "deprecated"
 name = "Qwen3.6 35B A3B"
 
 [modalities]
