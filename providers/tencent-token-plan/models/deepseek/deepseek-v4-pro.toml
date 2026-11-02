@@ -3,8 +3,8 @@
 # Section III, General plan, uniform subscription-tier pricing table:
 # Lite / Standard / Pro / Max = 22.285 / 19.8 / 18.687 / 18.43 points/MTok,
 # with the same rate for input, output and cached input (20 points = CNY 1).
-# No single tier-independent price exists. Zeros remain pending maintainer
-# guidance on representing subscription tiers; they do NOT mean free usage.
+# No single tier-independent price exists. Cost is omitted pending maintainer
+# guidance on representing subscription tiers; unknown must not imply free usage.
 # Tencent China personal Token Plan (accessed 2026-10-26).
 # Availability: https://cloud.tencent.com/document/product/1823/130060
 # Specifications: https://cloud.tencent.com/document/product/1823/130051
@@ -30,12 +30,4 @@ top_k = false
 cache = { implicit = true }
 
 [api.chat-completions]
-base_url = "https://tokenhub.tencentmaas.com/plan/v3"
 compatibility = { reasoning_field = "reasoning_content" }
-
-[cost.text.input]
-price = 0
-cache = { read = 0 }
-
-[cost.text.output]
-price = 0

@@ -5,12 +5,10 @@
 # FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
 # These are prepaid-credit value equivalents, not additional pay-as-you-go fees.
 # Temporary promotions are excluded; actual deductions may be discounted.
-# Off-peak base; 2x Mon-Fri 09:00-12:00 and 14:00-18:00 Asia/Shanghai.
-# Schedule source: the introductory notice in the personal-plan rules above
-# defines weekdays as Monday-Friday and weekends as Saturday-Sunday.
-# It does not discuss public holidays; use that explicit day-of-week rule,
-# without importing the native DeepSeek API's separate holiday condition.
-# v1 publishes the off-peak base; the peak multiplier is v2-only.
+# Published prices below are the off-peak base only; peak rates are 2x.
+# Tencent documents weekday peak windows but does not clarify holiday handling.
+# The automatic time multiplier is omitted pending clarification; these prices
+# are not an all-hours estimate and can understate peak-period deductions.
 # Tencent China personal Token Plan (accessed 2026-10-26).
 # Availability: https://cloud.tencent.com/document/product/1823/130060
 # Specifications: https://cloud.tencent.com/document/product/1823/130051
@@ -38,7 +36,6 @@ top_k = false
 cache = { implicit = true }
 
 [api.chat-completions]
-base_url = "https://tokenhub.tencentmaas.com/plan/v3"
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
@@ -47,7 +44,3 @@ cache = { read = 0.00300262 }
 
 [cost.text.output]
 price = 0.60052342
-
-[[cost.multipliers]]
-when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
-factor = 2
