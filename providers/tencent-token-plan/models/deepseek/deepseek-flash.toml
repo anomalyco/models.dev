@@ -5,10 +5,12 @@
 # FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
 # These are prepaid-credit value equivalents, not additional pay-as-you-go fees.
 # Temporary promotions are excluded; actual deductions may be discounted.
-# Published prices below are the off-peak base only; peak rates are 2x.
-# Tencent documents weekday peak windows but does not clarify holiday handling.
-# The automatic time multiplier is omitted pending clarification; these prices
-# are not an all-hours estimate and can understate peak-period deductions.
+# Off-peak base; 2x Mon-Fri 09:00-12:00 and 14:00-18:00 Asia/Shanghai.
+# Source: introductory peak/off-peak notice and the deepseek/deepseek-flash
+# pricing row in the personal-plan rules above. Billing uses request receipt time.
+# Encode Tencent's explicit weekday windows, not native DeepSeek holiday rules.
+# v1 cannot represent time multipliers and publishes only the off-peak base;
+# v2 includes the peak multiplier for input, output and cached input.
 # Tencent China personal Token Plan (accessed 2026-10-26).
 # Availability: https://cloud.tencent.com/document/product/1823/130060
 # Specifications: https://cloud.tencent.com/document/product/1823/130051
@@ -44,3 +46,7 @@ cache = { read = 0.00300262 }
 
 [cost.text.output]
 price = 0.60052342
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
