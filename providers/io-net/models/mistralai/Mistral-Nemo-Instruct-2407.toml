@@ -1,4 +1,6 @@
-# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
+# io.net IO Intelligence listing of mistralai/Mistral-Nemo-Instruct-2407.
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = true and a cache_read_token_price; prefixes are cached automatically with no cache_control markers, so the cache is implicit.
 # knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
 base_model = "mistral/mistral-nemo"
@@ -6,12 +8,12 @@ name = "Mistral Nemo Instruct 2407"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 knowledge = "2024-05"
 
-[limit]
-output = 4_096
+[capabilities]
+cache = { implicit = true }
 
 [cost.text.input]
-price = 0.0514
-cache = { read = 0.0257 }
+price = 0.05675
+cache = { read = 0.028375 }
 
 [cost.text.output]
-price = 0.082
+price = 0.06
