@@ -1,0 +1,17 @@
+# Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
+# served on the GreenPT tier, $0.22/$1.10 per 1M tokens with $0.011 cached input, 1M context.
+# Reasoning surface copied from the underlying host entry (providers/greenpt/models/deepseek-v4.1-flash.toml):
+# reasoning_effort = none|minimal|low|medium|high; accepted by the gateway (probe, 2026-11-01).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.22
+cache = { read = 0.011 }
+
+[cost.text.output]
+price = 1.1
