@@ -1,0 +1,20 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/alibaba/models/qwen3.8-max-0902.toml (first-party entry).
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+schema = 2
+base_model = "alibaba/qwen3.8-max-0902"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 1.65
+cache = { read = 0.206, write = 2.063 }
+
+[cost.text.output]
+price = 4.951

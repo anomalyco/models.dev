@@ -1,0 +1,18 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: relay baseline (kilo x2; llmgateway exposes none).
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.6
