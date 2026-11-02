@@ -1,0 +1,22 @@
+# Toggle: chat_template_kwargs.thinking true|false (Watt docs:
+# https://www.watt-cloud.com/docs/inference/features/deep-thinking/)
+# Pricing & limits: Watt catalog (2026-10-23), DeepSeek-V4.1-Flash row:
+# 0.29/1.14 USD per MTok, context 1_048_576
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.290
+
+[cost.text.output]
+price = 1.140
