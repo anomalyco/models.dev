@@ -1,0 +1,22 @@
+# DiscreteStack's balanced default tier, serving zhipuai/glm-5.3-flash. Limits,
+# modalities, and effort control verified via https://setup.discretestack.com
+# (accessed 2026-09-17): reasoning effort is passed as reasoning_effort and accepts
+# low | medium | high (medium default). These are DiscreteStack's wire values,
+# deliberately not the Zhipu first-party ladder (low/high/max). Flat-rate licensed
+# host: no per-token pricing is published, so cost fields are omitted.
+base_model = "zhipuai/glm-5.3-flash"
+name = "DiscreteStack Stable"
+description = "DiscreteStack's balanced default tier for everyday coding, reasoning, and agent tasks"
+
+[limit]
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
