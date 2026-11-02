@@ -1,0 +1,26 @@
+# Sources: https://developer.ant-ling.com/en/docs/models/ling/#ling-31-flash
+# Pricing: https://developer.ant-ling.com/en/docs/models/price (accessed 2026-10-30)
+# CNY→USD rate: 6.676858, 2026-10-30, source: https://open.er-api.com/v6/latest/USD
+# Toggle: `thinking.type = "enabled" | "disabled"` (default: enabled).
+schema = 2
+base_model = "inclusionai/ling-3.1-flash-1019"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+cache = { implicit = true }
+system_updates = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.ant-ling.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.225
