@@ -1,0 +1,19 @@
+# Source: https://tokenrhythm.studio/api/models (public, accessed 2026-10-13).
+# Host lists contextWindow 200000, maxOutputTokens 128000, input modalities ["text"].
+# Reasoning: always on, no caller control. Live-tested on POST /v1/chat/completions (2026-10-14):
+# thinking.type = disabled, reasoning.enabled = false and enable_thinking = false
+# are accepted but reasoning_content is still returned.
+# reasoning_effort is not forwarded: invalid values are accepted and low/max do not change reasoning.
+# thinking_budget, reasoning.max_tokens and thinking.budget_tokens are rejected as unknown fields (400).
+# Pricing: published in CNY per 1M tokens (input 8 / output 28 / cache read 2); converted to USD at
+# 1 USD = 7 CNY (2026-10-13).
+base_model = "zhipuai/glm-5.1"
+reasoning_options = []
+
+[cost]
+input = 1.1429
+output = 4
+cache_read = 0.2857
+
+[limit]
+output = 128_000
