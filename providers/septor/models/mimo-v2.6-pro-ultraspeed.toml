@@ -1,0 +1,19 @@
+# Price = midpoint of Septor's published range (input 3.251625-5.0025, output 6.50325-10.005 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/mimo-v2.6-pro-ultraspeed
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 4.127063
+cache = { read = 0.0468 }
+
+[cost.text.output]
+price = 8.254125
