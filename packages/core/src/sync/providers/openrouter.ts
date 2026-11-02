@@ -372,7 +372,7 @@ const IMAGE_CHAT_APIS = {
 // https://openrouter.ai/docs/cookbook/coding-agents/claude-code-integration ("Some picker entries route
 // to non-Anthropic providers")
 const TEXT_APIS = {
-  responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } },
+  responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openrouter/responses" } },
   messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } },
 };
 

@@ -30,7 +30,7 @@ output = 128_000
 [api.chat-completions]
 
 [api.responses]
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openrouter/responses" }
 capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [api.messages]

@@ -14,7 +14,7 @@ cache = { implicit = { min_tokens = 1_024 } }
 [api.chat-completions]
 
 [api.responses]
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openrouter/responses" }
 capabilities = { tools = { updates = true } }
 
 [api.messages]
