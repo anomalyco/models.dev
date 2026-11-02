@@ -1,0 +1,38 @@
+# Served by the Gonka network (https://gonka.ai) through the gateway; checkpoint deepseek-ai/DeepSeek-V4-Flash-0731,
+# registered on-chain by Gonka governance proposal #94.
+# Limits: context 380,000 tokens, input plus max_tokens (nodes run --max-model-len 400000; a 381,011-token input was
+#   accepted on 2026-08-13); output capped at 32,768 by the gateway. GET https://gate.joingonka.ai/v1/models (2026-10-28).
+# Effort: reasoning_effort (alias reasoning.effort) = none|low|high|max, passed through to the model's chat template
+#   (https://gate.joingonka.ai/docs/api, "Passed through to the network as-is"). Live 2026-10-28: none returns no
+#   reasoning; low returns reasoning without an effort prefix; high and max return reasoning with the template's
+#   "Reasoning Effort" prefix (about 80 extra prompt tokens). Where a serving node rejects max, the gateway retries
+#   the request at high (https://gate.joingonka.ai/docs/api, "Reasoning").
+#   chat_template_kwargs.thinking = true|false is forwarded too; thinking.type is not forwarded.
+#   With no effort field, thinking was on or off depending on the serving node, so no default is authored.
+# Reasoning text: message.reasoning_content and delta.reasoning_content; assistant messages that carry reasoning_content
+#   are accepted back, including tool-call turns (live 2026-10-28).
+# Structured output: response_format json_object and json_schema (https://gate.joingonka.ai/docs/api, "Structured
+#   response"; json_schema verified live 2026-10-28).
+# Cost: 33 / 99 nGNK per input / output token, converted at gnk_usd_price = 0.187 USD from
+#   GET https://gate.joingonka.ai/api/pricing (2026-10-28) = 0.006171 / 0.018513 USD per MTok, gateway fee included.
+#   Billing is in GNK, so the USD price follows the GNK rate. No cached-input pricing.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = false
+
+[limit]
+context = 380_000
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.006171
+
+[cost.text.output]
+price = 0.018513

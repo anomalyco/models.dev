@@ -1,0 +1,42 @@
+# Served by the Gonka network (https://gonka.ai) through the gateway; checkpoint zai-org/GLM-5.3-Flash,
+# registered on-chain by Gonka governance proposal #101 (vLLM reasoning parser glm45).
+# Input: text only. image_url parts are replaced with a text placeholder (https://gate.joingonka.ai/docs/api, "Limits");
+#   video and PDF input are not served.
+# Limits: context 390,000 tokens, input plus max_tokens (nodes run --max-model-len 400000; a 390,013-token input was
+#   accepted on 2026-09-16); output capped at 8,192 by the gateway. GET https://gate.joingonka.ai/v1/models (2026-10-28).
+# Effort: reasoning_effort (alias reasoning.effort) = none|max. This route has two modes: the gateway maps
+#   none|minimal|low to the off mode and medium|high|xhigh|max to no field, which runs the network default max
+#   (https://gate.joingonka.ai/docs/api, "Reasoning"). Live 2026-10-28: none and low return no reasoning; high and max
+#   send the identical upstream request and return the same full reasoning, so only none and max are distinct.
+#   enable_thinking, chat_template_kwargs.enable_thinking and thinking.type do not turn it off on this route.
+# Reasoning text: message.reasoning_content and delta.reasoning_content; assistant messages that carry reasoning_content
+#   are accepted back, including tool-call turns (live 2026-10-28).
+# Structured output: response_format json_object and json_schema (https://gate.joingonka.ai/docs/api, "Structured
+#   response"; json_schema verified live 2026-10-28).
+# Cost: 33 / 99 nGNK per input / output token, converted at gnk_usd_price = 0.187 USD from
+#   GET https://gate.joingonka.ai/api/pricing (2026-10-28) = 0.006171 / 0.018513 USD per MTok, gateway fee included.
+#   Billing is in GNK, so the USD price follows the GNK rate. No cached-input pricing.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "max"] }
+structured_output = true
+cache = false
+
+[limit]
+context = 390_000
+output = 8_192
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.006171
+
+[cost.text.output]
+price = 0.018513
