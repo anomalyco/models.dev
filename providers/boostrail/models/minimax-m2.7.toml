@@ -1,0 +1,14 @@
+# Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
+# published as https://www.boostrail.com/models.json. USD per 1M tokens;
+# cache writes are billed at the input price.
+# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
+# reasoning_effort none|high gave 205|207 completion tokens for a one-number
+# answer (always thinks, no caller control).
+base_model = "minimax/MiniMax-M2.7"
+reasoning_options = []
+
+[cost]
+input = 0.228
+output = 0.912
+cache_read = 0.0228
+cache_write = 0.228
