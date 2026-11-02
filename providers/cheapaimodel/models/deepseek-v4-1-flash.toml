@@ -1,5 +1,5 @@
-# Price: https://cheapaimodel.ai/api/models (fetched 2026-10-27) lists the peak rate
-# (input $0.2093511, output $0.8374044, cache read $0.004187022 per 1M tokens).
+# Price: https://cheapaimodel.ai/api/models (fetched 2026-11-02) lists the peak rate
+# (input $0.2100153, output $0.8400612, cache read $0.004200306 per 1M tokens).
 # Billing follows DeepSeek's peak/off-peak split: weekdays (Asia/Shanghai) 09:00-12:00 and
 # 14:00-18:00 Beijing time (01:00-04:00, 06:00-10:00 UTC) bill 2x the off-peak base below.
 # Unlike DeepSeek's own API, Chinese public holidays are not exempted.
@@ -19,11 +19,11 @@ cache = { implicit = true }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.10467555
-cache = { read = 0.002093511 }
+price = 0.10500765
+cache = { read = 0.002100153 }
 
 [cost.text.output]
-price = 0.4187022
+price = 0.4200306
 
 [[cost.multipliers]]
 when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
