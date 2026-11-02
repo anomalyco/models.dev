@@ -1,0 +1,27 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). Video prices are USD per generated second as published by AIsa.
+# Published through v2 with the model-specific API; non-chat prices are not exposed as chat token prices.
+# Base video rate: 720p / standard; other resolutions use the published overrides.
+# Route metadata and media formats: https://www.alibabacloud.com/help/en/model-studio/happyhorse-reference-to-video-api-reference (accessed 2026-10-26).
+# This AIsa ID exposes one route of the shared happyhorse-1.1 model; keep its input format override on the provider.
+schema = 2
+v2_only = true
+base_model = "alibaba/happyhorse-1.1"
+name = "HappyHorse 1.1 Reference-to-Video"
+description = "Video model for reference-guided generation from up to 9 reference images with auto-generated audio"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[api.videos]
+path = "/video/generations"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+price = 0.098
+unit = "second"
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, quality = { equals = "standard" } }
+price = 0.126

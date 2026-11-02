@@ -1,0 +1,28 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). Token prices are USD per 1M tokens.
+# AIsa is a multi-model relay: reasoning controls follow the underlying lab API and relay peers.
+# Toggle: thinking.type = enabled|disabled; effort: reasoning_effort = low|high|max.
+# Reasoning baseline: DeepSeek native controls and CommandCode/OrcaRouter relay peers.
+# Per-model route evidence: name=deepseek-v4-flash-vision-exp; routes=POST /v1/messages (anthropic); POST /v1/chat/completions (openai); POST /v1/responses (openai-response).
+# Source: https://aisa.one/api/pricing/models (cached 2026-10-26 02:20:40 UTC).
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { write = 0.006 }
+
+[cost.text.output]
+price = 1.2
