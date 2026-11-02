@@ -1,0 +1,10 @@
+# Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
+# text-to-image on the Regolo tier (EU hosting, zero data retention).
+# API: POST https://gateway.inference.coop/v1/images/generations (OpenAI images format; returns
+# base64-encoded JPEGs). Billed per pixel generated, which v2 cost cannot express; the co-op
+# metering is documented at the model list above.
+schema = 2
+base_model = "alibaba/qwen-image"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }

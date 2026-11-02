@@ -1,0 +1,12 @@
+# Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
+# speech-to-text on the Tinfoil tier (TEE enclaves), $0.05 per 1M input tokens.
+# API: POST https://gateway.inference.coop/v1/audio/transcriptions (multipart, OpenAI Whisper
+# format; language/prompt/temperature accepted, response carries text/language/duration/segments).
+schema = 2
+base_model = "openai/whisper-large-v3-turbo"
+
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+price = 0.05

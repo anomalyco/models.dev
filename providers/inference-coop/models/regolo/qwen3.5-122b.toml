@@ -1,0 +1,25 @@
+# Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
+# served on the Regolo tier (EU hosting, zero data retention), $0.70/$3.94 per 1M tokens, 262K
+# context, image input verified working through the gateway.
+# Modality set and output limit copied from the underlying host entry
+# (providers/regolo-ai/models/qwen3.5-122b.toml). Reasoning restated as always-on,
+# mirroring that host entry.
+schema = 2
+base_model = "alibaba/qwen3.5-122b-a10b"
+name = "Qwen3.5-122B"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 16_384
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 3.94
