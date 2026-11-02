@@ -1,0 +1,17 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-30).
+# Prices (USD/MTok) and limits describe the catalog default route.
+# Other routes may have different prices and limits; https://docs.anonrouter.ai/models.
+schema = 2
+base_model = "deepseek/deepseek-v3"
+
+[limit]
+context = 163_840
+output = 16_384
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.37
+
+[cost.text.output]
+price = 1.025

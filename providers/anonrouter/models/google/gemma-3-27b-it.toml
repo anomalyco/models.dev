@@ -1,0 +1,21 @@
+# Source: https://api.anonrouter.ai/v1/models (2026-10-30).
+# Prices (USD/MTok) and limits describe the catalog default route.
+# Other routes may have different prices and limits; https://docs.anonrouter.ai/models.
+# Image formats: PNG, JPEG and WebP data URLs verified through Chat Completions.
+schema = 2
+base_model = "google/gemma-3-27b-it"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[limit]
+output = 16_384
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.092
+
+[cost.text.output]
+price = 0.184
