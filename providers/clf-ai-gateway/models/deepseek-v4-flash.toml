@@ -1,0 +1,25 @@
+# Prices: currently billed rate, GET https://api.clfaigateway.dev/v1/public/models (accessed 2026-10-30), nano-USD per token / 1000.
+# Wire: only reasoning_effort is forwarded. chat_template_kwargs, thinking and top_k get 400 unknown_parameter, so there is no toggle or top_k.
+# Effort: same-surface peer set (Workers AI none|low|high|max) minus none, which this host rejects with 400.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 0.176
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.528
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
