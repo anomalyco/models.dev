@@ -1,0 +1,13 @@
+schema = 2
+base_model = "meta/llama-3.2-90b-vision-instruct"
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
+temperature = false
+
+[cost.text.input]
+price = 2.11
+
+[cost.text.output]
+price = 10.55
