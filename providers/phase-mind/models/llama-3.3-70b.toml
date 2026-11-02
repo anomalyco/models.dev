@@ -1,0 +1,12 @@
+# Llama 3.3 70B Instruct. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[cost.text.input]
+price = 0.104
+
+[cost.text.output]
+price = 0.333
+
+[limit]
+context = 131_072

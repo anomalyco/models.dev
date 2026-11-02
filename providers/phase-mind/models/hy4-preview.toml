@@ -1,0 +1,17 @@
+# Hy4 Preview. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Effort: reasoning_effort = none|high (forwarded to DeepInfra).
+schema = 2
+base_model = "tencent/hy4-preview"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[cost.text.input]
+price = 0.8674
+
+[cost.text.output]
+price = 2.6011
+
+[limit]
+context = 1_048_576

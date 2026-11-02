@@ -1,0 +1,20 @@
+# Qwen3.8 Max. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 1.716
+
+[cost.text.output]
+price = 5.15
+
+[limit]
+context = 256_000
+output = 65_536

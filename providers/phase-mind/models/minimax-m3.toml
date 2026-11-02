@@ -1,0 +1,21 @@
+# MiniMax M3 (reasoning). Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Reasoning: always on, no caller control.
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.292
+
+[cost.text.output]
+price = 1.144
+
+[limit]
+context = 524_288
+output = 65_536

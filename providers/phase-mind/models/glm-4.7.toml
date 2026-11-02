@@ -1,0 +1,18 @@
+# GLM 4.7. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Toggle: reasoning_effort = "none" disables thinking (forwarded to DeepInfra).
+schema = 2
+base_model = "zhipuai/glm-4.7"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.416
+
+[cost.text.output]
+price = 1.82
+
+[limit]
+context = 202_752
+output = 65_536

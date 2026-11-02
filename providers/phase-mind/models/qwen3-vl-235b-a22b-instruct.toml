@@ -1,0 +1,13 @@
+# Qwen3 VL 235B A22B Instruct. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+status = "beta"
+
+[cost.text.input]
+price = 0.208
+
+[cost.text.output]
+price = 0.9152
+
+[limit]
+context = 262_144
