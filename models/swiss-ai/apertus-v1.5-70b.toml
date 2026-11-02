@@ -1,0 +1,36 @@
+# Sources (accessed 2026-11-02):
+# - https://huggingface.co/swiss-ai/Apertus-v1.5-70B (model card)
+# - https://www.apertus-ai.org/articles/2026-07-apertus-1-5/ (weights released 2026-07-24)
+# - https://arxiv.org/abs/2610.15542 (technical report)
+# Continued pretraining of Apertus 1.0 (2T multimodal tokens on the 70B): image and audio
+# understanding enter through the tokenizer (Emu3.5 image codes, WavTokenizer audio at 40
+# tokens per second) while the output head stays text-only. The context window is extended
+# fourfold to 262,144 tokens. Thinking is a request-time chat-template flag, off by default.
+# The model card does not enumerate accepted image/audio MIME types, so modalities stay
+# generic; the output cap is inherited from the Apertus 1.0 card (the v1.5 card documents
+# no separate output budget).
+schema = 2
+name = "Apertus 1.5 70B"
+description = "Fully open multilingual multimodal reasoner from the Swiss AI Initiative with image and audio understanding, an optional thinking mode, and a 262K context window"
+open_weights = true
+release_date = "2026-07-24"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/swiss-ai/Apertus-v1.5-70B"

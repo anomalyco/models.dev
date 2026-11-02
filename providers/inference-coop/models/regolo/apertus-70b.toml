@@ -1,21 +1,25 @@
+# The co-op serves Apertus 1.5 70B under the unversioned regolo/apertus-70b gateway ID:
+# image input works and a 240,946-token prompt retrieved values from the first and last
+# lines of the input (probes, 2026-11-02), matching the v1.5 lab — not the text-only 65K
+# Apertus 1.0 that models/swiss-ai/apertus-70b.toml describes (and that the same-tier
+# providers/regolo-ai entry serves capped at 30,000).
 # Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
 # served on the Regolo tier (EU hosting, zero data retention), $1.16/$3.94 per 1M tokens, no cache price.
-# Live probes through the gateway (2026-11-02) verify the overrides against the lab facts
-# (text-only, 65,536 context) and the same-tier host entry (30,000, text-only):
-# - vision: base64 inputs answered correctly for PNG, JPEG, BMP, GIF and TIFF; webp/heic untested.
-# - context: at 240,946 prompt tokens the model retrieved values from the first and last lines
-#   of the input (its reasoning names box 0 and box 13999, the actual endpoints), so the window
-#   is usable at that length. The co-op model list publishes 262K measured through the gateway;
-#   prompts above it are rejected with ContextWindowExceededError.
+# Host deltas, verified live through the gateway (2026-11-02):
+# - image input answered correctly for PNG, JPEG, BMP, GIF and TIFF (the lab also lists
+#   audio input, untested through this host); webp/heic untested.
+# - reasoning: no caller control verified — top-level `thinking`, body
+#   `chat_template_kwargs.enable_thinking` (which this gateway honours for qwen3.5), and
+#   `reasoning_effort` all leave reasoning_content unchanged, so no controls are authored.
 schema = 2
-base_model = "swiss-ai/apertus-70b"
+base_model = "swiss-ai/apertus-v1.5-70b"
 
 [modalities]
 input = ["text", "image/bmp", "image/gif", "image/jpeg", "image/png", "image/tiff"]
 output = ["text"]
 
-[limit]
-context = 262_144
+[capabilities]
+reasoning = { supported = true }
 
 [cost.text.input]
 price = 1.16
