@@ -5,11 +5,14 @@
 # Speech-to-text on the Tinfoil tier (TEE enclaves). Tinfoil bills per REQUEST, not per
 # token: $0.01 per request per the config (the model list's older "$0.05/1M input tokens"
 # line is superseded by the config, which the docs name as the authoritative source).
-# v2 cost has no per-request unit, so no cost is published here.
+# v2 cost has no per-request unit, so no cost is published; the route stays v2-only so
+# v1 does not publish a costless transcription model (per-request-only Tinfoil services
+# are otherwise ignored per sync.md's Tinfoil notes).
 # API: POST https://gateway.inference.coop/v1/audio/transcriptions (multipart, OpenAI
 # Whisper format; language/prompt/temperature accepted, response carries
 # text/language/duration/segments).
 schema = 2
+v2_only = true
 base_model = "openai/whisper-large-v3-turbo"
 
 [api.transcriptions]

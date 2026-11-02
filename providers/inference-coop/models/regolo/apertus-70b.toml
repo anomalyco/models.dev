@@ -2,15 +2,16 @@
 # served on the Regolo tier (EU hosting, zero data retention), $1.16/$3.94 per 1M tokens, no cache price.
 # Live probes through the gateway (2026-11-02) verify the overrides against the lab facts
 # (text-only, 65,536 context) and the same-tier host entry (30,000, text-only):
-# - vision: base64 PNG input accepted and answered correctly.
-# - context: a 240,918-token prompt was accepted; the co-op model list publishes 262K
-#   measured through the gateway. The exact accepted image MIME set is not documented,
-#   so only jpeg/png are listed.
+# - vision: base64 inputs answered correctly for PNG, JPEG, BMP, GIF and TIFF; webp/heic untested.
+# - context: at 240,946 prompt tokens the model retrieved values from the first and last lines
+#   of the input (its reasoning names box 0 and box 13999, the actual endpoints), so the window
+#   is usable at that length. The co-op model list publishes 262K measured through the gateway;
+#   prompts above it are rejected with ContextWindowExceededError.
 schema = 2
 base_model = "swiss-ai/apertus-70b"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png"]
+input = ["text", "image/bmp", "image/gif", "image/jpeg", "image/png", "image/tiff"]
 output = ["text"]
 
 [limit]

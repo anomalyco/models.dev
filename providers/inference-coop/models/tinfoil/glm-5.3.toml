@@ -2,7 +2,8 @@
 # served on the Tinfoil tier (TEE enclaves), $1.80/$5.75 per 1M tokens with $0.45 cached input, 1M context.
 # Reasoning surface, cache, and context copied from the underlying host entry
 # (providers/tinfoil/models/glm-5-3.toml); reasoning_effort accepted by the
-# gateway (probe, 2026-11-01).
+# gateway (probe, 2026-11-01). Implicit caching verified live through the gateway
+# (2026-11-02): a repeated prompt returned a nonzero prompt_tokens_details.cached_tokens.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 

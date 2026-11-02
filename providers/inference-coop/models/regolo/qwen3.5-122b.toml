@@ -1,12 +1,14 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false in the request body; the
+# co-op gateway's LiteLLM config defaults it to false for this model
+# (https://git.inference.coop/code/litellm/src/branch/main/config.yaml, accessed 2026-11-02).
+# Verified live 2026-11-02: with the body kwarg the response carries reasoning_content;
+# without it (and with a top-level enable_thinking field, which the gateway drops) it answers
+# directly with no reasoning_content. No graded effort levels or budget fields are exposed.
 # Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
 # served on the Regolo tier (EU hosting, zero data retention), $0.70/$3.94 per 1M tokens, 262K
 # context, image input verified working through the gateway.
 # Modality set and output limit copied from the underlying host entry
-# (providers/regolo-ai/models/qwen3.5-122b.toml). The co-op gateway disables thinking for
-# this model at the host level (chat_template_kwargs: {enable_thinking: false} in the
-# gateway's LiteLLM config, https://git.inference.coop/code/litellm/src/branch/main/config.yaml),
-# so it is non-reasoning here despite the lab metadata; verified live 2026-11-02
-# (responses carry no reasoning_content and answer directly).
+# (providers/regolo-ai/models/qwen3.5-122b.toml).
 schema = 2
 base_model = "alibaba/qwen3.5-122b-a10b"
 name = "Qwen3.5-122B"
@@ -16,7 +18,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true, toggle = true }
 
 [limit]
 output = 16_384
