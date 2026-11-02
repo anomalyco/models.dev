@@ -1,0 +1,13 @@
+# Custom-tool probe 2026-11-01, responses: rejected (400); Provider API error: Invalid value: 'custom'  .
+# Custom-tool probe 2026-11-01, chat-completions: rejected (400); Provider API error: Missing required parameter: 'tools[0].custom'.  .
+# Catalog: https://api.mixroute.ai/v1/models
+# Snapshot: https://developers.openai.com/api/docs/models/o3-mini
+schema = 2
+base_model = "openai/o3-mini"
+name = "o3-mini (2025-01-31)"
+release_date = "2025-01-31"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]

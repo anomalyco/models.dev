@@ -1,0 +1,11 @@
+# Wire proof 2026-11-01: POST /v1beta/models/gemini-2.5-pro-preview-tts:generateContent with responseModalities=["AUDIO"] returned 200 and inlineData audio/L16 PCM at 24kHz.
+# Native GenerateContent audio configuration: https://ai.google.dev/gemini-api/docs/speech-generation
+# Catalog: https://api.mixroute.ai/v1/models
+# Model reference: providers/google/models/gemini-2.5-pro-preview-tts.toml
+schema = 2
+v2_only = true
+base_model = "google/gemini-2.5-pro-preview-tts"
+
+[api.generate-content]
+base_url = "https://api.mixroute.ai/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }

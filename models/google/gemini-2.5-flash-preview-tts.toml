@@ -1,0 +1,25 @@
+# Model metadata from providers/google/models/gemini-2.5-flash-preview-tts.toml
+schema = 2
+v2_only = true
+type = "speech"
+name = "Gemini 2.5 Flash Preview TTS"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "gemini-flash"
+open_weights = false
+knowledge = "2025-01"
+release_date = "2025-05-01"
+
+[modalities]
+input = ["text"]
+output = ["audio/l16"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8192
+output = 16384

@@ -1,0 +1,10 @@
+# Model: https://mixroute.ai/docs/model-api/kuaishou/kling-2.5-turbo
+# Text requests: /kling/text-to-video/kling-2.5-turbo
+# Image requests: /kling/image-to-video/kling-2.5-turbo
+schema = 2
+base_model = "kuaishou/kling-v2.5-turbo"
+
+[api.videos]
+base_url = "https://api.mixroute.ai"
+path = "/kling/text-to-video/kling-2.5-turbo"
+sdk = { aisdk = "none", opencodeai = "none" }

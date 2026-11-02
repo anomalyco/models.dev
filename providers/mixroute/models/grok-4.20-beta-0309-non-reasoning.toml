@@ -1,0 +1,9 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Provider alias for xai/grok-4.20-0309-non-reasoning.
+schema = 2
+base_model = "xai/grok-4.20-0309-non-reasoning"
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
