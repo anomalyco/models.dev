@@ -1,0 +1,31 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-11-02), listed alongside kimi-k3 and kimi-k2.8-preview.
+# Subscription tier: no per-token price.
+# Limits (Ark model list, accessed 2026-11-02):
+# https://www.volcengine.com/docs/ark/model-list
+# kimi-k3-1-pro-261024: context 1024k, max answer 1024k, max reasoning 128k.
+# Reasoning (Ark deep-thinking doc, accessed 2026-11-02):
+# https://www.volcengine.com/docs/ark/deep-thinking
+# kimi-k3-1-pro-261024 always thinks and does not take the thinking parameter;
+# reasoning_effort defaults to max. low/medium map to low, high to high and
+# xhigh/max to max, so only the three effective levels are published.
+# Plaintext reasoning is in choices[].message.reasoning_content.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
