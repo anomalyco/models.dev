@@ -1,0 +1,15 @@
+# Cost basis: USD cash price. The published catalog quotes account credit, and
+# top-up converts at $1 paid = $10 credit, so every cost value here is the
+# credit price / 10.
+#
+# The conversion is stated by the service itself, read 2026-10-04:
+#   https://y-api.bestvirtualgoods.com/pricing
+#     "Every $1 paid adds $10 of account credit. The rate is fixed."
+# The 1:10 rate replaced a limited-time 1:20 promo that ended 2026-10-01;
+# costs were recomputed the same day. The service is not reachable from
+# mainland China and quotes no non-USD price, so no FX conversion is involved.
+name = "Y-API"
+env = ["Y_API_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.y-api.bestvirtualgoods.com/v1"
+doc = "https://y-api.bestvirtualgoods.com/docs"
