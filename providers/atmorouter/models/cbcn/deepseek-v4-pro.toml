@@ -1,0 +1,10 @@
+# AtmoRouter model catalog: GET https://atmorouter.dev/v1/models (accessed 2026-10-25).
+# Toggle: thinking.type = enabled|disabled (disabled returned no reasoning tokens live 2026-10-25).
+# Effort: top-level reasoning_effort = low|high|max (the lab's levels for this model; accepted live 2026-10-25).
+# Mid-conversation: system_updates, effort_updates and tools.updates are unset; AtmoRouter documents none of them.
+# Cost omitted: the price depends on the offer tier that serves each request (see provider.toml).
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }

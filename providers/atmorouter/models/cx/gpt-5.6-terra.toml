@@ -1,0 +1,18 @@
+# AtmoRouter model catalog: GET https://atmorouter.dev/v1/models (accessed 2026-10-25).
+# Effort: top-level reasoning_effort = none|low|medium|high|xhigh|max (the lab's levels for this model; accepted live 2026-10-25).
+# Mid-conversation: system_updates, effort_updates and tools.updates are unset; AtmoRouter documents none of them.
+# Input MIME types: the lab's entries for each kind AtmoRouter lists (text, image); AtmoRouter documents no formats.
+# Cost omitted: the price depends on the offer tier that serves each request (see provider.toml).
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["limit.input"]
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 272_000
