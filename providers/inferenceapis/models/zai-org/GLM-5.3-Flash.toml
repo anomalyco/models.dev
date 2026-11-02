@@ -1,0 +1,18 @@
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-10-21)
+# Thinking cannot be disabled on this model; reasoning_effort = "low" is the minimum.
+# Effort (measured 2026-09-17): low < high < max in reasoning tokens; max is the default.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.66
