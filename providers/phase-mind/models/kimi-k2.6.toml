@@ -1,0 +1,20 @@
+# Kimi K2.6 (reasoning). Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Toggle: reasoning_effort = "none" disables thinking (forwarded to DeepInfra).
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.78
+
+[cost.text.output]
+price = 3.64
+
+[limit]
+output = 65_536

@@ -1,0 +1,13 @@
+# Gemma 3 12B IT. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+schema = 2
+base_model = "google/gemma-3-12b-it"
+status = "beta"
+
+[cost.text.input]
+price = 0.052
+
+[cost.text.output]
+price = 0.156
+
+[limit]
+output = 65_536

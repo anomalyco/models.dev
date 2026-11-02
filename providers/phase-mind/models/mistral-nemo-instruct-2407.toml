@@ -1,0 +1,14 @@
+# Mistral Nemo Instruct 2407. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+schema = 2
+base_model = "mistral/mistral-nemo"
+status = "beta"
+
+[cost.text.input]
+price = 0.0302
+
+[cost.text.output]
+price = 0.0312
+
+[limit]
+context = 131_072
+output = 65_536

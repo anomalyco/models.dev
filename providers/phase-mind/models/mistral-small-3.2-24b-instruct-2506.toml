@@ -1,0 +1,17 @@
+# Mistral Small 3.2 24B Instruct 2506. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+schema = 2
+base_model = "mistral/mistral-small-3.2-24b-instruct"
+status = "beta"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.078
+
+[cost.text.output]
+price = 0.208
+
+[limit]
+context = 128_000
