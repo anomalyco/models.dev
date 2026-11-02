@@ -2,7 +2,7 @@
 # Prices: https://router.bumo.ai/api/v1/models (accessed 2026-11-02); the catalog row lists prompt-length tiers, mirrored as overrides.
 # Docs: https://bumo.ai/docs/api
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max (request body is forwarded unchanged)
-# Freeform custom tools: not probed on this host, not declared.
+# Freeform custom tools: inherited from the lab entry. Live probe 2026-11-02 on POST /v1/chat/completions with tool_choice=required: regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ plus three digits on gpt-5.6-luna, gpt-6-luna and gpt-5.3-codex; format text worked on gpt-6-luna. The body is forwarded unchanged, so the other GPT IDs take the same path.
 schema = 2
 base_model = "openai/gpt-6-luna"
 

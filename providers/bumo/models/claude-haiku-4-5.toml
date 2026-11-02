@@ -3,7 +3,7 @@
 # Docs: https://bumo.ai/docs/api
 # Toggle: thinking.type = enabled|disabled in the Chat Completions body (LiteLLM Anthropic param, https://docs.litellm.ai/docs/reasoning_content)
 # Budget: thinking.budget_tokens in the Chat Completions body (LiteLLM Anthropic param, https://docs.litellm.ai/docs/reasoning_content; Anthropic minimum 1024)
-# Wire: the Chat Completions body is forwarded unchanged to a LiteLLM Anthropic adapter (lab-mapped, not probed on this host).
+# Wire: the Chat Completions body is forwarded unchanged to a LiteLLM Anthropic adapter. Live probe 2026-11-02 on claude-haiku-4-5: thinking = {type = enabled, budget_tokens = 1024} returned reasoning_content and thinking_blocks (66 reasoning tokens).
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
