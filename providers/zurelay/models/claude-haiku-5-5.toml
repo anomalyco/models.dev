@@ -1,6 +1,7 @@
 # API: Anthropic Messages, POST https://api.zurelay.com/v1/messages with x-api-key; cache_control, thinking
 # and output_config pass through (https://zurelay.com/docs/anthropic, accessed 2026-11-03).
 # Caching tested 2026-11-03 on /v1/messages: a 12,656-token system block with cache_control was written (ephemeral_5m) and read back on the next request.
+# No toggle listed: with thinking.type = disabled this host still returned a thinking block (tested 2026-11-03), so only effort is listed.
 # Effort: output_config.effort = low|medium|high|xhigh|max on POST /v1/messages (Zurelay maps reasoning_effort the same way).
 # Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
 # Prices: https://zurelay.com/models/claude-haiku-5-5 (USD per 1M tokens, accessed 2026-11-03).

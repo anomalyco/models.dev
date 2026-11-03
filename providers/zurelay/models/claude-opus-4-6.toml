@@ -2,6 +2,7 @@
 # and output_config pass through (https://zurelay.com/docs/anthropic, accessed 2026-11-03).
 # Inputs on this host: text, images, in the formats Zurelay takes
 # (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# No budget listed: thinking = { type = "enabled", budget_tokens = 1024 } returned no thinking block on this host (tested 2026-11-03), so only effort is listed.
 # Effort: output_config.effort = low|medium|high|max on POST /v1/messages (Zurelay maps reasoning_effort the same way).
 # Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
 # Prices: https://zurelay.com/models/claude-opus-4-6 (USD per 1M tokens, accessed 2026-11-03).
