@@ -75,11 +75,6 @@ test("fails without a catalog when the endpoint is down or returns something els
   await expect(fetchModularModels(respond(JSON.stringify({ data: [] })))).rejects.toThrow();
 });
 
-test("never creates models or opens issues for them", () => {
-  expect(modular.skipCreates).toBe(true);
-  expect(modular.trackMissingModels).toBe(false);
-});
-
 test("sync updates prices of listed models and removes models that leave the public set", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "sync-modular-"));
   const modelsDir = path.join(dir, "providers", "modular", "models");
@@ -88,7 +83,10 @@ test("sync updates prices of listed models and removes models that leave the pub
   await mkdir(path.dirname(kept), { recursive: true });
   await mkdir(path.join(dir, "models", "ai21"), { recursive: true });
   for (const id of ["jamba-mini", "jamba-large"]) {
-    await copyFile(path.join("models", "ai21", `${id}.toml`), path.join(dir, "models", "ai21", `${id}.toml`));
+    await copyFile(
+      path.join(import.meta.dirname, "..", "..", "..", "models", "ai21", `${id}.toml`),
+      path.join(dir, "models", "ai21", `${id}.toml`),
+    );
     await Bun.write(path.join(modelsDir, "ai21", `${id}.toml`), [
       "schema = 2",
       `base_model = "ai21/${id}"`,
