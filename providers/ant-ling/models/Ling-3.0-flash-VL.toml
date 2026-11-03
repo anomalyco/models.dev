@@ -5,11 +5,21 @@
 schema = 2
 base_model = "inclusionai/ling-3.0-flash-vl"
 
+[modalities]
+input = [
+  "text", 
+  "image/jpeg",
+  "image/png", 
+  "video/mp4",
+  "video/quicktime",
+  "video/x-ms-wmv"
+]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 cache = { implicit = true }
-system_updates = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -23,4 +33,4 @@ price = 0.021
 cache = { read = 0.0042 }
 
 [cost.text.output]
-price = 0.062
+price = 0.063

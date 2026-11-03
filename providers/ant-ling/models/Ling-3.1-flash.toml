@@ -9,7 +9,6 @@ base_model = "inclusionai/ling-3.1-flash-1019"
 tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 cache = { implicit = true }
-system_updates = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
