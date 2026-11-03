@@ -1,0 +1,22 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-04;
+# list prices of the default provider, USD per 1M tokens (or per stated unit).
+# Capabilities: Ironlane's POST /v1/chat/completions takes text messages with no tools, response_format or image/pdf parts.
+# Anthropic models: Ironlane sends no thinking or cache_control, so no extended thinking and no prompt caching.
+schema = 2
+base_model = "anthropic/claude-opus-4-6"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+cache = false
+structured_output = false
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 25

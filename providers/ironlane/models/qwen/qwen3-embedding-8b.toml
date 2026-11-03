@@ -1,0 +1,10 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-04;
+# list prices of the default provider, USD per 1M tokens (or per stated unit).
+schema = 2
+base_model = "alibaba/qwen3-embedding-8b"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.1
