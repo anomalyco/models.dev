@@ -1,0 +1,28 @@
+# Pricing: GET https://api.aiand.com/v1/api.json (synced hourly by the aiand module)
+# Docs: https://docs.aiand.com/models/catalog/
+# Effort: reasoning_effort = "low" | "medium" | "high" | "xhigh"
+# Controls: reasoning_effort only (`reasoning_effort` on /v1/chat/completions, `reasoning.effort` on /v1/responses; "none" = off) — no separate toggle or token-budget field on this host.
+# Reasoning side channel: message.reasoning_content
+schema = 2
+base_model = "meta/muse-spark-open"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = false
+
+[limit]
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

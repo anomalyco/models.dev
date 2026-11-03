@@ -5,7 +5,9 @@ import type { SyncProvider } from "../index.js";
 import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.pinference.ai/api/v1/models";
-const TokenLimit = z.number().int().positive().nullish();
+// Prime reports 0 for routes without a token limit, such as audio
+// transcription, so 0 reads as unpublished rather than a real limit.
+const TokenLimit = z.number().int().nonnegative().nullish().transform((value) => value === 0 ? null : value);
 const Price = z.number().nonnegative().nullish();
 
 export const PrimeModel = z.object({

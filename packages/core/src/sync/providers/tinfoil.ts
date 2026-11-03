@@ -5,6 +5,9 @@ import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://inference.tinfoil.sh/v1/models";
 
+// Models served only on other routes (e.g. pii-filter on /redact) have no catalog API to list.
+const MODEL_APIS = new Set(["/v1/chat/completions", "/v1/responses", "/v1/embeddings"]);
+
 const TinfoilPricing = z.object({
   inputTokenPricePer1M: z.number().nonnegative(),
   outputTokenPricePer1M: z.number().nonnegative(),
@@ -24,6 +27,7 @@ export const TinfoilModel = z.object({
   tool_calling: z.boolean(),
   multimodal: z.boolean(),
   type: z.string().min(1),
+  endpoints: z.array(z.string()),
 }).passthrough();
 
 export const TinfoilResponse = z.object({
@@ -75,6 +79,7 @@ export async function fetchTinfoilModels(fetcher: typeof fetch = fetch) {
 function isRepresentableTokenModel(model: TinfoilModel) {
   return model.context_window !== undefined
     && ["chat", "embedding", "safety"].includes(model.type)
+    && model.endpoints.some((endpoint) => MODEL_APIS.has(endpoint))
     && (
       model.pricing.inputTokenPricePer1M > 0
       || model.pricing.outputTokenPricePer1M > 0

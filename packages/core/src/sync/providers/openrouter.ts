@@ -42,6 +42,13 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "minimax/minimax-01": 40_000,
 };
 
+// OpenRouter's metadata still lists the preview's efforts for these models, but requests
+// are rejected upstream. Mistral Large 4: `none` returns 400 "supported values: high, low,
+// medium" and `reasoning.enabled = false` is rejected the same way (live 2026-10-31).
+const REASONING_OVERRIDES: Record<string, NonNullable<OpenRouterModel["reasoning"]>> = {
+  "mistralai/mistral-large-4-0": { mandatory: true, supported_efforts: ["high", "medium", "low"] },
+};
+
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
@@ -1407,7 +1414,7 @@ export function buildOpenRouterModel(
   // and rotated models pick up new efforts/budget support. Fall back to authored
   // only when the API omits a reasoning object.
   const reasoning_options = reasoning
-    ? openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options
+    ? openRouterReasoningOptions(REASONING_OVERRIDES[model.id] ?? model.reasoning) ?? existing?.reasoning_options
     : undefined;
   const context = model.context_length;
   const family = inferFamily(model, name);
