@@ -1,0 +1,26 @@
+# Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
+# (checked 2026-11-03): 0.35 / 1.41 USD per 1M input / output tokens.
+# Price taken from ECO mode; PRO may differ.
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.35
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256000 } }
+price = 1.06
+
+[cost.text.output]
+price = 1.41
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256000 } }
+price = 4.24
