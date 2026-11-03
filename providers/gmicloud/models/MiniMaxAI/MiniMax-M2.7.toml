@@ -1,11 +1,16 @@
 # Source: GET https://api.gmi-serving.com/v1/models (verified 2026-08-25)
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
-reasoning_options = []
 
-[cost]
-input = 0.30
-output = 1.20
-cache_read = 0.06
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 196_608
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

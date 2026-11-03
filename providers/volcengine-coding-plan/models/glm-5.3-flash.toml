@@ -2,16 +2,19 @@
 # (accessed 2026-09-11): the model list includes both glm-5.3 (glm-latest)
 # and glm-5.3-flash. Subscription tier: no per-token price.
 # Effort levels mirror providers/zai-coding-plan/glm-5.3-flash.toml.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

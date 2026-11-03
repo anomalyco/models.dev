@@ -1,0 +1,29 @@
+# Published June 2023 (MIT, 512-token input): https://huggingface.co/intfloat/multilingual-e5-large
+# Paper: https://arxiv.org/abs/2212.03533
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Multilingual E5 Large"
+description = "Multilingual text embedding model for retrieval and semantic similarity"
+open_weights = true
+release_date = "2023-06"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 512
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/intfloat/multilingual-e5-large"

@@ -1,19 +1,40 @@
+# Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
+# Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-11-24 (scheduled for retirement).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+# Web search: 0.004 CNY per search on top of tokens; not expressible in v2.
+schema = 2
+base_model = "bytedance-seed/seed-2.0-pro"
 name = "Doubao Seed 2.0 Pro"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-02-14"
-last_updated = "2026-02-14"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 temperature = true
-structured_output = false
-open_weights = false
 
-[limit]
-context = 256_000
-output = 128_000
+[cost.text.input]
+price = 0.46376812
+cache = { read = 0.09275362 }
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.69565217
+cache = { read = 0.13913043 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.39130435
+cache = { read = 0.27826087 }
+
+[cost.text.output]
+price = 2.31884058
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.47826087
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 6.95652174

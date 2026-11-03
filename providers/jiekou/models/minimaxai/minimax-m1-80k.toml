@@ -1,24 +1,18 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Reasoning: no caller control documented. The chat reference lists enable_thinking only for zai-org/glm-4.5 and separate_reasoning only for deepseek-r1-turbo (https://docs.jiekou.ai/docs/models/reference-llm-create-chat-completion).
+schema = 2
+base_model = "minimax/minimax-m1-80k"
 name = "MiniMax M1"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.55
-output = 2.2
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
-context = 1000000
-output = 40000
+output = 40_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.55
+
+[cost.text.output]
+price = 2.2

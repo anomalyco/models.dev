@@ -1,0 +1,27 @@
+schema = 2
+name = "LiquidAI: LFM2.5-2.6B"
+description = "LFM2.5-2.6B is a compact reasoning model from Liquid AI. It is suited for agent workflows, data extraction, RAG, and long-context processing. Liquid advises against using it for agentic coding or..."
+family = "liquid"
+open_weights = false
+release_date = "2026-08-11"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 128_000
+output = 8_192
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.5

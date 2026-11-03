@@ -1,21 +1,26 @@
+# Sampling: https://console.sakana.ai/models?model=fugu lists temperature and top_p as "Accepted but ignored" on
+#   Responses and Chat Completions and documents no top_k, so all three are off.
+# Input: the Sakana docs list no image formats (image input only), so input stays generic `image`.
+schema = 2
 name = "Fugu Ultra"
 description = "Quality-first multi-agent model for hard research, analysis, and competitions"
 family = "fugu"
-release_date = "2026-06-15"
-last_updated = "2026-06-15"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
-
-[limit]
-context = 1_000_000
+release_date = "2026-06-15"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
 
 [[links]]
 label = "Official model catalog"

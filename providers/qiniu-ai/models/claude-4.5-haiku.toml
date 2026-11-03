@@ -1,19 +1,13 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
 name = "Claude 4.5 Haiku"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-release_date = "2025-10-16"
-last_updated = "2025-10-16"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
-structured_output = false
-open_weights = false
-
-[limit]
-context = 200_000
-output = 64_000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false

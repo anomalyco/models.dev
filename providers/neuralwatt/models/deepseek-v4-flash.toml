@@ -11,18 +11,23 @@
 # Output cap raised to 393,216 tokens per GET /v1/models (checked
 # 2026-09-18; was 65,536).
 # https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
-interleaved = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.028
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_560
 output = 393_216
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 0.28

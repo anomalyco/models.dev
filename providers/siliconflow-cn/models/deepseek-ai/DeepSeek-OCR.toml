@@ -1,21 +1,30 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 0, output 0
+# Modalities: the China multimodal guide lists image input with PDF support for DeepSeek-OCR
+# (https://docs.siliconflow.cn/docs/userguide/capabilities/multimodal-vision, 2026-10-21).
+schema = 2
 name = "deepseek-ai/DeepSeek-OCR"
 description = "OCR model for extracting structured text from documents and screenshots"
-release_date = "2025-10-20"
-last_updated = "2025-10-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
 open_weights = true
-
-[cost]
-input = 0
-output = 0
-
-[limit]
-context = 8192
-output = 8192
+release_date = "2025-10-20"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 8_192
+output = 8_192
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

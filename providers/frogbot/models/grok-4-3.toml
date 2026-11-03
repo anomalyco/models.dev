@@ -1,26 +1,23 @@
-name = "Grok 4.3"
+# knowledge: FrogBot's value, unsourced (the lab states none). Kept so v1 doesn't change.
+schema = 2
+base_model = "xai/grok-4.3"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-release_date = "2026-04-30"
-last_updated = "2026-04-30"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
 knowledge = "2024-11"
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.20
-
-[limit]
-context = 1_000_000
-output = 128_000
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.5

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
+import { ReasoningEffortV2Values } from "../../schema-v2.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
@@ -48,6 +49,16 @@ const VendorInfo = z.object({
     output_per_million: z.number().nonnegative(),
     cache_read_per_million: z.number().nonnegative().nullable().optional(),
     cache_write_per_million: z.number().nonnegative().nullable().optional(),
+    // `per_token` unless the route bills by second, image or character.
+    unit: z.string().optional(),
+    // Rates that replace the base ones once input passes `threshold_tokens`.
+    long_context: z.object({
+      threshold_tokens: z.number().int().positive(),
+      input_per_million: z.number().nonnegative().nullable().optional(),
+      output_per_million: z.number().nonnegative().nullable().optional(),
+      cache_read_per_million: z.number().nonnegative().nullable().optional(),
+      cache_write_per_million: z.number().nonnegative().nullable().optional(),
+    }).passthrough().nullable().optional(),
   }).passthrough(),
   prompt_caching: PromptCaching.nullable().optional(),
 }).passthrough();
@@ -162,8 +173,7 @@ export const mergeGateway = {
       id: model.model,
       model: translated,
       header: translated.reasoning_options?.some((option) => option.type === "toggle")
-        && translated.reasoning_options.some((option) => option.type === "budget_tokens")
-        ? '# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.\n# https://docs.merge.dev/merge-gateway/features/reasoning\n'
+        ? '# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.\n# https://docs.merge.dev/merge-gateway/capabilities/reasoning\n'
         : undefined,
     };
   },
@@ -185,7 +195,7 @@ export function mergeGatewayReasoningOptions(
     (controls.includes("reasoning.effort") || controls.includes("reasoning_effort"))
     && effortValues.length > 0
   ) {
-    options.push({ type: "effort" as const, values: [...effortValues] });
+    options.push({ type: "effort" as const, values: sortEfforts(effortValues) });
   }
 
   if (controls.includes("thinking.budget_tokens")) {
@@ -239,7 +249,10 @@ export function buildMergeGatewayModel(
     output: selected.info.max_output_tokens || existing?.limit?.output || selected.info.context_window,
   };
   const cachePricing = mergeGatewayCachePricing(selected.info, existing);
-  const cost = {
+  // A route billed per second, image or character has no per-token price pair
+  // (its token fields are 0), so the file's own non-token price is kept.
+  const perToken = (selected.info.pricing.unit ?? "per_token") === "per_token";
+  const cost = perToken ? {
     input: selected.info.pricing.input_per_million,
     output: selected.info.pricing.output_per_million,
     reasoning: existing?.cost?.reasoning,
@@ -247,8 +260,8 @@ export function buildMergeGatewayModel(
     cache_write: cachePricing.write,
     input_audio: existing?.cost?.input_audio,
     output_audio: existing?.cost?.output_audio,
-    tiers: existing?.cost?.tiers,
-  };
+    tiers: longContextTiers(selected.info.pricing, cachePricing) ?? existing?.cost?.tiers,
+  } : undefined;
   const status = model.availability_status === "deprecated" || selected.info.availability_status === "deprecated"
     ? "deprecated" as const
     : undefined;
@@ -360,6 +373,29 @@ function mergeGatewayCachePricing(
       ?? pricing.cache_write_per_million
       ?? existing?.cost?.cache_write,
   };
+}
+
+function longContextTiers(
+  pricing: MergeGatewayVendor["pricing"],
+  cache: { read?: number; write?: number },
+) {
+  const longContext = pricing.long_context;
+  if (longContext == null) return undefined;
+  return [{
+    tier: { type: "context" as const, size: longContext.threshold_tokens },
+    input: longContext.input_per_million ?? pricing.input_per_million,
+    output: longContext.output_per_million ?? pricing.output_per_million,
+    cache_read: longContext.cache_read_per_million ?? cache.read,
+    cache_write: longContext.cache_write_per_million ?? cache.write,
+  }];
+}
+
+function sortEfforts(values: string[]) {
+  const rank = (value: string) => {
+    const index = (ReasoningEffortV2Values as readonly string[]).indexOf(value);
+    return index === -1 ? ReasoningEffortV2Values.length : index;
+  };
+  return [...values].sort((a, b) => rank(a) - rank(b));
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";

@@ -1,22 +1,29 @@
 # https://huggingface.co/CohereLabs/aya-vision-8b
+# Image formats: https://docs.cohere.com/docs/image-inputs ("Limitations > File types": PNG, JPEG, WEBP,
+#   non-animated GIF; listed as extensions, so the registered MIME types are used). Retired 2026-04-04
+#   (https://docs.cohere.com/docs/deprecations); the formats are those of the Cohere Chat API it was served on.
+schema = 2
 name = "Aya Vision 8B"
 description = "Compact open multilingual vision model for OCR and visual question answering"
+open_weights = true
 release_date = "2025-03-04"
 last_updated = "2025-05-14"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
 license = "CC-BY-NC-4.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 16_000
 output = 4_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

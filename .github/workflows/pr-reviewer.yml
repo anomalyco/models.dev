@@ -43,7 +43,7 @@ jobs:
           persist-credentials: false
 
       - name: Install opencode
-        run: curl -fsSL https://opencode.ai/install | bash
+        run: curl -fsSL https://opencode.ai/install | bash -s -- --version 1.19.4
 
       - name: Prepare pull request context
         env:

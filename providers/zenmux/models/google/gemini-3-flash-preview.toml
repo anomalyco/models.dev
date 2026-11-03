@@ -1,25 +1,29 @@
-name = "Gemini 3 Flash Preview"
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# cache write kept from the file; the catalog lists none.
+schema = 2
+base_model = "google/gemini-3-flash-preview"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-release_date = "2025-12-17"
-last_updated = "2025-12-17"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
-
-[cost]
-input = 0.50
-output = 3.00
-cache_read = 0.05
-cache_write = 1.00
-
-[limit]
-context = 1048_000
-output = 64_000
 
 [modalities]
-input = ["text", "image", "pdf", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true, explicit = true }
+
+[limit]
+context = 1_048_000
+output = 65_535
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05, write = 1 }
+
+[cost.text.output]
+price = 3
+
+[cost.audio.input]
+price = 1
+cache = { read = 0.1 }

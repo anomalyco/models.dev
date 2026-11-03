@@ -1,13 +1,23 @@
 # Vertex Gemini adapter: $.generationConfig.thinkingConfig.thinkingBudget is 0 (off), -1 (dynamic), or 512..24576. https://cloud.google.com/vertex-ai/generative-ai/docs/thinking (accessed 2026-06-25)
-
+# Cost: Vertex AI list price (https://cloud.google.com/vertex-ai/generative-ai/pricing), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Deprecated: the SAP AI Core calculator (https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/, 2026-10-21) listed with retirement date 2026-10-16 (version 001).
+schema = 2
 base_model = "google/gemini-2.5-flash-lite"
-
 name = "gemini-2.5-flash-lite"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24576 }]
+status = "deprecated"
 
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.01
-input_audio = 0.3
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 512, max = 24_576 } }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4
+
+[cost.audio.input]
+price = 0.3

@@ -1,14 +1,23 @@
 # https://novita.ai/models/model-detail/xiaomimimo-mimo-v2.5-pro
 # Toggle: thinking.type = enabled|disabled
 # Public pricing is flat; the old 256K tier duplicated the base price.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "xiaomi/mimo-v2.5-pro"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 structured_output = true
-reasoning_options = [{ type = "toggle" }]
+system_updates = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.522
-output = 1.044
-cache_read = 0.0043
+[cost.text.input]
+price = 0.522
+cache = { read = 0.0043 }
+
+[cost.text.output]
+price = 1.044

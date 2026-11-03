@@ -1,0 +1,22 @@
+# context: the API's own limit, as named in its error for an over-long request.
+# Prices: Modular's public model catalog, https://console.modular.com/api/v1/docs/models (accessed 2026-10-26)
+# Reasoning is returned in message.reasoning (probe). reasoning_field = "reasoning" is valid in v2,
+#   but v1's interleaved.field only allows reasoning_content|reasoning_details, so it is left unset.
+# Reasoning controls: providers/deepseek/models/deepseek-flash.toml, kept where this host honours them (probe, /v1/chat/completions).
+# Toggle: reasoning.enabled = true|false (true -> 260 reasoning tokens, false -> 0; on by default here, 283 with no control)
+# Effort: reasoning.effort = low|high|max (the host validates values: 400 on an unknown one). Levels were not separable on the test prompt, one run each.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.17
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 1.2

@@ -1,15 +1,25 @@
+# Mid-conversation (Ofox Gemini native API, https://ofox.ai/docs/api/gemini/generate-content): systemInstruction, thinkingConfig and tools are request-level and content roles are user/model, so system_updates, effort_updates and tools.updates are false.
+# Cache: implicit, plus explicit cachedContents on the Gemini native API (https://ofox.ai/docs/develop/models/gemini#caching, https://ofox.ai/docs/develop/advanced/gemini-explicit-cache).
+# Effort: generationConfig.thinkingConfig.thinkingLevel = minimal|low|medium|high (https://ofox.ai/docs/develop/models/gemini/thinking)
+schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
 
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.03
-cache_write = 0.083
+[api.generate-content]
+base_url = "https://api.ofox.ai/gemini/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://api.ofox.ai/gemini/v1beta"
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.083 }
+
+[cost.text.output]
+price = 2.5
+
+[cost.audio.input]
+price = 0.3

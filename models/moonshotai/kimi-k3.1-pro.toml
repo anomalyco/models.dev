@@ -1,0 +1,45 @@
+# Sources:
+# - Release and availability (2026-10-23): https://www.kimi.com/en/blog/kimi-k3-1-pro
+# - API guide: https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart
+# - Announced as an open-weight model; full weights are scheduled for 2026-11-04. Keep open_weights=false until the weights and a real link are available.
+# - Input formats: https://platform.kimi.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats
+# Sampling is fixed at temperature=1.0 and top_p=0.95; top_k is not documented.
+schema = 2
+name = "Kimi K3.1 Pro"
+description = "Multimodal Kimi model with 1M context and always-on reasoning for coding, 3D creation, financial research, and agentic work"
+family = "kimi-k3"
+open_weights = false
+release_date = "2026-10-23"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072

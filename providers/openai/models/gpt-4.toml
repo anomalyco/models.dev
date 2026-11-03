@@ -1,25 +1,39 @@
+# tools.updates: left out. This model has no prompt caching (no cached-input price), so there is no cache for a tool change to keep.
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4
+schema = 2
 name = "GPT-4"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
+open_weights = false
+knowledge = "2023-11"
 release_date = "2023-11-06"
 last_updated = "2024-04-09"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-11"
-tool_call = true
-structured_output = false
-open_weights = false
 status = "deprecated"
-
-[cost]
-input = 30.00
-output = 60.00
-
-[limit]
-context = 8192
-output = 8192
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+system_updates = true
+store = true
+cache = false
+
+[limit]
+context = 8_192
+output = 8_192
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 30
+
+[cost.text.output]
+price = 60

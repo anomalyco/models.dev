@@ -1,6 +1,7 @@
 name = "NanoGPT"
 env = ["NANO_GPT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Chat variants are POST `/api/v1/chat/completions` (`reasoning`),
 # `/api/v1legacy/chat/completions` (`reasoning_content`), and
 # `/api/v1thinking/chat/completions` (reasoning merged into `content`). Requests

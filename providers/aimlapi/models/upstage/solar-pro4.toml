@@ -1,10 +1,14 @@
+schema = 2
 base_model = "upstage/solar-pro4"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
 
-[cost]
-input = 0.041262
-output = 0.165048
-cache_read = 0.008252
+[cost.text.input]
+price = 0.03174
+cache = { read = 0.006348 }
+
+[cost.text.output]
+price = 0.12696

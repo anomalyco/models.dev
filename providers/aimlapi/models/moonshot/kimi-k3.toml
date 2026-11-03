@@ -1,13 +1,17 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+tools = { supported = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 3.9
-output = 19.5
-cache_read = 0.39
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

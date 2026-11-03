@@ -1,22 +1,24 @@
 # No [cost]: billed as the sum of the panel legs actually run, at
 # upstream cost with zero markup, so there is no per-token price.
+# Input MIME types: the formats every panel model accepts (Claude Opus 4.8, GPT-5.5 and Gemini 3.1 Pro;
+# see their lab files). Panel per https://docs.orcarouter.ai/routing/fusion
+schema = 2
 name = "OrcaRouter Fusion"
 description = "Curated fan-out router that runs Claude Opus 4.8, GPT-5.5 and Gemini 3.1 Pro in parallel on hard requests, then has a Claude Opus 4.8 judge return the strongest single answer verbatim. Easy requests fall through to a cheaper default and bill as one call."
 family = "model-router"
-release_date = "2026-06-15"
-last_updated = "2026-06-15"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-06-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 1_000_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

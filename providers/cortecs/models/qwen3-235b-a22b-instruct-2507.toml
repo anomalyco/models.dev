@@ -1,12 +1,21 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (scaleway, nebius). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-structured_output = true
 
-[cost]
-input = 0.199
-output = 0.598
-cache_read = 0.018
+[capabilities]
+tools = { supported = true }
+cache = false
+structured_output = true
 
 [limit]
 context = 262_000
 output = 262_000
+
+[cost.text.input]
+price = 0.199
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 0.598

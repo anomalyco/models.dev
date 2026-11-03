@@ -1,0 +1,33 @@
+# Model card: https://ai.google.dev/gemma/docs/gemma-3n/model_card (mirrored at https://build.nvidia.com/google/gemma-3n-e2b-it):
+# text, image and audio in, text out; "Total input context of 32K tokens"; output "up to 32K tokens, subtracting the
+# request input tokens"; knowledge cutoff June 2024. Image and audio stay generic: the card gives sizes, not formats.
+# No function calling is documented. Released 2025-06-26
+# (https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/).
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Gemma 3n E2B IT"
+description = "Efficient on-device Gemma 3n model for text, image, and audio understanding"
+family = "gemma"
+open_weights = true
+knowledge = "2024-06"
+release_date = "2025-06-26"
+license = "Gemma Terms of Use"
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-3n-E2B-it"

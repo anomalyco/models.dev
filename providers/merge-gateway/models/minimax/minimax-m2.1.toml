@@ -1,14 +1,19 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=minimax%2Fminimax-m2.1 (accessed 2026-07-21)
+schema = 2
 base_model = "minimax/MiniMax-M2.1"
 name = "MiniMax M2.1"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
-cache_write = 0.375
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 output = 8_192
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 1.2

@@ -1,13 +1,23 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/muse-glimmer-30b.md
+# Effort: reasoning_effort = none|low|medium|high|max
+# Cache: model page prices an "Implicit cache read" row.
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1/completions, /v1beta/models/muse-glimmer-30b:generateContent
+schema = 2
 base_model = "meta/muse-glimmer-30b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 0.2
-output = 0.8
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.8

@@ -1,28 +1,23 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "meituan/longcat-2.0"
 name = "Meituan: LongCat 2.0"
 description = "LongCat 2.0 is a sparse mixture-of-experts language model from Meituan, with 48B active parameters out of 1.6T total. It is suited for coding, repository-level changes, long-horizon problem solving, and agentic..."
-family = "longcat"
-release_date = "2026-07-20"
-last_updated = "2026-07-20"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.75
-output = 3
-cache_read = 0.015
 
 [limit]
 context = 1_048_756
 output = 262_144
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.75
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 3

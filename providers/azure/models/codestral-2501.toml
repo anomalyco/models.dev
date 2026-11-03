@@ -1,23 +1,31 @@
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 name = "Codestral 25.01"
 description = "Mistral coding model for code completion, generation, and developer workflows"
 family = "codestral"
-release_date = "2025-01-01"
-last_updated = "2025-01-01"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-03"
-tool_call = true
 open_weights = false
+knowledge = "2024-03"
+release_date = "2025-01-01"
 
-[cost]
-input = 0.30
-output = 0.90
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.9

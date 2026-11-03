@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: write
-  issues: read
+  issues: write
   pull-requests: read
 
 concurrency:
@@ -39,8 +39,11 @@ jobs:
               --limit 1000 \
               --json number,createdAt,labels
           } | jq --arg cutoff "$cutoff" '
-            map(select(.createdAt <= $cutoff)) | sort_by(.createdAt)
+            map(select(.createdAt <= $cutoff and ([.labels[].name] | index("fixer:retried") | not)))
+            | sort_by(.createdAt)
           ')"
+
+          gh label create "fixer:retried" --repo "$GITHUB_REPOSITORY" --color "BFD4F2" --description "The issue fixer was retried once" >/dev/null 2>&1 || true
 
           dispatched=0
           dispatched_issues=()
@@ -85,6 +88,7 @@ jobs:
                 }
               }' \
               | gh api "repos/$GITHUB_REPOSITORY/dispatches" --method POST --input -
+            gh issue edit "$number" --repo "$GITHUB_REPOSITORY" --add-label "fixer:retried"
 
             dispatched=$((dispatched + 1))
             dispatched_issues+=("#$number")

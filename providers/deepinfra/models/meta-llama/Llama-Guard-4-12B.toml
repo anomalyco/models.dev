@@ -1,0 +1,19 @@
+schema = 2
+base_model = "meta/llama-guard-4-12b"
+
+[capabilities]
+service_tier = ["flex", "priority"]
+
+[cost.text.input]
+price = 0.18
+
+[cost.text.output]
+price = 0.18
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

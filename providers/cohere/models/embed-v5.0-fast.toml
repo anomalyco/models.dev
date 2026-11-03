@@ -1,0 +1,14 @@
+# Embed API (POST https://api.cohere.com/v2/embed): https://docs.cohere.com/reference/embed
+# Served: GET /v1/models lists it with the `embed` endpoint; live text and image embeddings returned 200
+#   (2026-10-19; v3 image requests need images of at least 2x2 px).
+# Pricing: https://cohere.com/pricing (Embed 5 Fast: $0.08 per 1M tokens).
+# API: POST https://api.cohere.com/v2/embed (https://docs.cohere.com/reference/embed).
+schema = 2
+v2_only = true
+base_model = "cohere/embed-v5.0-fast"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.08

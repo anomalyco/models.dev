@@ -1,15 +1,18 @@
+# Mid-conversation: Hyper serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://hyper.charm.land/v1/models
+schema = 2
 base_model = "zhipuai/glm-5.3"
-release_date = "2026-08-28"
-last_updated = "2026-08-31"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.52432
-output = 4.79072
-cache_read = 0.283088
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 1.52432
+cache = { read = 0.283088 }
+
+[cost.text.output]
+price = 4.79072

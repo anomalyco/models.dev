@@ -1,0 +1,37 @@
+# Spot serving path for GLM 5.3 — same weights and OpenAI-compatible API as Standard, best-effort at 30% discount.
+# Sources (accessed 2026-10-22):
+# - Spot docs: GLM-5.3 Spot $0.98 / $0.182 / $3.08 per 1M (input / cached input / output), 30% below Standard $1.40 / $0.26 / $4.40; same API as Standard; service_tier does not select Spot: https://docs.fireworks.ai/guides/spot-serverless
+# - Standard pricing source of truth: https://docs.fireworks.ai/serverless/pricing
+# - Catalog sync found remote ID accounts/fireworks/routers/glm-5p3-spot (docs table lists accounts/fireworks/models/glm-5p3-spot for the same offering; router namespace used here per sync).
+# - Capabilities and limits mirror sibling Standard entry accounts/fireworks/models/glm-5p3 (thinking-only, effort low/high/max; context 1_048_573, output 262_144; reasoning_content; implicit cache; system_updates true, effort/tools updates false): https://docs.fireworks.ai/guides/reasoning, https://docs.fireworks.ai/guides/prompt-caching, https://docs.fireworks.ai/structured-responses/structured-response-formatting
+# - Lab identity Z.ai GLM-5.3: https://docs.z.ai/guides/llm/glm-5.3, https://huggingface.co/zai-org/GLM-5.3. Spot limits not independently probed; assumed same as Standard sibling.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Spot"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_573
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.98
+cache = { read = 0.182 }
+
+[cost.text.output]
+price = 3.08

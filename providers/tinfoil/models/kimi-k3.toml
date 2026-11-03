@@ -2,16 +2,23 @@
 # - https://inference.tinfoil.sh/v1/models
 # - https://docs.tinfoil.sh/guides/reasoning.md
 # Effort: reasoning_effort = low|high|max on Tinfoil; reasoning is always on.
+# Mid-conversation: Tinfoil serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.tinfoil.sh/models/chat
+# Cache: the inference router reuses matching prompt prefixes automatically, scoped by API identity and user_cache_secret (https://docs.tinfoil.sh/sdk/prompt-caching).
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 4
-output = 20
-cache_read = 0.8
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 4
+cache = { read = 0.8 }
+
+[cost.text.output]
+price = 20

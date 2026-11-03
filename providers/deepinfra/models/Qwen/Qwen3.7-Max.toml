@@ -1,23 +1,40 @@
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12672/13639 -> 0/13653; 12672/13639 -> 0/13653]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12672/13554 -> 0/13614; 13824/13874 -> 0/13934]
+schema = 2
 base_model = "alibaba/qwen3.7-max"
-reasoning = false
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
 structured_output = true
-
-[cost]
-input = 2.5
-output = 7.5
-cache_read = 0.5
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 5
-output = 15
-cache_read = 1
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 6.25
-output = 18.5
-cache_read = 1.25
+cache = { implicit = true }
+prompt_cache_key = true
 
 [limit]
 context = 256_000
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 5
+cache = { read = 1 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 6.25
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 7.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 18.5

@@ -1,0 +1,25 @@
+# Released 2026-03-10: https://ai.google.dev/gemini-api/docs/changelog
+# Modalities and context as in gemini-embedding-2: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Gemini Embedding 2 Preview"
+description = "Preview of Gemini Embedding 2, a multimodal embedding model for text, images, video, audio, and PDFs"
+family = "gemini"
+open_weights = false
+release_date = "2026-03-10"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "audio/mp3", "audio/wav", "video/mp4", "video/mov", "application/pdf"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0

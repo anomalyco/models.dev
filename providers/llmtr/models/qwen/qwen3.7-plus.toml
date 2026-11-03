@@ -4,14 +4,16 @@
 # Budget: $.thinking_budget (integer reasoning tokens).
 # Measured: `thinking_budget` is honoured as a cap: 64 -> 64 reasoning tokens; at 600 the model used 307.
 # The bare `$.reasoning` boolean also toggles thinking here, but `enable_thinking` is the lab-native field and is documented instead for consistency across these routes.
+# Cache read price: GET https://llmtr.com/v1/models pricing.input_cache_read (accessed 2026-10-21).
+schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
-[cost]
-input = 0.4
-output = 1.6
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 0.4
+cache = { read = 0.08 }
 
-[[reasoning_options]]
-type = "budget_tokens"
+[cost.text.output]
+price = 1.6

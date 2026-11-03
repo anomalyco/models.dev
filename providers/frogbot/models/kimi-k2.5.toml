@@ -1,24 +1,26 @@
+# Retired: absent from https://docs.frogbot.ai/api-reference/models (accessed 2026-10-21).
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
 name = "Kimi-K2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-release_date = "1970-01-01"
-last_updated = "1970-01-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
+status = "deprecated"
 
-[cost]
-input = 0.6
-output = 3.0
-cache_read = 0.1
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 256_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.6
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3

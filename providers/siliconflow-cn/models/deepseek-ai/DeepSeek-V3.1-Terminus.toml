@@ -1,24 +1,34 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 4, output 12, cache read 0.4
+# Toggle: enable_thinking = true|false (top-level request field)
+# https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions
+schema = 2
 name = "deepseek-ai/DeepSeek-V3.1-Terminus"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
+open_weights = true
 release_date = "2025-09-29"
 last_updated = "2025-11-25"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.27
-output = 1.0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 164_000
 output = 164_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.59778991
+cache = { read = 0.05977899 }
+
+[cost.text.output]
+price = 1.79336973

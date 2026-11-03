@@ -1,25 +1,27 @@
 # Budget: thinking_token_budget (integer reasoning tokens)
+schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Flex"
 description = "Kimi K3 on the flex tier: discounted, best-effort latency, requests may be held under load"
 
-interleaved = true
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 1.95
-output = 9.75
-cache_read = 0.195
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], budget = {} }
+structured_output = true
 
 [limit]
 context = 1_048_560
 output = 1_048_560
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 1.95
+cache = { read = 0.195 }
+
+[cost.text.output]
+price = 9.75

@@ -3,18 +3,25 @@
 # reasoning_content present when on, absent when off
 # Text and image, as /v1/models reports for this route. The lab entry adds video,
 # which was never probed here.
+# Cache: automatic prefix caching on NEAR-hosted (TEE) models, no request changes (https://docs.near.ai/cloud/guides/prompt-caching).
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.04
-output = 1.35
-cache_read = 0.018
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 1.35

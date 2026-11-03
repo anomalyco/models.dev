@@ -3,18 +3,34 @@
 # with HTTP 200, but a 2026-09-04 effect probe did not show distinct tiers
 # (reasoning_content length is not monotonic). `none` is rejected (thinking-only).
 # thinking.type=disabled returns 200 and still emits reasoning_content.
+# List rates. First-party zhipuai currently publishes a 50% promo that Neon does not.
+# Lab context is 1_000_000. neon.com/models publishes 1_048_576.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Modalities: text and images only. Neon's docs overview table and models.json list "text, image", and
+# Databricks (the host behind Neon) lists "Supported inputs: text, image":
+# https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models#zhipu-ai-glm-53-flash
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3 Flash"
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
 
-# List rates. First-party zhipuai currently publishes a 50% promo that Neon does not.
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
 
-# Lab context is 1_000_000. neon.com/models publishes 1_048_576.
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

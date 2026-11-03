@@ -109,7 +109,11 @@ export function buildCortecsModel(
     tiers: existing?.cost?.tiers,
   };
   if (canonical !== undefined) {
+    // Model facts (family, dates, knowledge, open_weights) come from the lab
+    // file. A display name or description stays only where it differs from
+    // the lab's (factorBaseModel drops values equal to the lab).
     return factorBaseModel(canonical, {
+      name: existing?.name,
       description: existing?.description,
       attachment: input.some((value) => value !== "text"),
       reasoning,

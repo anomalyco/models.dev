@@ -1,0 +1,20 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-14): reasoning_effort = minimal -> HTTP 400 invalid option.
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.5

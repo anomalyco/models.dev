@@ -1,17 +1,28 @@
 # Native `/ai/run` schema documents no reasoning toggle, effort, or token
 # budget for this reasoning-only model.
 # https://developers.cloudflare.com/workers-ai/models/qwq-32b/sync-input.json (accessed 2026-06-25)
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted and adds a role header (+19 tokens). On 2026-10-23 QwQ ignored the test instruction both mid-conversation and at the top of the system prompt, so it's the model, not the placement.
+# No prefix cache on this model, so effort and tool changes keep nothing.
+schema = 2
 base_model = "alibaba/qwq-32b"
 name = "Qwq 32B"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-tool_call = false
-structured_output = false
-reasoning_options = []
 
-[cost]
-input = 0.66
-output = 1
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+cache = false
+structured_output = false
+system_updates = true
 
 [limit]
 context = 24_000
 output = 24_000
+
+[cost.text.input]
+price = 0.66
+
+[cost.text.output]
+price = 1

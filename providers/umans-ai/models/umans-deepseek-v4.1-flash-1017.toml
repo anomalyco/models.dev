@@ -1,0 +1,35 @@
+# Dated pin of umans-deepseek-v4.1-flash. Since 2026-10-20 both ids serve
+# DeepSeek-V4.1-Flash-1017 with the same price and limits. A dated id is never
+# repointed: when the floating id moves to a later update, this id keeps the
+# 1017 weights or is deprecated with notice.
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)
+# Effort: reasoning_effort = low|high|max (default high). A number from 1 to 100
+# maps to the nearest mode: 1-62 low, 63-87 high, 88-100 max.
+# Live card, checked 2026-10-21: https://api.code.umans.ai/v1/models/info
+# (levels none/low/high/max, default high, can_disable true, supports_vision
+# true, context_window 1048576, max_completion_tokens 393216).
+# Pay-per-token: Umans AI's public rate, the same as umans-deepseek-v4.1-flash
+# ($0.15 / $0.60 / $0.028 cached per 1M; GET /v1/models renders input/output).
+# limit.output is cap-1 on purpose: the gateway 400s max_tokens >=
+# max_completion_tokens (393216), so 393215 is the largest value that serves
+# (its advertised recommended_max_tokens).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 393_215
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 0.6

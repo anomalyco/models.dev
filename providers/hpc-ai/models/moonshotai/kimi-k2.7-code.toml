@@ -1,16 +1,22 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = []
-temperature = true
 
-[cost]
-input = 0.95
-output = 4.00
-cache_read = 0.19
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

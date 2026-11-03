@@ -1,14 +1,20 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 name = "Nvidia Nemotron 3 Nano 30B"
-reasoning = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.17
-output = 0.68
-cache_read = 0.085
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 input = 262_144
 output = 235_929
+
+[cost.text.input]
+price = 0.17
+cache = { read = 0.085 }
+
+[cost.text.output]
+price = 0.68

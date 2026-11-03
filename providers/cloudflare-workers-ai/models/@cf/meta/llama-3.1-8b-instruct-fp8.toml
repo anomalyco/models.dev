@@ -1,13 +1,23 @@
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is silently dropped (prompt tokens unchanged, not honored).
+# No prefix cache on this model, so effort and tool changes keep nothing.
+schema = 2
 base_model = "meta/llama-3.1-8b-instruct"
 name = "Llama 3.1 8B Instruct fp8"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.152
-output = 0.287
+[capabilities]
+tools = { supported = false }
+cache = false
+structured_output = false
 
 [limit]
 context = 32_000
 output = 32_000
+
+[cost.text.input]
+price = 0.152
+
+[cost.text.output]
+price = 0.287

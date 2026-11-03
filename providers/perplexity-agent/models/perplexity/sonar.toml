@@ -1,24 +1,26 @@
-name = "Sonar"
-description = "Sonar search model for current answers, retrieval, and citation-backed chat"
-family = "sonar"
-release_date = "2024-01-01"
-last_updated = "2025-09-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-09-01"
-open_weights = false
+# Perplexity Agent API: https://docs.perplexity.ai/docs/agent-api/models.md (USD per MTok: input, output, cache read);
+#   prices match GET https://api.perplexity.ai/v1/models (2026-10-21). reasoning.effort = minimal|low|medium|high|xhigh|max
+#   (https://docs.perplexity.ai/api-reference/agent-post.md); this file's effort list is unchanged from v1.
+#   Images: PNG, JPEG, WEBP, GIF; documents via input_file.
+# Agent API tool fees (https://docs.perplexity.ai/docs/getting-started/pricing#tool-pricing, accessed 2026-10-22): web_search
+#   with search_type "web" is $2.50 per 1,000 invocations (cost.web_search). Not representable in v2 (no per-call field or
+#   search type condition): web_search with search_type fast $0.001, image_search $0.0025, fetch_url $0.0005,
+#   people_search and finance_search $0.005, sandbox $0.03 per session.
+schema = 2
+base_model = "perplexity/sonar"
 
-[cost]
-input = 0.25
-output = 2.50
-cache_read = 0.0625
+[capabilities]
+tools = { supported = true }
 
 [limit]
-context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.0625 }
+
+[cost.text.output]
+price = 2.5
+
+[cost.web_search]
+price = 2.5

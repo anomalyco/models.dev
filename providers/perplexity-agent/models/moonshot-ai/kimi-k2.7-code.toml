@@ -1,18 +1,32 @@
 # Perplexity Agent API pricing scraped from
 # https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-07-30).
 # Kimi K2.7 Code capability confirmation (force thinking, preserve_thinking,
-# reasoning_content field, instant/non-thinking mode unsupported) sourced from
+# instant/non-thinking mode unsupported) sourced from
 # https://huggingface.co/moonshotai/Kimi-K2.7-Code.
 # base_model inherits reasoning = true, so reasoning_options = [] is required
-
+# Retired: absent from GET /v1/models and rejected as "not supported" (live probe 2026-10-21).
+# Agent API tool fees (https://docs.perplexity.ai/docs/getting-started/pricing#tool-pricing, accessed 2026-10-22): web_search
+#   with search_type "web" is $2.50 per 1,000 invocations (cost.web_search). Not representable in v2 (no per-call field or
+#   search type condition): web_search with search_type fast $0.001, image_search $0.0025, fetch_url $0.0005,
+#   people_search and finance_search $0.005, sandbox $0.03 per session.
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-last_updated = "2026-07-30"
-reasoning_options = []
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
+output = ["text"]
 
-[cost]
-input = 0.95
-output = 4.00
-cache_read = 0.19
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4
+
+[cost.web_search]
+price = 2.5

@@ -1,27 +1,28 @@
+# The Bailing request surface documents no toggle, effort, or budget field for
+# Ring-1T. https://alipaytbox.yuque.com/sxs0ba/ling/intro
+schema = 2
 name = "Ring-1T"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "ring"
-release_date = "2025-10"
-last_updated = "2025-10"
-attachment = false
-reasoning = true
-# The Bailing request surface documents no toggle, effort, or budget field for
-# Ring-1T. https://alipaytbox.yuque.com/sxs0ba/ling/intro
-reasoning_options = []
-temperature = true
-knowledge = "2024-06"
-tool_call = false
 open_weights = true
-
-[cost]
-input = 0.57
-output = 2.29
-
-[limit]
-context = 128_000
-output = 32_000
+knowledge = "2024-06"
+release_date = "2025-10"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 128_000
+output = 32_000
+
+[cost.text.input]
+price = 0.57
+
+[cost.text.output]
+price = 2.29

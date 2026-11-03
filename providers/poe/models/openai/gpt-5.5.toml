@@ -1,17 +1,21 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh (top level, as on Poe's other OpenAI/xAI bots in https://api.poe.com/v1/models)
+schema = 2
 base_model = "openai/gpt-5.5"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
-base_model_omit = ["limit.input"]
-release_date = "2026-04-08"
-last_updated = "2026-04-08"
 
-[cost]
-input = 4.5455
-output = 27.2727
-cache_read = 0.4545
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text", "image"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
 
 [limit]
 context = 400_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text", "image"]
+[cost.text.input]
+price = 4.5455
+cache = { read = 0.4545 }
+
+[cost.text.output]
+price = 27.2727

@@ -1,23 +1,26 @@
-name = "UnslopNemo 12B"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
+# effort_updates = false: no per-turn effort control
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+schema = 2
+base_model = "thedrummer/unslopnemo-12b"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-release_date = "2024-11-08"
-last_updated = "2024-11-08"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = true
-knowledge = "2024-04-30"
-open_weights = true
 
-[cost]
-input = 0.4
-output = 0.4
+[api.chat-completions]
+capabilities = { system_updates = true }
 
-[limit]
-context = 1_024_000
-output = 819_200
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 0.4

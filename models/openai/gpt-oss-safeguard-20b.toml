@@ -7,25 +7,27 @@
 # No separate fixed output cap: https://huggingface.co/openai/gpt-oss-safeguard-20b/blob/8a11e17b25c973a24099d4016bf2e17dd7ec1574/generation_config.json
 # Reference generation has a caller-supplied token cap (0 = uncapped): https://github.com/openai/gpt-oss/blob/main/gpt_oss/torch/model.py
 # Release: https://openai.com/index/introducing-gpt-oss-safeguard/
+schema = 2
 name = "GPT OSS Safeguard 20B"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "gpt-oss"
-release_date = "2025-10-29"
-last_updated = "2025-10-29"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
-
-[limit]
-context = 131_072
-output = 131_072
+release_date = "2025-10-29"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

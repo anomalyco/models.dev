@@ -15,21 +15,29 @@
 #   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+# Toggle: reasoning_effort = "none" (off) | "low"|"medium"|"high" (on), e.g. {"reasoning_effort": "none"}
+schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B-A17B FP8"
-last_updated = "2026-08-01"
 status = "beta"
-reasoning_options = [{ type = "toggle" }] # API: {"reasoning_effort": "none"} off | "low"|"medium"|"high" on
-interleaved = true
 
-[cost]
-input = 0.99
-output = 4.46
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 200_000
 input = 200_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.99
+
+[cost.text.output]
+price = 4.46

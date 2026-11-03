@@ -1,23 +1,23 @@
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "google/gemini-3-pro-image-preview"
 name = "Nano-Banana-Pro"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "nano-banana"
-release_date = "2025-11-19"
-last_updated = "2025-11-19"
-attachment = true
-reasoning = false
-temperature = false
-open_weights = false
-tool_call = true
-
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
-
-[limit]
-context = 65_536
-output = 0
 
 [modalities]
-input = ["text", "image"]
-output = ["image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["image/png", "image/jpeg"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+output = 0
+
+[cost.text.input]
+price = 2.0202
+cache = { read = 0.202 }
+
+[cost.text.output]
+price = 12.1212

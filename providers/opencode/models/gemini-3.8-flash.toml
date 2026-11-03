@@ -1,14 +1,28 @@
+# Pricing and endpoint (Gemini generateContent): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high
+# Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-3.8-flash.toml (Zen passes requests through).
+#   system_updates left out: undocumented. Google's generateContent spec lists only "user" and "model" for Content.role (https://ai.google.dev/api/caching#Content). A contents entry with role system kept the cache and was followed on Zen (live 2026-10-23), but server behavior alone is not a documented mechanism.
+# Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes (auto/any/none, allowed function names); Zen passes requests through.
+schema = 2
 base_model = "google/gemini-3.8-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 1.50
-output = 7.50
-cache_read = 0.15
-input_audio = 1.50
+[api.generate-content]
+base_url = "https://opencode.ai/inference/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
 
-[provider]
-npm = "@ai-sdk/google"
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5
+
+[cost.audio.input]
+price = 1.5

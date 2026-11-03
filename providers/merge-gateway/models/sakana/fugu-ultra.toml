@@ -1,15 +1,27 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=sakana%2Ffugu-ultra (accessed 2026-07-21)
+schema = 2
 base_model = "sakana/fugu-ultra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
-
-[cost]
-input = 5
-output = 30
-cache_read = 0.5
+tools = { supported = true }
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 10
+cache = { read = 1 }
+
+[cost.text.output]
+price = 30
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 45

@@ -1,8 +1,13 @@
+schema = 2
 base_model = "google/gemini-3-pro-image"
-attachment = false
-reasoning = false
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 12

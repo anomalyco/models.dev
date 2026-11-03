@@ -1,28 +1,32 @@
+# Deprecated: the Coding Plan overview (updated 2026-10-15, checked 2026-10-21) lists only
+# Auto (tc-code-latest) as a plan model: https://cloud.tencent.com/document/product/1772/128947
+schema = 2
 name = "Hunyuan-T1"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
 family = "hunyuan"
-release_date = "2026-03-08"
-last_updated = "2026-03-08"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 open_weights = false
+release_date = "2026-03-08"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 131_072
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

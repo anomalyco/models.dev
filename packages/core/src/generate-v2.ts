@@ -12,17 +12,26 @@ import {
   type Model,
 } from "./schema.js";
 import {
+  AuthoredModelV2,
+  LabModelV2,
   ProviderV2,
+  OpencodePackageV2,
   type ApiEntryV2,
+  type AuthoredApiEntryV2,
+  type AuthoredToolsSupportV2,
   type ApiProtocolV2,
   type ApiV2,
   type CompatibilityV2,
+  type CostV2,
   type ExperimentalModeV2,
+  type InputCostV2,
   type InputModalityV2,
   type ModelV2,
+  type OutputCostV2,
   type OutputModalityV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
+import { modelV2ToV1, providerTomlToV1, v1ModelType, withoutV1ReasoningCost } from "./translate.js";
 
 // ---------------------------------------------------------------------------
 // High-level catalog generation
@@ -39,13 +48,15 @@ export async function generateV2(
 ): Promise<Record<string, ProviderV2>> {
   const modelsDir = path.join(path.dirname(providersDir), "models");
   const baseModels = await generateModels(modelsDir);
+  const labsV2 = await loadLabsV2(modelsDir);
 
   const providers: Record<string, ProviderV2> = {};
   const nameToProviderID = new Map<string, string>();
   for await (const providerPath of scanTomls(providersDir, "*/provider.toml")) {
     const providerID = path.basename(path.dirname(providerPath));
     if (IGNORED_PROVIDERS.has(providerID)) continue;
-    const provider = await loadProviderV2(providerPath, baseModels);
+    if ((await readToml(providerPath)).v1_alias !== undefined) continue;
+    const provider = await loadProviderV2(providerPath, baseModels, labsV2);
     const nameKey = provider.name.toLowerCase();
     const existingID = nameToProviderID.get(nameKey);
     if (existingID !== undefined) {
@@ -64,10 +75,16 @@ export async function generateV2(
 async function loadProviderV2(
   providerPath: string,
   baseModels: Record<string, ModelMetadata>,
+  labsV2: Record<string, LabModelV2>,
 ): Promise<ProviderV2> {
   const providerDir = path.dirname(providerPath);
   const providerID = path.basename(providerDir);
-  const rawProvider = { ...(await readToml(providerPath)), id: providerID, models: {} };
+  const toml = await readToml(providerPath);
+  const opencodeai =
+    toml.opencodeai === undefined
+      ? undefined
+      : parseWithCause(OpencodePackageV2, toml.opencodeai, { providerPath, toml });
+  const rawProvider = { ...providerTomlToV1(toml), id: providerID, models: {} };
   const v1Provider = parseWithCause(Provider, rawProvider, {
     providerPath,
     toml: rawProvider,
@@ -88,8 +105,14 @@ async function loadProviderV2(
       .join("/")
       .slice(0, -5);
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
-    const resolved = resolveV1Model(rawModel, baseModels, modelPath);
-    models[modelID] = toModelV2(resolved, v1Provider);
+    const v1Model = modelV2ToV1(rawModel, { modelPath }, v1Provider.npm);
+    const resolved = resolveV1Model(v1Model, baseModels, modelPath);
+    const tables = (rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined;
+    const { model, tools } = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
+    if (tables !== undefined) model.api = toModelApis(tables, v1Provider, opencodeai);
+    else if (opencodeai !== undefined && opencodeai !== "none") model.api = withOpencodePackage(model.api, opencodeai);
+    model.api = withApiTools(model.api, tools, tables, { modelPath });
+    models[modelID] = model;
   }
 
   if (Object.keys(models).length === 0) {
@@ -111,6 +134,61 @@ async function loadProviderV2(
   );
 }
 
+async function loadLabsV2(modelsDir: string) {
+  const labs: Record<string, LabModelV2> = {};
+  if (!existsSync(modelsDir)) return labs;
+  for await (const modelPath of scanTomls(modelsDir, "**/*.toml")) {
+    const raw = await readToml(modelPath);
+    const id = path.relative(modelsDir, modelPath).split(path.sep).join("/").slice(0, -5);
+    labs[id] = parseWithCause(LabModelV2, { ...withoutSchema(raw), id }, { modelPath, toml: raw });
+  }
+  return labs;
+}
+
+// v1 can't carry some v2 data (MIME modalities, cache TTLs, service tiers…), so it
+// is read straight from the v2 lab and provider files. The tool details come back
+// separately: they are published on each API, not on the model.
+function withV2Fields(
+  model: ModelV2,
+  rawModel: Record<string, unknown>,
+  labsV2: Record<string, LabModelV2>,
+  modelPath: string,
+) {
+  const lab =
+    typeof rawModel.base_model === "string" ? labsV2[rawModel.base_model] : undefined;
+  const authored = parseWithCause(AuthoredModelV2, withoutSchema(rawModel), { modelPath, toml: rawModel });
+  const omit = Array.isArray(rawModel.base_model_omit) ? rawModel.base_model_omit : [];
+  const inheritsModalities =
+    rawModel.modalities === undefined &&
+    !omit.some((item) => String(item).startsWith("modalities"));
+
+  const capabilities = mergeDeep(
+    mergeDeep(lab?.capabilities ?? {}, model.capabilities),
+    authored.capabilities ?? {},
+  ) as Omit<ModelV2["capabilities"], "tools"> & { tools: AuthoredToolsSupportV2 };
+  const result: ModelV2 = {
+    ...model,
+    modalities:
+      authored.modalities ??
+      (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities),
+    capabilities: { ...capabilities, tools: { supported: capabilities.tools.supported } },
+  };
+  // v1 leaves v2-only types out, so they come from the files.
+  const type = authored.type ?? (omit.includes("type") ? undefined : lab?.type);
+  if (type !== undefined && v1ModelType(type, authored.v2_only, { modelPath, toml: rawModel }) === undefined) {
+    result.type = type;
+  }
+  if (authored.cost !== undefined) result.cost = authored.cost;
+  if (authored.experimental !== undefined) result.experimental = authored.experimental;
+  if (authored.metadata !== undefined) result.metadata = authored.metadata;
+  return { model: result, tools: capabilities.tools };
+}
+
+function withoutSchema(raw: Record<string, unknown>) {
+  const { schema: _schema, ...rest } = raw;
+  return rest;
+}
+
 // ---------------------------------------------------------------------------
 // V1 -> V2 model transformation
 // ---------------------------------------------------------------------------
@@ -125,11 +203,6 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
     }
     return model.modalities.output.map(normalizeModality) as OutputModalityV2[];
   })();
-  const stripLegacyCost = ({
-    context_over_200k: _legacy,
-    ...cost
-  }: NonNullable<Model["cost"]>) => cost;
-
   return {
     id: model.id,
     ...(model.canonical_model_id !== undefined
@@ -149,7 +222,10 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
       output: outputModalities,
     },
     capabilities: {
-      tools: model.tool_call ? { supported: true } : { supported: false },
+      tools: { supported: model.tool_call },
+      // An update flag that isn't authored means the host doesn't support it.
+      system_updates: false,
+      effort_updates: false,
       reasoning: toReasoningSupportV2(model),
       ...(model.structured_output !== undefined && type !== "decision"
         ? { structured_output: model.structured_output }
@@ -165,7 +241,7 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
         ? {}
         : { output: model.limit.output }),
     },
-    ...(model.cost !== undefined ? { cost: stripLegacyCost(model.cost) } : {}),
+    ...(model.cost !== undefined ? { cost: toCostV2(model.cost) } : {}),
     api: toApiV2(model, provider),
     ...(model.experimental?.modes
       ? {
@@ -174,7 +250,7 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
               Object.entries(model.experimental.modes).map(([name, mode]) => {
                 const entry: ExperimentalModeV2 = {
                   ...(mode.cost !== undefined
-                    ? { cost: stripLegacyCost(mode.cost) }
+                    ? { cost: toCostV2(mode.cost) }
                     : {}),
                   ...(mode.provider?.body !== undefined
                     ? { body: mode.provider.body }
@@ -186,6 +262,85 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
                 return [name, entry];
               }),
             ),
+          },
+        }
+      : {}),
+  };
+}
+
+type CostV1 = NonNullable<Model["cost"]>;
+type CostTierV1 = NonNullable<CostV1["tiers"]>[number];
+
+// v1 context tiers become `context > size` overrides on each price they set.
+export function toCostV2(cost: CostV1): CostV2 {
+  const tiers = [...(cost.tiers ?? [])].sort((a, b) => a.tier.size - b.tier.size);
+  const when = (tier: CostTierV1) => ({ context: { gt: tier.tier.size } });
+  const cache = (prices: { cache_read?: number; cache_write?: number }) =>
+    prices.cache_read === undefined && prices.cache_write === undefined
+      ? {}
+      : {
+          cache: {
+            ...(prices.cache_read !== undefined ? { read: prices.cache_read } : {}),
+            ...(prices.cache_write !== undefined
+              ? { write: prices.cache_write }
+              : {}),
+          },
+        };
+  const withOverrides = <T extends { when: unknown }>(overrides: T[]) =>
+    overrides.length > 0 ? { overrides } : {};
+
+  const textInput: InputCostV2 = {
+    price: cost.input,
+    ...cache(cost),
+    ...withOverrides(
+      tiers.map((tier) => ({ when: when(tier), price: tier.input, ...cache(tier) })),
+    ),
+  };
+  const textOutput: OutputCostV2 = {
+    price: cost.output,
+    ...(cost.reasoning !== undefined ? { reasoning: cost.reasoning } : {}),
+    ...withOverrides(
+      tiers.map((tier) => ({
+        when: when(tier),
+        price: tier.output,
+        ...(tier.reasoning !== undefined ? { reasoning: tier.reasoning } : {}),
+      })),
+    ),
+  };
+  const audioInput: InputCostV2 | undefined =
+    cost.input_audio === undefined
+      ? undefined
+      : {
+          price: cost.input_audio,
+          ...withOverrides(
+            tiers.flatMap((tier) =>
+              tier.input_audio === undefined
+                ? []
+                : [{ when: when(tier), price: tier.input_audio }],
+            ),
+          ),
+        };
+  const audioOutput: OutputCostV2 | undefined =
+    cost.output_audio === undefined
+      ? undefined
+      : {
+          price: cost.output_audio,
+          ...withOverrides(
+            tiers.flatMap((tier) =>
+              tier.output_audio === undefined
+                ? []
+                : [{ when: when(tier), price: tier.output_audio }],
+            ),
+          ),
+        };
+
+  return {
+    text: { input: textInput, output: textOutput },
+    ...(audioInput !== undefined || audioOutput !== undefined
+      ? {
+          audio: {
+            ...(audioInput !== undefined ? { input: audioInput } : {}),
+            ...(audioOutput !== undefined ? { output: audioOutput } : {}),
           },
         }
       : {}),
@@ -240,96 +395,22 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "@ai-sdk/togetherai": "https://api.together.xyz/v1",
   "@ai-sdk/cohere": "https://api.cohere.com/v2",
   "@ai-sdk/perplexity": "https://api.perplexity.ai",
-  "@ai-sdk/gateway": "https://ai-gateway.vercel.sh/v1/ai",
+  // OpenAI-compatible base for chat-completions, responses and messages; `/v1/ai` is the AI SDK's own protocol.
+  "@ai-sdk/gateway": "https://ai-gateway.vercel.sh/v1",
   "@ai-sdk/vercel": "https://api.v0.dev/v1",
   "venice-ai-sdk-provider": "https://api.venice.ai/api/v1",
+  // The catalog-aware REST API (`/ai/v1/chat/completions`, `/responses`, `/messages`); provider
+  // passthroughs such as `/openai` are authored on their models.
   "ai-gateway-provider":
-    "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}",
+    "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
   "@aihubmix/ai-sdk-provider": "https://aihubmix.com/v1",
-  "@saladtechnologies-oss/ai-sdk-provider":
-    "https://api.salad.com/api/public",
+  // The AI Gateway, not SaladCloud's management API. https://docs.salad.com/ai-gateway/tutorials/getting-started
+  "@saladtechnologies-oss/ai-sdk-provider": "https://ai.salad.cloud/v1",
   "watsonx-ai-provider": "https://${WATSONX_REGION}.ml.cloud.ibm.com",
-  "@qvac/ai-sdk-provider": "http://localhost:8080/v1",
+  // `qvac serve --openai` listens on port 11434 by default (@qvac/cli 0.16.0 README).
+  "@qvac/ai-sdk-provider": "http://127.0.0.1:11434/v1",
   "@jerome-benoit/sap-ai-provider-v2": "${AICORE_DEPLOYMENT_URL}",
   "gitlab-ai-provider": "https://gitlab.com/api/v4",
-};
-
-const OPENCODE_PACKAGES: Record<string, string> = {
-  "@ai-sdk/amazon-bedrock": "@opencode/ai/providers/amazon-bedrock",
-  "@ai-sdk/alibaba": "@opencode/ai/providers/alibaba/chat",
-  "@ai-sdk/anthropic": "@opencode/ai/providers/anthropic",
-  "@ai-sdk/azure": "@opencode/ai/providers/azure/responses",
-  "@ai-sdk/cerebras": "@opencode/ai/providers/cerebras",
-  "@ai-sdk/cohere": "@opencode/ai/providers/cohere/chat",
-  "@ai-sdk/deepinfra": "@opencode/ai/providers/deepinfra",
-  "@ai-sdk/google": "@opencode/ai/providers/google",
-  "@ai-sdk/google-vertex": "@opencode/ai/providers/google-vertex/gemini",
-  "@ai-sdk/google-vertex/anthropic":
-    "@opencode/ai/providers/google-vertex/messages",
-  "@ai-sdk/groq": "@opencode/ai/providers/groq",
-  "@ai-sdk/mistral": "@opencode/ai/providers/mistral",
-  "@ai-sdk/openai": "@opencode/ai/providers/openai/responses",
-  "@ai-sdk/openai-compatible": "@opencode/ai/providers/openai-compatible",
-  "@ai-sdk/togetherai": "@opencode/ai/providers/togetherai",
-  "@ai-sdk/xai": "@opencode/ai/providers/xai",
-  "@ai-sdk/gateway": "@opencode/ai/providers/vercel-ai-gateway",
-  "@openrouter/ai-sdk-provider": "@opencode/ai/providers/openrouter",
-  "ai-gateway-provider": "@opencode/ai/providers/cloudflare-ai-gateway",
-  "venice-ai-sdk-provider": "@opencode/ai/providers/venice",
-};
-
-const hostProtocols = (name: string) => ({
-  "@ai-sdk/openai-compatible": `@opencode/ai/providers/${name}/chat`,
-  "@ai-sdk/anthropic": `@opencode/ai/providers/${name}/messages`,
-  "@ai-sdk/openai": `@opencode/ai/providers/${name}/responses`,
-});
-
-const OPENCODE_HOSTS: Record<string, Record<string, string>> = {
-  alibaba: hostProtocols("alibaba"),
-  "alibaba-cn": hostProtocols("alibaba"),
-  "alibaba-coding-plan": hostProtocols("alibaba"),
-  "alibaba-coding-plan-cn": hostProtocols("alibaba"),
-  "alibaba-token-plan": hostProtocols("alibaba"),
-  "alibaba-token-plan-cn": hostProtocols("alibaba"),
-  baseten: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/baseten" },
-  "cloudflare-ai-gateway": {
-    "@ai-sdk/anthropic": "@opencode/ai/providers/cloudflare-ai-gateway",
-    "@ai-sdk/openai": "@opencode/ai/providers/cloudflare-ai-gateway",
-    "@ai-sdk/openai-compatible":
-      "@opencode/ai/providers/cloudflare-ai-gateway",
-    "ai-gateway-provider": "@opencode/ai/providers/cloudflare-ai-gateway",
-  },
-  cohere: {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/cohere/chat",
-  },
-  "cloudflare-workers-ai": {
-    "@ai-sdk/openai-compatible":
-      "@opencode/ai/providers/cloudflare-workers-ai",
-  },
-  deepseek: {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/deepseek",
-  },
-  digitalocean: {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/digitalocean",
-  },
-  "fireworks-ai": {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/fireworks",
-  },
-  "google-vertex": {
-    "@ai-sdk/openai-compatible": "@opencode/ai/providers/google-vertex/chat",
-  },
-  "kimi-for-coding": hostProtocols("moonshot"),
-  meta: hostProtocols("meta"),
-  minimax: hostProtocols("minimax"),
-  "minimax-cn": hostProtocols("minimax"),
-  "minimax-coding-plan": hostProtocols("minimax"),
-  "minimax-cn-coding-plan": hostProtocols("minimax"),
-  moonshotai: hostProtocols("moonshot"),
-  "moonshotai-cn": hostProtocols("moonshot"),
-  zai: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/zai/chat" },
-  "zai-coding-plan": hostProtocols("zai-coding-plan"),
-  zhipuai: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/zai/chat" },
-  "zhipuai-coding-plan": hostProtocols("zai-coding-plan"),
 };
 
 function toApiV2(model: Model, provider: Provider): ApiV2 {
@@ -343,22 +424,19 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
   const base_url = rawBaseUrl.replace(/\/+$/, "");
 
   const protocol = resolveProtocol(model, provider, npm, shape);
-  const opencodeai = resolveOpencodePackage(model, provider, npm, shape);
   const compatibility = toCompatibilityV2(model);
 
   const entry: ApiEntryV2 = {
     base_url,
-    sdk: {
-      ...(model.type === "decision" ? {} : { aisdk: npm }),
-      ...(opencodeai !== undefined ? { opencodeai } : {}),
-    },
+    sdk: { aisdk: npm },
     ...(compatibility !== undefined ? { compatibility } : {}),
+    ...(model.tool_call ? { capabilities: { tools: { updates: false } } } : {}),
   };
 
   return { [protocol]: entry } as ApiV2;
 }
 
-function resolveProtocol(
+export function resolveProtocol(
   model: Model,
   provider: Provider,
   npm: string,
@@ -366,14 +444,14 @@ function resolveProtocol(
 ): ApiProtocolV2 {
   if (model.type === "decision") {
     if (provider.id === "cloudflare-workers-ai") return "workers-ai-run";
-    if (provider.id === "vercel") return "evaluate";
+    if (provider.id === "vercel") return "decisions";
     return "systemone";
   }
 
   if (npm === "@ai-sdk/anthropic" || npm === "@ai-sdk/google-vertex/anthropic") {
     return "messages";
   }
-  if (npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure") {
+  if (npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure" || npm === "@ai-sdk/xai") {
     return shape === "completions" ? "chat-completions" : "responses";
   }
   if (npm === "@ai-sdk/amazon-bedrock") {
@@ -392,39 +470,76 @@ function resolveProtocol(
   return shape === "responses" ? "responses" : "chat-completions";
 }
 
-function resolveOpencodePackage(
-  model: Model,
+// A model's own `[api.<protocol>]` tables, in order. Whatever a table leaves out
+// comes from the provider's default API: `base_url` from its `api` (or the SDK's
+// default URL), `sdk.aisdk` from its `npm`, and `sdk.opencodeai` from its
+// `opencodeai` only when the table takes the provider's `npm` too: a table
+// naming another `aisdk` names its own `opencodeai` or gets none. `"none"`
+// stops a package from being filled in.
+function toModelApis(
+  tables: Record<string, AuthoredApiEntryV2>,
   provider: Provider,
-  npm: string,
-  shape: "responses" | "completions" | undefined,
-): string | undefined {
-  if (model.type === "decision") {
-    if (provider.id === "cloudflare-workers-ai")
-      return "@opencode/ai/providers/cloudflare-workers-ai";
-    if (provider.id === "vercel")
-      return "@opencode/ai/providers/vercel-ai-gateway";
-    if (provider.id === "openrouter")
-      return "@opencode/ai/providers/openrouter";
-    return "@opencode/ai/providers/typesafe-ai";
-  }
+  opencodeai: string | undefined,
+): ApiV2 {
+  return Object.fromEntries(
+    Object.entries(tables).map(([protocol, table]) => {
+      const aisdk = table.sdk?.aisdk ?? provider.npm;
+      const npm = aisdk === "none" ? provider.npm : aisdk;
+      const base_url = (table.base_url ?? provider.api ?? DEFAULT_NPM_BASE_URLS[npm] ?? "").replace(/\/+$/, "");
+      const { tools: _tools, ...capabilities } = table.capabilities ?? {};
+      const sdk = {
+        aisdk,
+        opencodeai: table.sdk?.opencodeai ?? (aisdk === provider.npm ? opencodeai : undefined),
+      };
+      const entry: ApiEntryV2 = {
+        base_url,
+        ...(table.path !== undefined ? { path: table.path } : {}),
+        // `"none"`: no package supports this API, so the key is left out.
+        sdk: Object.fromEntries(Object.entries(sdk).filter(([, value]) => value !== undefined && value !== "none")),
+        ...(table.compatibility !== undefined ? { compatibility: table.compatibility } : {}),
+        // Tool details are resolved for every API by `withApiTools`.
+        ...(Object.keys(capabilities).length > 0 ? { capabilities } : {}),
+      };
+      return [protocol, entry];
+    }),
+  ) as ApiV2;
+}
 
-  const host = OPENCODE_HOSTS[provider.id]?.[npm];
-  if (host) return host;
-  if (npm === "@ai-sdk/amazon-bedrock/mantle") {
-    return `@opencode/ai/providers/amazon-bedrock/mantle/${
-      model.id.includes("gpt-oss") ? "chat" : "responses"
-    }`;
-  }
-  if (npm === "@ai-sdk/openai" && shape === "completions") {
-    return "@opencode/ai/providers/openai/chat";
-  }
-  if (npm === "@ai-sdk/azure" && shape === "completions") {
-    return "@opencode/ai/providers/azure/chat";
-  }
-  if (npm === "@ai-sdk/openai-compatible" && shape === "responses") {
-    return "@opencode/ai/providers/openai-compatible/responses";
-  }
-  return OPENCODE_PACKAGES[npm];
+const TOOL_DETAILS = ["strict", "choice", "search", "freeform"] as const;
+
+// Each API of a model that supports tools gets its own tool details: the
+// model's top-level values, replaced field by field by its table's.
+function withApiTools(
+  api: ApiV2,
+  tools: AuthoredToolsSupportV2,
+  tables: Record<string, AuthoredApiEntryV2> | undefined,
+  cause: Record<string, unknown>,
+): ApiV2 {
+  return Object.fromEntries(
+    Object.entries(api).map(([protocol, entry]) => {
+      const override = tables?.[protocol]?.capabilities?.tools;
+      if (!tools.supported) {
+        if (override === undefined) return [protocol, entry];
+        throw new Error(`[api.${protocol}] sets tool capabilities, but the model doesn't support tools`, { cause });
+      }
+      const merged = { ...tools, ...override };
+      const details = Object.fromEntries(
+        TOOL_DETAILS.filter((key) => merged[key] !== undefined).map((key) => [key, merged[key]]),
+      );
+      return [
+        protocol,
+        { ...entry, capabilities: { ...entry.capabilities, tools: { ...details, updates: merged.updates ?? false } } },
+      ];
+    }),
+  ) as ApiV2;
+}
+
+// A model without its own tables uses the provider's default API, so it takes
+// the provider's `opencodeai`.
+function withOpencodePackage(api: ApiV2, opencodeai: string): ApiV2 {
+  return Object.fromEntries(
+    Object.entries(api).map(([protocol, entry]) => [protocol, { ...entry, sdk: { ...entry.sdk, opencodeai } }]),
+  ) as ApiV2;
 }
 
 function toCompatibilityV2(model: Model): CompatibilityV2 | undefined {
@@ -494,7 +609,7 @@ function resolveV1Model(
   );
   omitPaths(merged, omit ?? []);
 
-  const authored = parseWithCause(AuthoredModel, merged, {
+  const authored = parseWithCause(AuthoredModel, withoutV1ReasoningCost(merged), {
     modelPath,
     toml: merged,
   });

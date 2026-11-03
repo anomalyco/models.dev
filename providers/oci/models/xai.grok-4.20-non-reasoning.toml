@@ -3,19 +3,28 @@
 # prompt tokens. Model is hosted by xAI and called through OCI. Limits from
 # https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-20.htm (1M context).
 # Only text and base64 images were verified through this endpoint; PDF input is not declared.
+schema = 2
 base_model = "xai/grok-4.20-0309-non-reasoning"
 
-[cost]
-input = 1.25
-output = 2.50
-cache_read = 0.20
-
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2.50
-output = 5.00
-cache_read = 0.40
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5

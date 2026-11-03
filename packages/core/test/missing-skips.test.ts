@@ -11,7 +11,7 @@ test("opens issues for selectively skipped missing models", async () => {
   const modelsDir = path.join(dir, "providers", "example", "models");
   await mkdir(modelsDir, { recursive: true });
   const existingPath = path.join(modelsDir, "needs-metadata.toml");
-  await Bun.write(existingPath, 'name = "Keep me"\n');
+  await Bun.write(existingPath, 'schema = 2\nname = "Keep me"\n');
   const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
   const provider: SyncProvider<{ id: string; missing: boolean }> = {
     id: "example",
@@ -40,7 +40,7 @@ test("opens issues for selectively skipped missing models", async () => {
   try {
     const result = await syncProvider(provider, { openIssues: true });
     expect(result).toMatchObject({ deleted: 0, unchanged: 1 });
-    expect(await Bun.file(existingPath).text()).toBe('name = "Keep me"\n');
+    expect(await Bun.file(existingPath).text()).toBe('schema = 2\nname = "Keep me"\n');
     expect(issues).toHaveBeenCalledTimes(1);
     expect(issues.mock.calls[0]?.[1]).toEqual(["needs-metadata"]);
   } finally {

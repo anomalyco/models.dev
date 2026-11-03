@@ -1,24 +1,18 @@
-name = "o4-mini-deep-research"
-description = "Research model for long-horizon investigation, synthesis, and analytical reports"
-family = "o-mini"
-release_date = "2025-06-27"
-last_updated = "2025-06-27"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-open_weights = false
-tool_call = true
-
-[cost]
-input = 1.8
-output = 7.2
-cache_read = 0.45
-
-[limit]
-context = 200_000
-output = 100_000
+# Status: https://poe.com/o4-mini-deep-research is titled "o4-mini-deep-research_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "openai/o4-mini-deep-research"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 7.2

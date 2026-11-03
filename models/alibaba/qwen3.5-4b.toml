@@ -1,0 +1,35 @@
+# Sources (accessed 2026-10-21):
+# - Model card: https://huggingface.co/Qwen/Qwen3.5-4B (Apache 2.0; "Causal Language Model with Vision Encoder";
+#   "Context Length: 262,144 natively"; image_url and video_url input examples; thinking on by default,
+#   off via enable_thinking; tool calling; recommended sampling uses temperature, top_p and top_k)
+# - Output: the card's Best Practices recommend 32,768 output tokens for most queries and a max output length of 81,920
+# - Release: Qwen announced the Qwen3.5 small series (0.8B/2B/4B/9B) on 2026-03-02
+#   (https://github.com/QwenLM/Qwen3.6/commit/7e103aebdbff11c98cc1cd6a2a568988cfd38168, "Release of Qwen3.5 small models")
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits;
+#   video lists extensions, registered MIME types used), the same Qwen3.5 vision input as models/alibaba/qwen3.5-9b.toml
+schema = 2
+name = "Qwen3.5 4B"
+description = "Small Qwen3.5 multimodal model for low-cost chat, reasoning, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2026-03-02"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 81_920
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3.5-4B"

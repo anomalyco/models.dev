@@ -1,17 +1,25 @@
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
+# Input MIME types: the lab's image list; Chutes' catalog reports image input without formats (https://llm.chutes.ai/v1/models).
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B TEE"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2026-08-16"
-last_updated = "2026-08-16"
-reasoning_options = []
 
-[cost]
-input = 0.039
-output = 1.25
-cache_read = 0.003899999999999999
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.039
+cache = { read = 0.003899999999999999 }
+
+[cost.text.output]
+price = 1.25

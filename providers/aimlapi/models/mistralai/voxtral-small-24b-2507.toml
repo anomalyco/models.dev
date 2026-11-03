@@ -1,9 +1,15 @@
+schema = 2
 base_model = "mistral/voxtral-small-24b-2507"
 
-[cost]
-input = 0.13754
-output = 0.41262
-cache_read = 0.013754
+[capabilities]
+tools = { supported = true }
 
 [limit]
 context = 32_000
+
+[cost.text.input]
+price = 0.1058
+cache = { read = 0.01058 }
+
+[cost.text.output]
+price = 0.3174

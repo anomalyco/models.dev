@@ -1,0 +1,18 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=embeddings (prices per token)
+# https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request
+# Limit: OpenRouter's catalog reports 131,072 (the Llama 3.2 1B backbone); NVIDIA evaluated up to 10,240 tokens
+#   (https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2).
+schema = 2
+v2_only = true
+base_model = "nvidia/llama-nemotron-embed-vl-1b-v2"
+name = "Llama Nemotron Embed VL 1B V2 (free)"
+
+[limit]
+context = 131_072
+
+[api.embeddings]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
+
+[cost.text.input]
+price = 0

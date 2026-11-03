@@ -1,6 +1,7 @@
 name = "Bothub"
 env = ["BOTHUB_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP reasoning controls (live-verified 2026-08-29):
 # Chat POST `/v1/chat/completions` takes `reasoning_effort`; upstream
 # reasoning returns in the message side channel (`reasoning`, mirrored

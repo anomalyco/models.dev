@@ -1,6 +1,7 @@
 name = "Inception"
 env = ["INCEPTION_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Reasoning HTTP format (accessed 2026-09-10): POST /v1/chat/completions accepts
 # top-level `reasoning_effort` = instant, low, medium, or high; default medium.
 # It documents no off value or numeric reasoning-token budget. `instant` is the

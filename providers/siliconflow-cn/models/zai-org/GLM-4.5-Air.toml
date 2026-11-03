@@ -1,1 +1,22 @@
-../../../siliconflow/models/zai-org/GLM-4.5-Air.toml
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 1, output 6
+schema = 2
+base_model = "zhipuai/glm-4.5-air"
+name = "zai-org/GLM-4.5-Air"
+description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 131_000
+output = 131_000
+
+[cost.text.input]
+price = 0.14944748
+
+[cost.text.output]
+price = 0.89668487

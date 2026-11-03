@@ -1,29 +1,21 @@
-name = "Nemotron 3 Nano Omni"
-base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
-family = "nemotron"
-
-release_date = "2026-04-28"
-last_updated = "2026-04-28"
-attachment = true
-reasoning = true
 # NIM Chat schema: `reasoning_budget` is -1..32768 (default 16384); -1 means
 # unlimited/no budget enforcement, not reasoning off. `/think` and `/no_think`
 # go in a system message; video and audio requests should use `/no_think`.
 # https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-infer
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = -1, max = 32768 }]
-temperature = true
-tool_call = true
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): a late system message was
+# followed and kept the cache in 2 of 2 trials (system_updates = true). Tool changes couldn't be measured (503
+# ResourceExhausted).
+schema = 2
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+name = "Nemotron 3 Nano Omni"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = -1, max = 32_768 } }
 structured_output = true
-open_weights = true
+system_updates = true
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
 
-[limit]
-context = 256_000
-output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[cost.text.output]
+price = 0

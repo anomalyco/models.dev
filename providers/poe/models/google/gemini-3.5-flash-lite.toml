@@ -1,0 +1,32 @@
+# Sources: Poe API model entry + live chat-completions probes, accessed 2026-10-12
+#   (verified live with packages/core/script/poe-reasoning-audit.py)
+#   — https://poe.com/gemini-3.5-flash-lite
+# - effort: parameters[].thinking_level = minimal|low|medium|high (Poe's per-bot enum;
+#   the same extraction reproduces the values already filed for Poe's gemini-3-flash,
+#   gemini-3.1-flash-lite, gemini-3.1-pro and gemini-3.5-flash). Bot parameters travel
+#   via extra_body (see provider.toml); live probes 2026-10-12: extra_body
+#   reasoning_effort -> 400 "does not support these request fields", while
+#   thinking_level="medium" -> 200 with reasoning_tokens>0 and out-of-enum values
+#   -> 400. Top-level reasoning_effort is documented as ignored but is actually
+#   forwarded; the filed set follows the declared thinking_level enum.
+# - cost: pricing.prompt / input_cache_read are USD per token (no FX conversion) x1e6
+#   -> 0.303 / 0.0303, completion -> 2.5253 USD/MTok
+# - modalities: architecture.input_modalities lists no pdf -> pdf dropped from input
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+name = "Gemini-3.5-Flash-Lite"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.303
+cache = { read = 0.0303 }
+
+[cost.text.output]
+price = 2.5253

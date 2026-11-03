@@ -1,0 +1,18 @@
+# Sources:
+# - https://docs.x.ai/developers/models/grok-voice-3.0
+# - https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech
+# - https://docs.x.ai/developers/pricing (Speech to Speech: $0.08/min, $0.004/text input)
+# Realtime WebSocket (wss://api.x.ai/v1/realtime); alias grok-voice-latest.
+# Not listed by the models endpoints, so xAI sync keeps this file as authored.
+# Pricing is per minute, which v1 cost can't express; no [cost] authored.
+# Reasoning: session.update reasoning.effort = high|none (default high)
+# API: wss://api.x.ai/v1/realtime (https://docs.x.ai/developers/rest-api-reference/inference/voice.md).
+schema = 2
+v2_only = true
+base_model = "xai/grok-voice-3.0"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "high"] }
+
+[api.realtime]
+sdk = { opencodeai = "none" }

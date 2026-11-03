@@ -1,10 +1,16 @@
 # Source: https://www.ibm.com/products/watsonx-ai/pricing (accessed 2026-08-08)
 # Model details: https://www.ibm.com/docs/en/watsonx/saas?topic=solutions-supported-foundation-models (accessed 2026-08-08)
+schema = 2
 base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
 
-[cost]
-input = 0.106
-output = 0.318
+[capabilities]
+structured_output = true
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 0.106
+
+[cost.text.output]
+price = 0.318

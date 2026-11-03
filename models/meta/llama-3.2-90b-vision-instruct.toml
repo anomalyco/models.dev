@@ -1,0 +1,32 @@
+# Model card (https://huggingface.co/meta-llama/Llama-3.2-90B-Vision-Instruct, mirrored at
+# https://build.nvidia.com/meta/llama-3.2-90b-vision-instruct): released September 25, 2024; text + image in,
+# text out; 128k context; pre-training data cutoff December 2023; Llama 3.2 Community License.
+# `image` stays generic and output matches the 11B Vision lab: Meta publishes no image format list or
+# separate output cap for Llama 3.2 Vision.
+schema = 2
+name = "Llama-3.2-90B-Vision-Instruct"
+description = "Large open multimodal Llama model for image reasoning, document QA, and captioning"
+family = "llama"
+open_weights = true
+knowledge = "2023-12"
+release_date = "2024-09-25"
+license = "Llama 3.2 Community License"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 4_096
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-llama/Llama-3.2-90B-Vision-Instruct"

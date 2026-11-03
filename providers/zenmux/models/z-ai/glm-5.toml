@@ -1,27 +1,36 @@
 # Toggle: reasoning.enabled = true|false
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+schema = 2
 base_model = "zhipuai/glm-5"
 name = "GLM 5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.58
-output = 2.6
-cache_read = 0.14
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.87
-output = 3.18
-cache_read = 0.22
+cache = { implicit = true }
 
 [limit]
 context = 200_000
 output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.58
+cache = { read = 0.14 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 32_000 } }
+price = 0.87
+cache = { read = 0.22 }
+
+[cost.text.output]
+price = 2.6
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 32_000 } }
+price = 3.18

@@ -1,20 +1,29 @@
+# Synced from https://api.empiriolabs.ai/v1/models (accessed 2026-10-21); model page https://docs.empiriolabs.ai/models/gemma-4-26b-a4b.md
+# Effort: reasoning_effort = none|low|medium|high|max
+#   (model page: "low, medium, high, and max set bounded thinking budgets sized to the selected model")
+# Budget: thinking_budget (integer reasoning tokens)
+# Cache: model page prices an "Implicit cache read" row; its notes say "Explicit cache controls are not supported."
+# MIME: the lab's types for the media kinds EmpirioLabs lists; EmpirioLabs documents no format list.
+# Mid-conversation flags unset: EmpirioLabs forwards multiple system messages to the upstream as-is
+# (https://docs.empiriolabs.ai/compatibility.md) but documents no cache or effort/tool update behavior; not tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages, /v1/completions, /v1beta/models/gemma-4-26b-a4b:generateContent
+# Modalities: catalog input_modalities = text, image, video (no `file`, so no PDF). Video is host-stated (model page: "Supports text, image, and video input"), the lab lists none.
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 name = "Gemma 4 26B-A4B"
-last_updated = "2026-06-12"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 128
-max = 32_768
-
-[cost]
-input = 0.05
-output = 0.29
-cache_read = 0.025
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 128, max = 32_768 } }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.29

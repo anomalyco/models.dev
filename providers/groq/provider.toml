@@ -1,6 +1,7 @@
 name = "Groq"
 env = ["GROQ_API_KEY"]
 npm = "@ai-sdk/groq"
+opencodeai = "@opencode/ai/providers/groq"
 # Reasoning HTTP format (accessed 2026-06-25):
 # POST https://api.groq.com/openai/v1/chat/completions
 # JSON reasoning_effort is model-specific; reasoning_format: "parsed" | "raw" |

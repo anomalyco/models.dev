@@ -1,13 +1,20 @@
+# Image input: GMI's model page shows an image_url Chat Completions example; PDF input isn't documented. https://docs.gmicloud.ai/model-quickstarts/text/anthropic-claude-opus-4-6 (2026-10-21)
+schema = 2
 base_model = "anthropic/claude-opus-4-6"
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 127_999 }]
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024, max = 127_999 } }
 
 [limit]
 context = 409_600
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 25

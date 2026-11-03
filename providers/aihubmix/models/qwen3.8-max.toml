@@ -1,26 +1,28 @@
 # AIHubMix OpenAI-compatible /v1/chat/completions: $.enable_thinking = true|false (toggle) and $.reasoning_effort = "low"|"medium"|"xhigh"; verified live 2026-08-11. https://docs.aihubmix.com/cn/api/unified-inference
 # AIHubMix Models API (queried 2026-08-11T09:45:11Z): input 1.69, output 5.07, cache_read 0.169, cache_write 2.1125 USD/MTok. https://aihubmix.com/api/v1/models?model=qwen3.8-max
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "alibaba/qwen3.8-max"
-attachment = false
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.69
-output = 5.07
-cache_read = 0.169
-cache_write = 2.1125
+cache = { implicit = true }
 
 [limit]
 context = 991_000
-output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.69
+cache = { read = 0.169, write = 2.1125 }
+
+[cost.text.output]
+price = 5.07

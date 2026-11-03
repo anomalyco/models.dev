@@ -1,0 +1,27 @@
+# Model IDs: https://elevenlabs.io/docs/overview/models
+# API availability 2025-08-20 ("Eleven v3 is now available via the API"): https://elevenlabs.io/docs/changelog/2025/8/20
+# Output formats: output_format mp3_*, pcm_*, wav_*, opus_*, ulaw_8000, alaw_8000:
+#   https://elevenlabs.io/docs/api-reference/text-to-speech/convert
+schema = 2
+v2_only = true
+type = "speech"
+name = "Eleven v3"
+description = "Expressive text-to-speech model with inline audio tags across 70+ languages"
+family = "elevenlabs"
+open_weights = false
+release_date = "2025-08-20"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm", "audio/wav", "audio/opus", "audio/basic", "audio/alaw"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

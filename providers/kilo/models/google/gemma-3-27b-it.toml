@@ -1,10 +1,19 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 base_model = "google/gemma-3-27b-it"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-structured_output = true
 
-[cost]
-input = 0.08
-output = 0.16
+[capabilities]
+tools = { supported = true }
+structured_output = true
 
 [limit]
 output = 117_964
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.16

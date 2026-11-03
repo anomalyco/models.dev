@@ -1,0 +1,18 @@
+# Modalities: inherited PNG/JPEG from the lab (https://docs.typesafe.ai/images.md); Vercel's catalog tags jev-1.13.0 vision (https://ai-gateway.vercel.sh/v1/models)
+schema = 2
+base_model = "typesafe/jev-1.13.0"
+name = "Jev 1.13.0"
+description = "Jev 1.13.0 is TypeSafe AI’s System One evaluation model for fast, structured decisions in software. It evaluates shared state against typed questions and returns choices, scores, and boolean probabilities, supporting classification, routing, rubric-based assessment, and automated verification. Multiple questions can be evaluated in parallel within a single request."
+
+[limit]
+context = 32_000
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

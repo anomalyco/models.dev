@@ -3,16 +3,31 @@
 # https://api.deepinfra.com/models/zai-org/GLM-5.3/schema/openai-chat-completions
 # Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
 # GLM-5.3 always reasons; no toggle or reasoning-token budget.
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12544/12624 -> 0/12638; 12544/12624 -> 0/12638]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12160/12289 -> 0/12289 (reasoning tokens 7 -> 28); 12224/12289 -> 0/12289 (reasoning tokens 7 -> 38)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12352/12434 -> 0/12484; 12352/12434 -> 128/12484]
+schema = 2
 base_model = "zhipuai/glm-5.3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 0.9
-output = 4
-cache_read = 0.2
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

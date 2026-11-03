@@ -1,31 +1,64 @@
+# v2 capabilities (accessed 2026-10-19): Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (sampling, enable_thinking, thinking_budget, reasoning_effort, stream_options.include_usage);
+# structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
+# Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the explicit cache (in place); enable_thinking and thinking_budget changes kept the cache; adding tools missed the cache.
+# effort_updates: left out. Changing enable_thinking or thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
+# Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
+# Prices (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19)
+# Tiers: 0-256K $0.4/$2.4, 256K-1M $0.5/$3.
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+schema = 2
 name = "Qwen3.5 Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
-release_date = "2026-02-16"
-last_updated = "2026-02-16"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2025-04"
-tool_call = true
 open_weights = false
+knowledge = "2025-04"
+release_date = "2026-02-16"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.4
-output = 2.4
-reasoning = 2.4
-
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
+stream_usage = true
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 0.4
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.5
+
+[cost.text.output]
+price = 2.4
+reasoning = 2.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 3
+
+[cost.web_search]
+price = 10

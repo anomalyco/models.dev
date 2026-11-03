@@ -5,17 +5,20 @@
 # RouteLLM max_completion_tokens: 8192
 # RouteLLM input_token_rate: 0.00000059
 # RouteLLM output_token_rate: 0.00000079
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21), which listed it when this file was written.
+schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
-reasoning = false
+status = "deprecated"
 
-[cost]
-input = 0.59
-output = 0.79
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 131_072
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.59
+
+[cost.text.output]
+price = 0.79

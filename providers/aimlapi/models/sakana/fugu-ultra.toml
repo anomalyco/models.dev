@@ -1,13 +1,17 @@
+schema = 2
 base_model = "sakana/fugu-ultra"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 6.877
-output = 41.262
-cache_read = 0.6877
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 5.29
+cache = { read = 0.529 }
+
+[cost.text.output]
+price = 31.74

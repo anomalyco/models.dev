@@ -4,8 +4,11 @@
 # 128K our own catalog currently advertises for this route; the catalog value is being corrected.
 # Audio input is billed per minute upstream ($0.004/min), a unit the cost schema cannot express;
 # [cost] therefore carries the text-token price only.
+schema = 2
 base_model = "mistral/voxtral-small-latest"
 
-[cost]
-input = 0.1
-output = 0.3
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.3

@@ -1,7 +1,23 @@
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message fails (code 3030, internal error).
+# No prefix cache on this model, so effort and tool changes keep nothing.
+# Modalities: text only on Workers AI; the model's input schema takes a text prompt or text messages, no image fields
+# (https://developers.cloudflare.com/workers-ai/models/gemma-sea-lion-v4-27b-it/sync-input.json).
+schema = 2
 base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
 name = "Gemma Sea Lion V4 27B It"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+cache = false
 structured_output = false
 
-[cost]
-input = 0.351
-output = 0.555
+[cost.text.input]
+price = 0.351
+
+[cost.text.output]
+price = 0.555

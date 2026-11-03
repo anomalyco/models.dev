@@ -13,12 +13,15 @@
 # refused upstream with a 400 that LowRouter passed through: none;
 # max is refused by LowRouter itself with 400 'reasoning_effort "max" is not valid (expected one of: none,
 # minimal, low, medium, high, xhigh)'.
+schema = 2
 base_model = "openai/gpt-oss-120b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.1695
-output = 0.6779
+[cost.text.input]
+price = 0.1695
+
+[cost.text.output]
+price = 0.6779

@@ -1,18 +1,35 @@
-name = "Qwen3 Max Preview"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-release_date = "2025-09-06"
-last_updated = "2025-09-06"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
-open_weights = false
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-07-07 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
+base_model = "alibaba/qwen3-max-preview"
+status = "deprecated"
+
+[capabilities]
+structured_output = true
 
 [limit]
 context = 256_000
 output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.86956522
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.44927536
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 2.17391304
+
+[cost.text.output]
+price = 3.47826087
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 5.79710145
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 8.69565217

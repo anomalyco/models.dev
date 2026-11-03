@@ -1,28 +1,19 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "upstage/solar-mini4"
 name = "Upstage: Solar Mini 4"
 description = "Solar Mini 4 is Upstage's compact, cost-efficient language model, a 35B-parameter mixture-of-experts with 3B active parameters and a 524K context window. It is built for agentic use cases where response..."
-family = "solar"
-release_date = "2026-09-23"
-last_updated = "2026-09-23"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-open_weights = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
 
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.01
-
-[limit]
-context = 524_288
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.4

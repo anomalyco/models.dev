@@ -1,1 +1,35 @@
+# Native Chat API (POST https://api.cohere.com/v2/chat), sources accessed 2026-10-19:
+# - Parameters: https://docs.cohere.com/reference/chat (temperature, p, k; response_format; tool_choice
+#   REQUIRED|NONE; strict_tools; thinking; system messages anywhere in `messages`; usage.cached_tokens)
+# - Live probes (2026-10-19):
+#   * A system message after an assistant turn returns 200 and stays in place (cached_tokens covers the
+#     prefix before it) -> system_updates = true.
+#   * Prompt prefixes are cached automatically (usage.cached_tokens), with no request field to control it
+#     and no cache price; billed_units.input_tokens did not drop on cache hits.
+#   * The API has no per-turn effort control -> effort_updates = false.
+# Structured output: live response_format returned 400 "response_format is not supported with the specified
+#   model"; GET /v1/models lists no json_mode/json_schema feature for it.
+# Pricing: https://cohere.com/pricing FAQ ("Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens
+#   for input and $1.50/1M tokens for output").
+# Tools: live tool requests return 400 "tool use is not supported".
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
+schema = 2
 base_model = "cohere/c4ai-aya-expanse-32b"
+
+[capabilities]
+structured_output = false
+cache = { implicit = true }
+
+[api.cohere-chat]
+capabilities = { system_updates = true }
+
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

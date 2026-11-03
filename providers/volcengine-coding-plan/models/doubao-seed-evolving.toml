@@ -11,16 +11,19 @@
 # into paying for a level that thinks less than 'high'. Only none|low|high hold up.
 # 'none' is kept rather than a toggle because thinking.type=disabled sent together
 # with a graded effort is rejected as an invalid combination here.
+schema = 2
 base_model = "bytedance-seed/seed-evolving"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

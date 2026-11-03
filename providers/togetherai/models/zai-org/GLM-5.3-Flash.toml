@@ -1,17 +1,37 @@
+# Serverless: $0.15 input, $0.03 cached input, $0.50 output per 1M; context 1,048,575
+# (https://docs.together.ai/docs/serverless-models, accessed 2026-10-21).
+# Effort: reasoning_effort = low|high|max (kept; this backend doesn't return the rendered prompt,
+# so the levels weren't confirmed live). Reasoning can't be turned off: reasoning.enabled,
+# thinking.type, chat_template_kwargs and `none` all still reason (live 2026-10-21).
+# Inputs (live 2026-10-21): PNG, JPEG and WebP images and MP4 video are read; GIF returns
+# "Unsupported Media Type" and audio is rejected. No PDF content part on Together.
+# Mid-conversation (live 2026-10-21): a late system message was followed and kept the cache;
+# adding a tool dropped the cache to 0.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.50
-cache_read = 0.03
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
 
 [limit]
 context = 1_048_575
 output = 400_000
 
-[modalities]
-input = ["text", "image", "video"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

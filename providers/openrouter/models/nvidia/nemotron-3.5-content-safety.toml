@@ -1,15 +1,28 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
 base_model = "nvidia/nemotron-3.5-content-safety"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.2
-output = 0.2
 
 [limit]
 context = 131_072
 output = 117_964
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.2

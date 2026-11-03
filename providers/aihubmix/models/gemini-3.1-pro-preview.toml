@@ -1,32 +1,26 @@
-name = "Gemini 3.1 Pro Preview"
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-family = "gemini-pro"
-release_date = "2026-02-19"
-last_updated = "2026-02-19"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-knowledge = "2025-01"
-open_weights = false
+cache = { implicit = true, explicit = true }
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
+[cost.text.input]
+price = 2
+cache = { read = 0.2, storage = 4.5 }
 
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 4.00
-output = 18.00
-cache_read = 0.40
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4, storage = 4.5 }
 
-[limit]
-context = 1_048_576
-output = 65_536
+[cost.text.output]
+price = 12
 
-[modalities]
-input = ["text", "image", "audio", "video", "pdf"]
-output = ["text"]
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18

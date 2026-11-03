@@ -1,16 +1,20 @@
-# Gateway-wide $.reasoning_effort = "none" (or $.reasoning.effort = "none")
-# disables non-OpenAI reasoning; this model has no documented effort tiers
-# or exact reasoning-token budget.
-# https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
+# Reasoning: no caller on/off control. The reasoning mapping (Nebius) is deactivated, and the remaining hosts get no thinking switch: the gateway drops reasoning_effort = "none" for them (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts).
+# structured_output = false: /v1/models structured_outputs, strict json_schema (https://docs.llmgateway.io/learn/structured-outputs)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "alibaba/qwen3-32b"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.36
-output = 0.87
-reasoning = 8.4
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 40_960
+
+[cost.text.input]
+price = 0.36
+
+[cost.text.output]
+price = 0.87
+reasoning = 8.4

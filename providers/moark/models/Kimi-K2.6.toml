@@ -1,8 +1,14 @@
 # Costs: Moark USD price list, https://moark.ai/serverless-api (accessed 2026-10-10)
 # No user-selectable reasoning control on Moark's chat API: https://moark.com/docs/openapi/v1 (accessed 2026-10-10)
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = []
 
-[cost]
-input = 0.98
-output = 4.00
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.98
+
+[cost.text.output]
+price = 4

@@ -1,10 +1,14 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+schema = 2
 base_model = "openai/gpt-4.1"
-base_model_omit = ["structured_output"]
-
-[cost]
-input = 2
-output = 8
-cache_read = 0.5
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8

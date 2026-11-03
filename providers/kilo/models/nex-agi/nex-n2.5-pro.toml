@@ -1,28 +1,30 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 name = "Nex AGI: Nex-N2.5-Pro"
 description = "Nex-N2.5 is an agentic model built to turn goals into working, verified outcomes. Its core strength is agentic coding within a visual feedback loop: it can explore codebases, implement multi-file..."
 family = "agi"
-release_date = "2026-09-08"
-last_updated = "2026-09-08"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-08"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "medium", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.075
-output = 0.25
-cache_read = 0.015
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 output = 235_929
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25

@@ -1,23 +1,28 @@
+# Status: deprecated. Groq shut llama-3.1-8b-instant down for free and developer-tier usage on 2026-08-16 (replacement:
+# openai/gpt-oss-20b): https://console.groq.com/docs/deprecations. It is gone from GET /openai/v1/models and a
+# developer-tier request returns 404 model_not_found (2026-10-21). https://console.groq.com/docs/models still lists it as
+# "Enterprise" with price "Contact Sales"; the cost below is the last public on-demand price (https://groq.com/pricing,
+# archived 2026-08-04: https://web.archive.org/web/20260804151728/https://groq.com/pricing).
+# Limits: https://console.groq.com/docs/models (context window 131_072, max completion tokens 131_072).
+# Responses: POST https://api.groq.com/openai/v1/responses ("all models support the Responses API"; the docs use llama-3.3-70b-versatile in their examples; https://console.groq.com/docs/responses-api). Enterprise-only now, so not probed.
+schema = 2
+base_model = "meta/llama-3.1-8b-instruct"
 name = "Llama 3.1 8B"
 description = "Compact Llama instruction model for fast chat and local deployment"
-family = "llama"
-release_date = "2024-07-23"
-last_updated = "2024-07-23"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2023-12"
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.05
-output = 0.08
+status = "deprecated"
 
 [limit]
 context = 131_072
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.08

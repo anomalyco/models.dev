@@ -1,23 +1,28 @@
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
+base_model = "google/gemini-2.5-pro"
 name = "gemini-2.5-pro"
-description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-family = "gemini-pro"
-release_date = "2025-06-17"
-last_updated = "2025-06-17"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
-knowledge = "2025-01"
 
-[cost]
-input = 1.250
-output = 10.000
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 1_000_000
-output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 15

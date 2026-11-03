@@ -1,3 +1,5 @@
+import { costSummary } from "./shared.js";
+
 type SortDirection = "asc" | "desc";
 
 interface SearchIndexItem {
@@ -233,9 +235,7 @@ function formatCompactNumber(value?: number) {
 
 function formatCost(input?: number, output?: number) {
   if (input === undefined && output === undefined) return undefined;
-  const inputText = input === undefined ? "-" : `$${input.toFixed(2)}`;
-  const outputText = output === undefined ? "-" : `$${output.toFixed(2)}`;
-  return `${inputText} / ${outputText}`;
+  return costSummary(input, output);
 }
 
 function appendHighlightedText(

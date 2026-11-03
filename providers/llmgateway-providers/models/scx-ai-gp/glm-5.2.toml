@@ -1,15 +1,17 @@
+schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM-5.2 (SCX.ai)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 0.605
+cache = { read = 0.154 }
 
-[cost]
-input = 0.605
-output = 2.123
-cache_read = 0.154
+[cost.text.output]
+price = 2.123

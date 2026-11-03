@@ -1,0 +1,28 @@
+# Launch page ("Built on MiniMax H3 and post-trained by HeyGen"; model heygen-video-1):
+#   https://developers.heygen.com/heygen-video-1.0-catalog, https://developers.heygen.com/docs/models/heygen-video
+# Launched 2026-09-30, the day it went live on HeyGen's API and OpenRouter (https://openrouter.ai/heygen).
+# HeyGen lists no input formats for this model; these are the formats its v3 API takes elsewhere (PNG or JPEG
+#   images, MP3 audio: https://developers.heygen.com/image-to-video) and MP4 for video references.
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "HeyGen Video"
+description = "General-purpose video model for text, image and reference to video with generated dialogue, ambience and effects"
+open_weights = false
+release_date = "2026-09-30"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "video/mp4", "audio/mpeg"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,19 +1,26 @@
 # Toggle: enable_thinking; budget: thinking_budget
+# Prices (accessed 2026-10-21): https://api.orcarouter.ai/v1/models lists 0.276/1.651,
+# and 1.101/6.602 above 256K input, which is Alibaba's China (Beijing) list price
+# (see providers/alibaba-cn). The host lists no cache price for this model; cache
+# read/write follow the same China (Beijing) list.
+schema = 2
 base_model = "alibaba/qwen3.6-plus"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "budget_tokens" },
-]
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
-cache_write = 0.625
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
 
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
-input = 2
-output = 6
-cache_read = 0.2
-cache_write = 2.5
+[cost.text.input]
+price = 0.276
+cache = { read = 0.0276, write = 0.345 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 1.101
+cache = { read = 0.1101, write = 1.37625 }
+
+[cost.text.output]
+price = 1.651
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 6.602

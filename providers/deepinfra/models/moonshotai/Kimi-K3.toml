@@ -5,16 +5,28 @@
 # DeepInfra OpenAPI accepts max among effort values; model-native values are low/high/max.
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
+# Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12288/12691 -> 0/12715; 12288/12691 -> 0/12715]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12288/12967 -> 0/12966 (reasoning tokens 105 -> 65); 10752/12327 -> 0/12326 (reasoning tokens 94 -> 47)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12288/12406 -> 0/12450; 12288/12406 -> 0/12450]
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 2.85
-output = 14.25
-cache_read = 0.285
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_536 } }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 2.85
+cache = { read = 0.285, explicit = { write = { "5m" = 3.5625, "1h" = 5.7 } } }
+
+[cost.text.output]
+price = 14.25

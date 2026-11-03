@@ -1,6 +1,7 @@
 name = "StepFun (China)"
 env = ["STEPFUN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Reasoning HTTP format (accessed 2026-09-20):
 # POST /v1/chat/completions uses top-level `reasoning_effort`; POST /v1/messages
 # uses `output_config.effort`; POST /v1/responses uses `reasoning.effort`.

@@ -1,23 +1,34 @@
+# Type: listed under Transcription on https://evroc.com/ai-services/think-models; evroc serves speech-to-text on
+# POST /v1/audio/transcriptions (https://docs.evroc.com/products/think/openai-compatibility.html), accessed 2026-10-21.
+# Tool calls stay unsupported: the supported-models page shows no tool-call badge for it.
+# Price: 0.0023 per audio minute, kept from the previous file; evroc publishes no price page, so it is unsourced.
+# The old v1 output price (0.0023) and output_audio (2.3) had no unit meaning for a transcription model and were dropped.
+# v1 has no per-minute price, so v1 shows no cost.
+# Audio MIME types: evroc lists none; this ID serves Voxtral Small 24B 2507 (models/mistral/voxtral-small-24b-2507), so the
+# lab's formats apply: WAV and MP3, the files Mistral's API accepts for this model (https://docs.mistral.ai/api/endpoint/chat; see the lab header).
+schema = 2
+type = "transcription"
 name = "Voxtral Small 24B"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
 family = "voxtral"
-release_date = "2025-03-01"
-last_updated = "2025-03-01"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = true
+release_date = "2025-03-01"
 
-[cost]
-# per audio minute
-input = 0.0023
-output = 0.0023
-output_audio = 2.3
+[modalities]
+input = ["audio/wav", "audio/mpeg", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 
 [limit]
 context = 32_000
 output = 32_000
 
-[modalities]
-input = ["audio", "text"]
-output = ["text"]
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.0023

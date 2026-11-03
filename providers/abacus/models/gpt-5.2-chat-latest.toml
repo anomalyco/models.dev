@@ -1,24 +1,22 @@
+# Linked to models/openai/gpt-5.2-chat-latest.toml (same model).
+# knowledge: unsourced host value kept as an override (lab: 2025-08-31).
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+schema = 2
+base_model = "openai/gpt-5.2-chat-latest"
 name = "GPT-5.2 Chat Latest"
-description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-family = "gpt"
-release_date = "2026-01-01"
-last_updated = "2026-01-01"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
 knowledge = "2024-09-30"
-tool_call = true
-open_weights = false
+status = "deprecated"
 
-[cost]
-input = 1.75
-output = 14.00
+[capabilities]
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 400_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.75
+
+[cost.text.output]
+price = 14

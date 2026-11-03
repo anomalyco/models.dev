@@ -1,23 +1,27 @@
 # Toggle: chat_template_kwargs.thinking = true|false
 # Source: https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp (chat template exposes thinking)
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
+schema = 2
 base_model = "deepseek/deepseek-v3.2"
 name = "DeepSeek V3.2 TEE"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-12"
-last_updated = "2026-06-21"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1
-output = 1
-cache_read = 0.09999999999999998
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 131_072
 output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.09999999999999998 }
+
+[cost.text.output]
+price = 1

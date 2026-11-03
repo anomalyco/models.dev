@@ -1,17 +1,21 @@
 # Off: reasoning_effort = none (0 reasoning tokens); no toggle field on this surface.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
-[interleaved]
-field = "reasoning_details"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
-
-[cost]
-input = 2.393196
-output = 4.786392
-cache_read = 0.199433
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 1.84092
+cache = { read = 0.15341 }
+
+[cost.text.output]
+price = 3.68184

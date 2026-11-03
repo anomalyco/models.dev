@@ -1,6 +1,7 @@
 name = "ModelScope"
 env = ["MODELSCOPE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP is POST `/v1/chat/completions`. ModelScope's API Inference docs do
 # not document a shared reasoning toggle, effort, or token-budget field.
 # https://modelscope.cn/docs/model-service/API-Inference/intro (accessed 2026-06-25)

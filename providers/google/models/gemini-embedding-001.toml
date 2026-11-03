@@ -1,23 +1,39 @@
+# v2 capabilities and prices:
+# - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
+# APIs: embedContent, and /embeddings on the OpenAI-compatible endpoint (https://ai.google.dev/gemini-api/docs/openai#embeddings, confirmed live 2026-10-22).
+schema = 2
+type = "embedding"
 name = "Gemini Embedding 001"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "gemini"
-release_date = "2025-05-20"
-last_updated = "2025-05-20"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-knowledge = "2025-05"
 open_weights = false
+knowledge = "2025-05"
+release_date = "2025-05-20"
 
-[cost]
-input = 0.15
-output = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 2_048
 output = 1
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.embed-content]
+sdk = { opencodeai = "none" }
+
+[api.embeddings]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0

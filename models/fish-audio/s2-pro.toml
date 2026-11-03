@@ -1,0 +1,30 @@
+# Released March 2026: https://docs.fish.audio/developer-guide/getting-started/changelog
+# Weights and license: https://huggingface.co/fishaudio/s2-pro
+# Output formats (mp3, wav, pcm, opus): https://docs.fish.audio/api-reference/endpoint/openapi-v1/text-to-speech
+schema = 2
+v2_only = true
+type = "speech"
+name = "S2 Pro"
+description = "Open multilingual text-to-speech model with bracket emotion cues and multi-speaker dialogue"
+open_weights = true
+release_date = "2026-03"
+license = "Fish Audio Research License"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/wav", "audio/pcm", "audio/opus"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/fishaudio/s2-pro"

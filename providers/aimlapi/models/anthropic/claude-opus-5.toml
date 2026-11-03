@@ -1,10 +1,15 @@
+# Cache: the chat-completions catalog row prices cache writes at 5m (cache_write) and 1h (cache_write_1h), and the request schema takes cache_control { type: ephemeral, ttl: 5m | 1h }. https://api.aimlapi.com/v1/models?include=pricing,modalities
+schema = 2
 base_model = "anthropic/claude-opus-5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+tools = { supported = true }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
-[cost]
-input = 6.5
-output = 32.5
-cache_read = 0.65
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
+
+[cost.text.output]
+price = 25

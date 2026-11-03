@@ -1,19 +1,24 @@
 # Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+# Sampling (temperature, top_p): https://platform.minimax.io/docs/guides/text-chat
+# Retired on the MiniMax API (https://platform.minimax.io/docs/faq/models).
+schema = 2
 name = "MiniMax-M2 Her"
 description = "MiniMax M2 variant tuned for conversational and character-driven agent interactions"
 family = "minimax"
-release_date = "2026-01-23"
-last_updated = "2026-01-23"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = false
-
-[limit]
-context = 65_536
-output = 2_048
+release_date = "2026-01-23"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 65_536
+output = 2_048

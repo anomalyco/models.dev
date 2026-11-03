@@ -1,0 +1,26 @@
+schema = 2
+name = "Abliterated Large Flash"
+description = "Abliterated Large Flash is an uncensored reasoning model based on DeepSeek V4.1-Flash-1017. It accepts text and images and returns text, with tool calling, JSON mode, JSON Schema output, and automatic prompt caching. Its shared input/output context is 1,048,576 tokens, with up to 262,144 output tokens when space permits. Reasoning defaults to high and can be turned off or set to low, high, or max. Supports up to four images across the request history."
+open_weights = false
+release_date = "2026-10-23"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 262_144
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2

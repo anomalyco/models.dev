@@ -1,24 +1,35 @@
-# Baseten documents top-level reasoning_effort = none | minimal | low | medium |
-# high (default) | xhigh | max for DeepSeek V4 Flash 0731. Reasoning output is
-# returned in reasoning_content.
-# Baseten serves at most 384k output tokens for this model; keep this explicit
-# because its catalog has reported the 1,048,576-token context as the output cap.
+# Baseten accepts top-level reasoning_effort = none | minimal | low | medium |
+# high (default) | xhigh | max for DeepSeek V4 Flash 0731, but runs minimal at
+# low, medium at high and xhigh at max, so the distinct levels are
+# none | low | high | max. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/overview
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 14848/15098 -> 14848/15112; 15360/15418 -> 15360/15432]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 14848/15082 -> 0/15174 (reasoning tokens 0 -> 87); 14848/15082 -> 0/15174 (reasoning tokens 0 -> 71)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 15104/15353 -> 0/15404; 15104/15353 -> 0/15404]
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.13
-output = 0.26
-cache_read = 0.028
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+system_updates = true
 
 [limit]
 context = 1_048_576
-output = 384_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.13
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 0.26

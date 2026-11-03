@@ -1,6 +1,22 @@
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
 base_model = "google/gemma-2-27b-it"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 
-[cost]
-input = 0.65
-output = 0.65
+[capabilities]
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.65
+
+[cost.text.output]
+price = 0.65

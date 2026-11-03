@@ -1,0 +1,27 @@
+schema = 2
+name = "GLM-5.3 FlashX (Tencent Cloud)"
+description = "GLM vision model for visual reasoning, documents, and multimodal agents"
+family = "glm"
+open_weights = false
+release_date = "2026-09-18"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["xhigh", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[cost.text.input]
+price = 0.37
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.25

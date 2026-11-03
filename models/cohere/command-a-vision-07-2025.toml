@@ -1,24 +1,29 @@
 # https://docs.cohere.com/docs/command-a-vision
 # https://huggingface.co/CohereLabs/c4ai-command-a-vision-07-2025
+# Image formats: https://docs.cohere.com/docs/image-inputs ("Limitations > File types": PNG, JPEG, WEBP,
+#   non-animated GIF; listed as extensions, so the registered MIME types are used).
+schema = 2
 name = "Command A Vision"
 description = "Cohere vision model for multilingual document analysis, OCR, and image understanding"
 family = "command-a"
-release_date = "2025-07-31"
-last_updated = "2025-07-31"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-06-01"
-tool_call = false
 open_weights = true
+knowledge = "2024-06-01"
+release_date = "2025-07-31"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 128_000
 output = 8_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

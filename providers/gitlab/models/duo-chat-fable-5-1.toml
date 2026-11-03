@@ -1,9 +1,28 @@
+# Sources (accessed 2026-10-20):
+# - Upstream model: gitlab-ai-provider maps duo-chat-fable-5-1 to Anthropic `claude-fable-5-1` (https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/model-mappings.ts).
+# - AI Gateway proxy allowlist: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/model_selection/models.yml (`claude_fable_5_1`, proxy_provider anthropic,
+#   max_context_tokens 1_000_000, max_tokens 128_000).
+# - Supported models: https://docs.gitlab.com/user/duo_agent_platform/model_selection/
+# Messages: POST /ai/v1/proxy/anthropic/v1/messages, forwarded unchanged to api.anthropic.com (body passed
+#   through; anthropic-version and anthropic-beta headers forwarded).
+#   https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/ai_gateway/proxy/clients/anthropic.py
+# Effort: output_config.effort = low|medium|high|xhigh|max with thinking = { type = "adaptive" }.
+# Cost: billed per model call in GitLab Credits ($1 each on demand; claude-fable-5.1: 0.6 calls per credit, https://docs.gitlab.com/subscriptions/gitlab_credits/).
+#   v2 has no per-request unit, so token prices stay 0 (calls draw on the subscription's credits).
+# Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
+# APIs: gitlab-ai-provider sends Claude to the AI gateway's /ai/v1/proxy/anthropic/v1/messages and OpenAI models to /ai/v1/proxy/openai/v1/chat/completions or /responses (sources in provider.toml).
+schema = 2
 base_model = "anthropic/claude-fable-5-1"
 name = "Agentic Chat (Claude Fable 5.1)"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.messages]
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

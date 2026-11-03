@@ -1,36 +1,35 @@
+# Deprecated: listed under Deprecated models (June 15, 2026); requests return 400 "Model is unavailable" (live 2026-10-21) (https://opencode.ai/v2/docs/console/models/#deprecated-models, accessed 2026-10-21).
+# Budget: thinking.budget_tokens (min 1024) with thinking.type = enabled (deprecated; not re-verified on Zen)
+# Mid-conversation flags left out: anthropic has no provider file for anthropic/claude-sonnet-4-0 to follow (Zen passes requests through).
+# Tools follow Anthropic's Messages API: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (strict), https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility (search), https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use (choice); Zen passes requests through.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-0"
 name = "Claude Sonnet 4"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-release_date = "2025-05-22"
-last_updated = "2025-05-22"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
-temperature = true
-tool_call = true
-knowledge = "2025-03-31"
-open_weights = false
+status = "deprecated"
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
-cache_write = 3.75
-
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 6.00
-output = 22.50
-cache_read = 0.60
-cache_write = 7.50
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, budget = { min = 1_024 } }
 
 [limit]
 context = 1_000_000
-output = 64_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.messages]
+base_url = "https://opencode.ai/inference/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 6
+cache = { read = 0.6, write = 7.5 }
+
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 22.5

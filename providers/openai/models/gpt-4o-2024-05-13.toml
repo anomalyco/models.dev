@@ -1,29 +1,47 @@
+# tools.updates: left out. This model has no prompt caching (no cached-input price), so there is no cache for a tool change to keep.
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4o
+schema = 2
 name = "GPT-4o (2024-05-13)"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
-release_date = "2024-05-13"
-last_updated = "2024-05-13"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-09"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2023-09"
+release_date = "2024-05-13"
 status = "deprecated"
 
-[cost]
-input = 5.00
-output = 15.00
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+system_updates = true
+store = true
+cache = false
+service_tier = ["priority"]
 
 [limit]
 context = 128_000
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 15
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
 
 [experimental.modes.fast]
-cost = { input = 8.75, output = 26.25 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }

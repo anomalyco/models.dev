@@ -1,24 +1,16 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: output_config.effort = low|medium|high
+# Budget: thinking.budget_tokens (lab-mapped, not probed on 302.AI)
+schema = 2
+base_model = "anthropic/claude-opus-4-5-20251101"
 name = "claude-opus-4-5-20251101"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-release_date = "2025-11-25"
-last_updated = "2025-11-25"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1024, max = 63999 }]
-temperature = true
-tool_call = true
-open_weights = false
 knowledge = "2025-03-31"
 
-[cost]
-input = 5.000
-output = 25.000
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], budget = { min = 1_024, max = 63_999 } }
 
-[limit]
-context = 200_000
-output = 64_000
+[cost.text.input]
+price = 5
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 25

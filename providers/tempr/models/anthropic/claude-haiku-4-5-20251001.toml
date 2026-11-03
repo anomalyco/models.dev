@@ -1,18 +1,24 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
 # Budget: reasoning.max_tokens (integer reasoning tokens)
 # /v1/messages: thinking.type = enabled|disabled; thinking.budget_tokens
 # /v1/responses: reasoning.effort = none|low|medium|high (sized to a thinking budget)
+# Prompt caching (https://temprhq.io/docs/gateway-reference#prompt-caching): Anthropic caches only at
+# cache_control breakpoints (Tempr places them when the account or key turns prompt caching on, or
+# passes the client's own); 5m or 1h lifetime, writes at 1.25x (5m) or 2x (1h) input.
+schema = 2
 base_model = "anthropic/claude-haiku-4-5-20251001"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 structured_output = true
 
-reasoning_options = [
-  { type = "toggle" },
-  { type = "budget_tokens", min = 1024 },
-]
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
 
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+[cost.text.output]
+price = 5

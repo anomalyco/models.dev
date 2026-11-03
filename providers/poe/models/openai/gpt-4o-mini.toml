@@ -1,23 +1,22 @@
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "openai/gpt-4o-mini"
 name = "GPT-4o-mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2024-07-18"
-last_updated = "2024-07-18"
-attachment = true
-reasoning = false
-temperature = false
-open_weights = false
-tool_call = true
 
-[cost]
-input = 0.14
-output = 0.54
-cache_read = 0.068
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+temperature = false
 
 [limit]
 context = 124_096
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.1364
+cache = { read = 0.0682 }
+
+[cost.text.output]
+price = 0.5455

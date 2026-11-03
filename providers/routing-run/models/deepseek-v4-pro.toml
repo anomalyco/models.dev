@@ -1,13 +1,18 @@
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = []
 
-[cost]
-input = 0.348
-output = 0.696
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
-context = 1_000_000
 output = 64_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.348
+
+[cost.text.output]
+price = 0.696

@@ -1,0 +1,25 @@
+schema = 2
+name = "Synth 2.5 Pro Preview"
+description = "Synth 2.5 Pro Preview is a low-cost text model designed for role-play, character dialogue, and collaborative storytelling."
+open_weights = false
+release_date = "2026-09-05"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 30_000
+input = 30_000
+output = 30_000
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.2

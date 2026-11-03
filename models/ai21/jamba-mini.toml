@@ -1,24 +1,32 @@
+# Sources:
+# - https://docs.ai21.com/docs/jamba-foundation-models (jamba-mini points to jamba-mini-2-2026-01, Jamba2 Mini; 256K context; knowledge cutoff August 22nd, 2024; text in and out)
+# - https://www.ai21.com/blog/introducing-jamba2/ (Jamba2 announcement, published 2026-01-08)
+# - https://docs.ai21.com/reference/jamba-1-6-api-ref (max_tokens up to 4096)
+# - https://huggingface.co/ai21labs/AI21-Jamba2-Mini (open weights, Apache-2.0)
+# Sampling: open weights, so temperature, top_p and top_k all apply when self-hosted; AI21's own API takes only temperature and top_p.
+schema = 2
 name = "Jamba Mini"
 description = "AI21's efficient, lightweight hybrid SSM-Transformer model for a wide range of tasks"
 family = "jamba"
-release_date = "2026-01-01"
-last_updated = "2026-01-01"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-knowledge = "2024-08-22"
 open_weights = true
-
-[limit]
-context = 256_000
-output = 4_096
+knowledge = "2024-08-22"
+release_date = "2026-01-08"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 256_000
+output = 4_096
+
 [[weights]]
 label = "Hugging Face"
-url = "https://huggingface.co/ai21labs/AI21-Jamba-Mini-1.6"
+url = "https://huggingface.co/ai21labs/AI21-Jamba2-Mini"

@@ -1,0 +1,25 @@
+# Released 2025-08-11: https://blog.voyageai.com/2025/08/11/rerank-2-5/
+# Context length: https://docs.voyageai.com/docs/reranker
+schema = 2
+v2_only = true
+type = "reranking"
+name = "rerank-2.5-lite"
+description = "Instruction-following reranker optimized for latency and quality"
+family = "voyage"
+open_weights = false
+release_date = "2025-08-11"
+
+[modalities]
+input = ["text"]
+output = ["reranking"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0

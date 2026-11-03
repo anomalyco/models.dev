@@ -1,8 +1,13 @@
+schema = 2
 base_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
-structured_output = true
 status = "deprecated"
-reasoning_options = []
 
-[cost]
-input = 0.4
-output = 0.4
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 0.4

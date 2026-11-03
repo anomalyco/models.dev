@@ -10,22 +10,28 @@
 #     off-peak; peak is 2x on weekdays 01:00-04:00 and 06:00-10:00 UTC)
 #   https://above.dev/docs  (flat x1.10 on every upstream rate; the docs table
 #     lists deepseek-v4-flash as an accepted alternative id)
+# Peak pricing: base prices are off-peak; the multiplier doubles them on weekday peak hours
+# (01:00-04:00 and 06:00-10:00 UTC, Monday-Friday), per https://above.dev/llms.txt (checked 2026-10-21).
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4 Flash"
 status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.165
+cache = { read = 0.0033 }
 
-[cost]
-input = 0.165
-output = 0.66
+[cost.text.output]
+price = 0.66
 reasoning = 0.66
-cache_read = 0.0033
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

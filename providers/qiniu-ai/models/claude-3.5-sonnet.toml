@@ -1,19 +1,13 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+# Reasoning: inherited from the lab (no thinking mode); the old reasoning = true had no source.
+schema = 2
+base_model = "anthropic/claude-3-5-sonnet-20241022"
 name = "Claude 3.5 Sonnet"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-release_date = "2025-09-09"
-last_updated = "2025-09-09"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
-structured_output = false
-open_weights = false
-
-[limit]
-context = 200_000
-output = 8_200
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+structured_output = false

@@ -1,23 +1,36 @@
+# Modalities: the lab's. Image generation through the Responses `image_generation` tool doesn't make the model an
+# image-output model, so output is the lab's text.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+schema = 2
 base_model = "openai/gpt-6-astra"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 20
-output = 75
-cache_read = 2
-cache_write = 25
+[api.responses]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+legacy_shape = "responses"
 
-[modalities]
-output = ["text", "image"]
+[api.chat-completions]
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
-shape = "responses"
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

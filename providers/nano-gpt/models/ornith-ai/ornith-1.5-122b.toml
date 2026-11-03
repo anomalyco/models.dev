@@ -1,0 +1,27 @@
+schema = 2
+name = "Ornith 1.5 122B"
+description = "Ornith 1.5 122B is an MIT-licensed open-weight model for coding, reasoning, tool use and image understanding. It accepts text and images across a shared 262,144-token context, with up to 32,768 output tokens. Reasoning is enabled by default; JSON object output and streaming are supported."
+family = "ornith"
+open_weights = true
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.8

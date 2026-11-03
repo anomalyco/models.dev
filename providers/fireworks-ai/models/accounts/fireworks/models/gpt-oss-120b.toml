@@ -1,31 +1,46 @@
-name = "GPT OSS 120B"
+# GPT OSS 120B on Fireworks Serverless: accounts/fireworks/models/gpt-oss-120b
+# Lab identity: OpenAI gpt-oss-120b (List Models displayName "OpenAI gpt-oss-120b", modelType gpt_oss,
+#   116.8B parameters, FP4): GET https://api.fireworks.ai/v1/accounts/fireworks/models (2026-10-21)
+# Effort: reasoning_effort = low|medium|high (https://docs.fireworks.ai/guides/reasoning)
+# Deprecation: List Models reports deprecationDate 2026-11-07 (2026-10-21).
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = false: after a system message sent after the first turn, cached tokens fell to 0 in 3 trials while the control turns hit, so it is moved to the top.
+#   effort_updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
+#   tools.updates = false: adding a second tool on the last turn left 0/123 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
+base_model = "openai/gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2026-06-16"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.015
+[api.chat-completions]
 
-[limit]
-context = 131_072
-output = 32_768
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.2
 
 [experimental.modes.priority]
-cost = { input = 0.18, output = 0.72, cache_read = 0.018 }
-provider = { body = { service_tier = "priority" } }
+body = { service_tier = "priority" }

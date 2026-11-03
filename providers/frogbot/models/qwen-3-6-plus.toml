@@ -1,24 +1,23 @@
+# Retired: absent from https://docs.frogbot.ai/api-reference/models (accessed 2026-10-21).
+schema = 2
+base_model = "alibaba/qwen3.6-plus"
 name = "Qwen 3.6 Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
-release_date = "2026-04-02"
-last_updated = "2026-04-03"
-open_weights = false
-
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.1
-
-[limit]
-context = 1_000_000
-output = 64_000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3

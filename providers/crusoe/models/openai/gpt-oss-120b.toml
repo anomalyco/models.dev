@@ -3,12 +3,21 @@
 # (26/58/174 chars on the same prompt); "none" and "max" return HTTP 400.
 # Reasoning text arrives interleaved with tool_calls, in the message field
 # named "reasoning" (not "reasoning_content"), hence the boolean form below.
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-10-21; output was 0.20
+# on 2026-08-13)
+schema = 2
 base_model = "openai/gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-interleaved = true
 
-# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
-[cost]
-input = 0.05
-output = 0.20
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.25

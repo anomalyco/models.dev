@@ -1,0 +1,32 @@
+# Model card (https://huggingface.co/meta-llama/Llama-Guard-4-12B, mirrored at
+# https://build.nvidia.com/meta/llama-guard-4-12b): 12B safety classifier pruned from Llama 4 Scout that labels
+# text and image prompts and responses against the MLCommons hazard taxonomy; text + image in, text (safety
+# label) out; Llama 4 Community License. Release date: "Hugging Face: April 29, 2025" (NVIDIA card).
+# Context: 163,840 tokens per the NVIDIA card. Output: a short label; no separate cap is published, so the
+# Llama Guard 3 value (4,096) is not reused and output = context.
+schema = 2
+name = "Llama Guard 4 12B"
+description = "Multimodal Llama 4-based safety classifier for moderating prompts and responses"
+family = "llama"
+open_weights = true
+release_date = "2025-04-29"
+license = "Llama 4 Community License"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 163_840
+output = 163_840
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-llama/Llama-Guard-4-12B"

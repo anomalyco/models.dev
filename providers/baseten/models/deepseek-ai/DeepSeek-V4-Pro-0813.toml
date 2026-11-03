@@ -1,20 +1,34 @@
 # Baseten documents top-level reasoning_effort = none | low | high | max for
 # DeepSeek V4 Pro 0813. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 14592/14778 -> 14592/14792; 14848/15098 -> 14848/15112]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 14592/14762 -> 0/14854 (reasoning tokens 0 -> 40); 14592/14762 -> 0/14854 (reasoning tokens 0 -> 59)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 14848/15033 -> 0/15084; 14848/15033 -> 256/15084]
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 1.32
-output = 3.96
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+system_updates = true
 
 [limit]
 context = 1_048_576
 output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.32
+cache = { read = 0.132 }
+
+[cost.text.output]
+price = 3.96

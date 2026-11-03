@@ -1,11 +1,14 @@
 # Reasoning controls verified against https://modelishub.com/v1 on 2026-08-02.
 #   Effort:        {"reasoning_effort": "none"|"high"|"max"} — "none" disables reasoning
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 0.0983
-output = 0.1966
+[cost.text.input]
+price = 0.0983
+
+[cost.text.output]
+price = 0.1966

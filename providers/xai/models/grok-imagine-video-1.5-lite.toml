@@ -1,7 +1,9 @@
 # Sources:
 # - https://docs.x.ai/developers/models/grok-imagine-video-1.5-lite
 # - https://docs.x.ai/developers/models (Imagine pricing: grok-imagine-video-1.5-lite $0.020/sec; per-second billing, no [cost] authored)
+# API: POST https://api.x.ai/v1/videos/generations (https://docs.x.ai/developers/rest-api-reference/inference/videos.md).
+schema = 2
 base_model = "xai/grok-imagine-video-1.5-lite"
 
-[modalities]
-input = ["text", "image", "pdf"]
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/protocols/xai-video" }

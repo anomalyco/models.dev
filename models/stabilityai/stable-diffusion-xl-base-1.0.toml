@@ -1,0 +1,33 @@
+# Released 2023-07-26: https://stability.ai/news/stable-diffusion-sdxl-1-announcement
+# Weights under CreativeML Open RAIL++-M: https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0
+# Latent diffusion text-to-image model (also img2img and inpainting). Input images and output stay generic `image`:
+# the open weights take and produce pixels and the format is chosen by the host. Prompts are not chat tokens, so
+# context and output are 0.
+schema = 2
+v2_only = true
+type = "image"
+name = "Stable Diffusion XL Base 1.0"
+description = "Latent diffusion text-to-image model from Stability AI"
+family = "stable-diffusion"
+open_weights = true
+release_date = "2023-07-26"
+license = "CreativeML Open RAIL++-M"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0"

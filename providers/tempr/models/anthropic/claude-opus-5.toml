@@ -1,16 +1,23 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # Effort: reasoning.effort = low|medium|high|xhigh|max (alias: top-level reasoning_effort)
 # /v1/messages: output_config.effort = low|medium|high|xhigh|max
 # /v1/responses: reasoning.effort = low|medium|high|xhigh|max
+# Prompt caching (https://temprhq.io/docs/gateway-reference#prompt-caching): Anthropic caches only at
+# cache_control breakpoints (Tempr places them when the account or key turns prompt caching on, or
+# passes the client's own); 5m or 1h lifetime, writes at 1.25x (5m) or 2x (1h) input.
+schema = 2
 base_model = "anthropic/claude-opus-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 structured_output = true
 
-reasoning_options = [
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
-]
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[cost.text.output]
+price = 25

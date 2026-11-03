@@ -1,26 +1,31 @@
+# Toggle: $.reasoning_effort (or $.reasoning.effort) = "none" disables thinking; any other value enables it.
+# On the Z.AI mapping the gateway sends thinking.type = "disabled"|"enabled" (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts, case "zai").
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 name = "GLM-4.5 X"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
-release_date = "2025-07-28"
-last_updated = "2025-07-28"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2025-07-28"
 status = "beta"
 
-[cost]
-input = 2.20
-output = 8.90
-cache_read = 0.45
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 2.2
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 8.9

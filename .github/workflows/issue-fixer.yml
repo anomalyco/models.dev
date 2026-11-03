@@ -2,7 +2,7 @@ name: Issue Fixer
 
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
   repository_dispatch:
     types: [missing-model]
 
@@ -19,6 +19,11 @@ jobs:
       github.repository == 'anomalyco/models.dev'
       && !contains(github.event.issue.labels.*.name, 'provider:openai')
       && github.event.client_payload.provider != 'openai'
+      && (
+        github.event_name == 'repository_dispatch'
+        || (github.event.action == 'opened' && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association))
+        || (github.event.action == 'labeled' && github.event.label.name == 'fixer:run')
+      )
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
@@ -38,12 +43,13 @@ jobs:
           echo "ISSUE_FILE=$ISSUE_FILE" >> "$GITHUB_ENV"
 
       - name: Install opencode
-        run: curl -fsSL https://opencode.ai/install | bash
+        run: curl -fsSL https://opencode.ai/install | bash -s -- --version 1.19.4
 
       - name: Run issue fixer
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           OPENCODE_PERMISSION: '{"bash":"deny"}'
+          OPENCODE_CONFIG_CONTENT: '{"snapshot":false}'
         run: |
           set -euo pipefail
           EVENTS_FILE="$RUNNER_TEMP/issue-fixer-events.jsonl"

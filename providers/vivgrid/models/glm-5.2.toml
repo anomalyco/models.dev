@@ -1,18 +1,28 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/glm-5.2 (accessed 2026-09-18)
+# Served on Chat Completions only: every API surface listed for this model uses
+# /chat/completions, so it needs the openai-compatible SDK rather than the
+# provider default (Responses). https://docs.vivgrid.com/models/glm-5.2 (accessed 2026-10-21)
+# Sunset: Vivgrid legacy model, superseded by glm-5.3.
+# https://docs.vivgrid.com/models#legacy-models (accessed 2026-10-23)
+schema = 2
 base_model = "zhipuai/glm-5.2"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.2
-output = 4.2
-cache_read = 0.3
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 4.2

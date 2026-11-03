@@ -1,0 +1,24 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/omni-moderation-latest
+# https://developers.openai.com/api/docs/changelog
+schema = 2
+v2_only = true
+name = "omni-moderation"
+description = "Moderation model that classifies potentially harmful content in text and images"
+open_weights = false
+release_date = "2024-09-26"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

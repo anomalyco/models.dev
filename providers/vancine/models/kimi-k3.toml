@@ -6,19 +6,19 @@
 # Interleaved field: reasoning_content.
 # Lab cost: input 3.00 / output 15.00 / cache_read 0.30 (USD/MTok).
 # Vancine public pricing (/api/pricing) is 2.40 / 12.00 / 0.24 (USD/MTok).
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 2.4
+cache = { read = 0.24 }
 
-[cost]
-input = 2.40
-output = 12.00
-cache_read = 0.24
+[cost.text.output]
+price = 12

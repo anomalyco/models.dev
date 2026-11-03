@@ -1,0 +1,26 @@
+# Released 2026-01-28 with the Grok Imagine API: https://x.ai/news/grok-imagine-api
+# Generation, editing and extension: https://docs.x.ai/developers/model-capabilities/video/editing , https://docs.x.ai/developers/model-capabilities/video/extension
+# Image and video MIME types: https://docs.x.ai/developers/rest-api-reference/inference/videos (image inputs JPEG, PNG or WebP; video inputs and generated videos are .mp4)
+schema = 2
+v2_only = true
+type = "video"
+name = "Grok Imagine Video"
+description = "Video model for text-to-video, image-to-video, video editing and extension with native synchronized audio"
+family = "grok"
+open_weights = false
+release_date = "2026-01-28"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,23 +1,24 @@
+# Budget: extra_body.thinking_budget (integer; Poe's parameter for budgeted Claude/Gemini bots in https://api.poe.com/v1/models)
+# Status: https://poe.com/Gemini-2.5-Flash-Lite is titled "Gemini-2.5-Flash-Li_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "google/gemini-2.5-flash-lite"
 name = "Gemini-2.5-Flash-Lite"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-family = "gemini-flash-lite"
-release_date = "2025-06-19"
-last_updated = "2025-06-19"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 0, max = 24_576 }]
-temperature = false
-open_weights = false
-tool_call = true
+status = "deprecated"
 
-[cost]
-input = 0.07
-output = 0.28
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 0, max = 24_576 } }
+temperature = false
 
 [limit]
 context = 1_024_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.28

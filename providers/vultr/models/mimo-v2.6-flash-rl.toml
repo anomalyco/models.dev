@@ -1,7 +1,12 @@
 # Toggle: reasoning.enabled = true|false
+schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.10
-output = 0.25
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.25

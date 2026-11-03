@@ -1,14 +1,31 @@
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 name = "NVIDIA Nemotron 3 Nano 30B"
-release_date = "2026-01-27"
-last_updated = "2026-06-11"
-reasoning = false
-structured_output = true
 
-[cost]
-input = 0.075
-output = 0.3
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 128_000
 output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.075
+
+[cost.text.output]
+price = 0.3
+
+[cost.web_search]
+price = 10

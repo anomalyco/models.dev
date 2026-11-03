@@ -1,25 +1,17 @@
+schema = 2
+base_model = "anthropic/claude-3-5-sonnet-20241022"
 name = "Claude-Sonnet-3.5"
-description = "Legacy model retained for compatibility with older integrations"
-family = "claude-sonnet"
-release_date = "2024-06-05"
-last_updated = "2024-06-05"
-attachment = true
-reasoning = false
-temperature = false
-open_weights = false
-tool_call = true
 status = "deprecated"
 
-[cost]
-input = 2.6
-output = 13
-cache_read = 0.26
-cache_write = 3.2
+[capabilities]
+temperature = false
 
 [limit]
 context = 189_096
-output = 8_192
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.6
+cache = { read = 0.26, write = 3.2 }
+
+[cost.text.output]
+price = 13

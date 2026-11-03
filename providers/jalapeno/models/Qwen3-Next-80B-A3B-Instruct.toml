@@ -1,11 +1,18 @@
 # Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
 # Limits: GET https://api.jalapeno-cloud.ai/v1/models id=Qwen3-Next-80B-A3B-Instruct (2026-08-17)
+# Deprecated: no longer in the public catalog GET https://www.jalapeno-cloud.ai/token-api/v1/models (2026-10-21)
+schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
-structured_output = true
+status = "deprecated"
 
-[cost]
-input = 0.15
-output = 1.50
+[capabilities]
+structured_output = true
 
 [limit]
 context = 129_024
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.5

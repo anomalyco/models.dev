@@ -1,0 +1,13 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Input: the formats the schema's file field documents, else the lab's. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+schema = 2
+v2_only = true
+base_model = "assemblyai/universal-3-pro"
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.0035

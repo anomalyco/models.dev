@@ -1,14 +1,30 @@
+# Mid-conversation (Ofox Responses, https://ofox.ai/docs/api/openai/responses): effort_updates = false because OpenAI's own API has no such mechanism for this model (providers/openai/models/gpt-5.5.toml). system_updates, tools.updates unset: OpenAI supports them, but Ofox's reference doesn't document passing them through.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/gpt#caching).
+# Effort: reasoning.effort = none|low|medium|high|xhigh (https://ofox.ai/docs/develop/models/gpt/reasoning)
+schema = 2
 base_model = "openai/gpt-5.5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 4
-output = 24
-cache_read = 0.4
+[api.responses]
+base_url = "https://api.ofox.ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://api.ofox.ai/v1"
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 10
+cache = { read = 1 }
+
+[cost.text.output]
+price = 30
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 45

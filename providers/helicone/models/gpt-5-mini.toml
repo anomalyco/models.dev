@@ -1,24 +1,18 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2024-05-30).
+# Effort: reasoning_effort = minimal|low|medium|high. Helicone's gateway schema accepts minimal|low|medium|high
+# and OpenAI routes pass it through, so these are the model's native values within that set.
+# https://docs.helicone.ai/gateway/concepts/reasoning
+schema = 2
+base_model = "openai/gpt-5-mini"
 name = "OpenAI GPT-5 Mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2025-01-01"
-last_updated = "2025-01-01"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = true
 knowledge = "2025-01"
-open_weights = false
 
-[cost]
-input = 0.25
-output = 2
-cache_read = 0.024999999999999998
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 
-[limit]
-context = 400000
-output = 128000
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 2

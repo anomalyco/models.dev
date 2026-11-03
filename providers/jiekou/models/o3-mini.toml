@@ -1,23 +1,18 @@
-name = "o3-mini"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Modalities: the catalog lists image input, which the model doesn't accept (lab); inherited from the lab.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Effort: top-level reasoning_effort on /openai/chat/completions (provider.toml), values from providers/openai or relay peers for this model.
+schema = 2
+base_model = "openai/o3-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
 structured_output = true
-open_weights = false
 
-[cost]
-input = 1.1
-output = 4.4
+[cost.text.input]
+price = 1.045
+cache = { read = 0.5225 }
 
-[limit]
-context = 131072
-output = 131072
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 4.18

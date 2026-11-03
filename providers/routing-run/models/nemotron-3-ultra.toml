@@ -1,13 +1,18 @@
+schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-reasoning_options = []
 
-[cost]
-input = 0.10
-output = 0.10
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 131_072
 output = 32_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.1

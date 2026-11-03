@@ -1,25 +1,28 @@
 # https://huggingface.co/Qwen/Qwen3-Reranker-8B
 # https://qwenlm.github.io/blog/qwen3-embedding/
+schema = 2
+type = "reranking"
 name = "Qwen3 Reranker 8B"
 description = "Multilingual query-document reranking model supporting more than 100 languages"
-type = "reranking"
 family = "qwen"
-release_date = "2025-06-05"
-last_updated = "2025-06-05"
-attachment = false
-reasoning = false
-tool_call = false
-temperature = false
 open_weights = true
+release_date = "2025-06-05"
 license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["reranking"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 32_768
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

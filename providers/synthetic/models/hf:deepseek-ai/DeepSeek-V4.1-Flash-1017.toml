@@ -1,0 +1,30 @@
+# GET https://api.synthetic.new/openai/v1/models lists
+# hf:deepseek-ai/DeepSeek-V4.1-Flash-1017 with reasoning_parameters.efforts
+# none|low|high|xhigh|max, text+image input, fp8 quantization.
+# Pricing: https://synthetic.new/pricing/models — DeepSeek-V4.1-Flash-1017
+# $0.60 input / $0.03 cached input / $1.20 output per MTok (matches per-token
+# prompt $0.0000006, completion $0.0000012, input_cache_reads $0.00000003).
+# Limits: context_length 524288, max_output_length 65536.
+# Lab weights: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Live probes on sibling hf:deepseek-ai/DeepSeek-V4.1-Flash: `reasoning_effort = "none"` disables reasoning; `"xhigh"` streams it.
+# Reasoning is returned in the `reasoning` message field.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 524_288
+output = 65_536
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

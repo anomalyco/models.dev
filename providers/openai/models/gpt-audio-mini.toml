@@ -1,0 +1,28 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-audio-mini
+# https://developers.openai.com/api/docs/pricing
+# https://developers.openai.com/api/docs/deprecations
+# No tools.updates: OpenAI's additional_tools items are Responses-only, and this model is Chat Completions only.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-audio-mini"
+status = "deprecated"
+
+[capabilities]
+structured_output = false
+system_updates = true
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.4
+
+[cost.audio.input]
+price = 10
+
+[cost.audio.output]
+price = 20

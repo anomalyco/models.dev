@@ -1,16 +1,20 @@
+schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
-[interleaved]
-field = "reasoning_details"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium"]
-
-[cost]
-input = 3.4385
-output = 8.59625
-cache_read = 0.6877
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium"] }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 output = 52_429
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 2.645
+cache = { read = 0.529 }
+
+[cost.text.output]
+price = 6.6125

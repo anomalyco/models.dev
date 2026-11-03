@@ -1,15 +1,25 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: the lab's formats that NanoGPT Chat Completions accepts): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
-reasoning = false
-structured_output = false
 
-[cost]
-input = 0.375
-output = 2
-cache_read = 0.07
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+tools = { supported = true }
 
 [limit]
 input = 262_144
 output = 65_536
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.375
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2

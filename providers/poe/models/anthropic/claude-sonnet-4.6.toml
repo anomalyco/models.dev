@@ -1,24 +1,21 @@
+# Effort: extra_body.output_effort = max|high|medium|low|none (default medium)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
 name = "Claude-Sonnet-4.6"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-release_date = "2026-02-05"
-last_updated = "2026-02-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-temperature = false
-open_weights = false
-tool_call = true
 
-[cost]
-input = 2.6
-output = 13
-cache_read = 0.26
-cache_write = 3.2
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+temperature = false
 
 [limit]
 context = 983_040
 output = 128_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.5758
+cache = { read = 0.2576, write = 3.2197 }
+
+[cost.text.output]
+price = 12.8788

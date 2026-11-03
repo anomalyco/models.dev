@@ -1,24 +1,23 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Limit: the catalog's max_output_tokens 200000 is above Gemini's documented 65536 (lab); the lab value is inherited.
+# Cache: Gemini is implicit-only (no cache_control); minimums per https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Effort: top-level reasoning_effort, converted to a Gemini thinking budget (none/disable 0, low 1024, medium 2048, high 4096); https://docs.jiekou.ai/docs/providers/gemini.
+schema = 2
+base_model = "google/gemini-2.5-flash-preview-05-20"
 name = "gemini-2.5-flash-preview-05-20"
-description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-family = "gemini-flash"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 0.135
-output = 3.15
-
-[limit]
-context = 1048576
-output = 200000
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = { min_tokens = 1_024 } }
+structured_output = true
+
+[cost.text.input]
+price = 0.1425
+cache = { read = 0.0285 }
+
+[cost.text.output]
+price = 3.325

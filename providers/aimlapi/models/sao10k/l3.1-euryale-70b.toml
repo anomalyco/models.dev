@@ -1,5 +1,12 @@
+schema = 2
 base_model = "sao10k/l3.1-euryale-70b"
 
-[cost]
-input = 1.99488
-output = 1.99488
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[cost.text.input]
+price = 1.534523
+
+[cost.text.output]
+price = 1.534523

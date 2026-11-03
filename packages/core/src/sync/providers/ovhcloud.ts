@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter";
 
@@ -110,9 +111,38 @@ export function buildOvhcloudModel(
     cache_write: cacheWrite !== undefined && cacheWrite > 0 ? cacheWrite : undefined,
   };
 
+  const limit = {
+    context: model.context_length,
+    input: existing?.limit?.input,
+    output: model.max_output_length ?? existing?.limit?.output ?? model.context_length,
+  };
+  const modalitiesValue = { input, output };
+
+  if (existing?.base_model !== undefined) {
+    // Model facts belong to the lab file; a base_model file only carries host fields.
+    return factorBaseModel(
+      existing.base_model,
+      {
+        name: model.name,
+        description: existing.description,
+        attachment,
+        reasoning,
+        reasoning_options: reasoning ? existing.reasoning_options : undefined,
+        temperature: temperature || undefined,
+        tool_call: toolCall,
+        structured_output: structuredOutput || undefined,
+        status: existing.status,
+        interleaved: existing.interleaved,
+        cost,
+        limit,
+        modalities: modalitiesValue,
+      },
+      limit,
+      existing.base_model_omit,
+    );
+  }
+
   return {
-    base_model: existing?.base_model,
-    base_model_omit: existing?.base_model_omit,
     name: model.name,
     description: existing?.description ?? describeModel({
       id: model.id,
@@ -143,11 +173,7 @@ export function buildOvhcloudModel(
     status: existing?.status,
     interleaved: existing?.interleaved,
     cost,
-    limit: {
-      context: model.context_length,
-      input: existing?.limit?.input,
-      output: model.max_output_length ?? existing?.limit?.output ?? model.context_length,
-    },
-    modalities: { input, output },
+    limit,
+    modalities: modalitiesValue,
   } satisfies SyncedModel;
 }

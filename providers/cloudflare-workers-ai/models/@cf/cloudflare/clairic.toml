@@ -1,0 +1,39 @@
+# https://developers.cloudflare.com/workers-ai/models/clairic/ (accessed 2026-10-19)
+# System One-style extraction model: /ai/run takes model + state + typed fields and returns
+# typed answers with confidence; chat completions are rejected (live 2026-10-19, code 5006).
+# Images: embedded PNG, JPEG or WebP (model page).
+# API: POST /accounts/{ACCOUNT_ID}/ai/run/@cf/cloudflare/clairic (https://developers.cloudflare.com/workers-ai/models/clairic/).
+# type = "extraction" is deliberately not a known schema type: only Cloudflare's Clairic uses it (typed field
+# extraction, not a decision model). Promote it to a known type if other hosts adopt it, or drop it. v1 has no such
+# type, so the model is v2_only.
+schema = 2
+v2_only = true
+type = "extraction"
+name = "Clairic"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+open_weights = true
+release_date = "2026-10-14"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 65_536
+output = 65_536
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0

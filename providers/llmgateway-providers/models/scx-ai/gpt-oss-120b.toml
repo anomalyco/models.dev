@@ -1,11 +1,13 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (SCX.ai (Turbo))"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0.17
 
-[cost]
-input = 0.17
-output = 0.55
+[cost.text.output]
+price = 0.55

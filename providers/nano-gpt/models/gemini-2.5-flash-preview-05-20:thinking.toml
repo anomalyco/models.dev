@@ -1,28 +1,30 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# system_updates = false: Gemini places every system message, even one after the history, in its system instruction (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching#gemini-implicit-caching)
+# Cache: implicit (automatic) for Gemini models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+# status = deprecated: NanoGPT's catalog says "Deprecated. Mapped to Gemini 2.5 Flash because this model is deprecated" (https://nano-gpt.com/api/v1/models?detailed=true)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
+base_model = "google/gemini-2.5-flash-preview-05-20"
 name = "Gemini 2.5 Flash 0520 Thinking"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gemini"
-release_date = "2025-05-20"
-last_updated = "2025-05-20"
-attachment = true
-reasoning = true
-tool_call = false
+status = "deprecated"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.15
-output = 3.5
-cache_read = 0.015
+cache = { implicit = true }
 
 [limit]
 context = 1_048_000
 input = 1_048_000
-output = 65_536
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 3.5

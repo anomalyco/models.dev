@@ -7,19 +7,22 @@
 # RouteLLM input_token_rate: 0.00000175
 # RouteLLM output_token_rate: 0.000014
 # RouteLLM cached_input_token_rate: 0.000000175
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21), which listed it when this file was written.
+schema = 2
 base_model = "openai/gpt-5.2-codex"
-reasoning = true
-reasoning_options = []
-
-[cost]
-input = 1.75
-output = 14.00
-cache_read = 0.175
-
-[limit]
-context = 400_000
-output = 128_000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

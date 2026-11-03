@@ -1,24 +1,24 @@
-name = "Aion-RP 1.0 (8B)"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "aion-labs/aion-rp-llama-3.1-8b"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-release_date = "2025-02-04"
-last_updated = "2025-02-04"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = false
-knowledge = "2023-12-31"
-open_weights = false
 
-[cost]
-input = 0.8
-output = 1.6
+[api.chat-completions]
 
-[limit]
-context = 32_768
-output = 29_491
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.8
+
+[cost.text.output]
+price = 1.6

@@ -1,3 +1,21 @@
-# ZenMux pricing is non-token-denominated for this route and is intentionally omitted.
+# Price: catalog audio_input $0.00002778 per second ($0.10 per hour); v2 only.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
-base_model = "xai/grok-voice-stt-1.0"
+# ZenMux's "Grok Voice STT 1.0" route is xAI Speech to Text. Its first model,
+# grok-voice-transcribe-1.0, reached end of life on 2026-10-02 and xAI routes it to
+# grok-voice-transcribe-2.0: https://docs.x.ai/developers/release-notes
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Transcriptions: POST /api/v1/audio/transcriptions, JSON input_audio body (https://zenmux.ai/docs/api/openai/create-audio-transcriptions.html)
+schema = 2
+base_model = "xai/grok-voice-transcribe-2.0"
+name = "Grok Voice STT 1.0"
+
+[limit]
+context = 15_000
+output = 15_000
+
+[api.transcriptions]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+unit = "second"
+price = 0.00002778

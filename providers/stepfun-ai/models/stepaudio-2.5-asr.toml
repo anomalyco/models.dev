@@ -1,1 +1,33 @@
-../../stepfun/models/stepaudio-2.5-asr.toml
+# Sources (accessed 2026-10-21):
+# - Speech recognition API (POST /v1/audio/asr/sse; format ogg, mp3, wav, pcm, m4a): https://platform.stepfun.ai/docs/en/api-reference/audio/asr-sse
+# - Pricing: USD 0.022 per hour of audio (https://platform.stepfun.ai/docs/en/guides/pricing/details).
+#   Per minute: 0.022 / 60 = USD 0.000366... (repeating), written as 0.00036667.
+# release_date is unsourced.
+schema = 2
+type = "transcription"
+name = "StepAudio 2.5 ASR"
+description = "Speech transcription model for accurate audio-to-text and captioning workflows"
+family = "step"
+open_weights = false
+release_date = "2026-04-24"
+last_updated = "2026-07-02"
+
+[modalities]
+input = ["audio/ogg", "audio/mpeg", "audio/wav", "audio/pcm", "audio/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0
+
+[api.transcriptions]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.00036667

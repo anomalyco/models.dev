@@ -1,22 +1,36 @@
-# Opt in with chat_template_args.enable_thinking=true. Baseten documents no
-# explicit false behavior, effort values, or reasoning-token budget.
+# Reasoning is off by default. Baseten documents reasoning_effort = none | high:
+# none turns reasoning off, high turns it on (chat_template_args.enable_thinking
+# also works). No reasoning-token budget is documented.
 # https://docs.baseten.co/inference/model-apis/reasoning
-
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 18304/18449 -> 18432/18468; 0/18769 -> 18688/18788; 18688/18769 -> 18688/18788]
+#   changing reasoning_effort between turns keeps the cached prefix [cached/prompt tokens, control -> test: 18304/18424 -> 18304/18424 (reasoning tokens 0 -> 67); 18304/18424 -> 18304/18424 (reasoning tokens 0 -> 70)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 18560/18677 -> 0/18741; 18944/18997 -> 0/19061]
+# effort_updates: left out. Changing reasoning_effort on the next request keeps the cache here, but there's no in-history effort message, so it doesn't count.
+schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron Ultra"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.6
-output = 2.4
-cache_read = 0.12
+cache = { implicit = true }
+system_updates = true
 
 [limit]
 context = 202_800
 output = 202_800
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 2.4

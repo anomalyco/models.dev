@@ -1,27 +1,25 @@
-name = "Kimi K2.6"
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = false
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = true
 
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.16
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+temperature = false
 
 [limit]
 context = 262_140
 output = 262_140
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

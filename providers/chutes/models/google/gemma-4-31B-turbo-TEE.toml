@@ -1,17 +1,23 @@
 # Toggle: chat_template_kwargs.enable_thinking = true|false
 # Source: https://huggingface.co/google/gemma-4-31b-it (chat template exposes enable_thinking)
 # Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
+# Mid-conversation: Chutes serves this model on POST https://llm.chutes.ai/v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://llm.chutes.ai/v1/models
+schema = 2
 base_model = "google/gemma-4-31b-it"
 name = "gemma 4 31B turbo TEE"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.12
-output = 0.37
-cache_read = 0.011999999999999997
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 131_072
 output = 65_536
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.011999999999999997 }
+
+[cost.text.output]
+price = 0.37

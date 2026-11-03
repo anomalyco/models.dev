@@ -1,0 +1,26 @@
+# Released 2026-10-02: https://www.alibabacloud.com/help/en/model-studio/newly-released-models,
+#   https://docs.modelstudio.console.alibabacloud.com/en/model-studio/qwen-image-2-1-pro
+#   Input JPG, JPEG, PNG, BMP, TIFF, WEBP or GIF; output PNG: https://www.alibabacloud.com/help/en/model-studio/qwen-image-edit-guide
+schema = 2
+v2_only = true
+type = "image"
+name = "Qwen-Image-2.1-Pro"
+description = "Qwen-Image-2.1 API tier for image generation and editing with native transparency"
+family = "qwen"
+open_weights = false
+release_date = "2026-10-02"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/tiff", "image/webp", "image/gif"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

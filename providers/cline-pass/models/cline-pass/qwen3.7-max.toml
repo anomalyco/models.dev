@@ -2,11 +2,15 @@
 # Lab Alibaba Qwen3.7 Max: enable_thinking + thinking_budget (providers/alibaba/models/qwen3.7-max.toml)
 # ClinePass OpenAI-compatible Chat Completions path: peers (OpenRouter) expose on/off only, not budget_tokens.
 # Toggle: enable_thinking / reasoning enabled|disabled
+schema = 2
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 2.5
-output = 7.5
-cache_read = 0.5
-cache_write = 3.125
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.5, write = 3.125 }
+
+[cost.text.output]
+price = 7.5

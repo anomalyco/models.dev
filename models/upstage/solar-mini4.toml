@@ -1,0 +1,29 @@
+# Sources (accessed 2026-10-17):
+#   https://console.upstage.ai/docs/models/solar-mini-4
+#   https://console.upstage.ai/docs/capabilities/generate/reasoning
+# Field values mirror Upstage's own first-party host entry in this repo
+# (providers/upstage/models/solar-mini4.toml); host-scoped keys (cost,
+# reasoning_options) are intentionally left to the provider files.
+# Sampling: the chat API reference (https://console.upstage.ai/api/chat) documents temperature and top_p; no top_k.
+schema = 2
+name = "Solar Mini 4"
+description = "Upstage's compact, cost-efficient model for agentic use"
+family = "solar-mini"
+open_weights = false
+knowledge = "2026-02"
+release_date = "2026-09-22"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 524_288
+output = 131_072

@@ -3,16 +3,24 @@
 # Effort: reasoning_effort = low|high|max; no thinking/reasoning toggle.
 # Context follows the 1M dashboard model entry; output is capped at 131,072.
 # PDF input is not advertised on this API.
+# Pricing update: GET https://api.paretoinference.com/v1/models (checked 2026-10-21) lists prompt 0.00000006, completion 0.0000002, input_cache_read 0.000000012 per token (0.06 / 0.20 / 0.012 per 1M); the pricing page says GLM 5.3 Flash is on a 33% promo.
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.03
-output = 0.10
-cache_read = 0.006
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.2

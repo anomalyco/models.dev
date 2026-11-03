@@ -1,0 +1,26 @@
+# Released at DevDay on 2025-10-06: https://openai.com/devday/2025/
+# Model page: https://developers.openai.com/api/docs/models/gpt-image-1-mini
+# Image MIME types: https://developers.openai.com/api/docs/guides/image-generation#output-format (output_format: png, jpeg, webp)
+schema = 2
+v2_only = true
+type = "image"
+name = "GPT-Image-1 Mini"
+description = "Cost-efficient GPT Image 1 variant for image generation and editing"
+family = "gpt-image"
+open_weights = false
+release_date = "2025-10-06"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["image/png", "image/jpeg", "image/webp"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

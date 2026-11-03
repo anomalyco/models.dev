@@ -1,29 +1,56 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: automatic for prompts of 1024+ tokens. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "openai/o3"
 name = "OpenAI o3"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2024-05"
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 2
-output = 8
-cache_read = 0.5
-
-[limit]
-context = 200_000
-output = 100_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = { min_tokens = 1_024 } }
+structured_output = true
+system_updates = true
+service_tier = ["flex", "priority"]
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 3.5
+cache = { read = 0.875 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 1
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 8
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 14
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 4
+
+[cost.web_search]
+price = 10

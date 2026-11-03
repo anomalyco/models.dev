@@ -10,19 +10,19 @@
 # Endpoint-specific effort behavior on this relay was not measured; the
 # baseline is copied per relay convention — adjust if wire probing shows
 # levels collapsing as they do on kimi-k2.7-code (see that file).
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.output]
+price = 0

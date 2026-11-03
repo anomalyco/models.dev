@@ -1,23 +1,24 @@
-name = "ReMM SLERP 13B"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "undi95/remm-slerp-l2-13b"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-release_date = "2023-07-22"
-last_updated = "2023-07-22"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = true
-knowledge = "2023-06-30"
-open_weights = true
 
-[cost]
-input = 0.35
-output = 0.65
+[api.chat-completions]
 
-[limit]
-context = 6_144
-output = 5_529
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.35
+
+[cost.text.output]
+price = 0.65

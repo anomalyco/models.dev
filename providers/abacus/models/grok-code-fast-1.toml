@@ -1,22 +1,21 @@
+# Linked to models/xai/grok-code-fast-1.toml (same model).
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+# Input: text only, inherited from the lab. xAI listed grok-code-fast-1 with inputModalities [TEXT] only
+#   (https://web.archive.org/web/20251222030703/https://docs.x.ai/docs/models/grok-code-fast-1).
+schema = 2
+base_model = "xai/grok-code-fast-1"
 name = "Grok Code Fast 1"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
-release_date = "2025-09-01"
-last_updated = "2025-09-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
+status = "deprecated"
 
-[cost]
-input = 0.20
-output = 1.50
+
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
-context = 256_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 1.5

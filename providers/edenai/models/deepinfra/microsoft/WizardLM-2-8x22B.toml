@@ -1,7 +1,12 @@
+schema = 2
 base_model = "microsoft/wizardlm-2-8x22b"
 name = "WizardLM 2 8x22B (Deep Infra)"
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 0.48
-output = 0.48
+[cost.text.input]
+price = 0.48
+
+[cost.text.output]
+price = 0.48

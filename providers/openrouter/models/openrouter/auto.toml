@@ -1,20 +1,24 @@
-reasoning_options = []
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding; audio: https://openrouter.ai/docs/guides/overview/multimodal/audio; video: https://openrouter.ai/docs/guides/overview/multimodal/videos; image output: https://openrouter.ai/docs/guides/overview/multimodal/image-generation
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: a router, so placement depends on the model it picks
+# effort_updates = false: no per-turn effort control
+# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+schema = 2
 name = "Auto Router"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "auto"
-release_date = "2023-11-08"
-last_updated = "2023-11-08"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2023-11-08"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "audio/wav", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mp4", "application/pdf", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
+output = ["text", "image/png", "image/jpeg", "image/webp"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 2_000_000
 output = 2_000_000
-
-[modalities]
-input = ["text", "image", "audio", "pdf", "video"]
-output = ["text", "image"]

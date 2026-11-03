@@ -1,29 +1,39 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes disagreed (in place on SiliconFlow; hoisted on SiliconFlow)
+# effort_updates = false: no per-turn effort control
+schema = 2
 name = "Hunyuan A13B Instruct"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
 family = "hunyuan"
-release_date = "2025-07-08"
-last_updated = "2025-07-08"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = true
-knowledge = "2025-03-31"
 open_weights = true
+knowledge = "2025-03-31"
+release_date = "2025-07-08"
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.14
-output = 0.57
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 131_072
 output = 117_964
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.57

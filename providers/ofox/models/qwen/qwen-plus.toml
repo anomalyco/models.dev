@@ -1,13 +1,25 @@
 # Sources (accessed 2026-09-11):
 # https://ofox.ai/models/qwen/qwen-plus
 # https://api.ofox.ai/v1/models/qwen/qwen-plus
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen) with a catalog cache-read price, though the catalog's prompt_caching flag is false.
+# structured_output: Ofox's Qwen page documents response_format json_schema (https://ofox.ai/docs/develop/models/qwen); Alibaba's own API agrees (providers/alibaba).
+schema = 2
 base_model = "alibaba/qwen-plus"
-reasoning = false
 
-[cost]
-input = 0.12
-output = 0.29
-cache_read = 0.023
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 32_000
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.023 }
+
+[cost.text.output]
+price = 0.29

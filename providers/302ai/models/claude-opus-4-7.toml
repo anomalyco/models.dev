@@ -1,33 +1,24 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: output_config.effort = low|medium|high|xhigh|max (lab-mapped, not probed on 302.AI)
+schema = 2
+base_model = "anthropic/claude-opus-4-7"
 name = "claude-opus-4-7"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-family = "claude-opus"
-release_date = "2026-04-17"
-last_updated = "2026-04-17"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-temperature = false
-tool_call = true
-open_weights = false
-knowledge = "2026-01-31"
 
-[cost]
-input = 5.000
-output = 25.000
-cache_read = 0.500
-cache_write = 6.250
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 10.000
-output = 37.500
-cache_read = 1.000
-cache_write = 12.500
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
 
-[limit]
-context = 1_000_000
-output = 128_000
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 10
+cache = { read = 1, write = 12.5 }
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 25
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 37.5

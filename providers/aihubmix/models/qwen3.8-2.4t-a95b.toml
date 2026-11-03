@@ -1,21 +1,28 @@
 # AIHubMix Models API reports text,image input (queried 2026-08-31T04:06:29Z).
 # OpenAI-compatible HTTPS image input returned HTTP 200 (validated 2026-08-31T04:08:19Z).
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+# Input: text only, inherited from the lab. Qwen documents Qwen3.8-2.4T-A95B as "a text-only model ... Multimodal inputs are
+#   not supported" (https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B); vision is a Qwen3.8-Max feature. The catalog image flag and an
+#   HTTP 200 on an image request are not evidence the model reads images, so image input is not listed.
+schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
-attachment = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 
-[interleaved]
-field = "reasoning_content"
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 262_000
-output = 262_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 6

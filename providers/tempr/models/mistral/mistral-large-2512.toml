@@ -1,5 +1,15 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-reference
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
+schema = 2
 base_model = "mistral/mistral-large-2512"
 
-[cost]
-input = 0.5
-output = 1.5
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.5

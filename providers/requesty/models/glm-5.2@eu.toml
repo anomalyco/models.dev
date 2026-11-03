@@ -1,14 +1,23 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+# status = deprecated: retires 2026-10-01 on https://router.requesty.ai/v1/models/managed (accessed 2026-10-20)
+schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM-5.2 (EU)"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 1.2
-output = 4.2
-cache_read = 0.26
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.2

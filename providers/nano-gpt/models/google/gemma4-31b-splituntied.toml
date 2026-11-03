@@ -1,24 +1,29 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
 name = "Gemma 4 31B Split-Untied"
 description = "Blazed-Forge's Split-Untied is a text-only Gemma 4 31B community finetune with an untied BF16 output head, built for creative writing, roleplay, expressive dialogue, and tool use."
 family = "gemma"
-release_date = "2026-09-17"
-last_updated = "2026-09-17"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-09-17"
 
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.05
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.3

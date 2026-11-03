@@ -1,0 +1,23 @@
+# Modalities: OpenRouter says "Jev accepts only image/png and image/jpeg" (https://openrouter.ai/docs/guides/community/multimodal-decisions), matching the lab (https://docs.typesafe.ai/images.md)
+schema = 2
+base_model = "typesafe/jev-1.14.0"
+type = "decision"
+description = "Decision model for typed evaluation of shared state"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 262_144
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
+compatibility = { media_input = "state" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

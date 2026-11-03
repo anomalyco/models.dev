@@ -1,8 +1,25 @@
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget (integer reasoning tokens)
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
 base_model = "alibaba/qwen3.6-flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[cost]
-input = 0.188
-output = 1.133
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+
+[cost.text.input]
+price = 0.19
+cache = { read = 0.0171, write = 0.214 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.76
+cache = { read = 0.0686, write = 0.857 }
+
+[cost.text.output]
+price = 1.13
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 4.52

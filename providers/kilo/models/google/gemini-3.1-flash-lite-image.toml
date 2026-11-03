@@ -1,17 +1,24 @@
+schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
 description = "Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image) is Google's fastest, most cost-efficient Gemini image model, built for high-velocity developer pipelines and rapid-fire visual exploration. It delivers text-to-image generation..."
-tool_call = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "high"]
+[modalities]
+input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "text", "application/pdf"]
+output = ["text", "image/png", "image/jpeg"]
 
-[cost]
-input = 0.25
-output = 1.5
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
+structured_output = false
 
 [limit]
 output = 58_982
 
-[modalities]
-input = ["image", "text", "pdf"]
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 1.5
+
+[cost.web_search]
+price = 14

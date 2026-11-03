@@ -1,23 +1,30 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Standalone: no lab file. xAI no longer documents grok-4-0709 (https://docs.x.ai/docs/models/grok-4-0709 now shows the model list), so a lab's output limit and knowledge can't be sourced.
+# Limit: the catalog's max_output_tokens equals context_size (256000), a placeholder; the output limit is the file's previous 8192.
+# Image MIME types: xAI documents jpg/jpeg or png image input for its language models (https://docs.x.ai/developers/models, "Image input models").
+schema = 2
 name = "grok-4-0709"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
-
-[cost]
-input = 2.7
-output = 13.5
-
-[limit]
-context = 256000
-output = 8192
+release_date = "2026-01"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 256_000
+output = 8_192
+
+[cost.text.input]
+price = 2.85
+
+[cost.text.output]
+price = 14.25

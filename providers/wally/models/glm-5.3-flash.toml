@@ -1,0 +1,29 @@
+# Effort: reasoning_effort = low|high|max (default max; minimal maps to low, medium to high). Thinking cannot be turned off; none is rejected.
+# Input: text only; an image_url is rejected with a 400 ("does not take image, audio, video or file input").
+# Cache: automatic; a repeated prompt returns usage.prompt_tokens_details.cached_tokens.
+# Pricing: https://www.runwally.com/pricing
+# Limits and modalities: GET https://inference.runanywhere.ai/v1/models
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.272
+cache = { read = 0.076 }
+
+[cost.text.output]
+price = 0.65

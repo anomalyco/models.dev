@@ -1,6 +1,7 @@
 name = "Jiekou.AI"
 env = ["JIEKOU_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Reasoning HTTP formats (accessed 2026-06-25; docs use api.highwayapi.ai):
 # OpenAI: POST /openai/chat/completions uses top-level `reasoning_effort`.
 # For Gemini it maps disable|none -> budget 0, low -> 1024, medium -> 2048,

@@ -1,5 +1,12 @@
+schema = 2
 base_model = "amazon/nova-pro-v1"
 
-[cost]
-input = 1.10032
-output = 4.40128
+[capabilities]
+structured_output = false
+tools = { supported = true }
+
+[cost.text.input]
+price = 0.8464
+
+[cost.text.output]
+price = 3.3856

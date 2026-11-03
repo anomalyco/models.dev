@@ -1,26 +1,18 @@
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = true
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Reasoning: the catalog lists `reasoning` in supported_parameters; the control set is unchanged from v1 (not re-tested, no API key).
+# Toggle: thinking.type = enabled|disabled (lab wire field, as in providers/zhipuai; FastRouter documents no mapping)
+schema = 2
+base_model = "zhipuai/glm-5"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0.95
-output = 3.15
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 204800
-output = 131072
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 2.08

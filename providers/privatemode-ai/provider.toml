@@ -1,6 +1,7 @@
 name = "Privatemode AI"
-env = ["PRIVATEMODE_API_KEY", "PRIVATEMODE_ENDPOINT"]
+env = ["PRIVATEMODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP reasoning caveat (source accessed 2026-06-25): POST
 # `/v1/chat/completions` is served by the local Privatemode proxy. Additional
 # OpenAI-style request parameters are passed through according to the active

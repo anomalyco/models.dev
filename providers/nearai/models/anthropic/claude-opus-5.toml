@@ -8,13 +8,19 @@
 # overlapping the no-parameter range. No reply carries reasoning_content.
 # Text and image only: the lab entry adds pdf, and a type: "file" content part fails
 # schema deserialisation on every route.
+schema = 2
 base_model = "anthropic/claude-opus-5"
-reasoning_options = []
-
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 25

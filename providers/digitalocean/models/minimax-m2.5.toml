@@ -1,28 +1,45 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates = false: live 2026-10-20, a system message after an assistant turn returns 200 but is not delivered (4 of 4 attempts).
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
 name = "MiniMax M2.5 (Public Preview)"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax-m2.5"
+open_weights = true
+knowledge = "2025-08"
 release_date = "2026-02-12"
 last_updated = "2026-04-16"
-attachment = false
-reasoning = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
 temperature = true
-tool_call = true
-knowledge = "2025-08"
-open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+prompt_cache_key = true
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2
+
+[cost.web_search]
+price = 10

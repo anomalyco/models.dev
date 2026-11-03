@@ -1,14 +1,20 @@
 # Toggle: chat_template_kwargs.thinking = true|false (verified against Inco;
 # reasoning_effort and thinking.type are accepted but ignored). Reasons by
 # default; reasoning_content interleaved field verified against Inco responses.
+# Prices from https://api.inco.ai/v1/models (public, checked 2026-10-21), including cached input.
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 6
-output = 30
+[cost.text.input]
+price = 6
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 30

@@ -1,14 +1,20 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 name = "Gemma 4 26B A4B"
 description = "Gemma 4 26B A4B is a multimodal MoE model with LoRA support and function calling for agentic workflows."
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.1
-output = 0.3
-cache_read = 0.05
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 output = 262_144
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.3

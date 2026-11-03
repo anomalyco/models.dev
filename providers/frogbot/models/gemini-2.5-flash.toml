@@ -1,25 +1,13 @@
-name = "Gemini 2.5 Flash"
+schema = 2
+base_model = "google/gemini-2.5-flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-family = "gemini-flash"
-release_date = "2025-07-17"
-last_updated = "2025-07-17"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 0, max = 24_576 }]
-temperature = true
-knowledge = "2025-01"
-tool_call = true
-open_weights = false
 
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.075
+[capabilities]
+reasoning = { supported = true, budget = { min = 0, max = 24_576 } }
 
-[limit]
-context = 1_048_576
-output = 65_536
+[cost.text.input]
+price = 0.3
+cache = { read = 0.075 }
 
-[modalities]
-input = ["text", "image", "audio", "video", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 2.5

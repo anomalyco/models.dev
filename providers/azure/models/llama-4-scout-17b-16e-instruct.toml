@@ -1,23 +1,32 @@
+# Modalities: Azure names no image formats for Llama 4; these are Meta's (see models/meta/llama-4-scout-17b-instruct.toml).
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 name = "Llama 4 Scout 17B 16E Instruct"
 description = "Open multimodal Llama model for long-context analysis and efficient agents"
 family = "llama"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-08"
-tool_call = true
 open_weights = true
+knowledge = "2024-08"
+release_date = "2025-04-05"
 
-[cost]
-input = 0.20
-output = 0.78
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.78

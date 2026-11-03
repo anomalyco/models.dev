@@ -1,0 +1,36 @@
+# Sources (accessed 2026-10-21):
+# - Models (context 8K, max output 2K): https://mimo.mi.com/static/docs/quick-start/summary/model.md
+# - Input audio: wav and mp3 only (MIME audio/wav, audio/mpeg or audio/mp3), base64 up to 10 MB:
+#   https://mimo.mi.com/static/docs/quick-start/usage-guide/audio/Speech-Recognition.md
+# - Weights (MIT) published with the MiMo-V2.5-TTS + ASR launch; Hugging Face repo created 2026-04-23:
+#   https://huggingface.co/XiaomiMiMo/MiMo-V2.5-ASR, https://mimo.mi.com/static/docs/news/latest/v2.5-tts-release.md
+#   (the API update log lists it on 2026-06-02: https://mimo.mi.com/static/docs/updates/model.md)
+# Sampling: the ASR API takes no temperature, top_p or top_k (https://mimo.mi.com/static/docs/api/audio/Speech-Recognition.md).
+schema = 2
+v2_only = true
+type = "transcription"
+name = "MiMo-V2.5-ASR"
+description = "Speech recognition model for Chinese, English, dialects, and noisy multi-speaker audio"
+family = "mimo"
+open_weights = true
+release_date = "2026-04-23"
+license = "MIT"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 2_048
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-ASR"

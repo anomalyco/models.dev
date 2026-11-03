@@ -1,27 +1,21 @@
-name = "GLM-5.1"
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+# Deprecated: not in GET https://pass.wafer.ai/v1/models (checked 2026-10-21), which lists GLM-5.2, GLM-5.3, GLM-5.3-Flash, Kimi-K3, Qwen3.8-27B and the DeepSeek V4 models.
+schema = 2
+base_model = "zhipuai/glm-5.1"
 description = "General Language Model 5.1 — high-quality bilingual (EN/ZH) generation with strong coding and reasoning capabilities."
-family = "glm"
-release_date = "2026-04-07"
-last_updated = "2026-06-01"
 knowledge = "2025-04"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+status = "deprecated"
 
-[cost]
-input = 1.00
-output = 3.20
-cache_read = 0.10
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 202_752
-output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 0 }
+
+[cost.text.output]
+price = 3.2

@@ -1,0 +1,18 @@
+schema = 2
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3 (Consensus Protocol)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.28
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.1

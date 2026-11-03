@@ -1,25 +1,29 @@
+# Deprecated: no longer listed by GET https://api.intelligence.io.solutions/api/v1/models (2026-10-21)
+schema = 2
 name = "Devstral Small 2505"
 description = "Mistral coding agent model for repository tasks and software engineering workflows"
 family = "devstral"
-release_date = "2025-05-01"
-last_updated = "2025-05-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-12"
 open_weights = false
-
-[cost]
-input = 0.05
-output = 0.22
-cache_read = 0.025
-cache_write = 0.1
-
-[limit]
-context = 128000
-output = 4096
+knowledge = "2024-12"
+release_date = "2025-05-01"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 128_000
+output = 4_096
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.025, write = 0.1 }
+
+[cost.text.output]
+price = 0.22

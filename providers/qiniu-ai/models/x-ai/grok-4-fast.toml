@@ -1,19 +1,23 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+# Modalities: xAI documents jpg/jpeg and png image input (https://docs.x.ai/developers/models, "Image input models"); it documents no audio or video
+# input for Grok 4 Fast, so those stay generic.
+schema = 2
 name = "x-AI/Grok-4-Fast"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-release_date = "2025-09-20"
-last_updated = "2025-09-20"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
-structured_output = false
 open_weights = false
+release_date = "2025-09-20"
+status = "deprecated"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "audio", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+temperature = true
 
 [limit]
 context = 2_000_000
 output = 2_000_000
-
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]

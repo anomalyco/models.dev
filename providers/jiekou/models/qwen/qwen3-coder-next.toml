@@ -1,23 +1,13 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+schema = 2
+base_model = "alibaba/qwen3-coder-next"
 name = "qwen/qwen3-coder-next"
-description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2026-02"
-last_updated = "2026-02"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
+
+[capabilities]
 structured_output = true
-open_weights = true
 
-[cost]
-input = 0.2
-output = 1.5
+[cost.text.input]
+price = 0.2
 
-[limit]
-context = 262144
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.5

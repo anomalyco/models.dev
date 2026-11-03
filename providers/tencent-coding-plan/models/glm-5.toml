@@ -1,31 +1,26 @@
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
 # Top-level `thinking.type` accepts enabled/disabled and defaults enabled
 # (accessed 2026-06-25).
 # https://cloud.tencent.com/document/product/1823/132061
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = false
+# Deprecated: the Coding Plan overview (updated 2026-10-15, checked 2026-10-21) lists only
+# Auto (tc-code-latest) as a plan model: https://cloud.tencent.com/document/product/1772/128947
+schema = 2
+base_model = "zhipuai/glm-5"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 202_752
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

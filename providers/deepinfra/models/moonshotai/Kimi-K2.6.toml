@@ -1,30 +1,38 @@
 # https://deepinfra.com/docs/advanced/max_tokens_limit
-name = "Kimi K2.6"
+# Lab identity: https://deepinfra.com/moonshotai/Kimi-K2.6 (Hugging Face repo moonshotai/Kimi-K2.6)
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 13120/13196 -> 0/13213; 13120/13196 -> 0/13213]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12832/12897 -> 0/12924; 12832/12897 -> 32/12924]
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
-tool_call = true
-knowledge = "2024-04"
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.75
-output = 3.50
-cache_read = 0.15
+cache = { implicit = true }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
 
 [limit]
-context = 262_144
 output = 16_384
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

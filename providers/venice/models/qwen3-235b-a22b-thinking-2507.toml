@@ -1,32 +1,36 @@
 # Live /models (2026-06-25): low|medium|high; no dedicated reasoning budget.
 # https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
-
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
 name = "Qwen 3 235B A22B Thinking 2507"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-family = "qwen"
-release_date = "2025-04-29"
-last_updated = "2026-06-11"
-attachment = false
-reasoning = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.45
-output = 3.5
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.45
+
+[cost.text.output]
+price = 3.5
+
+[cost.web_search]
+price = 10

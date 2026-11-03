@@ -1,11 +1,18 @@
+schema = 2
 base_model = "deepseek/deepseek-chat-v3-0324"
 name = "DeepSeek V3"
 
-[cost]
-input = 0.398866
-output = 1.567956
-cache_read = 0.192556
+[capabilities]
+structured_output = true
+tools = { supported = true }
 
 [limit]
 context = 128_000
 output = 124_000
+
+[cost.text.input]
+price = 0.30682
+cache = { read = 0.14812 }
+
+[cost.text.output]
+price = 1.20612

@@ -1,15 +1,23 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "xai/grok-build-0.1"
-reasoning_options = []
-
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
-
-[limit]
-context = 256_000
-output = 256_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 256_000
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2

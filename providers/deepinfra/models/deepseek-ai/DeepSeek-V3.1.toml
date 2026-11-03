@@ -1,13 +1,28 @@
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 14442/14465 -> 12/14479; 14442/14465 -> 12/14479]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 14238/14262 -> 67/14307; 14238/14262 -> 67/14307]
+schema = 2
 base_model = "deepseek/deepseek-v3.1"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.25
-output = 0.95
-cache_read = 0.13
+cache = { implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 163_840
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 0.95
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

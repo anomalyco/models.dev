@@ -6,18 +6,18 @@
 # RouteLLM max_completion_tokens: 131072
 # RouteLLM input_token_rate: 0.00000014
 # RouteLLM output_token_rate: 0.0000004
+schema = 2
 base_model = "google/gemma-4-31b-it"
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 0.14
-output = 0.4
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
-context = 262_144
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.4

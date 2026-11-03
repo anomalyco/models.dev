@@ -1,10 +1,19 @@
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/glm).
+# Effort: reasoning_effort = high|max (https://ofox.ai/docs/develop/models/glm)
+schema = 2
 base_model = "zhipuai/glm-5.2"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

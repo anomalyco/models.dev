@@ -1,0 +1,31 @@
+# Model card: https://ai.google.dev/gemma/docs/core/model_card_2 (mirrored at https://build.nvidia.com/google/gemma-2-2b-it:
+# text in, text out, "Context Length: 8,192 tokens", "Function Calling: Not supported"). Gemma 2 2B was released on
+# 2024-07-31 (https://developers.googleblog.com/en/smaller-safer-more-transparent-advancing-responsible-ai-with-gemma/).
+# No separate output cap is published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Gemma 2 2B IT"
+description = "Small open Gemma 2 instruction model for lightweight chat and on-device use"
+family = "gemma"
+open_weights = true
+release_date = "2024-07-31"
+license = "Gemma Terms of Use"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8_192
+output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-2-2b-it"

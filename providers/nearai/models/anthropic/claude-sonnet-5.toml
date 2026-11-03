@@ -6,13 +6,19 @@
 # every range overlapping. No reply carries reasoning_content.
 # Text and image only: the lab entry adds pdf, and a type: "file" content part fails
 # schema deserialisation on every route.
+schema = 2
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = []
-
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

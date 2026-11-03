@@ -1,24 +1,22 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh (default none)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+# Modalities: /v1/models architecture.output_modalities = text, image (2026-10-21).
+schema = 2
+base_model = "openai/gpt-5.4-mini"
 name = "GPT-5.4-Mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2026-03-12"
-last_updated = "2026-03-12"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
-temperature = false
-open_weights = false
-tool_call = true
-
-[cost]
-input = 0.68
-output = 4
-cache_read = 0.068
-
-[limit]
-context = 400_000
-input = 272_000
-output = 128_000
 
 [modalities]
-input = ["text", "image"]
-output = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text", "image"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+temperature = false
+
+[cost.text.input]
+price = 0.6818
+cache = { read = 0.0682 }
+
+[cost.text.output]
+price = 4.0909

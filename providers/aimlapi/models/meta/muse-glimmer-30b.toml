@@ -1,13 +1,17 @@
+schema = 2
 base_model = "meta/muse-glimmer-30b"
 
-[interleaved]
-field = "reasoning_details"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[cost]
-input = 0.48139
-output = 2.0631
-cache_read = 0.055016
+[cost.text.input]
+price = 0.3703
+cache = { read = 0.04232 }
+
+[cost.text.output]
+price = 1.587

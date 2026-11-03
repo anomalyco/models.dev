@@ -1,17 +1,15 @@
 # `thinking.type` accepts enabled/disabled (default disabled), while top-level
 # `reasoning_effort` accepts low/medium/high (default low), accessed 2026-06-25.
 # https://cloud.tencent.com/document/product/1823/131208
+schema = 2
 base_model = "tencent/hy3-preview"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[cost.text.output]
+price = 0

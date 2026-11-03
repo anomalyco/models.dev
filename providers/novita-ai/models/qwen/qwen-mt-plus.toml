@@ -1,6 +1,10 @@
 # https://novita.ai/models/model-detail/qwen-qwen-mt-plus
+# system_updates = false: a mid-conversation system message returns 400 "invalid request error" for any system message (live 2026-10-20).
+schema = 2
 base_model = "alibaba/qwen-mt-plus"
 
-[cost]
-input = 0.25
-output = 0.75
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 0.75

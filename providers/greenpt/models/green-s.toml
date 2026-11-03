@@ -1,30 +1,35 @@
-# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
-# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
-# Speech-to-text is billed per hour of audio and converted to a per-minute USD
-# rate for this catalog. cost.input is the standard EUR 0.23/hour pre-recorded
-# rate (0.23 / 60 * 1.14 = 0.00437). A 50% promotion runs through 2026-08-31
-# (EUR 0.12/hour, about USD 0.00228/minute); the durable standard rate is
-# published here so the catalog stays correct after the promotion ends.
-# Live and multilingual tiers are priced higher and cannot be represented in
-# this single-rate field.
+# API: Deepgram-compatible POST /v1/listen (https://docs.greenpt.ai/audio-prerecorded)
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards (accessed 2026-10-21).
+# Speech-to-text, billed per hour of audio: EUR 0.23/hour pre-recorded (standard rate; the 50% launch promotion
+# ended 2026-08-31). Converted at 1.14 USD/EUR (rate captured 2026-07-24): 0.23 * 1.14 / 60 = USD 0.00437 per minute.
+# v1 has no per-minute price, so v1 shows no cost.
+# Needs discussion: live audio (EUR 0.31/hour) and the add-ons (redaction, entity detection, streaming diarization,
+# keyterm prompting; free during the promo) have no v2 condition. Multichannel audio is billed per channel.
+# The host lists no audio formats, so modalities stay generic.
+schema = 2
+type = "transcription"
 name = "Green S"
 description = "GreenPT speech-to-text model for pre-recorded and live transcription"
-release_date = "2025-01"
-last_updated = "2025-01"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = false
+release_date = "2025-01"
 
-[cost]
-input = 0.00437
-output = 0.0
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 0
 output = 8_192
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[api.transcriptions]
+base_url = "https://api.greenpt.ai"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/deepgram-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.00437

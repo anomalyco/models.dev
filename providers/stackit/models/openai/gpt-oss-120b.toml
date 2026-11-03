@@ -1,18 +1,22 @@
+# Prices: STACKIT lists EUR per 1M tokens (net): https://stackit.com/en/products/data-ai/stackit-ai-model-serving
+# Existing USD values were converted at about 1.17 USD/EUR (original rate and date not recorded).
+schema = 2
 base_model = "openai/gpt-oss-120b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.53
-output = 0.76
 
 [limit]
 context = 131_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.53
+
+[cost.text.output]
+price = 0.76

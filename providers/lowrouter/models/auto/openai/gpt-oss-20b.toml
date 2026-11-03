@@ -14,12 +14,15 @@
 # minimal, low, medium, high, xhigh)'.
 # none, minimal, xhigh were also accepted by this host, which passes the field through; gpt-oss documents only
 # low, medium, high, so they are not listed as distinct levels.
+schema = 2
 base_model = "openai/gpt-oss-20b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.113
-output = 0.4745
+[cost.text.input]
+price = 0.113
+
+[cost.text.output]
+price = 0.4745

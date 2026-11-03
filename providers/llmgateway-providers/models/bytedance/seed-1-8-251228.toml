@@ -1,28 +1,28 @@
+# Modalities: image formats from models/bytedance-seed/seed-1-8.toml (same model)
+schema = 2
 name = "Seed 1.8 (251228) (ByteDance)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
-release_date = "2025-12-18"
-last_updated = "2025-12-18"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-12-18"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic"]
+output = ["text"]
 
-[cost]
-input = 0.25
-output = 2
-cache_read = 0.05
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = false
+temperature = true
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 2

@@ -12,19 +12,24 @@
 # A GMI Chat Completions probe with reasoning_split=true returned 170 chars of
 # reasoning_content for adaptive and omitted reasoning_content for disabled.
 # Native wire docs: https://platform.minimax.io/docs/api-reference/text-openai-api
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.60
-output = 2.40
-cache_read = 0.12
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[[cost.tiers]]
-tier = { type = "context", size = 512_000 }
-input = 1.20
-output = 4.80
-cache_read = 0.24
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
 
-[limit]
-context = 1_048_576
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 1.2
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 2.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 4.8

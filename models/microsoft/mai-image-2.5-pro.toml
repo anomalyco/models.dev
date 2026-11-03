@@ -1,0 +1,27 @@
+# Released 2026-07-23: https://microsoft.ai/news/introducing-mai-image-2-5-pro-and-mai-voice-2-flash/
+#   Model card: https://microsoft.ai/pdf/MAI-Image-2.5_Pro-Model_Card.pdf
+#   Edits take JPEG or PNG references; output is always PNG; prompt up to 32,000 tokens:
+#   https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-mai-image
+schema = 2
+v2_only = true
+type = "image"
+name = "MAI-Image-2.5-Pro"
+description = "Highest-fidelity MAI-Image-2.5 model for detailed editing and in-image text"
+family = "mai"
+open_weights = false
+release_date = "2026-07-23"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0

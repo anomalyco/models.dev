@@ -1,22 +1,21 @@
+# Status: https://poe.com/Gemini-2.0-Flash is titled "Gemini-2.0-Flash_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "google/gemini-2.0-flash"
 name = "Gemini-2.0-Flash"
-description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-family = "gemini-flash"
-release_date = "2024-12-11"
-last_updated = "2024-12-11"
-attachment = true
-reasoning = false
-temperature = false
-open_weights = false
-tool_call = true
+status = "deprecated"
 
-[cost]
-input = 0.1
-output = 0.42
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+temperature = false
 
 [limit]
 context = 990_000
-output = 8_192
 
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.42

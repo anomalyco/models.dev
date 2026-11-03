@@ -4,21 +4,29 @@
 # Field values mirror Mistral's own first-party host entry in this repo
 # (providers/mistral/models/voxtral-small-latest.toml); host-scoped keys
 # (cost, status) are intentionally left to the provider files.
+# Audio formats: Mistral's docs list none for chat audio input (the known-limitations page lists WAV, MP3, FLAC, OGG and
+#   WEBM for /v1/audio/transcriptions only; the Hugging Face card and mistral-common, which decodes through libsndfile,
+#   list none). Mistral's chat API rejects other files with "Failed to load audio file. Verify that the given file is
+#   valid mp3 or wav." (live 2026-10-19 on voxtral-small-2507: WAV and MP3 transcribed, OGG and WEBM rejected, FLAC
+#   also decoded but is not in that list).
+schema = 2
 name = "Voxtral Small (latest)"
 description = "Instruct model with native audio input for speech understanding and tool use"
 family = "voxtral"
-release_date = "2025-07-15"
-last_updated = "2025-07-15"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-07-15"
+
+[modalities]
+input = ["text", "audio/wav", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 32_000
 output = 32_000
-
-[modalities]
-input = ["text", "audio"]
-output = ["text"]

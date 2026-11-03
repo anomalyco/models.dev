@@ -1,18 +1,22 @@
-base_model = "deepseek/deepseek-r1"
+# Retired 2026-10-04 (rerouted to its replacement): https://docs.tensorx.ai/api-reference/model-deprecation (accessed 2026-10-21).
+# knowledge: kept from the deepseek/deepseek-r1 lab this file used to link to (the 0528 lab states none), so v1 doesn't lose it.
+# Effort: reasoning_effort = <value>; reasoning is mandatory and "none" is rejected (from the v1 file's inline comment; the model is retired, so the current docs no longer cover it).
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
 name = "DeepSeek R1-0528"
-release_date = "2025-05-28"
-last_updated = "2025-05-28"
+knowledge = "2024-07"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; reasoning is mandatory, "none" is rejected
-values = ["minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.66
-output = 2.6
-cache_read = 0.165
-cache_write = 0.825
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
-context = 164000
-output = 8192
+context = 164_000
+output = 8_192
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.165, write = 0.825 }
+
+[cost.text.output]
+price = 2.6

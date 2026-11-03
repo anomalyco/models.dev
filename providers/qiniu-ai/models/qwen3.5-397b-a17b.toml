@@ -1,19 +1,33 @@
+# Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
+# Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B A17B"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-02-22"
-last_updated = "2026-02-22"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-temperature = true
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = false
-open_weights = false
 
 [limit]
 context = 256_000
 output = 64_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.17391304
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.43478261
+
+[cost.text.output]
+price = 1.04347826
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 2.60869565

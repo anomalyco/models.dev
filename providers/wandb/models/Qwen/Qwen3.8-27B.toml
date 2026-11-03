@@ -1,16 +1,24 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
+# Input MIME types: the lab's image list; CoreWeave's catalog reports image input without formats (https://trace.wandb.ai/inference/modelsdev/models).
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 description = "Qwen3.8-27B is a dense multimodal model suited for coding, research, vision, and long-running agent tasks."
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
-[cost]
-input = 0.4
-output = 3
-cache_read = 0.15
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.4
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3

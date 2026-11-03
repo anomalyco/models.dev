@@ -1,0 +1,32 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-realtime-mini
+# https://developers.openai.com/api/docs/pricing
+# https://developers.openai.com/api/docs/deprecations
+schema = 2
+v2_only = true
+base_model = "openai/gpt-realtime-mini"
+status = "deprecated"
+
+[capabilities]
+structured_output = false
+
+[api.realtime]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 2.4
+
+[cost.audio.input]
+price = 10
+cache = { read = 0.3 }
+
+[cost.audio.output]
+price = 20
+
+[cost.image.input]
+price = 0.8
+cache = { read = 0.08 }

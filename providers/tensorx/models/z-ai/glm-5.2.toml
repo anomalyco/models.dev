@@ -1,16 +1,18 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default on). Effort: reasoning_effort = high|max ("low"/"medium" map to "high").
+# https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-10-21)
+schema = 2
 base_model = "zhipuai/glm-5.2"
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}} (default on)
-
-[[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 1.5
-output = 4.5
-cache_read = 0.375
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
-context = 1048576
+context = 1_048_576
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.375 }
+
+[cost.text.output]
+price = 4.5

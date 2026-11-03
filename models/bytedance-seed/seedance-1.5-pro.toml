@@ -1,0 +1,26 @@
+# Released 2025-12-16: https://seed.bytedance.com/en/blog/sound-and-vision-all-in-one-take-the-official-release-of-seedance-1-5-pro
+# Image formats jpeg, png, webp, bmp, tiff, gif: https://www.volcengine.com/docs/82379/1520757
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "Seedance 1.5 Pro"
+description = "Audio-visual model that generates video and sound together from text or images"
+family = "seed"
+open_weights = false
+release_date = "2025-12-16"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

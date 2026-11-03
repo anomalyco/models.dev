@@ -1,25 +1,23 @@
+# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
+# Effort: reasoning.effort = none|low|medium|high (none disables); GET /api/v1/models lists supports_reasoning = true (2026-10-21). https://io.net/docs/guides/intelligence/reasoning-for-chat-completions
+# gpt-oss always reasons, so none is not listed.
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+schema = 2
+base_model = "openai/gpt-oss-20b"
 name = "GPT-OSS 20B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2024-12-01"
-last_updated = "2024-12-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 knowledge = "2024-10"
-open_weights = true
 
-[cost]
-input = 0.03
-output = 0.14
-cache_read = 0.015
-cache_write = 0.06
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
-context = 64000
-output = 4096
+context = 64_000
+output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.055
+cache = { read = 0.0275 }
+
+[cost.text.output]
+price = 0.194

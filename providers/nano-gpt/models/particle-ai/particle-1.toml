@@ -1,0 +1,26 @@
+schema = 2
+name = "Particle-1"
+description = "Particle-1 is Particle AI’s coding and data-engineering model, post-trained on DeepSeek V4.1 Flash. It accepts text and images, supports tool calling, and offers a shared 1,048,576-token context window with up to 131,072 output tokens, including reasoning. Reasoning defaults to high and can be turned off. JSON formatting is supported; strict JSON-schema enforcement is not guaranteed."
+open_weights = false
+release_date = "2026-10-29"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1

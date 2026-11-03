@@ -1,11 +1,16 @@
+# Cost: Anthropic list price (https://docs.anthropic.com/en/docs/about-claude/pricing), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
-
 name = "anthropic--claude-4.5-haiku"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 
-[cost]
-input = 1.00
-output = 5.00
-cache_read = 0.1
-cache_write = 1.25
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

@@ -2,10 +2,15 @@
 # Pricing (USD/MTok, accessed 2026-08-27):
 # - Public hub $0.30/$1.20: https://www.tokengo.com/models
 # - Exact console rates incl. cache $0.30/$1.20/$0.03 (TokenGo model table ratios)
+schema = 2
 base_model = "minimax/MiniMax-M2.5"
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

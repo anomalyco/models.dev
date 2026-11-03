@@ -1,29 +1,55 @@
+# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4o-mini
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+schema = 2
 name = "GPT-4o mini"
 description = "Small omni GPT for cheap multimodal assistance and production-scale traffic"
 family = "gpt-mini"
-release_date = "2024-07-18"
-last_updated = "2024-07-18"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-09"
-tool_call = true
-structured_output = true
 open_weights = false
+knowledge = "2023-09"
+release_date = "2024-07-18"
 
-[cost]
-input = 0.15
-output = 0.60
-cache_read = 0.075
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+system_updates = true
+store = true
+cache = { implicit = { min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["priority"]
 
 [limit]
 context = 128_000
 output = 16_384
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.responses]
+capabilities = { tools = { updates = true } }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.6
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.6666666667 }
 
 [experimental.modes.fast]
-cost = { input = 0.25, output = 1.00, cache_read = 0.125 }
-provider = { body = { service_tier = "priority" } }
+service_tier = "priority"
+body = { service_tier = "priority" }

@@ -6,14 +6,23 @@
 # level on a hard arithmetic prompt, reasoning_content length came back
 # minimal 707/697/917, high 823/892/755, max 712/861/690, i.e. fully overlapping,
 # so no graded control is declared.
+# Deprecated: no longer in the Coding Plan's supported Model Name list at https://www.volcengine.com/docs/82379/1928261
+# (checked 2026-10-21: doubao-seed-evolving, -2.1-pro, -2.1-lite, -2.0-mini, glm-5.3, glm-5.3-flash, deepseek-v4.1-flash(-economy),
+# deepseek-v4-flash, deepseek-v4-pro, kimi-k2.8-preview, kimi-k3).
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+status = "deprecated"
 
-reasoning_options = []
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

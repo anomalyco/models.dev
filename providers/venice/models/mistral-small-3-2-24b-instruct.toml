@@ -1,9 +1,26 @@
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+schema = 2
 base_model = "mistral/mistral-small-3.2-24b-instruct"
 name = "Mistral Small 3.2 24B Instruct"
-description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-release_date = "2026-01-15"
-last_updated = "2026-06-11"
 
-[cost]
-input = 0.09375
-output = 0.25
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.09375
+
+[cost.text.output]
+price = 0.25
+
+[cost.web_search]
+price = 10

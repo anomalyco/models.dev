@@ -1,21 +1,30 @@
+# Effort: Cortecs "accepts: 'reasoning_effort': 'low' | 'medium' | 'high'" (https://docs.cortecs.ai/routing/reasoning, "Controlling Reasoning").
+# Mapping: Tensorix, "Cortecs accepts the standard reasoning_effort parameter and automatically maps it to Tensorix's format"; DeepSeek "require[s] reasoning_effort to be provided to enable it" (same page).
+# Mapping: Sference, "reasoning_effort accepts: none, minimal, low, medium, high, xhigh" (same page).
+# Open: Cortecs documents no reasoning_effort mapping or native thinking/max control for its Inceptron and Scaleway routes (same page); left as is, see PR.
 # Cost converted from EUR at 1 EUR = 1.1515 USD (rate 2026-08-04).
 # EUR list: input €0.224 / output €0.269 / cache_read €0.056 per MTok.
 # https://api.cortecs.ai/v1/models (accessed 2026-08-04)
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 base_model_omit = ["structured_output"]
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.09
-output = 0.17
-cache_read = 0.014
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.082
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.413

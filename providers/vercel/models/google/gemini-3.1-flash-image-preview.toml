@@ -1,18 +1,22 @@
+schema = 2
 base_model = "google/gemini-3.1-flash-image-preview"
 name = "Gemini 3.1 Flash Image Preview (Nano Banana 2)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text", "image/png", "image/jpeg"]
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+cache = { implicit = true }
 
 [limit]
 context = 131_072
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3

@@ -1,15 +1,21 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 base_model = "undi95/remm-slerp-l2-13b"
-attachment = true
-structured_output = false
 
-[cost]
-input = 0.799
-output = 1.207
-cache_read = 0.3995
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
 
 [limit]
 input = 6_144
 output = 4_096
 
-[modalities]
-input = ["text", "pdf"]
+[cost.text.input]
+price = 0.799
+cache = { read = 0.3995 }
+
+[cost.text.output]
+price = 1.207

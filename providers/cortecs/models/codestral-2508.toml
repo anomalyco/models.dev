@@ -1,11 +1,21 @@
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: automatic prefix caching on every routed provider (mistral). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 base_model = "mistral/codestral-2508"
 description = "Mistral coding model for code completion, generation, and developer workflows"
 
-[cost]
-input = 0.368
-output = 1.103
-cache_read = 0.037
+[capabilities]
+tools = { supported = true }
+cache = { implicit = true }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 256_000
+
+[cost.text.input]
+price = 0.368
+cache = { read = 0.037 }
+
+[cost.text.output]
+price = 1.103

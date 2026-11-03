@@ -1,0 +1,20 @@
+# NEAR catalog: https://near.ai/models/deepseek/deepseek-v4.1-flash-1017 (Incognito, served through OpenRouter ZDR, $0.3 in / $1.2 out / $0.006 cache read per 1M, 1048K context)
+# Lab controls: https://api-docs.deepseek.com/guides/thinking_mode/ (thinking.type = enabled|disabled, reasoning_effort = low|high|max, default high)
+# Lab peer: providers/deepseek/models/deepseek-flash.toml (same base deepseek/deepseek-v4.1-flash-1017, toggle + low|high|max)
+# Relay peer: providers/openrouter/models/deepseek/deepseek-v4.1-flash-1017.toml (effort none|low|high|max, $0.3/$1.2/$0.006, 1048576 context)
+# Gateway passthrough: https://docs.near.ai/cloud/reasoning-models (third-party models use provider-native reasoning controls)
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

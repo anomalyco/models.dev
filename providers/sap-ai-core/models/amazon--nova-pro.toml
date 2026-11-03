@@ -1,22 +1,20 @@
+# Cost: Amazon Bedrock list price (https://aws.amazon.com/bedrock/pricing/, as in providers/amazon-bedrock), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Input: text, image and video; the SAP AI Core calculator lists no document (PDF) input for this model.
+schema = 2
+base_model = "amazon/nova-pro"
 name = "amazon--nova-pro"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "nova-pro"
-release_date = "2024-12-03"
-last_updated = "2024-12-03"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
-
-[cost]
-input = 0.56
-output = 2.13
-
-[limit]
-context = 300_000
-output = 8_192
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska", "video/webm", "video/x-flv", "video/mpeg", "video/x-ms-wmv", "video/3gpp"]
 output = ["text"]
+
+[limit]
+output = 8_192
+
+[cost.text.input]
+price = 0.8
+
+[cost.text.output]
+price = 3.2

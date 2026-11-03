@@ -6,18 +6,25 @@
 # Toggle: chat_template_kwargs.thinking = true|false (default true / reasoning on).
 # Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10).
 # EUR/MTok: input 1.55 / output 7.74 / cached input 0.15
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 name = "Kimi (latest)"
 status = "deprecated"
-reasoning_options = [{ type = "toggle" }]
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
 
-[cost]
-input = 1.7910
-output = 8.9436
-cache_read = 0.1733
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 256_000
+
+[cost.text.input]
+price = 1.791
+cache = { read = 0.1733 }
+
+[cost.text.output]
+price = 8.9436

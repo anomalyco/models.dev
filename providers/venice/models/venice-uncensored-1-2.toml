@@ -1,22 +1,39 @@
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+schema = 2
 name = "Venice Uncensored 1.2"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
 family = "venice"
+open_weights = true
 release_date = "2026-04-01"
 last_updated = "2026-06-11"
-attachment = true
-reasoning = false
-tool_call = true
-structured_output = true
-open_weights = true
 
-[cost]
-input = 0.2
-output = 0.9
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
 
 [limit]
 context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.9
+
+[cost.web_search]
+price = 10

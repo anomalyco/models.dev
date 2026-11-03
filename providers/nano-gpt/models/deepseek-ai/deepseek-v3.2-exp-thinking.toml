@@ -1,25 +1,29 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 name = "DeepSeek V3.2 Exp Thinking"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek-thinking"
+open_weights = true
 release_date = "2024-01-01"
 last_updated = "2025-09-29"
-attachment = false
-reasoning = true
-tool_call = false
-structured_output = false
-open_weights = true
-reasoning_options = []
 
-[cost]
-input = 0.28
-output = 0.42
-cache_read = 0.14
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
 
 [limit]
 context = 163_840
 input = 163_840
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.28
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 0.42

@@ -1,22 +1,19 @@
+# Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
+# and POST /v1/chat/completions returns 404 "Function ...: Not found for account" (probed 2026-10-21).
+schema = 2
+base_model = "mistral/mistral-7b-instruct-v0.3"
 name = "Mistral-7B-Instruct-v0.3"
-description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
-release_date = "2025-04-01"
-last_updated = "2025-04-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[capabilities]
+structured_output = true
 
 [limit]
 context = 65_536
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

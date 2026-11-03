@@ -1,0 +1,32 @@
+# Published 2023-12-06 under CreativeML Open RAIL-M: https://huggingface.co/Lykon/dreamshaper-8-lcm
+# DreamShaper 8 (a Stable Diffusion 1.5 fine-tune for photorealism) distilled with a latent consistency model for few-step
+# generation. Output stays generic `image`: the open weights produce pixels and the format is chosen by the host.
+# Prompts are not chat tokens, so context and output are 0.
+schema = 2
+v2_only = true
+type = "image"
+name = "DreamShaper 8 LCM"
+description = "Latent-consistency distilled DreamShaper 8 Stable Diffusion fine-tune for fast photorealistic images"
+family = "stable-diffusion"
+open_weights = true
+release_date = "2023-12-06"
+license = "CreativeML Open RAIL-M"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Lykon/dreamshaper-8-lcm"

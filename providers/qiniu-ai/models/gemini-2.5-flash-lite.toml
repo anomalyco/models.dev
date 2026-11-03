@@ -1,18 +1,16 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
+base_model = "google/gemini-2.5-flash-lite"
 name = "Gemini 2.5 Flash Lite"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = true
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
-open_weights = false
-
-[limit]
-context = 1_048_576
-output = 64_000
+status = "deprecated"
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+output = 64_000

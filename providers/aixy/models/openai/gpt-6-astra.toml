@@ -2,23 +2,30 @@
 # https://developers.openai.com/api/docs/pricing
 # https://developers.openai.com/api/docs/models/gpt-6-astra
 # Long-context rates apply to the full request above 272K input tokens.
+schema = 2
 base_model = "openai/gpt-6-astra"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 10.00
-cache_read = 1.00
-cache_write = 12.50
-output = 50.00
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 20.00
-cache_read = 2.00
-cache_write = 25.00
-output = 75.00
+[api.responses]
+base_url = "https://api.aixy-gateway.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+legacy_shape = "responses"
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://api.aixy-gateway.com/v1"
-shape = "responses"
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

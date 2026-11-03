@@ -1,21 +1,29 @@
+# Type video: text + control video in, MP4 video out (https://build.nvidia.com/nvidia/cosmos-transfer2_5-2b).
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21).
+# Formats: control video mp4 in, mp4 out (https://build.nvidia.com/nvidia/cosmos-transfer2_5-2b.md); the card
+# lists no image format, so image stays generic.
+schema = 2
+type = "video"
 name = "cosmos-transfer2.5-2b"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
-release_date = "2026-02-26"
-last_updated = "2026-02-26"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
+description = "Generates physics-aware video world states from text and spatial control videos"
 open_weights = true
+release_date = "2026-02-26"
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "image", "video/mp4"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 0
 output = 4_096
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["video"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

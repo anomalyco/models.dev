@@ -1,11 +1,14 @@
+schema = 2
 base_model = "openai/gpt-5.4-nano"
 name = "GPT-5.4 Nano (OpenAI)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
 
-[cost]
-input = 0.2
-output = 1.25
-cache_read = 0.02
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 1.25

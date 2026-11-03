@@ -1,28 +1,18 @@
+schema = 2
+base_model = "sakana/fugu-ultra-v2"
 name = "Fugu Ultra v2.0 (Sakana AI)"
-description = "Quality-first multi-agent model for hard research, analysis, and competitions"
-family = "fugu"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
-open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
-
-[cost]
-input = 5
-output = 30
-cache_read = 0.5
+temperature = true
 
 [limit]
-context = 1_000_000
 output = 1_000_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 30
