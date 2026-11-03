@@ -1,0 +1,20 @@
+schema = 2
+base_model = "openai/gpt-6-luna"
+base_model_omit = ["limit.input"]
+
+[modalities]
+input = ["text", "image/webp", "image/png", "image/gif", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[limit]
+context = 922_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.5
