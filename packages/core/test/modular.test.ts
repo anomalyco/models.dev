@@ -33,6 +33,13 @@ test("converts per-token catalog prices to per-1M prices without float noise", (
   expect(built.limit).toEqual(existing.limit);
 });
 
+test("keeps the local cache price when the catalog omits it or lists zero", () => {
+  const omitted = buildModularModel({ ...model, pricing: { ...model.pricing, cached_input: undefined } }, { cost: existing.cost, limit: existing.limit }) as Record<string, any>;
+  const zero = buildModularModel({ ...model, pricing: { ...model.pricing, cached_input: "0" } }, { cost: existing.cost, limit: existing.limit }) as Record<string, any>;
+  expect(omitted.cost.cache_read).toBe(0.01);
+  expect(zero.cost.cache_read).toBe(0.01);
+});
+
 test("keeps measured limits instead of the catalog's rounded context window", () => {
   const built = buildModularModel(model, { cost: existing.cost, limit: { context: 1_000_000, output: 8192 } }) as Record<string, any>;
   expect(built.limit).toEqual({ context: 1_000_000, output: 8192 });

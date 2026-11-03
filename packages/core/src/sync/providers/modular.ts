@@ -100,11 +100,13 @@ export function buildModularModel(
   // Only prices are authoritative here. The catalog's context window is
   // rounded display text ("1M"), and its modalities are incomplete.
   const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;
+  const cacheRead = perMillion(model.pricing.cached_input);
   const cost = {
     ...existing.cost,
     input: perMillion(model.pricing.input)!,
     output: perMillion(model.pricing.output)!,
-    cache_read: perMillion(model.pricing.cached_input),
+    // A missing or zero cache price is not a new free-cache offer, so keep the local value.
+    cache_read: cacheRead !== undefined && cacheRead > 0 ? cacheRead : existing.cost.cache_read,
   };
   const values = { ...current, cost } as SyncedFullModel;
 
