@@ -1,12 +1,17 @@
-# Effort: reasoning_effort = none|low|high|max on POST /v1/chat/completions.
-# none is sent upstream as thinking.type = disabled; no reasoning comes back (tested 2026-10-14).
+# Effort: reasoning_effort = none|low|high|max on POST /v1/chat/completions; default high.
+# none is sent upstream as thinking.type = disabled (tested 2026-11-03: no reasoning came back with none, and it did without).
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/deepseek-v4-flash-0731 (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
 
-[cost]
-input = 0.029
-output = 0.087
-cache_read = 0.00044
+[cost.text.input]
+price = 0.029
+cache = { read = 0.00044 }
+
+[cost.text.output]
+price = 0.087

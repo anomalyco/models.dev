@@ -1,12 +1,22 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max on POST /v1/chat/completions.
+# API: Anthropic Messages, POST https://api.zurelay.com/v1/messages with x-api-key; cache_control, thinking
+# and output_config pass through (https://zurelay.com/docs/anthropic, accessed 2026-11-03).
+# Effort: output_config.effort = low|medium|high|xhigh|max on POST /v1/messages (Zurelay maps reasoning_effort the same way).
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/claude-fable-5-1 (USD per 1M tokens, accessed 2026-11-03).
+# Cache writes: 1.25x input for 5 minutes, 2x for 1 hour (https://zurelay.com/docs/anthropic#prompt-caching).
+schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
-[cost]
-input = 3.5
-output = 17.5
-cache_read = 0.35
-cache_write = 4.375
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 3.5
+cache = { read = 0.0875, write = { "5m" = 4.375, "1h" = 7 } }
+
+[cost.text.output]
+price = 17.5

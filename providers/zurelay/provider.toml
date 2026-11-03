@@ -1,14 +1,17 @@
-# Zurelay: an OpenAI-compatible API for Anthropic, OpenAI, Google, xAI,
-# DeepSeek, Alibaba, Z.ai, MiniMax, Xiaomi, Moonshot and Tencent models, at
-# prices below each lab's list price. Prices and context windows per model:
-# https://zurelay.com/docs/models
-# Reasoning: POST /v1/chat/completions takes top-level reasoning_effort. Each
-# model takes the levels in its file; a level it doesn't take runs at the
-# closest one it does, and none turns thinking off where listed. A few
-# models switch thinking another way, as their files say.
-# https://zurelay.com/docs/chat (accessed 2026-10-14)
+# Zurelay: one OpenAI-compatible API for models from Anthropic, OpenAI, Google, xAI, DeepSeek,
+# Alibaba, Z.ai, MiniMax, Xiaomi, Moonshot AI, Meta, StepFun and Mistral AI, priced below each lab's
+# list price. Models, prices and context windows: https://zurelay.com/docs/models
+# (machine-readable: https://zurelay.com/prices.json).
+# Reasoning: POST /v1/chat/completions takes top-level reasoning_effort. Each model takes the levels
+# in its file; a level it doesn't take runs at the closest one it does, and thinking goes off only
+# with none, where listed. https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Caching: input read from a model's prompt cache is billed at its cached price
+# (usage.prompt_tokens_details.cached_tokens). Claude models are listed on Zurelay's Anthropic Messages
+# API (POST /v1/messages), where cache_control caching and thinking work as on Anthropic's own API:
+# https://zurelay.com/docs/anthropic (accessed 2026-11-03)
 name = "Zurelay"
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 env = ["ZURELAY_API_KEY"]
 api = "https://api.zurelay.com/v1"
 doc = "https://zurelay.com/docs/models"

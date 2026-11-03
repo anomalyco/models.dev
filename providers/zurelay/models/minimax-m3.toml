@@ -1,15 +1,23 @@
-# Toggle: thinking.type = enabled|disabled (tested 2026-10-14).
-# reasoning_effort doesn't change MiniMax-M3's thinking on this host.
+# Inputs on this host: text, images, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Toggle: reasoning_effort = none turns thinking off (Zurelay sends thinking.type = disabled upstream);
+# any other level, or leaving it out, thinks (tested 2026-11-03: no reasoning came back with none, and it did without).
+# https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/minimax-m3 (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
 base_model = "minimax/MiniMax-M3"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+cache = { implicit = true }
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
-[cost]
-input = 0.13
-output = 0.51
-cache_read = 0.026
+[cost.text.input]
+price = 0.13
+cache = { read = 0.026 }
+
+[cost.text.output]
+price = 0.51

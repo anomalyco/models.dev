@@ -1,18 +1,24 @@
-# Effort: reasoning_effort = none|low|medium|xhigh on POST /v1/chat/completions.
-# none turns thinking off; no reasoning comes back (tested 2026-10-14).
-# Modalities: this host also reads PDFs for this model, sent as file parts and checked
-# with a code-word PDF (2026-10-01). https://zurelay.com/docs/chat
+# Inputs on this host: text, images, PDFs, video, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# PDFs: this host reads them for this model as file parts (tested 2026-11-03: it read a code word from a PDF).
+# Effort: reasoning_effort = none|low|medium|xhigh on POST /v1/chat/completions; default xhigh.
+# none turns thinking off.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/qwen3.8-flash (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], default = { type = "effort", value = "xhigh" } }
+cache = { implicit = true }
 
 [modalities]
-input = ["text", "image", "pdf", "video"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4", "video/quicktime"]
 output = ["text"]
 
-[cost]
-input = 0.07
-output = 0.22
-cache_read = 0.007
+[cost.text.input]
+price = 0.07
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 0.22

@@ -1,11 +1,16 @@
-# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions.
+# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions; default max.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/glm-5.3 (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
 base_model = "zhipuai/glm-5.3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+cache = { implicit = true }
 
-[cost]
-input = 0.38
-output = 1.21
-cache_read = 0.038
+[cost.text.input]
+price = 0.38
+cache = { read = 0.038 }
+
+[cost.text.output]
+price = 1.21

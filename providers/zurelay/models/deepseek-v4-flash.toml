@@ -1,19 +1,24 @@
-# Effort: reasoning_effort = none|low|high|max on POST /v1/chat/completions.
-# none is sent upstream as thinking.type = disabled; no reasoning comes back (tested 2026-10-14).
-# Modalities: this host reads images for this model as image_url parts (tested 2026-10-14: it read
-# a picture's headline back). attachment follows. https://zurelay.com/docs/chat
+# Inputs on this host: text, images, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Images: this host reads them for this model (tested 2026-11-03: it described a photo sent as an image_url part).
+# Effort: reasoning_effort = none|high|max on POST /v1/chat/completions; default high.
+# none is sent upstream as thinking.type = disabled (tested 2026-11-03: no reasoning came back with none, and it did without).
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/deepseek-v4-flash (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
-attachment = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
-[cost]
-input = 0.03
-output = 0.12
-cache_read = 0.00074
+[cost.text.input]
+price = 0.03
+cache = { read = 0.00074 }
+
+[cost.text.output]
+price = 0.12

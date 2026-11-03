@@ -1,12 +1,23 @@
-# Effort: reasoning_effort = none|low|medium|xhigh on POST /v1/chat/completions.
-# none turns thinking off; no reasoning comes back (tested 2026-10-14).
+# Inputs on this host: text, images, PDFs, video, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Effort: reasoning_effort = none|low|medium|xhigh on POST /v1/chat/completions; default xhigh.
+# none turns thinking off.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/qwen3.8-max (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
 base_model = "alibaba/qwen3.8-max"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], default = { type = "effort", value = "xhigh" } }
+cache = { implicit = true }
 
-[cost]
-input = 1.2
-output = 3.6
-cache_read = 0.15
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4", "video/quicktime"]
+output = ["text"]
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.6

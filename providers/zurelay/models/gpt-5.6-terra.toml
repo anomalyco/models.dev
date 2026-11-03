@@ -1,17 +1,27 @@
-# Effort: reasoning_effort = none|low|medium|high|xhigh|max on POST /v1/chat/completions; none turns thinking off.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max on POST /v1/chat/completions; default medium.
+# none turns thinking off.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/gpt-5.6-terra (USD per 1M tokens, accessed 2026-11-03).
+# Prompts over 272,000 tokens: 2x every input price, 1.5x output, as the lab bills them.
+schema = 2
 base_model = "openai/gpt-5.6-terra"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "medium" } }
+cache = { implicit = true }
 
-[cost]
-input = 0.54
-output = 3.26
-cache_read = 0.054
+[cost.text.input]
+price = 0.54
+cache = { read = 0.054 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 1.08
-output = 4.89
-cache_read = 0.108
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.08
+cache = { read = 0.108 }
+
+[cost.text.output]
+price = 3.26
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.89

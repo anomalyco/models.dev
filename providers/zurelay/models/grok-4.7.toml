@@ -1,15 +1,22 @@
-# Effort: reasoning_effort = low|medium|high|xhigh on POST /v1/chat/completions.
+# Inputs on this host: text, images, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Effort: reasoning_effort = low|medium|high|xhigh on POST /v1/chat/completions; default high.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/grok-4.7 (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
 base_model = "xai/grok-4.7"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
-[cost]
-input = 0.7
-output = 2.1
-cache_read = 0.175
+[cost.text.input]
+price = 0.7
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 2.1

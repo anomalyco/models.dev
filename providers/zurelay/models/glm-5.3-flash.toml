@@ -1,18 +1,22 @@
-# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions.
-# Modalities: text only on this host; an image gets 400 "doesn't read images" (tested 2026-10-14).
-# attachment follows.
+# Inputs on this host: text only, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions; default max.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/glm-5.3-flash (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-attachment = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+cache = { implicit = true }
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[cost]
-input = 0.06
-output = 0.2
-cache_read = 0.006
+[cost.text.input]
+price = 0.058
+cache = { read = 0.0116 }
+
+[cost.text.output]
+price = 0.19
