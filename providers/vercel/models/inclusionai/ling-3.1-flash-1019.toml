@@ -29,7 +29,8 @@ base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
-price = 0
+price = 0.3
+cache = { read = 0.06 }
 
 [cost.text.output]
-price = 0
+price = 0.9
