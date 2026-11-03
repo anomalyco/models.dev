@@ -1,0 +1,32 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/.
+# Modalities, capabilities, limits and effort levels supplied by the operator on 2026-11-03.
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (each accepted on Zen, live 2026-11-03).
+schema = 2
+name = "Crouton Alpha Free"
+description = "Stealth reasoning model with text, image, video and PDF input and tool use"
+open_weights = false
+release_date = "2026-11-03"
+
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 270_000
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
