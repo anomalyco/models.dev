@@ -1,0 +1,15 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog entry "gemini-3.5-flash" (usd_per_million_tokens, generated_at 2026-11-03T00:42:51.018Z)
+# Reasoning controls: copied from the lab's host entry providers/google/models/gemini-3.5-flash.toml, as AGENTS.md asks for multi-model relays; not re-tested on this host
+schema = 2
+base_model = "google/gemini-3.5-flash"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 9
