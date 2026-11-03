@@ -1,14 +1,23 @@
 # Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
 # Effort: reasoning_effort = none|low|medium|high|xhigh (max is ignored).
 # PDF input via a "file" content part.
-# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12).
+# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12);
+# strict json_schema response_format verified 2026-11-03.
+schema = 2
 base_model = "openai/gpt-5.4-nano"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
-
-[cost]
-input = 0.20
-output = 1.25
-cache_read = 0.02
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 1.25

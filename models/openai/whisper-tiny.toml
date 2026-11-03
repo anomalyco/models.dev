@@ -1,24 +1,30 @@
 # https://huggingface.co/openai/whisper-tiny
 # https://openai.com/index/whisper/
+# Modalities and limits match the other Whisper checkpoints (whisper-large-v3-turbo).
+schema = 2
+v2_only = true
+type = "transcription"
 name = "Whisper Tiny"
 description = "Smallest multilingual Whisper checkpoint for fast, low-cost speech transcription"
-type = "transcription"
 family = "whisper"
-release_date = "2022-09-21"
-last_updated = "2022-09-21"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = true
+release_date = "2022-09-21"
 license = "Apache-2.0"
+
+[modalities]
+input = ["audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
 
 [limit]
 context = 448
 output = 448
-
-[modalities]
-input = ["audio"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

@@ -1,25 +1,30 @@
 # https://huggingface.co/ResembleAI/chatterbox-nano
 # https://github.com/resemble-ai/chatterbox
 # Input is limited by characters, not tokens, so limits are left at 0.
+# Output format depends on the host, so it stays generic.
+schema = 2
+v2_only = true
+type = "speech"
 name = "Chatterbox Nano"
 description = "Compact English text-to-speech model with zero-shot voice cloning"
-type = "speech"
-release_date = "2026-04-14"
-last_updated = "2026-04-14"
-attachment = false
-reasoning = false
-tool_call = false
-temperature = true
 open_weights = true
+release_date = "2026-04-14"
 license = "MIT"
-
-[limit]
-context = 0
-output = 0
 
 [modalities]
 input = ["text"]
 output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
 
 [[weights]]
 label = "Hugging Face"

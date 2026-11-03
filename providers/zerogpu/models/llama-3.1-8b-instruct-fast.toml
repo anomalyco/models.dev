@@ -1,12 +1,20 @@
 # Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
 # Limits: https://api.zerogpu.ai/v1/models
+# Strict json_schema response_format verified against https://api.zerogpu.ai/v1/chat/completions (2026-11-03).
+schema = 2
 base_model = "meta/llama-3.1-8b-instruct"
 
-[cost]
-input = 0.15
-output = 0.28
-cache_read = 0.025
+[capabilities]
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 131_072
 output = 8_192
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.28

@@ -1,11 +1,19 @@
 # Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
 # Effort: reasoning_effort = low|medium|high on /v1/chat/completions,
 # reasoning.effort on /v1/responses.
-# Verified against https://api.zerogpu.ai/v1 (2026-10-12).
+# Verified against https://api.zerogpu.ai/v1 (2026-10-12);
+# strict json_schema response_format verified 2026-11-03.
+schema = 2
 base_model = "openai/gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.15
-output = 0.60
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.6
