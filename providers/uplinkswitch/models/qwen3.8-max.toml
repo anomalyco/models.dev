@@ -1,0 +1,20 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog entry "qwen3.8-max" (usd_per_million_tokens, generated_at 2026-11-03T00:42:51.018Z)
+# Reasoning controls: copied from the lab's host entry providers/alibaba/models/qwen3.8-max.toml, as AGENTS.md asks for multi-model relays; not re-tested on this host
+# Toggle/effort/budget: the lab's request fields, see the header of the host entry above
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[limit]
+context = 991_000
+output = 65_536
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 2.4

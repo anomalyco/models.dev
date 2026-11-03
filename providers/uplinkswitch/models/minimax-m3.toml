@@ -1,0 +1,19 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog entry "minimax-m3" (usd_per_million_tokens, generated_at 2026-11-03T00:42:51.018Z)
+# Reasoning controls: copied from the lab's host entry providers/minimax/models/MiniMax-M3.toml, as AGENTS.md asks for multi-model relays; not re-tested on this host
+# Toggle/effort/budget: the lab's request fields, see the header of the host entry above
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 0.36

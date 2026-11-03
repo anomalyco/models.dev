@@ -1,0 +1,19 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog entry "qwen3.8-flash" (usd_per_million_tokens, generated_at 2026-11-03T00:42:51.018Z)
+# Reasoning controls: copied from the lab's host entry providers/alibaba/models/qwen3.8-flash.toml, as AGENTS.md asks for multi-model relays; not re-tested on this host
+# Toggle/effort/budget: the lab's request fields, see the header of the host entry above
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+
+[limit]
+context = 991_808
+
+[cost.text.input]
+price = 0.1152
+cache = { read = 0.012288 }
+
+[cost.text.output]
+price = 0.36096

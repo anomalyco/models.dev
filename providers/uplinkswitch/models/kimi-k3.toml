@@ -1,0 +1,15 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog entry "kimi-k3" (usd_per_million_tokens, generated_at 2026-11-03T00:42:51.018Z)
+# Reasoning controls: copied from the lab's host entry providers/moonshotai/models/kimi-k3.toml, as AGENTS.md asks for multi-model relays; not re-tested on this host
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 4.5
