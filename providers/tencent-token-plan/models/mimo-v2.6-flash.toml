@@ -1,0 +1,36 @@
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-02.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 20/40/0.4 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.660856.
+# FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/138677
+# Toggle: thinking.type = enabled|disabled
+# JSON output: response_format.type = json_object; json_schema is unsupported.
+# The host model table lists text/image/video input, not audio.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "video/mp4", "video/quicktime", "video/x-msvideo", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15013085
+cache = { read = 0.00300262 }
+
+[cost.text.output]
+price = 0.30026171

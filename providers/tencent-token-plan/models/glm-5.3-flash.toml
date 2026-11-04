@@ -1,0 +1,30 @@
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-02.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 16/56/4.6 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.660856.
+# FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/132061
+# Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.12010468
+cache = { read = 0.0345301 }
+
+[cost.text.output]
+price = 0.42036639

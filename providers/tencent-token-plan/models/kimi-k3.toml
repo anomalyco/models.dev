@@ -1,0 +1,33 @@
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-02.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 400/2000/40 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.660856.
+# FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/132232
+# Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
+# max_completion_tokens allows 1048576; 131072 is the default, not the maximum.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3.00261708
+cache = { read = 0.30026171 }
+
+[cost.text.output]
+price = 15.01308541
