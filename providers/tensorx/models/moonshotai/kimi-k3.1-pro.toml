@@ -1,12 +1,11 @@
-# Reasoning is always on: Kimi models cannot be toggled off on TensorX and take no reasoning_effort.
-# Probed live 2026-11-04: a request with chat_template_kwargs.enable_thinking=false and one with
-# reasoning_effort=low both still return reasoning_content.
+# Toggle: chat_template_kwargs.thinking = false disables reasoning (verified live 2026-11-04);
+# chat_template_kwargs.enable_thinking is ignored. reasoning_effort "none" also returns no reasoning.
 # https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-11-04)
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [limit]
