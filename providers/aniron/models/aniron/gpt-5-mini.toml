@@ -1,6 +1,6 @@
-# Effort: reasoning_effort = minimal|low|medium|high on POST https://api.aniron.ai/v1/chat/completions,
-#   forwarded to the serving host (checked by Aniron's conformance suite).
-# Toggle and token budget: not offered on this API.
+# Effort: reasoning_effort = minimal|low|medium|high on POST https://api.aniron.ai/v1/chat/completions (live probe, 2026-11-04).
+# Token budget: not offered on this API.
+# tools.freeform: custom tools in text, lark, regex format answered on POST https://api.aniron.ai/v1/chat/completions; the grammar ones (ZZ[0-9]{3}) returned only matching input (live probe, 2026-11-04).
 # Prices (USD per 1M tokens) and limits: https://portal-api.aniron.ai/v1/models, where
 #   pricing is USD per token (x 1e6 here) and limits are top_provider.max_completion_tokens
 #   and context_length; retrieved 2026-11-04.
@@ -10,6 +10,7 @@ base_model = "openai/gpt-5-mini"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 structured_output = true
 
 [limit]

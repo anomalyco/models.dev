@@ -1,6 +1,5 @@
-# Effort: reasoning_effort = low|high|max on POST https://api.aniron.ai/v1/chat/completions,
-#   forwarded to the serving host (checked by Aniron's conformance suite).
-# Toggle and token budget: not offered on this API.
+# Toggle: reasoning.enabled = true|false on POST https://api.aniron.ai/v1/chat/completions (live probe, 2026-11-04).
+# Token budget: not offered on this API.
 # Prices (USD per 1M tokens) and limits: https://portal-api.aniron.ai/v1/models, where
 #   pricing is USD per token (x 1e6 here) and limits are top_provider.max_completion_tokens
 #   and context_length; retrieved 2026-11-04.
@@ -9,7 +8,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [limit]
