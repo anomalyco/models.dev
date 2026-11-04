@@ -6,13 +6,15 @@
 #   this id, so per AGENTS.md there is no separate toggle entry.
 # https://cloud.tencent.com/document/product/1823/130060
 # https://cloud.tencent.com/document/product/1823/131208
+schema = 2
 base_model = "tencent/hy4"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501
