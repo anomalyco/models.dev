@@ -237,3 +237,57 @@ test("non-canonical models keep existing name and dates", () => {
   expect(synced.release_date).toBe("2026-01-15");
   expect(synced.last_updated).toBe("2026-02-01");
 });
+
+const existingGlmFlash: ExistingModel = {
+  base_model: "zhipuai/glm-5.3-flash",
+  reasoning: true,
+  reasoning_options: [{ type: "toggle" }],
+  structured_output: true,
+  limit: { context: 1_048_576, output: 64_000 },
+};
+
+test("modality narrowing subtracts only the denied kind from the lab card", () => {
+  // glm-5.3-flash lab card: [text, image, video, pdf].
+  const narrowed = buildTensorXModel(
+    model("z-ai/glm-5.3-flash", { supports_vision: true, supports_pdf_input: false }),
+    existingGlmFlash,
+    existingGlmFlash,
+  );
+  expect(narrowed).toMatchObject({
+    modalities: { input: ["text", "image", "video"] },
+  });
+  // The output denies nothing that would change the lab's `["text"]`, so the
+  // override only carries the key that actually changed.
+  expect(narrowed.modalities?.output).toBeUndefined();
+});
+
+test("audio_output:false alone must not drop image or video inputs", () => {
+  // LiteLLM commonly sets supports_audio_output:false on text-only models;
+  // with this subtraction logic an output-only denial leaves the input list
+  // identical to the lab card, so factorBaseModel drops the override and the
+  // provider file inherits all inputs — images and video included.
+  const narrowed = buildTensorXModel(
+    model("z-ai/glm-5.3-flash", { supports_vision: true, supports_audio_output: false }),
+    existingGlmFlash,
+    existingGlmFlash,
+  );
+  expect(narrowed.modalities).toBeUndefined();
+});
+
+test("a model whose flags are all non-false keeps inherited modalities", () => {
+  const kept = buildTensorXModel(
+    model("z-ai/glm-5.3-flash", { supports_vision: true }),
+    existingGlmFlash,
+    existingGlmFlash,
+  );
+  expect(kept.modalities).toBeUndefined();
+});
+
+test("a denial that later flips back to null stops narrowing", () => {
+  const reverted = buildTensorXModel(
+    model("z-ai/glm-5.3-flash", { supports_pdf_input: null }),
+    existingGlmFlash,
+    existingGlmFlash,
+  );
+  expect(reverted.modalities).toBeUndefined();
+});

@@ -3,7 +3,7 @@ import { describeModel } from "../../describe.js";
 import { inferKimiFamily } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.tensorx.ai/v1/model/info";
 
@@ -244,6 +244,39 @@ function price(perToken: number | null | undefined) {
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
+type LabModalities = { input?: string[]; output?: string[] } | undefined;
+
+// Subtract only the denied kinds from the lab card's modality list, keeping
+// MIME detail and every modality the gateway does not explicitly deny. An
+// input like `image/heic` belongs to the vision kind; `application/pdf` to the
+// PDF kind; `video/*` to video, which LiteLLM cannot deny because it has no
+// flag for it. Returns undefined when no flag is explicitly false, so the
+// provider file inherits the lab card unchanged.
+function narrowLabModalities(
+  lab: LabModalities,
+  info: TensorXModelInfo,
+): { input: string[]; output: string[] } | undefined {
+  const noFalse = info.supports_vision !== false && info.supports_pdf_input !== false && info.supports_audio_input !== false && info.supports_audio_output !== false;
+  if (noFalse || (lab?.input === undefined && lab?.output === undefined)) return undefined;
+  const keepInput = (entry: string) => {
+    if (info.supports_vision === false && /^image(\/|$)/.test(entry)) return false;
+    if (info.supports_pdf_input === false && /pdf/.test(entry)) return false;
+    if (info.supports_audio_input === false && /^audio(\/|$)/.test(entry)) return false;
+    return true;
+  };
+  const keepOutput = (entry: string) => {
+    if (info.supports_audio_output === false && /^audio(\/|$)/.test(entry)) return false;
+    return true;
+  };
+  const input = (lab?.input ?? []).filter(keepInput);
+  // v1 requires text in every input list; the gateway states nothing about
+  // text, so it always remains.
+  if (!input.includes("text")) input.unshift("text");
+  const output = (lab?.output ?? []).filter(keepOutput);
+  if (!output.includes("text")) output.unshift("text");
+  return { input, output };
+}
+
 function buildEmbeddingModel(
   model: TensorXModel,
   existing: ExistingModel | undefined,
@@ -348,27 +381,13 @@ export function buildTensorXModel(
         interleaved: existing?.interleaved,
         limit,
         cost,
-        // Modalities: inherit the lab card (which carries union supertypes and
-        // MIME detail the gateway's booleans cannot express) whenever no flag is
-        // explicitly false. If the gateway explicitly reports a flag as false
-        // (or its deployments disagree, which merges to false), narrow the list
-        // so the publish never advertises an input this host cannot serve. The
-        // narrowed list is generic on purpose: after a denial we cannot rely on
-        // any lab-listed subtype either.
-        modalities: info.supports_vision === false || info.supports_pdf_input === false || info.supports_audio_input === false || info.supports_audio_output === false
-          ? {
-              input: [
-                "text" as Modality,
-                ...(info.supports_vision === true ? ["image" as Modality] : []),
-                ...(info.supports_pdf_input === true ? ["pdf" as Modality] : []),
-                ...(info.supports_audio_input === true ? ["audio" as Modality] : []),
-              ],
-              output: [
-                "text" as Modality,
-                ...(info.supports_audio_output === true ? ["audio" as Modality] : []),
-              ],
-            }
-          : undefined,
+        // Modalities: inherit the lab card (union supertypes + MIME detail that
+        // the gateway's booleans cannot express) whenever no flag is explicitly
+        // false. When a flag is explicitly false, remove only the kind that flag
+        // denies from the lab list and keep every other type — so `pdf=false`
+        // strips `application/pdf` but leaves images and video alone. LiteLLM
+        // has no video flag, so video is never lost by accident.
+        modalities: narrowLabModalities(modelMetadata(canonical).modalities, info),
       },
       limit,
       existing?.base_model === canonical ? existing.base_model_omit : undefined,
