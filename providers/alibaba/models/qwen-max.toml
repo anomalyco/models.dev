@@ -3,7 +3,7 @@
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the cache; adding tools missed the cache; no reasoning control.
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 # max_tokens_field: ignores max_completion_tokens, max_tokens caps output (live probe 2026-10-24); Model Studio lists it outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions)
-# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Tools: tool_choice auto|none|named on every API; required (Messages `any`) is accepted but ignored (live 2026-10-26); no strict tool mode (sources in provider.toml).
 schema = 2
 name = "Qwen Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
@@ -18,7 +18,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none"] }
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = false }
 structured_output = true
 temperature = true

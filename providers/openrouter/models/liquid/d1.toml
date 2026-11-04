@@ -5,7 +5,7 @@ base_model = "liquid/d1"
 structured_output = true
 
 [api.systemone]
-sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
 compatibility = { media_input = "state" }
 
 [cost.text.input]

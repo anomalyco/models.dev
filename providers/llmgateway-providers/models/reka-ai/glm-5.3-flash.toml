@@ -7,12 +7,12 @@ reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "h
 structured_output = true
 
 [limit]
-context = 262_144
+context = 1_048_576
 output = 262_144
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.02 }
+price = 0.18
+cache = { read = 0.028 }
 
 [cost.text.output]
-price = 0.5
+price = 0.6

@@ -11,8 +11,10 @@
 # effort_updates: left out. Flipping thinking.type on the next request keeps the cache (reasoning tokens
 # ~100 vs 0), but there's no in-history effort message, so it doesn't count.
 # Adding or removing tools between turns drops the cache (2026-10-19).
-# Tools: tool_choice supports only auto; no strict tool mode (https://docs.z.ai/api-reference/llm/chat-completion,
-#   https://docs.z.ai/guides/capabilities/function-calling).
+# Tools: tool_choice supports only auto on Chat Completions (https://docs.z.ai/api-reference/llm/chat-completion,
+#   https://docs.z.ai/guides/capabilities/function-calling) and none|auto on Responses, which takes the BigModel Response
+#   API format (https://docs.bigmodel.cn/cn/guide/develop/responses/introduction), so [api.responses] adds none. Messages
+#   documents no tool_choice. No strict tool mode.
 schema = 2
 base_model = "zhipuai/glm-4.6"
 
@@ -32,6 +34,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-co
 [api.responses]
 base_url = "https://api.z.ai/api/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
+capabilities = { tools = { choice = ["auto", "none"] } }
 
 [cost.text.input]
 price = 0.6

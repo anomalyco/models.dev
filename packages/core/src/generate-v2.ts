@@ -404,10 +404,11 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "ai-gateway-provider":
     "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
   "@aihubmix/ai-sdk-provider": "https://aihubmix.com/v1",
-  "@saladtechnologies-oss/ai-sdk-provider":
-    "https://api.salad.com/api/public",
+  // The AI Gateway, not SaladCloud's management API. https://docs.salad.com/ai-gateway/tutorials/getting-started
+  "@saladtechnologies-oss/ai-sdk-provider": "https://ai.salad.cloud/v1",
   "watsonx-ai-provider": "https://${WATSONX_REGION}.ml.cloud.ibm.com",
-  "@qvac/ai-sdk-provider": "http://localhost:8080/v1",
+  // `qvac serve --openai` listens on port 11434 by default (@qvac/cli 0.16.0 README).
+  "@qvac/ai-sdk-provider": "http://127.0.0.1:11434/v1",
   "@jerome-benoit/sap-ai-provider-v2": "${AICORE_DEPLOYMENT_URL}",
   "gitlab-ai-provider": "https://gitlab.com/api/v4",
 };
@@ -504,7 +505,7 @@ function toModelApis(
   ) as ApiV2;
 }
 
-const TOOL_DETAILS = ["strict", "choice", "search", "grammar"] as const;
+const TOOL_DETAILS = ["strict", "choice", "search", "freeform"] as const;
 
 // Each API of a model that supports tools gets its own tool details: the
 // model's top-level values, replaced field by field by its table's.

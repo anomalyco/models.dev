@@ -167,6 +167,14 @@ test("keeps the file's own API address, which search does not report", () => {
   expect(buildWorkersAiModel(source!, undefined).provider).toBeUndefined();
 });
 
+test("adds Clef Omni's audio and video inputs, which search leaves out", () => {
+  const row = searchRow("@cf/cloudflare/clef-omni", 65_536);
+  const [source] = cloudflareWorkersAi.parseModels({
+    result: { data: [{ ...row, architecture: { ...row.architecture, input_modalities: ["text", "image"] } }] },
+  });
+  expect(buildWorkersAiModel(source!, undefined).modalities?.input).toEqual(["text", "image", "audio", "video"]);
+});
+
 test("detects Workers AI request schemas that take a Responses body", () => {
   const prompt = { title: "Prompt", properties: { prompt: {}, max_tokens: {} } };
   const messages = { title: "Messages", properties: { messages: {}, tools: {} } };

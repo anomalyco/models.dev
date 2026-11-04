@@ -14,6 +14,7 @@ import {
   gatewayTools,
   mediaCost,
   routeModalities,
+  splitLabTools,
 } from "../src/sync/providers/cloudflare-ai-gateway.js";
 
 test("missing reasoning controls open issues without deleting existing models or blocking valid ones", async () => {
@@ -455,6 +456,39 @@ test("native routes take the lab's own tool fields, with the schema's choice whe
   expect(gatewayTools({ supported: false }, { strict: true }, schema)).toEqual({ supported: false });
 });
 
+test("each gateway API takes the lab's tool fields for its protocol", () => {
+  const choice = ["auto", "none", "required", "tool"];
+  const lab = {
+    top: {},
+    apis: { responses: { strict: true, choice, search: true, freeform: ["text", "lark"] }, "chat-completions": { strict: true, choice, freeform: ["text", "lark"] } },
+  };
+  // Values every gateway API holds go top-level, the rest on their API; a protocol the gateway doesn't list is ignored.
+  expect(splitLabTools({ ...lab, apis: { ...lab.apis, decisions: {} } }, ["responses", "chat-completions"])).toEqual({
+    top: { strict: true, choice, freeform: ["text", "lark"] },
+    apis: { responses: { search: true }, "chat-completions": {} },
+  });
+  // A value one API leaves out stays off the top level.
+  expect(splitLabTools({ top: { choice }, apis: { responses: { strict: true } } }, ["responses", "messages"])).toEqual({
+    top: { choice },
+    apis: { responses: { strict: true }, messages: {} },
+  });
+  expect(splitLabTools(lab, ["responses"])).toEqual({ top: { strict: true, choice, search: true, freeform: ["text", "lark"] }, apis: { responses: {} } });
+
+  const main = "@opencode/ai/providers/cloudflare-ai-gateway";
+  const current = {
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { search: true, updates: true } } },
+    "chat-completions": { base_url: "stale", capabilities: { tools: { search: true } } },
+  };
+  // Tool fields are replaced per table; other capabilities and `updates` are kept, and an empty table loses capabilities.
+  expect(gatewayApis(current, "responses", ["responses", "chat-completions"], { responses: { strict: true }, "chat-completions": {} })).toEqual({
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { strict: true, updates: true } } },
+    "chat-completions": {
+      base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
+      sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: main },
+    },
+  });
+});
+
 test("syncs Jev through shared TypeSafe metadata without inventing tool support", async () => {
   const originalFetch = globalThis.fetch;
   const originalToken = process.env.CLOUDFLARE_API_TOKEN;
@@ -486,7 +520,7 @@ test("syncs Jev through shared TypeSafe metadata without inventing tool support"
       existing: () => undefined,
       authored: () => undefined,
     }).model).toEqual({
-      base_model: "typesafe/jev-latest",
+      base_model: "typesafe/jev-1.13.0",
       cost: { input: 0.042, output: 0 },
       limit: { context: 32_000 },
     });
@@ -1118,7 +1152,7 @@ test("lists decision models on the /ai/run API", () => {
     "workers-ai-run": {
       base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai",
       path: "/run",
-      sdk: { opencodeai: "@opencode/ai/protocols/cloudflare-run-decisions" },
+      sdk: { opencodeai: "@opencode/ai/providers/cloudflare-ai-gateway/decisions" },
     },
   };
   expect(translated.v2Set.api(undefined)).toEqual(run);

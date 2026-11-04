@@ -6,6 +6,7 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): US data residency (https://platform.claude.com/docs/en/manage-claude/data-residency#pricing).
 # APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
 # Per-API flags: mid-conversation system messages, per-message output_config and tool_addition/tool_removal are Messages API features, so they sit on [api.messages]. The OpenAI SDK compatibility endpoint hoists system messages to the top (https://platform.claude.com/docs/en/api/openai-sdk) and has no per-message effort or tool changes.
+# Per-API tools: the OpenAI SDK compatibility layer ignores `strict` and takes only function tools, so strict and search sit on [api.messages] only; tool_choice works on both APIs and stays top-level (https://platform.claude.com/docs/en/api/openai-sdk). Live 2026-10-26 on Chat Completions (claude-sonnet-4-6): a strict tool whose schema strict mode rejects was accepted, and a tool_search_tool_regex tool returned 400 "tools.0.type: Input should be 'function'".
 schema = 2
 name = "Claude Sonnet 5"
 description = "Everyday Claude agent model for coding, planning, browsing, and general work"
@@ -20,7 +21,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = false
@@ -31,7 +32,7 @@ context = 1_000_000
 output = 128_000
 
 [api.messages]
-capabilities = { system_updates = true }
+capabilities = { system_updates = true, tools = { strict = true, search = true } }
 
 [api.chat-completions]
 base_url = "https://api.anthropic.com/v1"

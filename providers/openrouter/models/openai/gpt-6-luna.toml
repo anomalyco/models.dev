@@ -2,6 +2,7 @@
 # effort_updates = true: configuration_update keeps the cache on Responses (input item) and Chat Completions (content-less system message). Live 2026-10-23 on gpt-6-luna: full prefix read on the update turn on both; xhigh -> none takes effect on both, none -> xhigh only on Chat (OpenAI's own Responses API ignores it too) (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort) Top level: OpenRouter documents the in-history update on Chat Completions, Responses and Messages and converts between them, so it holds on every listed API.
 # tools.updates = true on [api.responses] only (/api/v1/responses, add only): an `additional_tools` input item keeps the cache (live 2026-10-23, pinned to OpenAI). OpenRouter's Responses docs don't mention it (https://openrouter.ai/docs/api/reference/responses/overview); lab mechanism: https://developers.openai.com/api/docs/guides/prompt-caching. Chat Completions has no mechanism.
 # Cache: automatic from 1,024 tokens; GPT-5.6+ explicit prompt_cache_breakpoint, 30m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
+# tools.freeform on [api.responses] only: /api/v1/responses accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ plus three digits, live 2026-10-28 on this model). /api/v1/chat/completions rejects custom tools (400 "Missing required parameter: 'tools[0].name'", live 2026-10-28).
 schema = 2
 base_model = "openai/gpt-6-luna"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
@@ -18,7 +19,7 @@ cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tok
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
-capabilities = { tools = { updates = true } }
+capabilities = { tools = { freeform = ["text", "lark", "regex"], updates = true } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

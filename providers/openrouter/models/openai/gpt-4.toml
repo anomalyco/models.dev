@@ -6,7 +6,7 @@ base_model = "openai/gpt-4"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-structured_output = true
+structured_output = false
 system_updates = true
 
 [limit]

@@ -24,6 +24,16 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "zai/glm-5-turbo": 131_072,
 };
 
+// The catalog has no `vision` tag for these, but Vercel's docs say they take images:
+// https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-decisions#input
+const VISION_MODELS = new Set(["openai/gpt-6-luna-decisions"]);
+
+// Still listed in /v1/models, but every call fails upstream; do not rediscover them.
+const RETIRED_MODELS = new Set([
+  // Prodia: "Job type is no longer available" (checked 2026-10-28).
+  "prodia/flux-fast-schnell",
+]);
+
 const KnownModelType = z.enum([
   "language",
   "embedding",
@@ -94,7 +104,7 @@ export const vercel = {
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*-batch`) — they are not catalog targets.
-    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch"));
+    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch") && !RETIRED_MODELS.has(model.id));
   },
   translateModel(model, context) {
     const mediaType = MEDIA_TYPES[model.type];
@@ -190,7 +200,7 @@ export function buildVercelModel(
   existing: ExistingModel | undefined,
   base: ExistingModel | undefined = undefined,
 ): SyncedModel {
-  const tags = new Set(model.tags);
+  const tags = new Set(VISION_MODELS.has(model.id) ? [...model.tags, "vision"] : model.tags);
   const releaseDate = model.released
     ? dateFromTimestamp(model.released)
     : existing?.release_date ?? new Date().toISOString().slice(0, 10);
@@ -244,6 +254,8 @@ export function buildVercelModel(
           ? ["image"]
           : model.type === "video"
           ? ["video"]
+          : tags.has("video-generation")
+          ? ["video"]
           : tags.has("image-generation")
           ? ["text", "image"]
           : ["text"],
@@ -282,6 +294,8 @@ export function buildVercelModel(
         : model.type === "image"
         ? ["image"]
         : model.type === "video"
+        ? ["video"]
+        : tags.has("video-generation")
         ? ["video"]
         : tags.has("image-generation")
         ? ["text", "image"]
@@ -500,19 +514,19 @@ const MEDIA_SDK = { opencodeai: "none" };
 // https://vercel.com/docs/ai-gateway/sdks-and-apis
 const STANDARD_BASE_URL = "https://ai-gateway.vercel.sh/v1";
 const STANDARD_MEDIA_APIS: Partial<Record<MediaType, Doc>> = {
-  image: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-images" } },
+  image: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
   embedding: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
   reranking: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
 };
 // Decision models: POST /v1/decisions, OpenAI's Decisions format, which
-// @ai-sdk/openai's decisionModel and OpenCode's openai-decisions protocol
+// @ai-sdk/openai's decisionModel and OpenCode's vercel-ai-gateway/decisions entry
 // speak with this baseURL. @ai-sdk/gateway's decisionModel uses its own
 // /v4/ai/decision-model endpoint instead.
 // https://vercel.com/docs/ai-gateway/modalities/decision
 const DECISION_APIS = {
   decisions: {
     base_url: STANDARD_BASE_URL,
-    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/protocols/openai-decisions" },
+    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/decisions" },
   },
 };
 // v1 reads the first API as `provider`.

@@ -55,10 +55,13 @@ const REST_APIS: Record<string, { protocol: string; aisdk: string }> = {
 // A text model's APIs: its first table (what v1 reads: the native route for OpenAI
 // and Anthropic, else the provider's default), then a REST table for every other
 // format the catalog lists.
+// `apiTools` (the lab's per-API tool fields, see `splitLabTools`) replaces each
+// table's tool fields when given.
 export function gatewayApis(
   current: unknown,
   nativeProtocol: string | undefined,
   requestFormats: unknown,
+  apiTools?: Record<string, Record<string, unknown>>,
 ): Record<string, unknown> | undefined {
   const tables = isRecord(current) ? current : {};
   const [firstKey, firstValue] = Object.entries(tables)[0] ?? [nativeProtocol ?? "chat-completions", {}];
@@ -73,7 +76,19 @@ export function gatewayApis(
     api[rest.protocol] = { base_url: REST_BASE_URL, sdk: { aisdk: rest.aisdk, opencodeai: OPENCODE_PACKAGE } };
   }
   if (Object.keys(tables).length === 0 && nativeProtocol === undefined && Object.keys(api).length === 1) return undefined;
-  return api;
+  if (apiTools === undefined) return api;
+  return Object.fromEntries(
+    Object.entries(api).map(([protocol, table]) => [protocol, withTableTools(table as Record<string, unknown>, apiTools[protocol] ?? {})]),
+  );
+}
+
+function withTableTools(table: Record<string, unknown>, fields: Record<string, unknown>) {
+  const { tools, ...capabilities } = isRecord(table.capabilities) ? table.capabilities : {};
+  const kept = Object.entries(isRecord(tools) ? tools : {}).filter(([key]) => !TOOL_FIELDS.includes(key));
+  const nextTools = { ...fields, ...Object.fromEntries(kept) };
+  const next = { ...capabilities, ...(Object.keys(nextTools).length > 0 ? { tools: nextTools } : {}) };
+  const { capabilities: _capabilities, ...rest } = table;
+  return Object.keys(next).length > 0 ? { ...rest, capabilities: next } : rest;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -317,6 +332,9 @@ export const cloudflareAiGateway = {
     const native = NATIVE_API[id.split("/")[0]!];
     // Decision models are listed under Text Generation but only answer on POST /ai/run.
     const decision = base !== undefined && labType(base) === "decision";
+    const tools = !decision && base !== undefined && baseToolCall(base);
+    const lab = tools && native ? firstPartyTools(base) : undefined;
+    const labTools = lab && native && splitLabTools(lab, Object.keys(gatewayApis(undefined, native.protocol, source.catalog.request_formats) ?? {}));
     return {
       id,
       model: buildCloudflareAiGatewayModel(
@@ -329,10 +347,10 @@ export const cloudflareAiGateway = {
       v2Set: {
         api: decision
           ? () => DECISION_RUN_API
-          : (current: unknown) => gatewayApis(current, native?.protocol, source.catalog.request_formats),
-        ...(decision || base === undefined || !baseToolCall(base)
-          ? {}
-          : { "capabilities.tools": (current: unknown) => gatewayTools(current, native && firstPartyTools(base), source.schemaInput) }),
+          : (current: unknown) => gatewayApis(current, native?.protocol, source.catalog.request_formats, labTools?.apis),
+        ...(tools
+          ? { "capabilities.tools": (current: unknown) => gatewayTools(current, labTools?.top, source.schemaInput) }
+          : {}),
       },
     };
   },
@@ -395,7 +413,7 @@ export function buildCloudflareAiGatewayModel(
 // Decision models (TypeSafe Jev) take a System One body as `input` and answer in a run
 // record: `{ result: { state: "Completed", result: { answers, usage } } }`.
 // @opencode/ai speaks /ai/run for decision models only, through its
-// cloudflare-run-decisions protocol, which posts to the full Run URL (Workers AI
+// cloudflare-ai-gateway/decisions entry, which posts to the full Run URL (Workers AI
 // tables put it all in base_url). v1 publishes base_url, so `/run` goes in path.
 // Media models have no OpenCode package.
 const RUN_BASE_URL = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai";
@@ -406,7 +424,7 @@ const DECISION_RUN_API = {
   "workers-ai-run": {
     base_url: RUN_BASE_URL,
     path: "/run",
-    sdk: { opencodeai: "@opencode/ai/protocols/cloudflare-run-decisions" },
+    sdk: { opencodeai: "@opencode/ai/providers/cloudflare-ai-gateway/decisions" },
   },
 };
 
@@ -1245,27 +1263,54 @@ function baseReasoning(id: string) {
     .parse(readLabModel(file, id)).reasoning === true;
 }
 
-const TOOL_FIELDS = ["strict", "choice", "search", "grammar"];
+const TOOL_FIELDS = ["strict", "choice", "search", "freeform"];
 
 // Native routes forward the body unchanged, so once the lab's own API
-// (providers/<lab>) states its tool fields they are the model's. The catalog
-// schema's tool_choice values fill in `choice` when the lab doesn't state it.
+// (providers/<lab>) states its tool fields they are the model's: `lab` is the
+// top-level part from `splitLabTools`. The catalog schema's tool_choice values
+// fill in `choice` when the lab doesn't state it.
 export function gatewayTools(current: unknown, lab: Record<string, unknown> | undefined, schemaInput: unknown) {
   const choice = schemaToolChoice(schemaInput);
   if (lab === undefined) return toolsWith(current, { choice });
   if (isRecord(current) && current.supported === false) return current;
   const rest = Object.fromEntries(Object.entries(isRecord(current) ? current : {}).filter(([key]) => !TOOL_FIELDS.includes(key)));
-  return { supported: true, ...rest, ...(choice === undefined ? {} : { choice }), ...lab };
+  return { supported: true, ...(choice === undefined ? {} : { choice }), ...lab, ...rest };
 }
 
-// The tool fields of the lab's own provider file, when it states any.
-function firstPartyTools(base: string) {
+// The tool fields of the lab's own provider file, top-level and per API, when it states any.
+function firstPartyTools(base: string): LabTools | undefined {
   const [lab, ...rest] = base.split("/");
   const file = path.join(path.dirname(PROVIDER_DIR), lab!, "models", `${rest.join("/")}.toml`);
   if (!existsSync(file)) return undefined;
-  const tools = (Bun.TOML.parse(readFileSync(file, "utf8")) as { capabilities?: { tools?: unknown } }).capabilities?.tools;
-  const fields = Object.entries(isRecord(tools) ? tools : {}).filter(([key]) => TOOL_FIELDS.includes(key));
-  return fields.length > 0 ? Object.fromEntries(fields) : undefined;
+  const doc = Bun.TOML.parse(readFileSync(file, "utf8")) as {
+    capabilities?: { tools?: unknown };
+    api?: Record<string, { capabilities?: { tools?: unknown } }>;
+  };
+  const top = toolFields(doc.capabilities?.tools);
+  const apis = Object.fromEntries(Object.entries(doc.api ?? {}).map(([protocol, table]) => [protocol, toolFields(table.capabilities?.tools)]));
+  return [top, ...Object.values(apis)].some((fields) => Object.keys(fields).length > 0) ? { top, apis } : undefined;
+}
+
+type LabTools = { top: Record<string, unknown>; apis: Record<string, Record<string, unknown>> };
+
+function toolFields(tools: unknown) {
+  return Object.fromEntries(Object.entries(isRecord(tools) ? tools : {}).filter(([key]) => TOOL_FIELDS.includes(key)));
+}
+
+// Each gateway API takes the lab's values for the same protocol (native routes
+// forward the body unchanged; the REST Chat Completions route reaches OpenAI's own
+// Chat Completions, which takes custom and strict tools and rejects tool_search,
+// live 2026-10-26). A value every API holds goes top-level; one that holds on
+// only some APIs goes on each of those APIs. A value an API leaves out means no.
+export function splitLabTools(lab: LabTools, protocols: string[]) {
+  const resolved = protocols.map((protocol) => [protocol, { ...lab.top, ...lab.apis[protocol] }] as const);
+  const shared = (key: string) => resolved.every(([, tools]) => JSON.stringify(tools[key]) === JSON.stringify(resolved[0]![1][key]));
+  const pick = (fields: Record<string, unknown>, keep: (key: string) => boolean) =>
+    Object.fromEntries(TOOL_FIELDS.filter((key) => keep(key) && fields[key] !== undefined).map((key) => [key, fields[key]]));
+  return {
+    top: pick(resolved[0]?.[1] ?? {}, shared),
+    apis: Object.fromEntries(resolved.map(([protocol, tools]) => [protocol, pick(tools, (key) => !shared(key))])),
+  };
 }
 
 function baseToolCall(id: string) {

@@ -1,5 +1,6 @@
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-23): a system message after the last user message stays in place and is followed, matching Anthropic's API (cached on the next turn vs control: Haiku 5.5 5949/5949 vs 5922, Sonnet 5.5 5945/5951, Opus 5.5 5951, Opus 4.8 5951, Fable 5.1 5947, Sonnet 5 5949/5924 but not followed in 2 trials). Placed between an assistant and a user message it is hoisted (Haiku 5.5: 0 vs 16724). Anthropic's API has no cache-keeping per-turn effort for this model, so effort_updates stays false. Tool changes go through providerOptions.anthropic.toolChanges (https://ai-sdk.dev/providers/ai-sdk-providers/anthropic).
 # Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where the mechanisms above were checked. /v1/messages moves a mid-conversation system message to the top (live 2026-10-23, Haiku 5.5 and Sonnet 5.5, after or before the last user turn: cache read 0, full rewrite) and rejects tool_addition; /v1/responses has no Anthropic tool-change or per-message effort item and gave no cache to check where a system message lands.
+# Per-API tools.search: [api.messages] runs Anthropic's tool search tool (tool_search_tool_regex_20251119 with defer_loading tools found and called the deferred tool, live 2026-10-26 on Haiku 4.5, Sonnet 4.6 and Opus 5.5, with providerOptions.gateway.only set to anthropic, bedrock and vertex). /v1/chat/completions rejects the tool type (400 "Invalid discriminator value. Expected 'function' | 'custom' | ..."); /v1/responses ignored both tool_search and tool_search_tool_regex_20251119 and called the deferred tool with no search step (Sonnet 4.6). tool_choice none and a named tool worked on all three APIs (live, Haiku 4.5).
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
@@ -18,6 +19,7 @@ sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/v
 [api.messages]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+capabilities = { tools = { search = true } }
 
 [cost.text.input]
 price = 2

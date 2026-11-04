@@ -14,7 +14,8 @@ reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [limit]
-output = 235_929
+context = 1_000_000
+output = 262_144
 
 [api.chat-completions]
 capabilities = { system_updates = true }

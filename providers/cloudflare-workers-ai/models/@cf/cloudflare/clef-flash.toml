@@ -24,7 +24,7 @@ output = 65_536
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/cloudflare-run-decisions" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/cloudflare-workers-ai/decisions" }
 
 [cost.text.input]
 price = 0.038

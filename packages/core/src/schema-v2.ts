@@ -20,6 +20,8 @@ export const ModelTypeV2Values = [
   "speech",
   "realtime",
   "extraction",
+  // Non-speech audio generation (music, sound effects); text-to-speech is `speech`.
+  "audio",
 ] as const;
 
 export const ModelTypeV2 = z.enum(ModelTypeV2Values);
@@ -90,24 +92,27 @@ export type ModelFamilyV2 = z.infer<typeof ModelFamilyV2>;
 export const ToolChoiceV2 = z.enum(["auto", "none", "required", "tool"]);
 export type ToolChoiceV2 = z.infer<typeof ToolChoiceV2>;
 
-export const ToolGrammarV2Values = [
+// Input formats for custom (free-form) tools, whose input is plain text instead
+// of JSON: `text` is unconstrained, `lark` and `regex` constrain it with a grammar.
+export const ToolFreeformV2Values = [
+  "text",
   "lark",
   "regex",
 ] as const;
 
-export const ToolGrammarV2 = z.enum(ToolGrammarV2Values);
-export type ToolGrammarV2 = z.infer<typeof ToolGrammarV2>;
+export const ToolFreeformV2 = z.enum(ToolFreeformV2Values);
+export type ToolFreeformV2 = z.infer<typeof ToolFreeformV2>;
 
 // How a model takes tools. These depend on the API, so the v2 API publishes them
 // on each API (`api[<protocol>].capabilities.tools`), not on the model.
-// `grammar` (custom tools constrained by a Lark or regex grammar) only exists on
-// OpenAI-style APIs (`responses`, `chat-completions`).
+// `freeform` lists the formats an API accepts for custom tools; leaving it out
+// means the API has no free-form tools.
 export const ToolDetailsV2 = z
   .object({
     strict: z.boolean().optional(),
     choice: z.array(ToolChoiceV2).optional(),
     search: z.boolean().optional(),
-    grammar: z.array(ToolGrammarV2).optional(),
+    freeform: z.array(ToolFreeformV2).optional(),
     updates: z.boolean().optional(),
   })
   .strict();
@@ -822,10 +827,12 @@ export const LabMetadataV2 = z
 export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
 
 // `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
-// point: `@opencode/ai/providers/<path>` for a provider's chat, responses or
-// messages model (`@opencode/ai/providers/openai/chat`), or
+// point: `@opencode/ai/providers/<path>` for a provider's chat, responses,
+// messages, images or decisions model (`@opencode/ai/providers/openai/chat`,
+// `@opencode/ai/providers/openrouter/images`; System One decision hosts
+// without their own package use `@opencode/ai/providers/typesafe-ai/decisions`), or
 // `@opencode/ai/protocols/<name>` for an API with no provider entry point, such
-// as media (`@opencode/ai/protocols/openai-images`, `openai-speech`,
+// as speech and transcription (`@opencode/ai/protocols/openai-speech`,
 // `openai-transcription`). `"none"` (here or in `sdk.aisdk`) says no package
 // supports the API: nothing is filled in and the v2 output has no such key.
 export const OpencodePackageV2 = z.union([

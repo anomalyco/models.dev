@@ -5,13 +5,13 @@
 # Cache: implicit (context-cache model lists), hits at 10% of the same period's input price.
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache; enable_thinking and reasoning_effort changes missed it.
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
-# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Tools: tool_choice auto|none|required|named on every API except Responses (no required with more than one tool); no strict tool mode (sources in provider.toml).
 schema = 2
 v2_only = true
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 top_k = false
 stream_usage = true
@@ -23,6 +23,7 @@ capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+capabilities = { tools = { choice = ["auto", "none", "tool"] } }
 
 [api.messages]
 base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"

@@ -14,7 +14,7 @@ structured_output = true
 
 [limit]
 context = 1_050_000
-output = 945_000
+output = 235_929
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -27,8 +27,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.3045
-cache = { read = 0.0028 }
+price = 0.48
+cache = { read = 0.096 }
 
 [cost.text.output]
-price = 0.609
+price = 1.8

@@ -10,7 +10,7 @@ base_model = "google/gemini-3.1-flash-image"
 reasoning = { supported = true, effort = ["minimal", "high"] }
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.image.output]
 unit = "image"

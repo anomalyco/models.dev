@@ -11,7 +11,7 @@ reasoning = { supported = true, effort = ["minimal", "high"] }
 structured_output = false
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.image.output]
 unit = "image"

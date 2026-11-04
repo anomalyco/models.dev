@@ -10,6 +10,9 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
+[limit]
+output = 81_920
+
 [cost.text.input]
 price = 0.195
 

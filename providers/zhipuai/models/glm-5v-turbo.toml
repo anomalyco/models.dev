@@ -14,7 +14,8 @@
 # Adding or removing tools between turns drops the cache (2026-10-19).
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked on Chat Completions (live 2026-10-23); the Anthropic-compatible Messages and Responses endpoints have no documented or tested in-place system message.
 # Tools: tool_choice supports only auto on Chat Completions and none|auto on Responses; no strict tool mode
-#   (https://docs.bigmodel.cn/cn/guide/capabilities/function-calling, https://docs.bigmodel.cn/cn/guide/develop/responses/introduction).
+#   (https://docs.bigmodel.cn/cn/guide/capabilities/function-calling, https://docs.bigmodel.cn/cn/guide/develop/responses/introduction),
+#   so [api.responses] adds none. Messages documents no tool_choice.
 schema = 2
 base_model = "zhipuai/glm-5v-turbo"
 
@@ -35,6 +36,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-co
 [api.responses]
 base_url = "https://open.bigmodel.cn/api/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
+capabilities = { tools = { choice = ["auto", "none"] } }
 
 [cost.text.input]
 price = 0.74698

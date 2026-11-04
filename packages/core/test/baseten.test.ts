@@ -179,7 +179,7 @@ test("Baseten decision models get the systemone table, new or stale", async () =
     });
     const models = [await source(stale, "elephant-1"), await source(fresh, "mammoth-1")];
     expect(buildBasetenDecisionModel(models[1]!, undefined)?.api).toEqual({
-      systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/baseten" } },
+      systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/baseten/decisions" } },
     });
 
     const provider = { ...baseten, modelsDir, fetchModels: async () => ({ data: models }) };

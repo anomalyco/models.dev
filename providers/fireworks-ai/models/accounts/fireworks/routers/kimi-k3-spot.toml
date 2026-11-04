@@ -11,6 +11,7 @@
 # Image types: the lab's image types that Fireworks accepts. Fireworks documents .png, .jpg/.jpeg, .gif, .bmp, .tiff and .ppm (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations); webp and avif also decoded in live Standard-path tests (2026-10-21), heic failed.
 # Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting).
 # Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Per API: system_updates sits on [api.chat-completions] only, as on the Standard sibling, where only Chat Completions was tested.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Spot"
@@ -23,11 +24,11 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
-system_updates = true
 cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

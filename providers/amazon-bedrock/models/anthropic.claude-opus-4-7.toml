@@ -9,21 +9,24 @@
 # APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
 # tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-7.html
 # tools.choice: Converse toolChoice auto/any/tool, no none (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ToolChoice.html); Claude takes any and tool: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html
-# tools.search: left out. Bedrock offers the tool search tool through InvokeModel only, not Converse: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool
+# tools.search: on [api.messages] only. AWS documents the tool search tool through InvokeModel, not Converse (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool); Mantle Messages ran tool_search_tool_regex_20251119 with deferred tools live (2026-10-26).
+# Per-API tools.choice: Mantle Messages takes Anthropic's tool_choice, including none (live 2026-10-26), so choice is set per API: Converse's list on [api.converse], the same plus none on [api.messages]. Strict tools hold on both APIs (Mantle Messages rejected a strict schema without additionalProperties: false; structured outputs list Mantle Messages: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html).
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "required", "tool"] }
+tools = { supported = true, strict = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [api.converse]
+capabilities = { tools = { choice = ["auto", "required", "tool"] } }
 
 [api.messages]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"], search = true } }
 
 [cost.text.input]
 price = 5

@@ -10,7 +10,7 @@ name = "FLUX.2 Klein 4B"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.image.output]
 unit = "image"

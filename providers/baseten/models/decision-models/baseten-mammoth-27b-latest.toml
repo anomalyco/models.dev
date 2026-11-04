@@ -5,10 +5,10 @@ v2_only = true
 base_model = "baseten/mammoth-1"
 
 [api.systemone]
-sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/baseten" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/baseten/decisions" }
 
 [cost.text.input]
-price = 0
+price = 0.1
 
 [cost.text.output]
 price = 0
