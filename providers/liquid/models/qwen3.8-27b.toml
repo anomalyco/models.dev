@@ -1,0 +1,24 @@
+# Id, limits and features: GET https://router.inference.ai.exchange/v1/models (accessed 2026-11-04)
+# Prices: the auction picks an offer for each request, so the charge varies. These are the median
+#   rates of the 11 offers with tools in GET https://router.inference.ai.exchange/v1/exchange/book
+#   on 2026-11-04, plus the exchange fee (https://inference.ai.exchange/docs/fees).
+# Effort: reasoning_effort = low|medium|xhigh, passed to the seller as written. Levels follow the lab's API.
+# reasoning_field is unset: the host returns "reasoning", which v1's interleaved.field does not allow.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.0525 }
+
+[cost.text.output]
+price = 0.525

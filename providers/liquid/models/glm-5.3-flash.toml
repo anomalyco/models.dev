@@ -1,0 +1,27 @@
+# Id, limits and features: GET https://router.inference.ai.exchange/v1/models (accessed 2026-11-04)
+# Prices: the auction picks an offer for each request, so the charge varies. These are the median
+#   rates of the 10 offers with tools in GET https://router.inference.ai.exchange/v1/exchange/book
+#   on 2026-11-04, plus the exchange fee (https://inference.ai.exchange/docs/fees).
+# Effort: reasoning_effort = low|high|max, passed to the seller as written. Levels follow the lab's API.
+# reasoning_field is unset: the host returns "reasoning", which v1's interleaved.field does not allow.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.112
+cache = { read = 0.0278 }
+
+[cost.text.output]
+price = 0.315

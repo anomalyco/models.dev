@@ -1,0 +1,24 @@
+# Id, limits and features: GET https://router.inference.ai.exchange/v1/models (accessed 2026-11-04)
+# Prices: the auction picks an offer for each request, so the charge varies. These are the median
+#   rates of the 7 offers with tools in GET https://router.inference.ai.exchange/v1/exchange/book
+#   on 2026-11-04, plus the exchange fee (https://inference.ai.exchange/docs/fees).
+# Effort: reasoning_effort = low|high|max, passed to the seller as written. Levels follow the lab's API.
+# reasoning_field is unset: the host returns "reasoning", which v1's interleaved.field does not allow.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.26
+cache = { read = 0.315 }
+
+[cost.text.output]
+price = 10.2
