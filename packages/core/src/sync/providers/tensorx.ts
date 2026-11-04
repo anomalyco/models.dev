@@ -252,23 +252,27 @@ const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", 
 // always retained because the gateway has no text flag. Vision denial also
 // removes video, since video input decodes frames into the same image path.
 // undefined inherits.
-function narrowLabModalities(
+export function narrowLabModalities(
   canonical: string,
   info: TensorXModelInfo,
+  labOverride?: { input?: string[]; output?: string[] },
 ): {
   v1: { input: string[]; output: string[] } | undefined;
   v2Set: Record<string, unknown> | undefined;
 } {
   const noFalse = info.supports_vision !== false && info.supports_pdf_input !== false && info.supports_audio_input !== false && info.supports_audio_output !== false;
+  if (noFalse) return { v1: undefined, v2Set: undefined };
   const file = path.join(MODELS_DIR, `${canonical}.toml`);
   let lab: { input?: string[]; output?: string[] };
-  try {
-    lab = (Bun.TOML.parse(readFileSync(file, "utf8")).modalities as typeof lab) ?? {};
-  } catch {
-    // factorBaseModel surfaces the same missing lab file as its own error.
-    lab = {};
+  if (labOverride !== undefined) lab = labOverride;
+  else {
+    try {
+      lab = (Bun.TOML.parse(readFileSync(file, "utf8")).modalities as typeof lab) ?? {};
+    } catch {
+      // factorBaseModel surfaces the same missing lab file as its own error.
+      lab = {};
+    }
   }
-  if (noFalse) return { v1: undefined, v2Set: undefined };
   const input = (lab.input ?? []).filter((entry) => {
     const kind = toV1Modality(entry);
     if (info.supports_vision === false && (kind === "image" || kind === "video")) return false;
@@ -282,10 +286,15 @@ function narrowLabModalities(
 
   const v1Input = [...new Set(input.map(toV1Modality))];
   const v1Output = [...new Set(output.map(toV1Modality))];
+  // Emit BOTH sides in v2Set whenever any denial triggered narrowing, even
+  // the side whose list didn't shrink. factorBaseModel drops the unchanged
+  // side from the v1 override, and sync/index.ts then fills it back from the
+  // lab's generic v1 view — if v2Set only carried the changed side, the other
+  // side's MIME detail would be lost on the wire.
   const v2Set: Record<string, unknown> = {};
-  if (JSON.stringify(input) !== JSON.stringify(lab.input ?? [])) v2Set["modalities.input"] = input;
-  if (JSON.stringify(output) !== JSON.stringify(lab.output ?? [])) v2Set["modalities.output"] = output;
-  return { v1: { input: v1Input, output: v1Output }, v2Set: Object.keys(v2Set).length ? v2Set : undefined };
+  v2Set["modalities.input"] = input;
+  v2Set["modalities.output"] = output;
+  return { v1: { input: v1Input, output: v1Output }, v2Set };
 }
 
 function buildEmbeddingModel(

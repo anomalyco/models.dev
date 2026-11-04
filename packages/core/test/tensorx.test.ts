@@ -5,6 +5,7 @@ import { groups, providers, type ExistingModel } from "../src/sync/index.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   buildTensorXModel,
+  narrowLabModalities,
   tensorx,
   type TensorXModel,
   type TensorXModelInfo,
@@ -320,4 +321,21 @@ test("removing a denial deletes the narrowed modalities in patchModelV2", () => 
     { modalities: undefined },
   );
   expect(patched.modalities).toBeUndefined();
+});
+
+test("output-only denial keeps the input list's full MIME detail", () => {
+  // Round-4 regression: when audio_output is denied, the unchanged input list
+  // must still be written via v2Set (factorBaseModel drops the unchanged input
+  // from the v1 override, and sync/index.ts would otherwise fill it back from
+  // the lab's generic v1 view and lose MIME detail).
+  const lab = { input: ["text", "image/png", "audio/wav"], output: ["text", "audio/wav"] };
+  const narrowed = narrowLabModalities(
+    "whatever/lab-with-audio-out",
+    { ...info({}), supports_audio_output: false },
+    lab,
+  );
+  expect(narrowed.v2Set).toMatchObject({
+    "modalities.input": ["text", "image/png", "audio/wav"],
+    "modalities.output": ["text"],
+  });
 });
