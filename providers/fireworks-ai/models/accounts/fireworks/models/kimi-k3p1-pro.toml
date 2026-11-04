@@ -1,0 +1,48 @@
+# Sources (accessed 2026-11-04):
+# - Model, context, and pricing: https://app.fireworks.ai/models/fireworks/kimi-k3p1-pro
+# - Reasoning controls: https://docs.fireworks.ai/guides/reasoning
+# - Image formats: https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations
+# - Structured output: https://docs.fireworks.ai/structured-responses/structured-response-formatting
+# - Cache: prompt caching is prefix-based, on by default, and needs no request field (https://docs.fireworks.ai/guides/prompt-caching).
+# - Toggle: thinking.type = enabled|disabled (also reasoning_effort = none)
+# - Effort: reasoning_effort = low|medium|high|max
+# - Budget: reasoning_effort = <integer> or thinking.budget_tokens = <integer>, minimum 1024
+# Live Chat Completions checks (2026-11-04) confirmed all effort values and integer budgets; image input,
+# automatic tool calls, and strict JSON schema output. The default returns reasoning at the same Max tier
+# as Moonshot's API. The Responses and Messages endpoints also completed requests.
+# Modalities copy the Fireworks Kimi K3 host's image overrides; this model's lab entry also lists video,
+# which Fireworks does not document for this host.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 }, default = { type = "effort", value = "max" } }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }
