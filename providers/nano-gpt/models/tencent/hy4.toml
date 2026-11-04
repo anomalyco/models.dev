@@ -1,0 +1,26 @@
+schema = 2
+name = "Tencent Hy4"
+description = "Tencent Hy4 accepts text and images and returns text, with a 1,048,576-token context window and up to 65,536 output tokens. It supports coding, long-document analysis, automatic tool calling and structured output. Reasoning is enabled by default at high effort; choose low effort or turn reasoning off."
+open_weights = false
+release_date = "2026-11-04"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 0.417
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 1.2505
