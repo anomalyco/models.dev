@@ -2,16 +2,19 @@
 # Pricing: https://prisminference.com/pricing
 # Reasoning: https://docs.prisminference.com/api-reference/chat-completions
 # Off is reasoning_effort=none; graded levels use the same request field.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.038
-output = 0.50
-cache_read = 0.005
+[cost.text.input]
+price = 0.038
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.50
