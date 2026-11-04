@@ -65,6 +65,7 @@ import {
   mediaType,
   openrouter,
   resolveCanonicalBaseModel,
+  resolveMediaBaseModel,
   catalogCost,
   overrideWhen,
   withSystemOneMediaInput,
@@ -8545,4 +8546,16 @@ test("Vercel cache support comes from tags, else from a cache read price", () =>
   expect(cache([], "mistral/codestral", { input_cache_read: "0.03" })!(undefined)).toEqual({ implicit: true });
   expect(cache([], "anthropic/claude-x", { input_cache_read: "0.3" })!(undefined)).toEqual({ explicit: true });
   expect(cache([], "perplexity/sonar", { input_cache_write: "0.0625" })).toBeUndefined();
+});
+
+test("OpenRouter media models resolve to their lab files", () => {
+  // OpenRouter lists Voyage AI models under mongodb/ ("VoyageAI by MongoDB: voyage-4").
+  expect(resolveMediaBaseModel("mongodb/voyage-4")).toBe("voyageai/voyage-4");
+  expect(resolveMediaBaseModel("mongodb/voyage-multimodal-3.5")).toBe("voyageai/voyage-multimodal-3.5");
+  expect(resolveMediaBaseModel("mongodb/rerank-2.5-lite")).toBe("voyageai/rerank-2.5-lite");
+  // Cohere's lab IDs spell the version as v5.0.
+  expect(resolveMediaBaseModel("cohere/embed-5-fast")).toBe("cohere/embed-v5.0-fast");
+  expect(resolveMediaBaseModel("cohere/embed-5-pro")).toBe("cohere/embed-v5.0-pro");
+  expect(resolveMediaBaseModel("cohere/rerank-5-fast")).toBe("cohere/rerank-v5.0-fast");
+  expect(resolveMediaBaseModel("cohere/rerank-5-pro")).toBe("cohere/rerank-v5.0-pro");
 });
