@@ -1,0 +1,15 @@
+# Pricing: https://therouter.ai/models/ (checked 2026-11-04).
+# The authenticated GET /v1/models catalog reports USD per token; prices below
+# are USD per million tokens. The catalog states text and image inputs.
+schema = 2
+base_model = "openai/gpt-4o-mini"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.162
+
+[cost.text.output]
+price = 0.648
