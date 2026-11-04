@@ -4,14 +4,16 @@
 # Chat effort, none/off alias, caching and usage: https://docs.refuseless.com/api/chat-completions
 # Responses effort: https://docs.refuseless.com/api/responses
 # Wire: reasoning_effort (Chat) / reasoning.effort (Responses) = low|high|max; default low. Off/Medium are rejected.
-# Image input is documented without MIME types; video/PDF are not advertised.
+# Host input surface: docs.refuseless.com/models lists text and images for this ID;
+# use the base lab image MIME types. Lab video/PDF are outside that documented surface.
+# Effort validation: https://docs.refuseless.com/guides/reasoning explicitly rejects minimal, medium and xhigh with HTTP 400.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash Abliterated"
 description = "Abliterated variant of GLM 5.3 Flash hosted by Refuseless."
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]

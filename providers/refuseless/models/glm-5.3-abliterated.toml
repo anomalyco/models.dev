@@ -4,6 +4,7 @@
 # Chat effort, none/off alias, caching and usage: https://docs.refuseless.com/api/chat-completions
 # Responses effort: https://docs.refuseless.com/api/responses
 # Wire: reasoning_effort (Chat) / reasoning.effort (Responses) = low|high|max; default low. Off/Medium are rejected.
+# Effort validation: https://docs.refuseless.com/guides/reasoning explicitly rejects minimal, medium and xhigh with HTTP 400.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3 Abliterated"

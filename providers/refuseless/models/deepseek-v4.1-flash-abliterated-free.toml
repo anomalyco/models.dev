@@ -5,6 +5,8 @@
 # Responses effort: https://docs.refuseless.com/api/responses
 # Wire: reasoning_effort (Chat) / reasoning.effort (Responses) = none|low|high|max; default low. Medium is rejected.
 # Despite the free suffix, both public pricing sources list nonzero token rates.
+# Effort validation: https://docs.refuseless.com/guides/reasoning explicitly rejects minimal, medium and xhigh with HTTP 400.
+# Off uses the documented effort=none alias, so the catalog has no separate toggle (AGENTS.md none-in-effort rule).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 Abliterated Free"
