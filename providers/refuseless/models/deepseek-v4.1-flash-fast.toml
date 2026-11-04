@@ -1,0 +1,35 @@
+# Prices/limits: https://refuseless.com/models/deepseek-v4.1-flash-fast (2026-11-04).
+# Current promotional rates: https://refuseless.com/pricing
+# Inputs: https://docs.refuseless.com/models; efforts/default: https://docs.refuseless.com/api/models
+# Chat effort, none/off alias, caching and usage: https://docs.refuseless.com/api/chat-completions
+# Responses effort: https://docs.refuseless.com/api/responses
+# Wire: reasoning_effort (Chat) / reasoning.effort (Responses) = none|low|high|max; default low. Medium is rejected.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.01
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.08
