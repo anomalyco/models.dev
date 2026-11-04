@@ -332,7 +332,6 @@ test("a denial of a kind not on the lab card is a no-op, not a rewrite", () => {
   );
   expect(narrowed.v1).toBeUndefined();
   expect(narrowed.v2Set).toBeUndefined();
-  expect(narrowed.v2Set?.["modalities.input"]).toBeUndefined();
 });
 
 
