@@ -5,6 +5,9 @@
 # Responses effort: https://docs.refuseless.com/api/responses
 # Wire: reasoning_effort (Chat) / reasoning.effort (Responses) = low|high|max; default low. Off/Medium are rejected.
 # Effort validation: https://docs.refuseless.com/guides/reasoning explicitly rejects minimal, medium and xhigh with HTTP 400.
+# MiniMax-specific evidence, not inferred from DeepSeek or the native MiniMax API:
+# https://docs.refuseless.com/api/models documents id="minimax-m3.1-flash" with
+# reasoning_efforts=["low","high","max"] and reasoning_default="low" (2026-11-04).
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 name = "MiniMax M3.1 Flash"
