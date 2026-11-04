@@ -1,13 +1,16 @@
-# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-04).
 # Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
 # limit: the host's cap from the same catalog, where it is below the lab's.
 # Toggle: thinking.type = enabled|disabled (disabled: 2 output tokens, no reasoning; enabled: 589 reasoning tokens; on by default).
 #   Probed 2026-10-30 on /v1/chat/completions.
+# cache: implicit. A ~7k-token prompt sent 3 times in a row, twice (live 2026-11-04): the repeats reported
+#   prompt_tokens_details.cached_tokens = 6,656 of 7,576.
 schema = 2
 base_model = "zhipuai/glm-5.1"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
 [limit]
 output = 24_000
@@ -16,7 +19,8 @@ output = 24_000
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.336
+price = 0.154
+cache = { read = 0.0286 }
 
 [cost.text.output]
-price = 1.056
+price = 0.484

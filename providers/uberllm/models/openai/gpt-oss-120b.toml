@@ -1,5 +1,6 @@
-# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-10-30).
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-04).
 # Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# limit: the host's cap from the same catalog, where it is below the lab's.
 # Effort: reasoning_effort = low|medium|high. Providers on this host validate it (400 "must be one of low, medium, or high"
 #   for none); high returned 113 reasoning tokens. Reasoning comes back as reasoning_content or reasoning, depending on the provider.
 # tools.freeform: left out. Custom tools are rejected: 400 "tools[0].type must be one of [function, mcp]" (live 2026-10-30).
@@ -9,6 +10,10 @@ base_model = "openai/gpt-oss-120b"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+context = 128_000
+output = 16_384
 
 [cost.text.input]
 price = 0.0056
