@@ -348,9 +348,27 @@ export function buildTensorXModel(
         interleaved: existing?.interleaved,
         limit,
         cost,
-        // Modalities come from the lab card: it lists union supertypes with
-        // MIME detail the gateway's boolean flags cannot reproduce.
-        modalities: undefined,
+        // Modalities: inherit the lab card (which carries union supertypes and
+        // MIME detail the gateway's booleans cannot express) whenever no flag is
+        // explicitly false. If the gateway explicitly reports a flag as false
+        // (or its deployments disagree, which merges to false), narrow the list
+        // so the publish never advertises an input this host cannot serve. The
+        // narrowed list is generic on purpose: after a denial we cannot rely on
+        // any lab-listed subtype either.
+        modalities: info.supports_vision === false || info.supports_pdf_input === false || info.supports_audio_input === false || info.supports_audio_output === false
+          ? {
+              input: [
+                "text" as Modality,
+                ...(info.supports_vision === true ? ["image" as Modality] : []),
+                ...(info.supports_pdf_input === true ? ["pdf" as Modality] : []),
+                ...(info.supports_audio_input === true ? ["audio" as Modality] : []),
+              ],
+              output: [
+                "text" as Modality,
+                ...(info.supports_audio_output === true ? ["audio" as Modality] : []),
+              ],
+            }
+          : undefined,
       },
       limit,
       existing?.base_model === canonical ? existing.base_model_omit : undefined,

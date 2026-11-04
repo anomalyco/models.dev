@@ -4,6 +4,10 @@
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
