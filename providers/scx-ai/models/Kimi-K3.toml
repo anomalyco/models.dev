@@ -1,10 +1,3 @@
-# Prices: SCX AUD list prices (https://scx.ai/pricing), converted at 1 USD = 1.60218972 AUD on 2026-11-04.
-# SCX accepts max_tokens=1048576 (200 OK on a short prompt), so output is
-# overridden from the moonshotai/kimi-k3 base entry (131072). Thinking is returned
-# as `reasoning_content` on the message. `none` turns thinking off (no reasoning
-# returned, n=3), and so do the thinking-disable params. Effort is none plus the
-# lab's low/high/max; minimal, medium and xhigh are accepted but not clearly
-# distinct at n=3.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 

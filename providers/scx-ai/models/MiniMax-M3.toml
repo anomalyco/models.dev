@@ -1,9 +1,3 @@
-# Prices: SCX AUD list prices (GET https://api.scx.ai/v1/models, pricing.prompt and pricing.completion), converted at 1 USD = 1.60218972 AUD on 2026-11-04; cached input is billed at 10% of the input rate.
-# Thinking is always on and returned as `reasoning_content`: SCX rejects
-# thinking.type = disabled and reasoning_effort = none ("This model's reasoning
-# mode cannot be changed per request").
-# Video input is rejected: an MP4 video_url (data URI or https URL) returns 400 "The request was
-# rejected as invalid." on MiniMax-M3; the same data-URI request succeeds on SCX Qwen3.8-Max.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
