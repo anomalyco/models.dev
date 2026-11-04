@@ -1,5 +1,8 @@
+# Wire format: OpenAI Chat Completions, POST https://api.aniron.ai/v1/chat/completions.
+# Model ids are the `aniron/<model>` ids listed at https://portal-api.aniron.ai/v1/models.
 name = "Aniron"
 env = ["ANIRON_API_KEY"]
-npm = "@aniron/ai-sdk-provider"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 api = "https://api.aniron.ai/v1"
 doc = "https://aniron.ai/models"
