@@ -1,12 +1,8 @@
 schema = 2
+base_model = "tencent/hy4"
+base_model_omit = ["limit.input"]
 name = "Tencent Hy4"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
-open_weights = false
-release_date = "2026-11-03"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
