@@ -1,9 +1,12 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily } from "../../family.js";
+import { toV1Modality } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.tensorx.ai/v1/model/info";
 
@@ -137,10 +140,7 @@ export const tensorx = {
     if (mode === "embedding") {
       return buildEmbeddingModel(model, existing, context.authored(id));
     }
-    return {
-      id,
-      model: buildTensorXModel(model, existing, context.authored(id)),
-    };
+    return buildTensorXBundle(model, existing, context.authored(id));
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -244,37 +244,48 @@ function price(perToken: number | null | undefined) {
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
-type LabModalities = { input?: string[]; output?: string[] } | undefined;
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
-// Subtract only the denied kinds from the lab card's modality list, keeping
-// MIME detail and every modality the gateway does not explicitly deny. An
-// input like `image/heic` belongs to the vision kind; `application/pdf` to the
-// PDF kind; `video/*` to video, which LiteLLM cannot deny because it has no
-// flag for it. Returns undefined when no flag is explicitly false, so the
-// provider file inherits the lab card unchanged.
+// Subtract only the denied kinds from the lab card. v1 carries generic
+// modalities; read the raw lab TOML to also preserve exact MIME types in v2.
+// Outputs keep the lab's `output` list, except for audio-only denials; text is
+// always retained because the gateway has no text flag. Vision denial also
+// removes video, since video input decodes frames into the same image path.
+// undefined inherits.
 function narrowLabModalities(
-  lab: LabModalities,
+  canonical: string,
   info: TensorXModelInfo,
-): { input: string[]; output: string[] } | undefined {
+): {
+  v1: { input: string[]; output: string[] } | undefined;
+  v2Set: Record<string, unknown> | undefined;
+} {
   const noFalse = info.supports_vision !== false && info.supports_pdf_input !== false && info.supports_audio_input !== false && info.supports_audio_output !== false;
-  if (noFalse || (lab?.input === undefined && lab?.output === undefined)) return undefined;
-  const keepInput = (entry: string) => {
-    if (info.supports_vision === false && /^image(\/|$)/.test(entry)) return false;
-    if (info.supports_pdf_input === false && /pdf/.test(entry)) return false;
-    if (info.supports_audio_input === false && /^audio(\/|$)/.test(entry)) return false;
+  const file = path.join(MODELS_DIR, `${canonical}.toml`);
+  let lab: { input?: string[]; output?: string[] };
+  try {
+    lab = (Bun.TOML.parse(readFileSync(file, "utf8")).modalities as typeof lab) ?? {};
+  } catch {
+    // factorBaseModel surfaces the same missing lab file as its own error.
+    lab = {};
+  }
+  if (noFalse) return { v1: undefined, v2Set: undefined };
+  const input = (lab.input ?? []).filter((entry) => {
+    const kind = toV1Modality(entry);
+    if (info.supports_vision === false && (kind === "image" || kind === "video")) return false;
+    if (info.supports_pdf_input === false && kind === "pdf") return false;
+    if (info.supports_audio_input === false && kind === "audio") return false;
     return true;
-  };
-  const keepOutput = (entry: string) => {
-    if (info.supports_audio_output === false && /^audio(\/|$)/.test(entry)) return false;
-    return true;
-  };
-  const input = (lab?.input ?? []).filter(keepInput);
-  // v1 requires text in every input list; the gateway states nothing about
-  // text, so it always remains.
+  });
   if (!input.includes("text")) input.unshift("text");
-  const output = (lab?.output ?? []).filter(keepOutput);
+  const output = (lab.output ?? []).filter((entry) => !(info.supports_audio_output === false && toV1Modality(entry) === "audio"));
   if (!output.includes("text")) output.unshift("text");
-  return { input, output };
+
+  const v1Input = [...new Set(input.map(toV1Modality))];
+  const v1Output = [...new Set(output.map(toV1Modality))];
+  const v2Set: Record<string, unknown> = {};
+  if (JSON.stringify(input) !== JSON.stringify(lab.input ?? [])) v2Set["modalities.input"] = input;
+  if (JSON.stringify(output) !== JSON.stringify(lab.output ?? [])) v2Set["modalities.output"] = output;
+  return { v1: { input: v1Input, output: v1Output }, v2Set: Object.keys(v2Set).length ? v2Set : undefined };
 }
 
 function buildEmbeddingModel(
@@ -312,11 +323,11 @@ function buildEmbeddingModel(
   return { id, v2 };
 }
 
-export function buildTensorXModel(
+function buildTensorXBundle(
   model: TensorXModel,
   existing: ExistingModel | undefined,
   authored: ExistingModel | undefined,
-): SyncedModel {
+): { id: string; model: SyncedModel; v2Set?: Record<string, unknown> } {
   const id = model.model_name;
   const info = model.model_info;
 
@@ -368,30 +379,31 @@ export function buildTensorXModel(
   const canonical = existing?.base_model ?? authored?.base_model ?? resolveCanonicalBaseModel(id);
 
   if (canonical !== undefined) {
-    return factorBaseModel(
-      canonical,
-      {
-        type: existing?.type,
-        reasoning,
-        reasoning_options: reasoning === true ? existing?.reasoning_options : undefined,
-        temperature,
-        tool_call: toolCall,
-        structured_output: structuredOutput,
-        status: existing?.status,
-        interleaved: existing?.interleaved,
+    // Subtract only explicitly denied kinds. v1 stays generic; v2Set carries
+    // the lab's exact MIME strings so narrowing never loses format detail.
+    const narrowed = narrowLabModalities(canonical, info);
+    return {
+      id,
+      model: factorBaseModel(
+        canonical,
+        {
+          type: existing?.type,
+          reasoning,
+          reasoning_options: reasoning === true ? existing?.reasoning_options : undefined,
+          temperature,
+          tool_call: toolCall,
+          structured_output: structuredOutput,
+          status: existing?.status,
+          interleaved: existing?.interleaved,
+          limit,
+          cost,
+          modalities: narrowed.v1,
+        },
         limit,
-        cost,
-        // Modalities: inherit the lab card (union supertypes + MIME detail that
-        // the gateway's booleans cannot express) whenever no flag is explicitly
-        // false. When a flag is explicitly false, remove only the kind that flag
-        // denies from the lab list and keep every other type — so `pdf=false`
-        // strips `application/pdf` but leaves images and video alone. LiteLLM
-        // has no video flag, so video is never lost by accident.
-        modalities: narrowLabModalities(modelMetadata(canonical).modalities, info),
-      },
-      limit,
-      existing?.base_model === canonical ? existing.base_model_omit : undefined,
-    );
+        existing?.base_model === canonical ? existing.base_model_omit : undefined,
+      ),
+      v2Set: narrowed.v2Set,
+    };
   }
 
   const name = existing?.name ?? id.split("/").pop() ?? id;
@@ -406,7 +418,9 @@ export function buildTensorXModel(
       : { input: ["text" as Modality], output: ["text" as Modality] });
 
   return {
-    type: existing?.type,
+    id,
+    model: {
+      type: existing?.type,
     name,
     description: existing?.description ?? describeModel({
       id,
@@ -433,6 +447,17 @@ export function buildTensorXModel(
     open_weights: existing?.open_weights ?? false,
     cost,
     limit,
-    modalities,
-  } satisfies SyncedFullModel;
+      modalities,
+    } satisfies SyncedFullModel,
+  };
+}
+
+// Test seam: the fetcher uses the bundle above; this keeps the existing
+// model-only helper unchanged for its callers.
+export function buildTensorXModel(
+  model: TensorXModel,
+  existing: ExistingModel | undefined,
+  authored: ExistingModel | undefined,
+): SyncedModel {
+  return buildTensorXBundle(model, existing, authored).model;
 }

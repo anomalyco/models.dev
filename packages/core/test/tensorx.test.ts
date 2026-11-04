@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 
+import { patchModelV2 } from "../src/model-file-v2.js";
 import { groups, providers, type ExistingModel } from "../src/sync/index.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
@@ -290,4 +291,33 @@ test("a denial that later flips back to null stops narrowing", () => {
     existingGlmFlash,
   );
   expect(reverted.modalities).toBeUndefined();
+});
+
+test("narrowing keeps the lab's exact MIME types in v2", () => {
+  const result = tensorx.translateModel(
+    model("z-ai/glm-5.3-flash", { supports_vision: true, supports_pdf_input: false }),
+    context({ ["z-ai/glm-5.3-flash"]: existingGlmFlash }),
+  );
+  expect(result && "v2Set" in result ? result.v2Set : undefined).toMatchObject({
+    "modalities.input": ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"],
+  });
+});
+
+test("a vision denial also drops video, not only images", () => {
+  const result = buildTensorXModel(
+    model("z-ai/glm-5.3-flash", { supports_vision: false, supports_pdf_input: null }),
+    existingGlmFlash,
+    existingGlmFlash,
+  );
+  expect(result.modalities).toMatchObject({ input: ["text", "pdf"] });
+  expect(result.modalities?.output).toBeUndefined();
+});
+
+test("removing a denial deletes the narrowed modalities in patchModelV2", () => {
+  const patched = patchModelV2(
+    { base_model: "zhipuai/glm-5.3-flash", modalities: { input: ["text"], output: ["text"] } },
+    { modalities: { input: ["text"], output: ["text"] } },
+    { modalities: undefined },
+  );
+  expect(patched.modalities).toBeUndefined();
 });
