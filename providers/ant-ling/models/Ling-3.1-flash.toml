@@ -5,15 +5,15 @@
 #   what is deployed here, so limits are inherited from the 1019 entry, not the generic one.
 #   The docs page above still lists a 256K served window and has not been updated for 1019.
 # Pricing: https://developer.ant-ling.com/en/docs/models/price (accessed 2026-10-30); CNY prices: 0.50 input, 1.50 output, 0.10 cache read
+#   These are the current promotional CNY rows (price page: Ling-3.1-flash is on a 75% discount);
+#   the page states original prices resume when the promotion ends.
 # CNY→USD rate: 6.6666666667, 2026-10-30, source: https://open.er-api.com/v6/latest/USD
 # Toggle: `thinking.type = "enabled" | "disabled"` (default: enabled).
-# Tools/cache: strict tool calling, tool_choice and implicit caching are live on both
-#   chat-completions and messages; not yet documented on the pages above.
 schema = 2
 base_model = "inclusionai/ling-3.1-flash-1019"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 cache = { implicit = true }
 

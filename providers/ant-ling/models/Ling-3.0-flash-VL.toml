@@ -2,10 +2,11 @@
 # Pricing: https://developer.ant-ling.com/en/docs/models/price (accessed 2026-10-30); CNY prices: 0.14 input, 0.42 output, 0.028 cache read
 # CNY→USD rate: 6.6666666667, 2026-10-30, source: https://open.er-api.com/v6/latest/USD
 # Toggle: `thinking.type = "enabled" | "disabled"` (default: enabled).
-# Tools/cache: strict tool calling, tool_choice and implicit caching are live on both
-#   chat-completions and messages; not yet documented on the pages above.
-# VL pricing: this endpoint bills VL on the same Ling-3.0-flash row above (0.14 / 0.42 / 0.028 CNY).
-#   OpenRouter's separate VL pricing is a different host and is not evidence for this endpoint.
+# VL pricing is its own row on the price page, not an inference: the table lists
+#   "Ling-3.0-flash-VL | Native multimodal | ¥0.14 | ¥0.42 | ¥0.028 |" as a separate entry from
+#   "Ling-3.0-flash | Latest high-speed | ¥0.14 | ¥0.42 | ¥0.028 |"
+#   (https://developer.ant-ling.com/en/docs/models/price, accessed 2026-10-30).
+#   OpenRouter/ZenMux amounts on that page are third-party hosts, not this endpoint.
 # Modalities: `input` narrows the base image/video types to the formats the Ant Ling API accepts;
 #   `output = ["text"]` must stay because the schema requires it whenever [modalities] is present.
 schema = 2
@@ -23,7 +24,7 @@ input = [
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 cache = { implicit = true }
 

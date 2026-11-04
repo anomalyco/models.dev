@@ -1,14 +1,14 @@
 # Sources: https://developer.ant-ling.com/en/docs/models/ling/#ling-30-flash
 # Pricing: https://developer.ant-ling.com/en/docs/models/price (accessed 2026-10-30); CNY prices: 0.14 input, 0.42 output, 0.028 cache read
+#   These are the current promotional CNY rows (price page: Ling-3.0-flash and -VL are on a 72% discount);
+#   the page states original prices resume when the promotion ends.
 # CNY→USD rate: 6.6666666667, 2026-10-30, source: https://open.er-api.com/v6/latest/USD
 # Toggle: `thinking.type = "enabled" | "disabled"` (default: enabled).
-# Tools/cache: strict tool calling, tool_choice and implicit caching are live on both
-#   chat-completions and messages; not yet documented on the pages above.
 schema = 2
 base_model = "inclusionai/ling-3.0-flash"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 cache = { implicit = true }
 
