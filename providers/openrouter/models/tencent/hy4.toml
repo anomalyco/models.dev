@@ -1,22 +1,11 @@
 schema = 2
-name = "Hy4"
+base_model = "tencent/hy4"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
-open_weights = true
-release_date = "2026-11-04"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [api.chat-completions]
 
