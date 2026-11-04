@@ -2,6 +2,12 @@
 # Pricing: https://developer.ant-ling.com/en/docs/models/price (accessed 2026-10-30); CNY prices: 0.14 input, 0.42 output, 0.028 cache read
 # CNY→USD rate: 6.6666666667, 2026-10-30, source: https://open.er-api.com/v6/latest/USD
 # Toggle: `thinking.type = "enabled" | "disabled"` (default: enabled).
+# Tools/cache: strict tool calling, tool_choice and implicit caching are live on both
+#   chat-completions and messages; not yet documented on the pages above.
+# VL pricing: this endpoint bills VL on the same Ling-3.0-flash row above (0.14 / 0.42 / 0.028 CNY).
+#   OpenRouter's separate VL pricing is a different host and is not evidence for this endpoint.
+# Modalities: `input` narrows the base image/video types to the formats the Ant Ling API accepts;
+#   `output = ["text"]` must stay because the schema requires it whenever [modalities] is present.
 schema = 2
 base_model = "inclusionai/ling-3.0-flash-vl"
 

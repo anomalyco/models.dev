@@ -1,7 +1,14 @@
 # Sources: https://developer.ant-ling.com/en/docs/models/ling/#ling-31-flash
+# Served checkpoint: this endpoint runs inclusionai/ling-3.1-flash-1019 (1M context / 262k output),
+#   https://huggingface.co/inclusionAI/Ling-3.1-flash-1019. The generic lab file
+#   models/inclusionai/ling-3.1-flash is the earlier checkpoint (262k / 32k) and does not match
+#   what is deployed here, so limits are inherited from the 1019 entry, not the generic one.
+#   The docs page above still lists a 256K served window and has not been updated for 1019.
 # Pricing: https://developer.ant-ling.com/en/docs/models/price (accessed 2026-10-30); CNY prices: 0.50 input, 1.50 output, 0.10 cache read
 # CNY→USD rate: 6.6666666667, 2026-10-30, source: https://open.er-api.com/v6/latest/USD
 # Toggle: `thinking.type = "enabled" | "disabled"` (default: enabled).
+# Tools/cache: strict tool calling, tool_choice and implicit caching are live on both
+#   chat-completions and messages; not yet documented on the pages above.
 schema = 2
 base_model = "inclusionai/ling-3.1-flash-1019"
 
