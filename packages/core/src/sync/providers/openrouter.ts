@@ -42,6 +42,13 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "minimax/minimax-01": 40_000,
 };
 
+// OpenRouter's metadata still lists the preview's efforts for these models, but requests
+// are rejected upstream. Mistral Large 4: `none` returns 400 "supported values: high, low,
+// medium" and `reasoning.enabled = false` is rejected the same way (live 2026-10-31).
+const REASONING_OVERRIDES: Record<string, NonNullable<OpenRouterModel["reasoning"]>> = {
+  "mistralai/mistral-large-4-0": { mandatory: true, supported_efforts: ["high", "medium", "low"] },
+};
+
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
@@ -503,6 +510,10 @@ const MEDIA_DESCRIPTIONS: Record<MediaType, string> = {
 const MEDIA_BASE_MODEL_OVERRIDES: Record<string, string> = {
   "cohere/rerank-4-fast": "cohere/rerank-v4.0-fast",
   "cohere/rerank-4-pro": "cohere/rerank-v4.0-pro",
+  "cohere/rerank-5-fast": "cohere/rerank-v5.0-fast",
+  "cohere/rerank-5-pro": "cohere/rerank-v5.0-pro",
+  "cohere/embed-5-fast": "cohere/embed-v5.0-fast",
+  "cohere/embed-5-pro": "cohere/embed-v5.0-pro",
   "fish-audio/s2.1-pro-free:free": "fish-audio/s2.1-pro",
   "mistralai/mistral-embed-2312": "mistral/mistral-embed",
   "mistralai/voxtral-small-24b-2507-stt": "mistral/voxtral-small-24b-2507",
@@ -535,6 +546,8 @@ const MEDIA_BASE_MODEL_OVERRIDES: Record<string, string> = {
 const MEDIA_LAB_PREFIXES: Record<string, string> = {
   bytedance: "bytedance-seed",
   kwaivgi: "kuaishou",
+  // OpenRouter lists Voyage AI models under MongoDB ("VoyageAI by MongoDB: voyage-4").
+  mongodb: "voyageai",
 };
 
 // Transcription models whose pricing.prompt is per audio hour, not per second.
@@ -1407,7 +1420,7 @@ export function buildOpenRouterModel(
   // and rotated models pick up new efforts/budget support. Fall back to authored
   // only when the API omits a reasoning object.
   const reasoning_options = reasoning
-    ? openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options
+    ? openRouterReasoningOptions(REASONING_OVERRIDES[model.id] ?? model.reasoning) ?? existing?.reasoning_options
     : undefined;
   const context = model.context_length;
   const family = inferFamily(model, name);

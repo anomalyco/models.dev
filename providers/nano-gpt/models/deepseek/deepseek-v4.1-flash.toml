@@ -9,11 +9,12 @@ structured_output = true
 tools = { supported = true }
 
 [limit]
-input = 1_000_000
+context = 1_048_576
+input = 1_048_576
 
 [cost.text.input]
-price = 0.022
-cache = { read = 0.004 }
+price = 0.0318
+cache = { read = 0.000636 }
 
 [cost.text.output]
-price = 0.192
+price = 0.1272

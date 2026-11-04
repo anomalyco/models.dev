@@ -1,0 +1,31 @@
+# Prices: China pricing page https://www.siliconflow.cn/pricing (SKU billing rows, CNY per 1M tokens, accessed 2026-10-31),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.669566, 2026-10-31,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 0.8, output 2.8, cache read 0.23
+# Catalog (same page, model row, 2026-10-31): contextLen 1048576, vlm, functionCallSupport, jsonModeSupport.
+# Modalities: image input only (no video or PDF), as on the siliconflow GLM-5.3-Flash peer and the China multimodal guide
+# (GLM: image only); image formats are the lab's.
+# Effort: reasoning_effort = low|high|max, the lab's levels (providers/zhipuai) and the siliconflow GLM-5.3-Flash peer.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11994783
+cache = { read = 0.034485 }
+
+[cost.text.output]
+price = 0.41981742
