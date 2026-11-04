@@ -1,4 +1,4 @@
-# Prices: SCX.ai AUD list price (2026-11-04), converted at 1 USD = 1.60218972 AUD.
+# Prices: SCX.ai AUD list price (2026-11-04), converted at 1 USD = 1.60218972 AUD; cached input is billed at 10% of the input rate.
 # Limits and capabilities verified directly against https://api.scx.ai/v1:
 # SCX enforces a single context budget (prompt + max_tokens <= context) with no
 # separate output cap, so output equals context. Do not trust max_output_length
@@ -19,6 +19,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.3183
+cache = { read = 0.0318 }
 
 [cost.text.output]
 price = 1.0423

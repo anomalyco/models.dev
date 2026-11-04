@@ -1,0 +1,20 @@
+# Prices: SCX AUD list prices (https://scx.ai/pricing), converted at 1 USD = 1.60218972 AUD on 2026-11-04.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# structured_output: SCX rejects response_format json_schema with 400 "The model could not produce the requested structured output."
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.6477
+cache = { read = 0.1373 }
+
+[cost.text.output]
+price = 3.3017

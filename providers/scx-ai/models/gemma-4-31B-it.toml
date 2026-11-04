@@ -1,0 +1,15 @@
+# Prices: SCX.ai AUD list price (2026-11-04), converted at 1 USD = 1.60218972 AUD; cached input is billed at 10% of the input rate.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (off by default)
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }
+structured_output = true
+
+[cost.text.input]
+price = 0.337
+cache = { read = 0.0337 }
+
+[cost.text.output]
+price = 1.0174
