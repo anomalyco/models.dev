@@ -1,22 +1,12 @@
 schema = 2
+base_model = "tencent/hy4"
 name = "Tencent: Hy4"
 description = "The official release of Hy4 delivers comprehensive and substantial improvements over Hy4 Preview, with particularly strong gains in agentic capabilities and performance across a wide range of long-horizon, real-world productivity..."
-open_weights = false
-release_date = "2026-11-04"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 0.834
