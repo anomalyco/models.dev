@@ -8,9 +8,8 @@ name = "GPT 6.1 Sol"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
 input = 1_050_000

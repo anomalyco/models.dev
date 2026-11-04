@@ -14,11 +14,10 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_050_000
@@ -26,8 +25,8 @@ input = 1_050_000
 output = 128_000
 
 [cost.text.input]
-price = 2
-cache = { read = 0.2, write = 2.5 }
+price = 1
+cache = { read = 0.05, write = 1.25 }
 
 [cost.text.output]
-price = 12
+price = 5

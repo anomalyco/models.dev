@@ -1174,25 +1174,11 @@ function wireHeader(
   if (NONE_IS_REAL_OFF.has(measuredId)) {
     lines.push("# Off: reasoning_effort = none (0 reasoning tokens); no toggle field on this surface.");
   }
-  // Sources for the v2-only mid-conversation flags a file carries. The catalog
-  // does not state them, so sync keeps the values and only writes their source,
-  // because this provider's headers are authoritative.
-  if (capabilities?.["effort_updates"] === false) {
-    lines.push(midConversationLine(id));
-  }
-  if (capabilities?.["system_updates"] === false) {
-    lines.push(SYSTEM_UPDATES_LINE);
-  }
   const cache = capabilities?.["cache"] as { explicit?: { ttl?: unknown } } | undefined;
   if (JSON.stringify(cache?.explicit?.ttl) === JSON.stringify(["5m", "1h"])) {
     lines.push(CACHE_LINE);
   }
   return lines.length > 0 ? lines.join("\n") + "\n" : undefined;
-}
-
-function midConversationLine(id: string): string {
-  const schema = `${DOCS_ENDPOINT}?model=${encodeURIComponent(id)}&endpoint=${encodeURIComponent(CHAT_COMPLETIONS_TYPE)}`;
-  return `# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). ${schema}`;
 }
 
 function v2Capabilities(doc: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
@@ -1204,9 +1190,6 @@ function v2Capabilities(doc: Record<string, unknown> | undefined): Record<string
 
 const CACHE_LINE =
   `# Cache: the chat-completions catalog row prices cache writes at 5m (cache_write) and 1h (cache_write_1h), and the request schema takes cache_control { type: ephemeral, ttl: 5m | 1h }. ${API_ENDPOINT}`;
-
-const SYSTEM_UPDATES_LINE =
-  "# system_updates = false: the lab's own API keeps no mid-conversation system message for this closed-weight model (system_updates = false in its first-party file here), so a relay can't keep one in place.";
 
 /**
  * The remote id to report for a chat candidate, or `undefined` for records

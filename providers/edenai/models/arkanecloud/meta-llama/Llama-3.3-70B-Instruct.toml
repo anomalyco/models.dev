@@ -1,0 +1,13 @@
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+name = "Llama-3.3-70B-Instruct (Arkanecloud)"
+
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 0.7

@@ -6,15 +6,15 @@ base_model = "openai/gpt-oss-20b"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 131_072
 output = 16_384
 
 [cost.text.input]
-price = 0.02
+price = 0.008
+cache = { read = 0.007 }
 
 [cost.text.output]
-price = 0.1
+price = 0.035

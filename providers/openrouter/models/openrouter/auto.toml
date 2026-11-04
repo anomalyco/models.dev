@@ -14,11 +14,10 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "audio/wa
 output = ["text", "image/png", "image/jpeg", "image/webp"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 2_000_000

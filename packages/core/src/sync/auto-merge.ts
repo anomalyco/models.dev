@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { isDeepStrictEqual } from "node:util";
 
-import { isSchemaV2, labModelV2ToV1 } from "../translate.js";
+import { labModelV2ToV1, modelV2ToV1 } from "../translate.js";
 
 export const MAX_CREATED_MODELS = 10;
 export const MAX_DELETED_MODELS = 10;
@@ -69,13 +69,11 @@ export async function classifyAutoMerge(
   }
 
   const reasoningMetadata = async (path: string, loader: typeof load) => {
-    const model = Bun.TOML.parse(await loader(path)) as Record<string, unknown>;
+    const model = modelV2ToV1({ ...(Bun.TOML.parse(await loader(path)) as Record<string, unknown>), id: path });
     let reasoning = model.reasoning;
     if (reasoning === undefined && typeof model.base_model === "string") {
       const base = Bun.TOML.parse(await loader(`models/${model.base_model}.toml`)) as Record<string, unknown>;
-      reasoning = isSchemaV2(base)
-        ? labModelV2ToV1({ ...base, id: model.base_model }).reasoning
-        : base.reasoning;
+      reasoning = labModelV2ToV1({ ...base, id: model.base_model }).reasoning;
     }
 
     return {

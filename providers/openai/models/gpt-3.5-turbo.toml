@@ -1,3 +1,4 @@
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-3.5-turbo
 schema = 2
 name = "GPT-3.5-turbo"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
@@ -18,13 +19,17 @@ reasoning = { supported = false }
 structured_output = false
 temperature = true
 system_updates = true
-effort_updates = false
 store = true
-cache = { supported = false }
+cache = false
 
 [limit]
 context = 16_385
 output = 4_096
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 0.5

@@ -6,9 +6,8 @@ name = "DeepSeek V4.1 Flash 1017 Thinking"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
-structured_output = false
-tools = { supported = true, updates = false }
-effort_updates = false
+structured_output = true
+tools = { supported = true }
 
 [limit]
 context = 1_048_576
@@ -17,7 +16,7 @@ output = 393_216
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.003 }
+cache = { read = 0.0042 }
 
 [cost.text.output]
 price = 0.6

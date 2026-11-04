@@ -4,10 +4,9 @@ base_model_omit = ["limit.input"]
 name = "Step 3.5 Flash (Deep Infra)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 262_144

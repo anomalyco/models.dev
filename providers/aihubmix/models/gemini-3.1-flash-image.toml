@@ -13,10 +13,10 @@ base_model = "google/gemini-3.1-flash-image"
 reasoning = { supported = true, effort = ["minimal", "high"] }
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.text.input]
 price = 0.5

@@ -9,11 +9,10 @@ schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1.32

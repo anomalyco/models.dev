@@ -3,7 +3,7 @@
 # https://developers.cloudflare.com/workers-ai/models/qwq-32b/sync-input.json (accessed 2026-06-25)
 # Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
 # https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
-# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted, adds a role header (+19 tokens) and is honored.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted and adds a role header (+19 tokens). On 2026-10-23 QwQ ignored the test instruction both mid-conversation and at the top of the system prompt, so it's the model, not the placement.
 # No prefix cache on this model, so effort and tool changes keep nothing.
 schema = 2
 base_model = "alibaba/qwq-32b"
@@ -13,10 +13,9 @@ description = "Qwen reasoning model for deliberate problem solving, math, and co
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true }
-cache = { supported = false }
+cache = false
 structured_output = false
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 24_000

@@ -10,7 +10,7 @@ base_model = "xai/grok-4.20-0309-reasoning"
 
 [capabilities]
 reasoning = { supported = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 
 [cost.text.input]

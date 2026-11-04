@@ -253,7 +253,7 @@ test("a lab-backed model with no card and no statable control is reported, not i
   expect(aimlapi.missingModelID(model!)).toBeUndefined();
 });
 
-test("v2 files keep their mid-conversation flags, and the header cites them", () => {
+test("the header cites only what a v2 file carries", () => {
   const [model] = aimlapi.parseModels({
     data: [{
       id: "openai/gpt-4o",
@@ -272,9 +272,6 @@ test("v2 files keep their mid-conversation flags, and the header cites them", ()
     base_model: "openai/gpt-4o",
     capabilities: {
       structured_output: true,
-      system_updates: false,
-      effort_updates: false,
-      tools: { supported: true, updates: false },
     },
     cost: { text: { input: { price: 3.25, cache: { read: 1.625 } }, output: { price: 13 } } },
   };
@@ -286,13 +283,11 @@ test("v2 files keep their mid-conversation flags, and the header cites them", ()
   };
 
   const translated = aimlapi.translateModel(model!, context) as { header?: string; model: Record<string, any> };
-  expect(translated.header).toContain("effort_updates = false, tools.updates = false");
-  expect(translated.header).toContain("docs-json?model=openai%2Fgpt-4o&endpoint=openai%2Fchat-completions");
-  expect(translated.header).toContain("# system_updates = false:");
-  expect(translated.header).not.toContain("# Cache:");
+  // Left-out mid-conversation flags are false by default, so they need no source line.
+  expect(translated.header).toBeUndefined();
   const cached = aimlapi.translateModel(model!, {
     ...context,
-    v2: () => ({ ...doc, capabilities: { ...doc.capabilities, cache: { supported: true, explicit: { ttl: ["5m", "1h"] } } } }),
+    v2: () => ({ ...doc, capabilities: { ...doc.capabilities, cache: { explicit: { ttl: ["5m", "1h"] } } } }),
   }) as { header?: string };
   expect(cached.header).toContain("# Cache: the chat-completions catalog row prices cache writes at 5m");
   // Model facts and the lab's description stay with the lab.
@@ -341,7 +336,7 @@ test("cache write prices: one per TTL from the catalog, matched to the file's ex
       "",
       "[capabilities]",
       'reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }',
-      'cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }',
+      'cache = { explicit = { ttl = ["5m", "1h"] } }',
       "",
       "[cost.text.input]",
       "price = 4",
@@ -394,7 +389,7 @@ test("cache write prices: one per TTL from the catalog, matched to the file's ex
     const claudeDoc = Bun.TOML.parse(await readFile(claude, "utf8")) as Record<string, any>;
     const gptDoc = Bun.TOML.parse(await readFile(gpt, "utf8")) as Record<string, any>;
     expect(claudeDoc.cost.text.input.cache).toEqual({ read: 0.4, write: { "5m": 5, "1h": 8 } });
-    expect(claudeDoc.capabilities.cache).toEqual({ supported: true, explicit: { ttl: ["5m", "1h"] } });
+    expect(claudeDoc.capabilities.cache).toEqual({ explicit: { ttl: ["5m", "1h"] } });
     expect(gptDoc.cost.text.input.cache).toEqual({ read: 0.26, write: 3.25 });
     // v1 carries the first TTL only.
     expect(modelV2ToV1({ ...claudeDoc, id: "anthropic/claude-sonnet-4.6" }).cost?.cache_write).toBe(5);
@@ -422,7 +417,7 @@ test("TTL cache write prices that don't match the file's explicit cache TTLs fal
       ["low", "medium", "high", "max"],
     )],
   });
-  const doc = { schema: 2, base_model: "anthropic/claude-sonnet-4-6", capabilities: { cache: { supported: true, implicit: true } } };
+  const doc = { schema: 2, base_model: "anthropic/claude-sonnet-4-6", capabilities: { cache: { implicit: true } } };
   const translated = aimlapi.translateModel(model!, {
     existing: () => undefined,
     authored: () => undefined,

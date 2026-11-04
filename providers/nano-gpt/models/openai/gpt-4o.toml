@@ -11,9 +11,8 @@ output = ["text"]
 
 [capabilities]
 structured_output = false
-tools = { supported = true, updates = false }
-effort_updates = false
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
 input = 128_000

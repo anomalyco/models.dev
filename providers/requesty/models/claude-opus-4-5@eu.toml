@@ -5,11 +5,9 @@ base_model = "anthropic/claude-opus-4-5"
 name = "Claude Opus 4.5 (latest) (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [cost.text.input]
 price = 5.5

@@ -3,10 +3,9 @@ schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_000_000

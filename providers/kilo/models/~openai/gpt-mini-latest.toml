@@ -15,11 +15,10 @@ input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 temperature = false
-effort_updates = false
 
 [limit]
 context = 400_000
@@ -31,3 +30,6 @@ cache = { read = 0.075 }
 
 [cost.text.output]
 price = 4.5
+
+[cost.web_search]
+price = 10

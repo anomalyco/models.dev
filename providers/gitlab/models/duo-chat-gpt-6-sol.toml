@@ -10,6 +10,7 @@
 # Cost: billed per model call in GitLab Credits ($1 each on demand; gpt-6-sol: 2.86 calls per credit up to 272,000 tokens of context, 1.54 above, https://docs.gitlab.com/subscriptions/gitlab_credits/).
 #   v2 has no per-request unit, so token prices stay 0 (calls draw on the subscription's credits).
 # Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
+# APIs: gitlab-ai-provider sends Claude to the AI gateway's /ai/v1/proxy/anthropic/v1/messages and OpenAI models to /ai/v1/proxy/openai/v1/chat/completions or /responses (sources in provider.toml).
 schema = 2
 base_model = "openai/gpt-6-sol"
 name = "Agentic Chat (GPT-6 Sol)"
@@ -17,6 +18,10 @@ name = "Agentic Chat (GPT-6 Sol)"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
 
 [cost.text.input]
 price = 0

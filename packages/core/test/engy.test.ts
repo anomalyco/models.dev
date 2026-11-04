@@ -10,7 +10,7 @@ import { groups, providers } from "../src/sync/index.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import { buildEngyModel, engy, fetchEngyModels, type EngyModel } from "../src/sync/providers/engy.js";
 import { modelMetadata } from "../src/sync/providers/openrouter.js";
-import { isSchemaV2, modelV2ToV1 } from "../src/translate.js";
+import { modelV2ToV1 } from "../src/translate.js";
 
 const REPO = path.join(import.meta.dirname, "..", "..", "..");
 const SHIPPED_DIR = path.join(REPO, "providers", "engy", "models");
@@ -67,7 +67,7 @@ const SHIPPED: Record<string, Shipped> = Object.fromEntries(
     const text = readFileSync(path.join(SHIPPED_DIR, file), "utf8");
     // The files are v2; the runner sees their v1 translation.
     const raw = Bun.TOML.parse(text) as Record<string, unknown>;
-    const { id: _id, ...authored } = (isSchemaV2(raw) ? modelV2ToV1({ ...raw, id }) : raw) as ExistingModel & { id?: string };
+    const { id: _id, ...authored } = modelV2ToV1({ ...raw, id }) as ExistingModel & { id?: string };
     const { benchmarks: _benchmarks, weights: _weights, ...base } = modelMetadata(authored.base_model!);
     const resolved = mergeDeep(base, authored) as ExistingModel;
     return [id, { text, header: text.slice(0, text.search(/^(schema|base_model) =/m)), resolved, wire: wireRow(id, resolved) }];
@@ -355,7 +355,7 @@ test("a repricing changes the price line and nothing else", async () => {
   // base. An exact match proves the header, reasoning_options, the authored
   // limit split, the overrides and the modality order all survive the rewrite.
   const glm52 = GLM52.text
-    .replace("tools = { supported = true, updates = false }", "tools = { supported = false }")
+    .replace(/tools = { supported = true(, updates = false)? }/, "tools = { supported = false }")
     .replace("\nstructured_output = true\n", "\nstructured_output = true\ntemperature = false\n");
   expect(glm52).not.toBe(GLM52.text);
   await inRoot({ "glm-5.2.toml": glm52, "kimi-k3.toml": KIMI_K3.text }, async (modelsDir) => {

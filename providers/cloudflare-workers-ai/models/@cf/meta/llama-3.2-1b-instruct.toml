@@ -8,10 +8,8 @@ name = "Llama 3.2 1B Instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
 [capabilities]
-cache = { supported = false }
+cache = false
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 60_000

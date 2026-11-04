@@ -12,6 +12,7 @@
 #   models.yml on 2026-07-13 (https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/commit/4fd9060e), so the proxy answers 400 "Unsupported model"; OpenAI
 #   shut gpt-5.2-codex down on 2026-07-23 (https://developers.openai.com/api/docs/deprecations). The Duo model page still lists it.
 # Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
+# APIs: gitlab-ai-provider sends Claude to the AI gateway's /ai/v1/proxy/anthropic/v1/messages and OpenAI models to /ai/v1/proxy/openai/v1/chat/completions or /responses (sources in provider.toml).
 schema = 2
 base_model = "openai/gpt-5.2-codex"
 name = "Agentic Chat (GPT-5.2 Codex)"
@@ -21,6 +22,10 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
 
 [cost.text.input]
 price = 0

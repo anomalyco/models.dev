@@ -13,7 +13,7 @@ input = ["text"]
 output = ["image"]
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/zai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/zai/images" }
 
 [cost.image.output]
 unit = "image"

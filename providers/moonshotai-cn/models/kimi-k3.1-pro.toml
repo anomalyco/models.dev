@@ -1,0 +1,51 @@
+# China platform (api.moonshot.cn). Sources accessed 2026-10-24:
+# - Guide: https://platform.kimi.com/docs/guide/kimi-k3-1-pro-quickstart
+# - CNY pricing: https://platform.kimi.com/docs/pricing/chat (input ¥13, cache hit ¥1.30, cache write ¥13/¥26 by TTL, output ¥68)
+# - CNY→USD rate: 6.688225, updated 2026-10-23, source: https://open.er-api.com/v6/latest/USD
+# - Request capabilities: https://platform.kimi.ai/docs/api/chat (stream_options.include_usage, prompt_cache_key)
+# Always thinks: reasoning_effort = "low" | "high" | "max" (default "max"); there is no off toggle.
+# Mid-conversation flags (2026-10-27): not tested live on api.moonshot.cn (our key returns 401 there). They mirror
+#   providers/moonshotai/models/kimi-k3.1-pro.toml, where they were checked live on all three APIs, because the CN docs are the
+#   same: a `developer` message on Responses is handled as a system instruction (https://platform.kimi.com/docs/api/responses);
+#   tools are added (add only) through a system message with `tools` on Chat Completions (https://platform.kimi.com/docs/guide/use-dynamic-tool-loading)
+#   and through the `additional_tools` input item on Responses (ResponsesAdditionalToolsItem in https://platform.kimi.com/docs/openapi.json).
+#   system_updates holds on every API; tools.updates is not set on Messages (no documented tool addition).
+# Tools (live 2026-10-26; https://platform.kimi.ai/docs/api/models-overview): Chat Completions and Messages take auto, none
+#   and required (Messages `any`). A named tool returns 400 "incompatible with thinking enabled", and K3.x always thinks.
+#   Responses accepts only auto (none/required return 400; https://platform.kimi.ai/docs/api/responses), so [api.responses]
+#   overrides choice. strict: Chat Completions defaults function tools to strict = true, Responses function tools take strict,
+#   Messages has no strict field but needs MFJS input schemas and is served by the Chat Completions backend
+#   (https://platform.kimi.ai/docs/api/chat, https://platform.kimi.ai/docs/api/messages).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { ttl = ["5m", "1h"] } }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { tools = { updates = true } }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
+capabilities = { tools = { choice = ["auto"], updates = true } }
+
+[api.messages]
+base_url = "https://api.moonshot.cn/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/moonshot/messages" }
+
+[cost.text.input]
+price = 1.9437
+cache = { read = 0.1944, write = { "5m" = 1.9437, "1h" = 3.8874 } }
+
+[cost.text.output]
+price = 10.1671

@@ -5,11 +5,10 @@ base_model = "google/gemini-3.1-flash-lite"
 name = "Gemini 3.1 Flash Lite (Vertex AI, EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
-cache = { supported = true, explicit = true }
+cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.25

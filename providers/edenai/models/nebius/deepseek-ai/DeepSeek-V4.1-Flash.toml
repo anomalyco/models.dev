@@ -3,13 +3,12 @@ base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash (Nebius)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
-context = 1_048_000
+context = 1_048_576
 
 [cost.text.input]
 price = 0.3

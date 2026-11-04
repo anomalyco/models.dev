@@ -3,10 +3,9 @@ base_model = "zhipuai/glm-4.7-flash"
 name = "GLM-4.7-Flash (Amazon Bedrock, US)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 203_000

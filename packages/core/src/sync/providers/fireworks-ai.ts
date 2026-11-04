@@ -133,14 +133,38 @@ export const fireworksAi = {
       return {
         id: model.catalogId,
         model: { ...authored, status: lifecycleStatus(model, authored!.status) } as SyncedModel,
+        v2Set: { api: chatApis },
       };
     }
     return {
       id: model.catalogId,
       model: buildFireworksModel(model, existing),
+      v2Set: { api: chatApis },
     };
   },
 } satisfies SyncProvider<FireworksSourceModel>;
+
+// Serverless text models are also served on the Responses API (POST /inference/v1/responses)
+// and the Anthropic Messages API (POST /inference/v1/messages), under the same model IDs:
+// https://docs.fireworks.ai/guides/response-api
+// https://docs.fireworks.ai/api-reference/anthropic-messages
+const EXTRA_APIS = {
+  responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } },
+  messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } },
+};
+
+// A model's APIs: its own first table (what v1 reads; an empty table takes the
+// provider's Chat Completions API), then Responses and Messages.
+export function chatApis(current: unknown): Record<string, unknown> {
+  const { responses: _responses, messages: _messages, ...own } =
+    current !== null && typeof current === "object" && !Array.isArray(current)
+      ? current as Record<string, unknown>
+      : {};
+  return {
+    ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
+    ...structuredClone(EXTRA_APIS),
+  };
+}
 
 export async function fetchFireworksModels(
   key: string,

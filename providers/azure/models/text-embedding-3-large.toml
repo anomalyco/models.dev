@@ -1,6 +1,7 @@
 # Azure lists an 8,192-token maximum request for text-embedding-3-large:
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#embeddings
 schema = 2
+type = "embedding"
 name = "text-embedding-3-large"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
@@ -9,7 +10,7 @@ release_date = "2024-01-25"
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["embedding"]
 
 [capabilities]
 tools = { supported = false }

@@ -5,8 +5,7 @@ base_model = "google/gemini-flash-latest"
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [cost.text.input]
 price = 1.5

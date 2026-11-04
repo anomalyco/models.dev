@@ -8,10 +8,9 @@ name = "Grok 4.1 Fast Reasoning"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.2

@@ -1,8 +1,7 @@
-# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 name = "Cogito v1 Preview Qwen 32B"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
+description = "32-B parameter reasoning model from DeepCogito (Qwen backbone) – strong general reasoning & coding at low price."
+family = "cogito"
 open_weights = true
 release_date = "2025-05-10"
 
@@ -14,7 +13,6 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 128_000
@@ -23,7 +21,6 @@ output = 32_768
 
 [cost.text.input]
 price = 1.8
-cache = { read = 0.9 }
 
 [cost.text.output]
 price = 1.8

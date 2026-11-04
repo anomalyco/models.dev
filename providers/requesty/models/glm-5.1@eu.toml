@@ -5,11 +5,10 @@ base_model = "zhipuai/glm-5.1"
 name = "GLM-5.1 (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [cost.text.input]
 price = 1.4

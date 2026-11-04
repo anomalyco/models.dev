@@ -1,0 +1,35 @@
+# Sources (accessed 2026-10-23):
+# - https://build.nvidia.com/minimaxai/minimax-m3.1-flash (Free Endpoint: Available,
+#   Build.NVIDIA.com release 2026-10-22; Function Calling, Structured Output and
+#   Reasoning listed as Supported; reasoning_effort = low|medium|high|xhigh|max,
+#   default max)
+# - Live probe against https://integrate.api.nvidia.com/v1/chat/completions
+#   (2026-10-23, NVIDIA API key): responses carry `reasoning_content` and accept a
+#   top-level `reasoning_effort`. Hosted context limit is 262,144 total tokens
+#   (prompt + max_tokens): a 262,100-token prompt with max_tokens 16 succeeded
+#   (262,116 total), a 262,200-token prompt was rejected with
+#   {"type":"context_length","limit":262144,"actual":262200}, and a tiny prompt
+#   with max_tokens 262,144 was rejected the same way (actual 262,336).
+#   The model card's "up to 1,000,000 tokens" is the model's ISL, not this host's
+#   serving limit (the card's Specifications section also lists 262,144).
+# Pricing: hosted on NVIDIA's API trial tier; no per-token rate is published, so 0
+# (see providers/nvidia/provider.toml).
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -15,14 +15,12 @@ schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 1_048_576

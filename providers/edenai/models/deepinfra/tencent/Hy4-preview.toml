@@ -3,10 +3,9 @@ base_model = "tencent/hy4-preview"
 name = "Hy4 preview (Deep Infra)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

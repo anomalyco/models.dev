@@ -10,12 +10,14 @@ base_model = "openai/gpt-6-astra"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [api.responses]
 base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 legacy_shape = "responses"
+
+[api.chat-completions]
 
 [cost.text.input]
 price = 10

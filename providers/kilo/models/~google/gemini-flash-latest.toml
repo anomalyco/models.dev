@@ -15,11 +15,10 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
@@ -32,3 +31,6 @@ cache = { read = 0.075, write = 0.041667 }
 [cost.text.output]
 price = 3.75
 reasoning = 3.75
+
+[cost.web_search]
+price = 14

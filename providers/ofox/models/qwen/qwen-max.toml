@@ -9,10 +9,9 @@ schema = 2
 base_model = "alibaba/qwen-max"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 32_000

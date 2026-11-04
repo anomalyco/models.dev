@@ -8,11 +8,10 @@ base_model = "minimax/MiniMax-M2.1"
 name = "MiniMax-M2.1 Lightning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.3

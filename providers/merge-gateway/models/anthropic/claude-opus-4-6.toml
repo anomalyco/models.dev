@@ -8,9 +8,8 @@ base_model = "anthropic/claude-opus-4-6"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024, max = 127_999 } }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"] } }
+tools = { supported = true }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 5

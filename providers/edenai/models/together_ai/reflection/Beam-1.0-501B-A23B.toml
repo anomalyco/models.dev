@@ -3,10 +3,9 @@ base_model = "reflection/beam-1.0-501b-a23b"
 name = "Beam 1.0 501B A23B (Together AI)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.4

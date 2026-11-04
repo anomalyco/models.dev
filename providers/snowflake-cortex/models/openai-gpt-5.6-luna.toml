@@ -22,7 +22,7 @@ reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "h
 structured_output = true
 store = false
 prompt_cache_key = true
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 request_bytes = 20_971_520

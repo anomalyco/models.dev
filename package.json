@@ -17,7 +17,6 @@
   "scripts": {
     "test": "bun test",
     "validate": "bun ./packages/core/script/validate.ts",
-    "compare:migrations": "bun ./packages/core/script/compare-model-migrations.ts",
     "v1:check": "bun ./packages/core/script/v1-check.ts",
     "aimlapi:sync": "bun ./packages/core/script/sync-models.ts aimlapi",
     "anthropic:sync": "bun ./packages/core/script/sync-models.ts anthropic",
@@ -35,6 +34,7 @@
     "llmgateway-providers:sync": "bun ./packages/core/script/sync-models.ts llmgateway-providers",
     "requesty:sync": "bun ./packages/core/script/sync-models.ts requesty",
     "mistral:sync": "bun ./packages/core/script/sync-models.ts mistral",
+    "modular:sync": "bun ./packages/core/script/sync-models.ts modular",
     "merge-gateway:sync": "bun ./packages/core/script/sync-models.ts merge-gateway",
     "nano-gpt:sync": "bun ./packages/core/script/sync-models.ts nano-gpt",
     "nearai:sync": "bun ./packages/core/script/sync-models.ts nearai",

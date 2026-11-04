@@ -5,11 +5,10 @@ base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

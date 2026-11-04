@@ -6,12 +6,11 @@ name = "qwen3-30b-a3b-instruct-2507"
 description = "Qwen3-30B-A3B-Instruct-2507 is an advanced Mixture-of-Experts model optimized for reasoning, coding, and multilingual instruction following."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-cache = { supported = false }
+cache = false
 structured_output = true
 temperature = false
-effort_updates = false
 
 [limit]
 context = 262_000

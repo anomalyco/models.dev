@@ -1,0 +1,32 @@
+# Sources (accessed 2026-10-24):
+# Prices, context and maximum output: https://docs.munito.ai/models/zai-org-glm-5-3-flash
+# Input formats: https://docs.munito.ai/vision
+# Reasoning: https://docs.munito.ai/reasoning. The reasoning is in message.reasoning and delta.reasoning,
+# and the API reads reasoning_content (or reasoning) in the history.
+# Cache: automatic prefix cache, no cache_control markers, no cache-write fee (https://docs.munito.ai/prompt-caching).
+# Effort: reasoning_effort = low|high|max. The model always reasons, and none runs as low.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif", "image/bmp", "image/tiff", "image/avif", "video/mp4", "video/webm", "video/quicktime", "video/x-matroska", "video/x-msvideo"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.13
+cache = { read = 0.027 }
+
+[cost.text.output]
+price = 0.45

@@ -5,12 +5,11 @@ schema = 2
 base_model = "alibaba/qwen3.8-max"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
-system_updates = false
 
 [limit]
 context = 256_000

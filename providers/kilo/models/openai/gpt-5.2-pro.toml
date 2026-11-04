@@ -10,13 +10,15 @@ input = ["image/jpeg", "image/png", "image/gif", "image/webp", "text", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 21
 
 [cost.text.output]
 price = 168
+
+[cost.web_search]
+price = 10

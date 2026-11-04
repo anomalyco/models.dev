@@ -3,10 +3,9 @@ schema = 2
 base_model = "deepseek/deepseek-chat"
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 131_072

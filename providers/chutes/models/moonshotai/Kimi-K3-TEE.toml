@@ -7,11 +7,10 @@ name = "Kimi K3 TEE"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 output = 65_535

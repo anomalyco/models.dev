@@ -8,16 +8,16 @@
 # a 129575-token prompt completed, above the old 128000 context.
 # Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
 # Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools rejected (input does not deserialize).
+# APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
+# Per-API flags: system_updates sits on [api.responses]. Developer messages were checked on Mantle Responses; Mantle Chat Completions wasn't checked for in-place developer messages.
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = true
-effort_updates = false
 service_tier = ["flex", "priority"]
 
 [limit]
@@ -26,6 +26,11 @@ output = 131_072
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"
 sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }
+capabilities = { system_updates = true }
+
+[api.chat-completions]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/chat" }
 
 [cost.text.input]
 price = 0.07

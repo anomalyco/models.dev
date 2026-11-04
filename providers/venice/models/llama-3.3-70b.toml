@@ -8,11 +8,19 @@ name = "Llama 3.3 70B"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
 [capabilities]
-tools = { supported = true, updates = false }
-system_updates = false
+tools = { supported = true }
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.7
 
 [cost.text.output]
 price = 2.8
+
+[cost.web_search]
+price = 10

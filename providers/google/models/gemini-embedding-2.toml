@@ -7,6 +7,7 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   Paid standard: text $0.20, image $0.45, audio $6.50, video $12.00 per 1M tokens
 #   (catalog cost.input uses text rate; cost.input_audio uses audio rate)
+# APIs: embedContent, and /embeddings on the OpenAI-compatible endpoint (https://ai.google.dev/gemini-api/docs/openai#embeddings, confirmed live 2026-10-22).
 schema = 2
 base_model = "google/gemini-embedding-2"
 
@@ -15,6 +16,10 @@ output = 1
 
 [api.embed-content]
 sdk = { opencodeai = "none" }
+
+[api.embeddings]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.2

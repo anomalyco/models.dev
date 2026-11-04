@@ -1,0 +1,34 @@
+# https://api.novita.ai/openai/v1/models/minimax%2Fminimax-m3.1-flash (accessed 2026-10-23: prompt 0.15, completion 0.6, cache-read 0.015 USD/MTok; context 1,000,000; max_output_tokens 524288; features serverless/function-calling/structured-outputs/reasoning; is_tiered_billing false)
+# https://www.minimax.io/blog/minimax-m31f (MiniMax M3.1 Flash release 2026-10-19; flat pricing $0.15 input / $0.60 output / $0.015 cached input)
+# https://platform.minimax.io/docs/api-reference/text-anthropic-api (effort low|medium|high|xhigh|max; thinking cannot be disabled)
+# Effort: reasoning_effort = low|medium|high|xhigh|max (lab + relay peer baseline; always-on)
+# Cache: implicit prefix cache per https://docs.novita.ai/guides/llm-prompt-cache (has cache-read price).
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+output = 524_288
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

@@ -100,10 +100,7 @@ export default {
     }
 
     if (url.pathname === "/experimental/v2.0/api.json") {
-      const assetUrl = new URL(url);
-      assetUrl.pathname = "/_experimental_v2.0_api.json";
-      assetUrl.search = "";
-      return await env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return catalogResponse(url, request, env, "experimental_v2.0_api");
     } else if (url.pathname === "/api.json") {
       return catalogResponse(url, request, env, "api");
     } else if (url.pathname === "/models.json") {
@@ -171,7 +168,7 @@ async function sendHit(endpoint: string, token: string, body: string) {
   }
 }
 
-type CatalogEndpoint = "api" | "models" | "catalog";
+type CatalogEndpoint = "api" | "models" | "catalog" | "experimental_v2.0_api";
 
 async function catalogResponse(
   url: URL,
@@ -181,7 +178,7 @@ async function catalogResponse(
 ) {
   let filter;
   try {
-    filter = parseModelTypes(url.searchParams.get("type"));
+    filter = parseModelTypes(url.searchParams.getAll("type").join(","));
   } catch (error) {
     if (!(error instanceof InvalidModelTypeError)) throw error;
     return Response.json(
@@ -206,13 +203,26 @@ async function catalogResponse(
         : undefined;
   assetUrl.pathname = `/_${endpoint}${suffix ?? "-all"}.json`;
   assetUrl.search = "";
-  const assetResponse = await env.ASSETS.fetch(
-    new Request(assetUrl.toString(), request),
-  );
-  if (!assetResponse.ok || suffix !== undefined) return assetResponse;
+  // A filtered body depends only on the full file and the types, so its ETag is
+  // the file's ETag plus the types, and revalidation is passed to the file.
+  const tag = suffix === undefined ? `;type=${[...filter].sort().join(",")}` : "";
+  const assetRequest = new Request(assetUrl.toString(), request);
+  const conditional = request.headers.get("If-None-Match");
+  if (tag && conditional) {
+    assetRequest.headers.set("If-None-Match", conditional.replaceAll(`${tag}"`, '"'));
+  }
+  const assetResponse = await env.ASSETS.fetch(assetRequest);
+  if (suffix !== undefined) return assetResponse;
+  const etag = assetResponse.headers.get("ETag")?.replace(/"$/, `${tag}"`);
+  if (assetResponse.status === 304) {
+    const headers = new Headers(assetResponse.headers);
+    if (etag) headers.set("ETag", etag);
+    return new Response(null, { status: 304, headers });
+  }
+  if (!assetResponse.ok) return assetResponse;
 
   const value = await assetResponse.json();
-  const filtered = endpoint === "api"
+  const filtered = endpoint === "api" || endpoint === "experimental_v2.0_api"
     ? filterProvidersByModelType(
         value as Record<string, CatalogProvider>,
         filter,
@@ -232,7 +242,7 @@ async function catalogResponse(
 
   const headers = new Headers(assetResponse.headers);
   headers.delete("Content-Length");
-  headers.delete("ETag");
+  if (etag) headers.set("ETag", etag);
   headers.set("Content-Type", "application/json");
   headers.set("Cache-Control", "public, max-age=3600");
   return new Response(JSON.stringify(filtered), { headers });

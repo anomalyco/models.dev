@@ -7,10 +7,9 @@ base_model_omit = ["limit.input"]
 description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 262_144

@@ -1,5 +1,5 @@
 # Modalities: generic image kept, Interfaze lists no accepted image formats (its SDK only rejects image/gif and image/avif)
-# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 name = "Interfaze Beta"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -15,11 +15,20 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_000_000
 output = 32_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 1.5

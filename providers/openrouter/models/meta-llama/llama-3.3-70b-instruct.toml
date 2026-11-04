@@ -5,16 +5,24 @@ schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 131_072
-output = 16_384
+output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.1
+price = 0.2
+cache = { read = 0.1 }
 
 [cost.text.output]
-price = 0.32
+price = 0.52

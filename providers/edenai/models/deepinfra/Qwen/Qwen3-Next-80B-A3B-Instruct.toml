@@ -3,9 +3,8 @@ base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3-Next 80B-A3B Instruct (Deep Infra)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.09

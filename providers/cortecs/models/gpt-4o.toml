@@ -4,10 +4,9 @@ schema = 2
 base_model = "openai/gpt-4o"
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 structured_output = false
-effort_updates = false
 
 [limit]
 output = 16_000

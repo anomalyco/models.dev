@@ -1,0 +1,26 @@
+schema = 2
+name = "Qwen SEA-LION v4 32B"
+description = "AI Singapore’s Qwen-based multilingual model, adapted for Southeast Asian languages and cultural contexts. Supports text chat and tool calling with a 128K context window."
+family = "qwen"
+open_weights = true
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 131_072
+input = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.6

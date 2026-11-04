@@ -4,11 +4,10 @@ schema = 2
 base_model = "minimax/MiniMax-M2.7-highspeed"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 200_000

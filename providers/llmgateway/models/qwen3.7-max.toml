@@ -4,10 +4,9 @@ schema = 2
 base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
 price = 1.25

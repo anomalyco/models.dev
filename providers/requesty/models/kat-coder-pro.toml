@@ -12,11 +12,10 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 256_000

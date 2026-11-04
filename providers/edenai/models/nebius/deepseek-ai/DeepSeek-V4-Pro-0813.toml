@@ -3,13 +3,12 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro 0813 (Nebius)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = false
-effort_updates = false
 
 [limit]
-context = 979_000
+context = 1_048_576
 
 [cost.text.input]
 price = 1.32

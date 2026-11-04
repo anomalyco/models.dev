@@ -8,8 +8,7 @@ description = "GLM-4.7 is a next-gen GLM series text model with stronger reasoni
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 200_000
@@ -17,8 +16,8 @@ input = 200_000
 output = 65_535
 
 [cost.text.input]
-price = 0.6
-cache = { read = 0.11 }
+price = 0.4004
+cache = { read = 0.08008 }
 
 [cost.text.output]
-price = 2.2
+price = 1.9292

@@ -1,0 +1,29 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type speech)
+# https://vercel.com/docs/ai-gateway/modalities/text-to-speech
+schema = 2
+v2_only = true
+type = "speech"
+name = "Eleven Music v2"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "elevenlabs"
+open_weights = false
+release_date = "2026-10-27"
+
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[api.speech]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }

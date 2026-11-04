@@ -25,10 +25,13 @@ const DEPRECATED_IDS = new Set([
 
 const MistralCapabilities = z.object({
   completion_chat: z.boolean(),
+  completion_fim: z.boolean().optional(),
   function_calling: z.boolean(),
   reasoning: z.boolean(),
   vision: z.boolean(),
   audio: z.boolean(),
+  moderation: z.boolean().optional(),
+  ocr: z.boolean().optional(),
 }).passthrough();
 
 export const MistralModel = z.object({
@@ -93,16 +96,44 @@ export const mistral = {
       // Embedding, OCR, moderation, transcription, and TTS rows carry no
       // chat metadata to sync; keep any authored entry exactly as it is.
       const authored = context.authored(model.id);
-      return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+      return authored === undefined ? undefined : withApis(model, { id: model.id, model: authored as SyncedModel });
     }
     const existing = context.existing(model.id);
     if (existing === undefined) return undefined;
-    return {
+    return withApis(model, {
       id: model.id,
       model: buildMistralModel(model, existing),
-    };
+    });
   },
 } satisfies SyncProvider<MistralModel>;
+
+const NO_PACKAGE = { sdk: { aisdk: "none", opencodeai: "none" } };
+
+function withApis<T extends { id: string; model: SyncedModel }>(model: MistralModel, synced: T) {
+  const api = mistralApis(model.capabilities);
+  return api === undefined ? synced : { ...synced, v2Set: { api } };
+}
+
+// The APIs /v1/models capabilities name besides chat: POST /v1/fim/completions
+// (completion_fim), /v1/moderations (moderation) and /v1/ocr (ocr). No AI SDK or
+// OpenCode package calls them. They follow the file's first API, which v1 reads
+// and stays as it is; a file with none starts with Chat Completions, or with the
+// model's only API.
+export function mistralApis(capabilities: z.infer<typeof MistralCapabilities>) {
+  const extra: Record<string, unknown> = {};
+  if (capabilities.completion_fim) extra.fim = NO_PACKAGE;
+  if (capabilities.moderation) extra.moderations = NO_PACKAGE;
+  if (capabilities.ocr) extra.ocr = NO_PACKAGE;
+  if (Object.keys(extra).length === 0) return undefined;
+  const fallback = capabilities.completion_chat ? "chat-completions" : Object.keys(extra)[0]!;
+  return (current: unknown) => {
+    const tables = current !== null && typeof current === "object" && !Array.isArray(current)
+      ? current as Record<string, unknown>
+      : {};
+    const first = Object.keys(tables)[0] ?? fallback;
+    return { [first]: tables[first] ?? {}, ...tables, ...structuredClone(extra) };
+  };
+}
 
 export async function fetchMistralModels(
   key = process.env.MISTRAL_API_KEY,

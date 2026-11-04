@@ -8,16 +8,23 @@ name = "Nemotron 3 Ultra"
 description = "Flagship Nemotron model for high-throughput reasoning and complex agents"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
-effort_updates = false
 prompt_cache_key = true
 
 [limit]
 context = 131_072
 output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.9
@@ -25,3 +32,6 @@ cache = { read = 0.18 }
 
 [cost.text.output]
 price = 1.7
+
+[cost.web_search]
+price = 10

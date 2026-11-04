@@ -10,10 +10,10 @@ name = "Nous: Hermes 4 405B"
 tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 1
+cache = { read = 0.2 }
 
 [cost.text.output]
 price = 3

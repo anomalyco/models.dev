@@ -1,0 +1,37 @@
+# Sources (accessed 2026-10-26):
+# - Model catalog: https://sage.levanto.ai/models (id levanto-sage-v1.4, created 1791072000 = 2026-10-04,
+#   max_context_length 32,768, reasoning off|auto|on, off by default)
+# - API version: https://sage.levanto.ai/openapi.json (Sage 1.4.0, default model levanto-sage-v1.4)
+# - Docs: https://docs.levanto.ai/systemone.md, https://docs.levanto.ai/decision-model/reasoning.md
+# - Images (beta, /decide only; PNG, JPEG or WebP data URIs): https://docs.levanto.ai/decision-model/images.md
+# - Proprietary: https://near.ai/blog/near-ai-levanto-verifiably-private-decision-models
+# Context: about 32K tokens on standard plans, 128K with extended context
+#   (https://docs.levanto.ai/decision-model/limits.md); the catalog lists 32,768.
+# Output: typed decision probabilities, no generated text, so there is nothing to sample (temperature/top_p/top_k
+#   false). Optional reasoning tokens are billed as output but never returned as text.
+schema = 2
+type = "decision"
+name = "Sage 1.4"
+description = "Decision model that answers typed yes/no, choice, scale, sort and tag questions with calibrated probabilities"
+open_weights = false
+release_date = "2026-10-04"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[[links]]
+label = "Documentation"
+url = "https://docs.levanto.ai/"
+type = "docs"

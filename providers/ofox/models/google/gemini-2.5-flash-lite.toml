@@ -9,11 +9,10 @@ schema = 2
 base_model = "google/gemini-2.5-flash-lite"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = { min = 512, max = 24_576 } }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.1

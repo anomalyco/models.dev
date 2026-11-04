@@ -5,12 +5,11 @@ schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
 
 [cost.text.input]
 price = 0.1

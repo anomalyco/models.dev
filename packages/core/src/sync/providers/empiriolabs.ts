@@ -109,10 +109,11 @@ export const empiriolabs = {
     // (limit.context is required), so skip it rather than fail the whole sync.
     if (built === undefined) return undefined;
     // The catalog flags prompt caching per model but not the mechanism
-    // (implicit or explicit, TTLs), so only `supported` is synced.
+    // (implicit or explicit, TTLs), so a file's cache kinds are kept and
+    // otherwise assumed implicit.
     const features = new Set(model.features ?? []);
     const v2Set = features.has("cache") || features.has("prompt_cache")
-      ? { "capabilities.cache.supported": true }
+      ? { "capabilities.cache": (current: unknown) => (current !== null && typeof current === "object" ? current : { implicit: true }) }
       : undefined;
     return {
       id: model.id,

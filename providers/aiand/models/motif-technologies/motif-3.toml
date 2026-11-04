@@ -12,11 +12,10 @@ schema = 2
 base_model = "motif-technologies/motif-3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = false
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

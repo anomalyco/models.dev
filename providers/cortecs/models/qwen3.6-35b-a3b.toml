@@ -8,17 +8,16 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 262_000
 output = 32_768
 
 [cost.text.input]
-price = 0.167
+price = 0.279
 
 [cost.text.output]
-price = 0.557
+price = 1.671

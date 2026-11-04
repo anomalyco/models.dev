@@ -5,11 +5,10 @@ base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 output = 262_144

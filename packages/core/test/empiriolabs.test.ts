@@ -130,6 +130,9 @@ test("syncs the catalog's cache feature into v2 files only", () => {
   }, context);
   const uncached = empiriolabs.translateModel({ id: "glm-5-1", context_length: 202_752 }, context);
 
-  expect(cached).toMatchObject({ v2Set: { "capabilities.cache.supported": true } });
+  const cache = (cached as { v2Set: Record<string, (current: unknown) => unknown> }).v2Set["capabilities.cache"]!;
+  expect(cache(undefined)).toEqual({ implicit: true });
+  expect(cache(false)).toEqual({ implicit: true });
+  expect(cache({ explicit: { ttl: ["5m"] } })).toEqual({ explicit: { ttl: ["5m"] } });
   expect(uncached && "v2Set" in uncached ? uncached.v2Set : undefined).toBeUndefined();
 });

@@ -5,10 +5,9 @@ schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

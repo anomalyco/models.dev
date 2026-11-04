@@ -6,10 +6,9 @@ base_model = "google/gemini-2.5-pro-preview"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.625
@@ -18,3 +17,6 @@ cache = { read = 0.0625, write = 0.1875 }
 [cost.text.output]
 price = 5
 reasoning = 5
+
+[cost.web_search]
+price = 14

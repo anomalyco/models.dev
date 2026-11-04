@@ -12,7 +12,7 @@ base_model = "moonshotai/kimi-k2.6"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 262_000

@@ -1,34 +1,73 @@
 import { readFileSync } from "node:fs";
 
+import { MODEL_TYPES } from "./filter.js";
 import {
   AuthoredModelV2,
+  LabMetadataV2,
   LabModelV2,
   type AuthoredApiEntryV2,
+  type CostFactorV2,
   type CostV2,
   type CostWhenV2,
   type ReasoningSupportV2,
 } from "./schema-v2.js";
 
-// Files authored in the v2 format declare `schema = 2`. During the migration both
-// formats live side by side, and every reader translates v2 files back to v1.
+// Model files declare `schema = 2`; readers translate them back to v1.
 export function isSchemaV2(toml: Record<string, unknown>) {
   return toml.schema === 2;
+}
+
+// Mid-conversation flags default to false, so files leave them out instead of
+// writing `= false`. Returns the dotted path of every explicit false.
+export function explicitFalseFlags(toml: Record<string, unknown>): string[] {
+  const record = (value: unknown) =>
+    value !== null && typeof value === "object" && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : undefined;
+  const check = (capabilities: unknown, at: string) => {
+    const caps = record(capabilities);
+    if (caps === undefined) return [];
+    return [
+      caps.system_updates === false ? `${at}.system_updates` : undefined,
+      caps.effort_updates === false ? `${at}.effort_updates` : undefined,
+      record(caps.tools)?.updates === false ? `${at}.tools.updates` : undefined,
+    ].filter((flag) => flag !== undefined);
+  };
+  return [
+    ...check(toml.capabilities, "capabilities"),
+    ...Object.entries(record(toml.api) ?? {}).flatMap(([protocol, api]) =>
+      check(record(api)?.capabilities, `api.${protocol}.capabilities`),
+    ),
+  ];
 }
 
 // Reads a lab model file (`models/<lab>/<model>.toml`) as v1 fields.
 export function readLabModel(filePath: string, modelID: string) {
   const toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
-  return isSchemaV2(toml)
-    ? labModelV2ToV1({ ...toml, id: modelID }, { modelPath: filePath })
-    : toml;
+  return labModelV2ToV1({ ...toml, id: modelID }, { modelPath: filePath });
 }
 
 // Reads a provider model file (`providers/<p>/models/<model>.toml`) as v1 fields.
 export function readProviderModel(filePath: string) {
   const toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
-  if (!isSchemaV2(toml)) return toml;
   const { id: _id, ...model } = modelV2ToV1({ ...toml, id: "" }, { modelPath: filePath });
   return model;
+}
+
+// Reads a lab metadata file (`labs/<lab>/lab.toml`). It has no v1 form, so it
+// must declare `schema = 2`.
+export function readLabMetadata(filePath: string): LabMetadataV2 {
+  const toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+  if (!isSchemaV2(toml)) {
+    throw new Error(`Lab metadata must be v2. Add \`schema = 2\` to ${filePath}`);
+  }
+  const { schema: _schema, ...raw } = toml;
+  const parsed = LabMetadataV2.safeParse(raw);
+  if (!parsed.success) {
+    parsed.error.cause = { labPath: filePath, toml };
+    throw parsed.error;
+  }
+  return parsed.data;
 }
 
 // Reads a provider.toml as v1 fields: `opencodeai` (the default API's OpenCode
@@ -36,6 +75,25 @@ export function readProviderModel(filePath: string) {
 export function providerTomlToV1(toml: Record<string, unknown>): Record<string, unknown> {
   const { opencodeai: _opencodeai, ...v1 } = toml;
   return v1;
+}
+
+// v1's `type` enum can't grow, so a type it doesn't know is v2-only: the model
+// must set `v2_only = true`, and v1 leaves the type out. `audio` (music, sound
+// effects) is the exception: those models were in v1 untyped before the type
+// existed, so v1 keeps publishing them untyped.
+export function v1ModelType(
+  type: string | undefined,
+  v2Only: boolean | undefined,
+  cause: Record<string, unknown> = {},
+) {
+  if (type === undefined || (MODEL_TYPES as readonly string[]).includes(type)) return type;
+  if (type === "audio") return undefined;
+  if (v2Only !== true) {
+    throw new Error(`Model type "${type}" isn't a v1 type, so the model must set \`v2_only = true\` (see AGENTS.md)`, {
+      cause,
+    });
+  }
+  return undefined;
 }
 
 export function labModelV2ToV1(
@@ -53,7 +111,7 @@ export function labModelV2ToV1(
 
   return withoutUndefined({
     id: lab.id,
-    type: lab.type,
+    type: v1ModelType(lab.type, lab.v2_only, { ...cause, toml }),
     name: lab.name,
     description: lab.description,
     family: lab.family,
@@ -83,10 +141,12 @@ export function labModelV2ToV1(
 
 // Translates a v2 provider model file into the v1 authored fields it stands for.
 // v2-only data (MIME modalities, cache TTLs, service tiers…) has no v1 field and
-// is left out; the v2 output reads it from the file directly.
+// is left out; the v2 output reads it from the file directly. `providerNpm` is
+// the provider's `npm`, which a first API table without its own `aisdk` uses.
 export function modelV2ToV1(
   toml: Record<string, unknown>,
   cause: Record<string, unknown> = {},
+  providerNpm?: string,
 ): Record<string, unknown> {
   const { schema: _schema, ...raw } = toml;
   const parsed = AuthoredModelV2.safeParse(raw);
@@ -99,11 +159,11 @@ export function modelV2ToV1(
   const input = model.modalities && toV1Modalities(model.modalities.input);
   const cost = model.cost && costV2ToV1(model.cost);
 
-  return withoutUndefined({
+  return withoutV1ReasoningCost(withoutUndefined({
     id: model.id,
     base_model: model.base_model,
     base_model_omit: model.base_model_omit,
-    type: model.type,
+    type: v1ModelType(model.type, model.v2_only, { ...cause, toml }),
     name: model.name,
     description: model.description,
     family: model.family,
@@ -131,36 +191,69 @@ export function modelV2ToV1(
     status: model.status,
     cost,
     experimental: toV1Experimental(model, cost),
-    ...toV1Api(model.api),
-  });
+    ...toV1Api(model.api, providerNpm),
+  }));
+}
+
+// v1 forbids a reasoning price on a model that doesn't reason, but a host can
+// still bill reasoning tokens, so v2 keeps the price and v1 leaves it out.
+// `reasoning` is the model's resolved value (its base model's when unset).
+export function withoutV1ReasoningCost<T extends Record<string, unknown>>(model: T, reasoning = model.reasoning): T {
+  if (reasoning !== false) return model;
+  const next: Record<string, unknown> = { ...model };
+  if (next.cost !== undefined) next.cost = withoutReasoningPrice(next.cost);
+  const experimental = next.experimental as { modes?: Record<string, Record<string, unknown>> } | undefined;
+  if (experimental?.modes !== undefined) {
+    next.experimental = {
+      ...experimental,
+      modes: Object.fromEntries(
+        Object.entries(experimental.modes).map(([name, mode]) => [
+          name,
+          mode.cost === undefined ? mode : { ...mode, cost: withoutReasoningPrice(mode.cost) },
+        ]),
+      ),
+    };
+  }
+  return next as T;
+}
+
+function withoutReasoningPrice(cost: unknown): unknown {
+  if (cost === null || typeof cost !== "object" || Array.isArray(cost)) return cost;
+  const { reasoning: _reasoning, ...rest } = cost as Record<string, unknown>;
+  if (Array.isArray(rest.tiers)) rest.tiers = rest.tiers.map(withoutReasoningPrice);
+  return rest;
 }
 
 // v1 models have one API: `provider` holds its SDK, base URL and shape, and
 // `interleaved` its reasoning requirement. With several `[api.<protocol>]`
 // tables, the first one in the file is the default and becomes the v1 API.
 // The protocol only becomes a v1 `shape` where it isn't the SDK's default
-// (OpenAI and Azure default to Responses), unless `legacy_shape` keeps one.
-function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined) {
+// (OpenAI, Azure and xAI default to Responses), unless `legacy_shape` keeps one.
+// `legacy_interleaved` keeps a bare `interleaved: true`. A table without its own
+// `aisdk` takes the provider's.
+function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNpm?: string) {
   const first = Object.entries(api ?? {})[0];
   if (first === undefined) return {};
-  const [protocol, { base_url, sdk, compatibility, legacy_shape }] = first;
+  const [protocol, { base_url, sdk, compatibility, legacy_shape, legacy_interleaved }] = first;
   // `aisdk = "none"` (no AI SDK package) is v2-only; v1 keeps the provider's npm.
   const npm = sdk?.aisdk === "none" ? undefined : sdk?.aisdk;
   if (legacy_shape !== undefined && toProtocol(legacy_shape) !== protocol) {
     throw new Error(`legacy_shape = "${legacy_shape}" doesn't match [api.${protocol}]`);
   }
-  const shape = legacy_shape ?? toV1Shape(protocol, npm);
+  const shape = legacy_shape ?? toV1Shape(protocol, sdk?.aisdk === undefined ? providerNpm : npm);
   const provider = withoutUndefined({ npm, api: base_url, shape });
   const field = compatibility?.reasoning_field;
   return withoutUndefined({
-    interleaved: field !== undefined ? { field } : compatibility?.replay_reasoning ? true : undefined,
+    interleaved: field !== undefined ? { field } : legacy_interleaved,
     provider: Object.keys(provider).length > 0 ? provider : undefined,
   });
 }
 
 // The v1 `shape` a protocol gets on an SDK: none where it's the SDK's default.
+// `@ai-sdk/openai`, `@ai-sdk/azure` and `@ai-sdk/xai` default to Responses (`createXai().languageModel`
+// is `createResponsesLanguageModel` in packages/xai/src/xai-provider.ts).
 export function toV1Shape(protocol: string, npm: string | undefined) {
-  const responsesByDefault = npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure";
+  const responsesByDefault = npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure" || npm === "@ai-sdk/xai";
   if (protocol === "responses" && !responsesByDefault) return "responses";
   if (protocol === "chat-completions" && responsesByDefault) return "completions";
   return undefined;
@@ -218,7 +311,7 @@ function costV2ToV1(cost: CostV2) {
       withoutUndefined({
         input: override.price,
         cache_read: override.cache?.read,
-        cache_write: override.cache && firstPrice(override.cache.write),
+        cache_write: cacheWrite(override.cache),
       }),
     );
   }
@@ -230,14 +323,16 @@ function costV2ToV1(cost: CostV2) {
   }
 
   const tiers = [...contextTiers.values()];
+  // v1 has no web search price, so `web_search` stays v2-only.
   return withoutUndefined({
     input: input.price,
     output: output.price,
     reasoning: output.reasoning,
     cache_read: input.cache?.read,
-    cache_write: input.cache && firstPrice(input.cache.write),
-    input_audio: cost.audio?.input?.price,
-    output_audio: cost.audio?.output?.price,
+    cache_write: cacheWrite(input.cache),
+    // v1 audio prices are per token too; per-minute or per-second ones stay v2-only.
+    input_audio: perToken(cost.audio?.input?.unit) ? cost.audio?.input?.price : undefined,
+    output_audio: perToken(cost.audio?.output?.unit) ? cost.audio?.output?.price : undefined,
     tiers: tiers.length > 0 ? tiers : undefined,
   });
 }
@@ -246,6 +341,13 @@ function costV2ToV1(cost: CostV2) {
 // region…) stay v2-only, like multipliers.
 function isV1Tier(override: { when: CostWhenV2 }) {
   return Object.keys(override.when).every((key) => key === "context");
+}
+
+// v1 has one cache write price. Implicit caching usually has no write fee, so a
+// file with only an explicit write price gives v1 that one.
+function cacheWrite(cache: { write?: number | Partial<Record<string, number>>; explicit?: { write?: number | Partial<Record<string, number>> } } | undefined) {
+  if (cache === undefined) return undefined;
+  return firstPrice(cache.write) ?? firstPrice(cache.explicit?.write);
 }
 
 // v1 has one cache write price: the first TTL listed (the provider's default).
@@ -275,7 +377,7 @@ function toV1Experimental(
         const modeCost =
           mode.cost !== undefined
             ? costV2ToV1(mode.cost)
-            : typeof factor === "number" && cost !== undefined
+            : factor !== undefined && cost !== undefined
               ? scaleCost(cost, factor)
               : undefined;
         if (modeCost !== undefined) delete modeCost.tiers;
@@ -292,11 +394,39 @@ function toV1Experimental(
   };
 }
 
-function scaleCost(cost: Record<string, unknown>, factor: number) {
+// Where each v1 price sits in a v2 cost, for reading an object factor.
+const V1_COST_PATHS: Record<string, string[]> = {
+  input: ["text", "input", "price"],
+  output: ["text", "output", "price"],
+  reasoning: ["text", "output", "reasoning"],
+  cache_read: ["text", "input", "cache", "read"],
+  cache_write: ["text", "input", "cache", "write"],
+  input_audio: ["audio", "input", "price"],
+  output_audio: ["audio", "output", "price"],
+};
+
+// A number scales every price below it; prices an object factor doesn't name keep factor 1.
+function factorAt(factor: CostFactorV2, path: string[]): number {
+  let node: CostFactorV2 | undefined = factor;
+  for (const key of path) {
+    if (typeof node === "number") return node;
+    node = node?.[key];
+  }
+  if (typeof node === "number") return node;
+  // An object at a cache write is keyed by TTL; v1 keeps the first one.
+  const first = node === undefined ? undefined : Object.values(node)[0];
+  return typeof first === "number" ? first : 1;
+}
+
+function scaleCost(cost: Record<string, unknown>, factor: CostFactorV2) {
   return Object.fromEntries(
     Object.entries(cost)
       .filter(([key]) => key !== "tiers")
-      .map(([key, value]) => [key, roundPrice((value as number) * factor)]),
+      .map(([key, value]) => {
+        const path = V1_COST_PATHS[key];
+        if (path === undefined) throw new Error(`no v2 path for v1 cost ${key}`);
+        return [key, roundPrice((value as number) * factorAt(factor, path))];
+      }),
   );
 }
 

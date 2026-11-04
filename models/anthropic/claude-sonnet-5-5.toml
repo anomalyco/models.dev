@@ -1,3 +1,4 @@
+# tools.choice: forced tool use (any/tool) returns a 400 on every host: https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # Specs: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
 # Evaluations: https://www.anthropic.com/claude-sonnet-5-5
 schema = 2
@@ -13,7 +14,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true }
 temperature = false
 top_p = false

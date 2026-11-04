@@ -15,5 +15,8 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 # Anthropic /v1/messages (https://docs.ollama.com/api/anthropic-compatibility); native
 # /api/chat, /api/generate, /api/embed and /v1/systemone (https://docs.ollama.com/openapi.yaml).
 # Per-model thinking levels and context: POST https://ollama.com/api/show.
+# Every chat model lists Chat Completions, Responses and Messages (all on https://ollama.com/v1). Direct cloud
+# Messages requests need `Authorization: Bearer` ("does not accept x-api-key alone"), so @ai-sdk/anthropic needs
+# `authToken`. Native /api/chat and /api/generate and legacy /v1/completions aren't listed.
 api = "https://ollama.com/v1"
 doc = "https://docs.ollama.com/cloud"

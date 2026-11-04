@@ -15,24 +15,35 @@
 # Mid-conversation (live 2026-10-21, Chat Completions, ~18k-token conversation, same result on mimo-v2.6-flash,
 #   mimo-v2.6-pro and mimo-v2.6-pro-ultraspeed): a system message before the last user turn stays in place
 #   (+23 input tokens), is followed, and keeps the cache -> system_updates; switching thinking.type between turns
-#   (either direction) keeps the cache -> effort_updates; adding a tool drops the cache to 0-64 tokens while the
+#   (either direction) keeps the cache; adding a tool drops the cache to 0-64 tokens while the
 #   same request with the old tool list keeps it -> tools.updates = false.
+# effort_updates: left out. Changing thinking.type on the next request keeps the cache, but there's no
+#   in-history effort message, so it doesn't count.
+# Web search plugin: $5 per 1,000 calls (Overseas Internet Connectivity Service; the domestic service, CNY 16 per 1,000,
+#   is not modeled): https://mimo.mi.com/static/docs/price/pay-as-you-go.md (accessed 2026-10-23)
+# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked in place on Chat Completions (live 2026-10-23); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 description = "MiMo Pro model for multimodal coding agents and long-context automation"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
 top_k = false
-system_updates = true
-effort_updates = true
 stream_usage = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.xiaomimimo.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.435
@@ -40,3 +51,6 @@ cache = { read = 0.0036 }
 
 [cost.text.output]
 price = 0.87
+
+[cost.web_search]
+price = 5

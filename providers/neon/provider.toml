@@ -12,6 +12,10 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 # https://neon.com/docs/ai-gateway/anthropic-messages
 # https://neon.com/docs/ai-gateway/openai-responses
 # https://neon.com/docs/ai-gateway/gemini (accessed 2026-06-25)
+# Per-model APIs follow the Endpoints column of https://neon.com/docs/ai-gateway/overview (accessed 2026-10-22):
+# Claude also on Messages, GPT and Grok on Responses plus Chat (gpt-5-3-codex and gpt-5-5-pro Responses only),
+# Gemini also on generateContent. The Gemini and Messages routes take `Authorization: Bearer <token>`, so
+# @ai-sdk/google needs that header set (its apiKey is sent as x-goog-api-key) and @ai-sdk/anthropic needs `authToken`.
 api = "${NEON_AI_GATEWAY_BASE_URL}/v1"
 env = ["NEON_AI_GATEWAY_BASE_URL", "NEON_AI_GATEWAY_TOKEN"]
 doc = "https://neon.com/docs"

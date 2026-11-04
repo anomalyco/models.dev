@@ -1,0 +1,35 @@
+# Effort: reasoning_effort = low|high|max (default max); always thinks, no off toggle.
+# Catalog and price: https://cloud-api.near.ai/v1/models (moonshotai/kimi-k3.1-pro, owned_by moonshotai, no
+#   supported_features; accessed 2026-10-26). Prices match Moonshot's own (https://platform.kimi.ai/docs/pricing/chat).
+# Route: NEAR AI relays it to Moonshot as an external passthrough provider
+#   (https://github.com/nearai/cloud-api/blob/main/crates/services/src/completions/mod.rs, "external passthrough
+#   providers: Anthropic, Gemini, OpenAI, moonshotai"). Its openai_compatible backend forwards extra request fields such
+#   as reasoning_effort unchanged and strips them only for api.openai.com and Azure
+#   (https://github.com/nearai/cloud-api/blob/main/crates/inference_providers/src/non_attested/external/openai_compatible.rs).
+# Reasoning controls are Moonshot's, as NEAR documents for third-party gateway models
+#   (https://docs.near.ai/cloud/reasoning-models.md); NEAR's Kimi section covers only the TEE-hosted K2.5/K2.6
+#   (chat_template_kwargs.thinking). Moonshot: https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart
+# Reasoning comes back in reasoning_content (https://docs.near.ai/cloud/reasoning-models.md).
+# Input: text and images. The gateway refuses video parts up front for models whose catalog input_modalities don't
+#   declare video (GATED_INPUT_MODALITIES in https://github.com/nearai/cloud-api/blob/main/crates/api/src/models.rs),
+#   and this one declares only text and image. Image parts aren't gated and go through to Moonshot, which takes them.
+#   Not tested live (no NEARAI_API_KEY).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

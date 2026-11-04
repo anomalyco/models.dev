@@ -2,7 +2,7 @@
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
-name = "Inception: Mercury 3"
+name = "Inception: Mercury 3 (retires Nov 8)"
 description = "Mercury 3 is a diffusion-based language model from Inception, and the lab's most capable model to date. It is suited for agentic workflows and real-time applications where latency compounds, such..."
 family = "mercury"
 open_weights = false
@@ -13,11 +13,10 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_000_000

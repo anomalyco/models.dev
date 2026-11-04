@@ -6,15 +6,21 @@
 #
 # Paid tier is billed per generation ($0.04 per 30s song), not per token.
 # cost.input/output stay 0 because the catalog schema is USD per 1M tokens.
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/lyria-3-clip-preview"
 
 [capabilities]
 structured_output = false
-cache = { supported = false }
+cache = false
 
 [limit]
 context = 1_048_576
+
+[api.generate-content]
+
+[api.interactions]
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0

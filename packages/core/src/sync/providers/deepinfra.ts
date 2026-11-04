@@ -146,7 +146,6 @@ export function deepInfraV2Set(
   const cached = cost?.cache_read !== undefined;
   const cache = cached
     ? {
-        supported: true,
         implicit: true,
         ...(retention.length > 0
           ? {

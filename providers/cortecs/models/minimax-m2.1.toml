@@ -5,11 +5,10 @@ base_model = "minimax/MiniMax-M2.1"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-cache = { supported = false }
+cache = false
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 196_000

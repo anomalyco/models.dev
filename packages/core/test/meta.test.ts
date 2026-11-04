@@ -173,32 +173,44 @@ test("runner preserves inherited controls, retains absent models, and is idempot
   const modelsDir = path.join(root, "providers", "meta", "models");
   const filename = path.join(modelsDir, "muse-spark-1.2.toml");
   const original = `# Keep this authored source comment.
+schema = 2
 base_model = "meta/muse-spark-1.2"
 base_model_omit = ["limit.input"]
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
-[cost]
-input = 9
-output = 9
-cache_read = 9
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 9
+cache = { read = 9 }
+
+[cost.text.output]
+price = 9
 `;
   const absent = path.join(modelsDir, "muse-spark-1.1.toml");
   try {
     await Bun.write(path.join(root, "models", "meta", "muse-spark-1.2.toml"), `
+schema = 2
 name = "Muse Spark 1.2"
 description = "Test fixture"
-release_date = "2026-01-01"
-last_updated = "2026-01-01"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2026-01-01"
+
+[modalities]
+input = ["text", "image/png", "application/pdf", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
 [limit]
 context = 1048576
 input = 1048576
 output = 131072
-[modalities]
-input = ["text", "image", "pdf", "video"]
-output = ["text"]
 `);
     await Bun.write(filename, original);
     await Bun.write(absent, original);
@@ -215,9 +227,9 @@ output = ["text"]
     const result = Bun.TOML.parse(text);
     expect(result.base_model).toBe("meta/muse-spark-1.2");
     expect(result.base_model_omit).toEqual(["limit.input"]);
-    expect(result.reasoning_options).toEqual(Bun.TOML.parse(original).reasoning_options);
+    expect(result.capabilities).toEqual(Bun.TOML.parse(original).capabilities);
     expect(result.limit).toBeUndefined();
-    expect(result.cost).toEqual({ input: 1.25, output: 4.25, cache_read: 0.15 });
+    expect(result.cost).toEqual({ text: { input: { price: 1.25, cache: { read: 0.15 } }, output: { price: 4.25 } } });
     const second = await syncProvider(provider, { openIssues: false });
     expect(second).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 2 });
     expect(await Bun.file(filename).text()).toBe(text);

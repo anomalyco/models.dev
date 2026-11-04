@@ -15,21 +15,24 @@
 #   -> effort_updates = false, tools.updates = false.
 # - usage.prompt_tokens_details.cached_tokens stayed 0 across 10 identical requests, so cache is left unset.
 # - https://cohere.com/pricing lists North Mini Code as free (API key).
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes; there it only returned 200, with no cache to show it stays in place.
 schema = 2
 base_model = "cohere/north-mini-code-1-0"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "high"] }
 structured_output = false
 top_k = false
-system_updates = true
-effort_updates = false
 
 [api.chat-completions]
 base_url = "https://api.cohere.ai/compatibility/v1"
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.cohere-chat]
+capabilities = { system_updates = true }
 
 [cost.text.input]
 price = 0

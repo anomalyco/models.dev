@@ -7,11 +7,10 @@ base_model = "anthropic/claude-sonnet-4-6"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
-cache = { supported = true, explicit = true }
+cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 128_000

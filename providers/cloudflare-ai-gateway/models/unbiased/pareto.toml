@@ -4,10 +4,9 @@ schema = 2
 base_model = "unbiased/pareto"
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 system_updates = true
-effort_updates = false
 structured_output = false
 
 [limit]

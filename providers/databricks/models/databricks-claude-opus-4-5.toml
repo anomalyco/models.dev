@@ -8,17 +8,25 @@
 # Cache: `cache_control` on Databricks-hosted Claude (https://docs.databricks.com/aws/en/machine-learning/model-serving/score-foundation-models#prompt-caching); 5m and 1h write prices from the pricing page.
 # structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
 # system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+# APIs: Chat Completions, and the Anthropic Messages API at /serving-endpoints/anthropic/v1/messages for Anthropic pay-per-token models (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-anthropic-messages, https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models).
+# max_tokens_field: the Foundation Model API chat request documents max_tokens and not max_completion_tokens (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference, accessed 2026-10-24)
 schema = 2
 base_model = "anthropic/claude-opus-4-5"
 
 [capabilities]
 reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = true
-system_updates = false
-cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
 [limit]
-image = { max_per_request = 100, max_width = 8000, max_height = 8000 }
+image = { max_per_request = 100, max_width = 8_000, max_height = 8_000 }
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.messages]
+base_url = "https://${DATABRICKS_HOST}/serving-endpoints/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 5

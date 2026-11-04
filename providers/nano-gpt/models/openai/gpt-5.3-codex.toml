@@ -9,9 +9,8 @@ name = "GPT 5.3 Codex"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
 input = 400_000
