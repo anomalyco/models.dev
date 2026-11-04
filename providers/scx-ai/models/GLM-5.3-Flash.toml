@@ -1,11 +1,11 @@
-# Thinking is returned as `reasoning_content` on the message. SCX rejects none,
-# minimal and medium; low, high, xhigh and max are accepted (n=3: low 0 reasoning
-# chars, high 22, xhigh 348, max 420).
+# Prices: SCX AUD list prices (https://scx.ai/pricing), converted at 1 USD = 1.60218972 AUD on 2026-11-04.
+# Thinking is returned as `reasoning_content` on the message. Effort is the
+# zhipuai/glm-5.3-flash lab set (low, high, max), all accepted by SCX.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
@@ -13,7 +13,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.1248
-cache = { read = 0.0250 }
+cache = { read = 0.025 }
 
 [cost.text.output]
 price = 0.3745

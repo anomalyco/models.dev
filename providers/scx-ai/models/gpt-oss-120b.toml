@@ -1,5 +1,4 @@
-# Cost is USD per 1M tokens, matching the SCX rates carried in
-# theopenco/llmgateway (packages/models/src/models/openai.ts).
+# Prices: SCX AUD list prices (https://scx.ai/pricing), converted at 1 USD = 1.60218972 AUD on 2026-11-04.
 # Limits and capabilities verified directly against https://api.scx.ai/v1:
 # SCX enforces a single context budget (prompt + max_tokens <= context) with no
 # separate output cap, so output equals context. Do not trust max_output_length
@@ -19,7 +18,7 @@ output = 131_072
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.17
+price = 0.3183
 
 [cost.text.output]
-price = 0.55
+price = 1.0423

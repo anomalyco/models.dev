@@ -1,0 +1,23 @@
+# Prices: SCX AUD list prices (GET https://api.scx.ai/v1/models), converted at 1 USD = 1.60218972 AUD on 2026-11-04.
+# Thinking is always on and returned as `reasoning_content`: SCX rejects
+# thinking.type = disabled and reasoning_effort = none ("This model's reasoning
+# mode cannot be changed per request").
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.4
