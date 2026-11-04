@@ -10,13 +10,8 @@ description = "Qwen instruction model for multilingual chat, reasoning, and tool
 tools = { supported = true }
 structured_output = true
 
-[limit]
-context = 131_072
-output = 117_964
-
 [cost.text.input]
-price = 0.14
-cache = { read = 0.05 }
+price = 0.09
 
 [cost.text.output]
-price = 0.8
+price = 0.55
