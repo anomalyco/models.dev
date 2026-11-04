@@ -1,5 +1,5 @@
 # Mid-conversation: system_updates unset. OpenRouter doesn't document mid-conversation system messages for this model, and it routes to about 30 upstreams that place them differently (hoisted on Decart for deepseek-v4.1-flash). DeepSeek's own API keeps them in place, but that's only one of the upstreams. The earlier true came from live runs only (cache kept on Together, InferenceNet, 2026-10-19).
-# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# reasoning.updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"

@@ -29,7 +29,7 @@ export function explicitFalseFlags(toml: Record<string, unknown>): string[] {
     if (caps === undefined) return [];
     return [
       caps.system_updates === false ? `${at}.system_updates` : undefined,
-      caps.effort_updates === false ? `${at}.effort_updates` : undefined,
+      record(caps.reasoning)?.updates === false ? `${at}.reasoning.updates` : undefined,
       record(caps.tools)?.updates === false ? `${at}.tools.updates` : undefined,
     ].filter((flag) => flag !== undefined);
   };

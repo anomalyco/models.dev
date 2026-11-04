@@ -11,11 +11,10 @@ base_model = "anthropic/claude-opus-5"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, updates = true }
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], updates = true }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 system_updates = true
-effort_updates = true
 
 [api.messages]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

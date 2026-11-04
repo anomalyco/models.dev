@@ -96,11 +96,11 @@ describe("v2 catalog generation", () => {
         toggle: true,
         effort: ["default", "low", "medium", "high"],
         budget: { min: 1024, max: 32000 },
+        updates: false,
       },
       structured_output: true,
       temperature: true,
       system_updates: false,
-      effort_updates: false,
     });
     expect(translated.api).toEqual({
       responses: {

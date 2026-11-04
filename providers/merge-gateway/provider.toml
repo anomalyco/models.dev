@@ -13,7 +13,7 @@
 #   `thinking = { type = "enabled"|"disabled", budget_tokens = N }`.
 #   https://github.com/merge-api/merge-gateway-ai-sdk-provider/blob/main/src/chat/index.ts
 # Mid-conversation flags (sources accessed 2026-10-20):
-# - effort_updates = false on every chat model: /v1/ai-sdk/chat/completions has no
+# - reasoning.updates = false on every chat model: /v1/ai-sdk/chat/completions has no
 #   effort control at all, only `thinking`, and no per-turn configuration update.
 #   https://docs.merge.dev/merge-gateway/capabilities/reasoning (surface table)
 # - tools.updates = false: a Chat Completions `tools` array only; Gateway documents no

@@ -1,7 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Venice (live)
-# effort_updates = false: no per-turn effort control
+# reasoning.updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Deprecated: GET /api/v1/models lists expiration_date 2026-10-21
 schema = 2

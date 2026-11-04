@@ -7,9 +7,8 @@ base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
 tools = { supported = true, updates = true }
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], updates = true }
 system_updates = true
-effort_updates = true
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

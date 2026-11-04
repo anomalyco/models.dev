@@ -25,7 +25,7 @@ opencodeai = "@opencode/ai/providers/togetherai"
 # Cache: automatic prefix cache on serverless, no parameter or write charge; `prompt_cache_key`
 # routes related requests; cached tokens bill at the cached-input price:
 # https://docs.together.ai/docs/inference/chat/prompt-caching
-# effort_updates = false: the same page says to set `reasoning` and `reasoning_effort` once per
+# reasoning.updates = false: the same page says to set `reasoning` and `reasoning_effort` once per
 # conversation, because changing them partway through changes the rendered prompt.
 # Mid-conversation probes (live 2026-10-21): `echo: true` + `logprobs: true` returns the prompt as
 # the chat template rendered it, which shows where a later system message and the tool list land.

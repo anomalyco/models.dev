@@ -1,5 +1,5 @@
 # Modalities: image formats from models/xai/grok-4.7.toml (same model)
-# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+# reasoning.updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
 base_model = "xai/grok-4.7"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"

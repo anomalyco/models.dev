@@ -1,7 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Alibaba)
-# effort_updates: left out. Toggling reasoning.enabled on the next request keeps the cache (live 2026-10-23 pinned to Alibaba), but there's no in-history effort message (configuration_update is rejected with a 400), so it doesn't count.
+# reasoning.updates: left out. Toggling reasoning.enabled on the next request keeps the cache (live 2026-10-23 pinned to Alibaba), but there's no in-history effort message (configuration_update is rejected with a 400), so it doesn't count.
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2

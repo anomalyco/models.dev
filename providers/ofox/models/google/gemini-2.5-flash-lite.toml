@@ -2,7 +2,7 @@
 # Toggle/budget (Gemini native): generationConfig.thinkingConfig.thinkingBudget
 # 0 disables; enabled manual budgets 512..24576
 # https://ai.google.dev/gemini-api/docs/thinking
-# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (reasoning.updates = false, tools.updates = false).
 # system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
 # Cache: implicit (https://ofox.ai/docs/develop/models/gemini#caching); explicit cachedContents is on the Gemini native API only.
 schema = 2

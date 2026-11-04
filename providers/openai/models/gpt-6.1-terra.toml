@@ -5,7 +5,7 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6.1-terra
-# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / reasoning.updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
@@ -20,7 +20,7 @@ prompt_cache_key = true
 service_tier = ["flex", "priority"]
 
 [api.responses]
-capabilities = { effort_updates = true, tools = { search = true, updates = true } }
+capabilities = { reasoning = { updates = true }, tools = { search = true, updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }

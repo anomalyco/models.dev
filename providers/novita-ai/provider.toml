@@ -6,7 +6,7 @@
 # https://api.novita.ai/anthropic/v1 (x-api-key or Bearer) and Responses on https://api.novita.ai/openai/v1.
 # Other routes answer 400 "does not support endpoint" (live 2026-10-22). Legacy `completions` and `batch-api` aren't listed.
 # https://novita.ai/docs/guides/llm-anthropic-compatibility
-# effort_updates = false, tools.updates = false on chat models: reasoning controls and `tools`
+# reasoning.updates = false, tools.updates = false on chat models: reasoning controls and `tools`
 # are per request on Chat Completions; there is no per-turn effort or tool-change message.
 # Cache: implicit prefix cache with no request changes, on models with a cache-read price.
 # https://docs.novita.ai/guides/llm-prompt-cache

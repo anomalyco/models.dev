@@ -8,7 +8,7 @@
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6-luna
 # Decisions API (POST /v1/decisions, gpt-6-luna is its only model): https://developers.openai.com/api/docs/guides/decisions
 # Decisions takes no tools (only `model`, `input` and `questions`; tool calls appear only as evidence in `input`), so the tool values sit on [api.responses] and [api.chat-completions] and Decisions has none.
-# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on Chat Completions and Responses but not on Decisions, so system_updates sits on those two APIs.
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / reasoning.updates sit on [api.responses]. Developer messages mid-conversation are documented on Chat Completions and Responses but not on Decisions, so system_updates sits on those two APIs.
 schema = 2
 base_model = "openai/gpt-6-luna"
 
@@ -22,7 +22,7 @@ prompt_cache_key = true
 service_tier = ["flex", "priority"]
 
 [api.responses]
-capabilities = { system_updates = true, effort_updates = true, tools = { strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = true } }
+capabilities = { system_updates = true, reasoning = { updates = true }, tools = { strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }

@@ -4,7 +4,7 @@
 # Output: Requesty reports max_output_tokens = 0 (unknown), so the lab's 64,000 applies (ByteDance: 64K max output,
 #   https://www.volcengine.com/docs/82379/1330310). The earlier 256,000 was the sync's context-window fallback, not a Requesty value.
 # system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
-# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+# reasoning.updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
 schema = 2
 base_model = "bytedance-seed/seed-1-8"
 

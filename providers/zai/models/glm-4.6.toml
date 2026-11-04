@@ -8,7 +8,7 @@
 # Mid-conversation (live 2026-10-23 on api.z.ai and open.bigmodel.cn, ~7k-token first user message):
 # a late system message is followed but not kept in place (cached tokens drop to ~0 vs ~7.5k on the
 # unchanged control), so system_updates is left out.
-# effort_updates: left out. Flipping thinking.type on the next request keeps the cache (reasoning tokens
+# reasoning.updates: left out. Flipping thinking.type on the next request keeps the cache (reasoning tokens
 # ~100 vs 0), but there's no in-history effort message, so it doesn't count.
 # Adding or removing tools between turns drops the cache (2026-10-19).
 # Tools: tool_choice supports only auto on Chat Completions (https://docs.z.ai/api-reference/llm/chat-completion,

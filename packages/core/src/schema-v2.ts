@@ -189,11 +189,21 @@ export const ReasoningSupportV2 = z.discriminatedUnion("supported", [
         })
         .strict()
         .optional(),
+      // A message in the history changes effort for the next turn and keeps the cache.
+      updates: z.boolean().optional(),
     })
     .strict(),
 ]);
 
 export type ReasoningSupportV2 = z.infer<typeof ReasoningSupportV2>;
+
+// The API always states `updates` on a model that reasons.
+export const ReasoningV2 = z.discriminatedUnion("supported", [
+  z.object({ supported: z.literal(false) }).strict(),
+  ReasoningSupportV2.options[1].extend({ updates: z.boolean() }).strict(),
+]);
+
+export type ReasoningV2 = z.infer<typeof ReasoningV2>;
 
 export type DurationUnitV2 = "ms" | "s" | "m" | "h" | "d";
 export type DurationStringV2 = `${number}${DurationUnitV2}`;
@@ -266,7 +276,7 @@ export const ServiceTierV2Values = [
 export const ServiceTierV2 = z.enum(ServiceTierV2Values);
 export type ServiceTierV2 = z.infer<typeof ServiceTierV2>;
 
-// Files may leave `system_updates` / `effort_updates` out, which means false.
+// Files may leave `system_updates` and `reasoning.updates` out, which means false.
 // The API always states them.
 export const AuthoredCapabilitiesV2 = z
   .object({
@@ -278,7 +288,6 @@ export const AuthoredCapabilitiesV2 = z
     top_p: z.boolean().optional(),
     top_k: z.boolean().optional(),
     system_updates: z.boolean().optional(),
-    effort_updates: z.boolean().optional(),
     store: z.boolean().optional(),
     stream_usage: z.boolean().optional(),
     prompt_cache_key: z.boolean().optional(),
@@ -288,8 +297,8 @@ export const AuthoredCapabilitiesV2 = z
 
 export const CapabilitiesV2 = AuthoredCapabilitiesV2.extend({
   tools: ToolsSupportV2,
+  reasoning: ReasoningV2,
   system_updates: z.boolean(),
-  effort_updates: z.boolean(),
 }).strict();
 
 export type CapabilitiesV2 = z.infer<typeof CapabilitiesV2>;
@@ -385,7 +394,7 @@ export type CapabilitiesOverrideV2 = z.infer<typeof CapabilitiesOverrideV2>;
 export const AuthoredApiCapabilitiesV2 = z
   .object({
     system_updates: z.boolean().optional(),
-    effort_updates: z.boolean().optional(),
+    reasoning: z.object({ updates: z.boolean().optional() }).strict().optional(),
     tools: ToolDetailsV2.optional(),
   })
   .strict();

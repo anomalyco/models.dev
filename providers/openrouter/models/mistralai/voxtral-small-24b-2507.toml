@@ -1,6 +1,6 @@
 # Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): audio: https://openrouter.ai/docs/guides/overview/multimodal/audio
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Mistral (live)
-# effort_updates = false: no per-turn effort control
+# reasoning.updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 base_model = "mistral/voxtral-small-24b-2507"
