@@ -1,7 +1,9 @@
 # Infersia serves this as `reflection/beam-1.0-501b-a23b`, brokered to OpenRouter with a pinned
 # provider order (Nebius, Together), so the control surface is OpenRouter's for this model.
 # Effort: reasoning_effort (or reasoning.effort) = low|medium|high|xhigh|max
-# Reasoning side channel: message.reasoning
+# Reasoning side channel: message.reasoning. reasoning_field = "reasoning" is valid in v2 but v1's
+#   interleaved.field only allows reasoning_content|reasoning_details, so no reasoning_field is set
+#   rather than a wrong one (same as providers/nebius for this field).
 # Limits and pricing (accessed 2026-11-04): https://api.infersia.com/v1/models
 # Model page: https://infersia.com/models/reflection/beam-1.0-501b-a23b
 schema = 2
@@ -14,7 +16,6 @@ cache = { implicit = true }
 structured_output = true
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning" }
 
 [cost.text.input]
 price = 0.55

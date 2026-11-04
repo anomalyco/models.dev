@@ -2,7 +2,9 @@
 # (SiliconFlow, DeepInfra), so the control surface is OpenRouter's for this model. Providers that cap
 # context at 262k or output at 64k are deliberately excluded from the pin, hence the larger limits.
 # Effort: reasoning_effort (or reasoning.effort) = none|low|high; none = off, so no separate toggle.
-# Reasoning side channel: message.reasoning
+# Reasoning side channel: message.reasoning. reasoning_field = "reasoning" is valid in v2 but v1's
+#   interleaved.field only allows reasoning_content|reasoning_details, so no reasoning_field is set
+#   rather than a wrong one (same as providers/nebius for this field).
 # Limits and pricing (accessed 2026-11-04): https://api.infersia.com/v1/models
 # Model page: https://infersia.com/models/tencent/hy4-preview
 schema = 2
@@ -19,7 +21,6 @@ context = 1_048_576
 output = 131_072
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning" }
 
 [cost.text.input]
 price = 1.1
