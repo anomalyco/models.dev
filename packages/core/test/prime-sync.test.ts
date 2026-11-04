@@ -182,7 +182,7 @@ test("v2 files keep their effort order and MIME lists through a sync", async () 
     expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
     const text = await file.text();
     expect(text).toContain("# Effort: top-level reasoning_effort = none|low|high.");
-    expect(text).toContain("# Mid-conversation: system_updates, effort_updates and tools.updates are unset");
+    expect(text).toContain("# Mid-conversation: system_updates, reasoning.updates and tools.updates are unset");
     expect(text).toContain("https://api.pinference.ai/openapi.json");
     expect(text).toContain("# Input MIME types: the lab's entries");
     expect((await syncProvider(provider, { openIssues: false })).unchanged).toBe(1);

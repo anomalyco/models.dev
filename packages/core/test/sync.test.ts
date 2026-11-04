@@ -6627,7 +6627,7 @@ test("Vercel text models keep their default API first and add Responses and Mess
   // A second run changes nothing.
   expect(chatApis(chatApis(own))).toEqual(chatApis(own));
   // Per-API capabilities on the extra tables survive a sync.
-  const flagged = { ...chatApis(own), responses: { ...extra.responses, capabilities: { effort_updates: true } } };
+  const flagged = { ...chatApis(own), responses: { ...extra.responses, capabilities: { reasoning: { updates: true } } } };
   expect(chatApis(flagged)).toEqual(flagged);
 });
 
@@ -7618,7 +7618,7 @@ test("v2 patches switch tool_call and reasoning between the lab's value and an o
     "",
     "[capabilities]",
     ...capabilities,
-    "effort_updates = false",
+    "system_updates = false",
     "",
     "[cost.text.input]",
     "price = 1",
@@ -7649,13 +7649,13 @@ test("v2 patches switch tool_call and reasoning between the lab's value and an o
     synced = { base_model: "lab/chat", tool_call: false, cost: { input: 1, output: 2 } };
     expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
     let doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
-    expect(doc.capabilities).toEqual({ effort_updates: false, tools: { supported: false } });
+    expect(doc.capabilities).toEqual({ system_updates: false, tools: { supported: false } });
 
     // The source reports tools again, which the lab already says: the override goes.
     synced = { base_model: "lab/chat", cost: { input: 1, output: 2 } };
     expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
     doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
-    expect(doc.capabilities).toEqual({ effort_updates: false });
+    expect(doc.capabilities).toEqual({ system_updates: false });
 
     // An explicit value equal to the lab's, with v2-only data, is left alone.
     await write(["tools = { supported = true, updates = false }"]);
@@ -8280,7 +8280,7 @@ test("Kilo sync keeps v2-only data and leaves model facts to the lab in v2 files
       tools: { supported: true, updates: false },
       reasoning: { supported: true, effort: ["low", "high", "max"] },
       structured_output: true,
-      effort_updates: false,
+      system_updates: false,
       cache: { implicit: true },
     },
     cost: { text: { input: { price: 4, cache: { read: 0.2, write: 5 } }, output: { price: 20 } } },
@@ -8301,7 +8301,7 @@ test("Kilo sync keeps v2-only data and leaves model facts to the lab in v2 files
   expect(next.modalities).toEqual(doc.modalities);
   expect(next.capabilities).toMatchObject({
     tools: { supported: true, updates: false },
-    effort_updates: false,
+    system_updates: false,
     cache: { implicit: true },
   });
   expect(next.cost.text.input.price).toBe(5);
@@ -8355,7 +8355,7 @@ test("Ofox sync takes context tiers and audio prices from the catalog and keeps 
     capabilities: {
       tools: { supported: true, updates: false },
       structured_output: true,
-      effort_updates: false,
+      system_updates: false,
       cache: { implicit: true },
     },
     api: { responses: { base_url: "https://api.ofox.ai/v1", sdk: { aisdk: "@ai-sdk/openai" } } },

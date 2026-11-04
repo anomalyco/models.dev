@@ -246,13 +246,29 @@ test("patchModelV2 keeps the first table's path when sync rewrites it", () => {
 });
 
 test("patchModelV2 keeps the first table's capabilities when sync rewrites it", () => {
-  const api = { messages: { base_url: "https://example.com/v1", capabilities: { effort_updates: true } } };
+  const api = { messages: { base_url: "https://example.com/v1", capabilities: { reasoning: { updates: true } } } };
   const doc = { schema: 2, base_model: "anthropic/claude-opus-5-5", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
   const before = modelV2ToV1({ ...doc, id: "m" });
   const { id: _id, ...after } = { ...before, provider: { ...before.provider, api: "https://example.com/v2" } };
   expect(patchModelV2(doc, before, after).api.messages).toEqual({
     base_url: "https://example.com/v2",
-    capabilities: { effort_updates: true },
+    capabilities: { reasoning: { updates: true } },
+  });
+});
+
+test("patchModelV2 keeps reasoning.updates when sync rewrites the reasoning controls", () => {
+  const doc = {
+    schema: 2,
+    base_model: "anthropic/claude-opus-5-5",
+    capabilities: { reasoning: { supported: true, effort: ["low", "high"], updates: true } },
+    cost: { text: { input: { price: 1 }, output: { price: 2 } } },
+  };
+  const before = modelV2ToV1({ ...doc, id: "m" });
+  const { id: _id, ...after } = { ...before, reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }] };
+  expect(patchModelV2(doc, before, after).capabilities.reasoning).toEqual({
+    supported: true,
+    effort: ["low", "medium", "high"],
+    updates: true,
   });
 });
 
@@ -347,14 +363,14 @@ base_model = "lab/model"
 
 [capabilities]
 system_updates = true
-effort_updates = false
+reasoning = { supported = true, updates = false }
 tools = { supported = true, updates = false }
 
 [api.messages]
 capabilities = { system_updates = false, tools = { updates = true } }
 `) as Record<string, unknown>;
   expect(explicitFalseFlags(toml)).toEqual([
-    "capabilities.effort_updates",
+    "capabilities.reasoning.updates",
     "capabilities.tools.updates",
     "api.messages.capabilities.system_updates",
   ]);

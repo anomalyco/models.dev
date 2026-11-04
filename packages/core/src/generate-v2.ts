@@ -29,7 +29,7 @@ import {
   type ModelV2,
   type OutputCostV2,
   type OutputModalityV2,
-  type ReasoningSupportV2,
+  type ReasoningV2,
 } from "./schema-v2.js";
 import { modelV2ToV1, providerTomlToV1, v1ModelType, withoutV1ReasoningCost } from "./translate.js";
 
@@ -171,7 +171,13 @@ function withV2Fields(
     modalities:
       authored.modalities ??
       (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities),
-    capabilities: { ...capabilities, tools: { supported: capabilities.tools.supported } },
+    capabilities: {
+      ...capabilities,
+      tools: { supported: capabilities.tools.supported },
+      reasoning: capabilities.reasoning.supported
+        ? { ...capabilities.reasoning, updates: capabilities.reasoning.updates ?? false }
+        : capabilities.reasoning,
+    },
   };
   // v1 leaves v2-only types out, so they come from the files.
   const type = authored.type ?? (omit.includes("type") ? undefined : lab?.type);
@@ -225,7 +231,6 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
       tools: { supported: model.tool_call },
       // An update flag that isn't authored means the host doesn't support it.
       system_updates: false,
-      effort_updates: false,
       reasoning: toReasoningSupportV2(model),
       ...(model.structured_output !== undefined && type !== "decision"
         ? { structured_output: model.structured_output }
@@ -347,7 +352,7 @@ export function toCostV2(cost: CostV1): CostV2 {
   };
 }
 
-function toReasoningSupportV2(model: Model): ReasoningSupportV2 {
+function toReasoningSupportV2(model: Model): ReasoningV2 {
   if (!model.reasoning) return { supported: false };
 
   const options = model.reasoning_options ?? [];
@@ -357,6 +362,8 @@ function toReasoningSupportV2(model: Model): ReasoningSupportV2 {
 
   return {
     supported: true,
+    // An update flag that isn't authored means the host doesn't support it.
+    updates: false,
     ...(hasToggle ? { toggle: true } : {}),
     ...(effort !== undefined
       ? {

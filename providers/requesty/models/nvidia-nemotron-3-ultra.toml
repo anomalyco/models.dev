@@ -2,7 +2,7 @@
 #   Host deltas: context_window 262,144 (lab 1,000,000), max_output_tokens 131,072 (lab 128,000), supports_tool_calling false.
 #   Requesty's created date (2026-06-23) is its listing date; the lab has NVIDIA's 2026-06-04 release.
 # system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
-# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+# reasoning.updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
 schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 

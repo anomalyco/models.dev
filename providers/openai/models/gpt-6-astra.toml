@@ -8,7 +8,7 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Ultrafast (https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6-astra
-# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / reasoning.updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
 schema = 2
 base_model = "openai/gpt-6-astra"
 
@@ -23,7 +23,7 @@ prompt_cache_key = true
 service_tier = ["flex", "priority", "ultrafast"]
 
 [api.responses]
-capabilities = { effort_updates = true, tools = { strict = true, search = true, updates = true } }
+capabilities = { reasoning = { updates = true }, tools = { strict = true, search = true, updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }

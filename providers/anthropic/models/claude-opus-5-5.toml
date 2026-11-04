@@ -17,7 +17,7 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 service_tier = ["fast"]
 
 [api.messages]
-capabilities = { system_updates = true, effort_updates = true, tools = { updates = true, strict = true, search = true } }
+capabilities = { system_updates = true, reasoning = { updates = true }, tools = { updates = true, strict = true, search = true } }
 
 [api.chat-completions]
 base_url = "https://api.anthropic.com/v1"

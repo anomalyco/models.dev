@@ -9,7 +9,7 @@
 #   Billed at the price of whichever model served the request.
 # reasoning stays false as published: both engines reason, but the router documents no reasoning control and
 #   nothing was tested live. knowledge is unsourced.
-# Mid-conversation flags (system_updates, effort_updates, tools.updates) unset: undocumented, and no StepFun key to test.
+# Mid-conversation flags (system_updates, reasoning.updates, tools.updates) unset: undocumented, and no StepFun key to test.
 # max_tokens_field: StepFun's Chat Completions API documents max_tokens and not max_completion_tokens (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, accessed 2026-10-24)
 schema = 2
 name = "Step Router v1"

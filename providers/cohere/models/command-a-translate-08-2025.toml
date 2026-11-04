@@ -6,7 +6,7 @@
 #     prefix before it) -> system_updates = true.
 #   * Prompt prefixes are cached automatically (usage.cached_tokens), with no request field to control it
 #     and no cache price; billed_units.input_tokens did not drop on cache hits.
-#   * The API has no per-turn effort control -> effort_updates = false.
+#   * The API has no per-turn effort control -> reasoning.updates = false.
 #   * Tools are a request-level list with no add/remove mechanism; adding a tool to an otherwise identical
 #     request dropped cached_tokens (e.g. 6032 -> 112 on Command A) -> tools.updates = false.
 # Structured output: https://docs.cohere.com/docs/structured-outputs; live response_format json_object +

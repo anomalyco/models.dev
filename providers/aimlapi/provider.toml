@@ -1,6 +1,6 @@
 # Every model is served on POST /v1/chat/completions (@ai-sdk/openai-compatible).
 # Per-model request schema: https://api.aimlapi.com/docs-json?model=<id>&endpoint=openai/chat-completions
-# - effort_updates, tools.updates and system_updates are left out (false): the schema has a
+# - reasoning.updates, tools.updates and system_updates are left out (false): the schema has a
 #   per-request reasoning_effort and tools array, no configuration_update or tool-change
 #   message, and AI/ML API doesn't document where a mid-conversation system message ends up.
 # - capabilities.cache: the schema lists cache_control (5m/1h) on every model, including

@@ -150,6 +150,11 @@ export function patchModelV2(
     if (next.capabilities?.[key] === undefined) delete capabilities[key];
     else capabilities[key] = next.capabilities[key];
   }
+  // v1 has no `reasoning.updates`, so a reasoning change keeps the file's while the model still reasons.
+  const updates = doc.capabilities?.reasoning?.updates;
+  if (updates !== undefined && capabilities.reasoning?.supported === true && capabilities.reasoning.updates === undefined) {
+    capabilities.reasoning = { ...capabilities.reasoning, updates };
+  }
   if (Object.keys(capabilities).length > 0) next.capabilities = capabilities;
   else delete next.capabilities;
 

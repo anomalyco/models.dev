@@ -127,7 +127,7 @@ reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 | `structured_output` | curated — a live-tested judgement (schema acceptance ≠ conformance) |
 | `[api.<protocol>] sdk` | derived — `@ai-sdk/anthropic` / `@ai-sdk/openai` for the native-passthrough families |
 | leading comments | curated — `prefix_notes` (per family, by model id prefix) followed by the model's `note` |
-| `cache`, `system_updates`, `effort_updates`, `tools.updates`, cache-write TTL prices | hand-authored in the model files; sync keeps them and cites their sources through `prefix_notes` |
+| `cache`, `system_updates`, `reasoning.updates`, `tools.updates`, cache-write TTL prices | hand-authored in the model files; sync keeps them and cites their sources through `prefix_notes` |
 
 Reasoning controls are only written when the `base_model` has `reasoning = { supported = true }`. When a reasoning model has no derivable and no curated shape,
 the generator hard-fails rather than ship an invalid file.

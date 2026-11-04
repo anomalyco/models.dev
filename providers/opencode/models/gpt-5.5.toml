@@ -1,6 +1,6 @@
 # Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Effort: reasoning.effort = none|low|medium|high|xhigh (not re-verified on Zen: model access is disabled for the probe key)
-# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/openai/models/gpt-5.5.toml (Zen passes requests through).
+# Mid-conversation flags (system_updates, reasoning.updates, tools.updates) follow providers/openai/models/gpt-5.5.toml (Zen passes requests through).
 #   Surface: Responses carries the in-history messages (additional_tools for tools.updates, add only).
 # Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with text, lark or regex format), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
 schema = 2

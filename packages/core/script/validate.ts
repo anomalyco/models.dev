@@ -39,7 +39,7 @@ try {
   }
   if (falseFlags.length > 0) {
     console.error(
-      "system_updates, effort_updates and tools.updates default to false. Leave them out instead of writing `= false` (see AGENTS.md):\n" +
+      "system_updates, reasoning.updates and tools.updates default to false. Leave them out instead of writing `= false` (see AGENTS.md):\n" +
         falseFlags.map((flag) => `  ${flag}`).join("\n"),
     );
     process.exit(1);

@@ -17,7 +17,7 @@
 #   (+23 input tokens), is followed, and keeps the cache -> system_updates; switching thinking.type between turns
 #   (either direction) keeps the cache; adding a tool drops the cache to 0-64 tokens while the
 #   same request with the old tool list keeps it -> tools.updates = false.
-# effort_updates: left out. Changing thinking.type on the next request keeps the cache, but there's no
+# reasoning.updates: left out. Changing thinking.type on the next request keeps the cache, but there's no
 #   in-history effort message, so it doesn't count.
 # Web search plugin: $5 per 1,000 calls (Overseas Internet Connectivity Service; the domestic service, CNY 16 per 1,000,
 #   is not modeled): https://mimo.mi.com/static/docs/price/pay-as-you-go.md (accessed 2026-10-23)

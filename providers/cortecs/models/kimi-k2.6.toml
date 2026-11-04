@@ -1,6 +1,6 @@
 # Toggle: thinking.type = enabled|disabled; Cortecs maps reasoning_effort to Kimi thinking.type (see provider.toml,
 # https://docs.cortecs.ai/routing/reasoning).
-# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (reasoning.updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: automatic prefix caching on every routed provider (inceptron). https://docs.cortecs.ai/routing/prompt-caching
 # Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
 schema = 2

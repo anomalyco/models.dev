@@ -476,12 +476,12 @@ test("each gateway API takes the lab's tool fields for its protocol", () => {
 
   const main = "@opencode/ai/providers/cloudflare-ai-gateway";
   const current = {
-    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { search: true, updates: true } } },
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { reasoning: { updates: true }, tools: { search: true, updates: true } } },
     "chat-completions": { base_url: "stale", capabilities: { tools: { search: true } } },
   };
   // Tool fields are replaced per table; other capabilities and `updates` are kept, and an empty table loses capabilities.
   expect(gatewayApis(current, "responses", ["responses", "chat-completions"], { responses: { strict: true }, "chat-completions": {} })).toEqual({
-    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { strict: true, updates: true } } },
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { reasoning: { updates: true }, tools: { strict: true, updates: true } } },
     "chat-completions": {
       base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
       sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: main },

@@ -12,7 +12,7 @@
 #   tools with strict = true return tool calls.
 # - A late system or developer message (after an assistant turn) returns 200 -> system_updates = true.
 # - No effort control besides on/off, and tools are a request-level list with no add/remove mechanism
-#   -> effort_updates = false, tools.updates = false.
+#   -> reasoning.updates = false, tools.updates = false.
 # - usage.prompt_tokens_details.cached_tokens stayed 0 across 10 identical requests, so cache is left unset.
 # - https://cohere.com/pricing lists North Mini Code as free (API key).
 # APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.

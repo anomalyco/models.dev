@@ -74,10 +74,9 @@ schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], updates = true }
 structured_output = true
 system_updates = true
-effort_updates = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 service_tier = ["fast"]
 
@@ -99,10 +98,10 @@ body = { speed = "fast" }
 - `cache = false` means the host doesn't cache prompts. Otherwise list the kinds it supports, `implicit` and/or `explicit`, each `true` or a details table. A kind that isn't listed isn't supported. If a host caches but doesn't say how, use `{ implicit = true }`; Anthropic-style caching that needs `cache_control` markers is `explicit`.
 - Mid-conversation flags record what the API accepts, not whether the model obeys. Each one needs a message sent inside the conversation history; changing a top-level request parameter between turns never counts, even if the cache happens to survive.
   - `system_updates`: the API accepts a system/developer message after the conversation starts and keeps it in place (the cache before it survives; moved to the top or rejected = false).
-  - `effort_updates`: a message in the history changes effort for the next turn and keeps the cache: OpenAI Responses `configuration_update`, Anthropic per-message `output_config`. Changing `reasoning_effort`, a thinking toggle or a budget on the next request doesn't count.
+  - `reasoning.updates`: a message in the history changes effort for the next turn and keeps the cache: OpenAI Responses `configuration_update`, Anthropic per-message `output_config`. Changing `reasoning_effort`, a thinking toggle or a budget on the next request doesn't count.
   - `tools.updates`: a message in the history adds (or removes) tools and keeps the cache: Anthropic `tool_addition`/`tool_removal`, OpenAI Responses `additional_tools`, Kimi K3's tool-carrying system message. Add-only counts; note "add only" in the file comment. Changing the top-level `tools` list doesn't count. Tool search is `tools.search`.
 - These three flags default to false. Be conservative: set one to `true` only when the host has an explicit, documented way to do it (or passes requests through to a lab that documents it) and you're sure it works there; confirm live when you can. A server that happens to keep the cache isn't enough. Otherwise leave it out (don't write `= false`; `bun validate` rejects it). The v2 API always publishes them as `true` or `false`, with a left-out flag published as `false`.
-- Put a flag at the top level only when it holds on every API the model lists. When it holds on some of them only, leave the top level out and set it on those APIs instead, e.g. `[api.messages]` with `capabilities = { effort_updates = true }` (`system_updates`, `effort_updates` and `tools = { updates = true }` are allowed there).
+- Put a flag at the top level only when it holds on every API the model lists. When it holds on some of them only, leave the top level out and set it on those APIs instead, e.g. `[api.messages]` with `capabilities = { reasoning = { updates = true } }` (`system_updates`, `reasoning = { updates = true }` and `tools = { updates = true }` are allowed there).
 - Tool details (`strict`, `choice`, `search`, `freeform`, `updates`) depend on the API: OpenAI's tool search only works on Responses, Anthropic's OpenAI-compatible Chat Completions ignores `strict`, Moonshot's Responses only takes `tool_choice: "auto"`. Top-level `[capabilities] tools` values hold on every API the model lists; an API's `capabilities = { tools = { … } }` replaces any of them for that API. A value that differs by API is set only on the APIs that have it, never cancelled with `false`. The v2 API publishes the resolved values on each API (`api.<protocol>.capabilities.tools`, `updates` always stated) and keeps only `supported` on the model. `freeform` lists the formats an API accepts for custom tools, whose input is plain text instead of JSON: `"text"` (unconstrained), `"lark"` and `"regex"` (grammar-constrained). Leave it out when the API has no custom tools.
 - When you add or update an OpenAI GPT-5+ model on any host, check which `freeform` formats each of its APIs accepts. Use the host's docs or a live probe with a restrictive grammar (e.g. regex `ZZ[0-9]{3}`) whose output proves the grammar is enforced, not just accepted. Set the formats that work on the APIs where they work, leave `freeform` out where custom tools are rejected, and note the evidence in the file's header comment.
 

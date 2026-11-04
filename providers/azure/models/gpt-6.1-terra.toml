@@ -13,7 +13,7 @@
 # Web search: billed as Grounding with Bing Search, $14 per 1,000 Bing search requests (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing): https://www.microsoft.com/en-us/bing/apis/grounding-pricing
 # Token-only multipliers (object factor, so cost.web_search is unscaled): web search is billed separately as Grounding with Bing Search.
 # APIs: Responses (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses) and Chat Completions, both listed for gpt-6.1-terra on the availability page above.
-# Per-API flags: additional_tools and configuration_update exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Mid-conversation developer messages work on both Responses and Chat Completions, so system_updates stays top-level.
+# Per-API flags: additional_tools and configuration_update exist only on the Responses API, so tools.updates / reasoning.updates sit on [api.responses]. Mid-conversation developer messages work on both Responses and Chat Completions, so system_updates stays top-level.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
@@ -27,7 +27,7 @@ prompt_cache_key = true
 system_updates = true
 
 [api.responses]
-capabilities = { effort_updates = true, tools = { search = true, updates = true } }
+capabilities = { reasoning = { updates = true }, tools = { search = true, updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }

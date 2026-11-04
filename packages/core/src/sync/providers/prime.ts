@@ -154,7 +154,7 @@ export const prime = {
 } satisfies SyncProvider<PrimeModel>;
 
 const MID_CONVERSATION_LINES = [
-  "# Mid-conversation: system_updates, effort_updates and tools.updates are unset; Prime documents none of them and they weren't tested live.",
+  "# Mid-conversation: system_updates, reasoning.updates and tools.updates are unset; Prime documents none of them and they weren't tested live.",
   "# Prime serves Chat Completions, Anthropic Messages (translated onto chat completions) and Responses (https://api.pinference.ai/openapi.json).",
 ].join("\n");
 const MIME_LINE = "# Input MIME types: the lab's entries for each kind Prime lists (Prime documents no formats).";

@@ -8,7 +8,7 @@
 # Mid-conversation flags, live probes on Chat Completions (2026-10-21, ~1,050-token prefix in the first user message,
 # notes/neon-groq-v2-2026-10-21/groq-probe-loop.ts and results r3-safeguard.jsonl). Controls read 1,024 cached tokens:
 #   system_updates = false: a system message appended after the history read 0 (2 trials, between control hits).
-#   effort_updates = false: changing reasoning_effort low -> high read 0 (2 trials, between control hits).
+#   reasoning.updates = false: changing reasoning_effort low -> high read 0 (2 trials, between control hits).
 #   tools.updates = false: adding a tool read 0 between control hits (the repeat of that same request later hit its own entry).
 # Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
 # Flex: https://console.groq.com/docs/flex-processing (all models, paid customers, on-demand pricing).

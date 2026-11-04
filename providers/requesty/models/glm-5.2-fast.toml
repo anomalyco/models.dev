@@ -1,5 +1,5 @@
 # system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
-# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+# reasoning.updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
 schema = 2
 name = "glm-5.2-fast"
 description = "GLM-5.2 introduces a robust 1M-token context and advanced, multi-effort coding capabilities to significantly enhance performance on long-horizon tasks. Its new IndexShare architecture and improved MTP layer simultaneously boost efficiency by reducing per-token FLOPs and increasing speculative decoding lengths. A 743B-parameter model in Zhipu AI's GLM series, designed to plan, execute, and iterate autonomously on extended, engineering-grade tasks."

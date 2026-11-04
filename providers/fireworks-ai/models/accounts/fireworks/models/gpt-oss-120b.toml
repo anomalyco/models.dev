@@ -9,7 +9,7 @@
 #   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
 # Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
 #   system_updates = false: after a system message sent after the first turn, cached tokens fell to 0 in 3 trials while the control turns hit, so it is moved to the top.
-#   effort_updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
+#   reasoning.updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
 #   tools.updates = false: adding a second tool on the last turn left 0/123 cached tokens in 2 trials (tools render before the messages).
 #   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
 schema = 2
