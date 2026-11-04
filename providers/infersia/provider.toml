@@ -1,0 +1,17 @@
+# Reasoning HTTP format (accessed 2026-11-04): POST https://api.infersia.com/v1/chat/completions.
+# The request body is forwarded to the upstream unchanged apart from Infersia's own fields, so
+# reasoning controls are the upstream's: OpenRouter's `reasoning` object (`reasoning.enabled`
+# true|false, `reasoning.effort`) and the top-level `reasoning_effort` alias on the models
+# Infersia brokers through OpenRouter with pinned providers. Deliberation comes back in
+# message.reasoning (streamed as delta.reasoning). Prompt-prefix caching is implicit; the
+# discounted cache-read price is published per model.
+# Sources:
+# https://infersia.com/docs
+# https://api.infersia.com/v1/models (context_length, max_completion_tokens, supported_parameters, pricing)
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+name = "Infersia"
+env = ["INFERSIA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.infersia.com/v1"
+doc = "https://infersia.com/models"

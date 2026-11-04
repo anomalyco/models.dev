@@ -1,0 +1,29 @@
+# Infersia serves this as `tencent/hy4-preview`, brokered to OpenRouter with a pinned provider order
+# (SiliconFlow, DeepInfra), so the control surface is OpenRouter's for this model. Providers that cap
+# context at 262k or output at 64k are deliberately excluded from the pin, hence the larger limits.
+# Effort: reasoning_effort (or reasoning.effort) = none|low|high; none = off, so no separate toggle.
+# Reasoning side channel: message.reasoning
+# Limits and pricing (accessed 2026-11-04): https://api.infersia.com/v1/models
+# Model page: https://infersia.com/models/tencent/hy4-preview
+schema = 2
+base_model = "tencent/hy4-preview"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning" }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.055 }
+
+[cost.text.output]
+price = 3.3

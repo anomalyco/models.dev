@@ -1,0 +1,45 @@
+# Infersia serves this as `xiaomi/mimo-v2.6-flash`, brokered to OpenRouter with a pinned provider
+# order (DeepInfra, Xiaomi, Cohere, Io Net, Makora), so the control surface is OpenRouter's for this model.
+# Toggle: reasoning.enabled = true|false (no graded effort on this host)
+# Reasoning side channel: message.reasoning
+# Modalities: text, image and video input; the base entry's audio input is not offered on this host.
+# top_k is not accepted on this host (/v1/models supported_parameters).
+# Limits and pricing (accessed 2026-11-04): https://api.infersia.com/v1/models
+# Model page: https://infersia.com/models/xiaomi/mimo-v2.6-flash
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "video/mp4",
+  "video/quicktime",
+  "video/x-msvideo",
+  "video/x-ms-wmv",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+structured_output = true
+top_k = false
+
+[limit]
+context = 1_048_320
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.4
