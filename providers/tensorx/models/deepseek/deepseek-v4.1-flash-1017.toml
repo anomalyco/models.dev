@@ -1,11 +1,12 @@
-# Toggle: chat_template_kwargs.thinking = true|false (default off; thinking=false wins over reasoning_effort).
-# Effort: reasoning_effort = low|high|max (minimal maps to low, medium/xhigh map to high).
-# https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-11-04), DeepSeek V4.1 Flash section.
+# Effort: reasoning_effort = none|low|high|max (none disables; off by default).
+# Also: chat_template_kwargs.thinking = true|false (default off).
+# Both IDs are served by the 1017 checkpoint.
+# https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-11-04)
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [limit]

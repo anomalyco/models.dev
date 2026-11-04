@@ -284,9 +284,17 @@ export function narrowLabModalities(
   const output = (lab.output ?? []).filter((entry) => !(info.supports_audio_output === false && toV1Modality(entry) === "audio"));
   if (!output.includes("text")) output.unshift("text");
 
+  // No-op when the denial hit a kind the lab card doesn't have (a typical
+  // LiteLLM `supports_audio_output:false` on a text-only model would otherwise
+  // write a `[modalities]` block that's identical to the lab — forcing the sync
+  // to rewrite the file every hour without ever changing its v1 view).
+  if (JSON.stringify(input) === JSON.stringify(lab.input ?? []) && JSON.stringify(output) === JSON.stringify(lab.output ?? [])) {
+    return { v1: undefined, v2Set: undefined };
+  }
+
   const v1Input = [...new Set(input.map(toV1Modality))];
   const v1Output = [...new Set(output.map(toV1Modality))];
-  // Emit BOTH sides in v2Set whenever any denial triggered narrowing, even
+  // Emit BOTH sides in v2Set whenever any denial changed the list, even
   // the side whose list didn't shrink. factorBaseModel drops the unchanged
   // side from the v1 override, and sync/index.ts then fills it back from the
   // lab's generic v1 view — if v2Set only carried the changed side, the other

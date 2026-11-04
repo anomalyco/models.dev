@@ -323,6 +323,19 @@ test("removing a denial deletes the narrowed modalities in patchModelV2", () => 
   expect(patched.modalities).toBeUndefined();
 });
 
+test("a denial of a kind not on the lab card is a no-op, not a rewrite", () => {
+  // text-only lab with the gateway declaring no images.
+  const narrowed = narrowLabModalities(
+    "zhipuai/glm-5.2",
+    { ...info({}), supports_vision: false, supports_audio_output: false },
+    { input: ["text"], output: ["text"] },
+  );
+  expect(narrowed.v1).toBeUndefined();
+  expect(narrowed.v2Set).toBeUndefined();
+  expect(narrowed.v2Set?.["modalities.input"]).toBeUndefined();
+});
+
+
 test("output-only denial keeps the input list's full MIME detail", () => {
   // Round-4 regression: when audio_output is denied, the unchanged input list
   // must still be written via v2Set (factorBaseModel drops the unchanged input
