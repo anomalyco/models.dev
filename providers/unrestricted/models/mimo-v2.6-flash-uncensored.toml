@@ -15,10 +15,13 @@
 # none is documented in /reference; the graded levels follow the uncensored peer
 # providers/nano-gpt/models/xiaomi/mimo-v2.6-flash-uncensored.toml (same set as
 # providers/venice/models/xiaomi-mimo-v2-6-flash.toml). Xiaomi's own API only has an on/off toggle.
-# Not stated by Unrestricted, so copied from peers: structured_output = false from
-# providers/nano-gpt/models/xiaomi/mimo-v2.6-flash-uncensored.toml, the only uncensored
-# MiMo V2.6 Flash peer (xiaomi and venice list true for the stock model); temperature = true
-# and family from models/xiaomi/mimo-v2.6-flash.toml; open_weights = true as on the nano-gpt
+# Live-tested on Unrestricted's /v1/chat/completions (2026-11-05):
+# - structured_output: a strict json_schema response_format (3 required fields,
+#   additionalProperties false) returned schema-valid JSON in 3/3 runs, on a prompt asking
+#   for a poem, so the schema is enforced rather than followed by chance.
+# - temperature: 1.8 gave visibly different, incoherent sampling; 0 is applied but not
+#   fully deterministic on this host.
+# family from models/xiaomi/mimo-v2.6-flash.toml; open_weights = true as on the nano-gpt
 # uncensored entry and the lab file.
 schema = 2
 name = "MiMo V2.6 Flash Uncensored"
@@ -34,7 +37,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
-structured_output = false
+structured_output = true
 temperature = true
 cache = { implicit = true }
 
