@@ -4,6 +4,9 @@
 # Text-only on this host.
 # Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12);
 # strict json_schema response_format verified 2026-11-03.
+# Cache: implicit prefix caching, no markers needed. Live 2026-11-05 on
+#   https://api.zerogpu.ai/v1/chat/completions: a ~5.3k-token system prefix resent with a
+#   new user message returned usage.prompt_tokens_details.cached_tokens = 5,120.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 

@@ -3,20 +3,21 @@
 # reasoning_effort is ignored.
 # Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12);
 # strict json_schema response_format verified 2026-11-03.
+# Cache: none. A ~6.5k-token system prefix sent four times, with the same and then a new
+#   user message, reported no cached tokens (live 2026-11-05, three runs).
 schema = 2
 base_model = "alibaba/qwen3-30b-a3b"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-cache = { implicit = true }
+cache = false
 
 [limit]
 context = 32_768
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.05 }
 
 [cost.text.output]
 price = 0.45
