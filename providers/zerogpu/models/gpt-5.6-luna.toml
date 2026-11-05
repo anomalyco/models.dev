@@ -1,4 +1,10 @@
-# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# Pricing: https://api-dashboard.zerogpu.ai/api/models and
+#   https://docs.zerogpu.ai/docs/model-catalog (2026-11-05): input $0.20/M, output $1.20/M,
+#   cached input $0.20/M. ZeroGPU bills Luna cache hits at the full input price, not
+#   OpenAI's discounted rate.
+# Cache: implicit prefix caching, no markers needed. Live 2026-11-05 on
+#   https://api.zerogpu.ai/v1/chat/completions: a ~5.3k-token system prefix resent with a
+#   new user message returned usage.prompt_tokens_details.cached_tokens = 5,309.
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max; none disables reasoning.
 # Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12);
 # strict json_schema response_format verified 2026-11-03.
