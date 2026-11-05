@@ -1,0 +1,61 @@
+# Fireworks Kimi K3.1 Pro (accounts/fireworks/models/kimi-k3p1-pro):
+# - Model card (accessed 2026-11-05): https://fireworks.ai/models/fireworks/kimi-k3p1-pro — Serverless
+#   $2.00 / $0.20 / $10.00 per 1M input/cached input/output, Context Length 1040k tokens, Function Calling
+#   Supported, image input Supported ("supports text and image inputs"), Created 2 Nov 2026,
+#   Huggingface moonshotai/Kimi-K3.1-Pro.
+# - Pricing table, Kimi K3.1 Pro row: https://docs.fireworks.ai/serverless/pricing (accessed 2026-11-05) —
+#   Standard $2.00 / $0.20 / $10.00, Priority $3.00 / $0.30 / $15.00 per 1M input/cached input/output.
+# - Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-11-05) documents the
+#   Kimi K3 tiers — `reasoning_effort` low selects Low, medium is promoted to high, high selects High, xhigh is
+#   promoted to max, max selects Max — with the vendor default Max when omitted.
+# - Native Kimi K3.1 Pro always thinks, with effort low|high|max and default max
+#   (https://platform.kimi.ai/docs/api/chat, providers/moonshotai/models/kimi-k3.1-pro.toml). Those are the three
+#   real tiers, so they are the recorded controls; medium and xhigh are host-side aliases, and no toggle or
+#   reasoning-token budget is recorded for this model.
+# - Image types: Fireworks documents .png, .jpg/.jpeg, .gif, .bmp, .tiff and .ppm
+#   (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations); webp also decoded in
+#   live tests on this host (2026-10-21), heic failed. The lab file's video inputs are not offered for this model
+#   on Fireworks, so modalities list text plus the image subset this host serves for Kimi K3
+#   (providers/fireworks-ai/models/accounts/fireworks/models/kimi-k3.toml).
+# - Context and output ceilings are inherited from the lab file: Fireworks' "1040k tokens" is the same
+#   1,048,576-token window, so no limit override is recorded.
+# - Structured output: response_format json_schema (https://docs.fireworks.ai/structured-responses/structured-response-formatting).
+# - Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with
+#   `user` or `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# - APIs: Fireworks also serves Responses (POST /inference/v1/responses) and Anthropic Messages
+#   (POST /inference/v1/messages) for serverless text models, under the same model ID.
+#   https://docs.fireworks.ai/guides/response-api, https://docs.fireworks.ai/api-reference/anthropic-messages
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }
