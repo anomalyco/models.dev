@@ -4,12 +4,11 @@
 # - Model ID: https://api.apimodels.app/v1/models ("gpt-5-4")
 # Served on Chat Completions; reasoning_effort is forwarded unchanged.
 # Custom (freeform) tools have not been probed on this host, so `freeform` is left out.
-# Effort: reasoning_effort = low|medium|high|xhigh, the levels documented on the model page.
 schema = 2
 base_model = "openai/gpt-5.4"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 
 [cost.text.input]
 price = 1.8
