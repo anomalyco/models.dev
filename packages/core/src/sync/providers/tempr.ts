@@ -306,7 +306,12 @@ export function buildTemprModel(model: TemprModel, read: (relative: string) => T
     if (Array.isArray(labInput) && labInput.some((m) => m !== "text")) {
       result.attachment = false;
       result.modalities = { input: ["text"], output: ["text"] };
-      for (const extra of ["input_audio", "output_audio"]) delete (result.cost as Toml | undefined)?.[extra];
+      // A copy: result.cost can be the mirrored entry's own table, which is compared against below.
+      if (isPlainObject(result.cost)) {
+        const cost: Toml = { ...result.cost };
+        for (const extra of ["input_audio", "output_audio"]) delete cost[extra];
+        result.cost = cost;
+      }
       lines.push(...EMBEDDINGS_NOTE);
     }
   }

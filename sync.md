@@ -455,6 +455,7 @@ Tempr Gateway is implemented in `packages/core/src/sync/providers/tempr.ts`.
   - A reasoning model whose controls the catalog omits, or lists with values the schema doesn't know, keeps its authored controls. A new one raises `MissingReasoningOptionsError` instead of getting `[]`.
 - **Schema 2.** Mirrored provider and lab files are read through `readProviderModel` / `readLabModel`, so the adapter works on v1 fields and the runner writes schema 2.
 - **Comments.** Headers are authoritative but merged: an existing entry keeps every comment line the adapter doesn't write (the maintainers' notes) where it is, and only the reasoning block is regenerated. A new entry gets the block plus the bring-your-own-key prices note.
+- **Status.** `tempr.status` (`deprecated`, `beta` or `alpha`) is written to `status` whatever the mirrored file carries, so a deprecation the catalog states is never dropped.
 - **Safeguards.**
   - Catalog ids are checked before they name a file read or written.
   - A catalog of fewer than 100 models is treated as an outage and the sync stops.

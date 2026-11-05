@@ -323,3 +323,16 @@ test("writes the catalog's deprecated status even when the mirrored entry has no
 
   expect((built?.model as { status?: string }).status).toBe("deprecated");
 });
+
+test("trims an embedding's audio prices without touching the mirrored entry", () => {
+  const mirrored = { ...counterpart, cost: { input: 0.15, output: 0, input_audio: 6.5 } };
+  const model = catalogModel({}, { type: "embedding" });
+
+  const built = buildTemprModel(model, files({
+    "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": mirrored,
+    "models/alibaba/qwen3.7-max.toml": { modalities: { input: ["text", "audio"], output: ["text"] } },
+  }));
+
+  expect((built?.model as { cost: unknown }).cost).toEqual({ input: 0.15, output: 0 });
+  expect(mirrored.cost).toEqual({ input: 0.15, output: 0, input_audio: 6.5 });
+});
