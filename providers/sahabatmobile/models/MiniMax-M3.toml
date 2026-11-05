@@ -1,0 +1,17 @@
+# SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/dashboard/packages (accessed 2026-11-05)
+# Toggle: thinking.type = "enabled"|"disabled" (default disabled; proxied to upstream MiniMax API)
+# https://platform.minimax.io/docs/guides/text-generation
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.30
+
+[cost.text.output]
+price = 1.20

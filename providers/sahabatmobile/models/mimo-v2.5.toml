@@ -1,0 +1,17 @@
+# SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/dashboard/packages (accessed 2026-11-05)
+# Toggle: thinking.type = "enabled"|"disabled" (default enabled; proxied to upstream Xiaomi API)
+# https://platform.xiaomimimo.com/static/docs/api/chat/openai-api.md
+schema = 2
+base_model = "xiaomi/mimo-v2.5"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.45
