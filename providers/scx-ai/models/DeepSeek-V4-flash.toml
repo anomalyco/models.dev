@@ -1,4 +1,5 @@
 # Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
@@ -10,8 +11,8 @@ structured_output = false
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.3433
-cache = { read = 0.0374 }
+price = 0.138
+cache = { read = 0.028 }
 
 [cost.text.output]
-price = 1.3731
+price = 0.275
