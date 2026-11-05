@@ -12,13 +12,12 @@ schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
 
 [limit]
 context = 1_048_576
-output = 909_000
 
 [api.chat-completions]
 

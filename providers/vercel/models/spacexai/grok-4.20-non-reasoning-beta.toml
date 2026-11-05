@@ -13,7 +13,7 @@ input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 cache = { implicit = true }
 

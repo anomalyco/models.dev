@@ -446,7 +446,11 @@ price = 2
 
       const providersV2 = await generateV2(path.join(root, "providers"));
       expect(providersV2.provider?.models.model?.api).toEqual({
-        responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+        responses: {
+          base_url: "https://example.com/v1",
+          sdk: { aisdk: "@ai-sdk/openai" },
+          capabilities: { tools: { updates: false } },
+        },
       });
       expect(JSON.stringify(providersV2)).not.toContain("legacy_shape");
       expect(JSON.stringify(providersV2)).not.toContain("legacy_interleaved");
@@ -505,7 +509,7 @@ price = 25
 });
 
 describe("model API tables", () => {
-  const model = (api = "") => `schema = 2
+  const model = (api = "", tools = "{ supported = false }") => `schema = 2
 name = "Lab Model"
 description = "Example model for catalog generation and inheritance tests"
 open_weights = true
@@ -516,7 +520,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = ${tools}
 reasoning = { supported = false }
 
 [limit]
@@ -688,7 +692,7 @@ opencodeai = "@opencode/ai/providers/cohere"
         model(`
 [api.chat-completions]
 
-[api.completions]
+[api.fim]
 sdk = { aisdk = "@ai-sdk/openai-compatible" }
 
 [api.messages]
@@ -706,7 +710,7 @@ sdk = { aisdk = "none" }
       const inherited = { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" };
       expect(models?.tables?.api).toEqual({
         "chat-completions": { base_url: "https://example.com/v1", sdk: inherited },
-        completions: { base_url: "https://example.com/v1", sdk: inherited },
+        fim: { base_url: "https://example.com/v1", sdk: inherited },
         messages: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/anthropic" } },
         responses: {
           base_url: "https://example.com/v1",
@@ -743,6 +747,54 @@ path = "/decisions"
           sdk: { aisdk: "@ai-sdk/openai-compatible" },
         },
       });
+    });
+  });
+
+  test("tool details are published on each API, a table's values replacing the model's", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider());
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(
+          `
+[api.chat-completions]
+
+[api.responses]
+capabilities = { tools = { choice = ["auto"], search = true, updates = true } }
+
+[api.messages]
+capabilities = { tools = { strict = false } }
+`,
+          '{ supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }',
+        ),
+      );
+      await write(root, "providers/gateway/models/plain.toml", model("", "{ supported = true, search = true }"));
+
+      const models = (await generateV2(path.join(root, "providers"))).gateway?.models;
+      expect(models?.model?.capabilities.tools).toEqual({ supported: true });
+      const tools = Object.fromEntries(
+        Object.entries(models?.model?.api ?? {}).map(([protocol, entry]) => [protocol, entry.capabilities?.tools]),
+      );
+      expect(tools).toEqual({
+        "chat-completions": { strict: true, choice: ["auto", "none", "required", "tool"], updates: false },
+        responses: { strict: true, choice: ["auto"], search: true, updates: true },
+        messages: { strict: false, choice: ["auto", "none", "required", "tool"], updates: false },
+      });
+      // Without tables, the provider's default API takes the model's values.
+      expect(models?.plain?.api["chat-completions"]?.capabilities).toEqual({ tools: { search: true, updates: false } });
+    });
+  });
+
+  test("rejects API tool details on a model without tools", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider());
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(`\n[api.responses]\ncapabilities = { tools = { search = true } }\n`),
+      );
+      await expect(generateV2(path.join(root, "providers"))).rejects.toThrow("doesn't support tools");
     });
   });
 

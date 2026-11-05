@@ -18,7 +18,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"], budget = { min = 1, max = 262_144 } }
 cache = { implicit = true, explicit = true }
 

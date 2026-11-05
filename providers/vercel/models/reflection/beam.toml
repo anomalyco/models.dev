@@ -1,16 +1,18 @@
 # Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
+# Interleaved: on Chat Completions every prior assistant message must include reasoning_content; without it the request fails with 400 "Missing required parameter: 'messages[N].reasoning_content'" (live probe through the gateway, 2026-11-02). Same as the first-party Reflection entry.
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 name = "Beam 1.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }
 
 [api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

@@ -1,6 +1,7 @@
 # Status: retired on Model Studio international. Live 2026-10-19 the API answers 404 and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
 # Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits covers the Qwen-VL, QVQ and Qwen2.5-VL/Qwen3-VL series; video lists extensions, registered MIME types used).
 # max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 name = "Qwen-VL Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -16,7 +17,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = false }
 temperature = true
 

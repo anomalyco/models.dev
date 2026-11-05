@@ -7,6 +7,7 @@ description = "MiniMax multimodal coding model for long-context reasoning and ag
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [limit]
 context = 1_048_576
@@ -25,5 +26,23 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 price = 0.15
 cache = { read = 0.015 }
 
+[[cost.text.input.overrides]]
+when = { any = [{ utc_hours = { gte = "15:00" } }, { utc_hours = { lt = "01:00" } }] }
+price = 0.075
+cache = { read = 0.0075 }
+
+[[cost.text.input.overrides]]
+when = { all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "15:00" } }] }
+price = 0.15
+cache = { read = 0.015 }
+
 [cost.text.output]
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { any = [{ utc_hours = { gte = "15:00" } }, { utc_hours = { lt = "01:00" } }] }
+price = 0.3
+
+[[cost.text.output.overrides]]
+when = { all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "15:00" } }] }
 price = 0.6

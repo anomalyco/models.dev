@@ -19,7 +19,7 @@ schema = 2
 base_model = "cohere/command-a-translate-08-2025"
 
 [capabilities]
-tools = { supported = true, strict = false, choice = ["auto", "none", "required"] }
+tools = { supported = true, choice = ["auto", "none", "required"] }
 structured_output = true
 cache = { implicit = true }
 

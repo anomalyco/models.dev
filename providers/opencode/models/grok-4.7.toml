@@ -2,11 +2,12 @@
 # Effort: reasoning.effort = low|medium|high|xhigh
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xai/models/grok-4.7.toml (Zen passes requests through).
+# Tools follow xAI's API: https://docs.x.ai/developers/tools/function-calling#tool-choice; Zen passes requests through.
 schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 cache = { implicit = true }

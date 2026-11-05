@@ -4,12 +4,14 @@
 # Pricing and endpoint (Gemini generateContent): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-4-argon.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes (auto/any/none, allowed function names); Go passes requests through.
 schema = 2
 base_model = "google/gemini-4-argon"
 name = "Gemini 4 Argon Contributor"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 

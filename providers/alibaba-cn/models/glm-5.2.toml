@@ -5,6 +5,7 @@
 # Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
 # Toggle: enable_thinking true|false (default on); Effort: reasoning_effort = high|max (default high; low/medium map to high, xhigh to max) per the Chat API reference.
 # Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
@@ -13,7 +14,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["high", "max"] }
 structured_output = true
 stream_usage = true

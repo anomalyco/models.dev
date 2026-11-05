@@ -1,0 +1,36 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
+name = "Ternary Bonsai 2 9B"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+open_weights = true
+release_date = "2026-10-16"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.13

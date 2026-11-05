@@ -11,7 +11,7 @@ name = "Glm 5.3"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true

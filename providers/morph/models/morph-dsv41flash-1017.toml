@@ -1,0 +1,33 @@
+# Source: https://docs.morphllm.com/llms.txt and https://www.morphllm.com/api/models/json?prices=list (direct API list rates; accessed 2026-10-25).
+# Live probes (api.morphllm.com, 2026-10-25): chat, tool_choice required, json_schema and /v1/messages return 200; reasoning arrives in
+# reasoning_content (Chat Completions) and thinking blocks (Messages).
+# Output limit: max_tokens shares the 1,048,576-token window; 1,048,577 returns 400 "Max tokens must not exceed 1048576".
+# Off: reasoning_effort = none returned 0 reasoning tokens on every probe; thinking.type = disabled is ignored, so there is no toggle.
+# Shares morph-dsv41flash's serving pool and list prices.
+# Effort: reasoning_effort = none|low|high|xhigh|max, as Morph documents for DeepSeek V4.1 Flash (medium maps to high, minimal to low; an
+#   integer 1-100 is also accepted): https://docs.morphllm.com/sdk/components/fast-models#deepseek-v41-flash. Live, xhigh reasoned longer than
+#   high (9,461/8,359 vs 5,952/6,219 tokens). JSON mode disables reasoning.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 0.8

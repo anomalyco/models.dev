@@ -4,11 +4,12 @@
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-4-argon.toml (Zen passes requests through).
 #   system_updates left out: undocumented. Google's generateContent spec lists only "user" and "model" for Content.role (https://ai.google.dev/api/caching#Content). A contents entry with role system kept the cache and was followed on Zen (live 2026-10-23), but server behavior alone is not a documented mechanism.
+# Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes (auto/any/none, allowed function names); Zen passes requests through.
 schema = 2
 base_model = "google/gemini-4-argon"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }

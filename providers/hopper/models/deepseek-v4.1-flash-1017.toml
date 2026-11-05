@@ -1,0 +1,72 @@
+# Sources (accessed 2026-10-28; Messages verified live 2026-10-29):
+# - Endpoint, model ID, authentication, and thinking toggle:
+#   https://withhopper.com/agents/deepseek-v4.1-flash-1017.md
+# - Prices (USD per million tokens):
+#   https://withhopper.com/mcp, tools/call list_models (no authentication required).
+# - Served limits: live POST https://api.withhopper.com/v1/chat/completions and
+#   https://api.withhopper.com/v1/messages on 2026-10-29, using this exact model ID,
+#   thinking off, and "Reply with exactly READY." (10 input tokens). On both APIs:
+#   max_tokens=1048576 -> HTTP 200 (3 output tokens); 1048577 -> HTTP 400,
+#   "max_tokens=1048577 cannot be greater than max_model_len=1048576".
+#   GET https://api.withhopper.com/v1/models also reports max_model_len=1048576.
+#   Output records the accepted request cap and shares context with the prompt;
+#   no separate lower output cap observed. Full-window generation was not tested.
+# - JPEG/PNG/GIF/WebP verified live 2026-10-29: each red-image data URL returned
+#   "Red" with 184 image tokens. Inherit the lab's matching image MIME types.
+# Chat Completions toggle: chat_template_kwargs.thinking = true|false.
+# Chat Completions effort: reasoning_effort = low|high|max (native DeepSeek levels, accepted live;
+# unknown levels return HTTP 400; relative effort was not benchmarked).
+# Live checks: thinking on/off, streaming reasoning_content and usage, a tool/result
+# round trip, and an implicit cache hit. The API also accepts max_completion_tokens.
+# The live limit checks above supersede the 2026-10-28 rejection of max_tokens=393217.
+# Same-endpoint high-effort comparison on 2026-10-29: standard returned 162 chars
+# in both message.reasoning and reasoning_content, plus reasoning_details;
+# abliterated returned 133 chars only in message.reasoning. Keep this verified alias.
+# Structured output: response_format.type = json_schema with strict = true enforced
+# required keys and enum values against two contradictory prompts (live 2026-10-28).
+# Chat Completions system updates: a late system message changed ORIGINAL -> UPDATED
+# while retaining 13824 cached tokens (control 13920 prompt tokens -> update 13941),
+# reproduced with two independent prefixes. No system-message relocation observed.
+# Messages: https://api.withhopper.com/v1/messages, inheriting the provider base URL.
+# Official Anthropic SDK 1.3.0: x-api-key auth, chat/streaming, thinking blocks,
+# tool/result round trips (including thinking history), strict output_config.format
+# JSON-schema output, and final input/output/cache usage passed live 2026-10-29.
+# Main endpoint: 15/16 initial assertions passed; a trivial tool request omitted
+# thinking. An arithmetic-before-tool follow-up verified thinking/history replay.
+# Messages toggle: thinking.type = enabled|disabled; adaptive is also accepted.
+# Messages effort: output_config.effort = low|high|max, accepted live with reasoning;
+# invalid effort returns HTTP 400. Relative effort was not benchmarked.
+# Repeated prefix: 3848 input tokens -> 8 uncached + 3840 cache_read_input_tokens.
+# budget_tokens was accepted but hard reasoning-budget enforcement is unverified;
+# no budget capability is advertised. Thinking signatures are empty.
+# Messages does not expose top_k (the adapter drops it; invalid values are accepted),
+# so do not inherit the lab's top_k support across both APIs.
+# Keep Chat Completions first for v1 compatibility; system_updates is chat-only.
+# Hopper hosts the model itself; the reasoning controls describe this host's API.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+stream_usage = true
+structured_output = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 0.85
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

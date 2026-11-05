@@ -7,7 +7,7 @@ base_model = "google/gemini-3.7-flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }

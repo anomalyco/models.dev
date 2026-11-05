@@ -11,7 +11,7 @@ base_model = "tencent/hy3"
 base_model_omit = ["limit.input"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 cache = { implicit = true }
 

@@ -7,7 +7,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
 structured_output = true
 

@@ -8,12 +8,15 @@
 # Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html).
 # Per-turn effort is a system-message output_config on InvokeModel only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html); a Converse Message has no such field, so effort_updates = false.
 # tools.updates: left out. This file only lists Converse, which has no field for tool_addition/tool_removal; AWS documents mid-conversation tool changes only for the Anthropic Messages body (InvokeModel, Mantle Messages). The 2026-10-19 Converse test only worked by passing the blocks and beta through additionalModelRequestFields, which isn't a documented Converse feature.
+# tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-5.html
+# tools.choice: Converse toolChoice auto/any/tool, no none (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ToolChoice.html); Claude takes any and tool: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html
+# tools.search: left out. Bedrock offers the tool search tool through InvokeModel only, not Converse: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool
 schema = 2
 base_model = "anthropic/claude-opus-5"
 name = "Claude Opus 5 (AU)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "required", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

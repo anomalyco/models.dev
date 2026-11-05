@@ -89,6 +89,7 @@ skip = [
   "Route: provider-native passthrough /openai (Responses body forwarded unchanged): https://developers.cloudflare.com/ai-gateway/usage/providers/openai/",
   "v2 capabilities and cache follow OpenAI's own API (providers/openai). Live via the gateway 2026-10-19: mid-conversation developer messages and additional_tools keep the cached prefix (gpt-4.1-nano, gpt-5-nano, gpt-5.4-nano), configuration_update is accepted on gpt-6-luna and gpt-5.6-luna, json_schema output is enforced.",
   "Per-API flags: additional_tools and configuration_update exist only on the Responses API (the /openai passthrough), so tools.updates and effort_updates sit on [api.responses] for models that also list the REST chat-completions route. Developer messages are documented on both OpenAI APIs, so system_updates stays top-level.",
+  "Tools: each API takes providers/openai's tool fields for the same protocol, so tools.search sits on [api.responses]. The REST chat-completions route forwards custom tools (text, lark and regex) and strict function tools and rejects tool_search, like OpenAI's own Chat Completions (openai/gpt-5.4-nano, live 2026-10-26).",
 ]
 "anthropic/" = [
   "Route: provider-native passthrough /anthropic (Messages body and anthropic-beta headers forwarded): https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/",
@@ -156,10 +157,10 @@ skip = [
   "Live 2026-10-23: typesafe/jev (answers as jev-1.13.0) and typesafe/jev-1.14.0 answered on /ai/run; the path form /ai/run/typesafe/jev returns 400 \"No route for that URI\" (code 7000).",
 ]
 
-# Cloudflare exposes TypeSafe's evaluation-only Jev alias over /ai/run. The shared
-# metadata marks its structured output support and lack of tool calling.
+# Cloudflare's typesafe/jev answers as jev-1.13.0 (the response examples on
+# https://developers.cloudflare.com/ai/models/typesafe/jev/), so it is Jev 1.13, not the moving alias.
 [models."typesafe/jev"]
-base_model = "typesafe/jev-latest"
+base_model = "typesafe/jev-1.13.0"
 
 # Muse Spark 1.x / Muse Wonder: the catalog schema's reasoning.effort enum (none..max) is the generic
 # Responses schema, not what the model accepts. Cloudflare's own validation error lists the values:
@@ -312,6 +313,9 @@ structured_output = true
 structured_output = true
 
 [models."openai/gpt-6.1-sol"]
+structured_output = true
+
+[models."openai/gpt-6.1-terra"]
 structured_output = true
 
 [models."openai/gpt-5"]
@@ -508,8 +512,6 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] 
 # Live CF chat-completions (2026-10-16, unified billing): reasoning_effort accepts
 # low|medium|high|xhigh|max and rejects none|minimal (code 7003); reasoning is always on and
 # returned in reasoning_content, and omitting it from a prior assistant turn is rejected.
-# The catalog row has provider_details = null, so cost is curated: free, matching the
-# catalog's display pricing (input/cached input/output $0 per 1M) on 2026-10-16.
 [models."reflection-ai/beam-1.0-501b-a23b"]
 base_model = "reflection/beam-1.0-501b-a23b"
 note = [
@@ -519,7 +521,6 @@ note = [
 ]
 interleaved = { field = "reasoning_content" }
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-cost = { input = 0, output = 0, cache_read = 0 }
 
 [models."thinkingmachines/inkling"]
 note = [

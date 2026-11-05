@@ -9,7 +9,7 @@ base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 name = "Nemotron 3 Nano Omni (free)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = false
 

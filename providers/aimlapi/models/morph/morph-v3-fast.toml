@@ -5,6 +5,11 @@ name = "V3 Fast"
 [capabilities]
 structured_output = false
 
+# Pinned to the limits this entry had before the lab file moved to Morph's 262,144 / 131,072; AI/ML API does not publish its own.
+[limit]
+context = 81_920
+output = 38_000
+
 [cost.text.input]
 price = 0.8464
 

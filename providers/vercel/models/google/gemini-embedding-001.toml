@@ -4,8 +4,8 @@ schema = 2
 base_model = "google/gemini-embedding-001"
 
 [api.embeddings]
-base_url = "https://ai-gateway.vercel.sh/v4/ai"
-sdk = { opencodeai = "none" }
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.15

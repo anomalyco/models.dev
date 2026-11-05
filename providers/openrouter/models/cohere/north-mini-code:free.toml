@@ -9,7 +9,7 @@ name = "North Mini Code (free)"
 description = "Cohere coding model for practical software engineering and agentic edits"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = false
 

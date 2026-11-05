@@ -11,10 +11,13 @@ input = ["image/jpeg", "image/png", "image/gif", "image/webp", "text", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 system_updates = true
 cache = { implicit = { min_tokens = 1_024 } }
+
+[limit]
+output = 942_818
 
 [api.chat-completions]
 
@@ -27,7 +30,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 0.1
-cache = { read = 0.025 }
+cache = { read = 0.03 }
 
 [cost.text.output]
 price = 0.4

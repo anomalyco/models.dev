@@ -8,6 +8,7 @@
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-max.toml (Zen passes requests through).
 #   system_updates left out although the lab claims it: Zen Chat Completions rejects a later system message (live 2026-10-21 and 2026-10-23: 400 "System message must be at the beginning").
+# Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Zen passes requests through.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
@@ -16,7 +17,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 1_024 } }
 cache = { implicit = true }
 

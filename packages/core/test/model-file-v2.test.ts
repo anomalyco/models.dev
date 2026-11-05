@@ -379,6 +379,25 @@ test("a type v1 doesn't know needs v2_only, and v1 leaves it out", () => {
   expect(modelV2ToV1({ schema: 2, v2_only: true, ...model }).type).toBeUndefined();
 });
 
+test("an audio model stays in v1 untyped, without v2_only", () => {
+  const model = {
+    schema: 2,
+    id: "music",
+    type: "audio",
+    name: "Music",
+    description: "Generates music",
+    open_weights: false,
+    release_date: "2026-10-14",
+    modalities: { input: ["text"], output: ["text", "audio/mp3"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false } },
+    limit: { context: 65_536, output: 65_536 },
+  };
+  const v1 = modelV2ToV1(model);
+  expect(v1.type).toBeUndefined();
+  expect("type" in v1).toBe(false);
+  expect(modelV2ToV1({ ...model, v2_only: true }).type).toBeUndefined();
+});
+
 test("patchModelV2 keeps a type that v1 can't carry", () => {
   const doc = { schema: 2, v2_only: true, type: "extraction", name: "Extractor", cost: { text: { input: { price: 1 } } } };
   const next = patchModelV2(doc, { name: "Extractor", cost: { input: 1 } }, { name: "Extractor", cost: { input: 2 } });

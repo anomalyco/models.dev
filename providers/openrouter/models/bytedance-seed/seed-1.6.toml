@@ -11,7 +11,7 @@ description = "Multimodal reasoning model for visual analysis, planning, and too
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 

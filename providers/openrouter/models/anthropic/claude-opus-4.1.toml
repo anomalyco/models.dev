@@ -8,7 +8,7 @@ schema = 2
 base_model = "anthropic/claude-opus-4-1"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = false
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 1_024 } }

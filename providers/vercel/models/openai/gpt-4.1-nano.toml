@@ -8,7 +8,7 @@ input = ["text", "image", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 system_updates = true
 store = true

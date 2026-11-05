@@ -10,7 +10,7 @@ base_model = "google/gemini-2.5-flash-lite"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }

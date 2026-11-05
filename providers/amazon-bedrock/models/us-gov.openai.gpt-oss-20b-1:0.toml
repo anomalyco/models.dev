@@ -3,12 +3,13 @@
 # Geo inference uses source-region pricing with no routing surcharge: https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html
 # Effort: additionalModelRequestFields.reasoning_effort = low|medium|high; https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-openai.html
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-oss-20b.html
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b (GovCloud)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 

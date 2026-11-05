@@ -1,11 +1,13 @@
 # Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-4.7.toml (Zen passes requests through).
+# Tools follow Z.ai's API: https://docs.z.ai/api-reference/llm/chat-completion (tool_choice: only auto); Zen passes requests through.
 schema = 2
 base_model = "zhipuai/glm-4.7"
 description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, toggle = true }
 system_updates = true
 

@@ -3,13 +3,14 @@
 # Effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh, matching the US profile. Structured outputs are supported on bedrock-runtime for 4.7 (inherited true).
 # v2 cache: implicit per the model card; cache reads verified live on Converse 2026-10-19 (explicit cachePoint unsupported on Converse).
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-7.html
 schema = 2
 base_model = "xai/grok-4.7"
 name = "Grok 4.7 (Global)"
 last_updated = "2026-09-28"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 cache = { implicit = true }

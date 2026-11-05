@@ -3,10 +3,14 @@ schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
+
+[limit]
+context = 1_048_600
+output = 1_048_600
 
 [api.chat-completions]
 
@@ -19,8 +23,8 @@ base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
-price = 0.66
-cache = { read = 0.022 }
+price = 1.32
+cache = { read = 0.132 }
 
 [cost.text.output]
-price = 1.98
+price = 3.96

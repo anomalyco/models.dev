@@ -10,7 +10,7 @@ name = "Nemotron 3.5 Super VL (free)"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 

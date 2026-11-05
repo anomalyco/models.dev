@@ -1,11 +1,13 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Effort: reasoning_effort = low|medium|high|xhigh|max (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/reflection/models/beam-1.0-501b-a23b.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow providers/reflection/models/Beam-1.0-501B-A23B.toml; Go passes requests through.
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
 name = "Beam Free"
 
 [capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 

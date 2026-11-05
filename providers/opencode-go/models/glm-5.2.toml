@@ -1,10 +1,12 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Effort: reasoning_effort = high|max (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.2.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow Z.ai's API: https://docs.z.ai/api-reference/llm/chat-completion (tool_choice: only auto); Go passes requests through.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, effort = ["high", "max"] }
 structured_output = true
 system_updates = true

@@ -1,8 +1,12 @@
 # Mid-conversation flags left out: anthropic has no provider file for anthropic/claude-3-5-haiku-20241022 to follow (Zen passes requests through).
+# Tools follow Anthropic's Messages API: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (strict), https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility (search), https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use (choice); Zen passes requests through.
 schema = 2
 base_model = "anthropic/claude-3-5-haiku-20241022"
 description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"

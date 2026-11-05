@@ -6,7 +6,7 @@ base_model = "openai/gpt-oss-safeguard-20b"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 

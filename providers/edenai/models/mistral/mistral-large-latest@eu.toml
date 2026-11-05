@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/mistral-large-latest"
+name = "Mistral Large (latest) (EU)"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 2.2
+cache = { read = 0.22 }
+
+[cost.text.output]
+price = 6.6

@@ -3,11 +3,12 @@
 # Not in the open-model implicit caching list: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models#context-caching
 # Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
 # system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+# tools.choice: auto only; gpt-oss on Vertex doesn't support tool_choice "required" or named tool calling: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/capabilities/function-calling#model-specific-guidance
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = false

@@ -90,7 +90,7 @@ describe("v2 catalog generation", () => {
       output: ["text"],
     });
     expect(translated.capabilities).toEqual({
-      tools: { supported: true, updates: false },
+      tools: { supported: true },
       reasoning: {
         supported: true,
         toggle: true,
@@ -101,6 +101,13 @@ describe("v2 catalog generation", () => {
       temperature: true,
       system_updates: false,
       effort_updates: false,
+    });
+    expect(translated.api).toEqual({
+      responses: {
+        base_url: "https://api.openai.com/v1",
+        sdk: { aisdk: "@ai-sdk/openai" },
+        capabilities: { tools: { updates: false } },
+      },
     });
     expect(translated.cost).toEqual({
       text: {
@@ -138,7 +145,7 @@ describe("v2 catalog generation", () => {
         base_url: "https://opencode.ai/inference/systemone/v1",
         sdk: {
           aisdk: "@ai-sdk/typesafe-ai",
-          opencodeai: "@opencode/ai/providers/opencode",
+          opencodeai: "@opencode/ai/providers/opencode/decisions",
         },
       },
     });
@@ -147,7 +154,7 @@ describe("v2 catalog generation", () => {
       api: {
         systemone: {
           base_url: "https://openrouter.ai/api/v1",
-          sdk: { opencodeai: "@opencode/ai/providers/openrouter" },
+          sdk: { opencodeai: "@opencode/ai/providers/openrouter/decisions" },
         },
       },
     });

@@ -1,10 +1,12 @@
 # Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Effort: reasoning.effort = low|medium|high|xhigh (not verified on Go: no Go subscription key was available)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xai/models/grok-4.7.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow xAI's API: https://docs.x.ai/developers/tools/function-calling#tool-choice; Go passes requests through.
 schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 system_updates = true

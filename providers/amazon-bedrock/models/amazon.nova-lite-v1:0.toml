@@ -6,6 +6,7 @@
 # Modalities: Converse images png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); video MP4, MOV, MKV, WebM, FLV, MPEG/MPG, WMV, 3GP (https://docs.aws.amazon.com/nova/latest/userguide/modalities-video.html);
 # documents PDF, CSV, TXT, HTML, Markdown (https://docs.aws.amazon.com/nova/latest/userguide/modalities-document.html). DOC/DOCX/XLS/XLSX are also supported but have no v1 modality, so they are left out.
 # v2 cache: implicit for all text prompts; explicit cachePoint in system/messages, 5m TTL, 4 checkpoints per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html.
+# tools.choice: Converse toolChoice auto/any/tool (no none on Converse): https://docs.aws.amazon.com/nova/latest/userguide/tool-choice.html
 schema = 2
 base_model = "amazon/nova-lite"
 
@@ -14,7 +15,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "required", "tool"] }
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 
 [cost.text.input]

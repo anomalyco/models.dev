@@ -6,7 +6,7 @@ base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 
 [limit]

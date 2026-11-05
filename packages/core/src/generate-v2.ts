@@ -18,6 +18,7 @@ import {
   OpencodePackageV2,
   type ApiEntryV2,
   type AuthoredApiEntryV2,
+  type AuthoredToolsSupportV2,
   type ApiProtocolV2,
   type ApiV2,
   type CompatibilityV2,
@@ -106,10 +107,11 @@ async function loadProviderV2(
     const rawModel = { ...(await readToml(modelPath)), id: modelID };
     const v1Model = modelV2ToV1(rawModel, { modelPath }, v1Provider.npm);
     const resolved = resolveV1Model(v1Model, baseModels, modelPath);
-    const model = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
     const tables = (rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined;
+    const { model, tools } = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
     if (tables !== undefined) model.api = toModelApis(tables, v1Provider, opencodeai);
     else if (opencodeai !== undefined && opencodeai !== "none") model.api = withOpencodePackage(model.api, opencodeai);
+    model.api = withApiTools(model.api, tools, tables, { modelPath });
     models[modelID] = model;
   }
 
@@ -144,13 +146,14 @@ async function loadLabsV2(modelsDir: string) {
 }
 
 // v1 can't carry some v2 data (MIME modalities, cache TTLs, service tiers…), so it
-// is read straight from the v2 lab and provider files.
+// is read straight from the v2 lab and provider files. The tool details come back
+// separately: they are published on each API, not on the model.
 function withV2Fields(
   model: ModelV2,
   rawModel: Record<string, unknown>,
   labsV2: Record<string, LabModelV2>,
   modelPath: string,
-): ModelV2 {
+) {
   const lab =
     typeof rawModel.base_model === "string" ? labsV2[rawModel.base_model] : undefined;
   const authored = parseWithCause(AuthoredModelV2, withoutSchema(rawModel), { modelPath, toml: rawModel });
@@ -159,15 +162,16 @@ function withV2Fields(
     rawModel.modalities === undefined &&
     !omit.some((item) => String(item).startsWith("modalities"));
 
+  const capabilities = mergeDeep(
+    mergeDeep(lab?.capabilities ?? {}, model.capabilities),
+    authored.capabilities ?? {},
+  ) as Omit<ModelV2["capabilities"], "tools"> & { tools: AuthoredToolsSupportV2 };
   const result: ModelV2 = {
     ...model,
     modalities:
       authored.modalities ??
       (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities),
-    capabilities: mergeDeep(
-      mergeDeep(lab?.capabilities ?? {}, model.capabilities),
-      authored.capabilities ?? {},
-    ) as ModelV2["capabilities"],
+    capabilities: { ...capabilities, tools: { supported: capabilities.tools.supported } },
   };
   // v1 leaves v2-only types out, so they come from the files.
   const type = authored.type ?? (omit.includes("type") ? undefined : lab?.type);
@@ -177,7 +181,7 @@ function withV2Fields(
   if (authored.cost !== undefined) result.cost = authored.cost;
   if (authored.experimental !== undefined) result.experimental = authored.experimental;
   if (authored.metadata !== undefined) result.metadata = authored.metadata;
-  return result;
+  return { model: result, tools: capabilities.tools };
 }
 
 function withoutSchema(raw: Record<string, unknown>) {
@@ -218,8 +222,8 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
       output: outputModalities,
     },
     capabilities: {
+      tools: { supported: model.tool_call },
       // An update flag that isn't authored means the host doesn't support it.
-      tools: model.tool_call ? { supported: true, updates: false } : { supported: false },
       system_updates: false,
       effort_updates: false,
       reasoning: toReasoningSupportV2(model),
@@ -391,16 +395,20 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "@ai-sdk/togetherai": "https://api.together.xyz/v1",
   "@ai-sdk/cohere": "https://api.cohere.com/v2",
   "@ai-sdk/perplexity": "https://api.perplexity.ai",
-  "@ai-sdk/gateway": "https://ai-gateway.vercel.sh/v1/ai",
+  // OpenAI-compatible base for chat-completions, responses and messages; `/v1/ai` is the AI SDK's own protocol.
+  "@ai-sdk/gateway": "https://ai-gateway.vercel.sh/v1",
   "@ai-sdk/vercel": "https://api.v0.dev/v1",
   "venice-ai-sdk-provider": "https://api.venice.ai/api/v1",
+  // The catalog-aware REST API (`/ai/v1/chat/completions`, `/responses`, `/messages`); provider
+  // passthroughs such as `/openai` are authored on their models.
   "ai-gateway-provider":
-    "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}",
+    "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
   "@aihubmix/ai-sdk-provider": "https://aihubmix.com/v1",
-  "@saladtechnologies-oss/ai-sdk-provider":
-    "https://api.salad.com/api/public",
+  // The AI Gateway, not SaladCloud's management API. https://docs.salad.com/ai-gateway/tutorials/getting-started
+  "@saladtechnologies-oss/ai-sdk-provider": "https://ai.salad.cloud/v1",
   "watsonx-ai-provider": "https://${WATSONX_REGION}.ml.cloud.ibm.com",
-  "@qvac/ai-sdk-provider": "http://localhost:8080/v1",
+  // `qvac serve --openai` listens on port 11434 by default (@qvac/cli 0.16.0 README).
+  "@qvac/ai-sdk-provider": "http://127.0.0.1:11434/v1",
   "@jerome-benoit/sap-ai-provider-v2": "${AICORE_DEPLOYMENT_URL}",
   "gitlab-ai-provider": "https://gitlab.com/api/v4",
 };
@@ -422,6 +430,7 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
     base_url,
     sdk: { aisdk: npm },
     ...(compatibility !== undefined ? { compatibility } : {}),
+    ...(model.tool_call ? { capabilities: { tools: { updates: false } } } : {}),
   };
 
   return { [protocol]: entry } as ApiV2;
@@ -477,6 +486,7 @@ function toModelApis(
       const aisdk = table.sdk?.aisdk ?? provider.npm;
       const npm = aisdk === "none" ? provider.npm : aisdk;
       const base_url = (table.base_url ?? provider.api ?? DEFAULT_NPM_BASE_URLS[npm] ?? "").replace(/\/+$/, "");
+      const { tools: _tools, ...capabilities } = table.capabilities ?? {};
       const sdk = {
         aisdk,
         opencodeai: table.sdk?.opencodeai ?? (aisdk === provider.npm ? opencodeai : undefined),
@@ -487,9 +497,39 @@ function toModelApis(
         // `"none"`: no package supports this API, so the key is left out.
         sdk: Object.fromEntries(Object.entries(sdk).filter(([, value]) => value !== undefined && value !== "none")),
         ...(table.compatibility !== undefined ? { compatibility: table.compatibility } : {}),
-        ...(table.capabilities !== undefined ? { capabilities: table.capabilities } : {}),
+        // Tool details are resolved for every API by `withApiTools`.
+        ...(Object.keys(capabilities).length > 0 ? { capabilities } : {}),
       };
       return [protocol, entry];
+    }),
+  ) as ApiV2;
+}
+
+const TOOL_DETAILS = ["strict", "choice", "search", "freeform"] as const;
+
+// Each API of a model that supports tools gets its own tool details: the
+// model's top-level values, replaced field by field by its table's.
+function withApiTools(
+  api: ApiV2,
+  tools: AuthoredToolsSupportV2,
+  tables: Record<string, AuthoredApiEntryV2> | undefined,
+  cause: Record<string, unknown>,
+): ApiV2 {
+  return Object.fromEntries(
+    Object.entries(api).map(([protocol, entry]) => {
+      const override = tables?.[protocol]?.capabilities?.tools;
+      if (!tools.supported) {
+        if (override === undefined) return [protocol, entry];
+        throw new Error(`[api.${protocol}] sets tool capabilities, but the model doesn't support tools`, { cause });
+      }
+      const merged = { ...tools, ...override };
+      const details = Object.fromEntries(
+        TOOL_DETAILS.filter((key) => merged[key] !== undefined).map((key) => [key, merged[key]]),
+      );
+      return [
+        protocol,
+        { ...entry, capabilities: { ...entry.capabilities, tools: { ...details, updates: merged.updates ?? false } } },
+      ];
     }),
   ) as ApiV2;
 }

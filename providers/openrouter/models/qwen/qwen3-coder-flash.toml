@@ -5,7 +5,7 @@ schema = 2
 base_model = "alibaba/qwen3-coder-flash"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = false
 
 [api.chat-completions]

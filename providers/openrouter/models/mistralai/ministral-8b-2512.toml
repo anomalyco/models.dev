@@ -6,7 +6,7 @@ base_model = "mistral/ministral-8b-2512"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 
 [api.chat-completions]

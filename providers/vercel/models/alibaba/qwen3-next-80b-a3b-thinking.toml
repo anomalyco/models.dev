@@ -4,7 +4,7 @@ base_model = "alibaba/qwen3-next-80b-a3b-thinking"
 name = "Qwen3 Next 80B A3B Thinking"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, budget = { min = 1 } }
 
 [limit]

@@ -5,7 +5,7 @@ base_model = "nace-ai/drex-v2.0"
 structured_output = true
 
 [api.systemone]
-sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
 
 [cost.text.input]
 price = 0.06

@@ -12,7 +12,7 @@ input = ["text", "image/jpeg", "image/png", "video/mp4"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 

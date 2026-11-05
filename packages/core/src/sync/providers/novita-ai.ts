@@ -17,6 +17,9 @@ const IGNORED_IDS = new Set([
   "deepseek/deepseek-v4.1-flash-dst",
   "deepseek/deepseek-v4.1-flash-p",
   "moonshotai/kimi-k3-p",
+  // Undocumented routing aliases (2026-10-28): $0 placeholder prices and no published target models.
+  "nvrouter/auto",
+  "nvrouter/fusion",
   "zai-org/glm-4.7-h",
   "zai-org/glm-5.3-p",
 ]);

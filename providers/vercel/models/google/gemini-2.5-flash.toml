@@ -18,7 +18,7 @@ input = ["text", "image", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = {} }
 structured_output = true
 cache = { implicit = { min_tokens = 2_048 } }

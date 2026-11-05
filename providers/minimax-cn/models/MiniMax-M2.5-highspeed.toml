@@ -6,6 +6,8 @@
 # CNY per 1M tokens: 4.2 in / 16.8 out / 0.21 cache read / 2.625 cache write, from the CN price list
 #   before M2.x was removed (https://web.archive.org/web/20260911060320/https://platform.minimaxi.com/docs/guides/pricing-paygo).
 #   CNY→USD rate: 6.693661, 2026-10-19, source: https://open.er-api.com/v6/latest/USD
+# Tools: tool_choice supports only auto (ToolChoice schema); no strict tool mode documented
+#   (https://platform.minimaxi.com/docs/api-reference/text-chat-anthropic).
 schema = 2
 name = "MiniMax-M2.5-highspeed"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
@@ -19,7 +21,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true }
 temperature = true
 top_p = true

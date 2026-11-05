@@ -11,7 +11,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
 temperature = true
@@ -29,8 +29,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.6712
+price = 0.6
 cache = { read = 0.15 }
 
 [cost.text.output]
-price = 3.35
+price = 3.5

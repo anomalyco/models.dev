@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel, withSystemOneImageInput } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel, withSystemOneMediaInput } from "./openrouter.js";
 
 const API_ENDPOINT = "https://nano-gpt.com/api/v1/models?detailed=true";
 
@@ -84,7 +84,7 @@ export const nanoGpt = {
       id,
       model: translated,
       v2Set: {
-        api: (api: unknown) => withSystemOneImageInput(api, images),
+        api: (api: unknown) => withSystemOneMediaInput(api, images),
       },
     };
   },

@@ -6,12 +6,13 @@
 # v2 cache: implicit for all text prompts; explicit cachePoint in system/messages, 5m TTL, 4 checkpoints per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; its "1K" minimum is approximate (981-token write live), so no min_tokens.
 # Structured outputs: Converse rejects outputConfig ("This model doesn't support the outputConfig field", live 2026-10-19).
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# tools.choice: Converse toolChoice auto/any/tool (no none on Converse): https://docs.aws.amazon.com/nova/latest/userguide/tool-choice.html
 schema = 2
 base_model = "amazon/nova-micro"
 name = "Nova Micro (EU)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "required", "tool"] }
 structured_output = false
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 

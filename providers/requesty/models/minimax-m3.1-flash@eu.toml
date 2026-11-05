@@ -1,0 +1,18 @@
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+name = "MiniMax-M3.1-Flash (EU)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 1.2

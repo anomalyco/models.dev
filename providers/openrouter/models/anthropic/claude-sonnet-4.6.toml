@@ -6,7 +6,7 @@ schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 1_024 } }
