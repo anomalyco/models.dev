@@ -1,0 +1,7 @@
+# Pricing: realtime tariff from GET https://api.doubleword.ai/v1/models?include=pricing (2026-11-05),
+# matching https://docs.doubleword.ai/inference-api/models/qwen-qwen3-embedding-8b. Async/batch tiers are cheaper and not modelled here.
+schema = 2
+base_model = "alibaba/qwen3-embedding-8b"
+
+[cost.text.input]
+price = 0.04

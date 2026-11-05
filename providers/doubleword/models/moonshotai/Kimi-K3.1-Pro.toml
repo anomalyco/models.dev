@@ -1,0 +1,25 @@
+# Pricing: realtime tariff from GET https://api.doubleword.ai/v1/models?include=pricing (2026-11-05),
+# matching https://docs.doubleword.ai/inference-api/models/moonshotai-kimi-k3-1-pro. Async/batch tiers are cheaper and not modelled here.
+# Reasoning: reasoning_effort only; the gateway rejects `thinking` and `chat_template_kwargs.enable_thinking`
+# with a 400 ("use 'reasoning_effort'"), so there is no toggle. It validates none|minimal|low|medium|high|xhigh|max
+# and maps them to the model's native levels; effort lists the native/peer set. Live probe 2026-11-05:
+# see PR body for per-level reasoning-token counts.
+# Input: image input verified live 2026-11-05 (PNG); video/audio/PDF not served on this endpoint, so dropped.
+# Tools and json_schema structured output probed live 2026-11-12.
+# Cache: not listed; repeat requests on 2026-11-12 returned 0 cached tokens.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 10

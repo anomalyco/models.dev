@@ -1,0 +1,19 @@
+# Pricing: realtime tariff from GET https://api.doubleword.ai/v1/models?include=pricing (2026-11-05),
+# matching https://docs.doubleword.ai/inference-api/models/qwen-qwen3-vl-235b-a22b-instruct-fp8. Async/batch tiers are cheaper and not modelled here.
+# Tools and json_schema structured output probed live 2026-11-12.
+# Cache hits verified live 2026-11-12.
+# Cache: implicit by default, explicit via cache_control (ttl 5m|1h, min prefix 1024 tokens):
+# https://docs.doubleword.ai/inference-api/prompt-caching
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 0.21
+cache = { read = 0.1155, write = { "5m" = 0.2625, "1h" = 0.42 } }
+
+[cost.text.output]
+price = 1.9
