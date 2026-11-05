@@ -1,9 +1,10 @@
-# Sources (accessed 2026-10-25): https://api.decisionmodels.io/v1/models (live registry, "attribution" field), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
+# Sources (accessed 2026-11-05): https://api.decisionmodels.io/v1/models (live registry, "attribution" field), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
 # Prices are USD per 1M input tokens on the Peer-to-Peer (S1-Region: global) tier; output tokens are free. The EU tier (S1-Region: eu) costs slightly more; not modelled.
 # s1-pro is a rotating alias of Decision Models. It moves to a new version with 7 days notice on https://decisionmodels.io/changelog; base_model is updated with each move.
-#   Today it answers with s1-pro-3 = vLLM-SR d3 (FP8), text only, up to 3 questions per request, 8,192 input tokens per question.
+#   Since 2026-11-05 the EU tier targets s1-pro-5 = mammoth-1 (FP8), with s1-pro-3 = vLLM-SR d3 as fallback.
+#   The Peer-to-Peer tier still targets s1-pro-3. Both tiers: text only, up to 3 questions, 8,192 input tokens per question.
 schema = 2
-base_model = "vllm-sr/d3"
+base_model = "baseten/mammoth-1"
 name = "s1-pro"
 description = "Larger open decision model for text decisions: up to three typed noul, choice or score questions per request, answered with probabilities"
 
