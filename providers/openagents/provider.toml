@@ -1,0 +1,11 @@
+﻿# OpenAgents demo model gateway: Anthropic-Messages-compatible aggregator.
+# POST /v1/messages works with both x-api-key and Authorization: Bearer; POST /v1/chat/completions
+# (OpenAI format, reasoning_content) also answers. Inventory with prices: GET /v1/models
+# (23 chat models, as of 2026-11-05).
+# https://openagents.org
+name = "OpenAgents"
+env = ["OPENAGENTS_API_KEY"]
+npm = "@ai-sdk/anthropic"
+opencodeai = "@opencode/ai/providers/anthropic-compatible"
+api = "https://api-gateway.openagents.org/v1"
+doc = "https://openagents.org"

@@ -1,0 +1,15 @@
+﻿# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Reasoning on this host: the gateway returns thinking blocks unconditionally and ignores the
+# Anthropic thinking.type toggle (checked live 2026-11-05), so no caller control is published.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2.784
+
+[cost.text.output]
+price = 5.568
+
