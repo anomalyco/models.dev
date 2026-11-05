@@ -311,6 +311,12 @@ export function buildTemprModel(model: TemprModel, read: (relative: string) => T
     }
   }
 
+  // The catalog's lifecycle status (models.dev's, as Tempr serves the model) is written whatever
+  // the mirrored file carries, so a deprecation the catalog states is never dropped.
+  if (model.tempr.status === "deprecated" || model.tempr.status === "beta" || model.tempr.status === "alpha") {
+    result.status = model.tempr.status;
+  }
+
   const temprPrice = temprCost(model);
   if (temprPrice !== undefined) {
     // Tempr's catalog prices input, output and the cache; what it doesn't publish (a separate

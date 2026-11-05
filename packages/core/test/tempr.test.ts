@@ -317,3 +317,9 @@ test("does not restate what the lab already says, even for an override-only prov
     cost: { input: 2.5, output: 7.5 },
   } as never);
 });
+
+test("writes the catalog's deprecated status even when the mirrored entry has none", () => {
+  const built = buildTemprModel(catalogModel({}, { status: "deprecated" }), files({ "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": counterpart }));
+
+  expect((built?.model as { status?: string }).status).toBe("deprecated");
+});
