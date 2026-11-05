@@ -1,4 +1,5 @@
-# Catalog: https://console.tenstorrent.com/v1/openrouter/models (2026-11-04): text input only, 262K context, 131K max output, fp8,
+# Catalog: https://console.tenstorrent.com/v1/openrouter/models (2026-11-04): exactly 262,000 context (max_context_length)
+#   and 131,000 max output (max_tokens.max), not rounded display values, fp8,
 # USD per token prompt 0.000000075, cached_prompt 0.000000015, completion 0.00000025.
 # Effort: reasoning_effort = low|high|max (default max), matching the lab and relay peers. Live probe 2026-11-04 on
 #   /v1/chat/completions, temperature 0, 3 runs each (identical): low -> 31 completion tokens, high -> 58, max and the
@@ -7,11 +8,14 @@
 # Reasoning is returned in both message.reasoning and message.reasoning_content.
 # Tools: tool_choice auto, required, named and none all behave as expected (live 2026-11-04).
 # structured_output: response_format json_schema (strict, enum field) is enforced (live 2026-11-04).
+# Modalities: the feed lists text only, but live 2026-11-05 the host reads images and video. PNG and JPEG image_url
+#   parts and MP4 and QuickTime video_url parts all returned the right color. PDF file parts return 400 ("only text,
+#   image_url and video_url content parts are supported"), so PDF is dropped, as on Kilo and OpenCode Go. MKV wasn't tested.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
 output = ["text"]
 
 [capabilities]

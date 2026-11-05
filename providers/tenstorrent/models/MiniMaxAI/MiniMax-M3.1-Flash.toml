@@ -6,6 +6,10 @@
 #   level is accepted (51-52 reasoning tokens), and levels weren't separable on the test prompt. The no-effort
 #   baseline matches max. chat_template_kwargs.enable_thinking = false and thinking.type = disabled also turn
 #   thinking off but duplicate effort=none.
+# Modalities: text only, verified live 2026-11-05. Image and video parts return 200 but are dropped: prompt tokens
+#   are 213 with a PNG, JPEG, WebP, GIF, BMP, TIFF or HEIC image and 212 with none, every image is described as
+#   "White" whatever its real color, and for MP4 and QuickTime video the model says nothing was attached. A PDF file
+#   part returns 400.
 # Reasoning is returned in message.reasoning_content.
 # Tools: tool_choice auto and none work; required and named return 400 ("this worker does not implement:
 #   guided_decoding"), as does response_format json_schema, so structured_output is not set (live 2026-11-04).
