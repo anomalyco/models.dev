@@ -1,15 +1,26 @@
-# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
-# `reasoning_effort` through to the upstream model unchanged.
+# Pricing and host limits: https://quicksilverpro.io/models/gemini-3.8-flash/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/google/models/gemini-3.8-flash.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Effort: reasoning_effort = low|medium|high
-# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
-# Pricing: https://quicksilverpro.io/models/gemini-3.8-flash/ and https://quicksilverpro.io/pricing.json
+schema = 2
 base_model = "google/gemini-3.8-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 0.6375
-output = 3.1875
-cache_read = 0.06375
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.6375
+cache = { read = 0.06375 }
+
+[cost.text.output]
+price = 3.1875

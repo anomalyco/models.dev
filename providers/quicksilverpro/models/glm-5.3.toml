@@ -1,19 +1,25 @@
-# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
-# `reasoning_effort` through to the upstream model unchanged.
-# GLM-5.3 always reasons (thinking cannot be disabled); no toggle.
+# Pricing and host limits: https://quicksilverpro.io/models/glm-5.3/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/zhipuai/models/glm-5.3.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Effort: reasoning_effort = low|high|max
-# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
-# Pricing: https://quicksilverpro.io/models/glm-5.3/ and https://quicksilverpro.io/pricing.json
+schema = 2
 base_model = "zhipuai/glm-5.3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
 
-[interleaved]
-field = "reasoning_content"
+[limit]
+context = 1048576
 
-[cost]
-input = 1.12
-output = 3.52
-cache_read = 0.208
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.2
