@@ -1,0 +1,28 @@
+# CARouter routes this model to Augure (Canada; Canadian-owned, off by default).
+# Price: Free plan CAD 2.3 in / 4.6 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Effort: Augure sends reasoning_effort to the model unchanged, so the lab's native low|medium|xhigh
+#   apply (https://augureai.ca/docs/models). Text only on Augure (image parts are refused).
+schema = 2
+base_model = "alibaba/qwen3.8-flash-next"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.6474
+
+[cost.text.output]
+price = 3.2949

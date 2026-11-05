@@ -1,0 +1,23 @@
+# CARouter: OpenAI-compatible gateway in front of inference providers, with routing that
+# puts Canadian-owned, Canadian-hosted compute first (CARouter Cloud in Ottawa, Augure).
+# Foreign providers (Scaleway, OVHcloud) are listed but off until the account turns them on.
+# Gateway is in alpha (per llms.txt); billing and metering are live.
+# Sources (accessed 2026-11-04):
+# - https://carouter.ai/llms-full.txt (endpoints, auth, routing, plans, every model and price)
+# - https://carouter.ai/api/public/models (machine catalog; Free plan, CAD)
+# - https://carouter.ai/docs
+# Auth: Authorization: Bearer car_... ; env name from CARouter's own examples
+#   (https://carouter.ai/blog/kev-available-on-carouter.md).
+# Endpoints: /v1/chat/completions, /v1/completions, /v1/responses, /v1/embeddings,
+#   /v1/rerank, /v1/ner, /v1/moderations, /v1/decisions (System One body), GET /v1/models.
+# Request bodies pass through to the upstream provider unchanged (temperature, top_p,
+#   max_tokens, tools, response_format, stop, reasoning_effort).
+# Prices: Free plan list price (provider base rate + 15% markup), billed in CAD, converted
+#   to USD at the Bank of Canada rate of 1.3961 CAD per USD (2026-11-04), 4 decimals.
+#   Pro (8%) and Scale (4%) plans pay less.
+name = "CARouter"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["CAROUTER_API_KEY"]
+api = "https://carouter.ai/v1"
+doc = "https://carouter.ai/docs"

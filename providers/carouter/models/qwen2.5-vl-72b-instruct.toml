@@ -1,0 +1,22 @@
+# CARouter routes this model to OVHcloud AI Endpoints (Gravelines, FR; foreign-owned, off by default).
+# Price: Free plan CAD 1.6837 in / 1.6837 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# No tool use on this route (CARouter catalog; same as
+#   providers/ovhcloud/models/qwen2.5-vl-72b-instruct.toml). Context 32,768.
+schema = 2
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
+name = "Qwen2.5 VL 72B Instruct"
+
+[capabilities]
+tools = { supported = false }
+structured_output = true
+
+[limit]
+context = 32_768
+
+[cost.text.input]
+price = 1.206
+
+[cost.text.output]
+price = 1.206
