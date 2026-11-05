@@ -6,12 +6,15 @@
 # - Pricing table, Kimi K3.1 Pro row: https://docs.fireworks.ai/serverless/pricing (accessed 2026-11-05) —
 #   Standard $2.00 / $0.20 / $10.00, Priority $3.00 / $0.30 / $15.00 per 1M input/cached input/output.
 # - Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-11-05) documents the
-#   Kimi K3 tiers — `reasoning_effort` low selects Low, medium is promoted to high, high selects High, xhigh is
-#   promoted to max, max selects Max — with the vendor default Max when omitted.
+#   Fireworks Kimi K3 tiers: low selects Low, medium is promoted to high, high selects High, xhigh is promoted
+#   to max, and max selects Max. Fireworks also documents thinking.type and thinking.budget_tokens >= 1024.
+#   Same-host Kimi K3 and Ember-1 record toggle, medium and budget on this API. K3.1 Pro has not been probed
+#   separately; these Fireworks controls follow the same-host Kimi surface, not the native K3.1 Pro API.
 # - Native Kimi K3.1 Pro always thinks, with effort low|high|max and default max
-#   (https://platform.kimi.ai/docs/api/chat, providers/moonshotai/models/kimi-k3.1-pro.toml). Those are the three
-#   real tiers, so they are the recorded controls; medium and xhigh are host-side aliases, and no toggle or
-#   reasoning-token budget is recorded for this model.
+#   (https://platform.kimi.ai/docs/api/chat, providers/moonshotai/models/kimi-k3.1-pro.toml).
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = none also disables on Fireworks Kimi K3)
+# Effort: reasoning_effort = low|medium|high|max (medium promotes to high; xhigh promotes to max)
+# Budget: thinking.budget_tokens >= 1024 (reasoning-token cap)
 # - Image types: Fireworks documents .png, .jpg/.jpeg, .gif, .bmp, .tiff and .ppm
 #   (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations); webp also decoded in
 #   live tests on this host (2026-10-21), heic failed. The lab file's video inputs are not offered for this model
@@ -33,7 +36,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+reasoning = { supported = true, toggle = true, default = { type = "effort", value = "max" }, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
 cache = { implicit = true }
 
