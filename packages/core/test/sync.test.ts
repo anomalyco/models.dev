@@ -109,6 +109,8 @@ import { generate } from "../src/generate.js";
 import { buildWandbModel, mergeReasoningOptions, type WandbModel } from "../src/sync/providers/wandb.js";
 import { buildChutesModel } from "../src/sync/providers/chutes.js";
 import { buildXAIModel, xai } from "../src/sync/providers/xai.js";
+import { buildPhalaModel, phala, PhalaResponse, type PhalaModel } from "../src/sync/providers/phala.js";
+import { AuthoredModelV2 } from "../src/schema-v2.js";
 
 function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel {
   return {
@@ -8843,4 +8845,106 @@ test("OpenRouter media models resolve to their lab files", () => {
   expect(resolveMediaBaseModel("cohere/embed-5-pro")).toBe("cohere/embed-v5.0-pro");
   expect(resolveMediaBaseModel("cohere/rerank-5-fast")).toBe("cohere/rerank-v5.0-fast");
   expect(resolveMediaBaseModel("cohere/rerank-5-pro")).toBe("cohere/rerank-v5.0-pro");
+});
+
+function phalaModel(overrides: Partial<PhalaModel> = {}): PhalaModel {
+  return {
+    id: "z-ai/glm-5.2",
+    context_length: 1_048_576,
+    output_modalities: ["text"],
+    pricing: { prompt: "0.00000126", completion: "0.000003", input_cache_read: "0.00000022" },
+    supported_features: [],
+    ...overrides,
+  };
+}
+
+test("syncs Phala per-token USD prices and context while preserving authored fields", () => {
+  const model = buildPhalaModel(phalaModel({ max_output_length: 1_048_576 }), {
+    ...existingTinfoilGLM,
+    base_model_omit: ["limit.input"],
+  });
+  expect(model).toMatchObject({
+    base_model: "zhipuai/glm-5.2",
+    base_model_omit: ["limit.input"],
+    reasoning_options: existingTinfoilGLM.reasoning_options,
+    cost: { input: 1.26, output: 3, cache_read: 0.22 },
+    limit: { context: 1_048_576 },
+  });
+  // Output remains inherited from the lab instead of copying max_output_length.
+  expect(model.limit).not.toHaveProperty("output");
+});
+
+test("rounds Phala price conversion and removes an unpublished cache rate", () => {
+  const model = buildPhalaModel(phalaModel({
+    pricing: { prompt: "0.000000042", completion: "0" },
+  }), {
+    ...existingTinfoilGLM,
+    cost: { input: 1, output: 2, cache_read: 0.22, cache_write: 0.5 },
+  });
+  expect(model.cost).toEqual({ input: 0.042, output: 0, cache_write: 0.5 });
+});
+
+test.each(["", " ", "-1", "NaN", "Infinity", "invalid"])("rejects invalid Phala token price %j", (prompt) => {
+  expect(() => phala.parseModels({
+    data: [phalaModel({ pricing: { prompt, completion: "0" } })],
+  })).toThrow();
+});
+
+test("rejects empty and duplicate Phala inventories before they can remove models", () => {
+  expect(() => PhalaResponse.parse({ data: [] })).toThrow();
+  expect(() => phala.parseModels({ data: [phalaModel(), phalaModel()] })).toThrow("Duplicate Phala model IDs");
+});
+
+test("Phala price updates keep v2 controls, output arrays and the Kev System One entry", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-phala-"));
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const modelsDir = path.join(root, "providers", "phala", "models");
+  const authored = AuthoredModelV2.omit({ id: true }).passthrough();
+  const entries = [
+    { id: "qwen/qwen3.8-27b", base: "alibaba/qwen3.8-27b", context: 1_000_000 },
+    { id: "moonshotai/kimi-k2.6", base: "moonshotai/kimi-k2.6", context: 262_144 },
+    { id: "jaredpalmer/kev-4b", base: "jaredpalmer/kev-4b", context: 8_192 },
+  ];
+  try {
+    await mkdir(modelsDir, { recursive: true });
+    await copyFile(path.join(repo, "providers/phala/provider.toml"), path.join(modelsDir, "../provider.toml"));
+    for (const { id, base } of entries) {
+      const metadata = path.join(root, "models", `${base}.toml`);
+      const model = path.join(modelsDir, `${id}.toml`);
+      await mkdir(path.dirname(metadata), { recursive: true });
+      await mkdir(path.dirname(model), { recursive: true });
+      await copyFile(path.join(repo, "models", `${base}.toml`), metadata);
+      await copyFile(path.join(repo, "providers/phala/models", `${id}.toml`), model);
+    }
+    const provider = {
+      ...phala,
+      modelsDir,
+      async fetchModels() {
+        return { data: [
+          ...entries.map(({ id, context }) => phalaModel({
+            id,
+            context_length: context,
+            output_modalities: id === "jaredpalmer/kev-4b" ? ["decisions"] : ["text"],
+            pricing: { prompt: "0.00001", completion: "0" },
+          })),
+          phalaModel({ id: "new-chat-model" }),
+        ] };
+      },
+    };
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 0, updated: 3, deleted: 0 });
+    expect(result.notices.join(" ")).toContain("new-chat-model");
+    for (const { id } of entries) {
+      const source = await Bun.file(path.join(repo, "providers/phala/models", `${id}.toml`)).text();
+      const written = await Bun.file(path.join(modelsDir, `${id}.toml`)).text();
+      const { cost: _beforeCost, ...before } = authored.parse(Bun.TOML.parse(source));
+      const { cost, ...after } = authored.parse(Bun.TOML.parse(written));
+      expect(after).toEqual(before);
+      expect(cost).toEqual({ text: { input: { price: 10 }, output: { price: 0 } } });
+      expect(written.startsWith(source.slice(0, source.indexOf("schema = 2")))).toBe(true);
+    }
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 3 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
