@@ -1,14 +1,25 @@
-# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
-# `reasoning_effort` through to the upstream model unchanged.
+# Pricing and host limits: https://quicksilverpro.io/models/claude-opus-5/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/anthropic/models/claude-opus-5.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Effort: reasoning_effort = low|medium|high|xhigh|max
-# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
-# Pricing: https://quicksilverpro.io/models/claude-opus-5/ and https://quicksilverpro.io/pricing.json
+schema = 2
 base_model = "anthropic/claude-opus-5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
-[cost]
-input = 4
-output = 20
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125, write = { 5m = 1.5625, 1h = 2.5 } }
+
+[cost.text.output]
+price = 6.25

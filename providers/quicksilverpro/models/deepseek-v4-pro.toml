@@ -1,22 +1,27 @@
-# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
-# `reasoning_effort` through to the upstream model unchanged.
+# Pricing and host limits: https://quicksilverpro.io/models/deepseek-v4-pro/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/deepseek/models/deepseek-v4-pro.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning_effort = low|high|max
-# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
-# Pricing: https://quicksilverpro.io/models/deepseek-v4-pro/ and https://quicksilverpro.io/pricing.json
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[limit]
+context = 1048576
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.7
-output = 2.1
-cache_read = 0.1
+[cost.text.input]
+price = 0.7
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.1

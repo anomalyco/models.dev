@@ -1,14 +1,26 @@
-# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
-# `reasoning_effort` through to the upstream model unchanged.
+# Pricing and host limits: https://quicksilverpro.io/models/minimax-m3/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/minimax/models/MiniMax-M3.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Toggle: reasoning.enabled = true|false
-# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
-# Pricing: https://quicksilverpro.io/models/minimax-m3/ and https://quicksilverpro.io/pricing.json
+schema = 2
 base_model = "minimax/MiniMax-M3"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 0.24
-output = 0.96
-cache_read = 0.048
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.048 }
+
+[cost.text.output]
+price = 0.96
