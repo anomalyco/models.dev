@@ -3,14 +3,15 @@
 # Toggle: native POST /api/chat and /api/generate use `think = true|false`.
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
 # API-verified context: https://ollama.com/api/show (deepseek4.context_length = 1048576)
-# Output: Ollama has no separate output cap; deepseek4 peers on this host
-# (deepseek-v4-flash:0731, deepseek-v4-pro) serve output = 1048576.
+# Output: live probe 2026-11-04 — max_tokens 65537 rejected with "max_tokens (65537) exceeds model's maximum output
+#   tokens (65536)" (ref 7f2a8c60-3e1d-49c5-a7da-037aeae7e393), max_tokens 65536 accepted; see #12589 and
+#   https://github.com/ollama/ollama/issues/19517.
 # Effort: OpenAI POST /v1/chat/completions accepts top-level `reasoning_effort` or `reasoning.effort`; named levels are applied exactly.
 # Reasoning: POST https://ollama.com/api/show reports thinking.values [false, low, high, max] (2026-10-21); Ollama applies a model's named levels exactly and `false` disables thinking (https://docs.ollama.com/api/openai-compatibility).
 # Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
 # Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
 #   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
-# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test them in the 2026-10-21 checks. Ollama Cloud serves Chat Completions,
 #   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
 # max_tokens_field: Ollama's OpenAI-compatible Chat API lists max_tokens and not max_completion_tokens (https://docs.ollama.com/api/openai-compatibility, accessed 2026-10-24); live probe 2026-10-24 ignored max_completion_tokens
 schema = 2
@@ -23,7 +24,7 @@ cache = { implicit = true }
 
 [limit]
 context = 1_048_576
-output = 1_048_576
+output = 65_536
 
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }
