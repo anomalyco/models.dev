@@ -1,0 +1,14 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "cohere/command-r7b-arabic-02-2025"
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.0375
+
+[cost.text.output]
+price = 0.15
