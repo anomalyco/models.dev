@@ -1,13 +1,21 @@
-# Sources (accessed 2026-10-08):
-# - Pricing: https://apimodels.app/models/gemini-3.1-pro-preview ($0.882 input / $5.294 output per 1M tokens)
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/gemini-3.1-pro-preview and https://apimodels.app/pricing
+#   ($0.882 input / $5.294 output / $0.20 cache read per 1M tokens)
 # - Model ID: https://api.apimodels.app/v1/models ("gemini-3.1-pro-preview")
+# Served on the Gemini generateContent API (https://api.apimodels.app/v1beta); generationConfig.thinkingConfig is passed through unchanged.
+schema = 2
 base_model = "google/gemini-3.1-pro-preview"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.882
-output = 5.294
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://api.apimodels.app/v1beta"
+[api.generate-content]
+base_url = "https://api.apimodels.app/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 0.882
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 5.294
