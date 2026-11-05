@@ -1,6 +1,6 @@
-# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/.
+# Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/.
 # Modalities, capabilities, limits and effort levels supplied by the operator on 2026-11-03.
-# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (each accepted on Zen, live 2026-11-03).
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh|max (each accepted on Zen Responses, live 2026-11-05).
 schema = 2
 name = "Crouton Alpha Free"
 description = "Stealth reasoning model with text, image, video and PDF input and tool use"
@@ -21,8 +21,9 @@ temperature = true
 context = 1_048_576
 output = 270_000
 
-[api.chat-completions]
+[api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 
 [cost.text.input]
 price = 0
