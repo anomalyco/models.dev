@@ -5,16 +5,16 @@ name = "Ling 3.0 Tiny"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "ling"
 open_weights = true
-release_date = "2026-11-05"
+release_date = "2026-08-06"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
-structured_output = false
+structured_output = true
 temperature = true
 
 [limit]
