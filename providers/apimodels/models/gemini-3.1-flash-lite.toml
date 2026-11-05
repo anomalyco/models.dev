@@ -1,13 +1,21 @@
-# Sources (accessed 2026-10-08):
-# - Pricing: https://apimodels.app/models/gemini-3.1-flash-lite ($0.375 input / $2.25 output per 1M tokens)
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/gemini-3.1-flash-lite and https://apimodels.app/pricing
+#   ($0.375 input / $2.25 output / $0.025 cache read per 1M tokens)
 # - Model ID: https://api.apimodels.app/v1/models ("gemini-3.1-flash-lite")
+# Served on the Gemini generateContent API (https://api.apimodels.app/v1beta); generationConfig.thinkingConfig is passed through unchanged.
+schema = 2
 base_model = "google/gemini-3.1-flash-lite"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
-[cost]
-input = 0.375
-output = 2.25
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://api.apimodels.app/v1beta"
+[api.generate-content]
+base_url = "https://api.apimodels.app/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 2.25
