@@ -1,7 +1,6 @@
-﻿# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
-# Reasoning on this host: the gateway returns thinking blocks unconditionally and ignores the
-# Anthropic thinking.type toggle (checked live 2026-11-05), so no caller control is published.
+# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
 # Media on this host: verified live with PNG images (2026-11-05); video is not expressible on the Anthropic Messages surface, so it is omitted.
+# Always-on on this gateway: Messages `thinking.type=disabled` still returned thinking in the live probe (2026-11-05); no caller control is advertised.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 

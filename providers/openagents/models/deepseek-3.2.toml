@@ -1,11 +1,10 @@
-﻿# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
-# Reasoning on this host: the gateway returns thinking blocks unconditionally and ignores the
-# Anthropic thinking.type toggle (checked live 2026-11-05), so no caller control is published.
+# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Reasoning toggle: Messages `thinking.type = enabled|disabled` (verified live on OpenAgents, 2026-11-05).
 schema = 2
 base_model = "deepseek/deepseek-v3.2"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0.85
