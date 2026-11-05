@@ -14,6 +14,11 @@ cache = { implicit = true }
 context = 131_072
 output = 32_768
 
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
+
 [cost.text.input]
 price = 0.5
 cache = { read = 0.05 }
