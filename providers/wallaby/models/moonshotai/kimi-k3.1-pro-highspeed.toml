@@ -3,9 +3,10 @@
 # priced the same, fresh input and output cost 2x.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Highspeed"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
