@@ -304,3 +304,16 @@ test("routes a new embedding entry to /v1/embeddings", () => {
   expect(translated?.v2Set).toEqual({ "api.embeddings": { sdk: { opencodeai: "none" } } });
   expect(translated?.header).toContain("# API: POST https://api.temprhq.io/v1/embeddings");
 });
+
+test("does not restate what the lab already says, even for an override-only provider entry", () => {
+  const built = buildTemprModel(catalogModel(), files({
+    "providers/deepinfra/models/Qwen/Qwen3.7-Max.toml": { ...counterpart, tool_call: true, structured_output: true },
+    "models/alibaba/qwen3.7-max.toml": { tool_call: true, limit: { context: 262_144, output: 32_768 } },
+  }));
+
+  expect(built?.model).toEqual({
+    base_model: "alibaba/qwen3.7-max",
+    structured_output: true,
+    cost: { input: 2.5, output: 7.5 },
+  } as never);
+});

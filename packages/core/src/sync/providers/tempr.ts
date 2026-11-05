@@ -255,9 +255,15 @@ export function overridesOf(entry: Toml, lab: Toml): Toml {
  */
 function resolveBase(model: TemprModel, counterpart: Toml, read: (relative: string) => Toml | undefined) {
   if (typeof counterpart.base_model === "string") {
-    const overrides = { ...counterpart };
+    // The schema 2 translation can report a field the lab already states (tool_call from a
+    // provider's detailed tools capability), so even an override-only entry is diffed against the
+    // lab file before anything is restated.
+    const base = counterpart.base_model;
+    const lab = isSafeModelPath(base) ? read(`models/${base}.toml`) : undefined;
+    const { base_model: _, ...rest } = counterpart;
+    const overrides: Toml = { base_model: base, ...(lab === undefined ? rest : overridesOf(rest, lab)) };
     for (const field of CATALOGUE_FIELDS) delete overrides[field];
-    return { base: counterpart.base_model, overrides };
+    return { base, overrides };
   }
   const { provider, model: id, canonical_model_id } = model.tempr.models_dev;
   // models.dev's own resolvers: the lab prefix of a provider id (zai/ is the zhipuai/ lab), and a
