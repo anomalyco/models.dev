@@ -1,0 +1,19 @@
+# Effort: reasoning_effort = minimal|low|medium|high
+# Cost, limits, input parts and reasoning levels: PopNow model table https://popnow.ai/docs/chat and the model schema from GET https://api.popnow.ai/api/v1/models/{model} (retrieved 2026-11-05).
+schema = 2
+base_model = "google/gemini-3.7-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.675
+cache = { read = 0.0675 }
+
+[cost.text.output]
+price = 3.375
