@@ -1,0 +1,19 @@
+# Pricing: https://wallabytoken.com/pricing.json (accessed 2026-11-05), USD per 1M tokens.
+# Wallaby retail is 10% below the official list; effort values are the three the
+# gateway accepts for this model (low/high/max, default max).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 9.0
