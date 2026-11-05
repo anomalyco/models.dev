@@ -1,0 +1,35 @@
+# Catalog: https://console.tenstorrent.com/v1/openrouter/models (2026-11-04): text input only, 262K context, 131K max output, fp8,
+# USD per token prompt 0.000000075, cached_prompt 0.000000015, completion 0.00000025.
+# Effort: reasoning_effort = low|high|max (default max), matching the lab and relay peers. Live probe 2026-11-04 on
+#   /v1/chat/completions, temperature 0, 3 runs each (identical): low -> 31 completion tokens, high -> 58, max and the
+#   no-effort baseline -> 133. Other values (none, minimal, medium, xhigh) render the max default.
+#   Thinking can't be turned off: chat_template_kwargs.enable_thinking and thinking.type are ignored.
+# Reasoning is returned in both message.reasoning and message.reasoning_content.
+# Tools: tool_choice auto, required, named and none all behave as expected (live 2026-11-04).
+# structured_output: response_format json_schema (strict, enum field) is enforced (live 2026-11-04).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 262_000
+output = 131_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25
