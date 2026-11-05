@@ -463,7 +463,10 @@ export const tempr = {
       // Embeddings are served on /v1/embeddings, not chat completions: the route the existing
       // Tempr embedding entries carry, written for a new one too.
       const existing = existingHeader(model.id);
-      const lines = existing === undefined ? [...generated, EMBEDDINGS_API_NOTE] : generated;
+      // A new one is laid out as the existing ones are: gateway line, prices note, API line.
+      const lines = existing === undefined
+        ? ["# Tempr Gateway: https://temprhq.io/docs/gateway-reference", ...generated, EMBEDDINGS_API_NOTE]
+        : generated;
       return {
         id: model.id,
         model: built.model,
