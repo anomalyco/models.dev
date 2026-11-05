@@ -1,0 +1,56 @@
+# Sources (accessed 2026-11-05):
+# - Model id, name, 1,048,576 context, 65,536 max output, text-only input and USD prices per
+#   1M tokens (input 0.35, cached input 0.10, output 1.25): https://api.unrestricted.sh/v1/models
+# - Prices, context, text input, reasoning in reasoning_content, tool calls, served by an
+#   outside inference partner: https://unrestricted.sh/models/deepseek-v4.1-flash-uncensored
+#   and https://unrestricted.sh/pricing
+# - Output limit (65,536 in the provider config): https://unrestricted.sh/guides/opencode
+# - Base URL, endpoints, reasoning_effort = none turns reasoning off: https://unrestricted.sh/reference
+# - Cache: cached-input prices apply when a tool resends the start of a conversation
+#   (https://unrestricted.sh/pricing); no cache markers are documented, so caching is implicit.
+# - release_date: the day the current model went live on this API.
+# The API names the model DeepSeek V4.1 Flash 1017 Uncensored; its id has no 1017.
+# Standalone entry, not base_model: an uncensored DeepSeek V4.1 Flash 1017 served text-only,
+# like qwen3.8-27b-uncensored here and
+# providers/nearai/models/deepseek-ai/DeepSeek-V4.1-Flash-1017-abliterated.toml.
+# Effort: reasoning_effort = none|low|high|max (none = thinking off, so no separate toggle).
+# none is documented in /reference; low|high|max are DeepSeek V4.1's native levels, as on
+# providers/hopper/models/deepseek-v4.1-flash-1017-abliterated.toml. Same set as the
+# uncensored peers providers/venice/models/deepseek-v4-1-flash-1017-uncensored.toml and
+# providers/nano-gpt/models/deepseek/deepseek-v4.1-flash-1017-uncensored.toml.
+# Not stated by Unrestricted, so copied from peers: structured_output = true from
+# providers/hopper/models/deepseek-v4.1-flash-1017-abliterated.toml (strict json_schema
+# verified there; venice agrees, nano-gpt lists false); temperature = true and family from
+# models/deepseek/deepseek-v4.1-flash-1017.toml, which Hopper inherits; open_weights = true
+# as on the venice and nano-gpt uncensored entries and the lab file.
+schema = 2
+name = "DeepSeek V4.1 Flash 1017 Uncensored"
+description = "Uncensored DeepSeek V4.1 Flash 1017 for coding and security research"
+family = "deepseek-flash"
+open_weights = true
+release_date = "2026-10-29"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+temperature = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.25

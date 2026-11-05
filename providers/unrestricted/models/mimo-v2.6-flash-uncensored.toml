@@ -1,0 +1,53 @@
+# Sources (accessed 2026-11-05):
+# - Model id, name, 1,048,576 context, 65,536 max output, text-only input and USD prices per
+#   1M tokens (input 0.40, cached input 0.29, output 1.30): https://api.unrestricted.sh/v1/models
+# - Prices, context, text input, reasoning in reasoning_content, tool calls, served by an
+#   outside inference partner: https://unrestricted.sh/models/mimo-v2.6-flash-uncensored
+#   and https://unrestricted.sh/pricing
+# - Output limit (65,536 in the provider config): https://unrestricted.sh/guides/opencode
+# - Base URL, endpoints, reasoning_effort = none turns reasoning off: https://unrestricted.sh/reference
+# - Cache: cached-input prices apply when a tool resends the start of a conversation
+#   (https://unrestricted.sh/pricing); no cache markers are documented, so caching is implicit.
+# - release_date: the day the current model went live on this API.
+# Standalone entry, not base_model: an uncensored MiMo V2.6 Flash served text-only, like
+# qwen3.8-27b-uncensored here and providers/nano-gpt/models/xiaomi/mimo-v2.6-flash-uncensored.toml.
+# Effort: reasoning_effort = none|low|medium|high (none = thinking off, so no separate toggle).
+# none is documented in /reference; the graded levels follow the uncensored peer
+# providers/nano-gpt/models/xiaomi/mimo-v2.6-flash-uncensored.toml (same set as
+# providers/venice/models/xiaomi-mimo-v2-6-flash.toml). Xiaomi's own API only has an on/off toggle.
+# Not stated by Unrestricted, so copied from peers: structured_output = false from
+# providers/nano-gpt/models/xiaomi/mimo-v2.6-flash-uncensored.toml, the only uncensored
+# MiMo V2.6 Flash peer (xiaomi and venice list true for the stock model); temperature = true
+# and family from models/xiaomi/mimo-v2.6-flash.toml; open_weights = true as on the nano-gpt
+# uncensored entry and the lab file.
+schema = 2
+name = "MiMo V2.6 Flash Uncensored"
+description = "Uncensored MiMo V2.6 Flash for coding and security research"
+family = "mimo"
+open_weights = true
+release_date = "2026-10-31"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+temperature = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.29 }
+
+[cost.text.output]
+price = 1.3
