@@ -1,16 +1,32 @@
-# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
-# `reasoning_effort` through to the upstream model unchanged.
+# Pricing and host limits: https://quicksilverpro.io/models/gpt-5.6-sol/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/openai/models/gpt-5.6-sol.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
-# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
-# Pricing: https://quicksilverpro.io/models/gpt-5.6-sol/ and https://quicksilverpro.io/pricing.json
+# Custom-tool formats checked against https://quicksilverpro.io/docs/tools/:
+# only function tools are documented; no freeform formats claimed or live-tested.
+schema = 2
 base_model = "openai/gpt-5.6-sol"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 1.6
-output = 8
-cache_read = 0.16
-cache_write = 2
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 1048576
+output = 131072
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 1.6
+cache = { read = 0.16, write = 2.0 }
+
+[cost.text.output]
+price = 8.0
