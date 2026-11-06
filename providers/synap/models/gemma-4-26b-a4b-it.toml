@@ -7,6 +7,8 @@
 # - modalities input = ["text"]: live probe - a chat request with an image_url content part
 #   returns an upstream error while the same request with text only succeeds, so this
 #   deployment does not accept image input even though the lab model can.
+# - modalities output = ["text"]: text-only emission (no audio/image output declared);
+#   required by the schema-2 validator.
 # - reasoning = { supported = true, toggle = true }: re-probed 2026-10-23 on this host with
 #   reasoning explicitly enabled. Default request: no reasoning, completion_tokens_details
 #   .reasoning_tokens = 0. With "reasoning": {"enabled": true} (or chat_template_kwargs
@@ -17,6 +19,7 @@ base_model = "google/gemma-4-26b-a4b-it"
 
 [modalities]
 input = ["text"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
