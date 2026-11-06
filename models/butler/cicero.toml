@@ -1,0 +1,46 @@
+# Sources (accessed 2026-11-05):
+# - Model card: https://huggingface.co/butler-compute/Cicero (Apache-2.0; base Qwen/Qwen3.5-35B-A3B, 3B active; a state
+#   of text, a chat or up to 4 images, up to 64 typed questions, a calibrated probability for every option; no text
+#   generated; 131,072-token context)
+# - Release: the public Hugging Face repo was created on 2026-11-05 (https://huggingface.co/api/models/butler-compute/Cicero)
+# - Images: PNG, JPEG and WebP, as base64 or data URLs (Butler API)
+# Output: decision probabilities, no generated text, so there is nothing to sample (temperature/top_p/top_k false).
+schema = 2
+v2_only = true
+type = "decision"
+name = "Cicero"
+description = "Open-weight decision model built on Qwen3.5-35B-A3B that answers typed yes/no, choice and score questions about text, chats or images with calibrated probabilities"
+open_weights = true
+release_date = "2026-11-05"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 131_072
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/butler-compute/Cicero"
+format = "safetensors"
+
+[[weights]]
+label = "Hugging Face (NVFP4)"
+url = "https://huggingface.co/butler-compute/Cicero-NVFP4"
+format = "safetensors"
+quantization = "nvfp4"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/butler-compute/Cicero"
+type = "model_card"

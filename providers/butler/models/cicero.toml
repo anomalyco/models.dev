@@ -1,0 +1,27 @@
+# Sources (accessed 2026-11-05):
+# - Price: https://butlercompute.com/models/ ($0.01 input, $0.005 cached input per million tokens; no output tokens)
+# - APIs: https://butlercompute.com/platform/ (decision models: POST /v1/systemone, System One format, and
+#   POST /v1/decisions, OpenAI Decisions format)
+# - Model list: GET https://api.butlercompute.com/v1/models (id cicero)
+# Media: System One requests take images as a top-level `images` list of base64 or data URLs (at most 4); the
+#   TypeSafe `assets` map is rejected.
+# Cache: repeated state prefixes are served from the prompt cache and billed at the cached input price.
+schema = 2
+base_model = "butler/cicero"
+
+[capabilities]
+cache = { implicit = true }
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+compatibility = { media_input = "root" }
+
+[api.decisions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.01
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0
