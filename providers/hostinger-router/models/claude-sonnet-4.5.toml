@@ -1,0 +1,21 @@
+# Pricing: catalog credit rates x 0.01 USD/credit, expressed per million tokens
+# Source: https://router.hostinger.com/v1/models (public catalog: supported_parameters, pricing, limits)
+# Toggle: reasoning = {"enabled": true|false} (catalog: reasoning; matches the OpenRouter peer control)
+# Served with the 1M context window (catalog context_length; lab default is 200k)
+schema = 2
+base_model = "anthropic/claude-sonnet-4-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 3.6
+cache = { read = 0.36, write = { "5m" = 4.5, "1h" = 7.2 } }
+
+[cost.text.output]
+price = 18

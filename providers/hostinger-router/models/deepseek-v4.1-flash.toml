@@ -1,0 +1,25 @@
+# Pricing: catalog credit rates x 0.01 USD/credit, expressed per million tokens
+# Source: https://router.hostinger.com/v1/models (public catalog: supported_parameters, pricing, limits)
+# Effort: reasoning_effort = "none"|"low"|"high"|"max" ("none" probed 2026-10-22: 0 reasoning tokens; matches the OpenRouter peer set)
+# No toggle: reasoning.enabled=false is accepted but still spends reasoning tokens (probed), so off lives in effort = "none"
+# Limits from the live catalog row (keyless): "context_length": 1310720, "max_input_tokens": 1000000,
+# "max_output_tokens": 393216 for id "deepseek-v4.1-flash" — larger than the lab's documented 1M window
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+
+[limit]
+context = 1_310_720
+input = 1_000_000
+output = 393_216
+
+[cost.text.input]
+price = 0.264
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 0.792

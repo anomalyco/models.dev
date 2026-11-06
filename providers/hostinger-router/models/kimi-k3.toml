@@ -1,0 +1,19 @@
+# Pricing: catalog credit rates x 0.01 USD/credit, expressed per million tokens
+# Source: https://router.hostinger.com/v1/models (public catalog: supported_parameters, pricing, limits)
+# Kimi K3 always thinks: reasoning.enabled=false is accepted but still spends reasoning tokens
+# (probed 2026-10-22), so no toggle is advertised. Effort: reasoning_effort = "low"|"high"|"max" (catalog: reasoning_effort)
+# The catalog row's max_output_tokens equals the context window, which is a catalog data error; the lab output limit is inherited
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+
+[cost.text.input]
+price = 3.6
+cache = { read = 0.36 }
+
+[cost.text.output]
+price = 18

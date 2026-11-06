@@ -1,0 +1,17 @@
+# Pricing: catalog credit rates x 0.01 USD/credit, expressed per million tokens
+# Source: https://router.hostinger.com/v1/models (public catalog: supported_parameters, pricing, limits)
+# Toggle: reasoning = {"enabled": true|false} (catalog: reasoning; no reasoning_effort listed for this model)
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.12, write = { "5m" = 1.5, "1h" = 2.4 } }
+
+[cost.text.output]
+price = 6

@@ -1,0 +1,24 @@
+# Catalog row (keyless): context_length 1048576, max_input_tokens 1000000, max_output_tokens 131072
+# Pricing: catalog credit rates x 0.01 USD/credit, expressed per million tokens
+# Source: https://router.hostinger.com/v1/models (public catalog: supported_parameters, pricing, limits)
+# Toggle: reasoning = {"enabled": true|false} (catalog: reasoning; probed 2026-10-22, HTTP 200)
+# Effort: reasoning_effort; the router accepts all five levels (probed), the lab aliases low/medium to high
+# and xhigh to max, so the effective set is high|max (lab note)
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
+cache = { supported = true, implicit = true }
+
+[limit]
+context = 1_048_576
+input = 1_000_000
+
+[cost.text.input]
+price = 1.68
+cache = { read = 0.168 }
+
+[cost.text.output]
+price = 5.28
