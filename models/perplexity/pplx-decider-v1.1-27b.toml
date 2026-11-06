@@ -1,0 +1,36 @@
+# Source: https://huggingface.co/perplexity-ai/pplx-decider-v1.1-27b (model card, accessed
+# 2026-10-20). A fine-tune of Qwen3.8-27B with a separate decision readout instead of an lm_head, so
+# it generates no text. It reads images; the card names no format. Text and all images of a decision
+# must fit in 8,192 tokens, and longer inputs are rejected rather than truncated.
+schema = 2
+v2_only = true
+type = "decision"
+name = "pplx-decider-v1.1-27b"
+description = "Perplexity's open-weight 27B decision model that returns probabilities for typed choice, score and yes/no questions about text and images"
+open_weights = true
+release_date = "2026-10-05"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/perplexity-ai/pplx-decider-v1.1-27b"
+type = "model_card"
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/perplexity-ai/pplx-decider-v1.1-27b"
