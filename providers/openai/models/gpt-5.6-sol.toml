@@ -6,6 +6,7 @@
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-5.6-sol
 # effort_updates (on [api.responses] only): a Responses `configuration_update` item between turns changes effort and keeps the cache (live 2026-10-19 and 2026-10-23; OpenAI's docs list only GPT-6).
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# Cache lifetime (documented for the Responses API): prompt_cache_options.ttl "30m" (default, write 1.25x uncached input) or "12h" (write 2.5x); reads cost the same for both, and the request-level ttl also applies to the implicit breakpoint: https://developers.openai.com/api/docs/guides/prompt-caching
 schema = 2
 base_model = "openai/gpt-5.6-sol"
 
@@ -15,7 +16,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 system_updates = true
 store = true
-cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+cache = { implicit = { ttl = ["30m", "12h"], min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
 
@@ -27,12 +28,12 @@ sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 4
-cache = { read = 0.4, write = 5 }
+cache = { read = 0.4, write = { "30m" = 5, "12h" = 10 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 8
-cache = { read = 0.8, write = 10 }
+cache = { read = 0.8, write = { "30m" = 10, "12h" = 20 } }
 
 [cost.text.output]
 price = 20
