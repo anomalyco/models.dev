@@ -1,0 +1,44 @@
+# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
+# tools.search: tool_search on the Responses API only (gpt-5.4 and later, per the model page's Supported tools): https://developers.openai.com/api/docs/guides/tools-tool-search
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-6-cyber
+# https://developers.openai.com/api/docs/pricing (Cyber models table; no long-context prices are listed)
+# https://openai.com/index/introducing-gpt-6-cyber/ (released 2026-11-05)
+# Access requires Daybreak Red plus approval for this model (https://openai.com/daybreak/), and Daybreak Red
+# API access requires an IP allowlist by default.
+# Reasoning effort: live 2026-11-05, 'none' and 'minimal' return 400 "Supported values are: 'low', 'medium',
+# 'high', 'xhigh', and 'max'"; low through max complete.
+# APIs: Responses only. The model page lists Chat Completions, but live 2026-11-06 it returns 404 "This model
+# is not supported in the v1/chat/completions endpoint. Use the v1/responses endpoint instead."
+# Live 2026-11-06 on the Responses API: strict function tools with tool_choice auto/none/required/named;
+# custom tools with free-form text and grammar-enforced output (regex `ZZ[0-9]{3}` returned "ZZ000", lark
+# `start: "QQ" INT` returned "QQ0" when asked for "hello world"); hosted tool_search loaded a deferred
+# namespace function; an additional_tools item mid-conversation made its tool callable; a developer message
+# mid-conversation took effect; strict json_schema output; implicit caching (1,639 tokens written, then read
+# with prompt_cache_key) and explicit breakpoints with 30m and 12h ttl (reported as ttl_30m_tokens and
+# ttl_12h_tokens).
+# Cache lifetime (documented for the Responses API): prompt_cache_options.ttl "30m" (default, write 1.25x uncached input) or "12h" (write 2.5x); reads cost the same for both, and the request-level ttl also applies to the implicit breakpoint: https://developers.openai.com/api/docs/guides/prompt-caching
+# Cache write prices: $25 per 1M tokens for 30m and $50 for 12h (model page).
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+schema = 2
+v2_only = true
+base_model = "openai/gpt-6-cyber"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+store = true
+cache = { implicit = { ttl = ["30m", "12h"], min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 20
+cache = { read = 2, write = { "30m" = 25, "12h" = 50 } }
+
+[cost.text.output]
+price = 100
+
+[cost.web_search]
+price = 10
