@@ -1,5 +1,5 @@
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
-# Freeform: omitted. POST https://api.popnow.ai/v1/chat/completions returned 400 for custom tools with text, regex (ZZ[0-9]{3}) and lark formats, while a function tool returned 200 on gpt-6.1-sol (probed 2026-11-06).
+# Freeform: omitted. POST https://api.popnow.ai/v1/chat/completions returned 400 for custom tools with text, regex (ZZ[0-9]{3}) and lark formats, while a function tool returned 200 on gpt-6.1-terra (probed 2026-11-06).
 # Cost, limits, input parts and reasoning levels: PopNow model table https://popnow.ai/docs/chat and the model schema from GET https://api.popnow.ai/api/v1/models/{model} (retrieved 2026-11-05).
 schema = 2
 base_model = "openai/gpt-6.1-terra"
