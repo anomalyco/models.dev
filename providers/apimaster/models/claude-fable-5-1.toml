@@ -4,9 +4,14 @@
 # (read 2026-09-28). The other 6 channel(s), up to 10 / 50, serve only when it is unavailable and bill at their own price.
 # Effort: reasoning_effort = low|medium|high|xhigh|max
 # No toggle: reasoning is on by default and thinking.type=disabled still reasoned (tested 2026-09-28).
+schema = 2
 base_model = "anthropic/claude-fable-5-1"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 2.37547
-output = 11.8774
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2.37547
+
+[cost.text.output]
+price = 11.8774

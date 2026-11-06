@@ -8,9 +8,14 @@
 # - effort not graded: reasoning_effort low / medium / xhigh gave median 1066 / 1186 / 1230 reasoning
 #   chars with overlapping ranges (4 each)
 # - budget not honoured: thinking_budget 100 vs 8000 gave median 994 vs 1240 chars (4 each)
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-reasoning_options = []
 
-[cost]
-input = 0.089344
-output = 0.301537
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.089344
+
+[cost.text.output]
+price = 0.301537

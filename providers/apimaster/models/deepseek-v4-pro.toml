@@ -4,9 +4,14 @@
 # (read 2026-09-29). The other 6 channel(s), up to 1.32 / 3.96, serve only when it is unavailable and bill at their own price.
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
-[cost]
-input = 0.4752
-output = 1.4256
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.4752
+
+[cost.text.output]
+price = 1.4256

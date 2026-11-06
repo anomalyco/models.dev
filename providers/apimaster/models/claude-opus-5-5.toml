@@ -6,9 +6,14 @@
 # Effort: reasoning_effort = low|medium|high|xhigh|max, sent upstream as output_config.effort.
 # Same prompt, 4 requests each: low used ~160 completion tokens, max ~340 (2026-09-29).
 # No toggle: thinking cannot be disabled on this model (Anthropic docs).
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 1.33819
-output = 6.69096
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1.33819
+
+[cost.text.output]
+price = 6.69096

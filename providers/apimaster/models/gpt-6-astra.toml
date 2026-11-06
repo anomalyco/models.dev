@@ -4,9 +4,14 @@
 # (data: https://apimaster.ai/api/marketplace-data?model=gpt-6-astra, read 2026-09-29). Channels reserved for
 # codex clients are excluded; the other 11 open channel(s), up to 1.04082 / 5.20408, serve only on failover and bill at their own price.
 # Effort: reasoning_effort = low|medium|high|xhigh|max
+schema = 2
 base_model = "openai/gpt-6-astra"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 0.535349
-output = 2.67674
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.535349
+
+[cost.text.output]
+price = 2.67674
