@@ -1,0 +1,10 @@
+# Inferris: pay-per-token API for open models, OpenAI- and Anthropic-compatible.
+# Sources (accessed 2026-11-06):
+# https://inferris.ai/developers.md  (base URLs, auth, endpoints)
+# https://inferris.ai/models.json    (model IDs, protocols, prices)
+name = "Inferris"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.inferris.ai/v1"
+env = ["INFERRIS_API_KEY"]
+doc = "https://inferris.ai/developers.md"

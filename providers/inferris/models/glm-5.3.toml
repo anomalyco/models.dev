@@ -1,0 +1,15 @@
+# Prices: https://inferris.ai/models.json (accessed 2026-11-06), USD per 1M tokens.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+# Reasoning is always on with no control
+# (https://inferris.ai/api-reference/reasoning). Context window as the lab value (confirmed by Inferris 2026-11-06); max output inherited from the lab.
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.84
+cache = { read = 0.156 }
+
+[cost.text.output]
+price = 2.64
