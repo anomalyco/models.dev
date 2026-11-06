@@ -19,7 +19,7 @@ structured_output = true
 temperature = true
 
 [limit]
-output = 65_536
+output = 235_929
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -32,8 +32,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.532
-cache = { read = 0.209 }
+price = 0.5
+cache = { read = 0.15 }
 
 [cost.text.output]
-price = 3.325
+price = 2.5
