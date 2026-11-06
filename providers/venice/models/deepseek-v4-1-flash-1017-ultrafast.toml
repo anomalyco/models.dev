@@ -1,0 +1,36 @@
+schema = 2
+name = "DeepSeek V4.1 Flash 1017 Ultrafast"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+family = "deepseek"
+open_weights = true
+release_date = "2026-10-23"
+last_updated = "2026-11-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 12
+
+[cost.web_search]
+price = 10
