@@ -1,0 +1,22 @@
+# Model: https://docs.verda.com/inference/models/kimi-k3-1-pro/
+# Pricing: Verda console, USD per million tokens.
+
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10
