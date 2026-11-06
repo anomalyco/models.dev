@@ -21,25 +21,3 @@ cache = { read = 0.26 }
 
 [cost.text.output]
 price = 4.4
-# Pricing, context window and max output: GET https://cloud.mlx-optiq.com/api/v1/models (accessed 2026-11-06)
-# Effort: reasoning_effort = minimal|low|medium|high|xhigh. Always thinks; none and
-# the :no-think suffix are refused. No effort set = full thinking.
-# https://mlx-optiq.com/docs/cloud/api#reasoning
-# Cache: automatic; the same x-session-id header on every call of a task keeps it.
-schema = 2
-base_model = "zhipuai/glm-5.3"
-
-[capabilities]
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
-structured_output = true
-cache = { implicit = true }
-
-[limit]
-context = 1_048_576
-
-[cost.text.input]
-price = 1.4
-cache = { read = 0.26 }
-
-[cost.text.output]
-price = 4.4
