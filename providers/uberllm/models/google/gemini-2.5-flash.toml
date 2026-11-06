@@ -1,0 +1,27 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-04).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# Off is effort=none; graded levels, no toggle.
+# Effort: reasoning_effort = none|minimal|low|medium|high, Google's OpenAI-compatible mapping for 2.5 models (none = thinking off;
+#   minimal and low = 1,024, medium = 8,192, high = 24,576 thinking budget: https://ai.google.dev/gemini-api/docs/openai).
+#   Live, 3 runs per value on one math prompt: reasoning_content chars none 0/0/0, minimal 1,045/1,068/982, low 1,188/904/1,303,
+#   medium 3,837/4,123/3,911, high 3,927/3,792/4,491 (usage has no reasoning token count on this host).
+# limit: none; max_tokens 65,536 (the lab's cap) is accepted here.
+#   Probed 2026-11-04 on /v1/chat/completions.
+# cache: implicit. A ~7k-token prompt sent 3 times in a row, twice (live 2026-11-04): the repeats reported
+#   prompt_tokens_details.cached_tokens = 7,143 of 7,459 (3 of 4 repeats).
+schema = 2
+base_model = "google/gemini-2.5-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.033
+cache = { read = 0.0033 }
+
+[cost.text.output]
+price = 0.275

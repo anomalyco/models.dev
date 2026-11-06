@@ -1,0 +1,12 @@
+# UberLLM is an API marketplace: each request is sent to a third-party inference provider that serves the
+# requested model, and costs what that provider charged; UberLLM adds no fee on requests.
+# OpenAI POST /v1/chat/completions is this provider's API here. The same key also serves Anthropic POST /v1/messages,
+# but the model files were tested on Chat Completions only, so no model lists [api.messages] yet.
+# The host passes reasoning fields through to the provider that serves a request. Each model file uses the lab's
+# own controls and records in its header what the live probes on this host showed (2026-10-30).
+name = "UberLLM"
+env = ["UBERLLM_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.uberllm.dev/v1"
+doc = "https://uberllm.dev/docs"

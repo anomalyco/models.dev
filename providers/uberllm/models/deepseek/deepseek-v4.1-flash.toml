@@ -1,0 +1,25 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-04).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# Off is effort=none; graded levels, no toggle.
+# Effort: reasoning_effort = none|low|high|max (DeepSeek's levels plus none, as on OpenRouter). Live on a counting prompt:
+#   none 0 reasoning tokens in 9 of 9 runs; low 292 / 319, high 401 / 391, max 394 / 429. thinking.type = disabled is not
+#   honoured by every serving provider (3 of 3 runs still reasoned), so it is not listed as a toggle.
+#   Probed 2026-11-04 on /v1/chat/completions.
+# cache: implicit. A ~7k-token prompt sent 3 times in a row, twice (live 2026-11-04): the repeats reported
+#   prompt_tokens_details.cached_tokens = 7,168 of 7,281.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.00585
+cache = { read = 0.000975 }
+
+[cost.text.output]
+price = 0.065
