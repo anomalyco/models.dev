@@ -1,0 +1,12 @@
+# sonar-reasoning-pro on TommyAPI serves perplexity/sonar-reasoning-pro (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "perplexity/sonar-reasoning-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 2.6
+
+[cost.text.output]
+price = 10.4

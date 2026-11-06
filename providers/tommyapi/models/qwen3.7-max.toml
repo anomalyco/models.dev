@@ -1,0 +1,12 @@
+# qwen3.7-max on TommyAPI serves alibaba/qwen3.7-max (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "alibaba/qwen3.7-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 3.5608
+
+[cost.text.output]
+price = 10.6825

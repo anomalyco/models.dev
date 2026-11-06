@@ -1,0 +1,12 @@
+# claude-opus-4-6 on TommyAPI serves anthropic/claude-opus-4-6 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "anthropic/claude-opus-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1024 } }
+
+[cost.text.input]
+price = 5.0
+
+[cost.text.output]
+price = 25.0

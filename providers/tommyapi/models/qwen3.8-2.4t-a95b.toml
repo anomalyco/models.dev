@@ -1,0 +1,12 @@
+# qwen3.8-2.4t-a95b on TommyAPI serves alibaba/qwen3.8-2.4t-a95b (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 2.6
+
+[cost.text.output]
+price = 7.8
