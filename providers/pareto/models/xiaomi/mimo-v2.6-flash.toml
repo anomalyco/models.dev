@@ -1,0 +1,26 @@
+# Toggle: reasoning_effort = none turns thinking off; any other value turns it on.
+# Pricing: https://docs.paretoinference.com/pricing (checked 2026-11-06). USD per 1M tokens:
+#   $0.126 input / $0.00252 cache read / $0.252 output, with no peak pricing.
+# Catalog: GET https://api.paretoinference.com/v1/models lists xiaomi/mimo-v2.6-flash.
+# Input: text only on this host (no images, audio or video). A required tool_choice runs as auto.
+#   1M context; output is capped at 131,072 tokens. The API serves streamed requests only.
+#   (Pareto model notes and https://docs.paretoinference.com/api-reference, checked 2026-11-06.)
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.126
+cache = { read = 0.00252 }
+
+[cost.text.output]
+price = 0.252
