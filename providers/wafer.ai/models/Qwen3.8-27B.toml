@@ -4,10 +4,9 @@
 # - Reasoning fields: https://docs.wafer.ai/serverless/chat-completions#reasoning
 # - Prompt caching (automatic, cache_control not needed, no cache-write charge): https://docs.wafer.ai/serverless/usage#prompt-caching
 # - Images (the docs name PNG and JPEG): https://docs.wafer.ai/serverless/chat-completions#vision
-# Effort: reasoning_effort = none|low|medium|high|max (default high); also reasoning.effort.
-#   Off is effort=none (thinking.type = disabled is the same switch); graded levels, no toggle.
-#   Wafer self-hosts the model. Its docs say none turns reasoning off and single out GLM-5.3 and
-#   GLM-5.3-Flash as models where none doesn't fully stop reasoning.
+# Effort: reasoning_effort = none|low|medium|xhigh (default xhigh); also reasoning.effort.
+#   Off is effort=none; graded levels, no toggle. The chat template takes low|medium|xhigh: Wafer's model list
+#   names high and max, and both run as xhigh (Wafer also accepts xhigh directly, which is listed here).
 # Reasoning text is returned in reasoning_content.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
@@ -18,7 +17,7 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "medium", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
 
