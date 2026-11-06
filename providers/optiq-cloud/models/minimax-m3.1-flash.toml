@@ -1,6 +1,29 @@
 # Pricing, context window and max output: GET https://cloud.mlx-optiq.com/api/v1/models (accessed 2026-11-06)
 # Effort: reasoning_effort = minimal|low|medium|high|xhigh. Always thinks; none and
 # the :no-think suffix are refused. No effort set = full thinking.
+# Any other value, max included, is refused with a 400 before the model runs.
+# https://mlx-optiq.com/docs/cloud/api#reasoning
+# Cache: automatic, no markers needed; the same x-session-id header on every call of a task raises the hit rate.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 524_288
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.6
+# Pricing, context window and max output: GET https://cloud.mlx-optiq.com/api/v1/models (accessed 2026-11-06)
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh. Always thinks; none and
+# the :no-think suffix are refused. No effort set = full thinking.
 # https://mlx-optiq.com/docs/cloud/api#reasoning
 # Text input only. Cache: automatic; the same x-session-id header on every call of a task keeps it.
 schema = 2
