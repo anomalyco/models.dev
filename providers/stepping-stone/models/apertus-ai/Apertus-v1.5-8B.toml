@@ -1,0 +1,30 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (model card: https://huggingface.co/swiss-ai/Apertus-v1.5-8B;
+#   thinking is off by default and is activated with enable_thinking=True). Reasoning support on the
+#   host confirmed by manual verification on 2026-10-30; the wiki example response's "reasoning": null
+#   only reflects the default-off state, not an absent thinking mode.
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-swiss-ai-initiative
+# 0.0200 / 0.0030 / 0.1000 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# The gateway serves this model under the id apertus-ai/Apertus-v1.5-8B (product page benchmark --model
+# apertus-ai/Apertus-v1.5-8B --tokenizer swiss-ai/Apertus-v1.5-8B; wiki page; /v1/models), hence this file's id.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_apertus-ai/Apertus-v1.5-8B (gateway max_model_len 131072).
+# Host delta vs the lab entry: serves a reduced 131,072-token (128k) context window per the product page price
+# table (https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-swiss-ai-initiative;
+# lab native default 262,144 per the model card). The host publishes no separate output cap; output 8,192 is
+# authored — limit.output is required on the merged provider model (the lab omits it) — from the Apertus
+# 8B/70B family values.
+schema = 2
+base_model = "swiss-ai/apertus-v1.5-8b"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[limit]
+context = 131_072
+output = 8_192
+
+[cost.text.input]
+price = 0.0238
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.119

@@ -1,0 +1,22 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (model card: https://huggingface.co/google/gemma-4-31B-it)
+#   stepping stone serves the model with reasoning support enabled. Verified by live testing on 2026-10-30.
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-google
+# 0.2500 / 0.0375 / 1.0000 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Context: 163,840 tokens — the product page price table lists a 160k window
+# (https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-google); lab native 262,144.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_google/gemma-4-31B-it (gateway max_model_len 163840)
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 163_840
+
+[cost.text.input]
+price = 0.2975
+cache = { read = 0.0446 }
+
+[cost.text.output]
+price = 1.19

@@ -1,0 +1,13 @@
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-qwen
+# 0.3400 / 0.0375 / 1.7000 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Context: gateway max_model_len 262144 matches the lab's 262,144 — no override
+# (https://wiki.stoney-cloud.com/wiki/AI_on_demand:_Qwen/Qwen3-Coder-Next).
+schema = 2
+base_model = "alibaba/qwen3-coder-next"
+
+[cost.text.input]
+price = 0.4046
+cache = { read = 0.0446 }
+
+[cost.text.output]
+price = 2.023
