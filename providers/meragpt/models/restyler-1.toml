@@ -1,0 +1,12 @@
+# Sources (accessed 2026-11-06):
+# - Price: https://meragpt.com/docs/models ($0.04 input, $0.16 output per million tokens)
+# - API: https://meragpt.com/docs/chat-completions (POST /v1/chat/completions; the task endpoint POST /v1/restyle
+#   has its own request shape and is not listed here)
+schema = 2
+base_model = "meragpt/restyler-1"
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.16
