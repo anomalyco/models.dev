@@ -1,6 +1,6 @@
-# CloudGPU exposes an OpenAI-compatible chat completions API through @ai-sdk/openai-compatible.
-# Authentication uses a Bearer key in CLOUDGPU_API_KEY; the API base URL is https://cloudgpu.app/v1.
-# Sources (accessed 2026-10-30): https://cloudgpu.app/api/docs, https://cloudgpu.app/api
+# CloudGPU OpenAI-compatible API at https://cloudgpu.app/v1 (Bearer: CLOUDGPU_API_KEY).
+# Model IDs and context windows from GET https://cloudgpu.app/v1/models (public).
+# Only open-weight chat models are listed here.
 name = "CloudGPU"
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
