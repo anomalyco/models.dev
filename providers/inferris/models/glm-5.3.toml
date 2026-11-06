@@ -1,11 +1,12 @@
 # Prices: https://inferris.ai/models.json (accessed 2026-11-06), USD per 1M tokens.
+# Reasoning effort: Inferris forwards reasoning_effort (Chat Completions) and reasoning.effort, documented
+# as model-dependent at https://inferris.ai/api-reference/chat-completions; the levels are the lab's.
+# Context window: the lab value, confirmed by Inferris 2026-11-06; max output inherited from the lab.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
-# Reasoning is always on with no control
-# (https://inferris.ai/api-reference/reasoning). Context window as the lab value (confirmed by Inferris 2026-11-06); max output inherited from the lab.
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
 price = 0.84
