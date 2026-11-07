@@ -1,0 +1,20 @@
+# Source: https://tokenrhythm.studio/api/models (public, accessed 2026-10-13).
+# Host lists contextWindow 1000000, maxOutputTokens 131072, input modalities ["text","image","video"].
+# Toggle: thinking.type = enabled|disabled (reasoning.enabled and enable_thinking are also accepted)
+# Live-tested on POST /v1/chat/completions (2026-10-14): disabling returns no reasoning_content.
+# reasoning_effort is not forwarded: invalid values are accepted and low/max do not change reasoning.
+# reasoning_effort = none does not disable reasoning either.
+# thinking_budget, reasoning.max_tokens and thinking.budget_tokens are rejected as unknown fields (400).
+# Pricing: published in CNY per 1M tokens (input 3 / output 12 / cache read 0.6); converted to USD at
+# 1 USD = 7 CNY (2026-10-13).
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.4286
+output = 1.7143
+cache_read = 0.0857
+
+[limit]
+context = 1_000_000
+output = 131_072
