@@ -60,6 +60,7 @@ import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { morph } from "./providers/morph.js";
 import { tinfoil } from "./providers/tinfoil.js";
+import { theGridAi } from "./providers/the-grid-ai.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -226,6 +227,7 @@ export const providers: {
   requesty: SyncProvider<any>;
   morph: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
+  "the-grid-ai": SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -273,6 +275,7 @@ export const providers: {
   requesty,
   morph,
   tinfoil,
+  "the-grid-ai": theGridAi,
   vercel,
   venice,
   wandb,
@@ -297,6 +300,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "the-grid-ai",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
