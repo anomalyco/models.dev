@@ -1,0 +1,24 @@
+# Prices: https://inferris.ai/models.json (accessed 2026-11-06), USD per 1M tokens.
+# Reasoning effort: Inferris forwards reasoning_effort (Chat Completions) and reasoning.effort, documented
+# as model-dependent at https://inferris.ai/api-reference/chat-completions; the levels are the lab's.
+# Context window: Inferris serves kimi-k3 from the k3-256k upstream (its registry, read 2026-11-06); max output inherited from the lab.
+# Input: text only (input_modalities in https://inferris.ai/models.json).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 262_144
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 9.0
