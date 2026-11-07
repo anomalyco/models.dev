@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = low|medium|high
+# https://docs.frogbot.ai/api-reference/chat-completions
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

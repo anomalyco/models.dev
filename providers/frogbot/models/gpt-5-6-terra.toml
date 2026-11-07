@@ -1,0 +1,23 @@
+# Routed by FrogBot's LiteLLM proxy to Bedrock Mantle (bedrock_mantle/openai.gpt-5.6-terra),
+# or to OpenAI (gpt-5.6-terra); the request body passes through unchanged.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max, forwarded unchanged on
+# both routes (litellm 1.104.0: Mantle sends reasoning.effort to /openai/v1/responses,
+# OpenAI sends reasoning_effort to /v1/chat/completions); levels match providers/openai.
+# https://docs.frogbot.ai/api-reference/chat-completions
+# Context and PDF are inherited. FrogBot enforces no prompt cap: its registry
+# limit only feeds GET /v1/models. Bedrock serves 1,050,000 tokens and lists
+# File input as Available: https://developers.openai.com/api/docs/guides/amazon-bedrock
+# Pricing: FrogBot bills one flat rate at every context length (no 272k tier).
+# https://docs.frogbot.ai/api-reference/models
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 12
