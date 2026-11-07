@@ -1,0 +1,27 @@
+# Toggle: reasoning_effort = off|low|medium|high|max ("off" disables, every other value enables it identically)
+# No graded dial on this deployment: the platform consumes reasoning_effort rather
+# than forwarding it, and resolves every enabling value to the same request. A value
+# outside off|low|medium|high|max returns HTTP 400.
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+name = "MiMo V2.6 Pro 1.02T-42B"
+description = "Steady tool use for long agent runs, 500K context"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 500_000
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.066 }
+
+[cost.text.output]
+price = 1.33
