@@ -14,7 +14,7 @@ base_model = "anthropic/claude-haiku-4-5"
 reasoning = { supported = true, toggle = true, budget = {} }
 
 [api.messages]
-base_url = "https://api.teapotrouter.com"
+base_url = "https://api.teapotrouter.com/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
