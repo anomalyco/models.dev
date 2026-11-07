@@ -1,0 +1,22 @@
+# Toggle: reasoning_effort = "none" switches thinking off; any other value (or omitting it) leaves it on. The gateway also maps
+#   reasoning.enabled = false and thinking.type = "disabled" onto the same switch, but reasoning_effort is the canonical field.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-10-21)
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 524_288
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.39
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 1.56

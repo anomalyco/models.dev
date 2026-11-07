@@ -1,0 +1,22 @@
+# Toggle: reasoning_effort = "none" switches thinking off; any other value (or omitting it) leaves it on. The gateway also maps
+#   reasoning.enabled = false and thinking.type = "disabled" onto the same switch, but reasoning_effort is the canonical field.
+# Measured on this gateway 2026-10-21: default request returned reasoning_content (18 reasoning tokens); reasoning_effort = "none" returned
+#   no reasoning field and 0 reasoning tokens, so the switch is real on this host even though the lab serves thinking always-on.
+# Verified live 2026-10-21: a base64 image_url part is answered ("Red." for a red square) and response_format json_object / json_schema
+#   both return valid JSON, so the lab's modalities and structured output are inherited unchanged.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-10-21)
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.89
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 4.42
