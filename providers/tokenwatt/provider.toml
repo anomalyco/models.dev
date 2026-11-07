@@ -1,0 +1,9 @@
+# TokenWatt serves open-weight models through an OpenAI-compatible Chat Completions API:
+# POST /v1/chat/completions (streaming with usage), GET /v1/models. Prepaid accounts and keys
+# from https://www.tokenwatt.io/api.html; prompts and completions are not logged (accessed 2026-10-29).
+name = "TokenWatt"
+env = ["TOKENWATT_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.tokenwatt.io/v1"
+doc = "https://www.tokenwatt.io/api.html"
