@@ -5,7 +5,7 @@
 #   context_size 1_048_576, max_output_tokens 131_072, endpoints chat/completions, anthropic, responses.
 # Effort: reasoning_effort = low|high|max (live 2026-11-07); thinking.type=disabled does not suppress reasoning on this route.
 # Modalities: Novita lists ["text","image","video"]; exact types are the lab's (zhipuai/glm-5.3-flash).
-# system_updates = true: cache hit right after a mid-conversation system message (live 2026-11-07, 17664 of 17710 prompt tokens cached).
+# system_updates (Chat Completions only, the API tested): cache hit right after a mid-conversation system message (live 2026-11-07, 17664 of 17710 prompt tokens cached).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 FlashX"
@@ -15,17 +15,16 @@ input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "vi
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
-system_updates = true
 
 [limit]
 context = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.messages]
 base_url = "https://api.novita.ai/anthropic/v1"

@@ -4,16 +4,14 @@
 #   endpoints chat/completions, anthropic, responses.
 # Effort: reasoning_effort = none|high; none (or thinking.type=disabled) suppresses reasoning (live 2026-11-07).
 #   Same native set as tencent-tokenhub/hy4 and novita-ai/tencent/hy4-preview; other accepted values are aliases.
-# system_updates = true: cache hit right after a mid-conversation system message (live 2026-11-07, 12544 of 12655 prompt tokens cached).
+# system_updates (Chat Completions only, the API tested): cache hit right after a mid-conversation system message (live 2026-11-07, 12544 of 12655 prompt tokens cached).
 schema = 2
 base_model = "tencent/hy4"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 cache = { implicit = true }
 structured_output = true
-system_updates = true
 
 [limit]
 context = 1_000_000
@@ -21,6 +19,7 @@ output = 64_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.messages]
 base_url = "https://api.novita.ai/anthropic/v1"
