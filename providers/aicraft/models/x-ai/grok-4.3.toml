@@ -1,0 +1,21 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "xai/grok-4.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.3813
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.7625
+
+[cost.text.output]
+price = 2.7625
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5.525

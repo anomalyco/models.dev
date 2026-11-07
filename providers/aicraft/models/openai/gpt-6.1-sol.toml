@@ -1,0 +1,21 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2.21
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.42
+
+[cost.text.output]
+price = 11.05
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16.575
