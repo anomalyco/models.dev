@@ -1,0 +1,14 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-20)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# No caller control: reasoning is emitted inline in `content` with `reasoning_tokens = 0`; omitted, `low`, and `thinking.type = disabled|enabled` all returned the same 114-token step-by-step answer; `off` is rejected.
+base_model = "moonshotai/kimi-k2.5"
+reasoning_options = []
+
+[limit]
+context = 256000
+
+[cost]
+input = 0.6
+output = 3
+cache_read = 0.1
