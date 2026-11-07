@@ -1,0 +1,40 @@
+# Pricing and host limits: https://quicksilverpro.io/models/gpt-6-luna/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/openai/models/gpt-6-luna.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max
+# Custom-tool formats checked against https://quicksilverpro.io/docs/tools/:
+# only function tools are documented; no freeform formats claimed or live-tested.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[limit]
+context = 1048576
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200000 } }
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200000 } }
+price = 0.75
