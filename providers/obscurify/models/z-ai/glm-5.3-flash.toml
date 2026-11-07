@@ -1,4 +1,4 @@
-# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-11-07. One flat price per model.
 # Effort: reasoning_effort = low|high|max
 # Controls follow providers/zhipuai/models/glm-5.3-flash.toml (thinking cannot be turned off).
 # Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and max accepted, max reasoned about 17x longer.
@@ -10,7 +10,7 @@ base_model = "zhipuai/glm-5.3-flash"
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
-price = 0.02457
+price = 0.1105
 
 [cost.text.output]
-price = 0.08125
+price = 0.3315
