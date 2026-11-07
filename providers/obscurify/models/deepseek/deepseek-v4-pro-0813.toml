@@ -1,4 +1,4 @@
-# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-11-07. One flat price per model.
 # Toggle: reasoning.enabled = true|false (thinking.type = enabled|disabled is also accepted)
 # Effort: reasoning_effort = low|high|max
 # Controls follow providers/deepseek/models/deepseek-v4-pro.toml: toggle plus low|high|max.
@@ -11,7 +11,7 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
-price = 0.7293
+price = 0.7278414
 
 [cost.text.output]
-price = 2.1879
+price = 2.1835242
