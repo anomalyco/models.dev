@@ -1,0 +1,18 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# Strict json_schema response_format verified against https://api.zerogpu.ai/v1/chat/completions (2026-11-03).
+# Cache: implicit prefix caching, no markers needed. Live 2026-11-05 on
+#   https://api.zerogpu.ai/v1/chat/completions: a ~5.2k-token system prefix resent with a
+#   new user message returned usage.prompt_tokens_details.cached_tokens = 4,992.
+schema = 2
+base_model = "openai/gpt-4.1-mini"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.6

@@ -1,0 +1,29 @@
+# Pricing: https://api-dashboard.zerogpu.ai/api/models and
+#   https://docs.zerogpu.ai/docs/model-catalog (2026-11-05): input $0.20/M, output $1.50/M,
+#   cached input $0.20/M. ZeroGPU bills cache hits at the full input price.
+# Cache: implicit prefix caching, no markers needed. Live 2026-11-05 on
+#   https://api.zerogpu.ai/v1/chat/completions: a ~6.8k-token system prefix resent with a
+#   new user message returned usage.prompt_tokens_details.cached_tokens = 6,288.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (thinking is off by default).
+# No thinking budget control: thinking_budget (top-level or in chat_template_kwargs),
+# reasoning.max_tokens and thinking_token_budget are not applied.
+# Image and video input are accepted; audio input is rejected (the lab lists no audio input).
+# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12);
+# strict json_schema response_format verified 2026-11-03.
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 16_384
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.5
