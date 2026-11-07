@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = low | medium | high
+# Model-specific enum, as for gpt-oss-120b: the gateway rejects any other
+# value with "Unsupported reasoning_effort '<x>' for gpt-oss; expected one
+# of low, medium, high" (probed 2026-10-02).
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.02
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.1

@@ -1,0 +1,15 @@
+# Context: 131_072 is the served window, not a restatement of the base's
+# 128_000: GET /v1/models context_length, and the server's max_tokens error
+# states "maximum context length of 131072" (checked 2026-10-05).
+schema = 2
+base_model = "mistral/mistral-nemo"
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.023
+cache = { read = 0.0034 }
+
+[cost.text.output]
+price = 0.03

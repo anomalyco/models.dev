@@ -1,0 +1,29 @@
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled); chat_template_kwargs.thinking also works.
+# Effort: reasoning_effort = low | high | max, the lab set. Any effort value on its own turns thinking on.
+# Measured on FlexAI 2026-10-29 (length of reasoning_content, 3 prompts, no max_tokens, all finish_reason stop):
+#   default 0/0/0 · disabled 0/0/0 · enabled 187/597/1402
+#   low 168/490/1307 · high 154/545/1336 · max 169/1317/3782
+# low is a distinct on-level (it reasons; disabled does not), which supersedes the capped
+# 2026-10-02 measurement that read low as zero. max is the longest; low and high were not
+# separated at one sample per prompt, and both are kept, as in the lab and peers.
+# Context: 1_048_576 is the served window (GET /v1/models context_length, and the
+# server's max_tokens error states "maximum context length of 1048576").
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.119
+cache = { read = 0.0178 }
+
+[cost.text.output]
+price = 0.238
