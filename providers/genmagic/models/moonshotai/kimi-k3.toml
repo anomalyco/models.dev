@@ -1,0 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort, or reasoning.effort
+# Pricing, limits and reasoning controls: https://genmagic.co/api/v1/models/moonshotai/kimi-k3 (accessed 2026-10-04)
+# Request body is forwarded unchanged: https://genmagic.co/developers#reasoning
+base_model = "moonshotai/kimi-k3"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.499
+output = 13
+cache_read = 0.49
+
+[limit]
+output = 943_718
