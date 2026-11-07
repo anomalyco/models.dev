@@ -1,0 +1,8 @@
+# OpenAI-compatible chat: POST /chat/completions with Bearer auth.
+# Reasoning models return `reasoning_content`; see per-model comments.
+# https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb (accessed 2026-10-09)
+name = "Baidu Qianfan"
+env = ["QIANFAN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://cloud.baidu.com/doc/qianfan/s/rmh4stp0j"
+api = "https://qianfan.baidubce.com/v2"
