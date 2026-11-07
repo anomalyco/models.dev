@@ -1,0 +1,10 @@
+# Iranian AI gateway, billed in Toman (IRT) from a prepaid wallet. One key serves
+# OpenAI Chat Completions and Responses at /v1 and Anthropic Messages at
+# /anthropic/v1 (x-api-key only). Keys are created at
+# https://gateway.dothoosh.com/api-keys; GET /v1/models lists what a key may call.
+name = "DotHoosh"
+env = ["DOTHOOSH_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://gateway.dothoosh.com/v1"
+doc = "https://gateway.dothoosh.com/docs"
