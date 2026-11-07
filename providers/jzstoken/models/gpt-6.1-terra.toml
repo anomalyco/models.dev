@@ -1,0 +1,23 @@
+# Pricing: https://jzstoken.com/model-pricing/gpt-6.1-terra (2026-10-30).
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max
+# Freeform custom tools: live probe on 2026-10-30 America/Tijuana against
+# https://jzstoken.com/api/v1/chat/completions using a Standard customer key.
+# type=function tools returned HTTP 200 with tool_calls (supported).
+# type=custom freeform text / lark / regex returned HTTP 400,
+# code=request_feature_unsupported ("native Responses bridge cannot preserve custom").
+# This host explicitly does not support freeform; base_model_omit removes it.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+base_model_omit = ["capabilities.tools.freeform"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1557
+cache = { read = 0.0156, write = 0.1557 }
+
+[cost.text.output]
+price = 0.7784
