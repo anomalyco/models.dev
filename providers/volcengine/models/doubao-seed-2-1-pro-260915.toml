@@ -1,0 +1,32 @@
+# Sources (accessed 2026-11-07):
+# - Models, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list
+# - CNY list prices: https://ark.volcengine.com/region:cn-beijing/docs/model-pricing
+# - Host reasoning controls: https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# Reuse this provider's fixed conversion rate; all prices are USD per million tokens.
+# Exact limits: public Ark Docs MCP ark_get_model("doubao-seed-2-1-pro-260915").
+# Effort: reasoning_effort = minimal|low|medium|high; minimal disables thinking.
+# Accepted aliases: none->minimal, xhigh/max->high. Do not repeat equivalent levels.
+schema = 2
+base_model = "bytedance-seed/seed-2.1-pro"
+name = "Seed 2.1 Pro 0915"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.8906
+cache = { read = 0.17812 }
+
+[cost.text.output]
+price = 4.45301

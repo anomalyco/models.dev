@@ -1,0 +1,50 @@
+# Sources (accessed 2026-11-07):
+# - Public release: https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-model-release
+#   Seed 2.1 Lite was publicly available on 2026-09-23; the 260915 suffix identifies its model version.
+# - Exact limits/modalities: public Ark Docs MCP ark_get_model("doubao-seed-2-1-lite-260915").
+# - https://ark.volcengine.com/region:cn-beijing/docs/model-list
+# - MIME types: https://ark.volcengine.com/region:cn-beijing/docs/image-understanding
+#   https://ark.volcengine.com/region:cn-beijing/docs/video-understanding
+#   https://ark.volcengine.com/region:cn-beijing/docs/audio-understanding
+# - Sampling parameters: https://ark.volcengine.com/region:cn-beijing/docs/chat-api (temperature/top_p; no top_k).
+schema = 2
+name = "Seed 2.1 Lite"
+description = "Lightweight ByteDance Seed model for multimodal reasoning, coding, and tool-assisted tasks"
+family = "seed"
+open_weights = false
+release_date = "2026-09-23"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "image/heic",
+  "video/mp4",
+  "video/x-msvideo",
+  "video/quicktime",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/aac",
+  "audio/x-m4a",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 262_144
