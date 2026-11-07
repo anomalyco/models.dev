@@ -1,0 +1,20 @@
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "Nemotron 3 Ultra 550B A55B (free)"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

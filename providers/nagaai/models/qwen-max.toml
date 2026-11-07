@@ -1,0 +1,17 @@
+schema = 2
+base_model = "alibaba/qwen-max"
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 3.2

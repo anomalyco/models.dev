@@ -1,0 +1,24 @@
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+name = "Nemotron 3.5 Lightning 30B A3B (free)"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

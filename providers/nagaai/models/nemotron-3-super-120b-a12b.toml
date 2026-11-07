@@ -1,0 +1,24 @@
+# Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.0375
+
+[cost.text.output]
+price = 0.2

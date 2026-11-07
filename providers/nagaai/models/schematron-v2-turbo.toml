@@ -1,0 +1,20 @@
+schema = 2
+base_model = "inference-net/schematron-v2-turbo"
+
+[capabilities]
+structured_output = true
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.015
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.075
