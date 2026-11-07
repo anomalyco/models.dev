@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max
+# Cost, limits, input parts and reasoning levels: PopNow model table https://popnow.ai/docs/chat and the model schema from GET https://api.popnow.ai/api/v1/models/{model} (retrieved 2026-11-05).
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10

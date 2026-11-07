@@ -1,0 +1,8 @@
+name = "PopNow"
+env = ["POPNOW_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# Relay provider: PopNow serves Claude, GPT, Gemini, DeepSeek, Kimi and other chat models through one OpenAI-compatible API, billed per token in USD.
+# Reasoning control on every listed model is the OpenAI-style `reasoning_effort` field; the accepted levels per model come from PopNow's model schemas.
+doc = "https://popnow.ai/docs/chat"
+api = "https://api.popnow.ai/v1"
