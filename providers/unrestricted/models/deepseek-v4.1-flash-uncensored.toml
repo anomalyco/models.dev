@@ -1,6 +1,6 @@
-# Sources (accessed 2026-11-05):
+# Sources (accessed 2026-11-07):
 # - Model id, name, 1,048,576 context, 65,536 max output, text-only input and USD prices per
-#   1M tokens (input 0.35, cached input 0.10, output 1.25): https://api.unrestricted.sh/v1/models
+#   1M tokens (input 0.15, cached input 0.05, output 0.60): https://api.unrestricted.sh/v1/models
 # - Prices, context, text input, reasoning in reasoning_content, tool calls, served by an
 #   outside inference partner: https://unrestricted.sh/models/deepseek-v4.1-flash-uncensored
 #   and https://unrestricted.sh/pricing
@@ -51,8 +51,8 @@ output = 65_536
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.35
-cache = { read = 0.1 }
+price = 0.15
+cache = { read = 0.05 }
 
 [cost.text.output]
-price = 1.25
+price = 0.6
