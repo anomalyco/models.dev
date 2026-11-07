@@ -1,0 +1,36 @@
+# Sources (accessed 2026-10-25): https://api.decisionmodels.io/v1/models (live registry), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
+# Prices are USD per 1M input tokens on the Peer-to-Peer (S1-Region: global) tier; output tokens are free. The EU tier (S1-Region: eu)
+#   costs $0.084 per 1M input tokens; it is not modelled because the EU/global ratio differs per model.
+# Model: REAX 1 by Decision Models, a fine-tune of Perplexity Decider v1.2 (Apache-2.0, derived from Qwen3.8-27B). reax-1 always points to the current release (pinned: reax-1-20261021). Up to 3 questions per request.
+# release_date: 2026-10-21 is the date of the pinned release reax-1-20261021.
+schema = 2
+type = "decision"
+name = "REAX 1"
+description = "Open decision model fine-tuned by Decision Models for text decisions: up to three typed noul, choice or score questions per request, answered with probabilities"
+open_weights = true
+release_date = "2026-10-21"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0

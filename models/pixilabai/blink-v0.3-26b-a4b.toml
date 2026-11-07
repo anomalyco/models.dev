@@ -1,0 +1,36 @@
+# Sources (accessed 2026-10-25): https://huggingface.co/PixilabAI/Blink-v0.3-26B-A4B-NVFP4 (Apache-2.0; Hub createdAt 2026-10-02;
+#   base model google/gemma-4-26B-A4B-it; FP8 build: https://huggingface.co/PixilabAI/Blink-v0.3-26B-A4B-FP8).
+#   26B-A4B MoE decision model by PixilabAI: reads a state, a question and options (text, plus images per the card's vision tag)
+#   and answers with a probability for every option in one forward pass; no generated text. The card's serving example uses
+#   --max-model-len 32768 and states "32k context".
+schema = 2
+v2_only = true
+type = "decision"
+name = "Blink v0.3 26B-A4B"
+description = "PixilabAI's fast 26B-A4B open-weight decision model on Gemma 4 that returns calibrated probabilities for typed choice, yes/no and score questions about text and images"
+open_weights = true
+release_date = "2026-10-02"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[[weights]]
+label = "Hugging Face (NVFP4)"
+url = "https://huggingface.co/PixilabAI/Blink-v0.3-26B-A4B-NVFP4"
+
+[[weights]]
+label = "Hugging Face (FP8)"
+url = "https://huggingface.co/PixilabAI/Blink-v0.3-26B-A4B-FP8"
