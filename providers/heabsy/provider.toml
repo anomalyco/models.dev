@@ -1,8 +1,11 @@
 # Heabsy — EU inference platform operated by FEYA, s.r.o. (Bratislava, Slovakia).
 # OpenAI-compatible chat completions at https://api.heabsy.com/v1 (API reference: https://api.heabsy.com/docs).
-# Model catalog with per-model prices and processing region: https://heabsy.com/models (accessed 2026-09-28).
+# Model catalog with per-model prices and processing region: https://heabsy.com/models (accessed 2026-11-07).
+# Machine-readable model feed (ids, context, max output, input formats, USD prices):
+# https://api.heabsy.com/site/v1/models (accessed 2026-11-07).
 name = "Heabsy"
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 env = ["HEABSY_API_KEY"]
 api = "https://api.heabsy.com/v1"
 doc = "https://heabsy.com/models"
