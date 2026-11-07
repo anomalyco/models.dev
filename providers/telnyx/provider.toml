@@ -1,0 +1,21 @@
+# Chat Completions: POST https://api.telnyx.com/v2/ai/openai/chat/completions, OpenAI-compatible, Bearer
+# auth with a Telnyx API key. The documented base URL is https://api.telnyx.com/v2/ai/openai
+# (https://developers.telnyx.com/docs/inference/getting-started); /v2/ai/chat/completions answers too.
+# Catalog, context lengths and USD prices: GET https://api.telnyx.com/v2/ai/models (accessed 2026-10-28).
+# Reasoning HTTP format (live 2026-10-28): reasoning_effort in the request body. Reasoning comes back
+# in message.reasoning_content (not `reasoning`). Models differ in what the field controls; see each model file.
+# APIs: Chat Completions (default). Not listed in this catalog entry, but live (2026-10-28):
+# - POST /v2/ai/responses: text and function calls work; reasoning.effort rejects "none".
+# - POST /v2/ai/anthropic/v1/messages (Anthropic-compatible): returned a message for GLM-5.2 and Kimi-K3.
+# Cache: automatic prefix cache, no parameter or write charge. A repeated ~4k-token prompt reported
+# prompt_tokens_details.cached_tokens of 3,840 to 3,968 on the second call for GLM-5.2, GLM-5.3-Flash,
+# MiniMax-M3 and DeepSeek-V4.1-Flash. Kimi-K3 cached intermittently (0 on some second calls, hits on later ones).
+# Output: max_tokens and max_completion_tokens are both accepted. Above 1,048,576 the gateway rejects
+# max_tokens for every model tested; Telnyx publishes no per-model cap beyond max_completion_tokens in /v2/ai/models.
+# Service tiers (priority, flex) and regions are listed per model by /v2/ai/models but not priced here.
+name = "Telnyx"
+env = ["TELNYX_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.telnyx.com/v2/ai/openai"
+doc = "https://developers.telnyx.com/docs/inference/getting-started"
